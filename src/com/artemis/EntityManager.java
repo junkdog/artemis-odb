@@ -150,7 +150,7 @@ public class EntityManager {
 
 	protected ImmutableBag<Component> getComponents(Entity e) {
 		entityComponents.clear();
-		for(int a = 0; componentsByType.size() > a; a++) {
+		for(int a = 0; componentsByType.getCapacity() > a; a++) {
 			Bag<Component> components = componentsByType.get(a);
 			if(components != null && e.getId() < components.size()) {
 				Component component = components.get(e.getId());
