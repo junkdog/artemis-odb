@@ -21,6 +21,8 @@ public final class Entity {
 	private World world;
 	private EntityManager entityManager;
 	private ComponentManager componentManager;
+	
+	private boolean deleted;
 
 	protected Entity(World world, int id) {
 		this.world = world;

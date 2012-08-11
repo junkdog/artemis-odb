@@ -4,14 +4,17 @@ import com.artemis.utils.Bag;
 
 public class EntityManager extends Manager {
 	private Bag<Entity> entities;
-	private int nextAvailableId;
 	
-	private int count;
+	private int active;
+	private long added;
 	private long created;
 	private long deleted;
+
+	private IdentifierPool identifierPool;
 	
 	public EntityManager() {
 		entities = new Bag<Entity>();
+		identifierPool = new IdentifierPool();
 	}
 	
 	@Override
@@ -19,15 +22,16 @@ public class EntityManager extends Manager {
 	}
 
 	protected Entity createEntityInstance() {
-		Entity e = new Entity(world, nextAvailableId++);
-		count++;
+		Entity e = new Entity(world, identifierPool.checkOut());
+		active++;
 		created++;
 		return e;
 	}
 	
 	@Override
 	protected void added(Entity e) {
-		count++;
+		active++;
+		added++;
 		entities.set(e.getId(), e);
 	}
 	
@@ -40,21 +44,22 @@ public class EntityManager extends Manager {
 		entities.set(e.getId(), null);
 		
 		e.setTypeBits(0);
+
+		identifierPool.checkIn(e.getId());
 		
-		count--;
+		active--;
 		deleted++;
 	}
 
-
-	
 	
 
 
 	/**
-	 * Check if this entity is active, or has been deleted, within the framework.
+	 * Check if this entity is active.
+	 * Active means the entity is being actively processed.
 	 * 
 	 * @param entityId
-	 * @return active or not.
+	 * @return true if active, false if not.
 	 */
 	public boolean isActive(int entityId) {
 		return entities.get(entityId) != null;
@@ -71,15 +76,17 @@ public class EntityManager extends Manager {
 	}
 	
 	/**
-	 * Get how many entities are in this world.
+	 * Get how many entities are active in this world.
 	 * @return how many entities are currently active.
 	 */
-	public int getEntityCount() {
-		return count;
+	public int getActiveEntityCount() {
+		return active;
 	}
 	
 	/**
-	 * Get how many entities have been created in this world.
+	 * Get how many entities have been created in the world since start.
+	 * Note: A created entity may not have been added to the world, thus
+	 * created count is always equal or larger than added count.
 	 * @return how many entities have been created since start.
 	 */
 	public long getTotalCreated() {
@@ -87,10 +94,43 @@ public class EntityManager extends Manager {
 	}
 	
 	/**
-	 * Get how many entities have been deleted in this world.
+	 * Get how many entities have been added to the world since start.
+	 * @return how many entities have been added.
+	 */
+	public long getTotalAdded() {
+		return added;
+	}
+	
+	/**
+	 * Get how many entities have been deleted from the world since start.
 	 * @return how many entities have been deleted since start.
 	 */
-	public long getTotalRemoved() {
+	public long getTotalDeleted() {
 		return deleted;
+	}
+	
+	
+	
+	/*
+	 * Used only internally to generate distinct ids for entities and reuse them.
+	 */
+	private class IdentifierPool {
+		private Bag<Integer> ids;
+		private int nextAvailableId;
+
+		public IdentifierPool() {
+			ids = new Bag<>();
+		}
+		
+		public int checkOut() {
+			if(ids.size() > 0) {
+				return ids.removeLast();
+			}
+			return nextAvailableId++;
+		}
+		
+		public void checkIn(int id) {
+			ids.add(id);
+		}
 	}
 }
