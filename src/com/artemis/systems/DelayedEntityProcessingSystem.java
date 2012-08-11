@@ -1,5 +1,7 @@
-package com.artemis;
+package com.artemis.systems;
 
+import com.artemis.Component;
+import com.artemis.Entity;
 import com.artemis.utils.ImmutableBag;
 
 public abstract class DelayedEntityProcessingSystem extends DelayedEntitySystem {

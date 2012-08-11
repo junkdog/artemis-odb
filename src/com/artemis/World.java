@@ -139,14 +139,6 @@ public class World {
 		return entityManager.getEntity(entityId);
 	}
 
-	/**
-	 * Let framework take care of internal business.
-	 */
-	public void loopStart() {
-		updateRefreshed();
-		updateDeleted();
-	}
-
 	private void updateDeleted() {
 		if (!deleted.isEmpty()) {
 			for (int i = 0; deleted.size() > i; i++) {
@@ -192,7 +184,12 @@ public class World {
 	}
 
 	public EntitySystem setSystem(EntitySystem system) {
+		return setSystem(system, false);
+	}
+	
+	public EntitySystem setSystem(EntitySystem system, boolean passive) {
 		system.setWorld(this);
+		system.setPassive(passive);
 		
 		systems.put(system.getClass(), system);
 		
@@ -206,6 +203,18 @@ public class World {
 	
 	public <T extends EntitySystem> T getSystem(Class<T> type) {
 		return type.cast(systems.get(type));
+	}
+
+	public void process() {
+		updateRefreshed();
+		updateDeleted();
+		
+		for(int i = 0; systemsBag.size() > i; i++) {
+			EntitySystem system = systemsBag.get(i);
+			if(!system.isPassive()) {
+				system.process();
+			}
+		}
 	}
 
 }

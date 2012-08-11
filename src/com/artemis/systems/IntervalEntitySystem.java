@@ -1,4 +1,7 @@
-package com.artemis;
+package com.artemis.systems;
+
+import com.artemis.Component;
+import com.artemis.EntitySystem;
 
 
 /**

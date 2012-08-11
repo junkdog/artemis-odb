@@ -1,7 +1,10 @@
-package com.artemis;
+package com.artemis.managers;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import com.artemis.Entity;
+import com.artemis.World;
 
 
 /**

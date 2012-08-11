@@ -20,6 +20,8 @@ public abstract class EntitySystem {
 
 	private Bag<Entity> actives;
 	
+	private boolean passive;
+	
 	public EntitySystem() {
 	}
 
@@ -124,6 +126,14 @@ public abstract class EntitySystem {
 			types[i+1] = otherTypes[i];
 		}
 		return types;
+	}
+
+	protected boolean isPassive() {
+		return passive;
+	}
+
+	protected void setPassive(boolean passive) {
+		this.passive = passive;
 	}
 
 }
