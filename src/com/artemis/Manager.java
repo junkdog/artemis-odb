@@ -10,9 +10,11 @@ package com.artemis;
 public abstract class Manager {
 	protected World world;
 	
+	protected abstract void changed(Entity e);
+	
 	protected abstract void added(Entity e);
 
-	protected abstract void removed(Entity e);
+	protected abstract void deleted(Entity e);
 
 	protected abstract void initialize();
 

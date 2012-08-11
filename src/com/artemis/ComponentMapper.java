@@ -10,17 +10,17 @@ package com.artemis;
  */
 public class ComponentMapper<A extends Component> {
 	private ComponentType type;
-	private EntityManager em;
 	private Class<A> classType;
+	private ComponentManager componentManager;
 
 	private ComponentMapper(Class<A> type, World world) {
-		this.em = world.getEntityManager();
+		componentManager = world.getComponentManager();
 		this.type = ComponentTypeManager.getTypeFor(type);
 		this.classType = type;
 	}
 
 	public A get(Entity e) {
-		return classType.cast(em.getComponent(e, type));
+		return classType.cast(componentManager.getComponent(e, type));
 	}
 
 	public static <T extends Component> ComponentMapper<T> getFor(Class<T> type, World world) {

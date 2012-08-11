@@ -17,10 +17,12 @@ import com.artemis.utils.ImmutableBag;
  * 
  */
 public class World {
-	private EntityManager entityManager;
+	private EntityManager em;
+	private ComponentManager cm;
 
 	private int delta;
-	private Bag<Entity> refreshed;
+	private Bag<Entity> added;
+	private Bag<Entity> changed;
 	private Bag<Entity> deleted;
 
 	private Map<Class<? extends Manager>, Manager> managers;
@@ -30,36 +32,65 @@ public class World {
 	private Bag<EntitySystem> systemsBag;
 
 	public World() {
-		managers = new HashMap<Class<? extends Manager>, Manager>();
+		managers = new HashMap<>();
 		managersBag = new Bag<>();
 		
 		systems = new HashMap<>();
 		systemsBag = new Bag<>();
 
-		refreshed = new Bag<>();
+		added = new Bag<>();
+		changed = new Bag<>();
 		deleted = new Bag<>();
 
-		entityManager = new EntityManager();
-
-		setManager(entityManager);
+		em = new EntityManager();
+		setManager(em);
+		
+		cm = new ComponentManager();
+		setManager(cm);
 	}
 
+	
 	/**
-	 * Returns a manager that is the core of this framework, containing all the
+	 * Makes sure all managers systems are initialized in the order they were added.
+	 */
+	public void initialize() {
+		for (int i = 0; i < managersBag.size(); i++) {
+			managersBag.get(i).initialize();
+		}
+		
+		for (int i = 0; i < systemsBag.size(); i++) {
+			systemsBag.get(i).initialize();
+		}
+	}
+	
+	
+	/**
+	 * Returns a manager that takes care of all the entities in the world.
 	 * entities of this world.
 	 * 
 	 * @return entity manager.
 	 */
 	public EntityManager getEntityManager() {
-		return entityManager;
+		return em;
 	}
+	
+	/**
+	 * Returns a manager that takes care of all the components in the world.
+	 * 
+	 * @return component manager.
+	 */
+	public ComponentManager getComponentManager() {
+		return cm;
+	}
+	
+	
+	
 
 	/**
 	 * Add a manager into this world. It can be retrieved later.
 	 * World will notify this manager of changes to entity.
 	 * 
-	 * @param manager
-	 *            to be added
+	 * @param manager to be added
 	 */
 	public void setManager(Manager manager) {
 		managers.put(manager.getClass(), manager);
@@ -78,7 +109,19 @@ public class World {
 	public <T extends Manager> T getManager(Class<T> managerType) {
 		return managerType.cast(managers.get(managerType));
 	}
+	
+	/**
+	 * Deletes the manager from this world.
+	 * @param manager to delete.
+	 */
+	public void deleteManager(Manager manager) {
+		managers.remove(manager);
+		managersBag.remove(manager);
+	}
 
+	
+	
+	
 	/**
 	 * Time since last game loop.
 	 * 
@@ -91,18 +134,38 @@ public class World {
 	/**
 	 * You must specify the delta for the game here.
 	 * 
-	 * @param delta
-	 *            time since last game loop.
+	 * @param delta time since last game loop.
 	 */
 	public void setDelta(int delta) {
 		this.delta = delta;
 	}
 
+	
+
 	/**
-	 * Delete the provided entity from the world.
+	 * Adds a entity to this world.
 	 * 
-	 * @param e
-	 *            entity
+	 * @param e entity
+	 */
+	public void addEntity(Entity e) {
+		added.add(e);
+	}
+	
+	/**
+	 * Ensure all systems are notified of changes to this entity.
+	 * If you're adding a component to an entity after it's been
+	 * added to the world, then you need to invoke this method.
+	 * 
+	 * @param e entity
+	 */
+	public void changedEntity(Entity e) {
+		changed.add(e);
+	}
+	
+	/**
+	 * Delete the entity from the world.
+	 * 
+	 * @param e entity
 	 */
 	public void deleteEntity(Entity e) {
 		if (!deleted.contains(e)) {
@@ -110,23 +173,16 @@ public class World {
 		}
 	}
 
-	/**
-	 * Ensure all systems are notified of changes to this entity.
-	 * 
-	 * @param e
-	 *            entity
-	 */
-	public void refreshEntity(Entity e) {
-		refreshed.add(e);
-	}
+
 
 	/**
 	 * Create and return a new or reused entity instance.
+	 * Will NOT add the entity to the world, use World.addEntity(Entity) for that.
 	 * 
 	 * @return entity
 	 */
 	public Entity createEntity() {
-		return entityManager.create();
+		return em.createEntityInstance();
 	}
 
 	/**
@@ -136,76 +192,126 @@ public class World {
 	 * @return entity
 	 */
 	public Entity getEntity(int entityId) {
-		return entityManager.getEntity(entityId);
+		return em.getEntity(entityId);
 	}
 
-	private void updateDeleted() {
+	
+
+	private void processAdded() {
+		if (!added.isEmpty()) {
+			for (int i = 0; added.size() > i; i++) {
+				for(int a = 0; managersBag.size() > a; a++) {
+					Entity e = added.get(i);
+					managersBag.get(a).added(added.get(i));
+					notifySystems(e);
+				}
+			}
+			added.clear();
+		}
+	}
+	
+	private void processChanged() {
+		if (!changed.isEmpty()) {
+			for (int i = 0; changed.size() > i; i++) {
+				for(int a = 0; managersBag.size() > a; a++) {
+					Entity e = changed.get(i);
+					managersBag.get(a).changed(changed.get(i));
+					notifySystems(e);
+				}
+			}
+			changed.clear();
+		}
+	}
+	
+	private void processDeleted() {
 		if (!deleted.isEmpty()) {
 			for (int i = 0; deleted.size() > i; i++) {
-				Entity e = deleted.get(i);
-				entityManager.remove(e);
-				notifyManagersOfDeletedEntity(e);
+				for(int a = 0; managersBag.size() > a; a++) {
+					Entity e = deleted.get(i);
+					managersBag.get(a).deleted(e);
+					notifySystems(e);
+				}
 			}
 			deleted.clear();
 		}
 	}
 
-	private void updateRefreshed() {
-		if (!refreshed.isEmpty()) {
-			for (int i = 0; refreshed.size() > i; i++) {
-				Entity e = refreshed.get(i);
-				entityManager.refresh(e);
-				notifyManagersOfAddedEntity(e);
-			}
-			refreshed.clear();
-		}
-	}
-	
-	private void notifyManagersOfDeletedEntity(Entity e) {
-		for(int i = 0; managersBag.size() > i; i++) {
-			managersBag.get(i).removed(e);
-		}
-	}
-	
-	private void notifyManagersOfAddedEntity(Entity e) {
-		for(int i = 0; managersBag.size() > i; i++) {
-			managersBag.get(i).added(e);
-		}
-	}
 
-	public void initialize() {
-		for (int i = 0; i < systemsBag.size(); i++) {
-			systemsBag.get(i).initialize();
-		}
-	}
+	
 
+
+
+	/**
+	 * Gives you all the systems in this world for possible iteration.
+	 * 
+	 * @return all entity systems in world.
+	 */
 	public ImmutableBag<EntitySystem> getSystems() {
 		return systemsBag;
 	}
 
+	/**
+	 * Adds a system to this world that will be processed by World.process()
+	 * 
+	 * @param system the system to add.
+	 * @return the added system.
+	 */
 	public EntitySystem setSystem(EntitySystem system) {
 		return setSystem(system, false);
 	}
-	
+
+	/**
+	 * Will add a system to this world.
+	 *  
+	 * @param system the system to add.
+	 * @param passive wether or not this system will be processed by World.process()
+	 * @return the added system.
+	 */
 	public EntitySystem setSystem(EntitySystem system, boolean passive) {
 		system.setWorld(this);
 		system.setPassive(passive);
 		
 		systems.put(system.getClass(), system);
-		
-		if(!systemsBag.contains(system))
-			systemsBag.add(system);
+		systemsBag.add(system);
 		
 		return system;
 	}
 	
+	/**
+	 * Removed the specified system from the world.
+	 * @param system to be deleted from world.
+	 */
+	public void deleteSystem(EntitySystem system) {
+		systems.remove(system.getClass());
+		systemsBag.remove(system);
+	}
+	
+	private void notifySystems(Entity e) {
+		for(int i = 0, s=systemsBag.size(); s > i; i++) {
+			systemsBag.get(i).change(e);
+		}
+	}
+	
+	/**
+	 * Retrieve a system for specified system type.
+	 * 
+	 * @param type type of system.
+	 * @return instance of the system in this world.
+	 */
 	public <T extends EntitySystem> T getSystem(Class<T> type) {
 		return type.cast(systems.get(type));
 	}
 
+	
+	
+	
+	/**
+	 * Process all non-passive systems.
+	 */
 	public void process() {
-		updateRefreshed();
-		updateDeleted();
+		processAdded();
+		processChanged();
+		processDeleted();
 		
 		for(int i = 0; systemsBag.size() > i; i++) {
 			EntitySystem system = systemsBag.get(i);
@@ -214,7 +320,14 @@ public class World {
 			}
 		}
 	}
+	
 
+	/**
+	 * Retrieves a ComponentMapper instance for fast retrieval of components from entities.
+	 * 
+	 * @param type of component to get mapper for.
+	 * @return mapper for specified component type.
+	 */
 	public <T extends Component> ComponentMapper<T> getMapper(Class<T> type) {
 		return ComponentMapper.getFor(type, this);
 	}

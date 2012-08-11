@@ -38,7 +38,7 @@ public abstract class EntitySystem {
 	 * Called before processing of entities begins. 
 	 */
 	protected void begin() {
-	};
+	}
 
 	public final void process() {
 		if(checkProcessing()) {
@@ -52,7 +52,7 @@ public abstract class EntitySystem {
 	 * Called after the processing of entities ends.
 	 */
 	protected void end() {
-	};
+	}
 	
 	/**
 	 * Any implementing entity system must implement this method and the logic
@@ -121,9 +121,6 @@ public abstract class EntitySystem {
 	/**
 	 * Used to generate a unique bit for each system.
 	 * Only used internally in EntitySystem.
-	 * 
-	 * @author Arni Arent
-	 *
 	 */
 	private static class SystemBitManager {
 		private static int POS = 0;

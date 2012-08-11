@@ -3,7 +3,7 @@ package com.artemis;
 public class Aspect {
 	
 	private long typeFlags;
-
+	
 	public long getTypeFlags() {
 		return typeFlags;
 	}

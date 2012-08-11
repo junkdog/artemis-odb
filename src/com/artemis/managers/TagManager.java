@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.artemis.Entity;
+import com.artemis.Manager;
 import com.artemis.World;
 
 
@@ -14,7 +15,7 @@ import com.artemis.World;
  * @author Arni Arent
  *
  */
-public class TagManager {
+public class TagManager extends Manager {
 	private World world;
 	private Map<String, Entity> entityByTag;
 
@@ -41,6 +42,22 @@ public class TagManager {
 	
 	protected void remove(Entity e) {
 		entityByTag.values().remove(e);
+	}
+
+	@Override
+	protected void changed(Entity e) {
+	}
+
+	@Override
+	protected void added(Entity e) {
+	}
+
+	@Override
+	protected void deleted(Entity e) {
+	}
+
+	@Override
+	protected void initialize() {
 	}
 
 }

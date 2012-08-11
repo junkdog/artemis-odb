@@ -28,6 +28,12 @@ public class GroupManager extends Manager {
 		EMPTY_BAG = new Bag<Entity>();
 	}
 	
+
+	@Override
+	protected void initialize() {
+	}
+	
+	
 	/**
 	 * Set the group of the entity.
 	 * 
@@ -35,7 +41,7 @@ public class GroupManager extends Manager {
 	 * @param e entity to set into the group.
 	 */
 	public void set(String group, Entity e) {
-		removed(e); // Entity can only belong to one group.
+		deleted(e); // Entity can only belong to one group.
 		
 		Bag<Entity> entities = entitiesByGroup.get(group);
 		if(entities == null) {
@@ -94,7 +100,7 @@ public class GroupManager extends Manager {
 	}
 
 	@Override
-	protected void removed(Entity e) {
+	protected void deleted(Entity e) {
 		if(e.getId() < groupByEntity.getCapacity()) {
 			String group = groupByEntity.get(e.getId());
 			if(group != null) {
@@ -107,9 +113,9 @@ public class GroupManager extends Manager {
 			}
 		}
 	}
-
+	
 	@Override
-	protected void initialize() {
+	protected void changed(Entity e) {
 	}
 
 }

@@ -1,5 +1,7 @@
 package com.artemis;
 
+import java.util.UUID;
+
 import com.artemis.utils.ImmutableBag;
 
 /**
@@ -10,18 +12,21 @@ import com.artemis.utils.ImmutableBag;
  * 
  */
 public final class Entity {
+	private UUID uuid = UUID.randomUUID();
+
 	private int id;
-	private long uniqueId;
 	private long typeBits;
 	private long systemBits;
 
 	private World world;
 	private EntityManager entityManager;
+	private ComponentManager componentManager;
 
 	protected Entity(World world, int id) {
 		this.world = world;
-		this.entityManager = world.getEntityManager();
 		this.id = id;
+		this.entityManager = world.getEntityManager();
+		this.componentManager = world.getComponentManager();
 	}
 
 	/**
@@ -33,20 +38,6 @@ public final class Entity {
 	 */
 	public int getId() {
 		return id;
-	}
-
-	protected void setUniqueId(long uniqueId) {
-		this.uniqueId = uniqueId;
-	}
-
-	/**
-	 * Get the unique ID of this entity. Because entity instances are reused
-	 * internally use this to identify between different instances.
-	 * 
-	 * @return the unique id of this entity.
-	 */
-	public long getUniqueId() {
-		return uniqueId;
 	}
 
 	protected long getTypeBits() {
@@ -98,7 +89,7 @@ public final class Entity {
 	 *            to add to this entity
 	 */
 	public void addComponent(Component component) {
-		entityManager.addComponent(this, component);
+		componentManager.addComponent(this, component);
 	}
 
 	/**
@@ -108,7 +99,7 @@ public final class Entity {
 	 *            to remove from this entity.
 	 */
 	public void removeComponent(Component component) {
-		entityManager.removeComponent(this, component);
+		componentManager.removeComponent(this, component);
 	}
 
 	/**
@@ -118,7 +109,7 @@ public final class Entity {
 	 *            to remove from this entity.
 	 */
 	public void removeComponent(ComponentType type) {
-		entityManager.removeComponent(this, type);
+		componentManager.removeComponent(this, type);
 	}
 
 	/**
@@ -140,7 +131,7 @@ public final class Entity {
 	 * @return
 	 */
 	public Component getComponent(ComponentType type) {
-		return entityManager.getComponent(this, type);
+		return componentManager.getComponent(this, type);
 	}
 
 	/**
@@ -166,7 +157,7 @@ public final class Entity {
 	 * @return all components of this entity.
 	 */
 	public ImmutableBag<Component> getComponents() {
-		return entityManager.getComponents(this);
+		return componentManager.getComponents(this);
 	}
 
 	/**
@@ -175,15 +166,26 @@ public final class Entity {
 	 * relevant systems. It is typical to call this after adding components to a
 	 * newly created entity.
 	 */
-	public void refresh() {
-		world.refreshEntity(this);
+	public void addToWorld() {
+		world.addEntity(this);
+	}
+	
+	/**
+	 * This entity has changed, a component added or deleted.
+	 */
+	public void changedInWorld() {
+		world.changedEntity(this);
 	}
 
 	/**
 	 * Delete this entity from the world.
 	 */
-	public void delete() {
+	public void deleteFromWorld() {
 		world.deleteEntity(this);
+	}
+	
+	public UUID getUuid() {
+		return uuid;
 	}
 
 }
