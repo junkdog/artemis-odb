@@ -215,4 +215,9 @@ public class World {
 		}
 	}
 
+	public <T extends Component> ComponentMapper<T> getMapper(Class<T> type) {
+		return ComponentMapper.getFor(type, this);
+	}
+	
+
 }
