@@ -22,16 +22,9 @@ public abstract class EntitySystem {
 	
 	private boolean passive;
 	
-	public EntitySystem() {
-	}
-
-	public EntitySystem(Class<? extends Component>... types) {
+	protected EntitySystem(Aspect aspect) {
 		actives = new Bag<Entity>();
-
-		for (Class<? extends Component> type : types) {
-			ComponentType ct = ComponentTypeManager.getTypeFor(type);
-			typeFlags |= ct.getBit();
-		}
+		typeFlags = aspect.getTypeFlags();
 	}
 	
 	protected void setSystemBit(long bit) {
@@ -112,22 +105,6 @@ public abstract class EntitySystem {
 		this.world = world;
 	}
 	
-	/**
-	 * Merge together a required type and a array of other types. Used in derived systems.
-	 * @param requiredType
-	 * @param otherTypes
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	protected static Class<? extends Component>[] getMergedTypes(Class<? extends Component> requiredType, Class<? extends Component>[] otherTypes) {
-		Class<? extends Component>[] types = new Class[1+otherTypes.length];
-		types[0] = requiredType;
-		for(int i = 0; otherTypes.length > i; i++) {
-			types[i+1] = otherTypes[i];
-		}
-		return types;
-	}
-
 	protected boolean isPassive() {
 		return passive;
 	}

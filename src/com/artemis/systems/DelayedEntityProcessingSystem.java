@@ -1,20 +1,15 @@
 package com.artemis.systems;
 
-import com.artemis.Component;
+import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.utils.ImmutableBag;
 
 public abstract class DelayedEntityProcessingSystem extends DelayedEntitySystem {
 	
-	/**
-	 * Create a new DelayedEntityProcessingSystem. It requires at least one component.
-	 * @param requiredType the required component type.
-	 * @param otherTypes other component types.
-	 */
-	public DelayedEntityProcessingSystem(Class<? extends Component> requiredType, Class<? extends Component>... otherTypes) {
-		super(getMergedTypes(requiredType, otherTypes));
+	protected DelayedEntityProcessingSystem(Aspect aspect) {
+		super(aspect);
 	}
-	
+
 	/**
 	 * Process a entity this system is interested in.
 	 * @param e the entity to process.

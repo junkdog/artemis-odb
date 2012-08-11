@@ -1,6 +1,6 @@
 package com.artemis.systems;
 
-import com.artemis.Component;
+import com.artemis.Aspect;
 import com.artemis.EntitySystem;
 
 
@@ -15,8 +15,8 @@ public abstract class IntervalEntitySystem extends EntitySystem {
 	private int acc;
 	private int interval;
 
-	public IntervalEntitySystem(int interval, Class<? extends Component>... types) {
-		super(types);
+	public IntervalEntitySystem(Aspect aspect, int interval) {
+		super(aspect);
 		this.interval = interval;
 	}
 

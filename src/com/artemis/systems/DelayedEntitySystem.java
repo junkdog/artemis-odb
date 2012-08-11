@@ -1,6 +1,6 @@
 package com.artemis.systems;
 
-import com.artemis.Component;
+import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.utils.ImmutableBag;
@@ -35,8 +35,8 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 	private boolean running;
 	private int acc;
 
-	public DelayedEntitySystem(Class<? extends Component>... types) {
-		super(types);
+	protected DelayedEntitySystem(Aspect aspect) {
+		super(aspect);
 	}
 
 	@Override
@@ -62,8 +62,6 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 	 * @param entities read-only bag of entities.
 	 */
 	protected abstract void processEntities(ImmutableBag<Entity> entities, int accumulatedDelta);
-	
-	
 	
 	
 	/**
