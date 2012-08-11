@@ -2,6 +2,7 @@ package com.artemis;
 
 import java.util.HashMap;
 
+
 public class SystemBitManager {
 	private static int POS = 0;
 	private static HashMap<Class<? extends EntitySystem>, Long> systemBits = new HashMap<Class<? extends EntitySystem>, Long>();

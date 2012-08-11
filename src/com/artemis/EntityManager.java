@@ -3,8 +3,7 @@ package com.artemis;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
-public class EntityManager {
-	private World world;
+public class EntityManager extends Manager {
 	private Bag<Entity> activeEntities;
 	private Bag<Entity> removedAndAvailable;
 	private int nextAvailableId;
@@ -17,9 +16,7 @@ public class EntityManager {
 	
 	private Bag<Component> entityComponents; // Added for debug support.
 
-	public EntityManager(World world) {
-		this.world = world;
-		
+	public EntityManager() {
 		activeEntities = new Bag<Entity>();
 		removedAndAvailable = new Bag<Entity>();
 		
@@ -95,8 +92,7 @@ public class EntityManager {
 	}
 	
 	protected void refresh(Entity e) {
-		SystemManager systemManager = world.getSystemManager();
-		Bag<EntitySystem> systems = systemManager.getSystems();
+		ImmutableBag<EntitySystem> systems = world.getSystems();
 		for(int i = 0, s=systems.size(); s > i; i++) {
 			systems.get(i).change(e);
 		}
@@ -160,6 +156,18 @@ public class EntityManager {
 			}
 		}
 		return entityComponents;
+	}
+
+	@Override
+	protected void added(Entity e) {
+	}
+
+	@Override
+	protected void removed(Entity e) {
+	}
+
+	@Override
+	protected void initialize() {
 	}
 
 }

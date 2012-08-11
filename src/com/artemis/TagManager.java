@@ -3,6 +3,7 @@ package com.artemis;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * If you need to tag any entity, use this. A typical usage would be to tag
  * entities such as "PLAYER". After creating an entity call register().

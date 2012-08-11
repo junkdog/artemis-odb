@@ -1,11 +1,26 @@
 package com.artemis;
 
+
 /**
- * Tag class for Manager. (may evolve into something more later)
+ * Manager.
  * 
  * @author Arni Arent
- *
+ * 
  */
-public interface Manager {
+public abstract class Manager {
+	protected World world;
+	
+	protected abstract void added(Entity e);
 
+	protected abstract void removed(Entity e);
+
+	protected abstract void initialize();
+
+	protected void setWorld(World world) {
+		this.world = world;
+	}
+
+	protected World getWorld() {
+		return world;
+	}
 }

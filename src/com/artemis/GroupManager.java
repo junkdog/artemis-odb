@@ -15,14 +15,12 @@ import com.artemis.utils.ImmutableBag;
  * @author Arni Arent
  *
  */
-public class GroupManager {
-	private World world;
+public class GroupManager extends Manager {
 	private Bag<Entity> EMPTY_BAG;
 	private Map<String, Bag<Entity>> entitiesByGroup;
 	private Bag<String> groupByEntity;
 
-	public GroupManager(World world) {
-		this.world = world;
+	public GroupManager() {
 		entitiesByGroup = new HashMap<String, Bag<Entity>>();
 		groupByEntity = new Bag<String>();
 		EMPTY_BAG = new Bag<Entity>();
@@ -35,7 +33,7 @@ public class GroupManager {
 	 * @param e entity to set into the group.
 	 */
 	public void set(String group, Entity e) {
-		remove(e); // Entity can only belong to one group.
+		removed(e); // Entity can only belong to one group.
 		
 		Bag<Entity> entities = entitiesByGroup.get(group);
 		if(entities == null) {
@@ -57,24 +55,6 @@ public class GroupManager {
 		if(bag == null)
 			return EMPTY_BAG;
 		return bag;
-	}
-	
-	/**
-	 * Removes the provided entity from the group it is assigned to, if any.
-	 * @param e the entity.
-	 */
-	public void remove(Entity e) {
-		if(e.getId() < groupByEntity.getCapacity()) {
-			String group = groupByEntity.get(e.getId());
-			if(group != null) {
-				groupByEntity.set(e.getId(), null);
-				
-				Bag<Entity> entities = entitiesByGroup.get(group);
-				if(entities != null) {
-					entities.remove(e);
-				}
-			}
-		}
 	}
 	
 	/**
@@ -105,6 +85,29 @@ public class GroupManager {
 	 */
 	public boolean isInGroup(String group, Entity e) {
 		return group != null && group.equalsIgnoreCase(getGroupOf(e));
+	}
+
+	@Override
+	protected void added(Entity e) {
+	}
+
+	@Override
+	protected void removed(Entity e) {
+		if(e.getId() < groupByEntity.getCapacity()) {
+			String group = groupByEntity.get(e.getId());
+			if(group != null) {
+				groupByEntity.set(e.getId(), null);
+				
+				Bag<Entity> entities = entitiesByGroup.get(group);
+				if(entities != null) {
+					entities.remove(e);
+				}
+			}
+		}
+	}
+
+	@Override
+	protected void initialize() {
 	}
 
 }
