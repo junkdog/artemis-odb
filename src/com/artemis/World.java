@@ -197,49 +197,6 @@ public class World {
 
 	
 
-	private void processAdded() {
-		if (!added.isEmpty()) {
-			for (int i = 0; added.size() > i; i++) {
-				for(int a = 0; managersBag.size() > a; a++) {
-					Entity e = added.get(i);
-					managersBag.get(a).added(added.get(i));
-					notifySystems(e);
-				}
-			}
-			added.clear();
-		}
-	}
-	
-	private void processChanged() {
-		if (!changed.isEmpty()) {
-			for (int i = 0; changed.size() > i; i++) {
-				for(int a = 0; managersBag.size() > a; a++) {
-					Entity e = changed.get(i);
-					managersBag.get(a).changed(changed.get(i));
-					notifySystems(e);
-				}
-			}
-			changed.clear();
-		}
-	}
-	
-	private void processDeleted() {
-		if (!deleted.isEmpty()) {
-			for (int i = 0; deleted.size() > i; i++) {
-				for(int a = 0; managersBag.size() > a; a++) {
-					Entity e = deleted.get(i);
-					managersBag.get(a).deleted(e);
-					notifySystems(e);
-				}
-			}
-			deleted.clear();
-		}
-	}
-
-
-	
-
-
 
 	/**
 	 * Gives you all the systems in this world for possible iteration.
@@ -303,15 +260,46 @@ public class World {
 	}
 
 	
-	
+	/**
+	 * Performs an action on each entity.
+	 * @param entities
+	 * @param performer
+	 */
+	private void check(Bag<Entity> entities, Performer performer) {
+		if (!entities.isEmpty()) {
+			for (int i = 0; entities.size() > i; i++) {
+				for(int a = 0; managersBag.size() > a; a++) {
+					Entity e = entities.get(i);
+					performer.perform(managersBag.get(a), e);
+					notifySystems(e);
+				}
+			}
+			entities.clear();
+		}
+	}
 	
 	/**
 	 * Process all non-passive systems.
 	 */
 	public void process() {
-		processAdded();
-		processChanged();
-		processDeleted();
+		check(added, new Performer() {
+			@Override
+			public void perform(Manager manager, Entity e) {
+				manager.added(e);
+			}
+		});
+		check(changed, new Performer() {
+			@Override
+			public void perform(Manager manager, Entity e) {
+				manager.changed(e);
+			}
+		});
+		check(deleted, new Performer() {
+			@Override
+			public void perform(Manager manager, Entity e) {
+				manager.deleted(e);
+			}
+		});
 		
 		for(int i = 0; systemsBag.size() > i; i++) {
 			EntitySystem system = systemsBag.get(i);
@@ -332,5 +320,12 @@ public class World {
 		return ComponentMapper.getFor(type, this);
 	}
 	
+
+	/*
+	 * Only used internally to maintain clean code.
+	 */
+	private interface Performer {
+		void perform(Manager manager, Entity e);
+	}
 
 }
