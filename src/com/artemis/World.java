@@ -196,8 +196,6 @@ public class World {
 		if(!systemsBag.contains(system))
 			systemsBag.add(system);
 		
-		system.setSystemBit(SystemBitManager.getBitFor(system.getClass()));
-		
 		return system;
 	}
 	

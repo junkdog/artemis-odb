@@ -1,5 +1,7 @@
 package com.artemis;
 
+import java.util.HashMap;
+
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
@@ -25,6 +27,7 @@ public abstract class EntitySystem {
 	protected EntitySystem(Aspect aspect) {
 		actives = new Bag<Entity>();
 		typeFlags = aspect.getTypeFlags();
+		systemBit = SystemBitManager.getBitFor(this.getClass());
 	}
 	
 	protected void setSystemBit(long bit) {
@@ -111,6 +114,32 @@ public abstract class EntitySystem {
 
 	protected void setPassive(boolean passive) {
 		this.passive = passive;
+	}
+	
+	
+	
+	/**
+	 * Used to generate a unique bit for each system.
+	 * Only used internally in EntitySystem.
+	 * 
+	 * @author Arni Arent
+	 *
+	 */
+	private static class SystemBitManager {
+		private static int POS = 0;
+		private static HashMap<Class<? extends EntitySystem>, Long> systemBits = new HashMap<Class<? extends EntitySystem>, Long>();
+		
+		protected static final long getBitFor(Class<? extends EntitySystem> es){
+			Long bit = systemBits.get(es);
+			
+			if(bit == null){
+				bit = 1L << POS;
+				POS++;
+				systemBits.put(es, bit);
+			}
+			
+			return bit;
+		}
 	}
 
 }
