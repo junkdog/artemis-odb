@@ -12,20 +12,18 @@ import com.artemis.utils.ImmutableBag;
  * If you need to group your entities together, e.g. tanks going into "units" group or explosions into "effects",
  * then use this manager. You must retrieve it using world instance.
  * 
- * A entity can only belong to one group at a time.
+ * A entity can be assigned to more than one group.
  * 
  * @author Arni Arent
  *
  */
 public class GroupManager extends Manager {
-	private Bag<Entity> EMPTY_BAG;
 	private Map<String, Bag<Entity>> entitiesByGroup;
-	private Bag<String> groupByEntity;
+	private Map<Entity, Bag<String>> groupsByEntity;
 
 	public GroupManager() {
-		entitiesByGroup = new HashMap<String, Bag<Entity>>();
-		groupByEntity = new Bag<String>();
-		EMPTY_BAG = new Bag<Entity>();
+		entitiesByGroup = new HashMap<>();
+		groupsByEntity = new HashMap<>();
 	}
 	
 
@@ -37,12 +35,10 @@ public class GroupManager extends Manager {
 	/**
 	 * Set the group of the entity.
 	 * 
-	 * @param group group to set the entity into.
-	 * @param e entity to set into the group.
+	 * @param group group to add the entity into.
+	 * @param e entity to add into the group.
 	 */
-	public void set(String group, Entity e) {
-		deleted(e); // Entity can only belong to one group.
-		
+	public void add(Entity e, String group) {
 		Bag<Entity> entities = entitiesByGroup.get(group);
 		if(entities == null) {
 			entities = new Bag<Entity>();
@@ -50,7 +46,42 @@ public class GroupManager extends Manager {
 		}
 		entities.add(e);
 		
-		groupByEntity.set(e.getId(), group);
+		Bag<String> groups = groupsByEntity.get(e);
+		if(groups == null) {
+			groups = new Bag<>();
+			groupsByEntity.put(e, groups);
+		}
+		groups.add(group);
+	}
+	
+	/**
+	 * Remove the entity from the specified group.
+	 * @param e
+	 * @param group
+	 */
+	public void remove(Entity e, String group) {
+		Bag<Entity> entities = entitiesByGroup.get(group);
+		if(entities != null) {
+			entities.remove(e);
+		}
+		
+		Bag<String> groups = groupsByEntity.get(e);
+		if(groups != null) {
+			groups.remove(group);
+		}
+	}
+	
+	public void removeFromAllGroups(Entity e) {
+		Bag<String> groups = groupsByEntity.get(e);
+		if(groups != null) {
+			for(int i = 0; groups.size() > i; i++) {
+				Bag<Entity> entities = entitiesByGroup.get(groups.get(i));
+				if(entities != null) {
+					entities.remove(e);
+				}
+			}
+			groups.clear();
+		}
 	}
 	
 	/**
@@ -59,21 +90,20 @@ public class GroupManager extends Manager {
 	 * @return read-only bag of entities belonging to the group.
 	 */
 	public ImmutableBag<Entity> getEntities(String group) {
-		Bag<Entity> bag = entitiesByGroup.get(group);
-		if(bag == null)
-			return EMPTY_BAG;
-		return bag;
+		Bag<Entity> entities = entitiesByGroup.get(group);
+		if(entities == null) {
+			entities = new Bag<>();
+			entitiesByGroup.put(group, entities);
+		}
+		return entities;
 	}
 	
 	/**
 	 * @param e entity
-	 * @return the name of the group that this entity belongs to, null if none.
+	 * @return the groups the entity belongs to, null if none.
 	 */
-	public String getGroupOf(Entity e) {
-		if(e.getId() < groupByEntity.getCapacity()) {
-			return groupByEntity.get(e.getId());
-		}
-		return null;
+	public ImmutableBag<String> getGroups(Entity e) {
+		return groupsByEntity.get(e);
 	}
 	
 	/**
@@ -81,8 +111,8 @@ public class GroupManager extends Manager {
 	 * @param e the entity to check.
 	 * @return true if it is in any group, false if none.
 	 */
-	public boolean isGrouped(Entity e) {
-		return getGroupOf(e) != null;
+	public boolean isInAnyGroup(Entity e) {
+		return getGroups(e) != null;
 	}
 	
 	/**
@@ -91,8 +121,9 @@ public class GroupManager extends Manager {
 	 * @param e the entity to check for.
 	 * @return true if the entity is in the supplied group, false if not.
 	 */
-	public boolean isInGroup(String group, Entity e) {
-		return group != null && group.equalsIgnoreCase(getGroupOf(e));
+	public boolean inInGroup(Entity e, String group) {
+		Bag<String> groups = groupsByEntity.get(e);
+		return groups.contains(group);
 	}
 
 	@Override
@@ -101,17 +132,7 @@ public class GroupManager extends Manager {
 
 	@Override
 	protected void deleted(Entity e) {
-		if(e.getId() < groupByEntity.getCapacity()) {
-			String group = groupByEntity.get(e.getId());
-			if(group != null) {
-				groupByEntity.set(e.getId(), null);
-				
-				Bag<Entity> entities = entitiesByGroup.get(group);
-				if(entities != null) {
-					entities.remove(e);
-				}
-			}
-		}
+		removeFromAllGroups(e);
 	}
 	
 	@Override
