@@ -3,6 +3,7 @@ package com.artemis;
 import java.util.Iterator;
 
 import com.artemis.utils.Bag;
+import com.artemis.utils.ImmutableBag;
 
 public class ComponentManager extends Manager {
 	private Bag<Bag<Component>> componentsByType;
@@ -86,6 +87,19 @@ public class ComponentManager extends Manager {
 			public void remove() {
 			}
 		};
+	}
+	
+	protected Bag<Component> getComponentsFor(Entity e, Bag<Component> fillBag) {
+		for(int a = 0; componentsByType.getCapacity() > a; a++) {
+			Bag<Component> components = componentsByType.get(a);
+			if(components != null && e.getId() < components.size()) {
+				Component component = components.get(e.getId());
+				if(component != null) {
+					fillBag.add(component);
+				}
+			}
+		}
+		return fillBag;
 	}
 
 	

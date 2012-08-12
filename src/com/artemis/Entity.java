@@ -3,6 +3,7 @@ package com.artemis;
 import java.util.Iterator;
 import java.util.UUID;
 
+import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
 /**
@@ -174,6 +175,17 @@ public final class Entity {
 	 */
 	public Iterator<Component> getComponentsIterator() {
 		return componentManager.getComponentsIteratorFor(this);
+	}
+	
+	/**
+	 * Returns a bag of all components this entity has.
+	 * You need to reset the bag yourself if you intend to fill it more than once.
+	 * 
+	 * @param fillBag the bag to put the components into.
+	 * @return the fillBag with the components in.
+	 */
+	public Bag<Component> getComponents(Bag<Component> fillBag) {
+		return componentManager.getComponentsFor(this, fillBag);
 	}
 
 	/**
