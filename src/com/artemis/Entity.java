@@ -1,5 +1,6 @@
 package com.artemis;
 
+import java.util.Iterator;
 import java.util.UUID;
 
 import com.artemis.utils.ImmutableBag;
@@ -22,8 +23,6 @@ public final class Entity {
 	private EntityManager entityManager;
 	private ComponentManager componentManager;
 	
-	private boolean deleted;
-
 	protected Entity(World world, int id) {
 		this.world = world;
 		this.id = id;
@@ -87,31 +86,47 @@ public final class Entity {
 	/**
 	 * Add a component to this entity.
 	 * 
-	 * @param component
-	 *            to add to this entity
+	 * @param component to add to this entity
 	 */
 	public void addComponent(Component component) {
-		componentManager.addComponent(this, component);
+		addComponent(component, ComponentTypeManager.getTypeFor(component.getClass()));
+	}
+	
+	/**
+	 * Faster adding of components into the entity. Not neccessery to use this, but
+	 * in some cases you might need the extra performance.
+	 * 
+	 * @param component the component to add
+	 * @param type of the component
+	 */
+	public void addComponent(Component component, ComponentType type) {
+		componentManager.addComponent(this, type, component);
 	}
 
 	/**
 	 * Removes the component from this entity.
 	 * 
-	 * @param component
-	 *            to remove from this entity.
+	 * @param component to remove from this entity.
 	 */
 	public void removeComponent(Component component) {
-		componentManager.removeComponent(this, component);
+		removeComponent(component.getClass());
 	}
 
 	/**
 	 * Faster removal of components from a entity.
 	 * 
-	 * @param component
-	 *            to remove from this entity.
+	 * @param component to remove from this entity.
 	 */
 	public void removeComponent(ComponentType type) {
 		componentManager.removeComponent(this, type);
+	}
+	
+	/**
+	 * Remove component by its type.
+	 * @param type
+	 */
+	public void removeComponent(Class<? extends Component> type) {
+		removeComponent(ComponentTypeManager.getTypeFor(type));
 	}
 
 	/**
@@ -153,13 +168,12 @@ public final class Entity {
 
 	/**
 	 * Get all components belonging to this entity. WARNING. Use only for
-	 * debugging purposes, it is dead slow. WARNING. The returned bag is only
-	 * valid until this method is called again, then it is overwritten.
+	 * debugging purposes, it is dead slow.
 	 * 
 	 * @return all components of this entity.
 	 */
-	public ImmutableBag<Component> getComponents() {
-		return componentManager.getComponents(this);
+	public Iterator<Component> getComponentsIterator() {
+		return componentManager.getComponentsIteratorFor(this);
 	}
 
 	/**

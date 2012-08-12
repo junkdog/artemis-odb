@@ -1,15 +1,14 @@
 package com.artemis;
 
+import java.util.Iterator;
+
 import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
 
 public class ComponentManager extends Manager {
 	private Bag<Bag<Component>> componentsByType;
-	private Bag<Component> entityComponents; // Added for debug support.
 
 	public ComponentManager() {
 		componentsByType = new Bag<Bag<Component>>(64);
-		entityComponents = new Bag<Component>();
 	}
 
 	private void removeComponentsOfEntity(Entity e) {
@@ -21,9 +20,7 @@ public class ComponentManager extends Manager {
 		}
 	}
 	
-	protected void addComponent(Entity e, Component component) {
-		ComponentType type = ComponentTypeManager.getTypeFor(component.getClass());
-		
+	protected void addComponent(Entity e, ComponentType type, Component component) {
 		if(type.getId() >= componentsByType.getCapacity()) {
 			componentsByType.set(type.getId(), null);
 		}
@@ -38,12 +35,7 @@ public class ComponentManager extends Manager {
 
 		e.addTypeBit(type.getBit());
 	}
-	
-	protected void removeComponent(Entity e, Component component) {
-		ComponentType type = ComponentTypeManager.getTypeFor(component.getClass());
-		removeComponent(e, type);
-	}
-	
+
 	protected void removeComponent(Entity e, ComponentType type) {
 		Bag<Component> components = componentsByType.get(type.getId());
 		components.set(e.getId(), null);
@@ -57,18 +49,43 @@ public class ComponentManager extends Manager {
 		return null;
 	}
 	
-	protected ImmutableBag<Component> getComponents(Entity e) {
-		entityComponents.clear();
-		for(int a = 0; componentsByType.getCapacity() > a; a++) {
-			Bag<Component> components = componentsByType.get(a);
-			if(components != null && e.getId() < components.size()) {
-				Component component = components.get(e.getId());
-				if(component != null) {
-					entityComponents.add(component);
+	protected Iterator<Component> getComponentsIteratorFor(final Entity e) {
+		return new Iterator<Component>() {
+			private int index;
+			
+			@Override
+			public boolean hasNext() {
+				for(int a = index; componentsByType.getCapacity() > a; a++) {
+					Bag<Component> components = componentsByType.get(a);
+					if(components != null && e.getId() < components.size()) {
+						Component component = components.get(e.getId());
+						if(component != null) {
+							return true;
+						}
+					}
 				}
+				return false;
 			}
-		}
-		return entityComponents;
+
+			@Override
+			public Component next() {
+				for(int a = index; componentsByType.getCapacity() > a; a++) {
+					Bag<Component> components = componentsByType.get(a);
+					if(components != null && e.getId() < components.size()) {
+						Component component = components.get(e.getId());
+						if(component != null) {
+							index++;
+							return component;
+						}
+					}
+				}
+				return null;
+			}
+
+			@Override
+			public void remove() {
+			}
+		};
 	}
 
 	
