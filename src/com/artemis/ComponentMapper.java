@@ -15,7 +15,7 @@ public class ComponentMapper<A extends Component> {
 
 	private ComponentMapper(Class<A> type, World world) {
 		componentManager = world.getComponentManager();
-		this.type = ComponentTypeManager.getTypeFor(type);
+		this.type = ComponentType.getTypeFor(type);
 		this.classType = type;
 	}
 

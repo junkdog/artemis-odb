@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.UUID;
 
 import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
 
 /**
  * The entity class. Cannot be instantiated outside the framework, you must
@@ -90,7 +89,7 @@ public final class Entity {
 	 * @param component to add to this entity
 	 */
 	public void addComponent(Component component) {
-		addComponent(component, ComponentTypeManager.getTypeFor(component.getClass()));
+		addComponent(component, ComponentType.getTypeFor(component.getClass()));
 	}
 	
 	/**
@@ -127,7 +126,7 @@ public final class Entity {
 	 * @param type
 	 */
 	public void removeComponent(Class<? extends Component> type) {
-		removeComponent(ComponentTypeManager.getTypeFor(type));
+		removeComponent(ComponentType.getTypeFor(type));
 	}
 
 	/**
@@ -164,7 +163,7 @@ public final class Entity {
 	 * @return component that matches, or null if none is found.
 	 */
 	public <T extends Component> T getComponent(Class<T> type) {
-		return type.cast(getComponent(ComponentTypeManager.getTypeFor(type)));
+		return type.cast(getComponent(ComponentType.getTypeFor(type)));
 	}
 
 	/**

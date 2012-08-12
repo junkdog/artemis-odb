@@ -18,7 +18,7 @@ public class Aspect {
 		Aspect aspect = new Aspect();
 		
 		for (Class<? extends Component> type : types) {
-			aspect.addComponentType(ComponentTypeManager.getTypeFor(type));
+			aspect.addComponentType(ComponentType.getTypeFor(type));
 		}
 		
 		return aspect;

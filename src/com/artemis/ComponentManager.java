@@ -3,7 +3,6 @@ package com.artemis;
 import java.util.Iterator;
 
 import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
 
 public class ComponentManager extends Manager {
 	private Bag<Bag<Component>> componentsByType;
