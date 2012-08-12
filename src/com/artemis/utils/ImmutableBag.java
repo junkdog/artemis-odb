@@ -7,5 +7,7 @@ public interface ImmutableBag<E> {
 	int size();
 
 	boolean isEmpty();
+	
+	boolean contains(E e);
 
 }
