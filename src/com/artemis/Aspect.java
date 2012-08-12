@@ -1,6 +1,7 @@
 package com.artemis;
 
 public class Aspect {
+	private static Aspect empty = new Aspect();
 	
 	private long typeFlags;
 	
@@ -22,6 +23,10 @@ public class Aspect {
 		}
 		
 		return aspect;
+	}
+	
+	public static Aspect getEmpty() {
+		return empty;
 	}
 
 
