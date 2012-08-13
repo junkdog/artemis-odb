@@ -119,7 +119,7 @@ public class EntityManager extends Manager {
 		private int nextAvailableId;
 
 		public IdentifierPool() {
-			ids = new Bag<>();
+			ids = new Bag<Integer>();
 		}
 		
 		public int checkOut() {

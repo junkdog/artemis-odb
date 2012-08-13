@@ -25,8 +25,8 @@ public class TeamManager extends Manager {
 	private Map<String, String> teamByPlayer;
 
 	public TeamManager() {
-		playersByTeam = new HashMap<>();
-		teamByPlayer = new HashMap<>();
+		playersByTeam = new HashMap<String, Bag<String>>();
+		teamByPlayer = new HashMap<String, String>();
 	}
 	
 	public String getTeam(String player) {
@@ -40,7 +40,7 @@ public class TeamManager extends Manager {
 		
 		Bag<String> players = playersByTeam.get(team);
 		if(players == null) {
-			players = new Bag<>();
+			players = new Bag<String>();
 			playersByTeam.put(team, players);
 		}
 		players.add(player);

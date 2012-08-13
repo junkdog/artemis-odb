@@ -22,15 +22,15 @@ public class PlayerManager extends Manager {
 	private Map<String, Bag<Entity>> entitiesByPlayer;
 
 	public PlayerManager() {
-		playerByEntity = new HashMap<>();
-		entitiesByPlayer = new HashMap<>();
+		playerByEntity = new HashMap<Entity, String>();
+		entitiesByPlayer = new HashMap<String, Bag<Entity>>();
 	}
 	
 	public void setPlayer(Entity e, String player) {
 		playerByEntity.put(e, player);
 		Bag<Entity> entities = entitiesByPlayer.get(player);
 		if(entities == null) {
-			entities = new Bag<>();
+			entities = new Bag<Entity>();
 			entitiesByPlayer.put(player, entities);
 		}
 		entities.add(e);
@@ -39,7 +39,7 @@ public class PlayerManager extends Manager {
 	public ImmutableBag<Entity> getEntitiesOfPlayer(String player) {
 		Bag<Entity> entities = entitiesByPlayer.get(player);
 		if(entities == null) {
-			entities = new Bag<>();
+			entities = new Bag<Entity>();
 		}
 		return entities;
 	}

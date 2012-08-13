@@ -32,15 +32,15 @@ public class World {
 	private Bag<EntitySystem> systemsBag;
 
 	public World() {
-		managers = new HashMap<>();
-		managersBag = new Bag<>();
+		managers = new HashMap<Class<? extends Manager>, Manager>();
+		managersBag = new Bag<Manager>();
 		
-		systems = new HashMap<>();
-		systemsBag = new Bag<>();
+		systems = new HashMap<Class<?>, EntitySystem>();
+		systemsBag = new Bag<EntitySystem>();
 
-		added = new Bag<>();
-		changed = new Bag<>();
-		deleted = new Bag<>();
+		added = new Bag<Entity>();
+		changed = new Bag<Entity>();
+		deleted = new Bag<Entity>();
 
 		em = new EntityManager();
 		setManager(em);
