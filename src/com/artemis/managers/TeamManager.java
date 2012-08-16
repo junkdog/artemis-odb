@@ -29,6 +29,10 @@ public class TeamManager extends Manager {
 		teamByPlayer = new HashMap<String, String>();
 	}
 	
+	@Override
+	protected void initialize() {
+	}
+	
 	public String getTeam(String player) {
 		return teamByPlayer.get(player);
 	}
@@ -58,23 +62,6 @@ public class TeamManager extends Manager {
 				players.remove(player);
 			}
 		}
-	}
-
-	
-	@Override
-	protected void changed(Entity e) {
-	}
-
-	@Override
-	protected void added(Entity e) {
-	}
-
-	@Override
-	protected void deleted(Entity e) {
-	}
-
-	@Override
-	protected void initialize() {
 	}
 
 }

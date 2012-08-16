@@ -127,16 +127,8 @@ public class GroupManager extends Manager {
 	}
 
 	@Override
-	protected void added(Entity e) {
-	}
-
-	@Override
-	protected void deleted(Entity e) {
+	public void deleted(Entity e) {
 		removeFromAllGroups(e);
 	}
 	
-	@Override
-	protected void changed(Entity e) {
-	}
-
 }

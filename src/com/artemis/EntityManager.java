@@ -4,6 +4,7 @@ import com.artemis.utils.Bag;
 
 public class EntityManager extends Manager {
 	private Bag<Entity> entities;
+	private Bag<Entity> disabled;
 	
 	private int active;
 	private long added;
@@ -14,6 +15,7 @@ public class EntityManager extends Manager {
 	
 	public EntityManager() {
 		entities = new Bag<Entity>();
+		disabled = new Bag<Entity>();
 		identifierPool = new IdentifierPool();
 	}
 	
@@ -23,25 +25,35 @@ public class EntityManager extends Manager {
 
 	protected Entity createEntityInstance() {
 		Entity e = new Entity(world, identifierPool.checkOut());
-		active++;
 		created++;
 		return e;
 	}
 	
 	@Override
-	protected void added(Entity e) {
+	public void added(Entity e) {
 		active++;
 		added++;
 		entities.set(e.getId(), e);
 	}
 	
 	@Override
-	protected void changed(Entity e) {
+	public void enabled(Entity e) {
+		if(disabled.isIndexWithinBounds(e.getId()) && disabled.get(e.getId()) != null) {
+			disabled.set(e.getId(), null);
+		}
 	}
-
+	
 	@Override
-	protected void deleted(Entity e) {
+	public void disabled(Entity e) {
+		disabled.set(e.getId(), e);
+	}
+	
+	@Override
+	public void deleted(Entity e) {
 		entities.set(e.getId(), null);
+		if(disabled.isIndexWithinBounds(e.getId()) && disabled.get(e.getId()) != null) {
+			disabled.set(e.getId(), null);
+		}
 		
 		e.getComponentBits().clear();
 
@@ -50,8 +62,6 @@ public class EntityManager extends Manager {
 		active--;
 		deleted++;
 	}
-
-	
 
 
 	/**
@@ -63,6 +73,16 @@ public class EntityManager extends Manager {
 	 */
 	public boolean isActive(int entityId) {
 		return entities.get(entityId) != null;
+	}
+	
+	/**
+	 * Check if the specified entityId is enabled.
+	 * 
+	 * @param entityId
+	 * @return true if the entity is enabled, false if it is disabled.
+	 */
+	public boolean isEnabled(int entityId) {
+		return disabled.get(entityId) == null;
 	}
 	
 	/**
@@ -133,4 +153,5 @@ public class EntityManager extends Manager {
 			ids.add(id);
 		}
 	}
+
 }

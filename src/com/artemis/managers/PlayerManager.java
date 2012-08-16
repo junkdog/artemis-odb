@@ -58,22 +58,13 @@ public class PlayerManager extends Manager {
 		return playerByEntity.get(e);
 	}
 
-	
-	@Override
-	protected void changed(Entity e) {
-	}
-
-	@Override
-	protected void added(Entity e) {
-	}
-
-	@Override
-	protected void deleted(Entity e) {
-		removeFromPlayer(e);
-	}
-
 	@Override
 	protected void initialize() {
+	}
+
+	@Override
+	public void deleted(Entity e) {
+		removeFromPlayer(e);
 	}
 
 }

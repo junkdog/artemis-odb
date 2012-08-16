@@ -46,15 +46,7 @@ public class TagManager extends Manager {
 	}
 	
 	@Override
-	protected void changed(Entity e) {
-	}
-
-	@Override
-	protected void added(Entity e) {
-	}
-
-	@Override
-	protected void deleted(Entity e) {
+	public void deleted(Entity e) {
 		String removedTag = tagsByEntity.remove(e);
 		if(removedTag != null) {
 			entitiesByTag.remove(removedTag);

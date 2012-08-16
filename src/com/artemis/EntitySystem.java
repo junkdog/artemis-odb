@@ -14,7 +14,7 @@ import com.artemis.utils.ImmutableBag;
  * @author Arni Arent
  *
  */
-public abstract class EntitySystem {
+public abstract class EntitySystem implements EntityObserver {
 	private final int systemIndex;
 
 	private BitSet systemAspect;
@@ -74,7 +74,7 @@ public abstract class EntitySystem {
 	 * Called if the system has received a entity it is interested in, e.g. created or a component was added to it.
 	 * @param e the entity that was added to this system.
 	 */
-	protected void added(Entity e) {};
+	protected void inserted(Entity e) {};
 
 	/**
 	 * Called if a entity was removed from this system, e.g. deleted or had one of it's components removed.
@@ -99,15 +99,54 @@ public abstract class EntitySystem {
 		}
 
 		if (systemIsInterestedInEntity && !systemContainsEntity && !systemAspect.isEmpty()) {
-			actives.add(e);
-			e.getSystemBits().set(systemIndex);
-			added(e);
+			insertToSystem(e);
 		} else if (!systemIsInterestedInEntity && systemContainsEntity && !systemAspect.isEmpty()) {
-			actives.remove(e);
-			e.getSystemBits().clear(systemIndex);
-			removed(e);
+			removeFromSystem(e);
 		}
 	}
+
+	private void removeFromSystem(Entity e) {
+		actives.remove(e);
+		e.getSystemBits().clear(systemIndex);
+		removed(e);
+	}
+
+	private void insertToSystem(Entity e) {
+		actives.add(e);
+		e.getSystemBits().set(systemIndex);
+		inserted(e);
+	}
+	
+	
+	@Override
+	public final void added(Entity e) {
+		check(e);
+	}
+	
+	@Override
+	public final void changed(Entity e) {
+		check(e);
+	}
+	
+	@Override
+	public final void deleted(Entity e) {
+		if(e.getSystemBits().get(systemIndex)) {
+			removeFromSystem(e);
+		}
+	}
+	
+	@Override
+	public final void disabled(Entity e) {
+		if(e.getSystemBits().get(systemIndex)) {
+			removeFromSystem(e);
+		}
+	}
+	
+	@Override
+	public final void enabled(Entity e) {
+		check(e);
+	}
+	
 
 	protected final void setWorld(World world) {
 		this.world = world;

@@ -3,7 +3,7 @@ package com.artemis;
 import java.util.BitSet;
 
 public class Aspect {
-	private static BitSet empty = new BitSet();
+	private static Aspect empty = new Aspect(new BitSet());
 	
 	private BitSet bitSet;
 	
@@ -25,7 +25,7 @@ public class Aspect {
 		return new Aspect(set);
 	}
 	
-	public static BitSet getEmpty() {
+	public static Aspect getEmpty() {
 		return empty;
 	}
 

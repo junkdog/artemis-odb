@@ -25,6 +25,8 @@ public class World {
 	private Bag<Entity> added;
 	private Bag<Entity> changed;
 	private Bag<Entity> deleted;
+	private Bag<Entity> enable;
+	private Bag<Entity> disable;
 
 	private Map<Class<? extends Manager>, Manager> managers;
 	private Bag<Manager> managersBag;
@@ -42,6 +44,8 @@ public class World {
 		added = new Bag<Entity>();
 		changed = new Bag<Entity>();
 		deleted = new Bag<Entity>();
+		enable = new Bag<Entity>();
+		disable = new Bag<Entity>();
 
 		em = new EntityManager();
 		setManager(em);
@@ -193,6 +197,21 @@ public class World {
 		}
 	}
 
+	/**
+	 * (Re)enable the entity in the world, after it having being disabled.
+	 * Won't do anything unless it was already disabled.
+	 */
+	public void enable(Entity e) {
+		enable.add(e);
+	}
+
+	/**
+	 * Disable the entity from being processed. Won't delete it, it will
+	 * continue to exist but won't get processed.
+	 */
+	public void disable(Entity e) {
+		disable.add(e);
+	}
 
 
 	/**
@@ -263,9 +282,15 @@ public class World {
 		systemsBag.remove(system);
 	}
 	
-	private void notifySystems(Entity e) {
+	private void notifySystems(Performer performer, Entity e) {
 		for(int i = 0, s=systemsBag.size(); s > i; i++) {
-			systemsBag.get(i).check(e);
+			performer.perform(systemsBag.get(i), e);
+		}
+	}
+
+	private void notifyManagers(Performer performer, Entity e) {
+		for(int a = 0; managersBag.size() > a; a++) {
+			performer.perform(managersBag.get(a), e);
 		}
 	}
 	
@@ -288,15 +313,14 @@ public class World {
 	private void check(Bag<Entity> entities, Performer performer) {
 		if (!entities.isEmpty()) {
 			for (int i = 0; entities.size() > i; i++) {
-				for(int a = 0; managersBag.size() > a; a++) {
-					Entity e = entities.get(i);
-					performer.perform(managersBag.get(a), e);
-					notifySystems(e);
-				}
+				Entity e = entities.get(i);
+				notifyManagers(performer, e);
+				notifySystems(performer, e);
 			}
 			entities.clear();
 		}
 	}
+
 	
 	/**
 	 * Process all non-passive systems.
@@ -304,20 +328,36 @@ public class World {
 	public void process() {
 		check(added, new Performer() {
 			@Override
-			public void perform(Manager manager, Entity e) {
-				manager.added(e);
+			public void perform(EntityObserver observer, Entity e) {
+				observer.added(e);
 			}
 		});
+		
 		check(changed, new Performer() {
 			@Override
-			public void perform(Manager manager, Entity e) {
-				manager.changed(e);
+			public void perform(EntityObserver observer, Entity e) {
+				observer.changed(e);
 			}
 		});
+		
+		check(disable, new Performer() {
+			@Override
+			public void perform(EntityObserver observer, Entity e) {
+				observer.disabled(e);
+			}
+		});
+		
+		check(enable, new Performer() {
+			@Override
+			public void perform(EntityObserver observer, Entity e) {
+				observer.enabled(e);
+			}
+		});
+		
 		check(deleted, new Performer() {
 			@Override
-			public void perform(Manager manager, Entity e) {
-				manager.deleted(e);
+			public void perform(EntityObserver observer, Entity e) {
+				observer.deleted(e);
 			}
 		});
 		
@@ -345,7 +385,8 @@ public class World {
 	 * Only used internally to maintain clean code.
 	 */
 	private interface Performer {
-		void perform(Manager manager, Entity e);
+		void perform(EntityObserver observer, Entity e);
 	}
+
 
 }

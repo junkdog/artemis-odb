@@ -10,6 +10,10 @@ public class ComponentManager extends Manager {
 	public ComponentManager() {
 		componentsByType = new Bag<Bag<Component>>(64);
 	}
+	
+	@Override
+	protected void initialize() {
+	}
 
 	private void removeComponentsOfEntity(Entity e) {
 		for(int a = 0; componentsByType.size() > a; a++) {
@@ -21,7 +25,7 @@ public class ComponentManager extends Manager {
 	}
 	
 	protected void addComponent(Entity e, ComponentType type, Component component) {
-		if(type.getIndex() >= componentsByType.getCapacity()) {
+		if(!componentsByType.isIndexWithinBounds(type.getIndex())) {
 			componentsByType.set(type.getIndex(), null);
 		}
 		
@@ -44,7 +48,7 @@ public class ComponentManager extends Manager {
 	
 	protected Component getComponent(Entity e, ComponentType type) {
 		Bag<Component> bag = componentsByType.get(type.getIndex());
-		if(bag != null && e.getId() < bag.getCapacity())
+		if(bag != null && bag.isIndexWithinBounds(e.getId()))
 			return bag.get(e.getId());
 		return null;
 	}
@@ -102,21 +106,8 @@ public class ComponentManager extends Manager {
 	}
 
 	
-	
 	@Override
-	protected void initialize() {
-	}
-	
-	@Override
-	protected void added(Entity e) {
-	}
-	
-	@Override
-	protected void changed(Entity e) {
-	}
-
-	@Override
-	protected void deleted(Entity e) {
+	public void deleted(Entity e) {
 		removeComponentsOfEntity(e);
 	}
 

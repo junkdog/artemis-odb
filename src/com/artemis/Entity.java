@@ -124,14 +124,26 @@ public final class Entity {
 	}
 
 	/**
-	 * Checks if the entity has been deleted from somewhere.
+	 * Checks if the entity has been added to the world and has not been deleted from it.
+	 * If the entity has been disabled this will still return true.
 	 * 
 	 * @return if it's active.
 	 */
 	public boolean isActive() {
 		return entityManager.isActive(id);
 	}
-
+	
+	/**
+	 * Will check if the entity is enabled in the world.
+	 * By default all entities that are added to world are enabled,
+	 * this will only return false if an entity has been explicitly disabled.
+	 * 
+	 * @return if it's enabled
+	 */
+	public boolean isEnabled() {
+		return entityManager.isEnabled(id);
+	}
+	
 	/**
 	 * This is the preferred method to use when retrieving a component from a
 	 * entity. It will provide good performance.
@@ -205,8 +217,30 @@ public final class Entity {
 		world.deleteEntity(this);
 	}
 	
+	/**
+	 * (Re)enable the entity in the world, after it having being disabled.
+	 * Won't do anything unless it was already disabled.
+	 */
+	public void enable() {
+		world.enable(this);
+	}
+	
+	/**
+	 * Disable the entity from being processed. Won't delete it, it will
+	 * continue to exist but won't get processed.
+	 */
+	public void disable() {
+		world.disable(this);
+	}
+	
+	/**
+	 * Get the UUID for this entity.
+	 * This UUID is unique per entity (re-used entities get a new UUID).
+	 * @return uuid instance for this entity.
+	 */
 	public UUID getUuid() {
 		return uuid;
 	}
+
 
 }

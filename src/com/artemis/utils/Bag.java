@@ -154,6 +154,16 @@ public class Bag<E> implements ImmutableBag<E> {
 	public int getCapacity() {
 		return data.length;
 	}
+	
+	/**
+	 * Checks if the internal storage supports this index.
+	 * 
+	 * @param index
+	 * @return
+	 */
+	public boolean isIndexWithinBounds(int index) {
+		return index < getCapacity();
+	}
 
 	/**
 	 * Returns true if this list contains no elements.
