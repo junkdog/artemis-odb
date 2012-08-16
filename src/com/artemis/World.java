@@ -245,7 +245,7 @@ public class World {
 	
 	private void notifySystems(Entity e) {
 		for(int i = 0, s=systemsBag.size(); s > i; i++) {
-			systemsBag.get(i).change(e);
+			systemsBag.get(i).check(e);
 		}
 	}
 	

@@ -1,5 +1,6 @@
 package com.artemis;
 
+import java.util.BitSet;
 import java.util.HashMap;
 
 import com.artemis.utils.Bag;
@@ -14,10 +15,10 @@ import com.artemis.utils.ImmutableBag;
  *
  */
 public abstract class EntitySystem {
-	private long systemBit;
+	private final int systemIndex;
 
-	private long typeFlags;
-
+	private BitSet systemAspect;
+	
 	protected World world;
 
 	private Bag<Entity> actives;
@@ -26,12 +27,8 @@ public abstract class EntitySystem {
 	
 	protected EntitySystem(Aspect aspect) {
 		actives = new Bag<Entity>();
-		typeFlags = aspect.getTypeFlags();
-		systemBit = SystemBitManager.getBitFor(this.getClass());
-	}
-	
-	protected void setSystemBit(long bit) {
-		this.systemBit = bit;
+		systemAspect = aspect.getBitSet();
+		systemIndex = SystemIndexManager.getIndexFor(this.getClass());
 	}
 	
 	/**
@@ -85,23 +82,31 @@ public abstract class EntitySystem {
 	 */
 	protected void removed(Entity e) {};
 
-	protected final void change(Entity e) {
-		boolean contains = (systemBit & e.getSystemBits()) == systemBit;
-		boolean interest = (typeFlags & e.getTypeBits()) == typeFlags;
-
-		if (interest && !contains && typeFlags > 0) {
-			actives.add(e);
-			e.addSystemBit(systemBit);
-			added(e);
-		} else if (!interest && contains && typeFlags > 0) {
-			remove(e);
+	/**
+	 * Will check if the entity is of interest to this system.
+	 * @param e entity to check
+	 */
+	protected final void check(Entity e) {
+		boolean systemContainsEntity = e.getSystemBits().get(systemIndex);
+		boolean systemIsInterestedInEntity = true;
+		
+		BitSet componentBits = e.getComponentBits();
+		for (int i = systemAspect.nextSetBit(0); i >= 0; i = systemAspect.nextSetBit(i+1)) {
+			if(!componentBits.get(i)) {
+				systemIsInterestedInEntity = false;
+				break;
+			}
 		}
-	}
 
-	private void remove(Entity e) {
-		actives.remove(e);
-		e.removeSystemBit(systemBit);
-		removed(e);
+		if (systemIsInterestedInEntity && !systemContainsEntity && !systemAspect.isEmpty()) {
+			actives.add(e);
+			e.getSystemBits().set(systemIndex);
+			added(e);
+		} else if (!systemIsInterestedInEntity && systemContainsEntity && !systemAspect.isEmpty()) {
+			actives.remove(e);
+			e.getSystemBits().clear(systemIndex);
+			removed(e);
+		}
 	}
 
 	protected final void setWorld(World world) {
@@ -122,20 +127,17 @@ public abstract class EntitySystem {
 	 * Used to generate a unique bit for each system.
 	 * Only used internally in EntitySystem.
 	 */
-	private static class SystemBitManager {
-		private static int POS = 0;
-		private static HashMap<Class<? extends EntitySystem>, Long> systemBits = new HashMap<Class<? extends EntitySystem>, Long>();
+	private static class SystemIndexManager {
+		private static int INDEX = 0;
+		private static HashMap<Class<? extends EntitySystem>, Integer> indices = new HashMap<Class<? extends EntitySystem>, Integer>();
 		
-		protected static final long getBitFor(Class<? extends EntitySystem> es){
-			Long bit = systemBits.get(es);
-			
-			if(bit == null){
-				bit = 1L << POS;
-				POS++;
-				systemBits.put(es, bit);
+		private static int getIndexFor(Class<? extends EntitySystem> es){
+			Integer index = indices.get(es);
+			if(index == null) {
+				index = INDEX++;
+				indices.put(es, index);
 			}
-			
-			return bit;
+			return index;
 		}
 	}
 

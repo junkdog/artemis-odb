@@ -1,33 +1,32 @@
 package com.artemis;
 
+import java.util.BitSet;
+
 public class Aspect {
-	private static Aspect empty = new Aspect();
+	private static BitSet empty = new BitSet();
 	
-	private long typeFlags;
+	private BitSet bitSet;
 	
-	public long getTypeFlags() {
-		return typeFlags;
+	private Aspect(BitSet set) {
+		this.bitSet = set;
 	}
 	
-	private void addComponentType(ComponentType ct) {
-		typeFlags |= ct.getBit();
+	public BitSet getBitSet() {
+		return bitSet;
 	}
 	
-	
-	@SafeVarargs
 	public static Aspect getAspectFor(Class<? extends Component>... types) {
-		Aspect aspect = new Aspect();
+		BitSet set = new BitSet();
 		
 		for (Class<? extends Component> type : types) {
-			aspect.addComponentType(ComponentType.getTypeFor(type));
+			set.set(ComponentType.getIndexFor(type));
 		}
 		
-		return aspect;
+		return new Aspect(set);
 	}
 	
-	public static Aspect getEmpty() {
+	public static BitSet getEmpty() {
 		return empty;
 	}
-
 
 }

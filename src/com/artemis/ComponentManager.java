@@ -21,29 +21,29 @@ public class ComponentManager extends Manager {
 	}
 	
 	protected void addComponent(Entity e, ComponentType type, Component component) {
-		if(type.getId() >= componentsByType.getCapacity()) {
-			componentsByType.set(type.getId(), null);
+		if(type.getIndex() >= componentsByType.getCapacity()) {
+			componentsByType.set(type.getIndex(), null);
 		}
 		
-		Bag<Component> components = componentsByType.get(type.getId());
+		Bag<Component> components = componentsByType.get(type.getIndex());
 		if(components == null) {
 			components = new Bag<Component>();
-			componentsByType.set(type.getId(), components);
+			componentsByType.set(type.getIndex(), components);
 		}
 		
 		components.set(e.getId(), component);
 
-		e.addTypeBit(type.getBit());
+		e.getComponentBits().set(type.getIndex());
 	}
 
 	protected void removeComponent(Entity e, ComponentType type) {
-		Bag<Component> components = componentsByType.get(type.getId());
+		Bag<Component> components = componentsByType.get(type.getIndex());
 		components.set(e.getId(), null);
-		e.removeTypeBit(type.getBit());
+		e.getComponentBits().clear(type.getIndex());
 	}
 	
 	protected Component getComponent(Entity e, ComponentType type) {
-		Bag<Component> bag = componentsByType.get(type.getId());
+		Bag<Component> bag = componentsByType.get(type.getIndex());
 		if(bag != null && e.getId() < bag.getCapacity())
 			return bag.get(e.getId());
 		return null;

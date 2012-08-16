@@ -43,7 +43,7 @@ public class EntityManager extends Manager {
 	protected void deleted(Entity e) {
 		entities.set(e.getId(), null);
 		
-		e.setTypeBits(0);
+		e.getComponentBits().clear();
 
 		identifierPool.checkIn(e.getId());
 		

@@ -1,5 +1,6 @@
 package com.artemis;
 
+import java.util.BitSet;
 import java.util.Iterator;
 import java.util.UUID;
 
@@ -13,11 +14,11 @@ import com.artemis.utils.Bag;
  * 
  */
 public final class Entity {
-	private UUID uuid = UUID.randomUUID();
+	private UUID uuid;
 
 	private int id;
-	private long typeBits;
-	private long systemBits;
+	private BitSet componentBits;
+	private BitSet systemBits;
 
 	private World world;
 	private EntityManager entityManager;
@@ -28,6 +29,10 @@ public final class Entity {
 		this.id = id;
 		this.entityManager = world.getEntityManager();
 		this.componentManager = world.getComponentManager();
+		systemBits = new BitSet();
+		componentBits = new BitSet();
+		
+		reset();
 	}
 
 	/**
@@ -41,41 +46,30 @@ public final class Entity {
 		return id;
 	}
 
-	protected long getTypeBits() {
-		return typeBits;
+	/**
+	 * Returns a BitSet instance containing bits of the components the entity possesses.
+	 * @return
+	 */
+	protected BitSet getComponentBits() {
+		return componentBits;
 	}
-
-	protected void addTypeBit(long bit) {
-		typeBits |= bit;
-	}
-
-	protected void removeTypeBit(long bit) {
-		typeBits &= ~bit;
-	}
-
-	protected long getSystemBits() {
+	
+	/**
+	 * Returns a BitSet instance containing bits of the components the entity possesses.
+	 * @return
+	 */
+	protected BitSet getSystemBits() {
 		return systemBits;
 	}
 
-	protected void addSystemBit(long bit) {
-		systemBits |= bit;
-	}
-
-	protected void removeSystemBit(long bit) {
-		systemBits &= ~bit;
-	}
-
-	protected void setSystemBits(long systemBits) {
-		this.systemBits = systemBits;
-	}
-
-	protected void setTypeBits(long typeBits) {
-		this.typeBits = typeBits;
-	}
-
+	/**
+	 * Make entity ready for re-use.
+	 * Will generate a new uuid for the entity.
+	 */
 	protected void reset() {
-		systemBits = 0;
-		typeBits = 0;
+		systemBits.clear();
+		componentBits.clear();
+		uuid = UUID.randomUUID();
 	}
 
 	@Override
