@@ -97,10 +97,11 @@ public class World {
 	 * 
 	 * @param manager to be added
 	 */
-	public void setManager(Manager manager) {
+	public <T extends Manager> T setManager(T manager) {
 		managers.put(manager.getClass(), manager);
 		managersBag.add(manager);
 		manager.setWorld(this);
+		return manager;
 	}
 
 	/**
@@ -252,7 +253,7 @@ public class World {
 	 * @param system the system to add.
 	 * @return the added system.
 	 */
-	public EntitySystem setSystem(EntitySystem system) {
+	public <T extends EntitySystem> T setSystem(T system) {
 		return setSystem(system, false);
 	}
 
@@ -263,7 +264,7 @@ public class World {
 	 * @param passive wether or not this system will be processed by World.process()
 	 * @return the added system.
 	 */
-	public EntitySystem setSystem(EntitySystem system, boolean passive) {
+	public <T extends EntitySystem> T setSystem(T system, boolean passive) {
 		system.setWorld(this);
 		system.setPassive(passive);
 		
