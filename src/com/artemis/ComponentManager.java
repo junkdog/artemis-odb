@@ -1,7 +1,6 @@
 package com.artemis;
 
 import java.util.BitSet;
-import java.util.Iterator;
 
 import com.artemis.utils.Bag;
 
@@ -18,10 +17,9 @@ public class ComponentManager extends Manager {
 
 	private void removeComponentsOfEntity(Entity e) {
 		BitSet componentBits = e.getComponentBits();
-		for(int a = 0; componentsByType.size() > a; a++) {
-			if(componentBits.get(a)) {
-				componentsByType.get(a).set(e.getId(), null);
-			}
+		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
+			componentsByType.get(i).set(e.getId(), null);
+			e.getComponentBits().clear(i);
 		}
 	}
 	
@@ -40,67 +38,26 @@ public class ComponentManager extends Manager {
 	}
 
 	protected void removeComponent(Entity e, ComponentType type) {
-		Bag<Component> components = componentsByType.get(type.getIndex());
-		components.set(e.getId(), null);
-		e.getComponentBits().clear(type.getIndex());
+		if(e.getComponentBits().get(type.getIndex())) {
+			componentsByType.get(type.getIndex()).set(e.getId(), null);
+			e.getComponentBits().clear(type.getIndex());
+		}
 	}
 	
 	protected Component getComponent(Entity e, ComponentType type) {
-		Bag<Component> bag = componentsByType.get(type.getIndex());
-		if(bag != null && bag.isIndexWithinBounds(e.getId()))
-			return bag.get(e.getId());
+		if(e.getComponentBits().get(type.getIndex())) {
+			return componentsByType.get(type.getIndex()).get(e.getId());
+		}
 		return null;
 	}
 	
-	protected Iterator<Component> getComponentsIteratorFor(final Entity e) {
-		return new Iterator<Component>() {
-			private int index;
-			
-			@Override
-			public boolean hasNext() {
-				for(int a = index; componentsByType.getCapacity() > a; a++) {
-					Bag<Component> components = componentsByType.get(a);
-					if(components != null && e.getId() < components.size()) {
-						Component component = components.get(e.getId());
-						if(component != null) {
-							return true;
-						}
-					}
-				}
-				return false;
-			}
+	public Bag<Component> getComponentsFor(Entity e, Bag<Component> fillBag) {
+		BitSet componentBits = e.getComponentBits();
 
-			@Override
-			public Component next() {
-				for(int a = index; componentsByType.getCapacity() > a; a++) {
-					Bag<Component> components = componentsByType.get(a);
-					if(components != null && e.getId() < components.size()) {
-						Component component = components.get(e.getId());
-						if(component != null) {
-							index++;
-							return component;
-						}
-					}
-				}
-				return null;
-			}
-
-			@Override
-			public void remove() {
-			}
-		};
-	}
-	
-	protected Bag<Component> getComponentsFor(Entity e, Bag<Component> fillBag) {
-		for(int a = 0; componentsByType.getCapacity() > a; a++) {
-			Bag<Component> components = componentsByType.get(a);
-			if(components != null && e.getId() < components.size()) {
-				Component component = components.get(e.getId());
-				if(component != null) {
-					fillBag.add(component);
-				}
-			}
+		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
+			fillBag.add(componentsByType.get(i).get(e.getId()));
 		}
+		
 		return fillBag;
 	}
 

@@ -1,7 +1,6 @@
 package com.artemis;
 
 import java.util.BitSet;
-import java.util.Iterator;
 import java.util.UUID;
 
 import com.artemis.utils.Bag;
@@ -172,16 +171,6 @@ public final class Entity {
 		return type.cast(getComponent(ComponentType.getTypeFor(type)));
 	}
 
-	/**
-	 * Get all components belonging to this entity. WARNING. Use only for
-	 * debugging purposes, it is dead slow.
-	 * 
-	 * @return all components of this entity.
-	 */
-	public Iterator<Component> getComponentsIterator() {
-		return componentManager.getComponentsIteratorFor(this);
-	}
-	
 	/**
 	 * Returns a bag of all components this entity has.
 	 * You need to reset the bag yourself if you intend to fill it more than once.
