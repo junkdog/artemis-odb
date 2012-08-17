@@ -47,11 +47,11 @@ public class World {
 		enable = new Bag<Entity>();
 		disable = new Bag<Entity>();
 
-		em = new EntityManager();
-		setManager(em);
-		
 		cm = new ComponentManager();
 		setManager(cm);
+		
+		em = new EntityManager();
+		setManager(em);
 	}
 
 	

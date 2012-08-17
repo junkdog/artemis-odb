@@ -1,5 +1,6 @@
 package com.artemis;
 
+import java.util.BitSet;
 import java.util.Iterator;
 
 import com.artemis.utils.Bag;
@@ -8,7 +9,7 @@ public class ComponentManager extends Manager {
 	private Bag<Bag<Component>> componentsByType;
 
 	public ComponentManager() {
-		componentsByType = new Bag<Bag<Component>>(64);
+		componentsByType = new Bag<Bag<Component>>();
 	}
 	
 	@Override
@@ -16,18 +17,16 @@ public class ComponentManager extends Manager {
 	}
 
 	private void removeComponentsOfEntity(Entity e) {
+		BitSet componentBits = e.getComponentBits();
 		for(int a = 0; componentsByType.size() > a; a++) {
-			Bag<Component> components = componentsByType.get(a);
-			if(components != null && e.getId() < components.size()) {
-				components.set(e.getId(), null);
+			if(componentBits.get(a)) {
+				componentsByType.get(a).set(e.getId(), null);
 			}
 		}
 	}
 	
 	protected void addComponent(Entity e, ComponentType type, Component component) {
-		if(!componentsByType.isIndexWithinBounds(type.getIndex())) {
-			componentsByType.set(type.getIndex(), null);
-		}
+		componentsByType.ensureCapacity(type.getIndex());
 		
 		Bag<Component> components = componentsByType.get(type.getIndex());
 		if(components == null) {

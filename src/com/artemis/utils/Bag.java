@@ -215,6 +215,12 @@ public class Bag<E> implements ImmutableBag<E> {
 		data = (E[])new Object[newCapacity];
 		System.arraycopy(oldData, 0, data, 0, oldData.length);
 	}
+	
+	public void ensureCapacity(int index) {
+		if(index >= data.length) {
+			grow(index*2);
+		}
+	}
 
 	/**
 	 * Removes all of the elements from this bag. The bag will be empty after
@@ -238,5 +244,5 @@ public class Bag<E> implements ImmutableBag<E> {
 			add(items.get(i));
 		}
 	}
-	
+
 }
