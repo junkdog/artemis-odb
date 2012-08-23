@@ -1,8 +1,11 @@
 package com.artemis;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.artemis.annotations.Mapper;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
@@ -64,6 +67,7 @@ public class World {
 		}
 		
 		for (int i = 0; i < systemsBag.size(); i++) {
+			ComponentMapperInitHelper.config(systemsBag.get(i), this);
 			systemsBag.get(i).initialize();
 		}
 	}
@@ -389,5 +393,28 @@ public class World {
 		void perform(EntityObserver observer, Entity e);
 	}
 
+	
+	
+	private static class ComponentMapperInitHelper {
+
+		public static void config(Object target, World world) {
+			try {
+				Class<?> clazz = target.getClass();
+				for (Field field : clazz.getDeclaredFields()) {
+					Mapper annotation = field.getAnnotation(Mapper.class);
+					if (annotation != null && Mapper.class.isAssignableFrom(Mapper.class)) {
+						ParameterizedType genericType = (ParameterizedType) field.getGenericType();
+						Class componentType = (Class) genericType.getActualTypeArguments()[0];
+
+						field.setAccessible(true);
+						field.set(target, world.getMapper(componentType));
+					}
+				}
+			} catch (Exception e) {
+				throw new RuntimeException("Error while setting component mappers", e);
+			}
+		}
+
+	}
 
 }
