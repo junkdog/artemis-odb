@@ -7,6 +7,10 @@ public abstract class Timer {
 	private int acc;
 	private boolean done;
 	private boolean stopped;
+	
+	public Timer(int delay) {
+		this(delay, false);
+	}
 
 	public Timer(int delay, boolean repeat) {
 		this.delay = delay;
