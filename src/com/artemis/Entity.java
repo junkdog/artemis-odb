@@ -231,5 +231,13 @@ public final class Entity {
 		return uuid;
 	}
 
+	/**
+	 * Returns the world this entity belongs to.
+	 * @return world of entity.
+	 */
+	public World getWorld() {
+		return world;
+	}
+
 
 }
