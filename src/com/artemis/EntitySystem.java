@@ -19,6 +19,8 @@ public abstract class EntitySystem implements EntityObserver {
 
 	private BitSet systemAspect;
 	
+	private BitSet exclusionAspect;
+
 	protected World world;
 
 	private Bag<Entity> actives;
@@ -28,6 +30,7 @@ public abstract class EntitySystem implements EntityObserver {
 	protected EntitySystem(Aspect aspect) {
 		actives = new Bag<Entity>();
 		systemAspect = aspect.getBitSet();
+		exclusionAspect = aspect.getExclusionSet();
 		systemIndex = SystemIndexManager.getIndexFor(this.getClass());
 	}
 	
@@ -95,6 +98,15 @@ public abstract class EntitySystem implements EntityObserver {
 			if(!componentBits.get(i)) {
 				systemIsInterestedInEntity = false;
 				break;
+			}
+		}
+		
+		if(!exclusionAspect.isEmpty()) {
+			for (int i = exclusionAspect.nextSetBit(0); i >= 0; i = exclusionAspect.nextSetBit(i+1)) {
+				if(componentBits.get(i)) {
+					systemIsInterestedInEntity = false;
+					break;
+				}
 			}
 		}
 
