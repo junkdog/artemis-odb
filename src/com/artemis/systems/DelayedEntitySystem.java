@@ -35,7 +35,7 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 	private boolean running;
 	private int acc;
 
-	protected DelayedEntitySystem(Aspect aspect) {
+	public DelayedEntitySystem(Aspect aspect) {
 		super(aspect);
 	}
 

@@ -6,7 +6,7 @@ import com.artemis.utils.ImmutableBag;
 
 public abstract class DelayedEntityProcessingSystem extends DelayedEntitySystem {
 	
-	protected DelayedEntityProcessingSystem(Aspect aspect) {
+	public DelayedEntityProcessingSystem(Aspect aspect) {
 		super(aspect);
 	}
 

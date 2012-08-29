@@ -14,7 +14,7 @@ import com.artemis.utils.ImmutableBag;
  */
 public abstract class EntityProcessingSystem extends EntitySystem {
 	
-	protected EntityProcessingSystem(Aspect aspect) {
+	public EntityProcessingSystem(Aspect aspect) {
 		super(aspect);
 	}
 
