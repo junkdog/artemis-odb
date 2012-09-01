@@ -27,7 +27,7 @@ public abstract class EntitySystem implements EntityObserver {
 	
 	private boolean passive;
 	
-	protected EntitySystem(Aspect aspect) {
+	public EntitySystem(Aspect aspect) {
 		actives = new Bag<Entity>();
 		systemAspect = aspect.getBitSet();
 		exclusionAspect = aspect.getExclusionSet();
