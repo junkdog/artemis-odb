@@ -54,8 +54,6 @@ public class EntityManager extends Manager {
 		
 		disabled.clear(e.getId());
 		
-		e.getComponentBits().clear();
-
 		identifierPool.checkIn(e.getId());
 		
 		active--;

@@ -6,9 +6,11 @@ import com.artemis.utils.Bag;
 
 public class ComponentManager extends Manager {
 	private Bag<Bag<Component>> componentsByType;
+	private Bag<Entity> deleted;
 
 	public ComponentManager() {
 		componentsByType = new Bag<Bag<Component>>();
+		deleted = new Bag<Entity>();
 	}
 	
 	@Override
@@ -19,8 +21,8 @@ public class ComponentManager extends Manager {
 		BitSet componentBits = e.getComponentBits();
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
 			componentsByType.get(i).set(e.getId(), null);
-			e.getComponentBits().clear(i);
 		}
+		componentBits.clear();
 	}
 	
 	protected void addComponent(Entity e, ComponentType type, Component component) {
@@ -64,7 +66,15 @@ public class ComponentManager extends Manager {
 	
 	@Override
 	public void deleted(Entity e) {
-		removeComponentsOfEntity(e);
+		deleted.add(e);
+	}
+	
+	protected void clean() {
+		if(deleted.size() > 0) {
+			for(int i = 0; deleted.size() > i; i++) {
+				removeComponentsOfEntity(deleted.get(i));
+			}
+		}
 	}
 
 }

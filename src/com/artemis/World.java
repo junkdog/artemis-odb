@@ -366,6 +366,8 @@ public class World {
 			}
 		});
 		
+		cm.clean();
+		
 		for(int i = 0; systemsBag.size() > i; i++) {
 			EntitySystem system = systemsBag.get(i);
 			if(!system.isPassive()) {
