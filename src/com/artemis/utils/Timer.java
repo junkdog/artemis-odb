@@ -2,23 +2,23 @@ package com.artemis.utils;
 
 public abstract class Timer {
 
-	private int delay;
+	private float delay;
 	private boolean repeat;
-	private int acc;
+	private float acc;
 	private boolean done;
 	private boolean stopped;
 	
-	public Timer(int delay) {
+	public Timer(float delay) {
 		this(delay, false);
 	}
 
-	public Timer(int delay, boolean repeat) {
+	public Timer(float delay, boolean repeat) {
 		this.delay = delay;
 		this.repeat = repeat;
 		this.acc = 0;
 	}
 
-	public void update(int delta) {
+	public void update(float delta) {
 		if (!done && !stopped) {
 			acc += delta;
 
@@ -66,10 +66,10 @@ public abstract class Timer {
 		else if (stopped)
 			return 0;
 		else
-			return 1 - (float) (delay - acc) / (float) delay;
+			return 1 - (delay - acc) / delay;
 	}
 
-	public int getDelay() {
+	public float getDelay() {
 		return delay;
 	}
 
