@@ -80,9 +80,12 @@ public final class Entity {
 	 * Add a component to this entity.
 	 * 
 	 * @param component to add to this entity
+	 * 
+	 * @return this entity for chaining.
 	 */
-	public void addComponent(Component component) {
+	public Entity addComponent(Component component) {
 		addComponent(component, ComponentType.getTypeFor(component.getClass()));
+		return this;
 	}
 	
 	/**
@@ -91,35 +94,47 @@ public final class Entity {
 	 * 
 	 * @param component the component to add
 	 * @param type of the component
+	 * 
+	 * @return this entity for chaining.
 	 */
-	public void addComponent(Component component, ComponentType type) {
+	public Entity addComponent(Component component, ComponentType type) {
 		componentManager.addComponent(this, type, component);
+		return this;
 	}
 
 	/**
 	 * Removes the component from this entity.
 	 * 
 	 * @param component to remove from this entity.
+	 * 
+	 * @return this entity for chaining.
 	 */
-	public void removeComponent(Component component) {
+	public Entity removeComponent(Component component) {
 		removeComponent(component.getClass());
+		return this;
 	}
 
 	/**
 	 * Faster removal of components from a entity.
 	 * 
 	 * @param component to remove from this entity.
+	 * 
+	 * @return this entity for chaining.
 	 */
-	public void removeComponent(ComponentType type) {
+	public Entity removeComponent(ComponentType type) {
 		componentManager.removeComponent(this, type);
+		return this;
 	}
 	
 	/**
 	 * Remove component by its type.
 	 * @param type
+	 * 
+	 * @return this entity for chaining.
 	 */
-	public void removeComponent(Class<? extends Component> type) {
+	public Entity removeComponent(Class<? extends Component> type) {
 		removeComponent(ComponentType.getTypeFor(type));
+		return this;
 	}
 
 	/**
@@ -146,6 +161,8 @@ public final class Entity {
 	/**
 	 * This is the preferred method to use when retrieving a component from a
 	 * entity. It will provide good performance.
+	 * But the recommended way to retrieve components from an entity is using
+	 * the ComponentMapper.
 	 * 
 	 * @param type
 	 *            in order to retrieve the component fast you must provide a
