@@ -31,9 +31,9 @@ import com.artemis.utils.ImmutableBag;
  *
  */
 public abstract class DelayedEntitySystem extends EntitySystem {
-	private int delay;
+	private float delay;
 	private boolean running;
-	private int acc;
+	private float acc;
 
 	public DelayedEntitySystem(Aspect aspect) {
 		super(aspect);
@@ -61,7 +61,7 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 	 * The entities to process with accumulated delta.
 	 * @param entities read-only bag of entities.
 	 */
-	protected abstract void processEntities(ImmutableBag<Entity> entities, int accumulatedDelta);
+	protected abstract void processEntities(ImmutableBag<Entity> entities, float accumulatedDelta);
 	
 	
 	/**
@@ -82,11 +82,11 @@ public abstract class DelayedEntitySystem extends EntitySystem {
 	 * 
 	 * @return the originally set delay.
 	 */
-	public int getInitialTimeDelay() {
+	public float getInitialTimeDelay() {
 		return delay;
 	}
 	
-	public int getRemainingTimeUntilProcessing() {
+	public float getRemainingTimeUntilProcessing() {
 		if(running) {
 			return delay-acc;
 		}

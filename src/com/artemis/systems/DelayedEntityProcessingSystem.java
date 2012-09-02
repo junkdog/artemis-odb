@@ -14,10 +14,10 @@ public abstract class DelayedEntityProcessingSystem extends DelayedEntitySystem 
 	 * Process a entity this system is interested in.
 	 * @param e the entity to process.
 	 */
-	protected abstract void process(Entity e, int accumulatedDelta);
+	protected abstract void process(Entity e, float accumulatedDelta);
 
 	@Override
-	protected final void processEntities(ImmutableBag<Entity> entities, int accumulatedDelta) {
+	protected final void processEntities(ImmutableBag<Entity> entities, float accumulatedDelta) {
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			process(entities.get(i), accumulatedDelta);
 		}

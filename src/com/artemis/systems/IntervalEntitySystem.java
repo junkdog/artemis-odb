@@ -12,10 +12,10 @@ import com.artemis.EntitySystem;
  *
  */
 public abstract class IntervalEntitySystem extends EntitySystem {
-	private int acc;
-	private int interval;
+	private float acc;
+	private float interval;
 
-	public IntervalEntitySystem(Aspect aspect, int interval) {
+	public IntervalEntitySystem(Aspect aspect, float interval) {
 		super(aspect);
 		this.interval = interval;
 	}

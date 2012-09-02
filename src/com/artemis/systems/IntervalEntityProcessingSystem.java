@@ -14,7 +14,7 @@ import com.artemis.utils.ImmutableBag;
  */
 public abstract class IntervalEntityProcessingSystem extends IntervalEntitySystem {
 
-	public IntervalEntityProcessingSystem(Aspect aspect, int interval) {
+	public IntervalEntityProcessingSystem(Aspect aspect, float interval) {
 		super(aspect, interval);
 	}
 

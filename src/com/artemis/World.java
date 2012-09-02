@@ -23,8 +23,7 @@ public class World {
 	private EntityManager em;
 	private ComponentManager cm;
 
-	private int delta;
-	private float deltaFloat;
+	public float delta;
 	private Bag<Entity> added;
 	private Bag<Entity> changed;
 	private Bag<Entity> deleted;
@@ -135,9 +134,9 @@ public class World {
 	/**
 	 * Time since last game loop.
 	 * 
-	 * @return delta in milliseconds.
+	 * @return delta time since last game loop.
 	 */
-	public int getDelta() {
+	public float getDelta() {
 		return delta;
 	}
 
@@ -146,29 +145,10 @@ public class World {
 	 * 
 	 * @param delta time since last game loop.
 	 */
-	public void setDelta(int delta) {
+	public void setDelta(float delta) {
 		this.delta = delta;
 	}
 	
-
-	/**
-	 * Get the deltaFloat value.
-	 * This is not return the same as getDelta(), it will only return
-	 * the value that was set using setDeltaFloat(float), delta and deltaFloat are not the same.
-	 * @return delta time as float value.
-	 */
-	public float getDeltaFloat() {
-		return deltaFloat;
-	}
-
-	/**
-	 * Sets the deltaFloat value.
-	 * This is NOT the same as setDelta(int) method, delta and deltaFloat are not the same.
-	 * @param deltaFloat delta time as float.
-	 */
-	public void setDeltaFloat(float deltaFloat) {
-		this.deltaFloat = deltaFloat;
-	}
 
 
 	/**
