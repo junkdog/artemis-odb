@@ -24,17 +24,23 @@ public class World {
 	private ComponentManager cm;
 
 	public float delta;
-	private Bag<Entity> added;
-	private Bag<Entity> changed;
-	private Bag<Entity> deleted;
-	private Bag<Entity> enable;
-	private Bag<Entity> disable;
+	private final Bag<Entity> added;
+	private final Bag<Entity> changed;
+	private final Bag<Entity> deleted;
+	private final Bag<Entity> enable;
+	private final Bag<Entity> disable;
 
-	private Map<Class<? extends Manager>, Manager> managers;
-	private Bag<Manager> managersBag;
+	private final AddedPerformer addedPerformer;
+	private final ChangedPerformer changedPerformer;
+	private final DeletedPerformer deletedPerformer;
+	private final EnabledPerformer enabledPerformer;
+	private final DisabledPerformer disabledPerformer;
 	
-	private Map<Class<?>, EntitySystem> systems;
-	private Bag<EntitySystem> systemsBag;
+	private final Map<Class<? extends Manager>, Manager> managers;
+	private final Bag<Manager> managersBag;
+	
+	private final Map<Class<?>, EntitySystem> systems;
+	private final Bag<EntitySystem> systemsBag;
 
 	public World() {
 		managers = new HashMap<Class<? extends Manager>, Manager>();
@@ -48,6 +54,12 @@ public class World {
 		deleted = new Bag<Entity>();
 		enable = new Bag<Entity>();
 		disable = new Bag<Entity>();
+		
+		addedPerformer = new AddedPerformer();
+		changedPerformer = new ChangedPerformer();
+		deletedPerformer = new DeletedPerformer();
+		enabledPerformer = new EnabledPerformer();
+		disabledPerformer = new DisabledPerformer();
 
 		cm = new ComponentManager();
 		setManager(cm);
@@ -311,44 +323,15 @@ public class World {
 	 * Process all non-passive systems.
 	 */
 	public void process() {
-		check(added, new Performer() {
-			@Override
-			public void perform(EntityObserver observer, Entity e) {
-				observer.added(e);
-			}
-		});
-		
-		check(changed, new Performer() {
-			@Override
-			public void perform(EntityObserver observer, Entity e) {
-				observer.changed(e);
-			}
-		});
-		
-		check(disable, new Performer() {
-			@Override
-			public void perform(EntityObserver observer, Entity e) {
-				observer.disabled(e);
-			}
-		});
-		
-		check(enable, new Performer() {
-			@Override
-			public void perform(EntityObserver observer, Entity e) {
-				observer.enabled(e);
-			}
-		});
-		
-		check(deleted, new Performer() {
-			@Override
-			public void perform(EntityObserver observer, Entity e) {
-				observer.deleted(e);
-			}
-		});
+		check(added, addedPerformer);
+		check(changed, changedPerformer);
+		check(disable, disabledPerformer);
+		check(enable, enabledPerformer);
+		check(deleted, deletedPerformer);
 		
 		cm.clean();
 		
-		for(int i = 0; systemsBag.size() > i; i++) {
+		for(int i = 0, s = systemsBag.size(); s > i; i++) {
 			EntitySystem system = systemsBag.get(i);
 			if(!system.isPassive()) {
 				system.process();
@@ -368,13 +351,62 @@ public class World {
 	}
 	
 
+	private final class DeletedPerformer implements Performer
+	{
+		@Override
+		public void perform(EntityObserver observer, Entity e) {
+			observer.deleted(e);
+		}
+	}
+
+
+
+	private final class EnabledPerformer implements Performer
+	{
+		@Override
+		public void perform(EntityObserver observer, Entity e) {
+			observer.enabled(e);
+		}
+	}
+
+
+
+	private final class DisabledPerformer implements Performer
+	{
+		@Override
+		public void perform(EntityObserver observer, Entity e) {
+			observer.disabled(e);
+		}
+	}
+
+
+
+	private final class ChangedPerformer implements Performer
+	{
+		@Override
+		public void perform(EntityObserver observer, Entity e) {
+			observer.changed(e);
+		}
+	}
+
+
+
+	private final class AddedPerformer implements Performer
+	{
+		@Override
+		public void perform(EntityObserver observer, Entity e) {
+			observer.added(e);
+		}
+	}
+
+
+
 	/*
 	 * Only used internally to maintain clean code.
 	 */
 	private interface Performer {
 		void perform(EntityObserver observer, Entity e);
 	}
-
 	
 	
 	private static class ComponentMapperInitHelper {
