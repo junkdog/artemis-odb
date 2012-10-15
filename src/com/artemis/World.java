@@ -280,13 +280,13 @@ public class World {
 	}
 	
 	private void notifySystems(Performer performer, Entity e) {
-		for(int i = 0, s=systemsBag.size(); s > i; i++) {
+		for(int i = 0, s = systemsBag.size(); s > i; i++) {
 			performer.perform(systemsBag.get(i), e);
 		}
 	}
 
 	private void notifyManagers(Performer performer, Entity e) {
-		for(int a = 0; managersBag.size() > a; a++) {
+		for(int a = 0, s = managersBag.size(); s > a; a++) {
 			performer.perform(managersBag.get(a), e);
 		}
 	}
@@ -309,7 +309,7 @@ public class World {
 	 */
 	private void check(Bag<Entity> entities, Performer performer) {
 		if (!entities.isEmpty()) {
-			for (int i = 0; entities.size() > i; i++) {
+			for (int i = 0, s = entities.size(); s > i; i++) {
 				Entity e = entities.get(i);
 				notifyManagers(performer, e);
 				notifySystems(performer, e);

@@ -81,7 +81,7 @@ public class ComponentManager extends Manager {
 	
 	protected void clean() {
 		if(deleted.size() > 0) {
-			for(int i = 0; deleted.size() > i; i++) {
+			for(int i = 0, s = deleted.size(); s > i; i++) {
 				removeComponentsOfEntity(deleted.get(i));
 			}
 			deleted.clear();

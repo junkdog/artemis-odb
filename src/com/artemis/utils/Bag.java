@@ -108,7 +108,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	public boolean removeAll(ImmutableBag<E> bag) {
 		boolean modified = false;
 
-		for (int i = 0; i < bag.size(); i++) {
+		for (int i = 0, s = bag.size(); s > i; i++) {
 			E e1 = bag.get(i);
 
 			for (int j = 0; j < size; j++) {
@@ -240,7 +240,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * @param added
 	 */
 	public void addAll(ImmutableBag<E> items) {
-		for(int i = 0; items.size() > i; i++) {
+		for(int i = 0, s = items.size(); s > i; i++) {
 			add(items.get(i));
 		}
 	}
