@@ -28,6 +28,7 @@ public abstract class EntitySystem implements EntityObserver {
 	private BitSet oneSet;
 
 	private boolean passive;
+	private boolean enabled;
 
 	private boolean dummy;
 	
@@ -43,6 +44,8 @@ public abstract class EntitySystem implements EntityObserver {
 		oneSet = aspect.getOneSet();
 		systemIndex = SystemIndexManager.getIndexFor(this.getClass());
 		dummy = allSet.isEmpty() && oneSet.isEmpty(); // This system can't possibly be interested in any entity, so it must be "dummy"
+		
+		enabled = true;
 	}
 	
 	/**
@@ -52,7 +55,7 @@ public abstract class EntitySystem implements EntityObserver {
 	}
 
 	public final void process() {
-		if(checkProcessing()) {
+		if(enabled && checkProcessing()) {
 			begin();
 			processEntities(actives);
 			end();
@@ -95,6 +98,25 @@ public abstract class EntitySystem implements EntityObserver {
 	 * @param e the entity that was removed from this system.
 	 */
 	protected void removed(Entity e) {};
+
+	
+	/**
+	 * Returns true if the system is enabled.
+	 * 
+	 * @return True if enabled, otherwise false.
+	 */
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	/**
+	 * Enabled systems are run during {@link #process()}. Systems are enabled by defautl.
+	 * 
+	 * @param enabled System will not run when set to false.
+	 */
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
 
 	/**
 	 * Will check if the entity is of interest to this system.
