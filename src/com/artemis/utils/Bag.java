@@ -1,12 +1,15 @@
 package com.artemis.utils;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 /**
  * Collection type a bit like ArrayList but does not preserve the order of its
  * entities, speedwise it is very good, especially suited for games.
  */
 
 public class Bag<E> implements ImmutableBag<E> {
-	private E[] data;
+	E[] data;
 	private int size = 0;
 
 	/**
@@ -43,6 +46,10 @@ public class Bag<E> implements ImmutableBag<E> {
 		return e;
 	}
 	
+	public void sort(Comparator<E> comparator)
+	{
+		Sort.instance().sort(this, comparator);
+	}
 	
 	/**
 	 * Remove and return the last object in the bag.
