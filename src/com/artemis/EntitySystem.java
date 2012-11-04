@@ -21,8 +21,6 @@ public abstract class EntitySystem implements EntityObserver {
 
 	private Bag<Entity> actives;
 
-	private Aspect aspect;
-
 	private BitSet allSet;
 	private BitSet exclusionSet;
 	private BitSet oneSet;
@@ -38,7 +36,6 @@ public abstract class EntitySystem implements EntityObserver {
 	 */
 	public EntitySystem(Aspect aspect) {
 		actives = new Bag<Entity>();
-		this.aspect = aspect;
 		allSet = aspect.getAllSet();
 		exclusionSet = aspect.getExclusionSet();
 		oneSet = aspect.getOneSet();
@@ -206,7 +203,7 @@ public abstract class EntitySystem implements EntityObserver {
 		this.world = world;
 	}
 	
-	protected boolean isPassive() {
+	public boolean isPassive() {
 		return passive;
 	}
 
