@@ -250,5 +250,9 @@ public class Bag<E> implements ImmutableBag<E> {
 			add(items.get(i));
 		}
 	}
-
+	
+	public Object[] getData()
+	{
+		return data;
+	}
 }
