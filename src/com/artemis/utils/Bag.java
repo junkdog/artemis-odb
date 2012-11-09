@@ -45,8 +45,7 @@ public class Bag<E> implements ImmutableBag<E> {
 		return e;
 	}
 	
-	public void sort(Comparator<E> comparator)
-	{
+	public void sort(Comparator<E> comparator) {
 		Sort.instance().sort(this, comparator);
 	}
 	
@@ -251,8 +250,13 @@ public class Bag<E> implements ImmutableBag<E> {
 		}
 	}
 	
-	public Object[] getData()
-	{
+	/**
+	 * Returns this bag's underlying array. Use with care. 
+	 * 
+	 * @see Bag#size()
+	 * @return The underlying array.
+	 */
+	public Object[] getData() {
 		return data;
 	}
 }
