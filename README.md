@@ -1,6 +1,6 @@
 # Preamble
 
-This is a fork of [Artemis Entity System Framework](http://gamadu.com/artemis/).
+This is a [fork](https://code.google.com/p/artemis-framework/) of [Artemis Entity System Framework](http://gamadu.com/artemis/).
 
 # What's changed
 
