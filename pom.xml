@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.onedaybeard</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>2013-02</version>
+	<version>20130210</version>
 	<packaging>jar</packaging>
 	<name>artemis-odb</name>
 
