@@ -5,3 +5,4 @@
 *~
 *.kate-swp
 bin/
+target/

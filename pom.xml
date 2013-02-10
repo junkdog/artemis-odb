@@ -1,0 +1,44 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>net.onedaybeard</groupId>
+	<artifactId>artemis-odb</artifactId>
+	<version>2013-02</version>
+	<packaging>jar</packaging>
+	<name>artemis-odb</name>
+
+	<properties>
+		<internal.repo.path>file:///home/junkdog/opt/dev/mvn-repo</internal.repo.path>
+	</properties>
+
+<!--
+	<repositories>
+		<repository>
+			<id>local-repository</id>
+			<url>${internal.repo.path}</url>
+		</repository>
+	</repositories>
+-->
+	<description>Fork of Artemis Entity System Framework.</description>
+	<build>
+		<sourceDirectory>src</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src</directory>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source />
+					<target />
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
