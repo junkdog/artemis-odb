@@ -4,5 +4,6 @@
 *.out
 *~
 *.kate-swp
+*.releaseBackup
 bin/
 target/
