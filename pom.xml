@@ -3,22 +3,35 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.onedaybeard</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>20130210</version>
+	<version>0.2.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>artemis-odb</name>
+
 
 	<properties>
 		<internal.repo.path>file:///home/junkdog/opt/dev/mvn-repo</internal.repo.path>
 	</properties>
 
-<!--
+	<scm>
+		<url>https://github.com/junkdog/artemis-odb/</url>
+		<connection>scm:git:git@github.com:junkdog/artemis-odb.git</connection>
+		<developerConnection>scm:git:git@github.com:junkdog/artemis-odb.git</developerConnection>
+	</scm>
+
+	<!-- 
 	<repositories>
 		<repository>
-			<id>local-repository</id>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>always</updatePolicy>
+				<checksumPolicy>fail</checksumPolicy>
+			</releases>
+			<id>odb-repository</id>
 			<url>${internal.repo.path}</url>
 		</repository>
 	</repositories>
--->
+	 -->
+
 	<description>Fork of Artemis Entity System Framework.</description>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
