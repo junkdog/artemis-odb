@@ -130,6 +130,19 @@ public class World {
 	public <T extends Manager> T getManager(Class<T> managerType) {
 		return managerType.cast(managers.get(managerType));
 	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends Manager> T getManager(String managerType) {
+		try
+		{
+			Class<T> klazz = (Class<T>)Class.forName(managerType);
+			return (T)managers.get(klazz);
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 	
 	/**
 	 * Deletes the manager from this world.
@@ -300,6 +313,19 @@ public class World {
 	public <T extends EntitySystem> T getSystem(Class<T> type) {
 		return type.cast(systems.get(type));
 	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends EntitySystem> T getSystem(String type) {
+		try
+		{
+			Class<T> klazz = (Class<T>)Class.forName(type);
+			return (T)systems.get(klazz);
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
+	}
 
 	
 	/**
@@ -348,6 +374,19 @@ public class World {
 	 */
 	public <T extends Component> ComponentMapper<T> getMapper(Class<T> type) {
 		return ComponentMapper.getFor(type, this);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public <T extends Component> ComponentMapper<T> getMapper(String type) {
+		try
+		{
+			Class<T> klazz = (Class<T>)Class.forName(type);
+			return ComponentMapper.getFor(klazz, this);
+		}
+		catch (ClassNotFoundException e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 	
 
