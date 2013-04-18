@@ -1,6 +1,6 @@
 package com.artemis.utils;
 
-public interface ImmutableBag<E> {
+public interface ImmutableBag<E> extends Iterable<E>{
 
 	E get(int index);
 

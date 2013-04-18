@@ -1,6 +1,7 @@
 package com.artemis.utils;
 
 import java.util.Comparator;
+import java.util.Iterator;
 
 /**
  * Collection type a bit like ArrayList but does not preserve the order of its
@@ -258,5 +259,34 @@ public class Bag<E> implements ImmutableBag<E> {
 	 */
 	public Object[] getData() {
 		return data;
+	}
+
+	@Override
+	public Iterator<E> iterator()
+	{
+		Iterator<E> it = new Iterator<E>()
+		{
+			private E[] items = data;
+			private int index;
+			
+			@Override
+			public boolean hasNext()
+			{
+				return ((index + 1) < size);
+			}
+
+			@Override
+			public E next()
+			{
+				return items[index++];
+			}
+
+			@Override
+			public void remove()
+			{
+				throw new IllegalArgumentException("not implemented");
+			}
+		};
+		return it;
 	}
 }
