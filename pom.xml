@@ -6,6 +6,8 @@
 	<version>0.3.0</version>
 	<packaging>jar</packaging>
 	<name>artemis-odb</name>
+	<description>Fork of Artemis Entity System Framework.</description>
+	<url>https://github.com/junkdog/artemis-odb</url>
 
 
 	<properties>
@@ -26,7 +28,29 @@
 		</repository>
 	</distributionManagement>
 
-	<description>Fork of Artemis Entity System Framework.</description>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>Adrian Papari</name>
+			<email>junkdog@onedaybeard.net</email>
+			<id>junkdog</id>
+			<timezone>1</timezone>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<properties>
+				<twitter>@junkdogAP</twitter>
+			</properties>
+		</developer>
+	</developers>
+
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
@@ -40,7 +64,7 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
+				<version>3.1</version>
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
