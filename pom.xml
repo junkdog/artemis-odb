@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>0.3.0</version>
+	<version>0.3.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>artemis-odb</name>
 	<description>Fork of Artemis Entity System Framework.</description>
