@@ -16,6 +16,5 @@ This is a [fork](https://code.google.com/p/artemis-framework/) of [Artemis Entit
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
 	<version>0.3.2</version>
-	<scope>provided</scope>
 </dependency>
 ```
