@@ -145,7 +145,7 @@ public abstract class EntitySystem implements EntityObserver {
 		}
 		
 		// Check if the entity possesses ANY of the components in the oneSet. If so, the system is interested.
-		if(!oneSet.isEmpty()) {
+		if(!oneSet.isEmpty() && interested) {
 			interested = oneSet.intersects(componentBits);
 		}
 
