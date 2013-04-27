@@ -131,7 +131,7 @@ public class World {
 		return managerType.cast(managers.get(managerType));
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") @Deprecated
 	public <T extends Manager> T getManager(String managerType) {
 		try
 		{
@@ -314,7 +314,7 @@ public class World {
 		return type.cast(systems.get(type));
 	}
 	
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") @Deprecated
 	public <T extends EntitySystem> T getSystem(String type) {
 		try
 		{
