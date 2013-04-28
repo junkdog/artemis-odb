@@ -330,18 +330,17 @@ public class World {
 	
 	/**
 	 * Performs an action on each entity.
-	 * @param entities
+	 * @param entityBag
 	 * @param performer
 	 */
-	private void check(Bag<Entity> entities, Performer performer) {
-		if (!entities.isEmpty()) {
-			for (int i = 0, s = entities.size(); s > i; i++) {
-				Entity e = entities.get(i);
-				notifyManagers(performer, e);
-				notifySystems(performer, e);
-			}
-			entities.clear();
+	private void check(Bag<Entity> entityBag, Performer performer) {
+		Object[] entities = entityBag.getData();
+		for (int i = 0, s = entityBag.size(); s > i; i++) {
+			Entity e = (Entity)entities[i];
+			notifyManagers(performer, e);
+			notifySystems(performer, e);
 		}
+		entityBag.clear();
 	}
 
 	

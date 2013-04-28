@@ -1,7 +1,7 @@
 package com.artemis.utils;
 
 import java.util.Comparator;
-import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Collection type a bit like ArrayList but does not preserve the order of its
@@ -262,29 +262,41 @@ public class Bag<E> implements ImmutableBag<E> {
 	}
 
 	@Override
-	public Iterator<E> iterator()
-	{
-		Iterator<E> it = new Iterator<E>()
+	public BagIterator<E> iterator() {
+		BagIterator<E> it = new BagIterator<E>()
 		{
-			private E[] items = data;
-			private int index;
+			private int cursor;
+			private boolean validCursorPos;
 			
 			@Override
-			public boolean hasNext()
-			{
-				return ((index + 1) < size);
+			public boolean hasNext() {
+				return (cursor < size);
 			}
 
 			@Override
-			public E next()
-			{
-				return items[index++];
+			public E next() {
+				try	{
+					validCursorPos = true;
+					return data[cursor++];
+				}
+				catch (ArrayIndexOutOfBoundsException e) {
+					cursor--;
+					throw new NoSuchElementException("Iterated past last element");
+				}
 			}
 
 			@Override
-			public void remove()
-			{
-				throw new IllegalArgumentException("not implemented");
+			public void remove() {
+				if (!validCursorPos)
+					throw new IllegalStateException();
+				
+				validCursorPos = false;
+				Bag.this.remove(--cursor);
+			}
+
+			@Override
+			public void reset() {
+				cursor = 0;
 			}
 		};
 		return it;
