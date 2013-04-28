@@ -263,8 +263,7 @@ public class Bag<E> implements ImmutableBag<E> {
 
 	@Override
 	public BagIterator<E> iterator() {
-		BagIterator<E> it = new BagIterator<E>()
-		{
+		BagIterator<E> it = new BagIterator<E>() {
 			private int cursor;
 			private boolean validCursorPos;
 			
@@ -275,7 +274,7 @@ public class Bag<E> implements ImmutableBag<E> {
 
 			@Override
 			public E next() {
-				try	{
+				try {
 					validCursorPos = true;
 					return data[cursor++];
 				}
