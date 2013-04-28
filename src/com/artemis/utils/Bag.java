@@ -280,6 +280,7 @@ public class Bag<E> implements ImmutableBag<E> {
 				}
 				catch (ArrayIndexOutOfBoundsException e) {
 					cursor--;
+					validCursorPos = false;
 					throw new NoSuchElementException("Iterated past last element");
 				}
 			}
