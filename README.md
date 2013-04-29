@@ -12,6 +12,10 @@ This is a [fork](https://code.google.com/p/artemis-framework/) of [Artemis Entit
  - Bag implements [resettable iterator](https://github.com/junkdog/artemis-odb/blob/master/src/com/artemis/utils/BagIterator.java).
 
 # Maven
+
+Version 0.3.4 is apparently still not available in the main repo; use version `0.3.2` if
+the current version doesn't resolve.
+
 ```xml
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
