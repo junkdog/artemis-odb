@@ -263,7 +263,7 @@ public class Bag<E> implements ImmutableBag<E> {
 
 	@Override
 	public BagIterator<E> iterator() {
-		BagIterator<E> it = new BagIterator<E>() {
+		return new BagIterator<E>() {
 			private int cursor;
 			private boolean validCursorPos;
 			
@@ -275,12 +275,12 @@ public class Bag<E> implements ImmutableBag<E> {
 			@Override
 			public E next() {
 				try {
+					E e = data[cursor++];
 					validCursorPos = true;
-					return data[cursor++];
+					return e;
 				}
 				catch (ArrayIndexOutOfBoundsException e) {
 					cursor--;
-					validCursorPos = false;
 					throw new NoSuchElementException("Iterated past last element");
 				}
 			}
@@ -296,9 +296,9 @@ public class Bag<E> implements ImmutableBag<E> {
 
 			@Override
 			public void reset() {
+				validCursorPos = false;
 				cursor = 0;
 			}
 		};
-		return it;
 	}
 }
