@@ -1,6 +1,7 @@
 package com.artemis.utils;
 
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -9,8 +10,10 @@ import java.util.NoSuchElementException;
  */
 
 public class Bag<E> implements ImmutableBag<E> {
+
 	E[] data;
 	private int size = 0;
+	private BagIterator it;
 
 	/**
 	 * Constructs an empty Bag with an initial capacity of 64.
@@ -262,43 +265,44 @@ public class Bag<E> implements ImmutableBag<E> {
 	}
 
 	@Override
-	public BagIterator<E> iterator() {
-		return new BagIterator<E>() {
-			private int cursor;
-			private boolean validCursorPos;
+	public Iterator<E> iterator() {
+		if (it == null) it = new BagIterator();
+
+		it.validCursorPos = false;
+		it.cursor = 0;
+		
+		return it;
+	}
+	
+	private final class BagIterator implements Iterator<E> {
+		private int cursor;
+		private boolean validCursorPos;
+
+		@Override
+		public boolean hasNext() {
+			return (cursor < size);
+		}
+
+		@Override
+		public E next() {
+			try {
+				E e = data[cursor++];
+				validCursorPos = true;
+				return e;
+			}
+			catch (ArrayIndexOutOfBoundsException e) {
+				cursor--;
+				throw new NoSuchElementException("Iterated past last element");
+			}
+		}
+
+		@Override
+		public void remove() {
+			if (!validCursorPos)
+				throw new IllegalStateException();
 			
-			@Override
-			public boolean hasNext() {
-				return (cursor < size);
-			}
-
-			@Override
-			public E next() {
-				try {
-					E e = data[cursor++];
-					validCursorPos = true;
-					return e;
-				}
-				catch (ArrayIndexOutOfBoundsException e) {
-					cursor--;
-					throw new NoSuchElementException("Iterated past last element");
-				}
-			}
-
-			@Override
-			public void remove() {
-				if (!validCursorPos)
-					throw new IllegalStateException();
-				
-				validCursorPos = false;
-				Bag.this.remove(--cursor);
-			}
-
-			@Override
-			public void reset() {
-				validCursorPos = false;
-				cursor = 0;
-			}
-		};
+			validCursorPos = false;
+			Bag.this.remove(--cursor);
+		}
 	}
 }
