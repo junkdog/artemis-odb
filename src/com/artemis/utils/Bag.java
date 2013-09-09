@@ -1,5 +1,6 @@
 package com.artemis.utils;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -207,9 +208,9 @@ public class Bag<E> implements ImmutableBag<E> {
 	 */
 	public void set(int index, E e) {
 		if(index >= data.length) {
-			grow(index*2);
+			grow(index * 2);
 		}
-		size = index+1;
+		size = Math.max(size, index + 1);
 		data[index] = e;
 	}
 
@@ -237,10 +238,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 */
 	public void clear() {
 		// null all elements so gc can clean up
-		for (int i = 0; i < size; i++) {
-			data[i] = null;
-		}
-
+		Arrays.fill(data, null);
 		size = 0;
 	}
 
