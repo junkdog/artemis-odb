@@ -25,4 +25,4 @@ This is a [fork](https://code.google.com/p/artemis-framework/) of [Artemis Entit
 # Agrotera: Anti-boilerplate lib for Artemis
 [Agrotera](http://github.com/junkdog/agrotera) uses annotations to configure EntitySystems, removing the
 need for defining Aspects inside constructors and takes care of injecting ComponentMappers,
-Managers and EntitySystems. Can also inject profiling calls.
+Managers and EntitySystems. Can also simulate aspects for Managers and inject profiling calls.
