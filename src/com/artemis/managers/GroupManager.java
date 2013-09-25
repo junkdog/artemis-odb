@@ -125,12 +125,10 @@ public class GroupManager extends Manager {
 		if(group != null) {
 			Bag<String> bag = groupsByEntity.get(e);
 			Object[] groups = bag.getData();
-			if (bag != null) {
-				for(int i = 0, s = bag.size(); s > i; i++) {
-					String g = (String)groups[i];
-					if(group.equals(g)) {
-						return true;
-					}
+			for(int i = 0, s = bag.size(); s > i; i++) {
+				String g = (String)groups[i];
+				if(group.equals(g)) {
+					return true;
 				}
 			}
 		}
