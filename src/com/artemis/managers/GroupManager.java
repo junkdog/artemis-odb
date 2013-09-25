@@ -124,11 +124,13 @@ public class GroupManager extends Manager {
 	public boolean isInGroup(Entity e, String group) {
 		if(group != null) {
 			Bag<String> bag = groupsByEntity.get(e);
-			Object[] groups = bag.getData();
-			for(int i = 0, s = bag.size(); s > i; i++) {
-				String g = (String)groups[i];
-				if(group.equals(g)) {
-					return true;
+			if (bag != null) {
+				Object[] groups = bag.getData();
+				for(int i = 0, s = bag.size(); s > i; i++) {
+					String g = (String)groups[i];
+					if(group.equals(g)) {
+						return true;
+					}
 				}
 			}
 		}
