@@ -107,7 +107,7 @@ public abstract class EntitySystem implements EntityObserver {
 	}
 
 	/**
-	 * Enabled systems are run during {@link #process()}. Systems are enabled by defautl.
+	 * Enabled systems are run during {@link #process()}. Systems are enabled by default.
 	 * 
 	 * @param enabled System will not run when set to false.
 	 */
