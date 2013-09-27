@@ -15,6 +15,10 @@
 	<description>Fork of Artemis Entity System Framework.</description>
 	<url>https://github.com/junkdog/artemis-odb</url>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
 	<scm>
 		<url>https://github.com/junkdog/artemis-odb/</url>
 		<connection>scm:git:git@github.com:junkdog/artemis-odb.git</connection>
@@ -28,6 +32,15 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+	
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 	<developers>
 		<developer>

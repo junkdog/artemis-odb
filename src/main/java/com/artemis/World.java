@@ -194,6 +194,7 @@ public class World {
 	 */
 	public void changedEntity(Entity e) {
 		changed.add(e);
+		check(e, changedPerformer);
 	}
 	
 	/**
@@ -204,6 +205,7 @@ public class World {
 	public void deleteEntity(Entity e) {
 		if (!deleted.contains(e)) {
 			deleted.add(e);
+			check(e, deletedPerformer);
 		}
 	}
 
@@ -213,6 +215,7 @@ public class World {
 	 */
 	public void enable(Entity e) {
 		enable.add(e);
+		check(e, enabledPerformer);
 	}
 
 	/**
@@ -221,6 +224,7 @@ public class World {
 	 */
 	public void disable(Entity e) {
 		disable.add(e);
+		check(e, disabledPerformer);
 	}
 
 
@@ -326,7 +330,7 @@ public class World {
 			throw new RuntimeException(e);
 		}
 	}
-
+	
 	
 	/**
 	 * Performs an action on each entity.
@@ -343,6 +347,11 @@ public class World {
 		entityBag.clear();
 	}
 
+	private void check(Entity e, Performer performer) {
+		notifyManagers(performer, e);
+		notifySystems(performer, e);
+	}
+
 	
 	/**
 	 * Process all non-passive systems.
@@ -356,8 +365,9 @@ public class World {
 		
 		cm.clean();
 		
+		Object[] systems = systemsBag.getData();
 		for(int i = 0, s = systemsBag.size(); s > i; i++) {
-			EntitySystem system = systemsBag.get(i);
+			EntitySystem system = (EntitySystem)systems[i];
 			if(!system.isPassive()) {
 				system.process();
 			}
@@ -456,7 +466,9 @@ public class World {
 					Mapper annotation = field.getAnnotation(Mapper.class);
 					if (annotation != null && Mapper.class.isAssignableFrom(Mapper.class)) {
 						ParameterizedType genericType = (ParameterizedType) field.getGenericType();
-						Class componentType = (Class) genericType.getActualTypeArguments()[0];
+						
+						@SuppressWarnings("unchecked")
+						Class<Component> componentType = (Class<Component>) genericType.getActualTypeArguments()[0];
 
 						field.setAccessible(true);
 						field.set(target, world.getMapper(componentType));

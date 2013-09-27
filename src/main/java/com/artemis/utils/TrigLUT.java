@@ -24,16 +24,12 @@ public class TrigLUT {
 		return cos[(int) (deg * degToIndex) & SIN_MASK];
 	}
 
-	private static final float RAD, DEG;
 	private static final int SIN_BITS, SIN_MASK, SIN_COUNT;
 	private static final float radFull, radToIndex;
 	private static final float degFull, degToIndex;
 	private static final float[] sin, cos;
 
 	static {
-		RAD = (float) Math.PI / 180.0f;
-		DEG = 180.0f / (float) Math.PI;
-
 		SIN_BITS = 12;
 		SIN_MASK = ~(-1 << SIN_BITS);
 		SIN_COUNT = SIN_MASK + 1;

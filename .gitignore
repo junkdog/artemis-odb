@@ -7,3 +7,7 @@
 *.releaseBackup
 bin/
 target/
+.classpath
+.project
+.settings/
+
