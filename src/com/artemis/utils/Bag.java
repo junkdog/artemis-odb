@@ -237,8 +237,8 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * this call returns.
 	 */
 	public void clear() {
-		// null all elements so gc can clean up
-		Arrays.fill(data, null);
+		// new null array so gc can clean up old one
+		data = (E[])new Object[data.length];
 		size = 0;
 	}
 
