@@ -9,7 +9,7 @@ import java.util.NoSuchElementException;
  * entities, speedwise it is very good, especially suited for games.
  */
 
-public class Bag<E> implements ImmutableBag<E> {
+public class Bag<E> implements ImmutableBag<E>, Iterable<E> {
 
 	E[] data;
 	private int size = 0;
@@ -97,6 +97,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * @param e
 	 * @return
 	 */
+    @Override
 	public boolean contains(E e) {
 		for(int i = 0; size > i; i++) {
 			if(e == data[i]) {
@@ -142,6 +143,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 *            index of the element to return
 	 * @return the element at the specified position in bag
 	 */
+    @Override
 	public E get(int index) {
 		return data[index];
 	}
@@ -151,6 +153,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * 
 	 * @return the number of elements in this bag
 	 */
+    @Override
 	public int size() {
 		return size;
 	}
@@ -179,6 +182,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * 
 	 * @return true if this list contains no elements
 	 */
+    @Override
 	public boolean isEmpty() {
 		return size == 0;
 	}
@@ -235,6 +239,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * Removes all of the elements from this bag. The bag will be empty after
 	 * this call returns.
 	 */
+    @SuppressWarnings("unchecked")
 	public void clear() {
 		// new null array so gc can clean up old one
 		data = (E[])new Object[data.length];
@@ -243,7 +248,7 @@ public class Bag<E> implements ImmutableBag<E> {
 
 	/**
 	 * Add all items into this bag. 
-	 * @param added
+	 * @param items
 	 */
 	public void addAll(ImmutableBag<E> items) {
 		for(int i = 0, s = items.size(); s > i; i++) {
