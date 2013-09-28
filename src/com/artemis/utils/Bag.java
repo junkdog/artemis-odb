@@ -324,21 +324,20 @@ public class Bag<E> implements ImmutableBag<E> {
 
 		@Override
 		public E next() {
-			try {
-				E e = data[cursor++];
-				validCursorPos = true;
-				return e;
-			}
-			catch (ArrayIndexOutOfBoundsException e) {
-				cursor--;
+			if (cursor == size) {
 				throw new NoSuchElementException("Iterated past last element");
 			}
+
+			E e = data[cursor++];
+			validCursorPos = true;
+			return e;
 		}
 
 		@Override
 		public void remove() {
-			if (!validCursorPos)
+			if (!validCursorPos) {
 				throw new IllegalStateException();
+			}
 			
 			validCursorPos = false;
 			Bag.this.remove(--cursor);
