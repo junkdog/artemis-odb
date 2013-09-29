@@ -59,7 +59,12 @@ public class Bag<E> implements ImmutableBag<E> {
 		data[size] = null; // null last element, so gc can do its work
 		return e;
 	}
-	
+
+	/**
+	 * Sorts the bag using the {@code comparator}.
+	 *
+	 * @param comparator
+	 */
 	public void sort(Comparator<E> comparator) {
 		Sort.instance().sort(this, comparator);
 	}
