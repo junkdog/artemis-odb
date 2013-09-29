@@ -297,14 +297,16 @@ public class World {
 	}
 	
 	private void notifySystems(Performer performer, Entity e) {
+		Object[] data = systemsBag.getData();
 		for(int i = 0, s = systemsBag.size(); s > i; i++) {
-			performer.perform(systemsBag.get(i), e);
+			performer.perform((EntitySystem)data[i], e);
 		}
 	}
 
 	private void notifyManagers(Performer performer, Entity e) {
-		for(int a = 0, s = managersBag.size(); s > a; a++) {
-			performer.perform(managersBag.get(a), e);
+		Object[] data = managersBag.getData();
+		for(int i = 0, s = managersBag.size(); s > i; i++) {
+			performer.perform((Manager)data[i], e);
 		}
 	}
 	
