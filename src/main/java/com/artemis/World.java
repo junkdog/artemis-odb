@@ -25,10 +25,7 @@ public class World {
 
 	public float delta;
 	private final Bag<Entity> added;
-	private final Bag<Entity> changed;
 	private final Bag<Entity> deleted;
-	private final Bag<Entity> enable;
-	private final Bag<Entity> disable;
 
 	private final AddedPerformer addedPerformer;
 	private final ChangedPerformer changedPerformer;
@@ -50,10 +47,7 @@ public class World {
 		systemsBag = new Bag<EntitySystem>();
 
 		added = new Bag<Entity>();
-		changed = new Bag<Entity>();
 		deleted = new Bag<Entity>();
-		enable = new Bag<Entity>();
-		disable = new Bag<Entity>();
 		
 		addedPerformer = new AddedPerformer();
 		changedPerformer = new ChangedPerformer();
@@ -193,7 +187,6 @@ public class World {
 	 * @param e entity
 	 */
 	public void changedEntity(Entity e) {
-		changed.add(e);
 		check(e, changedPerformer);
 	}
 	
@@ -203,7 +196,9 @@ public class World {
 	 * @param e entity
 	 */
 	public void deleteEntity(Entity e) {
-		if (!deleted.contains(e)) {
+		if (added.contains(e)) {
+			added.remove(e);
+		} else if (!deleted.contains(e)) {
 			deleted.add(e);
 			check(e, deletedPerformer);
 		}
@@ -214,7 +209,6 @@ public class World {
 	 * Won't do anything unless it was already disabled.
 	 */
 	public void enable(Entity e) {
-		enable.add(e);
 		check(e, enabledPerformer);
 	}
 
@@ -223,7 +217,6 @@ public class World {
 	 * continue to exist but won't get processed.
 	 */
 	public void disable(Entity e) {
-		disable.add(e);
 		check(e, disabledPerformer);
 	}
 
@@ -360,11 +353,8 @@ public class World {
 	 */
 	public void process() {
 		check(added, addedPerformer);
-		check(changed, changedPerformer);
-		check(disable, disabledPerformer);
-		check(enable, enabledPerformer);
-		check(deleted, deletedPerformer);
-		
+		deleted.clear();
+
 		cm.clean();
 		
 		Object[] systems = systemsBag.getData();
