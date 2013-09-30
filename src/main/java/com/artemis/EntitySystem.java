@@ -32,8 +32,6 @@ public abstract class EntitySystem implements EntityObserver {
 	private boolean dummy;
 	
 	private boolean isProcessing;
-
-
 	
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher against entities.
