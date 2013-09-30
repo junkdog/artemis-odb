@@ -20,6 +20,7 @@ public abstract class EntitySystem implements EntityObserver {
 	protected World world;
 
 	private Bag<Entity> actives;
+	private Bag<Entity> deleted;
 
 	private BitSet allSet;
 	private BitSet exclusionSet;
@@ -30,12 +31,17 @@ public abstract class EntitySystem implements EntityObserver {
 
 	private boolean dummy;
 	
+	private boolean isProcessing;
+
+
+	
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher against entities.
 	 * @param aspect to match against entities
 	 */
 	public EntitySystem(Aspect aspect) {
 		actives = new Bag<Entity>();
+		deleted = new Bag<Entity>();
 		allSet = aspect.getAllSet();
 		exclusionSet = aspect.getExclusionSet();
 		oneSet = aspect.getOneSet();
@@ -43,8 +49,17 @@ public abstract class EntitySystem implements EntityObserver {
 		dummy = allSet.isEmpty() && oneSet.isEmpty(); // This system can't possibly be interested in any entity, so it must be "dummy"
 		
 		enabled = true;
+		isProcessing = false;
 	}
-	
+
+	/**
+	 * Check if the system is currently processing entities.
+	 * @return {@code true} if the system is currently processing entities
+	 */
+	public boolean isProcessing() {
+		return isProcessing;
+	}
+
 	/**
 	 * Called before processing of entities begins. 
 	 */
@@ -54,7 +69,21 @@ public abstract class EntitySystem implements EntityObserver {
 	public final void process() {
 		if(enabled && checkProcessing()) {
 			begin();
+			
+			isProcessing = true;
 			processEntities(actives);
+			isProcessing = false;
+
+			int s = deleted.size();
+
+			if (s > 0) {
+				Object[] data = deleted.getData();
+				for (int i = 0; i < s; i++) {
+					removeFromSystem((Entity)data[i]);
+				}
+				deleted.clear();
+			}
+
 			end();
 		}
 	}
@@ -182,7 +211,11 @@ public abstract class EntitySystem implements EntityObserver {
 	@Override
 	public final void deleted(Entity e) {
 		if(e.getSystemBits().get(systemIndex)) {
-			removeFromSystem(e);
+			if (!isProcessing) {
+				removeFromSystem(e);
+			} else {
+				deleted.add(e);
+			}
 		}
 	}
 	
