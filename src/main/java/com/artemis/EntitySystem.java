@@ -51,14 +51,6 @@ public abstract class EntitySystem implements EntityObserver {
 	}
 
 	/**
-	 * Check if the system is currently processing entities.
-	 * @return {@code true} if the system is currently processing entities
-	 */
-	public boolean isProcessing() {
-		return isProcessing;
-	}
-
-	/**
 	 * Called before processing of entities begins. 
 	 */
 	protected void begin() {
