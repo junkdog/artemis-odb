@@ -196,11 +196,11 @@ public class World {
 	 * @param e entity
 	 */
 	public void deleteEntity(Entity e) {
-		if (added.contains(e)) {
-			added.remove(e);
-		} else if (!deleted.contains(e)) {
+		if (!deleted.contains(e)) {
 			deleted.add(e);
 			check(e, deletedPerformer);
+		} else {
+			added.remove(e);
 		}
 	}
 
