@@ -1,10 +1,13 @@
 package com.artemis;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Before;
 import org.junit.Test;
 
 import com.artemis.annotations.Mapper;
 import com.artemis.component.ComponentX;
+import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 
 public class WorldTest
@@ -20,7 +23,7 @@ public class WorldTest
 	@Test
 	public void access_component_after_deletion_in_previous_system()
 	{
-		world.setSystem(new SystemA());
+		world.setSystem(new SystemComponentXRemover());
 		world.setSystem(new SystemB());
 		world.initialize();
 		
@@ -30,11 +33,32 @@ public class WorldTest
 		
 		world.process();
 	}
+	
+	@Test
+	public void ensure_extended_components_do_their_thing()
+	{
+		SystemB systemB = world.setSystem(new SystemB());
+		SystemY systemY = world.setSystem(new SystemY());
+		world.initialize();
+		
+		Entity e = world.createEntity();
+		e.addComponent(new ComponentX());
+		e.addToWorld();
+		
+		e = world.createEntity();
+		e.addComponent(new ComponentY());
+		e.addToWorld();
+		
+		world.process();
+		assertEquals(1, systemB.getActives().size());
+		assertEquals(1, systemY.getActives().size());
+		
+	}
 
-	static class SystemA extends EntityProcessingSystem
+	static class SystemComponentXRemover extends EntityProcessingSystem
 	{
 		@SuppressWarnings("unchecked")
-		public SystemA()
+		public SystemComponentXRemover()
 		{
 			super(Aspect.getAspectForAll(ComponentX.class));
 		}
@@ -62,7 +86,24 @@ public class WorldTest
 		protected void process(Entity e)
 		{
 			ComponentX x = xm.get(e);
-			System.out.println(x.text);
+		}
+	}
+	
+	static class SystemY extends EntityProcessingSystem
+	{
+		@Mapper
+		ComponentMapper<ComponentY> ym;
+		
+		@SuppressWarnings("unchecked")
+		public SystemY()
+		{
+			super(Aspect.getAspectForAll(ComponentY.class));
+		}
+		
+		@Override
+		protected void process(Entity e)
+		{
+			ComponentY y = ym.get(e);
 		}
 	}
 }
