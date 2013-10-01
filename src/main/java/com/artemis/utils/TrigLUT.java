@@ -2,6 +2,7 @@ package com.artemis.utils;
 
 // Thanks to Riven
 // From: http://riven8192.blogspot.com/2009/08/fastmath-sincos-lookup-tables.html
+@Deprecated
 public class TrigLUT {
 	public static void main(String[] args) {
 		System.out.println(cos((float) Math.PI));

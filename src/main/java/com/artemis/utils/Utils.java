@@ -8,6 +8,7 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
+@Deprecated
 public class Utils {
 
 	public static float cubicInterpolation(float v0, float v1, float v2, float v3, float t) {

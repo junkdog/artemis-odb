@@ -1,5 +1,6 @@
 package com.artemis.utils;
 
+@Deprecated
 public class FastMath {
 	public static final double PI = Math.PI;
 	public static final double SQUARED_PI = PI * PI;

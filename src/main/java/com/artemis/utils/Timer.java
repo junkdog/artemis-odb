@@ -1,5 +1,6 @@
 package com.artemis.utils;
 
+@Deprecated
 public abstract class Timer {
 
 	private float delay;
