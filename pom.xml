@@ -33,6 +33,36 @@
 		</license>
 	</licenses>
 	
+	<issueManagement>
+		<url>https://github.com/junkdog/artemis-odb/issues</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+	
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<developers>
+		<developer>
+			<name>Adrian Papari</name>
+			<email>junkdog@onedaybeard.net</email>
+			<id>junkdog</id>
+			<timezone>1</timezone>
+			<roles>
+				<role>developer</role>
+			</roles>
+			<properties>
+				<twitter>@junkdogAP</twitter>
+			</properties>
+		</developer>
+	</developers>
+	
+	
 	<profiles>
 		<profile>
 			<id>release</id>
@@ -82,30 +112,6 @@
 			</build>
 		</profile>
 	</profiles>
-	
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
-	<developers>
-		<developer>
-			<name>Adrian Papari</name>
-			<email>junkdog@onedaybeard.net</email>
-			<id>junkdog</id>
-			<timezone>1</timezone>
-			<roles>
-				<role>developer</role>
-			</roles>
-			<properties>
-				<twitter>@junkdogAP</twitter>
-			</properties>
-		</developer>
-	</developers>
 
 	<build>
 		<plugins>
