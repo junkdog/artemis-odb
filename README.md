@@ -1,8 +1,8 @@
-# Preamble
+## Preamble
 
 This is a [fork](https://code.google.com/p/artemis-framework/) of [Artemis Entity System Framework](http://gamadu.com/artemis/).
 
-# What's changed
+## What's changed
 
  - More efficient for loops, bounds checking performed once during loop initialization.
  - _processEntities_ forgoes Bag's getter in favor of direct array access.
@@ -11,7 +11,7 @@ This is a [fork](https://code.google.com/p/artemis-framework/) of [Artemis Entit
  - Bag now sports <code>sort</code>; borrows [libGDX](http://libgdx.badlogicgames.com/)'s TimSort implementation.
  - Foreach-friendly Bag: implements a one instance per Bag iterator. (version: 0.3.5-SNAPSHOT)
 
-# Maven
+## Maven
 
 ```xml
 <dependency>
@@ -22,7 +22,11 @@ This is a [fork](https://code.google.com/p/artemis-framework/) of [Artemis Entit
 ```
 
 
-# Agrotera: Anti-boilerplate lib for Artemis
+## Agrotera: Anti-boilerplate lib for Artemis
 [Agrotera](http://github.com/junkdog/agrotera) uses annotations to configure EntitySystems, removing the
 need for defining Aspects inside constructors and takes care of injecting ComponentMappers,
 Managers and EntitySystems. Can also simulate aspects for Managers and inject profiling calls.
+
+## Games using this library
+### Open source
+- [Sine](http://www.ludumdare.com/compo/2013/08/27/sine-post-mortem/) by [@timtipgames](http://twitter.com/timtipgames)
