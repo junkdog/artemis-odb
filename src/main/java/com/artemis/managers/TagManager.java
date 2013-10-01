@@ -9,11 +9,13 @@ import com.artemis.Manager;
 
 
 /**
- * If you need to tag any entity, use this. A typical usage would be to tag
- * entities such as "PLAYER", "BOSS" or something that is very unique.
+ * If you need to tag any entity, use this.
+ * <p>
+ * A typical usage would be to tag entities such as "PLAYER", "BOSS" or
+ * something that is very unique.
+ * </p>
  * 
  * @author Arni Arent
- *
  */
 public class TagManager extends Manager {
 

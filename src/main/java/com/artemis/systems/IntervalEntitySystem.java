@@ -6,10 +6,11 @@ import com.artemis.EntitySystem;
 
 /**
  * A system that processes entities at a interval in milliseconds.
+ * <p>
  * A typical usage would be a collision system or physics system.
+ * </p>
  * 
  * @author Arni Arent
- *
  */
 public abstract class IntervalEntitySystem extends EntitySystem {
 

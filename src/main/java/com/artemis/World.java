@@ -10,14 +10,14 @@ import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
 /**
- * The primary instance for the framework. It contains all the managers.
- * 
- * You must use this to create, delete and retrieve entities.
- * 
- * It is also important to set the delta each game loop iteration, and initialize before game loop.
+ * The primary instance for the framework.
+ * <p>
+ * It contains all the managers. You must use this to create, delete and
+ * retrieve entities. It is also important to set the delta each game loop
+ * iteration, and initialize before game loop.
+ * </p>
  * 
  * @author Arni Arent
- * 
  */
 public class World {
 
@@ -65,7 +65,8 @@ public class World {
 
 	
 	/**
-	 * Makes sure all managers systems are initialized in the order they were added.
+	 * Makes sure all managers systems are initialized in the order they were
+	 * added.
 	 */
 	public void initialize() {
 		for (int i = 0; i < managersBag.size(); i++) {
@@ -81,9 +82,8 @@ public class World {
 	
 	/**
 	 * Returns a manager that takes care of all the entities in the world.
-	 * entities of this world.
 	 * 
-	 * @return entity manager.
+	 * @return entity manager
 	 */
 	public EntityManager getEntityManager() {
 		return em;
@@ -92,7 +92,7 @@ public class World {
 	/**
 	 * Returns a manager that takes care of all the components in the world.
 	 * 
-	 * @return component manager.
+	 * @return component manager
 	 */
 	public ComponentManager getComponentManager() {
 		return cm;
@@ -102,10 +102,18 @@ public class World {
 	
 
 	/**
-	 * Add a manager into this world. It can be retrieved later.
-	 * World will notify this manager of changes to entity.
+	 * Add a manager into this world.
+	 * <p>
+	 * It can be retrieved later. World will notify this manager of changes to
+	 * entity.
+	 * </p>
 	 * 
-	 * @param manager to be added
+	 * @param <T>
+	 *			class type of the manager
+	 * @param manager
+	 *			manager to be added
+	 *
+	 * @return the manager
 	 */
 	public final <T extends Manager> T setManager(T manager) {
 		managers.put(manager.getClass(), manager);
@@ -118,8 +126,10 @@ public class World {
 	 * Returns a manager of the specified type.
 	 * 
 	 * @param <T>
+	 *			class type of the manager
 	 * @param managerType
-	 *            class type of the manager
+	 *			class type of the manager
+	 *
 	 * @return the manager
 	 */
 	public <T extends Manager> T getManager(Class<T> managerType) {
@@ -139,7 +149,9 @@ public class World {
 	
 	/**
 	 * Deletes the manager from this world.
-	 * @param manager to delete.
+	 *
+	 * @param manager
+	 *			manager to delete
 	 */
 	public void deleteManager(Manager manager) {
 		managers.remove(manager.getClass());
@@ -152,7 +164,7 @@ public class World {
 	/**
 	 * Time since last game loop.
 	 * 
-	 * @return delta time since last game loop.
+	 * @return delta time since last game loop
 	 */
 	public float getDelta() {
 		return delta;
@@ -161,7 +173,8 @@ public class World {
 	/**
 	 * You must specify the delta for the game here.
 	 * 
-	 * @param delta time since last game loop.
+	 * @param delta
+	 *			time since last game loop
 	 */
 	public void setDelta(float delta) {
 		this.delta = delta;
@@ -172,7 +185,8 @@ public class World {
 	/**
 	 * Adds a entity to this world.
 	 * 
-	 * @param e entity
+	 * @param e
+	 *			the entity to add
 	 */
 	public void addEntity(Entity e) {
 		added.add(e);
@@ -180,10 +194,13 @@ public class World {
 	
 	/**
 	 * Ensure all systems are notified of changes to this entity.
-	 * If you're adding a component to an entity after it's been
-	 * added to the world, then you need to invoke this method.
+	 * <p>
+	 * If you're adding a component to an entity after it's been added to the
+	 * world, then you need to invoke this method.
+	 * </p>
 	 * 
-	 * @param e entity
+	 * @param e
+	 *			the changed entity
 	 */
 	public void changedEntity(Entity e) {
 		check(e, changedPerformer);
@@ -192,7 +209,8 @@ public class World {
 	/**
 	 * Delete the entity from the world.
 	 * 
-	 * @param e entity
+	 * @param e
+	 *			the entity to delete
 	 */
 	public void deleteEntity(Entity e) {
 		if (!deleted.contains(e)) {
@@ -205,15 +223,25 @@ public class World {
 
 	/**
 	 * (Re)enable the entity in the world, after it having being disabled.
+	 * <p>
 	 * Won't do anything unless it was already disabled.
+	 * </p>
+	 *
+	 * @param e
+	 *			the entity to enable
 	 */
 	public void enable(Entity e) {
 		check(e, enabledPerformer);
 	}
 
 	/**
-	 * Disable the entity from being processed. Won't delete it, it will
-	 * continue to exist but won't get processed.
+	 * Disable the entity from being processed.
+	 * <p>
+	 * Won't delete it, it will continue to exist but won't get processed.
+	 * </p>
+	 *
+	 * @param e
+	 *			the entity to disable
 	 */
 	public void disable(Entity e) {
 		check(e, disabledPerformer);
@@ -222,7 +250,10 @@ public class World {
 
 	/**
 	 * Create and return a new or reused entity instance.
-	 * Will NOT add the entity to the world, use World.addEntity(Entity) for that.
+	 * <p>
+	 * Will NOT add the entity to the world, use {@link #addEntity(Entity)} for
+	 * that.
+	 * </p>
 	 * 
 	 * @return entity
 	 */
@@ -234,7 +265,9 @@ public class World {
 	 * Get a entity having the specified id.
 	 * 
 	 * @param entityId
-	 * @return entity
+	 *			the entities id
+	 *
+	 * @return the specific entity
 	 */
 	public Entity getEntity(int entityId) {
 		return em.getEntity(entityId);
@@ -246,17 +279,22 @@ public class World {
 	/**
 	 * Gives you all the systems in this world for possible iteration.
 	 * 
-	 * @return all entity systems in world.
+	 * @return all entity systems in world
 	 */
 	public ImmutableBag<EntitySystem> getSystems() {
 		return systemsBag;
 	}
 
 	/**
-	 * Adds a system to this world that will be processed by World.process()
+	 * Adds a system to this world that will be processed by
+	 * {@link #process()}.
 	 * 
-	 * @param system the system to add.
-	 * @return the added system.
+	 * @param <T>
+	 *			the system class type
+	 * @param system
+	 *			the system to add
+	 *
+	 * @return the added system
 	 */
 	public <T extends EntitySystem> T setSystem(T system) {
 		return setSystem(system, false);
@@ -265,9 +303,15 @@ public class World {
 	/**
 	 * Will add a system to this world.
 	 *  
-	 * @param system the system to add.
-	 * @param passive wether or not this system will be processed by World.process()
-	 * @return the added system.
+	 * @param <T>
+	 *			the system class type
+	 * @param system
+	 *			the system to add
+	 * @param passive
+	 *			wether or not this system will be processed by
+	 *			{@link #process()}
+	 *
+	 * @return the added system
 	 */
 	public <T extends EntitySystem> T setSystem(T system, boolean passive) {
 		system.setWorld(this);
@@ -281,7 +325,9 @@ public class World {
 	
 	/**
 	 * Removed the specified system from the world.
-	 * @param system to be deleted from world.
+	 *
+	 * @param system
+	 *			to be deleted from world
 	 */
 	public void deleteSystem(EntitySystem system) {
 		systems.remove(system.getClass());
@@ -303,10 +349,14 @@ public class World {
 	}
 	
 	/**
-	 * Retrieve a system for specified system type.
+	 * Retrieve a system for specified system type
 	 * 
-	 * @param type type of system.
-	 * @return instance of the system in this world.
+	 * @param <T>
+	 *			the class type of system
+	 * @param type
+	 *			type of system
+	 *
+	 * @return instance of the system in this world
 	 */
 	public <T extends EntitySystem> T getSystem(Class<T> type) {
 		return type.cast(systems.get(type));
@@ -326,8 +376,11 @@ public class World {
 	
 	/**
 	 * Performs an action on each entity.
+	 *
 	 * @param entityBag
+	 *			contains the entities upon which the action will be performed
 	 * @param performer
+	 *			the performer that carries out the action
 	 */
 	private void check(WildBag<Entity> entityBag, Performer performer) {
 		Object[] entities = entityBag.getData();
@@ -366,10 +419,15 @@ public class World {
 	
 
 	/**
-	 * Retrieves a ComponentMapper instance for fast retrieval of components from entities.
+	 * Retrieves a ComponentMapper instance for fast retrieval of components
+	 * from entities.
 	 * 
-	 * @param type of component to get mapper for.
-	 * @return mapper for specified component type.
+	 * @param <T>
+	 *			class type of the component
+	 * @param type
+	 *			type of component to get mapper for
+	 *
+	 * @return mapper for specified component type
 	 */
 	public <T extends Component> ComponentMapper<T> getMapper(Class<T> type) {
 		return ComponentMapper.getFor(type, this);
@@ -441,7 +499,7 @@ public class World {
 
 
 
-	/*
+	/**
 	 * Only used internally to maintain clean code.
 	 */
 	private interface Performer {

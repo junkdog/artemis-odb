@@ -6,11 +6,13 @@ import java.util.UUID;
 import com.artemis.utils.Bag;
 
 /**
- * The entity class. Cannot be instantiated outside the framework, you must
- * create new entities using World.
+ * The entity class.
+ * <p>
+ * Cannot be instantiated outside the framework, you must create new entities
+ * using World.
+ * </p>
  * 
  * @author Arni Arent
- * 
  */
 public final class Entity {
 
@@ -36,18 +38,22 @@ public final class Entity {
 	}
 
 	/**
-	 * The internal id for this entity within the framework. No other entity
-	 * will have the same ID, but ID's are however reused so another entity may
-	 * acquire this ID if the previous entity was deleted.
+	 * The internal id for this entity within the framework.
+	 * <p>
+	 * No other entity will have the same ID, but ID's are however reused so
+	 * another entity may acquire this ID if the previous entity was deleted.
+	 * </p>
 	 * 
-	 * @return id of the entity.
+	 * @return id of the entity
 	 */
 	public int getId() {
 		return id;
 	}
 
 	/**
-	 * Returns a BitSet instance containing bits of the components the entity possesses.
+	 * Returns a BitSet instance containing bits of the components the entity
+	 * possesses.
+	 *
 	 * @return
 	 */
 	protected BitSet getComponentBits() {
@@ -55,7 +61,9 @@ public final class Entity {
 	}
 	
 	/**
-	 * Returns a BitSet instance containing bits of the components the entity possesses.
+	 * Returns a BitSet instance containing bits of the components the entity
+	 * possesses.
+	 *
 	 * @return
 	 */
 	protected BitSet getSystemBits() {
@@ -64,7 +72,9 @@ public final class Entity {
 
 	/**
 	 * Make entity ready for re-use.
+	 * <p>
 	 * Will generate a new uuid for the entity.
+	 * </p>
 	 */
 	protected void reset() {
 		systemBits.clear();
@@ -80,9 +90,10 @@ public final class Entity {
 	/**
 	 * Add a component to this entity.
 	 * 
-	 * @param component to add to this entity
+	 * @param component
+	 *			to add to this entity
 	 * 
-	 * @return this entity for chaining.
+	 * @return this entity for chaining
 	 */
 	public Entity addComponent(Component component) {
 		addComponent(component, ComponentType.getTypeFor(component.getClass()));
@@ -90,13 +101,18 @@ public final class Entity {
 	}
 	
 	/**
-	 * Faster adding of components into the entity. Not neccessery to use this, but
-	 * in some cases you might need the extra performance.
+	 * Faster adding of components into the entity.
+	 * <p>
+	 * Not neccessery to use this, but in some cases you might need the extra
+	 * performance.
+	 * </p>
+	 *
+	 * @param component
+	 *			the component to add
+	 * @param type
+	 *			of the component
 	 * 
-	 * @param component the component to add
-	 * @param type of the component
-	 * 
-	 * @return this entity for chaining.
+	 * @return this entity for chaining
 	 */
 	public Entity addComponent(Component component, ComponentType type) {
 		componentManager.addComponent(this, type, component);
@@ -106,9 +122,10 @@ public final class Entity {
 	/**
 	 * Removes the component from this entity.
 	 * 
-	 * @param component to remove from this entity.
+	 * @param component
+	 *			to remove from this entity.
 	 * 
-	 * @return this entity for chaining.
+	 * @return this entity for chaining
 	 */
 	public Entity removeComponent(Component component) {
 		removeComponent(component.getClass());
@@ -118,9 +135,10 @@ public final class Entity {
 	/**
 	 * Faster removal of components from a entity.
 	 * 
-	 * @param component to remove from this entity.
+	 * @param type
+	 *			to remove from this entity
 	 * 
-	 * @return this entity for chaining.
+	 * @return this entity for chaining
 	 */
 	public Entity removeComponent(ComponentType type) {
 		componentManager.removeComponent(this, type);
@@ -129,9 +147,10 @@ public final class Entity {
 	
 	/**
 	 * Remove component by its type.
+	 *
 	 * @param type
 	 * 
-	 * @return this entity for chaining.
+	 * @return this entity for chaining
 	 */
 	public Entity removeComponent(Class<? extends Component> type) {
 		removeComponent(ComponentType.getTypeFor(type));
@@ -139,10 +158,13 @@ public final class Entity {
 	}
 
 	/**
-	 * Checks if the entity has been added to the world and has not been deleted from it.
+	 * Checks if the entity has been added to the world and has not been
+	 * deleted from it.
+	 * <p>
 	 * If the entity has been disabled this will still return true.
-	 * 
-	 * @return if it's active.
+	 * </p>
+	 *
+	 * @return {@code true} if it's active
 	 */
 	public boolean isActive() {
 		return entityManager.isActive(id);
@@ -150,10 +172,12 @@ public final class Entity {
 	
 	/**
 	 * Will check if the entity is enabled in the world.
-	 * By default all entities that are added to world are enabled,
-	 * this will only return false if an entity has been explicitly disabled.
+	 * <p>
+	 * By default all entities that are added to world are enabled, this will
+	 * only return false if an entity has been explicitly disabled.
+	 * </p>
 	 * 
-	 * @return if it's enabled
+	 * @return {@code true} if it's enabled
 	 */
 	public boolean isEnabled() {
 		return entityManager.isEnabled(id);
@@ -161,13 +185,16 @@ public final class Entity {
 	
 	/**
 	 * This is the preferred method to use when retrieving a component from a
-	 * entity. It will provide good performance.
-	 * But the recommended way to retrieve components from an entity is using
-	 * the ComponentMapper.
+	 * entity.
+	 * <p>
+	 * It will provide good performance. But the recommended way to retrieve
+	 * components from an entity is using the ComponentMapper.
+	 * </p>
 	 * 
 	 * @param type
-	 *            in order to retrieve the component fast you must provide a
-	 *            ComponentType instance for the expected component.
+	 *			in order to retrieve the component fast you must provide a
+	 *			ComponentType instance for the expected component
+	 *
 	 * @return
 	 */
 	public Component getComponent(ComponentType type) {
@@ -175,15 +202,18 @@ public final class Entity {
 	}
 
 	/**
-	 * Slower retrieval of components from this entity. Minimize usage of this,
-	 * but is fine to use e.g. when creating new entities and setting data in
-	 * components.
-	 * 
+	 * Slower retrieval of components from this entity.
+	 * <p>
+	 * Minimize usage of this, but is fine to use e.g. when creating new
+	 * entities and setting data in components.
+	 * </p>
+	 *
 	 * @param <T>
-	 *            the expected return component type.
+	 *			the expected return component type
 	 * @param type
-	 *            the expected return component type.
-	 * @return component that matches, or null if none is found.
+	 *			the expected return component type
+	 *
+	 * @return component that matches, or null if none is found
 	 */
 	public <T extends Component> T getComponent(Class<T> type) {
 		return type.cast(getComponent(ComponentType.getTypeFor(type)));
@@ -191,20 +221,27 @@ public final class Entity {
 
 	/**
 	 * Returns a bag of all components this entity has.
-	 * You need to reset the bag yourself if you intend to fill it more than once.
+	 * <p>
+	 * You need to reset the bag yourself if you intend to fill it more than
+	 * once.
+	 * </p>
 	 * 
-	 * @param fillBag the bag to put the components into.
-	 * @return the fillBag with the components in.
+	 * @param fillBag
+	 *			the bag to put the components into
+	 *
+	 * @return the fillBag with the components in
 	 */
 	public Bag<Component> getComponents(Bag<Component> fillBag) {
 		return componentManager.getComponentsFor(this, fillBag);
 	}
 
 	/**
-	 * Refresh all changes to components for this entity. After adding or
-	 * removing components, you must call this method. It will update all
-	 * relevant systems. It is typical to call this after adding components to a
-	 * newly created entity.
+	 * Refresh all changes to components for this entity.
+	 * <p>
+	 * After adding or removing components, you must call this method. It will
+	 * update all relevant systems. It is typical to call this after adding
+	 * components to a newly created entity.
+	 * </p>
 	 */
 	public void addToWorld() {
 		world.addEntity(this);
@@ -226,15 +263,19 @@ public final class Entity {
 	
 	/**
 	 * (Re)enable the entity in the world, after it having being disabled.
+	 * <p>
 	 * Won't do anything unless it was already disabled.
+	 * </p>
 	 */
 	public void enable() {
 		world.enable(this);
 	}
 	
 	/**
-	 * Disable the entity from being processed. Won't delete it, it will
-	 * continue to exist but won't get processed.
+	 * Disable the entity from being processed.
+	 * <p>
+	 * Won't delete it, it will continue to exist but won't get processed.
+	 * </p>
 	 */
 	public void disable() {
 		world.disable(this);
@@ -242,8 +283,11 @@ public final class Entity {
 	
 	/**
 	 * Get the UUID for this entity.
+	 * <p>
 	 * This UUID is unique per entity (re-used entities get a new UUID).
-	 * @return uuid instance for this entity.
+	 * </p>
+	 *
+	 * @return uuid instance for this entity
 	 */
 	public UUID getUuid() {
 		return uuid;
@@ -251,7 +295,8 @@ public final class Entity {
 
 	/**
 	 * Returns the world this entity belongs to.
-	 * @return world of entity.
+	 *
+	 * @return world of entity
 	 */
 	public World getWorld() {
 		return world;

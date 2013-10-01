@@ -11,11 +11,11 @@ import com.artemis.utils.ImmutableBag;
 
 /**
  * You may sometimes want to specify to which player an entity belongs to.
- * 
+ * <p>
  * An entity can only belong to a single player at a time.
- * 
- * @author Arni Arent
+ * </p>
  *
+ * @author Arni Arent
  */
 public class PlayerManager extends Manager {
 

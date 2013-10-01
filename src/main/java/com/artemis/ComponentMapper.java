@@ -3,12 +3,16 @@ package com.artemis;
 import com.artemis.utils.Bag;
 
 /**
- * High performance component retrieval from entities. Use this wherever you
- * need to retrieve components from entities often and fast.
- * 
+ * High performance component retrieval from entities.
+ * <p>
+ * Use this wherever you need to retrieve components from entities often and
+ * fast.
+ * </p>
+ *
  * @author Arni Arent
  *
- * @param <A> the class type of the component
+ * @param <A>
+ *			the class type of the component
  */
 public class ComponentMapper<A extends Component> {
 
@@ -24,10 +28,15 @@ public class ComponentMapper<A extends Component> {
 
 	/**
 	 * Fast but unsafe retrieval of a component for this entity.
-	 * No bounding checks, so this could throw an ArrayIndexOutOfBoundsExeption,
-	 * however in most scenarios you already know the entity possesses this component.
+	 * <p>
+	 * No bounding checks, so this could throw an
+	 * {@link ArrayIndexOutOfBoundsExeption}, however in most scenarios you
+	 * already know the entity possesses this component.
+	 * </p>
 	 * 
-	 * @param e the entity that should possess the component
+	 * @param e
+	 *			the entity that should possess the component
+	 *
 	 * @return the instance of the component
 	 */
 	public A get(Entity e) {
@@ -36,9 +45,13 @@ public class ComponentMapper<A extends Component> {
 
 	/**
 	 * Fast and safe retrieval of a component for this entity.
+	 * <p>
 	 * If the entity does not have this component then null is returned.
+	 * </p>
 	 * 
-	 * @param e the entity that should possess the component
+	 * @param e
+	 *			the entity that should possess the component
+	 *
 	 * @return the instance of the component
 	 */
 	public A getSafe(Entity e) {
@@ -50,8 +63,11 @@ public class ComponentMapper<A extends Component> {
 	
 	/**
 	 * Checks if the entity has this type of component.
-	 * @param e the entity to check
-	 * @return true if the entity has this component type, false if it doesn't.
+	 *
+	 * @param e
+	 *			the entity to check
+	 *
+	 * @return true if the entity has this component type, false if it doesn't
 	 */
 	public boolean has(Entity e) {
 		return getSafe(e) != null;		
@@ -60,9 +76,14 @@ public class ComponentMapper<A extends Component> {
 	/**
 	 * Returns a component mapper for this type of components.
 	 * 
-	 * @param type the type of components this mapper uses.
-	 * @param world the world that this component mapper should use.
-	 * @return a new mapper.
+	 * @param <T>
+	 *			the class type of components
+	 * @param type
+	 *			the class of components this mapper uses
+	 * @param world
+	 *			the world that this component mapper should use
+	 *
+	 * @return a new mapper
 	 */
 	public static <T extends Component> ComponentMapper<T> getFor(Class<T> type, World world) {
 		return new ComponentMapper<T>(type, world);

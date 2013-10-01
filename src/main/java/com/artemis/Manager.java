@@ -5,7 +5,6 @@ package com.artemis;
  * Manager.
  * 
  * @author Arni Arent
- * 
  */
 public abstract class Manager implements EntityObserver {
 

@@ -64,10 +64,13 @@ public class EntityManager extends Manager {
 
 	/**
 	 * Check if this entity is active.
+	 * <p>
 	 * Active means the entity is being actively processed.
+	 * </p>
 	 * 
 	 * @param entityId
-	 * @return true if active, false if not.
+	 *
+	 * @return true if active, false if not
 	 */
 	public boolean isActive(int entityId) {
 		return entities.get(entityId) != null;
@@ -77,7 +80,8 @@ public class EntityManager extends Manager {
 	 * Check if the specified entityId is enabled.
 	 * 
 	 * @param entityId
-	 * @return true if the entity is enabled, false if it is disabled.
+	 *
+	 * @return true if the entity is enabled, false if it is disabled
 	 */
 	public boolean isEnabled(int entityId) {
 		return !disabled.get(entityId);
@@ -87,6 +91,7 @@ public class EntityManager extends Manager {
 	 * Get a entity with this id.
 	 * 
 	 * @param entityId
+	 *
 	 * @return the entity
 	 */
 	protected Entity getEntity(int entityId) {
@@ -95,7 +100,8 @@ public class EntityManager extends Manager {
 	
 	/**
 	 * Get how many entities are active in this world.
-	 * @return how many entities are currently active.
+	 *
+	 * @return how many entities are currently active
 	 */
 	public int getActiveEntityCount() {
 		return active;
@@ -103,9 +109,12 @@ public class EntityManager extends Manager {
 	
 	/**
 	 * Get how many entities have been created in the world since start.
+	 * <p>
 	 * Note: A created entity may not have been added to the world, thus
 	 * created count is always equal or larger than added count.
-	 * @return how many entities have been created since start.
+	 * </p>
+	 *
+	 * @return how many entities have been created since start
 	 */
 	public long getTotalCreated() {
 		return created;
@@ -113,7 +122,8 @@ public class EntityManager extends Manager {
 	
 	/**
 	 * Get how many entities have been added to the world since start.
-	 * @return how many entities have been added.
+	 *
+	 * @return how many entities have been added
 	 */
 	public long getTotalAdded() {
 		return added;
@@ -121,7 +131,8 @@ public class EntityManager extends Manager {
 	
 	/**
 	 * Get how many entities have been deleted from the world since start.
-	 * @return how many entities have been deleted since start.
+	 *
+	 * @return how many entities have been deleted since start
 	 */
 	public long getTotalDeleted() {
 		return deleted;
@@ -129,8 +140,9 @@ public class EntityManager extends Manager {
 	
 	
 	
-	/*
-	 * Used only internally to generate distinct ids for entities and reuse them.
+	/**
+	 * Used only internally to generate distinct ids for entities and reuse
+	 * them.
 	 */
 	private static final class IdentifierPool {
 

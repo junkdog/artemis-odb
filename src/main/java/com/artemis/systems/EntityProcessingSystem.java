@@ -7,11 +7,13 @@ import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
 /**
- * A typical entity system. Use this when you need to process entities possessing the
- * provided component types.
+ * A typical entity system.
+ * <p>
+ * Use this when you need to process entities possessing the provided component
+ * types.
+ * </p>
  * 
  * @author Arni Arent
- *
  */
 public abstract class EntityProcessingSystem extends EntitySystem {
 	
@@ -21,7 +23,9 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 
 	/**
 	 * Process a entity this system is interested in.
-	 * @param e the entity to process.
+	 *
+	 * @param e
+	 *			the entity to process
 	 */
 	protected abstract void process(Entity e);
 

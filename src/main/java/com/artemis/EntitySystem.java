@@ -7,12 +7,14 @@ import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
 /**
- * The most raw entity system. It should not typically be used, but you can create your own
- * entity system handling by extending this. It is recommended that you use the other provided
- * entity system implementations.
- * 
- * @author Arni Arent
+ * The most raw entity system.
+ * <p>
+ * It should not typically be used, but you can create your own entity system
+ * handling by extending this. It is recommended that you use the other
+ * provided entity system implementations.
+ * </p>
  *
+ * @author Arni Arent
  */
 public abstract class EntitySystem implements EntityObserver {
 
@@ -35,8 +37,11 @@ public abstract class EntitySystem implements EntityObserver {
 	private boolean isProcessing;
 	
 	/**
-	 * Creates an entity system that uses the specified aspect as a matcher against entities.
-	 * @param aspect to match against entities
+	 * Creates an entity system that uses the specified aspect as a matcher
+	 * against entities.
+	 *
+	 * @param aspect
+	 *			to match against entities
 	 */
 	public EntitySystem(Aspect aspect) {
 		actives = new Bag<Entity>();
@@ -88,7 +93,8 @@ public abstract class EntitySystem implements EntityObserver {
 	 * Any implementing entity system must implement this method and the logic
 	 * to process the given entities of the system.
 	 * 
-	 * @param entities the entities this system contains.
+	 * @param entities
+	 *			the entities this system contains.
 	 */
 	protected abstract void processEntities(ImmutableBag<Entity> entities);
 	
@@ -99,19 +105,26 @@ public abstract class EntitySystem implements EntityObserver {
 	protected abstract boolean checkProcessing();
 
 	/**
-	 * Override to implement code that gets executed when systems are initialized.
+	 * Override to implement code that gets executed when systems are
+	 * initialized.
 	 */
 	protected void initialize() {};
 
 	/**
-	 * Called if the system has received a entity it is interested in, e.g. created or a component was added to it.
-	 * @param e the entity that was added to this system.
+	 * Called if the system has received a entity it is interested in, e.g
+	 * created or a component was added to it.
+	 *
+	 * @param e
+	 *			the entity that was added to this system
 	 */
 	protected void inserted(Entity e) {};
 
 	/**
-	 * Called if a entity was removed from this system, e.g. deleted or had one of it's components removed.
-	 * @param e the entity that was removed from this system.
+	 * Called if a entity was removed from this system, e.g deleted or had one
+	 * of it's components removed.
+	 *
+	 * @param e
+	 *			the entity that was removed from this system
 	 */
 	protected void removed(Entity e) {};
 
@@ -119,16 +132,20 @@ public abstract class EntitySystem implements EntityObserver {
 	/**
 	 * Returns true if the system is enabled.
 	 * 
-	 * @return True if enabled, otherwise false.
+	 * @return {@code true} if enabled, otherwise false
 	 */
 	public boolean isEnabled() {
 		return enabled;
 	}
 
 	/**
-	 * Enabled systems are run during {@link #process()}. Systems are enabled by default.
+	 * Enabled systems are run during {@link #process()}.
+	 * <p>
+	 * Systems are enabled by default.
+	 * </p>
 	 * 
-	 * @param enabled System will not run when set to false.
+	 * @param enabled
+	 *			system will not run when set to false
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
@@ -136,7 +153,9 @@ public abstract class EntitySystem implements EntityObserver {
 
 	/**
 	 * Will check if the entity is of interest to this system.
-	 * @param e entity to check
+	 *
+	 * @param e
+	 *			entity to check
 	 */
 	protected final void check(Entity e) {
 		if(dummy) {
@@ -243,7 +262,9 @@ public abstract class EntitySystem implements EntityObserver {
 	
 	/**
 	 * Used to generate a unique bit for each system.
+	 * <p>
 	 * Only used internally in EntitySystem.
+	 * </p>
 	 */
 	private static final class SystemIndexManager {
 

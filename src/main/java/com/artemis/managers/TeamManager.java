@@ -10,14 +10,14 @@ import com.artemis.utils.ImmutableBag;
 
 /**
  * Use this class together with PlayerManager.
- * 
- * You may sometimes want to create teams in your game, so that
- * some players are team mates.
- * 
+ * <p>
+ * You may sometimes want to create teams in your game, so that some players
+ * are team mates.
+ * </p><p>
  * A player can only belong to a single team.
+ * </p>
  * 
  * @author Arni Arent
- *
  */
 public class TeamManager extends Manager {
 
