@@ -19,17 +19,17 @@ public abstract class EntitySystem implements EntityObserver {
 
 	protected World world;
 
-	private Bag<Entity> actives;
-	private static WildBag<Entity> delayedDeletion = new WildBag<Entity>();
+	private final Bag<Entity> actives;
+	private static final WildBag<Entity> delayedDeletion = new WildBag<Entity>();
 
-	private BitSet allSet;
-	private BitSet exclusionSet;
-	private BitSet oneSet;
+	private final BitSet allSet;
+	private final BitSet exclusionSet;
+	private final BitSet oneSet;
 
 	private boolean passive;
 	private boolean enabled;
 
-	private boolean dummy;
+	private final boolean dummy;
 	
 	private boolean isProcessing;
 	
@@ -244,9 +244,10 @@ public abstract class EntitySystem implements EntityObserver {
 	 * Used to generate a unique bit for each system.
 	 * Only used internally in EntitySystem.
 	 */
-	private static class SystemIndexManager {
+	private static final class SystemIndexManager {
 		private static int INDEX = 0;
-		private static HashMap<Class<? extends EntitySystem>, Integer> indices = new HashMap<Class<? extends EntitySystem>, Integer>();
+		private static final HashMap<Class<? extends EntitySystem>, Integer> indices
+				= new HashMap<Class<? extends EntitySystem>, Integer>();
 		
 		private static int getIndexFor(Class<? extends EntitySystem> es){
 			Integer index = indices.get(es);

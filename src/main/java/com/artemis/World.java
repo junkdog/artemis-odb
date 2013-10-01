@@ -20,8 +20,8 @@ import com.artemis.utils.ImmutableBag;
  * 
  */
 public class World {
-	private EntityManager em;
-	private ComponentManager cm;
+	private final EntityManager em;
+	private final ComponentManager cm;
 
 	public float delta;
 	private final WildBag<Entity> added;
@@ -106,7 +106,7 @@ public class World {
 	 * 
 	 * @param manager to be added
 	 */
-	public <T extends Manager> T setManager(T manager) {
+	public final <T extends Manager> T setManager(T manager) {
 		managers.put(manager.getClass(), manager);
 		managersBag.add(manager);
 		manager.setWorld(this);
@@ -392,7 +392,7 @@ public class World {
 	}
 	
 
-	private final class DeletedPerformer implements Performer
+	private static final class DeletedPerformer implements Performer
 	{
 		@Override
 		public void perform(EntityObserver observer, Entity e) {
@@ -402,7 +402,7 @@ public class World {
 
 
 
-	private final class EnabledPerformer implements Performer
+	private static final class EnabledPerformer implements Performer
 	{
 		@Override
 		public void perform(EntityObserver observer, Entity e) {
@@ -412,7 +412,7 @@ public class World {
 
 
 
-	private final class DisabledPerformer implements Performer
+	private static final class DisabledPerformer implements Performer
 	{
 		@Override
 		public void perform(EntityObserver observer, Entity e) {
@@ -422,7 +422,7 @@ public class World {
 
 
 
-	private final class ChangedPerformer implements Performer
+	private static final class ChangedPerformer implements Performer
 	{
 		@Override
 		public void perform(EntityObserver observer, Entity e) {
@@ -432,7 +432,7 @@ public class World {
 
 
 
-	private final class AddedPerformer implements Performer
+	private static final class AddedPerformer implements Performer
 	{
 		@Override
 		public void perform(EntityObserver observer, Entity e) {
@@ -450,7 +450,7 @@ public class World {
 	}
 	
 	
-	private static class ComponentMapperInitHelper {
+	private static final class ComponentMapperInitHelper {
 
 		public static void config(Object target, World world) {
 			try {

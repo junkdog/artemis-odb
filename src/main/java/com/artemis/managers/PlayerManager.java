@@ -18,8 +18,8 @@ import com.artemis.utils.ImmutableBag;
  *
  */
 public class PlayerManager extends Manager {
-	private Map<Entity, String> playerByEntity;
-	private Map<String, Bag<Entity>> entitiesByPlayer;
+	private final Map<Entity, String> playerByEntity;
+	private final Map<String, Bag<Entity>> entitiesByPlayer;
 
 	public PlayerManager() {
 		playerByEntity = new HashMap<Entity, String>();

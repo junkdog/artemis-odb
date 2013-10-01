@@ -26,9 +26,9 @@ import java.util.BitSet;
  */
 public class Aspect {
 	
-	private BitSet allSet;
-	private BitSet exclusionSet;
-	private BitSet oneSet;
+	private final BitSet allSet;
+	private final BitSet exclusionSet;
+	private final BitSet oneSet;
 	
 	private Aspect() {
 		this.allSet = new BitSet();

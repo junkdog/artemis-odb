@@ -5,15 +5,15 @@ import java.util.BitSet;
 import com.artemis.utils.Bag;
 
 public class EntityManager extends Manager {
-	private Bag<Entity> entities;
-	private BitSet disabled;
+	private final Bag<Entity> entities;
+	private final BitSet disabled;
 	
 	private int active;
 	private long added;
 	private long created;
 	private long deleted;
 
-	private IdentifierPool identifierPool;
+	private final IdentifierPool identifierPool;
 	
 	public EntityManager() {
 		entities = new Bag<Entity>();
@@ -131,8 +131,8 @@ public class EntityManager extends Manager {
 	/*
 	 * Used only internally to generate distinct ids for entities and reuse them.
 	 */
-	private class IdentifierPool {
-		private Bag<Integer> ids;
+	private static final class IdentifierPool {
+		private final Bag<Integer> ids;
 		private int nextAvailableId;
 
 		public IdentifierPool() {
