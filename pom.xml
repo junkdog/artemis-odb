@@ -30,13 +30,13 @@
 			<name>The BSD 2-Clause License</name>
 			<url>http://opensource.org/licenses/BSD-2-Clause</url>
 			<distribution>repo</distribution>
-			<comment>Artemis main</comment>
+			<comments>Artemis main</comments>
 		</license>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 			<distribution>repo</distribution>
-			<comment>libGDX TimSort</comment>
+			<comments>libGDX TimSort</comments>
 		</license>
 	</licenses>
 	
