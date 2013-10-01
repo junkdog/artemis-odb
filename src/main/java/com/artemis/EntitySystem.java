@@ -20,7 +20,7 @@ public abstract class EntitySystem implements EntityObserver {
 	protected World world;
 
 	private Bag<Entity> actives;
-	private WildBag<Entity> deleted;
+	private static WildBag<Entity> delayedDeletion = new WildBag<Entity>();
 
 	private BitSet allSet;
 	private BitSet exclusionSet;
@@ -39,7 +39,6 @@ public abstract class EntitySystem implements EntityObserver {
 	 */
 	public EntitySystem(Aspect aspect) {
 		actives = new Bag<Entity>();
-		deleted = new WildBag<Entity>();
 		allSet = aspect.getAllSet();
 		exclusionSet = aspect.getExclusionSet();
 		oneSet = aspect.getOneSet();
@@ -64,15 +63,14 @@ public abstract class EntitySystem implements EntityObserver {
 			processEntities(actives);
 			isProcessing = false;
 
-			int s = deleted.size();
-
+			int s = delayedDeletion.size();
 			if (s > 0) {
-				Object[] data = deleted.getData();
+				Object[] data = delayedDeletion.getData();
 				for (int i = 0; i < s; i++) {
 					removeFromSystem((Entity)data[i]);
 					data[i] = null;
 				}
-				deleted.setSize(0);
+				delayedDeletion.setSize(0);
 			}
 
 			end();
@@ -177,6 +175,11 @@ public abstract class EntitySystem implements EntityObserver {
 	}
 
 	private void removeFromSystem(Entity e) {
+		if (isProcessing) {
+			delayedDeletion.add(e);
+			return;
+		}
+		
 		actives.remove(e);
 		e.getSystemBits().clear(systemIndex);
 		removed(e);
@@ -202,11 +205,7 @@ public abstract class EntitySystem implements EntityObserver {
 	@Override
 	public final void deleted(Entity e) {
 		if(e.getSystemBits().get(systemIndex)) {
-			if (!isProcessing) {
-				removeFromSystem(e);
-			} else {
-				deleted.add(e);
-			}
+			removeFromSystem(e);
 		}
 	}
 	
