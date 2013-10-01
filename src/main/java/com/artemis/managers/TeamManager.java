@@ -20,6 +20,7 @@ import com.artemis.utils.ImmutableBag;
  *
  */
 public class TeamManager extends Manager {
+
 	private final Map<String, Bag<String>> playersByTeam;
 	private final Map<String, String> teamByPlayer;
 

@@ -16,6 +16,7 @@ import com.artemis.Manager;
  *
  */
 public class TagManager extends Manager {
+
 	private final Map<String, Entity> entitiesByTag;
 	private final Map<Entity, String> tagsByEntity;
 

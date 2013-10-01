@@ -20,6 +20,7 @@ import com.artemis.utils.ImmutableBag;
  * 
  */
 public class World {
+
 	private final EntityManager em;
 	private final ComponentManager cm;
 
@@ -125,15 +126,13 @@ public class World {
 		return managerType.cast(managers.get(managerType));
 	}
 
-	@SuppressWarnings("unchecked") @Deprecated
+	@Deprecated
+	@SuppressWarnings("unchecked")
 	public <T extends Manager> T getManager(String managerType) {
-		try
-		{
+		try {
 			Class<T> klazz = (Class<T>)Class.forName(managerType);
 			return (T)managers.get(klazz);
-		}
-		catch (ClassNotFoundException e)
-		{
+		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -312,16 +311,14 @@ public class World {
 	public <T extends EntitySystem> T getSystem(Class<T> type) {
 		return type.cast(systems.get(type));
 	}
-	
-	@SuppressWarnings("unchecked") @Deprecated
+
+	@Deprecated
+	@SuppressWarnings("unchecked")
 	public <T extends EntitySystem> T getSystem(String type) {
-		try
-		{
+		try {
 			Class<T> klazz = (Class<T>)Class.forName(type);
 			return (T)systems.get(klazz);
-		}
-		catch (ClassNotFoundException e)
-		{
+		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -380,64 +377,66 @@ public class World {
 	
 	@SuppressWarnings("unchecked")
 	public <T extends Component> ComponentMapper<T> getMapper(String type) {
-		try
-		{
+		try {
 			Class<T> klazz = (Class<T>)Class.forName(type);
 			return ComponentMapper.getFor(klazz, this);
-		}
-		catch (ClassNotFoundException e)
-		{
+		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
 
-	private static final class DeletedPerformer implements Performer
-	{
+	private static final class DeletedPerformer implements Performer {
+
 		@Override
 		public void perform(EntityObserver observer, Entity e) {
 			observer.deleted(e);
 		}
+
 	}
 
 
 
-	private static final class EnabledPerformer implements Performer
-	{
+	private static final class EnabledPerformer implements Performer {
+
 		@Override
 		public void perform(EntityObserver observer, Entity e) {
 			observer.enabled(e);
 		}
+
 	}
 
 
 
-	private static final class DisabledPerformer implements Performer
-	{
+	private static final class DisabledPerformer implements Performer {
+
 		@Override
 		public void perform(EntityObserver observer, Entity e) {
 			observer.disabled(e);
 		}
+
 	}
 
 
 
-	private static final class ChangedPerformer implements Performer
-	{
+	private static final class ChangedPerformer implements Performer {
+
 		@Override
 		public void perform(EntityObserver observer, Entity e) {
 			observer.changed(e);
 		}
+
 	}
 
 
 
-	private static final class AddedPerformer implements Performer
-	{
+	private static final class AddedPerformer implements Performer {
+
 		@Override
 		public void perform(EntityObserver observer, Entity e) {
 			observer.added(e);
 		}
+
 	}
 
 
@@ -446,7 +445,9 @@ public class World {
 	 * Only used internally to maintain clean code.
 	 */
 	private interface Performer {
+
 		void perform(EntityObserver observer, Entity e);
+
 	}
 	
 	

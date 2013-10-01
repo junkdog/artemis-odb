@@ -12,6 +12,7 @@ import com.artemis.EntitySystem;
  *
  */
 public abstract class IntervalEntitySystem extends EntitySystem {
+
 	protected float acc;
 	private final float interval;
 

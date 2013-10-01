@@ -15,6 +15,7 @@ import com.artemis.utils.ImmutableBag;
  *
  */
 public abstract class EntitySystem implements EntityObserver {
+
 	private final int systemIndex;
 
 	protected World world;
@@ -245,11 +246,12 @@ public abstract class EntitySystem implements EntityObserver {
 	 * Only used internally in EntitySystem.
 	 */
 	private static final class SystemIndexManager {
+
 		private static int INDEX = 0;
 		private static final HashMap<Class<? extends EntitySystem>, Integer> indices
 				= new HashMap<Class<? extends EntitySystem>, Integer>();
 		
-		private static int getIndexFor(Class<? extends EntitySystem> es){
+		private static int getIndexFor(Class<? extends EntitySystem> es) {
 			Integer index = indices.get(es);
 			if(index == null) {
 				index = INDEX++;
@@ -257,6 +259,7 @@ public abstract class EntitySystem implements EntityObserver {
 			}
 			return index;
 		}
+
 	}
 
 }

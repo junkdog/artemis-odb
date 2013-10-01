@@ -8,6 +8,7 @@ package com.artemis;
  * 
  */
 public abstract class Manager implements EntityObserver {
+
 	protected World world;
 	
 	protected abstract void initialize();
@@ -39,4 +40,5 @@ public abstract class Manager implements EntityObserver {
 	@Override
 	public void enabled(Entity e) {
 	}
+
 }

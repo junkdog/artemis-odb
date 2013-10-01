@@ -13,6 +13,7 @@ import com.artemis.utils.Bag;
  * 
  */
 public final class Entity {
+
 	private UUID uuid;
 
 	private final int id;

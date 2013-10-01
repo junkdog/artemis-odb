@@ -5,6 +5,7 @@ import java.util.BitSet;
 import com.artemis.utils.Bag;
 
 public class ComponentManager extends Manager {
+
 	private final Bag<Bag<Component>> componentsByType;
 	private final WildBag<Entity> deleted;
 

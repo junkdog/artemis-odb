@@ -18,6 +18,7 @@ import com.artemis.utils.ImmutableBag;
  *
  */
 public class GroupManager extends Manager {
+
 	private final Map<String, Bag<Entity>> entitiesByGroup;
 	private final Map<Entity, Bag<String>> groupsByEntity;
 

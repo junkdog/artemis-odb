@@ -4,6 +4,7 @@ package com.artemis.utils;
 // From: http://riven8192.blogspot.com/2009/08/fastmath-sincos-lookup-tables.html
 @Deprecated
 public class TrigLUT {
+
 	public static void main(String[] args) {
 		System.out.println(cos((float) Math.PI));
 		System.out.println(cosDeg(180f));
@@ -48,4 +49,5 @@ public class TrigLUT {
 			cos[i] = (float) Math.cos((i + 0.5f) / SIN_COUNT * radFull);
 		}
 	}
+
 }

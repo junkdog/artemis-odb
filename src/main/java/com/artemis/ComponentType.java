@@ -3,6 +3,7 @@ package com.artemis;
 import java.util.HashMap;
 
 public class ComponentType {
+
 	private static int INDEX = 0;
 
 	private final int index;
@@ -39,4 +40,5 @@ public class ComponentType {
 	public static int getIndexFor(Class<? extends Component> c) {
 		return getTypeFor(c).getIndex();
 	}
+	
 }
