@@ -24,7 +24,7 @@ public class World {
 	private ComponentManager cm;
 
 	public float delta;
-	private final Bag<Entity> added;
+	private final WildBag<Entity> added;
 	private final Bag<Entity> deleted;
 
 	private final AddedPerformer addedPerformer;
@@ -46,7 +46,7 @@ public class World {
 		systems = new HashMap<Class<?>, EntitySystem>();
 		systemsBag = new Bag<EntitySystem>();
 
-		added = new Bag<Entity>();
+		added = new WildBag<Entity>();
 		deleted = new Bag<Entity>();
 		
 		addedPerformer = new AddedPerformer();
@@ -332,14 +332,15 @@ public class World {
 	 * @param entityBag
 	 * @param performer
 	 */
-	private void check(Bag<Entity> entityBag, Performer performer) {
+	private void check(WildBag<Entity> entityBag, Performer performer) {
 		Object[] entities = entityBag.getData();
 		for (int i = 0, s = entityBag.size(); s > i; i++) {
 			Entity e = (Entity)entities[i];
+			entities[i] = null;
 			notifyManagers(performer, e);
 			notifySystems(performer, e);
 		}
-		entityBag.clear();
+		entityBag.setSize(0);
 	}
 
 	private void check(Entity e, Performer performer) {

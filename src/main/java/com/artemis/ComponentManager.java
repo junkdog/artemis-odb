@@ -6,11 +6,11 @@ import com.artemis.utils.Bag;
 
 public class ComponentManager extends Manager {
 	private Bag<Bag<Component>> componentsByType;
-	private Bag<Entity> deleted;
+	private WildBag<Entity> deleted;
 
 	public ComponentManager() {
 		componentsByType = new Bag<Bag<Component>>();
-		deleted = new Bag<Entity>();
+		deleted = new WildBag<Entity>();
 	}
 	
 	@Override
@@ -80,11 +80,14 @@ public class ComponentManager extends Manager {
 	}
 	
 	protected void clean() {
-		if(deleted.size() > 0) {
-			for(int i = 0, s = deleted.size(); s > i; i++) {
-				removeComponentsOfEntity(deleted.get(i));
+		int s = deleted.size();
+		if(s > 0) {
+			Object[] data = deleted.getData();
+			for(int i = 0; s > i; i++) {
+				removeComponentsOfEntity((Entity)data[i]);
+				data[i] = null;
 			}
-			deleted.clear();
+			deleted.setSize(0);
 		}
 	}
 

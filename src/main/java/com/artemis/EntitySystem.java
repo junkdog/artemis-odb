@@ -20,7 +20,7 @@ public abstract class EntitySystem implements EntityObserver {
 	protected World world;
 
 	private Bag<Entity> actives;
-	private Bag<Entity> deleted;
+	private WildBag<Entity> deleted;
 
 	private BitSet allSet;
 	private BitSet exclusionSet;
@@ -39,7 +39,7 @@ public abstract class EntitySystem implements EntityObserver {
 	 */
 	public EntitySystem(Aspect aspect) {
 		actives = new Bag<Entity>();
-		deleted = new Bag<Entity>();
+		deleted = new WildBag<Entity>();
 		allSet = aspect.getAllSet();
 		exclusionSet = aspect.getExclusionSet();
 		oneSet = aspect.getOneSet();
@@ -70,8 +70,9 @@ public abstract class EntitySystem implements EntityObserver {
 				Object[] data = deleted.getData();
 				for (int i = 0; i < s; i++) {
 					removeFromSystem((Entity)data[i]);
+					data[i] = null;
 				}
-				deleted.clear();
+				deleted.setSize(0);
 			}
 
 			end();
