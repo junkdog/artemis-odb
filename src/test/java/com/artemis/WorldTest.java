@@ -1,6 +1,5 @@
 package com.artemis;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,11 +15,6 @@ public class WorldTest
 	public void setUp() throws Exception
 	{
 		world = new World();
-	}
-
-	@After
-	public void tearDown() throws Exception
-	{
 	}
 
 	@Test
