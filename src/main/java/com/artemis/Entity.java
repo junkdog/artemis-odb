@@ -5,27 +5,59 @@ import java.util.UUID;
 
 import com.artemis.utils.Bag;
 
+
 /**
  * The entity class.
  * <p>
  * Cannot be instantiated outside the framework, you must create new entities
- * using World.
+ * using World. The world creates entities via it's entity manager.
  * </p>
  * 
  * @author Arni Arent
  */
 public final class Entity {
 
+	/**
+	 * The entities unique global identifier.
+	 */
 	private UUID uuid;
-
+	/**
+	 * The entities identifier in the world.
+	 */
 	private final int id;
+	/**
+	 * A BitSet containing bits of the components the entity possesses.
+	 */
 	private final BitSet componentBits;
+	/**
+	 * A BitSet containing bits of the systems interested in the entity.
+	 */
 	private final BitSet systemBits;
-
+	/**
+	 * The world this entity belongs to.
+	 */
 	private final World world;
+	/**
+	 * The manager handling this entity.
+	 */
 	private final EntityManager entityManager;
+	/**
+	 * The manager handling this entities components.
+	 */
 	private final ComponentManager componentManager;
-	
+
+	/**
+	 * Creates a new {@link Entity} instance in the given world.
+	 * <p>
+	 * This will only be called by the world via it's entity manager,
+	 * and not directly by the user, as the world handles creation of entities.
+	 * </p>
+	 *
+	 * @param world
+	 *			the world to create the entity in
+	 * @param id
+	 *			the id to set
+	 */
 	protected Entity(World world, int id) {
 		this.world = world;
 		this.id = id;
@@ -54,17 +86,17 @@ public final class Entity {
 	 * Returns a BitSet instance containing bits of the components the entity
 	 * possesses.
 	 *
-	 * @return
+	 * @return a BitSet containing the entities component bits
 	 */
 	protected BitSet getComponentBits() {
 		return componentBits;
 	}
 	
 	/**
-	 * Returns a BitSet instance containing bits of the components the entity
-	 * possesses.
+	 * Returns a BitSet instance containing bits of the systems interested in
+	 * the entity.
 	 *
-	 * @return
+	 * @return a BitSet containing the systems bits interested in the entity
 	 */
 	protected BitSet getSystemBits() {
 		return systemBits;
@@ -73,7 +105,7 @@ public final class Entity {
 	/**
 	 * Make entity ready for re-use.
 	 * <p>
-	 * Will generate a new uuid for the entity.
+	 * Will generate a new uuid for the entity and remove all components.
 	 * </p>
 	 */
 	protected void reset() {
@@ -91,7 +123,7 @@ public final class Entity {
 	 * Add a component to this entity.
 	 * 
 	 * @param component
-	 *			to add to this entity
+	 *			the component to add to this entity
 	 * 
 	 * @return this entity for chaining
 	 */
@@ -110,7 +142,7 @@ public final class Entity {
 	 * @param component
 	 *			the component to add
 	 * @param type
-	 *			of the component
+	 *			the type of the component
 	 * 
 	 * @return this entity for chaining
 	 */
@@ -123,7 +155,7 @@ public final class Entity {
 	 * Removes the component from this entity.
 	 * 
 	 * @param component
-	 *			to remove from this entity.
+	 *			the component to remove from this entity.
 	 * 
 	 * @return this entity for chaining
 	 */
@@ -136,7 +168,7 @@ public final class Entity {
 	 * Faster removal of components from a entity.
 	 * 
 	 * @param type
-	 *			to remove from this entity
+	 *			the type of component to remove from this entity
 	 * 
 	 * @return this entity for chaining
 	 */
@@ -149,6 +181,7 @@ public final class Entity {
 	 * Remove component by its type.
 	 *
 	 * @param type
+	 *			the class type of component to remove from this entity
 	 * 
 	 * @return this entity for chaining
 	 */
@@ -209,9 +242,9 @@ public final class Entity {
 	 * </p>
 	 *
 	 * @param <T>
-	 *			the expected return component type
+	 *			the expected return component class type
 	 * @param type
-	 *			the expected return component type
+	 *			the expected return component class type
 	 *
 	 * @return component that matches, or null if none is found
 	 */
@@ -229,7 +262,7 @@ public final class Entity {
 	 * @param fillBag
 	 *			the bag to put the components into
 	 *
-	 * @return the fillBag with the components in
+	 * @return the fillBag containing the components
 	 */
 	public Bag<Component> getComponents(Bag<Component> fillBag) {
 		return componentManager.getComponentsFor(this, fillBag);
@@ -248,7 +281,7 @@ public final class Entity {
 	}
 	
 	/**
-	 * This entity has changed, a component added or deleted.
+	 * Refresh the entity if it has changed, a component added or deleted.
 	 */
 	public void changedInWorld() {
 		world.changedEntity(this);

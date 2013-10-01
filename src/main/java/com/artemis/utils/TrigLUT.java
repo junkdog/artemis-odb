@@ -1,11 +1,14 @@
 package com.artemis.utils;
 
+
 /**
  * Thanks to Riven.
  * <p>
  * From: <a href="http://riven8192.blogspot.com/2009/08/fastmath-sincos-lookup-tables.html">http://riven8192.blogspot.com/2009/08/fastmath-sincos-lookup-tables.html</a>
  * </p>
- * 
+ *
+ * @author Arni Arent
+ *
  * @deprecated
  */
 @Deprecated

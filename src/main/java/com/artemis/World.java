@@ -9,6 +9,7 @@ import com.artemis.annotations.Mapper;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
+
 /**
  * The primary instance for the framework.
  * <p>
@@ -21,25 +22,82 @@ import com.artemis.utils.ImmutableBag;
  */
 public class World {
 
+	/**
+	 * Mananges all entities for the world.
+	 */
 	private final EntityManager em;
+	/**
+	 * Manages all component-entities associations for the world.
+	 */
 	private final ComponentManager cm;
-
+	/**
+	 * The time since the last .
+	 */
 	public float delta;
+	/**
+	 * Entities added to the world since the last {@link #process}, they will
+	 * be gathered here and added in one go before the next {@link #process}.
+	 */
 	private final WildBag<Entity> added;
+	/**
+	 * Entities deleted from the world since the last {@link #process}.
+	 */
 	private final Bag<Entity> deleted;
 
+	/**
+	 * Runs actions on systems and managers when entites get added.
+	 *
+	 * @see #check
+	 */
 	private final AddedPerformer addedPerformer;
+	/**
+	 * Runs actions on systems and managers when entites are changed.
+	 *
+	 * @see #check
+	 */
 	private final ChangedPerformer changedPerformer;
+	/**
+	 * Runs actions on systems and managers when entities are deleted.
+	 *
+	 * @see #check
+	 */
 	private final DeletedPerformer deletedPerformer;
+	/**
+	 * Runs actions on systems and managers when entities are (re)enabled.
+	 *
+	 * @see #check
+	 */
 	private final EnabledPerformer enabledPerformer;
+	/**
+	 * Runs actions on systems and managers when entities are disabled.
+	 *
+	 * @see #check
+	 */
 	private final DisabledPerformer disabledPerformer;
-	
+	/**
+	 * Contains all managers and managers classes mapped.
+	 */
 	private final Map<Class<? extends Manager>, Manager> managers;
+	/**
+	 * Contains all managers unordered.
+	 */
 	private final Bag<Manager> managersBag;
-	
+	/**
+	 * Contains all systems and systems classes mapped.
+	 */
 	private final Map<Class<?>, EntitySystem> systems;
+	/**
+	 * Contains all systems unordered.
+	 */
 	private final Bag<EntitySystem> systemsBag;
 
+	/**
+	 * Creates a new world.
+	 * <p>
+	 * An EntityManager and ComponentManager are created and added upon
+	 * creation.
+	 * </p>
+	 */
 	public World() {
 		managers = new HashMap<Class<? extends Manager>, Manager>();
 		managersBag = new Bag<Manager>();
@@ -136,6 +194,18 @@ public class World {
 		return managerType.cast(managers.get(managerType));
 	}
 
+	/**
+	 * Returs a manager of the specified type.
+	 *
+	 * @param <T>
+	 *			class type of the manager
+	 * @param managerType
+	 *			class name of the manager
+	 *
+	 * @return	the manager
+	 *
+	 * @deprecated
+	 */
 	@Deprecated
 	@SuppressWarnings("unchecked")
 	public <T extends Manager> T getManager(String managerType) {
@@ -324,16 +394,24 @@ public class World {
 	}
 	
 	/**
-	 * Removed the specified system from the world.
+	 * Remove the specified system from the world.
 	 *
 	 * @param system
-	 *			to be deleted from world
+	 *			the system to be deleted from world
 	 */
 	public void deleteSystem(EntitySystem system) {
 		systems.remove(system.getClass());
 		systemsBag.remove(system);
 	}
-	
+
+	/**
+	 * Run performers on all systems.
+	 *
+	 * @param performer
+	 *			the performer to run
+	 * @param e
+	 *			the entity to pass as argument to the systems
+	 */
 	private void notifySystems(Performer performer, Entity e) {
 		Object[] data = systemsBag.getData();
 		for(int i = 0, s = systemsBag.size(); s > i; i++) {
@@ -341,6 +419,14 @@ public class World {
 		}
 	}
 
+	/**
+	 * Run performers on all managers.
+	 *
+	 * @param performer
+	 *			the performer to run
+	 * @param e
+	 *			the entity to pass as argument to the managers
+	 */
 	private void notifyManagers(Performer performer, Entity e) {
 		Object[] data = managersBag.getData();
 		for(int i = 0, s = managersBag.size(); s > i; i++) {
@@ -349,7 +435,7 @@ public class World {
 	}
 	
 	/**
-	 * Retrieve a system for specified system type
+	 * Retrieve a system for specified system type.
 	 * 
 	 * @param <T>
 	 *			the class type of system
@@ -362,9 +448,23 @@ public class World {
 		return type.cast(systems.get(type));
 	}
 
+	/**
+	 * Retrieve a system for the specifide system type.
+	 *
+	 * @param <T>
+	 *			the class type of the system
+	 * @param type
+	 *			the class name of the system
+	 *
+	 * @return instance of the system in this world
+	 *
+	 * @deprecated
+	 *
+	 * @throws RuntimeException
+	 */
 	@Deprecated
 	@SuppressWarnings("unchecked")
-	public <T extends EntitySystem> T getSystem(String type) {
+	public <T extends EntitySystem> T getSystem(String type) throws RuntimeException {
 		try {
 			Class<T> klazz = (Class<T>)Class.forName(type);
 			return (T)systems.get(klazz);
@@ -393,6 +493,14 @@ public class World {
 		entityBag.setSize(0);
 	}
 
+	/**
+	 * Performs an action on an entity.
+	 *
+	 * @param e
+	 *			the entity to use
+	 * @param performer
+	 *			the performer to run
+	 */
 	private void check(Entity e, Performer performer) {
 		notifyManagers(performer, e);
 		notifySystems(performer, e);
@@ -432,7 +540,21 @@ public class World {
 	public <T extends Component> ComponentMapper<T> getMapper(Class<T> type) {
 		return ComponentMapper.getFor(type, this);
 	}
-	
+
+	/**
+	 * Retrieves a ComponentMapper instance for fast retrieval of components
+	 * from entities.
+	 *
+	 * @param <T>
+	 *			class type of the component
+	 * @param type
+	 *			class name of the component
+	 *
+	 * @return mapper for specified component type
+	 *
+	 * @deprecated
+	 */
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	public <T extends Component> ComponentMapper<T> getMapper(String type) {
 		try {
@@ -444,6 +566,9 @@ public class World {
 	}
 	
 
+	/**
+	 * Runs {@link EntityObserver#deleted}.
+	 */
 	private static final class DeletedPerformer implements Performer {
 
 		@Override
@@ -453,8 +578,9 @@ public class World {
 
 	}
 
-
-
+	/**
+	 * Runs {@link EntityObserver#enabled}.
+	 */
 	private static final class EnabledPerformer implements Performer {
 
 		@Override
@@ -464,8 +590,9 @@ public class World {
 
 	}
 
-
-
+	/**
+	 * Runs {@link EntityObserver#disabled}.
+	 */
 	private static final class DisabledPerformer implements Performer {
 
 		@Override
@@ -475,8 +602,9 @@ public class World {
 
 	}
 
-
-
+	/**
+	 * Runs {@link EntityObserver#changed}.
+	 */
 	private static final class ChangedPerformer implements Performer {
 
 		@Override
@@ -486,8 +614,9 @@ public class World {
 
 	}
 
-
-
+	/**
+	 * Runs {@link EntityObserver#added}.
+	 */
 	private static final class AddedPerformer implements Performer {
 
 		@Override
@@ -498,20 +627,43 @@ public class World {
 	}
 
 
-
 	/**
+	 * Calls methods on observers.
+	 * <p>
 	 * Only used internally to maintain clean code.
+	 * </p>
 	 */
 	private interface Performer {
 
+		/**
+		 * Call a method on the observer with the entity as argument.
+		 *
+		 * @param observer
+		 *			the observer with the method to calll
+		 * @param e
+		 *			the entity to pass as argument
+		 */
 		void perform(EntityObserver observer, Entity e);
 
 	}
 	
-	
+	/**
+	 * Injects {@link ComponentMapper} instances into objects.
+	 */
 	private static final class ComponentMapperInitHelper {
 
-		public static void config(Object target, World world) {
+		/**
+		 * Injects a {@link ComponentMapper} instance for every {@link Mapper}
+		 * annotation into the given system.
+		 *
+		 * @param target
+		 *			the object to inject into (usually an {@link EntitySystem})
+		 * @param world 
+		 *			the world responsible for the component mappers
+		 *
+		 * @throws RuntimeException
+		 */
+		public static void config(Object target, World world) throws RuntimeException {
 			try {
 				Class<?> clazz = target.getClass();
 				for (Field field : clazz.getDeclaredFields()) {

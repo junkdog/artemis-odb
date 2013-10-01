@@ -6,6 +6,7 @@ import com.artemis.EntitySystem;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
+
 /**
  * The purpose of this class is to allow systems to execute at varying
  * intervals.

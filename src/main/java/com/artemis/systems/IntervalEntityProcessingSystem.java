@@ -5,6 +5,7 @@ import com.artemis.Entity;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
+
 /**
  * If you need to process entities at a certain interval then use this.
  * <p>

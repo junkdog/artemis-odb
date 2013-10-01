@@ -1,5 +1,13 @@
 package com.artemis.utils;
 
+
+/**
+ * FastMath.
+ *
+ * @author Arni Arent
+ *
+ * @deprecated
+ */
 @Deprecated
 public class FastMath {
 

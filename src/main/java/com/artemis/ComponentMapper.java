@@ -2,6 +2,7 @@ package com.artemis;
 
 import com.artemis.utils.Bag;
 
+
 /**
  * High performance component retrieval from entities.
  * <p>
@@ -16,10 +17,28 @@ import com.artemis.utils.Bag;
  */
 public class ComponentMapper<A extends Component> {
 
+	/**
+	 * The type of components this mapper handles.
+	 */
 	private final ComponentType type;
+	/**
+	 * The class of components this mapper handles.
+	 */
 	private final Class<A> classType;
+	/**
+	 * Holds all components of given type in the world.
+	 */
 	private final Bag<Component> components;
 
+	/**
+	 * Creates a new {@code ComponentMapper} instance handling the given type
+	 * of component for the given world.
+	 *
+	 * @param type
+	 *			the class type of components to handle
+	 * @param world
+	 *			the world to handle components for
+	 */
 	private ComponentMapper(Class<A> type, World world) {
 		this.type = ComponentType.getTypeFor(type);
 		components = world.getComponentManager().getComponentsByType(this.type);
@@ -38,8 +57,10 @@ public class ComponentMapper<A extends Component> {
 	 *			the entity that should possess the component
 	 *
 	 * @return the instance of the component
+	 *
+	 * @throws ArrayIndexOutOfBoundsException
 	 */
-	public A get(Entity e) {
+	public A get(Entity e) throws ArrayIndexOutOfBoundsException {
 		return classType.cast(components.get(e.getId()));
 	}
 

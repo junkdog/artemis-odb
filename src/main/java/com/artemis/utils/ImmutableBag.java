@@ -1,11 +1,14 @@
 package com.artemis.utils;
 
+
 /**
  * A non-modifiable bag.
  * <p>
  * A bag is a set that can also hold duplicates. Also known as multiset.
  * </p>
- * 
+ *
+ * @author Arni Arent
+ *
  * @param <E>
  *
  * @see Bag

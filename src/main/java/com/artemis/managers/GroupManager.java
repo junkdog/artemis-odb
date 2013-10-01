@@ -8,6 +8,7 @@ import com.artemis.Manager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
+
 /**
  * If you need to group your entities together, e.g tanks going into "units"
  * group or explosions into "effects", then use this manager.
@@ -21,9 +22,18 @@ import com.artemis.utils.ImmutableBag;
  */
 public class GroupManager extends Manager {
 
+	/**
+	 * All entities and groups mapped with group names as key.
+	 */
 	private final Map<String, Bag<Entity>> entitiesByGroup;
+	/**
+	 * All entities and groups mapped with entities as key.
+	 */
 	private final Map<Entity, Bag<String>> groupsByEntity;
 
+	/**
+	 * Creates a new GroupManager instance.
+	 */
 	public GroupManager() {
 		entitiesByGroup = new HashMap<String, Bag<Entity>>();
 		groupsByEntity = new HashMap<Entity, Bag<String>>();
@@ -78,7 +88,13 @@ public class GroupManager extends Manager {
 			groups.remove(group);
 		}
 	}
-	
+
+	/**
+	 * Remove the entity from all groups.
+	 *
+	 * @param e
+	 *			the entity to remove
+	 */
 	public void removeFromAllGroups(Entity e) {
 		Bag<String> groups = groupsByEntity.get(e);
 		if(groups != null) {
@@ -110,9 +126,10 @@ public class GroupManager extends Manager {
 	}
 	
 	/**
+	 * Get all groups the entity belongs to.
 	 *
 	 * @param e
-	 *			entity
+	 *			the entity
 	 *
 	 * @return the groups the entity belongs to, null if none
 	 */
@@ -158,6 +175,12 @@ public class GroupManager extends Manager {
 		return false;
 	}
 
+	/**
+	 * Removes the entity from all groups.
+	 *
+	 * @param e
+	 *			the deleted entity
+	 */
 	@Override
 	public void deleted(Entity e) {
 		removeFromAllGroups(e);

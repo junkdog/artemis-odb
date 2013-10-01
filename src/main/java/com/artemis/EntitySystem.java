@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
+
 /**
  * The most raw entity system.
  * <p>
@@ -18,22 +19,55 @@ import com.artemis.utils.ImmutableBag;
  */
 public abstract class EntitySystem implements EntityObserver {
 
+	/**
+	 * The systems index in the.
+	 */
 	private final int systemIndex;
-
+	/**
+	 * The world this system works in.
+	 */
 	protected World world;
-
+	/**
+	 * Contains all entities processed by this system.
+	 */
 	private final Bag<Entity> actives;
+	/**
+	 * Collects entites to be deleted from the system while it is processing.
+	 * <p>
+	 * The entities will be deleted after processing finishes.
+	 * </p>
+	 */
 	private static final WildBag<Entity> delayedDeletion = new WildBag<Entity>();
-
+	/**
+	 * Contains bits of components the entities must all possess for the
+	 * system to be interested in it.
+	 */
 	private final BitSet allSet;
+	/**
+	 * Contains bits of components the entities must not possess for the system
+	 * to be interested in it.
+	 */
 	private final BitSet exclusionSet;
+	/**
+	 * Contains bits of components of which the entities must at least posses
+	 * one for the system to be interested in it.
+	 */
 	private final BitSet oneSet;
-
+	/**
+	 * If the system is passive or not.
+	 */
 	private boolean passive;
+	/**
+	 * If the system is enabled or not.
+	 */
 	private boolean enabled;
-
+	/**
+	 * If the system is interested in no entities at all.
+	 */
 	private final boolean dummy;
-	
+	/**
+	 * If the system is currently proccessing.
+	 */
 	private boolean isProcessing;
 	
 	/**
@@ -61,6 +95,9 @@ public abstract class EntitySystem implements EntityObserver {
 	protected void begin() {
 	}
 
+	/**
+	 * Process all entities this system is interested in.
+	 */
 	public final void process() {
 		if(enabled && checkProcessing()) {
 			begin();
@@ -99,7 +136,8 @@ public abstract class EntitySystem implements EntityObserver {
 	protected abstract void processEntities(ImmutableBag<Entity> entities);
 	
 	/**
-	 * 
+	 * Check if the system should be processed.
+	 *
 	 * @return true if the system should be processed, false if not.
 	 */
 	protected abstract boolean checkProcessing();
@@ -194,6 +232,12 @@ public abstract class EntitySystem implements EntityObserver {
 		}
 	}
 
+	/**
+	 * Removes the entity from this system.
+	 *
+	 * @param e
+	 *			the entity to remove
+	 */
 	private void removeFromSystem(Entity e) {
 		if (isProcessing) {
 			delayedDeletion.add(e);
@@ -205,61 +249,145 @@ public abstract class EntitySystem implements EntityObserver {
 		removed(e);
 	}
 
+	/**
+	 * Insterts the entity into this system.
+	 *
+	 * @param e
+	 *			the entity to insert
+	 */
 	private void insertToSystem(Entity e) {
 		actives.add(e);
 		e.getSystemBits().set(systemIndex);
 		inserted(e);
 	}
 	
-	
+
+	/**
+	 * Call when an entity interesting to the system is added to the world.
+	 *
+	 * <p>
+	 * Checks if the system is interested in the added entity, if so, will
+	 * insert it in to the system.
+	 * </p>
+	 *
+	 * @param e
+	 *			the added entity
+	 */
 	@Override
 	public final void added(Entity e) {
 		check(e);
 	}
-	
+
+	/**
+	 * Call when an entity interesting to the system has changed in the world.
+	 * <p>
+	 * Checks if the system is still interested after the entity has changed,
+	 * e.g a component was removed.
+	 * </p>
+	 *
+	 * @param e
+	 *			the changed entity
+	 */
 	@Override
 	public final void changed(Entity e) {
 		check(e);
 	}
-	
+
+	/**
+	 * Call when an entity interesting to the system was deleted from the
+	 * world.
+	 * <p>
+	 * If the deleted entity is in this system, it will be removed.
+	 * </p>
+	 *
+	 * @param e
+	 *			the deleted entity
+	 */
 	@Override
 	public final void deleted(Entity e) {
 		if(e.getSystemBits().get(systemIndex)) {
 			removeFromSystem(e);
 		}
 	}
-	
+
+	/**
+	 * Call when an entity interesting to the system was disabled.
+	 *
+	 * <p>
+	 * If the disabled entity is in this system it will be removed
+	 * </p>
+	 *
+	 * @param e
+	 *			the disabled entity
+	 */
 	@Override
 	public final void disabled(Entity e) {
 		if(e.getSystemBits().get(systemIndex)) {
 			removeFromSystem(e);
 		}
 	}
-	
+
+	/**
+	 * Call when an entity interesting to the system was (re)enabled.
+	 * <p>
+	 * If the enabled entity is of interest, in will be (re)inserted.
+	 * </p>
+	 *
+	 * @param e
+	 *			the (re)enabled entity
+	 */
 	@Override
 	public final void enabled(Entity e) {
 		check(e);
 	}
 	
-
+	/**
+	 * Set the world this manager works on.
+	 *
+	 * @param world
+	 *			the world to set
+	 */
 	protected final void setWorld(World world) {
 		this.world = world;
 	}
-	
+
+	/**
+	 * Check if this system is passive.
+	 * <p>
+	 * A passive system will not process when {@link World#process()}
+	 * is called.
+	 * </p>
+	 *
+	 * @return {@code true} if the system is passive
+	 */
 	public boolean isPassive() {
 		return passive;
 	}
 
+	/**
+	 * Set if the system is passive or not.
+	 * <p>
+	 * A passive system will not process when {@link World#process()}
+	 * is called.
+	 * </p>
+	 *
+	 * @param passive
+	 *			{@code true} if passive, {@code false} if not
+	 */
 	protected void setPassive(boolean passive) {
 		this.passive = passive;
 	}
-	
+
+	/**
+	 * Get all entities being processed by this system.
+	 *
+	 * @return a bag containing all active entities of the system
+	 */
 	public ImmutableBag<Entity> getActives() {
 		return actives;
 	}
 	
-	
-	
+
 	/**
 	 * Used to generate a unique bit for each system.
 	 * <p>
@@ -268,10 +396,29 @@ public abstract class EntitySystem implements EntityObserver {
 	 */
 	private static final class SystemIndexManager {
 
+		/**
+		 * Amount of EntitySystem indices.
+		 */
 		private static int INDEX = 0;
+		/**
+		 * Contains the class types of all created systems.
+		 * <p>
+		 * Only one system per class is permitted in the world.
+		 * </p>
+		 */
 		private static final HashMap<Class<? extends EntitySystem>, Integer> indices
 				= new HashMap<Class<? extends EntitySystem>, Integer>();
-		
+
+		/**
+		 * Called by the EntitySystem constructor.
+		 * Will give the new EntitySystem the next index, and store the systems
+		 * class as an (Index, Class) entry.
+		 *
+		 * @param es
+		 *			the systems class type
+		 *
+		 * @return the systems index
+		 */
 		private static int getIndexFor(Class<? extends EntitySystem> es) {
 			Integer index = indices.get(es);
 			if(index == null) {

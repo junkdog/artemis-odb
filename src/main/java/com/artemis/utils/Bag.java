@@ -4,12 +4,15 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+
 /**
  * Collection type a bit like ArrayList but does not preserve the order of its
  * entities, speedwise it is very good, especially suited for games.
  * 
  * @param <E>
  *		object type this bag holds
+ *
+ * @author Arni Arent
  */
 public class Bag<E> implements ImmutableBag<E> {
 
@@ -57,8 +60,10 @@ public class Bag<E> implements ImmutableBag<E> {
 	 *			the index of element to be removed
 	 *
 	 * @return element that was removed from the Bag
+	 *
+	 * @throws ArrayIndexOutOfBoundsException
 	 */
-	public E remove(int index) {
+	public E remove(int index) throws ArrayIndexOutOfBoundsException {
 		E e = data[index]; // make copy of element to remove so it can be returned
 		data[index] = data[--size]; // overwrite item to remove with last element
 		data[size] = null; // null last element, so gc can do its work
@@ -120,6 +125,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * Check if bag contains this element.
 	 * 
 	 * @param e
+	 *			element to check
 	 *
 	 * @return {@code true} if the bag contains this element
 	 */
@@ -170,9 +176,11 @@ public class Bag<E> implements ImmutableBag<E> {
 	 *			index of the element to return
 	 *
 	 * @return the element at the specified position in bag
+	 *
+	 * @throws ArrayIndexOutOfBoundsException
 	 */
 	@Override
-	public E get(int index) {
+	public E get(int index) throws ArrayIndexOutOfBoundsException {
 		return data[index];
 	}
 
@@ -199,6 +207,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * Checks if the internal storage supports this index.
 	 * 
 	 * @param index
+	 *			index to check
 	 *
 	 * @return {@code true} if the index is within bounds
 	 */
@@ -219,7 +228,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	/**
 	 * Adds the specified element to the end of this bag.
 	 * <p>
-	 * If needed also increases the capacity of the bag.
+	 * If required, it also increases the capacity of the bag.
 	 * </p>
 	 * 
 	 * @param e
@@ -262,14 +271,15 @@ public class Bag<E> implements ImmutableBag<E> {
 	}
 
 	/**
-	 * Set the capacity of the bag.
-
-	 * @param newCapacity
+	 * Increase the capacity of the bag.
 	 *
-	 * @throws IndexOutOfBoundsException if new capacity is smaller than old
+	 * @param newCapacity
+	 *			new capacity to grow to
+	 *
+	 * @throws ArrayIndexOutOfBoundsException if new capacity is smaller than old
 	 */
 	@SuppressWarnings("unchecked")
-	private void grow(int newCapacity) throws IndexOutOfBoundsException {
+	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
 		E[] oldData = data;
 		data = (E[])new Object[newCapacity];
 		System.arraycopy(oldData, 0, data, 0, oldData.length);
@@ -282,6 +292,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * </p>
 	 *
 	 * @param index
+	 *			index to check
 	 */
 	public void ensureCapacity(int index) {
 		if(index >= data.length) {
@@ -306,6 +317,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * Add all items into this bag.
 	 *
 	 * @param items
+	 *			bag with items to add
 	 */
 	public void addAll(ImmutableBag<E> items) {
 		for(int i = 0, s = items.size(); s > i; i++) {
@@ -314,7 +326,10 @@ public class Bag<E> implements ImmutableBag<E> {
 	}
 	
 	/**
-	 * Returns this bag's underlying array. Use with care. 
+	 * Returns this bag's underlying array.
+	 * <p>
+	 * Use with care.
+	 * </p>
 	 * 
 	 * @return the underlying array
 	 *
@@ -341,8 +356,14 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * @see java.util.Iterator
 	 */
 	private final class BagIterator implements Iterator<E> {
-		
+
+		/**
+		 * Current position.
+		 */
 		private int cursor;
+		/**
+		 * True if the current position is within bounds.
+		 */
 		private boolean validCursorPos;
 
 		@Override
@@ -362,7 +383,7 @@ public class Bag<E> implements ImmutableBag<E> {
 		}
 
 		@Override
-		public void remove() {
+		public void remove() throws IllegalStateException {
 			if (!validCursorPos) {
 				throw new IllegalStateException();
 			}

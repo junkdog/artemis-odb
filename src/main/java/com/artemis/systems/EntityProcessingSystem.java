@@ -6,6 +6,7 @@ import com.artemis.EntitySystem;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
+
 /**
  * A typical entity system.
  * <p>

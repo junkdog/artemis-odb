@@ -19,14 +19,34 @@ import com.artemis.utils.ImmutableBag;
  */
 public class PlayerManager extends Manager {
 
+	/**
+	 * All players mapped to entities as key.
+	 */
 	private final Map<Entity, String> playerByEntity;
+	/**
+	 * All entities that are mapped to a player, with the player as key.
+	 */
 	private final Map<String, Bag<Entity>> entitiesByPlayer;
 
+	/**
+	 * Creates a new PlayerManager instance.
+	 */
 	public PlayerManager() {
 		playerByEntity = new HashMap<Entity, String>();
 		entitiesByPlayer = new HashMap<String, Bag<Entity>>();
 	}
-	
+
+	/**
+	 * Associate the entity to the specified player.
+	 * <p>
+	 * Each entity may only be assoctiated to one player at a time.
+	 * </p>
+	 *
+	 * @param e
+	 *			the entity to associate
+	 * @param player
+	 *			the player to associtate to the entity to
+	 */
 	public void setPlayer(Entity e, String player) {
 		playerByEntity.put(e, player);
 		Bag<Entity> entities = entitiesByPlayer.get(player);
@@ -36,7 +56,15 @@ public class PlayerManager extends Manager {
 		}
 		entities.add(e);
 	}
-	
+
+	/**
+	 * Get all entities belonging to a player.
+	 *
+	 * @param player
+	 *			the player
+	 *
+	 * @return a bag containing all entities belonging to the player
+	 */
 	public ImmutableBag<Entity> getEntitiesOfPlayer(String player) {
 		Bag<Entity> entities = entitiesByPlayer.get(player);
 		if(entities == null) {
@@ -44,7 +72,13 @@ public class PlayerManager extends Manager {
 		}
 		return entities;
 	}
-	
+
+	/**
+	 * Remove the association of an entity with a player.
+	 *
+	 * @param e
+	 *			the entity to remove
+	 */
 	public void removeFromPlayer(Entity e) {
 		String player = playerByEntity.get(e);
 		if(player != null) {
@@ -54,7 +88,15 @@ public class PlayerManager extends Manager {
 			}
 		}
 	}
-	
+
+	/**
+	 * Get the player an entity is associated with.
+	 *
+	 * @param e
+	 *			the entity to get the player for
+	 *
+	 * @return the player
+	 */
 	public String getPlayer(Entity e) {
 		return playerByEntity.get(e);
 	}
@@ -63,6 +105,12 @@ public class PlayerManager extends Manager {
 	protected void initialize() {
 	}
 
+	/**
+	 * Deleted entities are removed from their player.
+	 *
+	 * @param e
+	 *			the deleted entity
+	 */
 	@Override
 	public void deleted(Entity e) {
 		removeFromPlayer(e);

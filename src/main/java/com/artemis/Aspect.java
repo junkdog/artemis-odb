@@ -2,6 +2,7 @@ package com.artemis;
 
 import java.util.BitSet;
 
+
 /**
  * An Aspects is used by systems as a matcher against entities, to check if a
  * system is interested in an entity.
@@ -29,25 +30,59 @@ import java.util.BitSet;
  * @author Arni Arent
  */
 public class Aspect {
-	
+
+	/**
+	 * Contains bits of components the entity must all possess.
+	 */
 	private final BitSet allSet;
+	/**
+	 * Contains bits of components the entity must not possess.
+	 */
 	private final BitSet exclusionSet;
+	/**
+	 * Contains bits of components of which the entity must possess at least
+	 * one.
+	 */
 	private final BitSet oneSet;
-	
+
+	/**
+	 * Aspects can only be created via the static methods
+	 * {@link #getAspectForAll}, {@link #getAspectForOne},
+	 * or {@link #getEmpty}.
+	 */
 	private Aspect() {
 		this.allSet = new BitSet();
 		this.exclusionSet = new BitSet();
 		this.oneSet = new BitSet();
 	}
-	
+
+	/**
+	 * Get a BitSet containing bits of components the entity must all possess.
+	 *
+	 * @return
+	 *		the "all" BitSet
+	 */
 	protected BitSet getAllSet() {
 		return allSet;
 	}
-	
+
+	/**
+	 * Get a BitSet containing bits of components the entity must not possess.
+	 *
+	 * @return
+	 *		the "exclusion" BitSet
+	 */
 	protected BitSet getExclusionSet() {
 		return exclusionSet;
 	}
-	
+
+	/**
+	 * Get a BitSet containing bits of components of which the entity must
+	 * possess atleast one.
+	 *
+	 * @return
+	 *		the "one" BitSet
+	 */
 	protected BitSet getOneSet() {
 		return oneSet;
 	}
@@ -131,6 +166,7 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 * 
 	 * @deprecated
+	 * 
 	 * @see getAspectForAll
 	 */
 	@Deprecated
