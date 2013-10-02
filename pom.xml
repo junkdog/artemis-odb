@@ -9,7 +9,7 @@
 
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>0.3.5-SNAPSHOT</version>
+	<version>0.4.0</version>
 	<packaging>jar</packaging>
 	<name>artemis-odb</name>
 	<description>Fork of Artemis Entity System Framework.</description>
