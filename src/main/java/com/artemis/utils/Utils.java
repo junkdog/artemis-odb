@@ -8,6 +8,14 @@ import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
 
+
+/**
+ * Utils.
+ *
+ * @author Arni Arent
+ *
+ * @deprecated
+ */
 @Deprecated
 public class Utils {
 

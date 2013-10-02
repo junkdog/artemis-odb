@@ -8,35 +8,47 @@ import com.artemis.Manager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
+
 /**
- * If you need to group your entities together, e.g. tanks going into "units" group or explosions into "effects",
- * then use this manager. You must retrieve it using world instance.
- * 
+ * If you need to group your entities together, e.g tanks going into "units"
+ * group or explosions into "effects", then use this manager.
+ * <p>
+ * You must retrieve it using world instance.
+ * </p><p>
  * A entity can be assigned to more than one group.
+ * </p>
  * 
  * @author Arni Arent
- *
  */
 public class GroupManager extends Manager {
-	private Map<String, Bag<Entity>> entitiesByGroup;
-	private Map<Entity, Bag<String>> groupsByEntity;
 
+	/** All entities and groups mapped with group names as key. */
+	private final Map<String, Bag<Entity>> entitiesByGroup;
+	/** All entities and groups mapped with entities as key. */
+	private final Map<Entity, Bag<String>> groupsByEntity;
+
+
+	/**
+	 * Creates a new GroupManager instance.
+	 */
 	public GroupManager() {
 		entitiesByGroup = new HashMap<String, Bag<Entity>>();
 		groupsByEntity = new HashMap<Entity, Bag<String>>();
 	}
-	
+
+
 
 	@Override
 	protected void initialize() {
 	}
 	
-	
 	/**
 	 * Set the group of the entity.
 	 * 
-	 * @param group group to add the entity into.
-	 * @param e entity to add into the group.
+	 * @param group
+	 *			group to add the entity into
+	 * @param e
+	 *			entity to add into the group
 	 */
 	public void add(Entity e, String group) {
 		Bag<Entity> entities = entitiesByGroup.get(group);
@@ -56,8 +68,11 @@ public class GroupManager extends Manager {
 	
 	/**
 	 * Remove the entity from the specified group.
+	 *
 	 * @param e
+	 *			entity to remove from group
 	 * @param group
+	 *			group to remove the entity from
 	 */
 	public void remove(Entity e, String group) {
 		Bag<Entity> entities = entitiesByGroup.get(group);
@@ -70,7 +85,13 @@ public class GroupManager extends Manager {
 			groups.remove(group);
 		}
 	}
-	
+
+	/**
+	 * Remove the entity from all groups.
+	 *
+	 * @param e
+	 *			the entity to remove
+	 */
 	public void removeFromAllGroups(Entity e) {
 		Bag<String> groups = groupsByEntity.get(e);
 		if(groups != null) {
@@ -86,8 +107,11 @@ public class GroupManager extends Manager {
 	
 	/**
 	 * Get all entities that belong to the provided group.
-	 * @param group name of the group.
-	 * @return read-only bag of entities belonging to the group.
+	 *
+	 * @param group
+	 *			name of the group
+	 *
+	 * @return read-only bag of entities belonging to the group
 	 */
 	public ImmutableBag<Entity> getEntities(String group) {
 		Bag<Entity> entities = entitiesByGroup.get(group);
@@ -99,8 +123,12 @@ public class GroupManager extends Manager {
 	}
 	
 	/**
-	 * @param e entity
-	 * @return the groups the entity belongs to, null if none.
+	 * Get all groups the entity belongs to.
+	 *
+	 * @param e
+	 *			the entity
+	 *
+	 * @return the groups the entity belongs to, null if none
 	 */
 	public ImmutableBag<String> getGroups(Entity e) {
 		return groupsByEntity.get(e);
@@ -108,8 +136,11 @@ public class GroupManager extends Manager {
 	
 	/**
 	 * Checks if the entity belongs to any group.
-	 * @param e the entity to check.
-	 * @return true if it is in any group, false if none.
+	 *
+	 * @param e
+	 *			the entity to check
+	 *
+	 * @return true if it is in any group, false if none
 	 */
 	public boolean isInAnyGroup(Entity e) {
 		return getGroups(e) != null;
@@ -117,9 +148,13 @@ public class GroupManager extends Manager {
 	
 	/**
 	 * Check if the entity is in the supplied group.
-	 * @param group the group to check in.
-	 * @param e the entity to check for.
-	 * @return true if the entity is in the supplied group, false if not.
+	 *
+	 * @param group
+	 *			the group to check in
+	 * @param e
+	 *			the entity to check for
+	 *
+	 * @return true if the entity is in the supplied group, false if not
 	 */
 	public boolean isInGroup(Entity e, String group) {
 		if(group != null) {
@@ -137,6 +172,12 @@ public class GroupManager extends Manager {
 		return false;
 	}
 
+	/**
+	 * Removes the entity from all groups.
+	 *
+	 * @param e
+	 *			the deleted entity
+	 */
 	@Override
 	public void deleted(Entity e) {
 		removeFromAllGroups(e);
