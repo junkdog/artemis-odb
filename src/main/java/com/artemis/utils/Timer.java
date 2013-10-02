@@ -1,5 +1,13 @@
 package com.artemis.utils;
 
+
+/**
+ * Timer.
+ *
+ * @author Arni Arent
+ *
+ * @deprecated
+ */
 @Deprecated
 public abstract class Timer {
 

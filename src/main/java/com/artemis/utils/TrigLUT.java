@@ -1,9 +1,19 @@
 package com.artemis.utils;
 
-// Thanks to Riven
-// From: http://riven8192.blogspot.com/2009/08/fastmath-sincos-lookup-tables.html
+
+/**
+ * Thanks to Riven.
+ * <p>
+ * From: <a href="http://riven8192.blogspot.com/2009/08/fastmath-sincos-lookup-tables.html">http://riven8192.blogspot.com/2009/08/fastmath-sincos-lookup-tables.html</a>
+ * </p>
+ *
+ * @author Arni Arent
+ *
+ * @deprecated
+ */
 @Deprecated
 public class TrigLUT {
+
 	public static void main(String[] args) {
 		System.out.println(cos((float) Math.PI));
 		System.out.println(cosDeg(180f));
@@ -48,4 +58,5 @@ public class TrigLUT {
 			cos[i] = (float) Math.cos((i + 0.5f) / SIN_COUNT * radFull);
 		}
 	}
+
 }
