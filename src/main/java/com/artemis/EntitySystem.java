@@ -19,57 +19,30 @@ import com.artemis.utils.ImmutableBag;
  */
 public abstract class EntitySystem implements EntityObserver {
 
-	/**
-	 * The systems index in the.
-	 */
+	/** The system's index in the SystemIndexManager. */
 	private final int systemIndex;
-	/**
-	 * The world this system works in.
-	 */
+	/** The world this system belongs to. */
 	protected World world;
-	/**
-	 * Contains all entities processed by this system.
-	 */
+	/** Contains all entities processed by this system. */
 	private final Bag<Entity> actives;
-	/**
-	 * Collects entites to be deleted from the system while it is processing.
-	 * <p>
-	 * The entities will be deleted after processing finishes.
-	 * </p>
-	 */
+	/** Collects entites to be deleted from the system after processing. */
 	private static final WildBag<Entity> delayedDeletion = new WildBag<Entity>();
-	/**
-	 * Contains bits of components the entities must all possess for the
-	 * system to be interested in it.
-	 */
+	/** Component bits entities must possess for the system to be interested. */
 	private final BitSet allSet;
-	/**
-	 * Contains bits of components the entities must not possess for the system
-	 * to be interested in it.
-	 */
+	/** Component bits entities must not possess for the system to be interested. */
 	private final BitSet exclusionSet;
-	/**
-	 * Contains bits of components of which the entities must at least posses
-	 * one for the system to be interested in it.
-	 */
+	/** Component bits entities must at least posses one for the system to be interested. */
 	private final BitSet oneSet;
-	/**
-	 * If the system is passive or not.
-	 */
+	/** If the system is passive or not. */
 	private boolean passive;
-	/**
-	 * If the system is enabled or not.
-	 */
+	/** If the system is enabled or not. */
 	private boolean enabled;
-	/**
-	 * If the system is interested in no entities at all.
-	 */
+	/** If the system is interested in no entities at all. */
 	private final boolean dummy;
-	/**
-	 * If the system is currently proccessing.
-	 */
+	/** If the system is currently proccessing. */
 	private boolean isProcessing;
-	
+
+
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
 	 * against entities.
@@ -88,6 +61,7 @@ public abstract class EntitySystem implements EntityObserver {
 		enabled = true;
 		isProcessing = false;
 	}
+
 
 	/**
 	 * Called before processing of entities begins. 
@@ -166,7 +140,6 @@ public abstract class EntitySystem implements EntityObserver {
 	 */
 	protected void removed(Entity e) {};
 
-	
 	/**
 	 * Returns true if the system is enabled.
 	 * 
@@ -261,7 +234,6 @@ public abstract class EntitySystem implements EntityObserver {
 		inserted(e);
 	}
 	
-
 	/**
 	 * Call when an entity interesting to the system is added to the world.
 	 *
@@ -396,10 +368,9 @@ public abstract class EntitySystem implements EntityObserver {
 	 */
 	private static final class SystemIndexManager {
 
-		/**
-		 * Amount of EntitySystem indices.
-		 */
+		/** Amount of EntitySystem indices. */
 		private static int INDEX = 0;
+		
 		/**
 		 * Contains the class types of all created systems.
 		 * <p>

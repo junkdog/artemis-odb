@@ -16,20 +16,13 @@ import java.util.NoSuchElementException;
  */
 public class Bag<E> implements ImmutableBag<E> {
 
-	/**
-	 * The backing array.
-	 */
+	/** The backing array. */
 	E[] data;
-
-	/**
-	 * The elements contained in bag.
-	 */
+	/** The amount of elements contained in bag. */
 	protected int size = 0;
-
-	/**
-	 * The iterator, it is only created once and reused when required.
-	 */
+	/** The iterator, it is only created once and reused when required. */
 	private BagIterator it;
+
 
 	/**
 	 * Constructs an empty Bag with an initial capacity of 64.
@@ -48,6 +41,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	public Bag(int capacity) {
 		data = (E[])new Object[capacity];
 	}
+
 
 	/**
 	 * Removes the element at the specified position in this Bag.
@@ -357,19 +351,17 @@ public class Bag<E> implements ImmutableBag<E> {
 	 */
 	private final class BagIterator implements Iterator<E> {
 
-		/**
-		 * Current position.
-		 */
+		/** Current position. */
 		private int cursor;
-		/**
-		 * True if the current position is within bounds.
-		 */
+		/** True if the current position is within bounds. */
 		private boolean validCursorPos;
+
 
 		@Override
 		public boolean hasNext() {
 			return (cursor < size);
 		}
+
 
 		@Override
 		public E next() throws NoSuchElementException {
@@ -382,6 +374,7 @@ public class Bag<E> implements ImmutableBag<E> {
 			return e;
 		}
 
+		
 		@Override
 		public void remove() throws IllegalStateException {
 			if (!validCursorPos) {

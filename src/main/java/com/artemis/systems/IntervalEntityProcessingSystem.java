@@ -18,6 +18,15 @@ import com.artemis.utils.ImmutableBag;
  */
 public abstract class IntervalEntityProcessingSystem extends IntervalEntitySystem {
 
+
+	/**
+	 * Creates a new IntervalEntityProcessingSystem.
+	 *
+	 * @param aspect
+	 *			the aspect to match entities
+	 * @param interval
+	 *			the interval at which the system is processed
+	 */
 	public IntervalEntityProcessingSystem(Aspect aspect, float interval) {
 		super(aspect, interval);
 	}

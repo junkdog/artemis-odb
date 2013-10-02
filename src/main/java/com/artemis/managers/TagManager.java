@@ -19,14 +19,11 @@ import com.artemis.Manager;
  */
 public class TagManager extends Manager {
 
-	/**
-	 * Tags mapped to entities.
-	 */
+	/** Tags mapped to entities. */
 	private final Map<String, Entity> entitiesByTag;
-	/**
-	 * Tagged entities mapped to tags.
-	 */
+	/** Tagged entities mapped to tags. */
 	private final Map<Entity, String> tagsByEntity;
+
 
 	/**
 	 * Creates a new TagManager.
@@ -35,6 +32,7 @@ public class TagManager extends Manager {
 		entitiesByTag = new HashMap<String, Entity>();
 		tagsByEntity = new HashMap<Entity, String>();
 	}
+
 
 	/**
 	 * Tag an entity.
@@ -108,6 +106,7 @@ public class TagManager extends Manager {
 			entitiesByTag.remove(removedTag);
 		}
 	}
+
 
 	@Override
 	protected void initialize() {

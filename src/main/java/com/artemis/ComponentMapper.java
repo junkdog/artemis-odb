@@ -17,19 +17,14 @@ import com.artemis.utils.Bag;
  */
 public class ComponentMapper<A extends Component> {
 
-	/**
-	 * The type of components this mapper handles.
-	 */
+	/** The type of components this mapper handles. */
 	private final ComponentType type;
-	/**
-	 * The class of components this mapper handles.
-	 */
+	/** The class of components this mapper handles. */
 	private final Class<A> classType;
-	/**
-	 * Holds all components of given type in the world.
-	 */
+	/** Holds all components of given type in the world. */
 	private final Bag<Component> components;
 
+	
 	/**
 	 * Creates a new {@code ComponentMapper} instance handling the given type
 	 * of component for the given world.
@@ -44,6 +39,7 @@ public class ComponentMapper<A extends Component> {
 		components = world.getComponentManager().getComponentsByType(this.type);
 		this.classType = type;
 	}
+
 
 	/**
 	 * Fast but unsafe retrieval of a component for this entity.
@@ -93,6 +89,7 @@ public class ComponentMapper<A extends Component> {
 	public boolean has(Entity e) {
 		return getSafe(e) != null;		
 	}
+
 
 	/**
 	 * Returns a component mapper for this type of components.

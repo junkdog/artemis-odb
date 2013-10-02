@@ -22,14 +22,11 @@ import com.artemis.utils.ImmutableBag;
  */
 public class GroupManager extends Manager {
 
-	/**
-	 * All entities and groups mapped with group names as key.
-	 */
+	/** All entities and groups mapped with group names as key. */
 	private final Map<String, Bag<Entity>> entitiesByGroup;
-	/**
-	 * All entities and groups mapped with entities as key.
-	 */
+	/** All entities and groups mapped with entities as key. */
 	private final Map<Entity, Bag<String>> groupsByEntity;
+
 
 	/**
 	 * Creates a new GroupManager instance.
@@ -38,12 +35,12 @@ public class GroupManager extends Manager {
 		entitiesByGroup = new HashMap<String, Bag<Entity>>();
 		groupsByEntity = new HashMap<Entity, Bag<String>>();
 	}
-	
+
+
 
 	@Override
 	protected void initialize() {
 	}
-	
 	
 	/**
 	 * Set the group of the entity.

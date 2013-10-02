@@ -16,7 +16,8 @@ import com.artemis.utils.Bag;
  *			object type this bag holds
  */
 class WildBag<T> extends Bag<T> {
-	
+
+
 	/**
 	 * Set the size.
 	 * <p>

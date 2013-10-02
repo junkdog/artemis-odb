@@ -17,34 +17,21 @@ import com.artemis.utils.Bag;
  */
 public final class Entity {
 
-	/**
-	 * The entities unique global identifier.
-	 */
+	/** The entities unique global identifier. */
 	private UUID uuid;
-	/**
-	 * The entities identifier in the world.
-	 */
+	/** The entities identifier in the world. */
 	private final int id;
-	/**
-	 * A BitSet containing bits of the components the entity possesses.
-	 */
+	/** A BitSet containing bits of the components the entity possesses. */
 	private final BitSet componentBits;
-	/**
-	 * A BitSet containing bits of the systems interested in the entity.
-	 */
+	/** A BitSet containing bits of the systems interested in the entity. */
 	private final BitSet systemBits;
-	/**
-	 * The world this entity belongs to.
-	 */
+	/** The world this entity belongs to. */
 	private final World world;
-	/**
-	 * The manager handling this entity.
-	 */
+	/** The manager handling this entity. */
 	private final EntityManager entityManager;
-	/**
-	 * The manager handling this entities components.
-	 */
+	/** The manager handling this entities components. */
 	private final ComponentManager componentManager;
+
 
 	/**
 	 * Creates a new {@link Entity} instance in the given world.
@@ -68,6 +55,7 @@ public final class Entity {
 		
 		reset();
 	}
+
 
 	/**
 	 * The internal id for this entity within the framework.

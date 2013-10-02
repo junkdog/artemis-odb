@@ -19,14 +19,11 @@ import com.artemis.utils.Bag;
  */
 public class ComponentManager extends Manager {
 
-	/**
-	 * Holds all components grouped by type.
-	 */
+	/** Holds all components grouped by type. */
 	private final Bag<Bag<Component>> componentsByType;
-	/**
-	 * Collects all Entites marked for deletion from this ComponentManager.
-	 */
+	/** Collects all Entites marked for deletion from this ComponentManager. */
 	private final WildBag<Entity> deleted;
+
 
 	/**
 	 * Creates a new instance of {@link ComponentManager}.
@@ -35,7 +32,9 @@ public class ComponentManager extends Manager {
 		componentsByType = new Bag<Bag<Component>>();
 		deleted = new WildBag<Entity>();
 	}
-	
+
+
+
 	@Override
 	protected void initialize() {
 	}
@@ -96,6 +95,7 @@ public class ComponentManager extends Manager {
 			e.getComponentBits().clear(type.getIndex());
 		}
 	}
+
 	/**
 	 * Get all components from all entities for a given type.
 	 *
@@ -148,7 +148,7 @@ public class ComponentManager extends Manager {
 		return fillBag;
 	}
 
-	
+
 	@Override
 	public void deleted(Entity e) {
 		deleted.add(e);

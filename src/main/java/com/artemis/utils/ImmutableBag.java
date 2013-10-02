@@ -15,6 +15,7 @@ package com.artemis.utils;
  */
 public interface ImmutableBag<E> extends Iterable<E> {
 
+
 	/**
 	 * Returns the element at the specified position in Bag.
 	 *

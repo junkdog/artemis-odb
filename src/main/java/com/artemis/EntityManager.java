@@ -12,36 +12,21 @@ import com.artemis.utils.Bag;
  */
 public class EntityManager extends Manager {
 
-	/**
-	 * Contains all entities in the manager (and world that uses this manager).
-	 */
+	/** Contains all entities in the manager. */
 	private final Bag<Entity> entities;
-	/**
-	 * Stores the bits of all currently disabled entities IDs.
-	 */
+	/** Stores the bits of all currently disabled entities IDs. */
 	private final BitSet disabled;
-
-	/**
-	 * Amount of currently active (added to the world) entities.
-	 */
+	/** Amount of currently active (added to the world) entities. */
 	private int active;
-	/**
-	 * Amount of entities ever added to the manager.
-	 */
+	/** Amount of entities ever added to the manager. */
 	private long added;
-	/**
-	 * Amount of entites ever created by the manager.
-	 */
+	/** Amount of entites ever created by the manager. */
 	private long created;
-	/**
-	 * Amount of entities ever deleted from the manager.
-	 */
+	/** Amount of entities ever deleted from the manager. */
 	private long deleted;
-
-	/**
-	 * Manages free IDs for entities.
-	 */
+	/** Manages free IDs for entities. */
 	private final IdentifierPool identifierPool;
+
 
 	/**
 	 * Creates a new EntityManager Instance.
@@ -51,7 +36,9 @@ public class EntityManager extends Manager {
 		disabled = new BitSet();
 		identifierPool = new IdentifierPool();
 	}
-	
+
+
+
 	@Override
 	protected void initialize() {
 	}
@@ -127,7 +114,6 @@ public class EntityManager extends Manager {
 		active--;
 		deleted++;
 	}
-
 
 	/**
 	 * Check if this entity is active.
@@ -215,17 +201,13 @@ public class EntityManager extends Manager {
 	 * them.
 	 */
 	private static final class IdentifierPool {
-		/**
-		 * Stores free, pre-used, IDs.
-		 */
+		/** Stores free, pre-used, IDs. */
 		private final Bag<Integer> ids;
-		/**
-		 * The next ID to be given out, if no free pre-used ones are available.
-		 */
+		/** The next ID to be given out, if no free pre-used ones are available. */
 		private int nextAvailableId;
 
-		/**
-		 * Create a new identifier pool
+		/** 
+		 * Create a new identifier pool.
 		 */
 		public IdentifierPool() {
 			ids = new Bag<Integer>();

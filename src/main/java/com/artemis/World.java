@@ -22,74 +22,37 @@ import com.artemis.utils.ImmutableBag;
  */
 public class World {
 
-	/**
-	 * Mananges all entities for the world.
-	 */
+	/** Mananges all entities for the world. */
 	private final EntityManager em;
-	/**
-	 * Manages all component-entities associations for the world.
-	 */
+	/** Manages all component-entity associations for the world. */
 	private final ComponentManager cm;
-	/**
-	 * The time since the last .
-	 */
+	/** The time passed since the last update. */
 	public float delta;
-	/**
-	 * Entities added to the world since the last {@link #process}, they will
-	 * be gathered here and added in one go before the next {@link #process}.
-	 */
+	/** Entities added to the world since the last update. */
 	private final WildBag<Entity> added;
-	/**
-	 * Entities deleted from the world since the last {@link #process}.
-	 */
+	/** Entities deleted from the world since the last update. */
 	private final Bag<Entity> deleted;
 
-	/**
-	 * Runs actions on systems and managers when entites get added.
-	 *
-	 * @see #check
-	 */
+	/** Runs actions on systems and managers when entites get added. */
 	private final AddedPerformer addedPerformer;
-	/**
-	 * Runs actions on systems and managers when entites are changed.
-	 *
-	 * @see #check
-	 */
+	/** Runs actions on systems and managers when entites are changed. */
 	private final ChangedPerformer changedPerformer;
-	/**
-	 * Runs actions on systems and managers when entities are deleted.
-	 *
-	 * @see #check
-	 */
+	/** Runs actions on systems and managers when entities are deleted. */
 	private final DeletedPerformer deletedPerformer;
-	/**
-	 * Runs actions on systems and managers when entities are (re)enabled.
-	 *
-	 * @see #check
-	 */
+	/** Runs actions on systems and managers when entities are (re)enabled. */
 	private final EnabledPerformer enabledPerformer;
-	/**
-	 * Runs actions on systems and managers when entities are disabled.
-	 *
-	 * @see #check
-	 */
+	/** Runs actions on systems and managers when entities are disabled. */
 	private final DisabledPerformer disabledPerformer;
-	/**
-	 * Contains all managers and managers classes mapped.
-	 */
+
+	/** Contains all managers and managers classes mapped. */
 	private final Map<Class<? extends Manager>, Manager> managers;
-	/**
-	 * Contains all managers unordered.
-	 */
+	/** Contains all managers unordered. */
 	private final Bag<Manager> managersBag;
-	/**
-	 * Contains all systems and systems classes mapped.
-	 */
+	/** Contains all systems and systems classes mapped. */
 	private final Map<Class<?>, EntitySystem> systems;
-	/**
-	 * Contains all systems unordered.
-	 */
+	/** Contains all systems unordered. */
 	private final Bag<EntitySystem> systemsBag;
+
 
 	/**
 	 * Creates a new world.
@@ -137,7 +100,6 @@ public class World {
 		}
 	}
 	
-	
 	/**
 	 * Returns a manager that takes care of all the entities in the world.
 	 * 
@@ -156,9 +118,6 @@ public class World {
 		return cm;
 	}
 	
-	
-	
-
 	/**
 	 * Add a manager into this world.
 	 * <p>
@@ -193,29 +152,6 @@ public class World {
 	public <T extends Manager> T getManager(Class<T> managerType) {
 		return managerType.cast(managers.get(managerType));
 	}
-
-	/**
-	 * Returs a manager of the specified type.
-	 *
-	 * @param <T>
-	 *			class type of the manager
-	 * @param managerType
-	 *			class name of the manager
-	 *
-	 * @return	the manager
-	 *
-	 * @deprecated
-	 */
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public <T extends Manager> T getManager(String managerType) {
-		try {
-			Class<T> klazz = (Class<T>)Class.forName(managerType);
-			return (T)managers.get(klazz);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-	}
 	
 	/**
 	 * Deletes the manager from this world.
@@ -227,9 +163,6 @@ public class World {
 		managers.remove(manager.getClass());
 		managersBag.remove(manager);
 	}
-
-	
-	
 	
 	/**
 	 * Time since last game loop.
@@ -250,8 +183,6 @@ public class World {
 		this.delta = delta;
 	}
 	
-
-
 	/**
 	 * Adds a entity to this world.
 	 * 
@@ -317,7 +248,6 @@ public class World {
 		check(e, disabledPerformer);
 	}
 
-
 	/**
 	 * Create and return a new or reused entity instance.
 	 * <p>
@@ -342,9 +272,6 @@ public class World {
 	public Entity getEntity(int entityId) {
 		return em.getEntity(entityId);
 	}
-
-	
-
 
 	/**
 	 * Gives you all the systems in this world for possible iteration.
@@ -447,32 +374,6 @@ public class World {
 	public <T extends EntitySystem> T getSystem(Class<T> type) {
 		return type.cast(systems.get(type));
 	}
-
-	/**
-	 * Retrieve a system for the specifide system type.
-	 *
-	 * @param <T>
-	 *			the class type of the system
-	 * @param type
-	 *			the class name of the system
-	 *
-	 * @return instance of the system in this world
-	 *
-	 * @deprecated
-	 *
-	 * @throws RuntimeException
-	 */
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public <T extends EntitySystem> T getSystem(String type) throws RuntimeException {
-		try {
-			Class<T> klazz = (Class<T>)Class.forName(type);
-			return (T)systems.get(klazz);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
 	
 	/**
 	 * Performs an action on each entity.
@@ -505,7 +406,6 @@ public class World {
 		notifyManagers(performer, e);
 		notifySystems(performer, e);
 	}
-
 	
 	/**
 	 * Process all non-passive systems.
@@ -516,16 +416,15 @@ public class World {
 
 		cm.clean();
 		
-		Object[] systems = systemsBag.getData();
+		Object[] systemsData = systemsBag.getData();
 		for(int i = 0, s = systemsBag.size(); s > i; i++) {
-			EntitySystem system = (EntitySystem)systems[i];
+			EntitySystem system = (EntitySystem)systemsData[i];
 			if(!system.isPassive()) {
 				system.process();
 			}
 		}
 	}
 	
-
 	/**
 	 * Retrieves a ComponentMapper instance for fast retrieval of components
 	 * from entities.
@@ -541,34 +440,8 @@ public class World {
 		return ComponentMapper.getFor(type, this);
 	}
 
-	/**
-	 * Retrieves a ComponentMapper instance for fast retrieval of components
-	 * from entities.
-	 *
-	 * @param <T>
-	 *			class type of the component
-	 * @param type
-	 *			class name of the component
-	 *
-	 * @return mapper for specified component type
-	 *
-	 * @deprecated
-	 */
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public <T extends Component> ComponentMapper<T> getMapper(String type) {
-		try {
-			Class<T> klazz = (Class<T>)Class.forName(type);
-			return ComponentMapper.getFor(klazz, this);
-		} catch (ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
 
-	/**
-	 * Runs {@link EntityObserver#deleted}.
-	 */
+	/** Runs {@link EntityObserver#deleted}. */
 	private static final class DeletedPerformer implements Performer {
 
 		@Override
@@ -578,9 +451,7 @@ public class World {
 
 	}
 
-	/**
-	 * Runs {@link EntityObserver#enabled}.
-	 */
+	/** Runs {@link EntityObserver#enabled}. */
 	private static final class EnabledPerformer implements Performer {
 
 		@Override
@@ -590,9 +461,7 @@ public class World {
 
 	}
 
-	/**
-	 * Runs {@link EntityObserver#disabled}.
-	 */
+	/** Runs {@link EntityObserver#disabled}. */
 	private static final class DisabledPerformer implements Performer {
 
 		@Override
@@ -602,9 +471,7 @@ public class World {
 
 	}
 
-	/**
-	 * Runs {@link EntityObserver#changed}.
-	 */
+	/** Runs {@link EntityObserver#changed}. */
 	private static final class ChangedPerformer implements Performer {
 
 		@Override
@@ -614,9 +481,7 @@ public class World {
 
 	}
 
-	/**
-	 * Runs {@link EntityObserver#added}.
-	 */
+	/** Runs {@link EntityObserver#added}. */
 	private static final class AddedPerformer implements Performer {
 
 		@Override
@@ -646,7 +511,8 @@ public class World {
 		void perform(EntityObserver observer, Entity e);
 
 	}
-	
+
+
 	/**
 	 * Injects {@link ComponentMapper} instances into objects.
 	 */

@@ -19,14 +19,11 @@ import com.artemis.utils.ImmutableBag;
  */
 public class PlayerManager extends Manager {
 
-	/**
-	 * All players mapped to entities as key.
-	 */
+	/** All players mapped to entities as key. */
 	private final Map<Entity, String> playerByEntity;
-	/**
-	 * All entities that are mapped to a player, with the player as key.
-	 */
+	/** All entities that are mapped to a player, with the player as key. */
 	private final Map<String, Bag<Entity>> entitiesByPlayer;
+
 
 	/**
 	 * Creates a new PlayerManager instance.
@@ -36,16 +33,17 @@ public class PlayerManager extends Manager {
 		entitiesByPlayer = new HashMap<String, Bag<Entity>>();
 	}
 
+
 	/**
-	 * Associate the entity to the specified player.
+	 * Associate the entity with the specified player.
 	 * <p>
-	 * Each entity may only be assoctiated to one player at a time.
+	 * Each entity may only be assoctiated with one player at a time.
 	 * </p>
 	 *
 	 * @param e
 	 *			the entity to associate
 	 * @param player
-	 *			the player to associtate to the entity to
+	 *			the player to associtate to the entity with
 	 */
 	public void setPlayer(Entity e, String player) {
 		playerByEntity.put(e, player);

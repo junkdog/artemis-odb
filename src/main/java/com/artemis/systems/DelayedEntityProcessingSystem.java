@@ -36,13 +36,25 @@ import com.artemis.utils.ImmutableBag;
  */
 public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 
+	/** The time until an entity should be processed. */
 	private float delay;
+	/**	If the system is running and counting down delays. */
 	private boolean running;
+	/** The countdown, accumulates world deltas. */
 	private float acc;
 
+
+	/**
+	 * Creates a new DelayedEntityProcessingSystem.
+	 *
+	 * @param aspect
+	 *			the aspect to match against entities
+	 */
 	public DelayedEntityProcessingSystem(Aspect aspect) {
 		super(aspect);
 	}
+
+
 
 	@Override
 	protected final void processEntities(ImmutableBag<Entity> entities) {
@@ -59,12 +71,13 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 		}
 		stop();
 	}
-	
+
+
 	@Override
 	protected void inserted(Entity e) {
-		float delay = getRemainingDelay(e);
-		if(delay > 0) {
-			offerDelay(delay);
+		float remainingDelay = getRemainingDelay(e);
+		if(remainingDelay > 0) {
+			offerDelay(remainingDelay);
 		}
 	}
 	
@@ -77,7 +90,8 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	 * @return delay
 	 */
 	protected abstract float getRemainingDelay(Entity e);
-	
+
+
 	@Override
 	protected final boolean checkProcessing() {
 		if(running) {
@@ -104,9 +118,9 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	 */
 	protected abstract void processDelta(Entity e, float accumulatedDelta);
 
+
 	protected abstract void processExpired(Entity e);
 
-	
 	/**
 	 * Start processing of entities after a certain amount of delta time.
 	 * <p>
@@ -135,15 +149,14 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	 * run at the offered delay.
 	 * </p>
 	 *
-	 * @param delay
+	 * @param offeredDelay
 	 *			delay to offer
 	 */
-	public void offerDelay(float delay) {
-		if(!running || delay < getRemainingTimeUntilProcessing()) {
-			restart(delay);
+	public void offerDelay(float offeredDelay) {
+		if(!running || offeredDelay < getRemainingTimeUntilProcessing()) {
+			restart(offeredDelay);
 		}
 	}
-	
 	
 	/**
 	 * Get the initial delay that the system was ordered to process entities

@@ -14,20 +14,13 @@ import java.util.HashMap;
  */
 public class ComponentType {
 
-	/**
-	 * Amount of generated component types.
-	 */
+	/** Amount of generated component types. */
 	private static int INDEX = 0;
-	/**
-	 * Index of this component type in the
-	 * {@link ComponentType#componentTypes componentTypes}
-	 * {@link java.utils.HashMap HashMap}.
-	 */
+	/** Index of this component type in componentTypes. */
 	private final int index;
-	/**
-	 * The class type of the componet type.
-	 */
+	/** The class type of the componet type. */
 	private final Class<? extends Component> type;
+
 
 	/**
 	 * Creates a new {@link ComponentType} instance of given component class.
@@ -40,6 +33,7 @@ public class ComponentType {
 		this.type = type;
 	}
 
+
 	/**
 	 * Get the component type's index.
 	 *
@@ -48,18 +42,17 @@ public class ComponentType {
 	public int getIndex() {
 		return index;
 	}
-	
+
+
 	@Override
 	public String toString() {
 		return "ComponentType["+type.getSimpleName()+"] ("+index+")";
 	}
 
+
 	/**
-	 * A static {@link java.utils.HashMap HashMap} containing all generated 
-	 * component types.
-	 * <p>
-	 * Newly generated component types will be stored here.
-	 * </p>
+	 * Contains all generated component types, newly generated component types
+	 * will be stored here.
 	 */
 	private static final HashMap<Class<? extends Component>, ComponentType> componentTypes
 			= new HashMap<Class<? extends Component>, ComponentType>();

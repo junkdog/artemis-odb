@@ -31,19 +31,13 @@ import java.util.BitSet;
  */
 public class Aspect {
 
-	/**
-	 * Contains bits of components the entity must all possess.
-	 */
+	/** Component bits the entity must all possess. */
 	private final BitSet allSet;
-	/**
-	 * Contains bits of components the entity must not possess.
-	 */
+	/** Component bits the entity must not possess. */
 	private final BitSet exclusionSet;
-	/**
-	 * Contains bits of components of which the entity must possess at least
-	 * one.
-	 */
+	/** Component bits of which the entity must possess at least one. */
 	private final BitSet oneSet;
+
 
 	/**
 	 * Aspects can only be created via the static methods
@@ -55,6 +49,7 @@ public class Aspect {
 		this.exclusionSet = new BitSet();
 		this.oneSet = new BitSet();
 	}
+
 
 	/**
 	 * Get a BitSet containing bits of components the entity must all possess.
@@ -153,6 +148,7 @@ public class Aspect {
 		}
 		return this;
 	}
+
 	
 	/**
 	 * Creates an aspect where an entity must possess all of the specified
