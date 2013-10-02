@@ -202,7 +202,7 @@ public class EntityManager extends Manager {
 	 */
 	private static final class IdentifierPool {
 		/** Stores free, pre-used, IDs. */
-		private final Bag<Integer> ids;
+		private DumbUnsafeIntArray ids;
 		/** The next ID to be given out, if no free pre-used ones are available. */
 		private int nextAvailableId;
 
@@ -210,7 +210,7 @@ public class EntityManager extends Manager {
 		 * Create a new identifier pool.
 		 */
 		public IdentifierPool() {
-			ids = new Bag<Integer>();
+			ids = new DumbUnsafeIntArray();
 		}
 
 		/**
@@ -220,7 +220,7 @@ public class EntityManager extends Manager {
 		 */
 		public int checkOut() {
 			if(ids.size() > 0) {
-				return ids.removeLast();
+				return ids.pop();
 			}
 			return nextAvailableId++;
 		}
@@ -232,9 +232,39 @@ public class EntityManager extends Manager {
 		 *			the id to free
 		 */
 		public void checkIn(int id) {
-			ids.add(id);
+			ids.push(id);
 		}
-
 	}
-
+	
+	/**
+	 * Used by the {@link IdentifierPool} too avoid boxing to {@code Integer}.
+	 */
+	private static class DumbUnsafeIntArray {
+		private int[] items;
+		private int size;
+		
+		public DumbUnsafeIntArray() {
+			items = new int[64];
+		}
+		
+		public void push(int value) {
+			items[size++] = value;
+			if (size == items.length)
+				grow();
+		}
+		
+		public int pop() {
+			return items[--size];
+		}
+		
+		public int size() {
+			return size;
+		}
+		
+		private void grow() {
+			int[] old = items;
+			items = new int[(old.length * 2)];
+			System.arraycopy(old, 0, items, 0, size);
+		}
+	}
 }
