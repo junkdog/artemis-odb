@@ -26,7 +26,7 @@ public abstract class EntitySystem implements EntityObserver {
 	/** Contains all entities processed by this system. */
 	private final Bag<Entity> actives;
 	/** Collects entites to be deleted from the system after processing. */
-	private static final WildBag<Entity> delayedDeletion = new WildBag<Entity>();
+	private final WildBag<Entity> delayedDeletion;
 	/** Component bits entities must possess for the system to be interested. */
 	private final BitSet allSet;
 	/** Component bits entities must not possess for the system to be interested. */
@@ -57,7 +57,7 @@ public abstract class EntitySystem implements EntityObserver {
 		oneSet = aspect.getOneSet();
 		systemIndex = SystemIndexManager.getIndexFor(this.getClass());
 		dummy = allSet.isEmpty() && oneSet.isEmpty(); // This system can't possibly be interested in any entity, so it must be "dummy"
-		
+		delayedDeletion = new WildBag<Entity>();
 		enabled = true;
 		isProcessing = false;
 	}
