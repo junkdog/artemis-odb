@@ -8,6 +8,7 @@ import java.util.Map;
 import com.artemis.annotations.Mapper;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import java.util.UUID;
 
 
 /**
@@ -259,6 +260,22 @@ public class World {
 	 */
 	public Entity createEntity() {
 		return em.createEntityInstance();
+	}
+
+	/**
+	 * Create and return a new or reused entity instance.
+	 * <p>
+	 * Will NOT add the entity to the world, use {@link #addEntity(Entity)} for
+	 * that.
+	 * </p>
+	 * 
+	 * @param uuid
+	 *		the UUID to give to the entity
+	 * 
+	 * @return entity
+	 */
+	public Entity createEntity(UUID uuid) {
+		return em.createEntityInstance(uuid);
 	}
 
 	/**
