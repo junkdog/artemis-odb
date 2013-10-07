@@ -3,6 +3,7 @@ package com.artemis;
 import java.util.BitSet;
 
 import com.artemis.utils.Bag;
+import java.util.UUID;
 
 
 /**
@@ -55,6 +56,25 @@ public class EntityManager extends Manager {
 	 */
 	protected Entity createEntityInstance() {
 		Entity e = new Entity(world, identifierPool.checkOut());
+		created++;
+		return e;
+	}
+	
+	/**
+	 * Create a new entity.
+	 * <p>
+	 * New entities will recieve a free ID from a global pool, ensuring
+	 * every entity has a unique ID. Deleted entities free their ID for new
+	 * entities.
+	 * </p>
+	 *
+	 * @param uuid
+	 *			the UUID to give to the entity
+	 * 
+	 * @return a new entity
+	 */
+	protected Entity createEntityInstance(UUID uuid) {
+		Entity e = new Entity(world, identifierPool.checkOut(), uuid);
 		created++;
 		return e;
 	}
