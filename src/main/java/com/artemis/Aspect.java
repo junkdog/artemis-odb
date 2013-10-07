@@ -4,7 +4,7 @@ import java.util.BitSet;
 
 
 /**
- * An Aspects is used by systems as a matcher against entities, to check if a
+ * An Aspect is used by systems as a matcher against entities, to check if a
  * system is interested in an entity.
  * <p>
  * Aspects define what sort of component types an entity must possess, or not
