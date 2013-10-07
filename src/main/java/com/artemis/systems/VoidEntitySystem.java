@@ -32,7 +32,9 @@ public abstract class VoidEntitySystem extends EntitySystem {
 		processSystem();
 	}
 
-
+	/**
+	 * Override to implement behavior when this system is called by the world.
+	 */
 	protected abstract void processSystem();
 
 
