@@ -14,9 +14,9 @@ import com.artemis.EntitySystem;
  */
 public abstract class IntervalEntitySystem extends EntitySystem {
 
-
+	/** Accumulated delta to keep track of interval. */
 	protected float acc;
-
+	/** How long to wait between updates. */
 	private final float interval;
 
 
