@@ -260,6 +260,16 @@ public class World {
 	public Entity createEntity() {
 		return em.createEntityInstance();
 	}
+	
+	public <T extends Component> T createComponent(Class<T> componentKlazz)
+	{
+		return cm.create(componentKlazz);
+	}
+	
+	public <T extends Component> T createComponent(Class<T> componentKlazz, boolean newReferencePersisted)
+	{
+		throw new RuntimeException("oi!");
+	}
 
 	/**
 	 * Get a entity having the specified id.

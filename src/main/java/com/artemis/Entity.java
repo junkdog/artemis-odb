@@ -106,6 +106,12 @@ public final class Entity {
 	public String toString() {
 		return "Entity[" + id + "]";
 	}
+	
+	public <T extends PooledComponent> T addPooledComponent(Class<T> componentClass) {
+		T component = world.createComponent(componentClass);
+		addComponent(component);
+		return component;
+	}
 
 	/**
 	 * Add a component to this entity.

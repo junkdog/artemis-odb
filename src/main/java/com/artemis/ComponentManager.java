@@ -33,7 +33,18 @@ public class ComponentManager extends Manager {
 		deleted = new WildBag<Entity>();
 	}
 
-
+	public <T extends Component> T create(Class<T> componentClass) {
+		try	{
+			T component = componentClass.newInstance();
+			return component;
+		}
+		catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		}
+		catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	@Override
 	protected void initialize() {
