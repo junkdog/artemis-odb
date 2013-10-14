@@ -1,45 +1,7 @@
 package com.artemis;
 
-import com.artemis.utils.Bag;
-
-
-/**
- * High performance component retrieval from entities.
- * <p>
- * Use this wherever you need to retrieve components from entities often and
- * fast.
- * </p>
- *
- * @author Arni Arent
- *
- * @param <A>
- *			the class type of the component
- */
-public class ComponentMapper<A extends Component> {
-
-	/** The type of components this mapper handles. */
-	private final ComponentType type;
-	/** The class of components this mapper handles. */
-	private final Class<A> classType;
-	/** Holds all components of given type in the world. */
-	private final Bag<Component> components;
-
-	
-	/**
-	 * Creates a new {@code ComponentMapper} instance handling the given type
-	 * of component for the given world.
-	 *
-	 * @param type
-	 *			the class type of components to handle
-	 * @param world
-	 *			the world to handle components for
-	 */
-	private ComponentMapper(Class<A> type, World world) {
-		this.type = ComponentType.getTypeFor(type);
-		components = world.getComponentManager().getComponentsByType(this.type);
-		this.classType = type;
-	}
-
+public abstract class ComponentMapper<A extends Component>
+{
 
 	/**
 	 * Fast but unsafe retrieval of a component for this entity.
@@ -56,9 +18,7 @@ public class ComponentMapper<A extends Component> {
 	 *
 	 * @throws ArrayIndexOutOfBoundsException
 	 */
-	public A get(Entity e) throws ArrayIndexOutOfBoundsException {
-		return classType.cast(components.get(e.getId()));
-	}
+	public abstract A get(Entity e) throws ArrayIndexOutOfBoundsException;
 
 	/**
 	 * Fast and safe retrieval of a component for this entity.
@@ -71,13 +31,8 @@ public class ComponentMapper<A extends Component> {
 	 *
 	 * @return the instance of the component
 	 */
-	public A getSafe(Entity e) {
-		if(components.isIndexWithinBounds(e.getId())) {
-			return classType.cast(components.get(e.getId()));
-		}
-		return null;
-	}
-	
+	public abstract A getSafe(Entity e);
+
 	/**
 	 * Checks if the entity has this type of component.
 	 *
@@ -86,9 +41,7 @@ public class ComponentMapper<A extends Component> {
 	 *
 	 * @return true if the entity has this component type, false if it doesn't
 	 */
-	public boolean has(Entity e) {
-		return getSafe(e) != null;		
-	}
+	public abstract boolean has(Entity e);
 
 
 	/**
@@ -103,8 +56,12 @@ public class ComponentMapper<A extends Component> {
 	 *
 	 * @return a new mapper
 	 */
+	@SuppressWarnings("unchecked")
 	public static <T extends Component> ComponentMapper<T> getFor(Class<T> type, World world) {
-		return new ComponentMapper<T>(type, world);
+		if (PackedComponent.class.isAssignableFrom(type))
+//			return (ComponentMapper<T>)new PackedComponentMapper<?>(type, world);
+			return (ComponentMapper<T>)PackedComponentMapper.create((Class<PackedComponent>)type, world);
+		else
+			return new BasicComponentMapper<T>(type, world);
 	}
-
 }

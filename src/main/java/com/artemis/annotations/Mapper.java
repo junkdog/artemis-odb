@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 /**
  * Mapper.
  * <p>
- * Used to identify a {@link com.artemis.ComponentMapper} for injection.
+ * Used to identify a {@link com.artemis.BasicComponentMapper} for injection.
  * </p>
  *
  * @author Arni Arent

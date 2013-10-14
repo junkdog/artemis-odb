@@ -33,9 +33,9 @@ public class World {
 	/** Entities deleted from the world since the last update. */
 	private final Bag<Entity> deleted;
 
-	/** Runs actions on systems and managers when entites get added. */
+	/** Runs actions on systems and managers when entities get added. */
 	private final AddedPerformer addedPerformer;
-	/** Runs actions on systems and managers when entites are changed. */
+	/** Runs actions on systems and managers when entities are changed. */
 	private final ChangedPerformer changedPerformer;
 	/** Runs actions on systems and managers when entities are deleted. */
 	private final DeletedPerformer deletedPerformer;
@@ -261,11 +261,6 @@ public class World {
 		return em.createEntityInstance();
 	}
 	
-	public <T extends Component> T createComponent(Class<T> componentKlazz)
-	{
-		return cm.create(componentKlazz);
-	}
-	
 	public <T extends Component> T createComponent(Class<T> componentKlazz, boolean newReferencePersisted)
 	{
 		throw new RuntimeException("oi!");
@@ -447,7 +442,7 @@ public class World {
 	 * @return mapper for specified component type
 	 */
 	public <T extends Component> ComponentMapper<T> getMapper(Class<T> type) {
-		return ComponentMapper.getFor(type, this);
+		return BasicComponentMapper.getFor(type, this);
 	}
 
 
@@ -524,12 +519,12 @@ public class World {
 
 
 	/**
-	 * Injects {@link ComponentMapper} instances into objects.
+	 * Injects {@link BasicComponentMapper} instances into objects.
 	 */
 	private static final class ComponentMapperInitHelper {
 
 		/**
-		 * Injects a {@link ComponentMapper} instance for every {@link Mapper}
+		 * Injects a {@link BasicComponentMapper} instance for every {@link Mapper}
 		 * annotation into the given system.
 		 *
 		 * @param target

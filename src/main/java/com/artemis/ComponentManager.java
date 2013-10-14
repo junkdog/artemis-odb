@@ -21,6 +21,8 @@ public class ComponentManager extends Manager {
 
 	/** Holds all components grouped by type. */
 	private final Bag<Bag<Component>> componentsByType;
+	/** Holds all components grouped by type. */
+	private final Bag<PackedComponent> packedComponents;
 	/** Collects all Entites marked for deletion from this ComponentManager. */
 	private final WildBag<Entity> deleted;
 
@@ -30,10 +32,27 @@ public class ComponentManager extends Manager {
 	 */
 	public ComponentManager() {
 		componentsByType = new Bag<Bag<Component>>();
+		packedComponents = new Bag<PackedComponent>();
 		deleted = new WildBag<Entity>();
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T extends Component> T create(Class<T> componentClass) {
+		ComponentType type = ComponentType.getTypeFor(componentClass);
+		if (type.isPackedComponent()) {
+			PackedComponent packedComponent = packedComponents.get(type.getIndex());
+			if (packedComponent == null) {
+				packedComponent = (PackedComponent)newInstance(componentClass);
+				packedComponents.set(type.getIndex(), packedComponent);
+			}
+			return (T)packedComponent;
+		}
+		
+		return newInstance(componentClass);
+	}
+
+	private <T extends Component>T newInstance(Class<T> componentClass)
+	{
 		try	{
 			T component = componentClass.newInstance();
 			return component;
@@ -59,6 +78,7 @@ public class ComponentManager extends Manager {
 	private void removeComponentsOfEntity(Entity e) {
 		BitSet componentBits = e.getComponentBits();
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
+			// TODO, reset packed components. but should work (with some dirty data disregarded)
 			componentsByType.get(i).set(e.getId(), null);
 		}
 		componentBits.clear();
@@ -79,6 +99,26 @@ public class ComponentManager extends Manager {
 	 *			the component to add
 	 */
 	protected void addComponent(Entity e, ComponentType type, Component component) {
+		if (type.isPackedComponent())
+			addPackedComponent(type, (PackedComponent)component);
+		else
+			addBasicComponent(e, type, component);
+
+		e.getComponentBits().set(type.getIndex());
+	}
+	
+	private void addPackedComponent(ComponentType type, PackedComponent component)
+	{
+		packedComponents.ensureCapacity(type.getIndex());
+		
+		PackedComponent packed = packedComponents.get(type.getIndex());
+		if (packed == null) {
+			packedComponents.set(type.getIndex(), component);
+		}
+	}
+	
+	private void addBasicComponent(Entity e, ComponentType type, Component component)
+	{
 		componentsByType.ensureCapacity(type.getIndex());
 		
 		Bag<Component> components = componentsByType.get(type.getIndex());
@@ -88,8 +128,6 @@ public class ComponentManager extends Manager {
 		}
 		
 		components.set(e.getId(), component);
-
-		e.getComponentBits().set(type.getIndex());
 	}
 
 	/**
@@ -102,7 +140,12 @@ public class ComponentManager extends Manager {
 	 */
 	protected void removeComponent(Entity e, ComponentType type) {
 		if(e.getComponentBits().get(type.getIndex())) {
-			componentsByType.get(type.getIndex()).set(e.getId(), null);
+			if (type.isPackedComponent()) {
+				// TODO not really necessary. but might be nice.
+//				packedComponents.get(type.getIndex()).reset();
+			} else {
+				componentsByType.get(type.getIndex()).set(e.getId(), null);
+			}
 			e.getComponentBits().clear(type.getIndex());
 		}
 	}
@@ -115,12 +158,31 @@ public class ComponentManager extends Manager {
 	 * @return a bag containing all components of the given type
 	 */
 	protected Bag<Component> getComponentsByType(ComponentType type) {
-		Bag<Component> components = componentsByType.get(type.getIndex());
-		if(components == null) {
+		Bag<Component> components;
+		
+		if (type.isPackedComponent()) {
+			// TODO ugly... also, should return persistent instance of packed components
 			components = new Bag<Component>();
-			componentsByType.set(type.getIndex(), components);
+			PackedComponent c = packedComponents.get(type.getIndex());
+			if (c != null) components.add(c);
+		} else {
+			components = componentsByType.get(type.getIndex());
+			if(components == null) {
+				components = new Bag<Component>();
+				componentsByType.set(type.getIndex(), components);
+			}
 		}
 		return components;
+	}
+	
+	@SuppressWarnings("unchecked")
+	protected <T extends PackedComponent> T getPackedComponentByType(ComponentType type) {
+		if (!type.isPackedComponent())
+			throw new RuntimeException(type.getType() + " does not extend " + PackedComponent.class);
+		
+		PackedComponent component = packedComponents.get(type.getIndex());
+		if (component == null) component = (PackedComponent)create(type.getType());
+		return (T)component;
 	}
 
 	/**
@@ -133,9 +195,15 @@ public class ComponentManager extends Manager {
 	 * @return the component of given type
 	 */
 	protected Component getComponent(Entity e, ComponentType type) {
-		Bag<Component> components = componentsByType.get(type.getIndex());
-		if(components != null) {
-			return components.get(e.getId());
+		if (type.isPackedComponent()) {
+			PackedComponent component = packedComponents.get(type.getIndex());
+			if (component != null) component.setEntityId(e.getId());
+			return component;
+		} else {
+			Bag<Component> components = componentsByType.get(type.getIndex());
+			if(components != null) {
+				return components.get(e.getId());
+			}
 		}
 		return null;
 	}
@@ -150,6 +218,7 @@ public class ComponentManager extends Manager {
 	 * @return the {@code fillBag}, filled with the entities components
 	 */
 	public Bag<Component> getComponentsFor(Entity e, Bag<Component> fillBag) {
+		// TODO: return persiste dinstance of packed components
 		BitSet componentBits = e.getComponentBits();
 
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
@@ -179,5 +248,4 @@ public class ComponentManager extends Manager {
 			deleted.setSize(0);
 		}
 	}
-
 }

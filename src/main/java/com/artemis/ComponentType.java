@@ -20,6 +20,8 @@ public class ComponentType {
 	private final int index;
 	/** The class type of the componet type. */
 	private final Class<? extends Component> type;
+	/** True if component type is a {@link PackedComponent} */
+	private final boolean packedComponentType;
 
 
 	/**
@@ -31,6 +33,8 @@ public class ComponentType {
 	private ComponentType(Class<? extends Component> type) {
 		index = INDEX++;
 		this.type = type;
+		packedComponentType = PackedComponent.class.isAssignableFrom(type);
+//		packedComponentType = type.isAssignableFrom(PackedComponent.class);
 	}
 
 
@@ -48,8 +52,15 @@ public class ComponentType {
 	public String toString() {
 		return "ComponentType["+type.getSimpleName()+"] ("+index+")";
 	}
-
-
+	
+	public boolean isPackedComponent() {
+		return packedComponentType;
+	}
+	
+	protected Class<? extends Component> getType() {
+		return type;
+	}
+	
 	/**
 	 * Contains all generated component types, newly generated component types
 	 * will be stored here.
