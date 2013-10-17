@@ -1,6 +1,6 @@
 package com.artemis;
 
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
 
 import com.artemis.utils.Bag;
@@ -10,7 +10,7 @@ class ComponentPool {
 	private final Map<Class<? extends PooledComponent>, Pool> pools;
 	
 	ComponentPool() {
-		pools = new HashMap<Class<? extends PooledComponent>, ComponentPool.Pool>();
+		pools = new IdentityHashMap<Class<? extends PooledComponent>, ComponentPool.Pool>();
 	}
 	
 	@SuppressWarnings("unchecked")

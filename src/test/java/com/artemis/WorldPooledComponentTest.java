@@ -3,6 +3,9 @@ package com.artemis;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,28 +25,28 @@ public class WorldPooledComponentTest
 	@Test
 	public void pooled_component_reuse()
 	{
+		world.setSystem(new SystemComponentPooledRemover());
 		world.initialize();
 
-		int hash1 = createEntity();
-		int hash2 = createEntity();
+		Set<Integer> hashes = new HashSet<Integer>();
+		hashes.add(createEntity());
+		hashes.add(createEntity());
 		world.process();
-		int hash3 = createEntity();
 		world.process();
-		int hash4 = createEntity();
+		hashes.add(createEntity());
 		world.process();
-		int hash5 = createEntity();
+		hashes.add(createEntity());
+		world.process();
+		hashes.add(createEntity());
 		world.process();
 		
-		assertEquals(hash1, hash3);
-		assertNotEquals(hash1, hash2);
-		assertEquals(hash1, hash4);
-		assertEquals(hash1, hash5);
+		assertEquals(2, hashes.size());
 	}
-
+	
 	private int createEntity()
 	{
 		Entity e = world.createEntity();
-		ReusedComponent component = e.addPooledComponent(ReusedComponent.class);
+		ReusedComponent component = e.createComponent(ReusedComponent.class);
 		e.addToWorld();
 		return System.identityHashCode(component);
 	}

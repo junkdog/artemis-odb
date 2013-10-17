@@ -15,7 +15,11 @@ import com.artemis.utils.Bag;
  * @author Arni Arent
  */
 public class ComponentType {
-
+	enum Taxonomy {
+		BASIC, POOLED, PACKED;
+	}
+	
+	
 	/** Amount of generated component types. */
 	private static int INDEX = 0;
 	/** Index of this component type in componentTypes. */
@@ -23,7 +27,8 @@ public class ComponentType {
 	/** The class type of the component type. */
 	private final Class<? extends Component> type;
 	/** True if component type is a {@link PackedComponent} */
-	private final boolean packedComponentType;
+//	private final boolean packedComponentType;
+	private final Taxonomy taxonomy;
 	private static final Bag<ComponentType> types = new Bag<ComponentType>();
 
 
@@ -37,8 +42,13 @@ public class ComponentType {
 		types.set(INDEX, this);
 		index = INDEX++;
 		this.type = type;
-		packedComponentType = PackedComponent.class.isAssignableFrom(type);
-//		packedComponentType = type.isAssignableFrom(PackedComponent.class);
+		if (PackedComponent.class.isAssignableFrom(type)) {
+			taxonomy = Taxonomy.PACKED;
+		} else if (PooledComponent.class.isAssignableFrom(type)) {
+			taxonomy = Taxonomy.POOLED;
+		} else {
+			taxonomy = Taxonomy.BASIC;
+		}
 	}
 
 
@@ -57,8 +67,17 @@ public class ComponentType {
 		return "ComponentType["+type.getSimpleName()+"] ("+index+")";
 	}
 	
+	protected Taxonomy getTaxonomy() {
+		return taxonomy;
+	}
+	
+	protected static Taxonomy getTaxonomy(int index) {
+		ComponentType type = types.get(index);
+		return type != null ? type.getTaxonomy() : Taxonomy.BASIC;
+	}
+	
 	public boolean isPackedComponent() {
-		return packedComponentType;
+		return taxonomy == Taxonomy.PACKED;
 	}
 	
 	protected static boolean isPackedComponent(int index) {

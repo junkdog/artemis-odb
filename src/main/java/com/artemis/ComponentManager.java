@@ -25,6 +25,7 @@ public class ComponentManager extends Manager {
 	private final Bag<PackedComponent> packedComponents;
 	/** Collects all Entites marked for deletion from this ComponentManager. */
 	private final WildBag<Entity> deleted;
+	private final ComponentPool pooledComponents;
 
 
 	/**
@@ -33,25 +34,38 @@ public class ComponentManager extends Manager {
 	public ComponentManager() {
 		componentsByType = new Bag<Bag<Component>>();
 		packedComponents = new Bag<PackedComponent>();
+		pooledComponents = new ComponentPool();
 		deleted = new WildBag<Entity>();
 	}
 
 	@SuppressWarnings("unchecked")
 	public <T extends Component> T create(Class<T> componentClass) {
 		ComponentType type = ComponentType.getTypeFor(componentClass);
-		if (type.isPackedComponent()) {
-			PackedComponent packedComponent = packedComponents.get(type.getIndex());
-			if (packedComponent == null) {
-				packedComponent = (PackedComponent)newInstance(componentClass);
-				packedComponents.set(type.getIndex(), packedComponent);
-			}
-			return (T)packedComponent;
+		switch (type.getTaxonomy())
+		{
+			case BASIC:
+				return newInstance(componentClass);
+			case PACKED:
+				PackedComponent packedComponent = packedComponents.get(type.getIndex());
+				if (packedComponent == null) {
+					packedComponent = (PackedComponent)newInstance(componentClass);
+					packedComponents.set(type.getIndex(), packedComponent);
+				}
+				return (T)packedComponent;
+			case POOLED:
+				try {
+					return (T)pooledComponents.obtain((Class<PooledComponent>)componentClass);
+				} catch (InstantiationException e) {
+					throw new InvalidComponentException(componentClass, "Unable to instantiate component.", e);
+				} catch (IllegalAccessException e) {
+					throw new InvalidComponentException(componentClass, "Missing public constructor.", e);
+				}
+			default:
+				throw new InvalidComponentException(componentClass, " unknown component type: " + type.getTaxonomy());
 		}
-		
-		return newInstance(componentClass);
 	}
 
-	private <T extends Component>T newInstance(Class<T> componentClass)
+	private  static <T extends Component> T newInstance(Class<T> componentClass)
 	{
 		try {
 			return componentClass.newInstance();
@@ -75,10 +89,20 @@ public class ComponentManager extends Manager {
 	private void removeComponentsOfEntity(Entity e) {
 		BitSet componentBits = e.getComponentBits();
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
-			if (ComponentType.isPackedComponent(i)) {
-				packedComponents.get(i).setEntityId(e.getId()).reset();
-			} else {
-				componentsByType.get(i).set(e.getId(), null);
+			switch (ComponentType.getTaxonomy(i)) {
+				case BASIC:
+					componentsByType.get(i).set(e.getId(), null);
+					break;
+				case POOLED:
+					Component pooled = componentsByType.get(i).get(e.getId());
+					pooledComponents.free((PooledComponent)pooled);
+					componentsByType.get(i).set(e.getId(), null);
+					break;
+				case PACKED:
+					packedComponents.get(i).setEntityId(e.getId()).reset();
+					break;
+				default:
+					throw new InvalidComponentException(Component.class, " unknown component type: " + ComponentType.getTaxonomy(i));
 			}
 		}
 		componentBits.clear();
@@ -201,9 +225,7 @@ public class ComponentManager extends Manager {
 	 * @return the {@code fillBag}, filled with the entities components
 	 */
 	public Bag<Component> getComponentsFor(Entity e, Bag<Component> fillBag) {
-		// TODO: return persist dinstance of packed components
 		BitSet componentBits = e.getComponentBits();
-
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
 			if (ComponentType.isPackedComponent(i)) {
 				fillBag.add(packedComponents.get(i));
