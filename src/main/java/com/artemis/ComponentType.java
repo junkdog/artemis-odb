@@ -2,6 +2,8 @@ package com.artemis;
 
 import java.util.HashMap;
 
+import com.artemis.utils.Bag;
+
 
 /**
  * Identifies components in artemis without having to use classes.
@@ -18,10 +20,11 @@ public class ComponentType {
 	private static int INDEX = 0;
 	/** Index of this component type in componentTypes. */
 	private final int index;
-	/** The class type of the componet type. */
+	/** The class type of the component type. */
 	private final Class<? extends Component> type;
 	/** True if component type is a {@link PackedComponent} */
 	private final boolean packedComponentType;
+	private static final Bag<ComponentType> types = new Bag<ComponentType>();
 
 
 	/**
@@ -31,6 +34,7 @@ public class ComponentType {
 	 *			the components class
 	 */
 	private ComponentType(Class<? extends Component> type) {
+		types.set(INDEX, this);
 		index = INDEX++;
 		this.type = type;
 		packedComponentType = PackedComponent.class.isAssignableFrom(type);
@@ -55,6 +59,11 @@ public class ComponentType {
 	
 	public boolean isPackedComponent() {
 		return packedComponentType;
+	}
+	
+	protected static boolean isPackedComponent(int index) {
+		ComponentType type = types.get(index);
+		return type != null ? type.isPackedComponent() : false;
 	}
 	
 	protected Class<? extends Component> getType() {
@@ -89,6 +98,19 @@ public class ComponentType {
 		}
 
 		return type;
+	}
+	
+	/**
+	 * Gets the component type for the given component class.
+	 * <p>
+	 *
+	 * @param c
+	 *			the component's class to get the type for
+	 *
+	 * @return the component's {@link ComponentType}
+	 */
+	public static ComponentType getTypeFor(int index) {
+		return types.get(index);
 	}
 
 	/**

@@ -109,38 +109,18 @@ public final class Entity {
 	
 	@Deprecated
 	public <T extends PooledComponent> T addPooledComponent(Class<T> componentClass) {
-		T component = world.getComponentManager().create(componentClass);
-//		T component = world.createComponent(componentClass);
+		T component = componentManager.create(componentClass);
 		addComponent(component);
 		return component;
 	}
-	
-	@Deprecated
-	public <T extends Component> T addComponent(Class<T> componentClass) {
-		T component = world.getComponentManager().create(componentClass);
-		addComponent(component);
-		return component;
-	}
-	
 	
 	public <T extends Component> T createComponent(Class<T> componentKlazz) {
-		// TODO: move down to componentManager 0 below too
 		T component = componentManager.create(componentKlazz);
 		if (component instanceof PackedComponent) {
 			((PackedComponent)component).setEntityId(id);
 		}
-//		if (component instanceof PooledComponent) {
-//			
-//		}
-//		else if (component instanceof PackedComponent) {
-//			((PackedComponent)component).setEntityId(id);
-//		}
-//		else {
-//			
-//		}
 		
 		componentManager.addComponent(this, ComponentType.getTypeFor(componentKlazz), component);
-		
 		return component;
 	}
 
@@ -151,6 +131,7 @@ public final class Entity {
 	 *			the component to add to this entity
 	 * 
 	 * @return this entity for chaining
+	 * @see {@link #createComponent(Class)}
 	 */
 	@Deprecated
 	public Entity addComponent(Component component) {
@@ -171,6 +152,7 @@ public final class Entity {
 	 *			the type of the component
 	 * 
 	 * @return this entity for chaining
+	 * @see #createComponent(Class)
 	 */
 	@Deprecated
 	public Entity addComponent(Component component, ComponentType type) {
@@ -361,6 +343,4 @@ public final class Entity {
 	public World getWorld() {
 		return world;
 	}
-
-
 }

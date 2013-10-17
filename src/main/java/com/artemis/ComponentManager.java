@@ -53,15 +53,12 @@ public class ComponentManager extends Manager {
 
 	private <T extends Component>T newInstance(Class<T> componentClass)
 	{
-		try	{
-			T component = componentClass.newInstance();
-			return component;
-		}
-		catch (InstantiationException e) {
-			throw new RuntimeException(e);
-		}
-		catch (IllegalAccessException e) {
-			throw new RuntimeException(e);
+		try {
+			return componentClass.newInstance();
+		} catch (InstantiationException e) {
+			throw new InvalidComponentException(componentClass, "Unable to instantiate component.", e);
+		} catch (IllegalAccessException e) {
+			throw new InvalidComponentException(componentClass, "Missing public constructor.", e);
 		}
 	}
 
@@ -78,9 +75,11 @@ public class ComponentManager extends Manager {
 	private void removeComponentsOfEntity(Entity e) {
 		BitSet componentBits = e.getComponentBits();
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
-			// TODO, reset packed components. but should work (with some dirty data disregarded)
-			Bag<Component> componentBag = componentsByType.get(i);
-			if (componentBag != null) componentBag.set(e.getId(), null);
+			if (ComponentType.isPackedComponent(i)) {
+				packedComponents.get(i).setEntityId(e.getId()).reset();
+			} else {
+				componentsByType.get(i).set(e.getId(), null);
+			}
 		}
 		componentBits.clear();
 	}
@@ -142,8 +141,7 @@ public class ComponentManager extends Manager {
 	protected void removeComponent(Entity e, ComponentType type) {
 		if(e.getComponentBits().get(type.getIndex())) {
 			if (type.isPackedComponent()) {
-				// TODO not really necessary. but might be nice.
-//				packedComponents.get(type.getIndex()).reset();
+				packedComponents.get(type.getIndex()).reset();
 			} else {
 				componentsByType.get(type.getIndex()).set(e.getId(), null);
 			}
@@ -168,16 +166,6 @@ public class ComponentManager extends Manager {
 			componentsByType.set(type.getIndex(), components);
 		}
 		return components;
-	}
-	
-	@SuppressWarnings("unchecked")
-	protected <T extends PackedComponent> T getPackedComponentByType(ComponentType type) {
-		if (!type.isPackedComponent())
-			throw new RuntimeException(type.getType() + " does not extend " + PackedComponent.class);
-		
-		PackedComponent component = packedComponents.get(type.getIndex());
-		if (component == null) component = (PackedComponent)create(type.getType());
-		return (T)component;
 	}
 
 	/**
@@ -217,8 +205,11 @@ public class ComponentManager extends Manager {
 		BitSet componentBits = e.getComponentBits();
 
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
-			Bag<Component> componentBag = componentsByType.get(i);
-			if (componentBag != null) fillBag.add(componentBag.get(e.getId()));
+			if (ComponentType.isPackedComponent(i)) {
+				fillBag.add(packedComponents.get(i));
+			} else {
+				fillBag.add(componentsByType.get(i).get(e.getId()));
+			}
 		}
 		
 		return fillBag;
