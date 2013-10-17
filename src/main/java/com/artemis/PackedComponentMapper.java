@@ -38,8 +38,15 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 		ComponentManager cm = world.getComponentManager();
 		
 		this.type = ComponentType.getTypeFor(type);
-		component = cm.getPackedComponentByType(this.type);
+//		component = cm.getPackedComponentByType(this.type);
 		this.classType = type;
+		try {
+			component = classType.newInstance();
+		} catch (InstantiationException e) {
+			throw new InvalidComponentException(type, "Unable to instantiate component.", e);
+		} catch (IllegalAccessException e) {
+			throw new InvalidComponentException(type, "Missing public constructor.", e);
+		}
 	}
 	
 	static PackedComponentMapper<PackedComponent> create(Class<PackedComponent> type, World world) {
@@ -52,6 +59,7 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 	public A get(Entity e) throws ArrayIndexOutOfBoundsException {
 //		A component = classType.cast(components.get(e.getId()));
 		component.setEntityId(e.getId());
+		
 		return (A)component;
 	}
 	

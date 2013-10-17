@@ -126,6 +126,9 @@ public final class Entity {
 	public <T extends Component> T createComponent(Class<T> componentKlazz) {
 		// TODO: move down to componentManager 0 below too
 		T component = componentManager.create(componentKlazz);
+		if (component instanceof PackedComponent) {
+			((PackedComponent)component).setEntityId(id);
+		}
 //		if (component instanceof PooledComponent) {
 //			
 //		}

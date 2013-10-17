@@ -79,7 +79,8 @@ public class ComponentManager extends Manager {
 		BitSet componentBits = e.getComponentBits();
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
 			// TODO, reset packed components. but should work (with some dirty data disregarded)
-			componentsByType.get(i).set(e.getId(), null);
+			Bag<Component> componentBag = componentsByType.get(i);
+			if (componentBag != null) componentBag.set(e.getId(), null);
 		}
 		componentBits.clear();
 	}
@@ -158,19 +159,13 @@ public class ComponentManager extends Manager {
 	 * @return a bag containing all components of the given type
 	 */
 	protected Bag<Component> getComponentsByType(ComponentType type) {
-		Bag<Component> components;
-		
-		if (type.isPackedComponent()) {
-			// TODO ugly... also, should return persistent instance of packed components
+		if (type.isPackedComponent())
+			throw new InvalidComponentException(type.getType(), "PackedComponent types aren't supported.");
+
+		Bag<Component> components = componentsByType.get(type.getIndex());
+		if(components == null) {
 			components = new Bag<Component>();
-			PackedComponent c = packedComponents.get(type.getIndex());
-			if (c != null) components.add(c);
-		} else {
-			components = componentsByType.get(type.getIndex());
-			if(components == null) {
-				components = new Bag<Component>();
-				componentsByType.set(type.getIndex(), components);
-			}
+			componentsByType.set(type.getIndex(), components);
 		}
 		return components;
 	}
@@ -218,11 +213,12 @@ public class ComponentManager extends Manager {
 	 * @return the {@code fillBag}, filled with the entities components
 	 */
 	public Bag<Component> getComponentsFor(Entity e, Bag<Component> fillBag) {
-		// TODO: return persiste dinstance of packed components
+		// TODO: return persist dinstance of packed components
 		BitSet componentBits = e.getComponentBits();
 
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
-			fillBag.add(componentsByType.get(i).get(e.getId()));
+			Bag<Component> componentBag = componentsByType.get(i);
+			if (componentBag != null) fillBag.add(componentBag.get(e.getId()));
 		}
 		
 		return fillBag;
