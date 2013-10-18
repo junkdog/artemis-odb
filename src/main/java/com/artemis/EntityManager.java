@@ -3,6 +3,7 @@ package com.artemis;
 import java.util.BitSet;
 
 import com.artemis.utils.Bag;
+import java.util.UUID;
 
 
 /**
@@ -55,6 +56,25 @@ public class EntityManager extends Manager {
 	 */
 	protected Entity createEntityInstance() {
 		Entity e = new Entity(world, identifierPool.checkOut());
+		created++;
+		return e;
+	}
+	
+	/**
+	 * Create a new entity.
+	 * <p>
+	 * New entities will recieve a free ID from a global pool, ensuring
+	 * every entity has a unique ID. Deleted entities free their ID for new
+	 * entities.
+	 * </p>
+	 *
+	 * @param uuid
+	 *			the UUID to give to the entity
+	 * 
+	 * @return a new entity
+	 */
+	protected Entity createEntityInstance(UUID uuid) {
+		Entity e = new Entity(world, identifierPool.checkOut(), uuid);
 		created++;
 		return e;
 	}
@@ -201,11 +221,13 @@ public class EntityManager extends Manager {
 	 * them.
 	 */
 	private static final class IdentifierPool {
+		
 		/** Stores free, pre-used, IDs. */
 		private DumbUnsafeIntArray ids;
 		/** The next ID to be given out, if no free pre-used ones are available. */
 		private int nextAvailableId;
 
+		
 		/** 
 		 * Create a new identifier pool.
 		 */
@@ -213,6 +235,7 @@ public class EntityManager extends Manager {
 			ids = new DumbUnsafeIntArray();
 		}
 
+		
 		/**
 		 * Get a free id.
 		 *
@@ -234,37 +257,69 @@ public class EntityManager extends Manager {
 		public void checkIn(int id) {
 			ids.push(id);
 		}
+		
 	}
+	
 	
 	/**
 	 * Used by the {@link IdentifierPool} too avoid boxing to {@code Integer}.
 	 */
 	private static class DumbUnsafeIntArray {
+		
+		/** The underlaying array. */
 		private int[] items;
+		/** The amount of items in the array. */
 		private int size;
 		
+		
+		/**
+		 * Creates a new DumbUnsafeIntArray instance.
+		 */
 		public DumbUnsafeIntArray() {
 			items = new int[64];
 		}
 		
+		
+		/**
+		 * Append a value at the end of the array.
+		 * 
+		 * @param value 
+		 *			the value to append
+		 */
 		public void push(int value) {
 			items[size++] = value;
 			if (size == items.length)
 				grow();
 		}
 		
+		/**
+		 * Return and remove the last element from the array.
+		 * 
+		 * @return the last element in the array
+		 */
 		public int pop() {
 			return items[--size];
 		}
 		
+		/**
+		 * Gets the size of the array.
+		 * 
+		 * @return the size
+		 */
 		public int size() {
 			return size;
 		}
 		
+		/**
+		 * Creates a new, larger underlaying array and replaces the old one,
+		 * copying all content to the new array.
+		 */
 		private void grow() {
 			int[] old = items;
 			items = new int[(old.length * 2)];
 			System.arraycopy(old, 0, items, 0, size);
 		}
+		
 	}
+	
 }
