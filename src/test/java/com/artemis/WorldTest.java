@@ -33,26 +33,6 @@ public class WorldTest
 		
 		world.process();
 	}
-	
-	@Test
-	public void ensure_extended_components_do_their_thing()
-	{
-		SystemB systemB = world.setSystem(new SystemB());
-		SystemY systemY = world.setSystem(new SystemY());
-		world.initialize();
-		
-		Entity e = world.createEntity();
-		e.addToWorld();
-		
-		e = world.createEntity();
-		e.createComponent(ComponentX.class);
-		e.addToWorld();
-		
-		world.process();
-		assertEquals(1, systemB.getActives().size());
-		assertEquals(1, systemY.getActives().size());
-		
-	}
 
 	static class SystemComponentXRemover extends EntityProcessingSystem
 	{
