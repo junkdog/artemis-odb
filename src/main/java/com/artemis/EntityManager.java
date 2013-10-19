@@ -1,5 +1,7 @@
 package com.artemis;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.BitSet;
 
 import com.artemis.utils.Bag;
@@ -25,9 +27,7 @@ public class EntityManager extends Manager {
 	private long created;
 	/** Amount of entities ever deleted from the manager. */
 	private long deleted;
-	/** Manages free IDs for entities. */
-	private final IdentifierPool identifierPool;
-
+	private RecyclingEntityFactory recyclingEntityFactory;
 
 	/**
 	 * Creates a new EntityManager Instance.
@@ -35,13 +35,11 @@ public class EntityManager extends Manager {
 	public EntityManager() {
 		entities = new Bag<Entity>();
 		disabled = new BitSet();
-		identifierPool = new IdentifierPool();
 	}
-
-
 
 	@Override
 	protected void initialize() {
+		recyclingEntityFactory = new RecyclingEntityFactory(world);
 	}
 
 	/**
@@ -55,7 +53,7 @@ public class EntityManager extends Manager {
 	 * @return a new entity
 	 */
 	protected Entity createEntityInstance() {
-		Entity e = new Entity(world, identifierPool.checkOut());
+		Entity e = recyclingEntityFactory.obtain();
 		created++;
 		return e;
 	}
@@ -63,7 +61,7 @@ public class EntityManager extends Manager {
 	/**
 	 * Create a new entity.
 	 * <p>
-	 * New entities will recieve a free ID from a global pool, ensuring
+	 * New entities will receive a free ID from a global pool, ensuring
 	 * every entity has a unique ID. Deleted entities free their ID for new
 	 * entities.
 	 * </p>
@@ -74,8 +72,8 @@ public class EntityManager extends Manager {
 	 * @return a new entity
 	 */
 	protected Entity createEntityInstance(UUID uuid) {
-		Entity e = new Entity(world, identifierPool.checkOut(), uuid);
-		created++;
+		Entity e = createEntityInstance();
+		e.setUuid(uuid);
 		return e;
 	}
 
@@ -129,7 +127,7 @@ public class EntityManager extends Manager {
 		
 		disabled.clear(e.getId());
 		
-		identifierPool.checkIn(e.getId());
+		recyclingEntityFactory.free(e);
 		
 		active--;
 		deleted++;
@@ -214,112 +212,61 @@ public class EntityManager extends Manager {
 		return deleted;
 	}
 	
-	
-	
-	/**
-	 * Used only internally to generate distinct ids for entities and reuse
-	 * them.
-	 */
-	private static final class IdentifierPool {
+	private static final class RecyclingEntityFactory {
+		private final Bag<Entity> recycled;
+		private int nextId;
 		
-		/** Stores free, pre-used, IDs. */
-		private DumbUnsafeIntArray ids;
-		/** The next ID to be given out, if no free pre-used ones are available. */
-		private int nextAvailableId;
-
+		private Constructor<Entity> constructor;
+		private Object[] args;
 		
-		/** 
-		 * Create a new identifier pool.
-		 */
-		public IdentifierPool() {
-			ids = new DumbUnsafeIntArray();
-		}
-
-		
-		/**
-		 * Get a free id.
-		 *
-		 * @return a free id
-		 */
-		public int checkOut() {
-			if(ids.size() > 0) {
-				return ids.pop();
+		RecyclingEntityFactory(World world) {
+			recycled = new Bag<Entity>();
+			args = new Object[]{world, 0};
+			try
+			{
+				constructor = Entity.class.getDeclaredConstructor(World.class, int.class);
+				constructor.setAccessible(true);
 			}
-			return nextAvailableId++;
-		}
-
-		/**
-		 * Free the id.
-		 *
-		 * @param id
-		 *			the id to free
-		 */
-		public void checkIn(int id) {
-			ids.push(id);
+			catch (SecurityException e)
+			{
+				e.printStackTrace();
+			}
+			catch (NoSuchMethodException e)
+			{
+				e.printStackTrace();
+			}
 		}
 		
+		void free(Entity e) {
+			recycled.add(e);
+		}
+		
+		Entity obtain() {
+			if (recycled.isEmpty()) {
+				try
+				{
+					args[1] = nextId++;
+					return constructor.newInstance(args);
+				}
+				catch (IllegalArgumentException e)
+				{
+					throw new RuntimeException(e);
+				}
+				catch (InstantiationException e)
+				{
+					throw new RuntimeException(e);
+				}
+				catch (IllegalAccessException e)
+				{
+					throw new RuntimeException(e);
+				}
+				catch (InvocationTargetException e)
+				{
+					throw new RuntimeException(e);
+				}
+			} else {
+				return recycled.removeLast(); 
+			}
+		}
 	}
-	
-	
-	/**
-	 * Used by the {@link IdentifierPool} too avoid boxing to {@code Integer}.
-	 */
-	private static class DumbUnsafeIntArray {
-		
-		/** The underlaying array. */
-		private int[] items;
-		/** The amount of items in the array. */
-		private int size;
-		
-		
-		/**
-		 * Creates a new DumbUnsafeIntArray instance.
-		 */
-		public DumbUnsafeIntArray() {
-			items = new int[64];
-		}
-		
-		
-		/**
-		 * Append a value at the end of the array.
-		 * 
-		 * @param value 
-		 *			the value to append
-		 */
-		public void push(int value) {
-			items[size++] = value;
-			if (size == items.length)
-				grow();
-		}
-		
-		/**
-		 * Return and remove the last element from the array.
-		 * 
-		 * @return the last element in the array
-		 */
-		public int pop() {
-			return items[--size];
-		}
-		
-		/**
-		 * Gets the size of the array.
-		 * 
-		 * @return the size
-		 */
-		public int size() {
-			return size;
-		}
-		
-		/**
-		 * Creates a new, larger underlaying array and replaces the old one,
-		 * copying all content to the new array.
-		 */
-		private void grow() {
-			int[] old = items;
-			items = new int[(old.length * 2)];
-			System.arraycopy(old, 0, items, 0, size);
-		}
-		
-	}
-	
 }
