@@ -46,14 +46,7 @@ public final class Entity {
 	 *			the id to set
 	 */
 	protected Entity(World world, int id) {
-		this.world = world;
-		this.id = id;
-		this.entityManager = world.getEntityManager();
-		this.componentManager = world.getComponentManager();
-		systemBits = new BitSet();
-		componentBits = new BitSet();
-		
-		reset();
+		this(world, id, UUID.randomUUID());
 	}
 
 	/**
@@ -71,7 +64,12 @@ public final class Entity {
 	 *			the UUID to set
 	 */
 	protected Entity(World world, int id, UUID uuid) {
-		this(world, id);
+		this.world = world;
+		this.id = id;
+		this.entityManager = world.getEntityManager();
+		this.componentManager = world.getComponentManager();
+		systemBits = new BitSet();
+		componentBits = new BitSet();
 		this.uuid = uuid;
 	}
 
@@ -345,6 +343,10 @@ public final class Entity {
 	 */
 	public UUID getUuid() {
 		return uuid;
+	}
+	
+	public void setUuid(UUID uuid) {
+		this.uuid = uuid;
 	}
 
 	/**
