@@ -1,7 +1,8 @@
 package com.artemis;
 
-import com.artemis.utils.Bag;
 import java.util.Iterator;
+
+import com.artemis.utils.Bag;
 
 /**
  * ArtemisBenchmark.

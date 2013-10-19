@@ -28,7 +28,7 @@ public class WorldTest
 		world.initialize();
 		
 		Entity e = world.createEntity();
-		e.addComponent(new ComponentX());
+		e.createComponent(ComponentX.class);
 		e.addToWorld();
 		
 		world.process();
@@ -42,11 +42,10 @@ public class WorldTest
 		world.initialize();
 		
 		Entity e = world.createEntity();
-		e.addComponent(new ComponentX());
 		e.addToWorld();
 		
 		e = world.createEntity();
-		e.addComponent(new ComponentY());
+		e.createComponent(ComponentX.class);
 		e.addToWorld();
 		
 		world.process();
