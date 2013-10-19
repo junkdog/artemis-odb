@@ -126,13 +126,6 @@ public final class Entity {
 		return "Entity[" + id + "]";
 	}
 	
-	@Deprecated
-	public <T extends PooledComponent> T addPooledComponent(Class<T> componentClass) {
-		T component = componentManager.create(componentClass);
-		addComponent(component);
-		return component;
-	}
-	
 	public <T extends Component> T createComponent(Class<T> componentKlazz) {
 		T component = componentManager.create(componentKlazz);
 		if (component instanceof PackedComponent) {
