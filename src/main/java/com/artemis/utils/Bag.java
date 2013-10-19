@@ -1,5 +1,6 @@
 package com.artemis.utils;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -300,8 +301,20 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * The bag will be empty after this call returns.
 	 * </p>
 	 */
-	@SuppressWarnings("unchecked")
 	public void clear() {
+		Arrays.fill(data, 0, size, null);
+		size = 0;
+	}
+	
+	/**
+	 * Removes all of the elements from this by re-allocating the backing
+	 * array.
+	 * <p>
+	 * The bag will be empty after this call returns.
+	 * </p>
+	 */
+	@SuppressWarnings("unchecked")
+	public void fastClear() {
 		// new null array so gc can clean up old one
 		data = (E[])new Object[data.length];
 		size = 0;
