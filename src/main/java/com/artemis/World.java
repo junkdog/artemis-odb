@@ -2,13 +2,13 @@ package com.artemis;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import com.artemis.annotations.Mapper;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
-import java.util.UUID;
 
 
 /**
@@ -63,10 +63,10 @@ public class World {
 	 * </p>
 	 */
 	public World() {
-		managers = new HashMap<Class<? extends Manager>, Manager>();
+		managers = new IdentityHashMap<Class<? extends Manager>, Manager>();
 		managersBag = new Bag<Manager>();
 		
-		systems = new HashMap<Class<?>, EntitySystem>();
+		systems = new IdentityHashMap<Class<?>, EntitySystem>();
 		systemsBag = new Bag<EntitySystem>();
 
 		added = new WildBag<Entity>();

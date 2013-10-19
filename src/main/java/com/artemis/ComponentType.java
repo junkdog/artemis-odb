@@ -1,6 +1,6 @@
 package com.artemis;
 
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 
 import com.artemis.utils.Bag;
 
@@ -18,8 +18,14 @@ public class ComponentType {
 	enum Taxonomy {
 		BASIC, POOLED, PACKED;
 	}
-	
-	
+
+	/**
+	 * Contains all generated component types, newly generated component types
+	 * will be stored here.
+	 */
+	private static final IdentityHashMap<Class<? extends Component>, ComponentType> componentTypes
+			= new IdentityHashMap<Class<? extends Component>, ComponentType>();
+
 	/** Amount of generated component types. */
 	private static int INDEX = 0;
 	/** Index of this component type in componentTypes. */
@@ -27,10 +33,8 @@ public class ComponentType {
 	/** The class type of the component type. */
 	private final Class<? extends Component> type;
 	/** True if component type is a {@link PackedComponent} */
-//	private final boolean packedComponentType;
 	private final Taxonomy taxonomy;
 	private static final Bag<ComponentType> types = new Bag<ComponentType>();
-
 
 	/**
 	 * Creates a new {@link ComponentType} instance of given component class.
@@ -51,7 +55,6 @@ public class ComponentType {
 		}
 	}
 
-
 	/**
 	 * Get the component type's index.
 	 *
@@ -60,7 +63,6 @@ public class ComponentType {
 	public int getIndex() {
 		return index;
 	}
-
 
 	@Override
 	public String toString() {
@@ -89,13 +91,6 @@ public class ComponentType {
 		return type;
 	}
 	
-	/**
-	 * Contains all generated component types, newly generated component types
-	 * will be stored here.
-	 */
-	private static final HashMap<Class<? extends Component>, ComponentType> componentTypes
-			= new HashMap<Class<? extends Component>, ComponentType>();
-
 	/**
 	 * Gets the component type for the given component class.
 	 * <p>
