@@ -16,8 +16,6 @@ package com.artemis;
  */
 class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A> {
 
-	/** The type of components this mapper handles. */
-	private final ComponentType type;
 	/** The class of components this mapper handles. */
 	private final Class<A> classType;
 	/** Holds all components of given type in the world. */
@@ -37,8 +35,6 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 	private PackedComponentMapper(Class<A> type, World world) {
 		ComponentManager cm = world.getComponentManager();
 		
-		this.type = ComponentType.getTypeFor(type);
-//		component = cm.getPackedComponentByType(this.type);
 		this.classType = type;
 		try {
 			component = classType.newInstance();

@@ -65,8 +65,7 @@ public class ComponentManager extends Manager {
 		}
 	}
 
-	private  static <T extends Component> T newInstance(Class<T> componentClass)
-	{
+	private  static <T extends Component> T newInstance(Class<T> componentClass) {
 		try {
 			return componentClass.newInstance();
 		} catch (InstantiationException e) {
@@ -77,8 +76,7 @@ public class ComponentManager extends Manager {
 	}
 
 	@Override
-	protected void initialize() {
-	}
+	protected void initialize() {}
 
 	/**
 	 * Removes all components from the entity associated in this manager.
@@ -131,10 +129,7 @@ public class ComponentManager extends Manager {
 		e.getComponentBits().set(type.getIndex());
 	}
 	
-	private void addPackedComponent(ComponentType type, PackedComponent component)
-	{
-		packedComponents.ensureCapacity(type.getIndex());
-		
+	private void addPackedComponent(ComponentType type, PackedComponent component) {
 		PackedComponent packed = packedComponents.get(type.getIndex());
 		if (packed == null) {
 			packedComponents.set(type.getIndex(), component);
@@ -143,8 +138,6 @@ public class ComponentManager extends Manager {
 	
 	private void addBasicComponent(Entity e, ComponentType type, Component component)
 	{
-		componentsByType.ensureCapacity(type.getIndex());
-		
 		Bag<Component> components = componentsByType.get(type.getIndex());
 		if(components == null) {
 			components = new Bag<Component>();

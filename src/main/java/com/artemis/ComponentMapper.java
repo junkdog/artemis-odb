@@ -1,8 +1,6 @@
 package com.artemis;
 
-public abstract class ComponentMapper<A extends Component>
-{
-
+public abstract class ComponentMapper<A extends Component> {
 	/**
 	 * Fast but unsafe retrieval of a component for this entity.
 	 * <p>

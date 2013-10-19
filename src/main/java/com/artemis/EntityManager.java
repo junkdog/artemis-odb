@@ -1,9 +1,9 @@
 package com.artemis;
 
 import java.util.BitSet;
+import java.util.UUID;
 
 import com.artemis.utils.Bag;
-import java.util.UUID;
 
 
 /**
@@ -37,12 +37,9 @@ public class EntityManager extends Manager {
 		disabled = new BitSet();
 		identifierPool = new IdentifierPool();
 	}
-
-
-
+	
 	@Override
-	protected void initialize() {
-	}
+	protected void initialize() {}
 
 	/**
 	 * Create a new entity.
@@ -319,7 +316,5 @@ public class EntityManager extends Manager {
 			items = new int[(old.length * 2)];
 			System.arraycopy(old, 0, items, 0, size);
 		}
-		
 	}
-	
 }
