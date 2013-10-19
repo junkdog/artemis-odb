@@ -1,6 +1,6 @@
 package com.artemis;
 
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 
 
 /**
@@ -13,6 +13,13 @@ import java.util.HashMap;
  * @author Arni Arent
  */
 public class ComponentType {
+
+	/**
+	 * Contains all generated component types, newly generated component types
+	 * will be stored here.
+	 */
+	private static final IdentityHashMap<Class<? extends Component>, ComponentType> componentTypes
+			= new IdentityHashMap<Class<? extends Component>, ComponentType>();
 
 	/** Amount of generated component types. */
 	private static int INDEX = 0;
@@ -48,14 +55,6 @@ public class ComponentType {
 	public String toString() {
 		return "ComponentType["+type.getSimpleName()+"] ("+index+")";
 	}
-
-
-	/**
-	 * Contains all generated component types, newly generated component types
-	 * will be stored here.
-	 */
-	private static final HashMap<Class<? extends Component>, ComponentType> componentTypes
-			= new HashMap<Class<? extends Component>, ComponentType>();
 
 	/**
 	 * Gets the component type for the given component class.

@@ -1,7 +1,7 @@
 package com.artemis;
 
 import java.util.BitSet;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
@@ -377,8 +377,8 @@ public abstract class EntitySystem implements EntityObserver {
 		 * Only one system per class is permitted in the world.
 		 * </p>
 		 */
-		private static final HashMap<Class<? extends EntitySystem>, Integer> indices
-				= new HashMap<Class<? extends EntitySystem>, Integer>();
+		private static final IdentityHashMap<Class<? extends EntitySystem>, Integer> indices
+				= new IdentityHashMap<Class<? extends EntitySystem>, Integer>();
 
 		/**
 		 * Called by the EntitySystem constructor.
