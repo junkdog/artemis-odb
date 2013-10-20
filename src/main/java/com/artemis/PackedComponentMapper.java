@@ -3,7 +3,8 @@ package com.artemis;
 
 
 /**
- * High performance component retrieval from entities.
+ * High performance packed component retrieval from entities. Each instance
+ * holds its own view of the {@link PackedComponent}.
  * <p>
  * Use this wherever you need to retrieve components from entities often and
  * fast.

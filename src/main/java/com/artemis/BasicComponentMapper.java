@@ -4,7 +4,8 @@ import com.artemis.utils.Bag;
 
 
 /**
- * High performance component retrieval from entities.
+ * High performance component retrieval from entities. Utilized by {@link Component} and {@link PooledComponent}
+ * types.
  * <p>
  * Use this wherever you need to retrieve components from entities often and
  * fast.

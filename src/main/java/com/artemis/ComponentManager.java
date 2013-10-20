@@ -21,7 +21,7 @@ public class ComponentManager extends Manager {
 
 	/** Holds all components grouped by type. */
 	private final Bag<Bag<Component>> componentsByType;
-	/** Holds all components grouped by type. */
+	/** Holds all packed components sorted by type index. */
 	private final Bag<PackedComponent> packedComponents;
 	/** Collects all Entites marked for deletion from this ComponentManager. */
 	private final WildBag<Entity> deleted;
@@ -39,7 +39,7 @@ public class ComponentManager extends Manager {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends Component> T create(Class<T> componentClass) {
+	protected <T extends Component> T create(Class<T> componentClass) {
 		ComponentType type = ComponentType.getTypeFor(componentClass);
 		switch (type.getTaxonomy())
 		{
