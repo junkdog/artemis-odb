@@ -232,7 +232,6 @@ public class EntityManager extends Manager {
 		}
 		
 		void free(Entity e) {
-			e.reset();
 			recycled.add(e);
 		}
 		
@@ -251,7 +250,9 @@ public class EntityManager extends Manager {
 					throw new RuntimeException(e);
 				}
 			} else {
-				return recycled.removeLast(); 
+				Entity entity = recycled.removeLast();
+				entity.reset();
+				return entity; 
 			}
 		}
 	}
