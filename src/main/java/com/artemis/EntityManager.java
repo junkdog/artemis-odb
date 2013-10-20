@@ -221,18 +221,13 @@ public class EntityManager extends Manager {
 		RecyclingEntityFactory(World world) {
 			recycled = new Bag<Entity>();
 			args = new Object[]{world, 0};
-			try
-			{
+			try {
 				constructor = Entity.class.getDeclaredConstructor(World.class, int.class);
 				constructor.setAccessible(true);
-			}
-			catch (SecurityException e)
-			{
-				e.printStackTrace();
-			}
-			catch (NoSuchMethodException e)
-			{
-				e.printStackTrace();
+			} catch (SecurityException e) {
+				throw new RuntimeException(e);
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException(e);
 			}
 		}
 		
@@ -242,25 +237,16 @@ public class EntityManager extends Manager {
 		
 		Entity obtain() {
 			if (recycled.isEmpty()) {
-				try
-				{
+				try {
 					args[1] = nextId++;
 					return constructor.newInstance(args);
-				}
-				catch (IllegalArgumentException e)
-				{
+				} catch (IllegalArgumentException e) {
 					throw new RuntimeException(e);
-				}
-				catch (InstantiationException e)
-				{
+				} catch (InstantiationException e) {
 					throw new RuntimeException(e);
-				}
-				catch (IllegalAccessException e)
-				{
+				} catch (IllegalAccessException e) {
 					throw new RuntimeException(e);
-				}
-				catch (InvocationTargetException e)
-				{
+				} catch (InvocationTargetException e) {
 					throw new RuntimeException(e);
 				}
 			} else {
