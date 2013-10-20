@@ -115,7 +115,6 @@ public final class Entity {
 	 */
 	protected void reset() {
 		systemBits.clear();
-		componentBits.clear();
 		uuid = UUID.randomUUID();
 	}
 

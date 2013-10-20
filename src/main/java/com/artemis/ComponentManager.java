@@ -124,7 +124,7 @@ public class ComponentManager extends Manager {
 		if (type.isPackedComponent())
 			addPackedComponent(type, (PackedComponent)component);
 		else
-			addBasicComponent(e, type, component);
+			addBasicComponent(e, type, component); // pooled components are handled the same
 
 		e.getComponentBits().set(type.getIndex());
 	}
@@ -156,13 +156,24 @@ public class ComponentManager extends Manager {
 	 *			the type of component being removed
 	 */
 	protected void removeComponent(Entity e, ComponentType type) {
-		if(e.getComponentBits().get(type.getIndex())) {
-			if (type.isPackedComponent()) {
-				packedComponents.get(type.getIndex()).reset();
-			} else {
-				componentsByType.get(type.getIndex()).set(e.getId(), null);
+		int index = type.getIndex();
+		if(e.getComponentBits().get(index)) {
+			switch (type.getTaxonomy()) {
+				case BASIC:
+					componentsByType.get(index).set(e.getId(), null);
+					break;
+				case POOLED:
+					Component pooled = componentsByType.get(index).get(e.getId());
+					pooledComponents.free((PooledComponent)pooled);
+					componentsByType.get(index).set(e.getId(), null);
+					break;
+				case PACKED:
+					packedComponents.get(index).setEntityId(e.getId()).reset();
+					break;
+				default:
+					throw new InvalidComponentException(type.getType(), " unknown component type: " + type.getTaxonomy());
 			}
-			e.getComponentBits().clear(type.getIndex());
+			e.getComponentBits().clear(index);
 		}
 	}
 
