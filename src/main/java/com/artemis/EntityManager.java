@@ -232,6 +232,7 @@ public class EntityManager extends Manager {
 		}
 		
 		void free(Entity e) {
+			e.reset();
 			recycled.add(e);
 		}
 		
