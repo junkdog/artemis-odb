@@ -1,7 +1,5 @@
 package com.artemis;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.BitSet;
 import java.util.UUID;
 
@@ -212,23 +210,13 @@ public class EntityManager extends Manager {
 	}
 	
 	private static final class RecyclingEntityFactory {
+		private final World world;
 		private final Bag<Entity> recycled;
 		private int nextId;
 		
-		private Constructor<Entity> constructor;
-		private Object[] args;
-		
 		RecyclingEntityFactory(World world) {
+			this.world = world;
 			recycled = new Bag<Entity>();
-			args = new Object[]{world, 0};
-			try {
-				constructor = Entity.class.getDeclaredConstructor(World.class, int.class);
-				constructor.setAccessible(true);
-			} catch (SecurityException e) {
-				throw new RuntimeException(e);
-			} catch (NoSuchMethodException e) {
-				throw new RuntimeException(e);
-			}
 		}
 		
 		void free(Entity e) {
@@ -237,18 +225,7 @@ public class EntityManager extends Manager {
 		
 		Entity obtain() {
 			if (recycled.isEmpty()) {
-				try {
-					args[1] = nextId++;
-					return constructor.newInstance(args);
-				} catch (IllegalArgumentException e) {
-					throw new RuntimeException(e);
-				} catch (InstantiationException e) {
-					throw new RuntimeException(e);
-				} catch (IllegalAccessException e) {
-					throw new RuntimeException(e);
-				} catch (InvocationTargetException e) {
-					throw new RuntimeException(e);
-				}
+				return new Entity(world, nextId++);
 			} else {
 				Entity entity = recycled.removeLast();
 				entity.reset();
