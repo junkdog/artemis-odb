@@ -262,11 +262,6 @@ public class World {
 		return em.createEntityInstance();
 	}
 	
-	public <T extends Component> T createComponent(Class<T> componentKlazz, boolean newReferencePersisted)
-	{
-		throw new RuntimeException("oi!");
-	}
-
 	/**
 	 * Create and return a new or reused entity instance.
 	 * <p>
@@ -280,9 +275,11 @@ public class World {
 	 * @return entity
 	 */
 	public Entity createEntity(UUID uuid) {
-		return em.createEntityInstance(uuid);
+		Entity entity = em.createEntityInstance();
+		entity.setUuid(uuid);
+		return entity;
 	}
-
+	
 	/**
 	 * Get a entity having the specified id.
 	 * 

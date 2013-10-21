@@ -34,8 +34,6 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 	 *			the world to handle components for
 	 */
 	private PackedComponentMapper(Class<A> type, World world) {
-		ComponentManager cm = world.getComponentManager();
-		
 		this.classType = type;
 		try {
 			component = classType.newInstance();
