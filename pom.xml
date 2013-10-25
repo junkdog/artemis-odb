@@ -8,10 +8,10 @@
 	</parent>
 
 	<groupId>net.onedaybeard.artemis</groupId>
-	<artifactId>artemis-odb</artifactId>
+	<artifactId>artemis-parent</artifactId>
 	<version>0.4.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-	<name>artemis-odb</name>
+	<packaging>pom</packaging>
+	<name>artemis parent</name>
 	<description>Fork of Artemis Entity System Framework.</description>
 	<url>https://github.com/junkdog/artemis-odb</url>
 
@@ -69,6 +69,9 @@
 		</developer>
 	</developers>
 	
+	<modules>
+		<module>artemis</module>
+	</modules>
 	
 	<profiles>
 		<profile>
