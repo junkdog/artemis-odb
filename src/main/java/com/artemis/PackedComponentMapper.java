@@ -1,6 +1,6 @@
 package com.artemis;
 
-
+import com.artemis.utils.Bag;
 
 /**
  * High performance packed component retrieval from entities. Each instance
@@ -19,9 +19,10 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 
 	/** The class of components this mapper handles. */
 	private final Class<A> classType;
-	/** Holds all components of given type in the world. */
 	
-	private PackedComponent component;
+	/** Holds all components of given type in the world. */
+	private final PackedComponent component;
+	private final Bag<Entity> owners;
 
 	
 	/**
@@ -34,6 +35,9 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 	 *			the world to handle components for
 	 */
 	private PackedComponentMapper(Class<A> type, World world) {
+		ComponentManager cm = world.getComponentManager();
+		owners = cm.getPackedComponentOwners(ComponentType.getTypeFor(type));
+		
 		this.classType = type;
 		try {
 			component = classType.newInstance();
@@ -48,29 +52,20 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 		return new PackedComponentMapper<PackedComponent>(type, world);
 	}
 
-
-	@SuppressWarnings("unchecked")
-	@Override
+	@Override @SuppressWarnings("unchecked")
 	public A get(Entity e) throws ArrayIndexOutOfBoundsException {
-//		A component = classType.cast(components.get(e.getId()));
 		component.setEntityId(e.getId());
-		
 		return (A)component;
 	}
 	
 	@Override
 	public A getSafe(Entity e) {
-//		if(components.isIndexWithinBounds(e.getId())) {
-//			return classType.cast(components.get(e.getId()));
-//		}
-//		return null;
-		throw new RuntimeException("not impl");
+		return has(e) ? get(e) : null;
 	}
 	
 	@Override
 	public boolean has(Entity e) {
-//		return getSafe(e) != null;
-		// TODO: not done, only checks that the component exists...
-		return component != null;
+		owners.ensureCapacity(e.getId());
+		return owners.get(e.getId()) != null;
 	}
 }

@@ -23,6 +23,7 @@ public class ComponentManager extends Manager {
 	private final Bag<Bag<Component>> componentsByType;
 	/** Holds all packed components sorted by type index. */
 	private final Bag<PackedComponent> packedComponents;
+	private final Bag<Bag<Entity>> packedComponentOwners;
 	/** Collects all Entites marked for deletion from this ComponentManager. */
 	private final WildBag<Entity> deleted;
 	private final ComponentPool pooledComponents;
@@ -34,12 +35,13 @@ public class ComponentManager extends Manager {
 	public ComponentManager() {
 		componentsByType = new Bag<Bag<Component>>();
 		packedComponents = new Bag<PackedComponent>();
+		packedComponentOwners = new Bag<Bag<Entity>>();
 		pooledComponents = new ComponentPool();
 		deleted = new WildBag<Entity>();
 	}
 
 	@SuppressWarnings("unchecked")
-	protected <T extends Component> T create(Class<T> componentClass) {
+	protected <T extends Component> T create(Entity owner, Class<T> componentClass) {
 		ComponentType type = ComponentType.getTypeFor(componentClass);
 		switch (type.getTaxonomy())
 		{
@@ -50,6 +52,7 @@ public class ComponentManager extends Manager {
 				if (packedComponent == null) {
 					packedComponent = (PackedComponent)newInstance(componentClass);
 					packedComponents.set(type.getIndex(), packedComponent);
+					getPackedComponentOwners(type).set(owner.getId(), owner);
 				}
 				return (T)packedComponent;
 			case POOLED:
@@ -63,6 +66,17 @@ public class ComponentManager extends Manager {
 			default:
 				throw new InvalidComponentException(componentClass, " unknown component type: " + type.getTaxonomy());
 		}
+	}
+
+	protected Bag<Entity> getPackedComponentOwners(ComponentType type)
+	{
+		Bag<Entity> owners = packedComponentOwners.get(type.getIndex());
+		if (owners == null) {
+			int size = (world.getEntityManager().getActiveEntityCount() >> 1) << 3;
+			owners = new Bag<Entity>(size);
+			packedComponentOwners.set(type.getIndex(), owners);
+		}
+		return owners;
 	}
 
 	private  static <T extends Component> T newInstance(Class<T> componentClass) {
@@ -169,6 +183,7 @@ public class ComponentManager extends Manager {
 					break;
 				case PACKED:
 					packedComponents.get(index).setEntityId(e.getId()).reset();
+					getPackedComponentOwners(type).set(e.getId(), null);
 					break;
 				default:
 					throw new InvalidComponentException(type.getType(), " unknown component type: " + type.getTaxonomy());

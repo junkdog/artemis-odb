@@ -124,7 +124,7 @@ public final class Entity {
 	}
 	
 	public <T extends Component> T createComponent(Class<T> componentKlazz) {
-		T component = componentManager.create(componentKlazz);
+		T component = componentManager.create(this, componentKlazz);
 		if (component instanceof PackedComponent) {
 			((PackedComponent)component).setEntityId(id);
 		}
