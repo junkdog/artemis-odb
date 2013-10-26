@@ -1,6 +1,5 @@
 package com.artemis;
 
-
 /**
  * A tag class.
  * <p>
@@ -9,6 +8,6 @@ package com.artemis;
  * 
  * @author Arni Arent
  */
+@ComponentConformanceValidator
 public abstract class Component {
-
 }
