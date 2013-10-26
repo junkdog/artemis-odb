@@ -142,6 +142,7 @@ public final class Entity {
 	 * @return this entity for chaining
 	 * @see {@link #createComponent(Class)}
 	 */
+	@Deprecated
 	public Entity addComponent(Component component) {
 		addComponent(component, ComponentType.getTypeFor(component.getClass()));
 		return this;
@@ -162,6 +163,7 @@ public final class Entity {
 	 * @return this entity for chaining
 	 * @see #createComponent(Class)
 	 */
+	@Deprecated
 	public Entity addComponent(Component component, ComponentType type) {
 		componentManager.addComponent(this, type, component);
 		return this;
