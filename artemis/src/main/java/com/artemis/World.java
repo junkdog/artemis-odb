@@ -53,6 +53,8 @@ public class World {
 	private final Map<Class<?>, EntitySystem> systems;
 	/** Contains all systems unordered. */
 	private final Bag<EntitySystem> systemsBag;
+	/** Contains all uninitilized systems. **/
+	private final Bag<EntitySystem> systemsToInit;
 
 
 	/**
@@ -68,6 +70,7 @@ public class World {
 		
 		systems = new IdentityHashMap<Class<?>, EntitySystem>();
 		systemsBag = new Bag<EntitySystem>();
+		systemsToInit = new Bag<EntitySystem>();
 
 		added = new WildBag<Entity>();
 		deleted = new Bag<Entity>();
@@ -95,9 +98,9 @@ public class World {
 			managersBag.get(i).initialize();
 		}
 		
-		for (int i = 0; i < systemsBag.size(); i++) {
-			ComponentMapperInitHelper.config(systemsBag.get(i), this);
-			systemsBag.get(i).initialize();
+		for (int i = 0; i < systemsToInit.size(); i++) {
+			ComponentMapperInitHelper.config(systemsToInit.get(i), this);
+			systemsToInit.get(i).initialize();
 		}
 	}
 	
@@ -335,6 +338,7 @@ public class World {
 		
 		systems.put(system.getClass(), system);
 		systemsBag.add(system);
+		systemsToInit.add(system);
 		
 		return system;
 	}
@@ -348,6 +352,7 @@ public class World {
 	public void deleteSystem(EntitySystem system) {
 		systems.remove(system.getClass());
 		systemsBag.remove(system);
+		systemsToInit.remove(system);
 	}
 
 	/**
@@ -434,6 +439,38 @@ public class World {
 		deleted.clear();
 
 		cm.clean();
+		
+		if (systemsToInit.size() > 0) {
+			// Some systems may add other systems in their initialize() method.
+			// Initialize those newly added systems right after setSystem() call.
+			// We assume that `systemsToInit' collection always adds new item
+			// to the end of the collection as in a list structure.
+			
+			int initialSize = systemsToInit.size();
+			int endIndex = initialSize;
+			int initializedCount = 0;
+			
+			for(int i = 0; initialSize > i; i++) {
+				EntitySystem system = systemsToInit.get(i);
+				
+				ComponentMapperInitHelper.config(system, this);
+				system.initialize();
+				initializedCount++;
+				
+				while (endIndex < systemsToInit.size()) {
+					system = systemsToInit.get(endIndex);
+					
+					ComponentMapperInitHelper.config(system, this);
+					system.initialize();
+					initializedCount++;
+					
+					endIndex++;
+				}
+			}
+			
+			assert(initializedCount == systemsToInit.size());
+			systemsToInit.clear();
+		}
 		
 		Object[] systemsData = systemsBag.getData();
 		for(int i = 0, s = systemsBag.size(); s > i; i++) {
