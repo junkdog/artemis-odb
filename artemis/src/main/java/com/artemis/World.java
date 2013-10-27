@@ -98,10 +98,7 @@ public class World {
 			managersBag.get(i).initialize();
 		}
 		
-		for (int i = 0; i < systemsToInit.size(); i++) {
-			ComponentMapperInitHelper.config(systemsToInit.get(i), this);
-			systemsToInit.get(i).initialize();
-		}
+		initializeSystems();
 	}
 	
 	/**
@@ -352,7 +349,6 @@ public class World {
 	public void deleteSystem(EntitySystem system) {
 		systems.remove(system.getClass());
 		systemsBag.remove(system);
-		systemsToInit.remove(system);
 	}
 
 	/**
@@ -440,36 +436,10 @@ public class World {
 
 		cm.clean();
 		
+		// Some systems may add other systems in their initialize() method.
+		// Initialize those newly added systems right after setSystem() call.
 		if (systemsToInit.size() > 0) {
-			// Some systems may add other systems in their initialize() method.
-			// Initialize those newly added systems right after setSystem() call.
-			// We assume that `systemsToInit' collection always adds new item
-			// to the end of the collection as in a list structure.
-			
-			int initialSize = systemsToInit.size();
-			int endIndex = initialSize;
-			int initializedCount = 0;
-			
-			for(int i = 0; initialSize > i; i++) {
-				EntitySystem system = systemsToInit.get(i);
-				
-				ComponentMapperInitHelper.config(system, this);
-				system.initialize();
-				initializedCount++;
-				
-				while (endIndex < systemsToInit.size()) {
-					system = systemsToInit.get(endIndex);
-					
-					ComponentMapperInitHelper.config(system, this);
-					system.initialize();
-					initializedCount++;
-					
-					endIndex++;
-				}
-			}
-			
-			assert(initializedCount == systemsToInit.size());
-			systemsToInit.clear();
+			initializeSystems();
 		}
 		
 		Object[] systemsData = systemsBag.getData();
@@ -479,6 +449,15 @@ public class World {
 				system.process();
 			}
 		}
+	}
+
+
+	private void initializeSystems() {
+		for (int i = 0; i < systemsToInit.size(); i++) {
+			ComponentMapperInitHelper.config(systemsToInit.get(i), this);
+			systemsToInit.get(i).initialize();
+		}
+		systemsToInit.clear();
 	}
 	
 	/**
