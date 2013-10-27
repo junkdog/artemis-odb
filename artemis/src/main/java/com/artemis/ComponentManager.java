@@ -54,6 +54,7 @@ public class ComponentManager extends Manager {
 					packedComponents.set(type.getIndex(), packedComponent);
 					getPackedComponentOwners(type).set(owner.getId(), owner);
 				}
+				packedComponent.setEntityId(owner.getId());
 				return (T)packedComponent;
 			case POOLED:
 				try {

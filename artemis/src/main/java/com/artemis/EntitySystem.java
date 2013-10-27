@@ -25,7 +25,7 @@ public abstract class EntitySystem implements EntityObserver {
 	protected World world;
 	/** Contains all entities processed by this system. */
 	private final Bag<Entity> actives;
-	/** Collects entites to be deleted from the system after processing. */
+	/** Collects entities to be deleted from the system after processing. */
 	private final WildBag<Entity> delayedDeletion;
 	/** Component bits entities must possess for the system to be interested. */
 	private final BitSet allSet;

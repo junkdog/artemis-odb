@@ -3,6 +3,7 @@ package com.artemis;
 import java.util.BitSet;
 import java.util.UUID;
 
+import com.artemis.ComponentType.Taxonomy;
 import com.artemis.utils.Bag;
 
 
@@ -125,10 +126,6 @@ public final class Entity {
 	
 	public <T extends Component> T createComponent(Class<T> componentKlazz) {
 		T component = componentManager.create(this, componentKlazz);
-		if (component instanceof PackedComponent) {
-			((PackedComponent)component).setEntityId(id);
-		}
-		
 		componentManager.addComponent(this, ComponentType.getTypeFor(componentKlazz), component);
 		return component;
 	}
@@ -142,7 +139,6 @@ public final class Entity {
 	 * @return this entity for chaining
 	 * @see {@link #createComponent(Class)}
 	 */
-	@Deprecated
 	public Entity addComponent(Component component) {
 		addComponent(component, ComponentType.getTypeFor(component.getClass()));
 		return this;
@@ -151,7 +147,7 @@ public final class Entity {
 	/**
 	 * Faster adding of components into the entity.
 	 * <p>
-	 * Not neccessery to use this, but in some cases you might need the extra
+	 * Not necessary to use this, but in some cases you might need the extra
 	 * performance.
 	 * </p>
 	 *
@@ -163,8 +159,11 @@ public final class Entity {
 	 * @return this entity for chaining
 	 * @see #createComponent(Class)
 	 */
-	@Deprecated
 	public Entity addComponent(Component component, ComponentType type) {
+		if (type.getTaxonomy() != Taxonomy.BASIC) {
+			throw new InvalidComponentException(component.getClass(),
+				"Use Entity#createComponent for adding non-basic component types");
+		}
 		componentManager.addComponent(this, type, component);
 		return this;
 	}

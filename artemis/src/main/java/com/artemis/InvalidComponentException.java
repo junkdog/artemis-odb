@@ -12,6 +12,7 @@ public class InvalidComponentException extends RuntimeException {
 
 	public InvalidComponentException(Class<?> componentClass, String string, Exception e) {
 		super(message(componentClass, string), e);
+		this.componentClass = componentClass;
 	}
 	
 	private static String message(Class<?> componentClass, String string) {
