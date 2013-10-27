@@ -94,11 +94,6 @@ public class World {
 		for (int i = 0; i < managersBag.size(); i++) {
 			managersBag.get(i).initialize();
 		}
-		
-		for (int i = 0; i < systemsBag.size(); i++) {
-			ComponentMapperInitHelper.config(systemsBag.get(i), this);
-			systemsBag.get(i).initialize();
-		}
 	}
 	
 	/**
@@ -335,6 +330,9 @@ public class World {
 		
 		systems.put(system.getClass(), system);
 		systemsBag.add(system);
+		
+		ComponentMapperInitHelper.config(system, this);
+		system.initialize();
 		
 		return system;
 	}
