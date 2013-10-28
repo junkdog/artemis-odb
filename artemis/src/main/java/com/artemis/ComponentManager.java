@@ -52,8 +52,8 @@ public class ComponentManager extends Manager {
 				if (packedComponent == null) {
 					packedComponent = (PackedComponent)newInstance(componentClass);
 					packedComponents.set(type.getIndex(), packedComponent);
-					getPackedComponentOwners(type).set(owner.getId(), owner);
 				}
+				getPackedComponentOwners(type).set(owner.getId(), owner);
 				packedComponent.setEntityId(owner.getId());
 				return (T)packedComponent;
 			case POOLED:
@@ -73,8 +73,7 @@ public class ComponentManager extends Manager {
 	{
 		Bag<Entity> owners = packedComponentOwners.get(type.getIndex());
 		if (owners == null) {
-			int size = (world.getEntityManager().getActiveEntityCount() >> 1) << 3;
-			owners = new Bag<Entity>(size);
+			owners = new Bag<Entity>(64);
 			packedComponentOwners.set(type.getIndex(), owners);
 		}
 		return owners;
