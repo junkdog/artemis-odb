@@ -355,7 +355,18 @@ public class Bag<E> implements ImmutableBag<E> {
 		
 		return it;
 	}
-
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Bag(");
+		for (int i = 0; size > i; i++) {
+			if (i > 0) sb.append(", ");
+			sb.append(data[i]);
+		}
+		sb.append(')');
+		return sb.toString();
+	}
 
 	/**
 	 * An Iterator for Bag.
@@ -397,6 +408,5 @@ public class Bag<E> implements ImmutableBag<E> {
 			validCursorPos = false;
 			Bag.this.remove(--cursor);
 		}
-
 	}
 }
