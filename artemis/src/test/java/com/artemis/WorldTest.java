@@ -50,12 +50,15 @@ public class WorldTest
 		e.addToWorld();
 		
 		world.process();
-		
 		ImmutableBag<EntitySystem> systems = world.getSystems();
-		assertEquals(3, systems.size());
-		assertTrue(systems.get(0) instanceof SystemSpawner);
-		assertTrue(systems.get(1) instanceof SystemY);
-		assertTrue(systems.get(2) instanceof SystemB);
+		StringBuilder sb = new StringBuilder();
+		for (EntitySystem system : systems)
+			sb.append(system.getClass().getSimpleName() + " ");
+		
+		assertEquals(sb.toString(), 3, systems.size());
+		assertEquals(SystemSpawner.class, systems.get(0).getClass());
+		assertEquals(SystemY.class, systems.get(1).getClass());
+		assertEquals(SystemB.class, systems.get(2).getClass());
 		assertEquals(1, world.getSystem(SystemY.class).getActives().size());
 	}
 
