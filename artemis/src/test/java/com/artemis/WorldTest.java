@@ -1,6 +1,7 @@
 package com.artemis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,6 +12,7 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.systems.VoidEntitySystem;
+import com.artemis.utils.ImmutableBag;
 
 public class WorldTest
 {
@@ -40,6 +42,7 @@ public class WorldTest
 	public void system_adding_system_in_initialize()
 	{
 		world.setSystem(new SystemSpawner());
+		world.setSystem(new SystemB());
 		world.initialize();
 		
 		Entity e = world.createEntity();
@@ -48,7 +51,11 @@ public class WorldTest
 		
 		world.process();
 		
-		assertEquals(2, world.getSystems().size());
+		ImmutableBag<EntitySystem> systems = world.getSystems();
+		assertEquals(3, systems.size());
+		assertTrue(systems.get(0) instanceof SystemSpawner);
+		assertTrue(systems.get(1) instanceof SystemY);
+		assertTrue(systems.get(2) instanceof SystemB);
 		assertEquals(1, world.getSystem(SystemY.class).getActives().size());
 	}
 

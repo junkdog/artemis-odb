@@ -324,7 +324,7 @@ public class World {
 	 * @param system
 	 *			the system to add
 	 * @param passive
-	 *			wether or not this system will be processed by
+	 *			whether or not this system will be processed by
 	 *			{@link #process()}
 	 *
 	 * @return the added system
@@ -336,6 +336,8 @@ public class World {
 		systems.put(system.getClass(), system);
 		systemsBag.add(system);
 		systemsToInit.add(system);
+		
+		ComponentMapperInitHelper.config(system, this);
 		
 		return system;
 	}
@@ -349,6 +351,7 @@ public class World {
 	public void deleteSystem(EntitySystem system) {
 		systems.remove(system.getClass());
 		systemsBag.remove(system);
+		systemsToInit.remove(system);
 	}
 
 	/**
@@ -453,8 +456,7 @@ public class World {
 
 
 	private void initializeSystems() {
-		for (int i = 0; i < systemsToInit.size(); i++) {
-			ComponentMapperInitHelper.config(systemsToInit.get(i), this);
+		for (int i = 0, s = systemsToInit.size(); i < s; i++) {
 			systemsToInit.get(i).initialize();
 		}
 		systemsToInit.clear();
