@@ -1,6 +1,6 @@
 package com.artemis;
 
 public abstract class PackedComponent extends Component {
-	protected abstract PackedComponent setEntityId(int entityId);
+	protected abstract PackedComponent forEntity(Entity e);
 	protected abstract void reset();
 }

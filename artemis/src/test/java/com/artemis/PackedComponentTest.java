@@ -57,7 +57,7 @@ public class PackedComponentTest
 	public static class Packed extends PackedComponent {
 		
 		@Override
-		protected PackedComponent setEntityId(int entityId)
+		protected PackedComponent forEntity(Entity e)
 		{
 			return this;
 		}
