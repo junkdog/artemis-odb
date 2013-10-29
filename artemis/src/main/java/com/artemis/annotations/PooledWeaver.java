@@ -1,5 +1,3 @@
 package com.artemis.annotations;
 
-public @interface PooledWeaver {
-
-}
+public @interface PooledWeaver {}
