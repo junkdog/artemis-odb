@@ -2,8 +2,6 @@ package com.artemis;
 
 import java.util.BitSet;
 
-import com.artemis.utils.Bag;
-
 /**
  * High performance packed component retrieval from entities. Each instance
  * holds its own view of the {@link PackedComponent}.
@@ -46,7 +44,7 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 		} catch (InstantiationException e) {
 			throw new InvalidComponentException(type, "Unable to instantiate component.", e);
 		} catch (IllegalAccessException e) {
-			throw new InvalidComponentException(type, "Missing public constructor.", e);
+			throw new InvalidComponentException(type, "Missing public constructor or too restrictive access.", e);
 		}
 	}
 	
