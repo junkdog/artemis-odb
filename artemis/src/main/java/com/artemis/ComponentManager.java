@@ -54,7 +54,7 @@ public class ComponentManager extends Manager {
 					packedComponents.set(type.getIndex(), packedComponent);
 				}
 				getPackedComponentOwners(type).set(owner.getId());
-				packedComponent.setEntityId(owner.getId());
+				packedComponent.forEntity(owner);
 				return (T)packedComponent;
 			case POOLED:
 				try {
@@ -111,7 +111,7 @@ public class ComponentManager extends Manager {
 					componentsByType.get(i).set(e.getId(), null);
 					break;
 				case PACKED:
-					packedComponents.get(i).setEntityId(e.getId()).reset();
+					packedComponents.get(i).forEntity(e).reset();
 					break;
 				default:
 					throw new InvalidComponentException(Component.class, " unknown component type: " + ComponentType.getTaxonomy(i));
@@ -182,7 +182,7 @@ public class ComponentManager extends Manager {
 					componentsByType.get(index).set(e.getId(), null);
 					break;
 				case PACKED:
-					packedComponents.get(index).setEntityId(e.getId()).reset();
+					packedComponents.get(index).forEntity(e).reset();
 					getPackedComponentOwners(type).clear(e.getId());
 					break;
 				default:
@@ -223,7 +223,7 @@ public class ComponentManager extends Manager {
 	protected Component getComponent(Entity e, ComponentType type) {
 		if (type.isPackedComponent()) {
 			PackedComponent component = packedComponents.get(type.getIndex());
-			if (component != null) component.setEntityId(e.getId());
+			if (component != null) component.forEntity(e);
 			return component;
 		} else {
 			Bag<Component> components = componentsByType.get(type.getIndex());
