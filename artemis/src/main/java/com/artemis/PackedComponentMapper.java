@@ -1,5 +1,7 @@
 package com.artemis;
 
+import java.util.BitSet;
+
 import com.artemis.utils.Bag;
 
 /**
@@ -22,7 +24,7 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 	
 	/** Holds all components of given type in the world. */
 	private final PackedComponent component;
-	private final Bag<Entity> owners;
+	private final BitSet owners;
 
 	
 	/**
@@ -65,7 +67,6 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 	
 	@Override
 	public boolean has(Entity e) {
-		owners.ensureCapacity(e.getId());
-		return owners.get(e.getId()) != null;
+		return owners.get(e.getId());
 	}
 }

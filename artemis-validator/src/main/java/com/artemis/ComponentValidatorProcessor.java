@@ -63,7 +63,7 @@ public class ComponentValidatorProcessor extends AbstractProcessor {
 				checkIfPooledCanBePacked(component);
 				break;
 			} else {
-				component = (TypeElement)typeUtils.asElement(component.getSuperclass());
+				component = (TypeElement)typeUtils.asElement(superclass);
 			}
 		} while (!COMPONENT.equals(superclass.toString()));
 	}

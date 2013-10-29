@@ -23,7 +23,7 @@ public class ComponentManager extends Manager {
 	private final Bag<Bag<Component>> componentsByType;
 	/** Holds all packed components sorted by type index. */
 	private final Bag<PackedComponent> packedComponents;
-	private final Bag<Bag<Entity>> packedComponentOwners;
+	private final Bag<BitSet> packedComponentOwners; // FIXME: change to Bag<BitSet>>
 	/** Collects all Entites marked for deletion from this ComponentManager. */
 	private final WildBag<Entity> deleted;
 	private final ComponentPool pooledComponents;
@@ -35,7 +35,7 @@ public class ComponentManager extends Manager {
 	public ComponentManager() {
 		componentsByType = new Bag<Bag<Component>>();
 		packedComponents = new Bag<PackedComponent>();
-		packedComponentOwners = new Bag<Bag<Entity>>();
+		packedComponentOwners = new Bag<BitSet>();
 		pooledComponents = new ComponentPool();
 		deleted = new WildBag<Entity>();
 	}
@@ -53,7 +53,7 @@ public class ComponentManager extends Manager {
 					packedComponent = (PackedComponent)newInstance(componentClass);
 					packedComponents.set(type.getIndex(), packedComponent);
 				}
-				getPackedComponentOwners(type).set(owner.getId(), owner);
+				getPackedComponentOwners(type).set(owner.getId());
 				packedComponent.setEntityId(owner.getId());
 				return (T)packedComponent;
 			case POOLED:
@@ -69,11 +69,11 @@ public class ComponentManager extends Manager {
 		}
 	}
 
-	protected Bag<Entity> getPackedComponentOwners(ComponentType type)
+	protected BitSet getPackedComponentOwners(ComponentType type)
 	{
-		Bag<Entity> owners = packedComponentOwners.get(type.getIndex());
+		BitSet owners = packedComponentOwners.get(type.getIndex());
 		if (owners == null) {
-			owners = new Bag<Entity>(64);
+			owners = new BitSet();
 			packedComponentOwners.set(type.getIndex(), owners);
 		}
 		return owners;
@@ -183,7 +183,7 @@ public class ComponentManager extends Manager {
 					break;
 				case PACKED:
 					packedComponents.get(index).setEntityId(e.getId()).reset();
-					getPackedComponentOwners(type).set(e.getId(), null);
+					getPackedComponentOwners(type).clear(e.getId());
 					break;
 				default:
 					throw new InvalidComponentException(type.getType(), " unknown component type: " + type.getTaxonomy());
