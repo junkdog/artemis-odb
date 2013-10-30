@@ -12,36 +12,23 @@ import org.objectweb.asm.ClassReader;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.WeaverType;
 import com.artemis.meta.MetaScanner;
+import com.artemis.weaver.ComponentTypeWeaver;
 
 public class Weaver {
+	public static final String PACKED_ANNOTATION = "Lcom/artemis/annotations/PackedWeaver;";
+	public static final String POOLED_ANNOTATION = "Lcom/artemis/annotations/PooledWeaver;";
+	public static final String WOVEN_ANNOTATION = "Lcom/artemis/annotations/internal/Transmuted";
 
 	private static void processClass(ExecutorService threadPool, String file, List<ClassMetadata> processed) {
 		
-		FileInputStream stream = null;
-		try
-		{
-			ClassReader cr = classReaderFor(file);
-			ClassMetadata meta = scan(cr);
-			
-			if (meta.annotation == WeaverType.NONE || meta.isPreviouslyProcessed)
-				return;
+		ClassReader cr = classReaderFor(file);
+		ClassMetadata meta = scan(cr);
+		
+		if (meta.annotation == WeaverType.NONE)
+			return;
 
-			switch (meta.annotation) {
-				case PACKED:
-//					threadPool.submit(new PackedWeaver());
-					break;
-				case POOLED:
-//					threadPool.submit(new PooledWeaver());
-					break;
-				default:
-					throw new UnsupportedOperationException("Missing annotation case: " + meta.annotation);
-			}
-			processed.add(meta);
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		threadPool.submit(new ComponentTypeWeaver(file, cr, meta));
+		processed.add(meta);
 	}
 	
 	static ClassReader classReaderFor(InputStream file) {

@@ -1,6 +1,10 @@
 package com.artemis.meta;
 
 
+import static com.artemis.Weaver.PACKED_ANNOTATION;
+import static com.artemis.Weaver.POOLED_ANNOTATION;
+import static com.artemis.Weaver.WOVEN_ANNOTATION;
+
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
@@ -10,10 +14,6 @@ import org.objectweb.asm.Opcodes;
 import com.artemis.meta.ClassMetadata.WeaverType;
 
 public class MetaScanner extends ClassVisitor {
-	static final String PACKED_ANNOTATION = "Lcom/artemis/annotations/PackedWeaver;";
-	static final String POOLED_ANNOTATION = "Lcom/artemis/annotations/PooledWeaver;";
-	static final String WOVEN_ANNOTATION = "Lcom/artemis/annotations/internal/Transmuted";
-
 	private ClassMetadata info;
 
 	public MetaScanner(ClassMetadata metadata) {
