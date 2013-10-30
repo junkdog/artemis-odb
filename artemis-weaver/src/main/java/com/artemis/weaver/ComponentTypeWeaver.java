@@ -29,8 +29,8 @@ public class ComponentTypeWeaver extends CallableWeaver implements Opcodes{
 	@Override
 	protected void process(String file) throws FileNotFoundException, IOException {
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-		if (meta.annotation == WeaverType.PACKED && meta.foundEntityFor)
-			injectMethod("entityFor", "(Lcom/artemis/Entity;)V");
+		if (meta.annotation == WeaverType.PACKED && !meta.foundEntityFor)
+			injectMethod("forEntity", "(Lcom/artemis/Entity;)V");
 		if (!meta.foundReset)
 			injectMethod("reset", "()V");
 		

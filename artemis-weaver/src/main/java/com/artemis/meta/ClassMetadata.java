@@ -18,6 +18,7 @@ public final class ClassMetadata {
 	public boolean foundEntityFor;
 
 	public Type type;
+	public String superClass;
 
 	public List<MethodDescriptor> methods = new ArrayList<MethodDescriptor>(); 
 	public List<FieldDescriptor> fields = new ArrayList<FieldDescriptor>(); 
