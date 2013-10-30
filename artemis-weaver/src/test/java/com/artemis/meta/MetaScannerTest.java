@@ -12,6 +12,8 @@ import org.objectweb.asm.Type;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.component.ComponentToWeave;
+import com.artemis.component.PackedToBeA;
+import com.artemis.component.PackedToBeB;
 import com.artemis.component.PooledComponentNotScanned;
 import com.artemis.component.PooledComponentWithReset;
 import com.artemis.meta.ClassMetadata.WeaverType;
@@ -49,6 +51,22 @@ public class MetaScannerTest {
 		assertEquals(false, scan2.isPreviouslyProcessed);
 		
 		assertEquals(WeaverType.NONE, scan3.annotation);
+		
+	}
+	
+	@Test
+	public void packed_component_scanning() throws Exception {
+		
+		ClassMetadata scan1 = scan(PackedToBeA.class);
+		ClassMetadata scan2 = scan(PackedToBeB.class);
+		
+		assertEquals(WeaverType.PACKED, scan1.annotation);
+		assertEquals(true, scan1.foundEntityFor);
+		assertEquals(false, scan1.foundReset);
+		
+		assertEquals(WeaverType.PACKED, scan2.annotation);
+		assertEquals(false, scan2.foundEntityFor);
+		assertEquals(false, scan2.foundReset);
 	}
 	
 	static ClassMetadata scan(Class<?> klazz) throws Exception {
