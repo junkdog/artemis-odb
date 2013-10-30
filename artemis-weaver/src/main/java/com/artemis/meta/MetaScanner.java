@@ -3,6 +3,7 @@ package com.artemis.meta;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -15,9 +16,9 @@ public class MetaScanner extends ClassVisitor {
 
 	private ClassMetadata info;
 
-	public MetaScanner(ClassMetadata annotationMirror) {
+	public MetaScanner(ClassMetadata metadata) {
 		super(Opcodes.ASM4);
-		info = annotationMirror;
+		info = metadata;
 	}
 
 	@Override
@@ -38,11 +39,19 @@ public class MetaScanner extends ClassVisitor {
 	}
 	
 	@Override
+	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
+		info.fields.add(new FieldDescriptor(access, name, desc, signature, value));
+		return super.visitField(access, name, desc, signature, value);
+	}
+	
+	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 		if ("reset".equals(name) && "()V".equals(desc))
 			info.foundReset = true;
 		else if ("forEntity".equals(name) && "(Lcom/artemis/Entity;)V".equals(desc))
 			info.foundEntityFor = true;
+		
+		info.methods.add(new MethodDescriptor(access, name, desc, signature, exceptions));
 		
 		return super.visitMethod(access, name, desc, signature, exceptions);
 	}

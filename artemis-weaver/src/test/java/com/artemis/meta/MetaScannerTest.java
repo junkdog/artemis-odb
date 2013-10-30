@@ -7,7 +7,9 @@ import java.io.InputStream;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.util.ASMifiable;
 
 import com.artemis.Entity;
 import com.artemis.World;
@@ -51,7 +53,6 @@ public class MetaScannerTest {
 		assertEquals(false, scan2.isPreviouslyProcessed);
 		
 		assertEquals(WeaverType.NONE, scan3.annotation);
-		
 	}
 	
 	@Test
@@ -67,6 +68,19 @@ public class MetaScannerTest {
 		assertEquals(WeaverType.PACKED, scan2.annotation);
 		assertEquals(false, scan2.foundEntityFor);
 		assertEquals(false, scan2.foundReset);
+	}
+	
+	@Test
+	public void find_fields_and_methods() throws Exception {
+		ClassMetadata scan1 = scan(PackedToBeB.class);
+		ClassMetadata scan2 = scan(PackedToBeA.class);
+		
+		assertEquals(2, scan1.fields.size());
+		assertEquals("F", scan1.fields.get(1).getDesc());
+		assertEquals(Opcodes.ACC_PRIVATE, scan1.fields.get(1).getAccess());
+		assertEquals(1 /* default constructor*/, scan1.methods.size());
+		
+		assertEquals(2 /* default constructor*/, scan2.methods.size());
 	}
 	
 	static ClassMetadata scan(Class<?> klazz) throws Exception {

@@ -5,5 +5,5 @@ import com.artemis.annotations.PackedWeaver;
 
 @PackedWeaver
 public class PackedToBeB extends Component {
-	private boolean hasBeenReset;
+	private float x, y;
 }

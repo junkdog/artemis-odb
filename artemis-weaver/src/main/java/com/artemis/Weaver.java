@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Type;
 
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadata.WeaverType;
 import com.artemis.meta.MetaScanner;
 
 public class Weaver {
@@ -18,36 +18,30 @@ public class Weaver {
 	private static void processClass(ExecutorService threadPool, String file, List<ClassMetadata> processed) {
 		
 		FileInputStream stream = null;
-//		try
-//		{
-//			stream = new FileInputStream(file)
-//			ClassReader cr = new ClassReader(stream);
-//			ArtemisConfigurationData meta = scan(cr);
+		try
+		{
+			ClassReader cr = classReaderFor(file);
+			ClassMetadata meta = scan(cr);
 			
-//			meta.current = Type.getObjectType(cr.getClassName());
-//			
-//			if (meta.isPreviouslyProcessed)
-//				return;
-//			
-//			if (meta.isSystemAnnotation || meta.profilingEnabled)
-//			{
-//				threadPool.submit(new SystemWeaver(file, cr, meta));
-//				processed.add(meta);
-//			}
-//			else if (meta.isManagerAnnotation)
-//			{
-//				threadPool.submit(new ManagerWeaver(file, cr, meta));
-//				processed.add(meta);
-//			}
-//		}
-//		catch (FileNotFoundException e)
-//		{
-//			System.err.println("not found: " + file);
-//		}
-//		catch (IOException e)
-//		{
-//			e.printStackTrace();
-//		}
+			if (meta.annotation == WeaverType.NONE || meta.isPreviouslyProcessed)
+				return;
+
+			switch (meta.annotation) {
+				case PACKED:
+//					threadPool.submit(new PackedWeaver());
+					break;
+				case POOLED:
+//					threadPool.submit(new PooledWeaver());
+					break;
+				default:
+					throw new UnsupportedOperationException("Missing annotation case: " + meta.annotation);
+			}
+			processed.add(meta);
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 	
 	static ClassReader classReaderFor(InputStream file) {

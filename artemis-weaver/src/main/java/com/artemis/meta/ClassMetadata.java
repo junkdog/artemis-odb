@@ -1,8 +1,11 @@
 package com.artemis.meta;
 
-import org.objectweb.asm.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 import lombok.ToString;
+
+import org.objectweb.asm.Type;
 
 @ToString
 public final class ClassMetadata {
@@ -15,6 +18,9 @@ public final class ClassMetadata {
 	public boolean foundEntityFor;
 
 	public Type type;
+
+	public List<MethodDescriptor> methods = new ArrayList<MethodDescriptor>(); 
+	public List<FieldDescriptor> fields = new ArrayList<FieldDescriptor>(); 
 
 	public static enum WeaverType { NONE, POOLED, PACKED };
 }
