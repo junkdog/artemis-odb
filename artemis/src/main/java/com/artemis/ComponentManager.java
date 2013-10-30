@@ -23,7 +23,7 @@ public class ComponentManager extends Manager {
 	private final Bag<Bag<Component>> componentsByType;
 	/** Holds all packed components sorted by type index. */
 	private final Bag<PackedComponent> packedComponents;
-	private final Bag<BitSet> packedComponentOwners; // FIXME: change to Bag<BitSet>>
+	private final Bag<BitSet> packedComponentOwners;
 	/** Collects all Entites marked for deletion from this ComponentManager. */
 	private final WildBag<Entity> deleted;
 	private final ComponentPool pooledComponents;
