@@ -11,16 +11,15 @@ import org.objectweb.asm.ClassWriter;
 import com.artemis.component.ComponentToWeave;
 import com.artemis.component.PackedToBeB;
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadata.WeaverType;
 import com.artemis.weaver.ComponentTypeWeaver;
 
 public class ComponentTypeWeaverTest {
 
-	private ClassReader cr;
-	private ClassMetadata crScan;
-
 	@Test
 	public void pooled_weaver_test() throws Exception {
-		ClassMetadata meta = setup(ComponentToWeave.class);
+		ClassMetadata meta = transform(ComponentToWeave.class);
+		assertEquals(WeaverType.NONE, meta.annotation);
 		assertTrue(meta.foundReset); 
 		assertFalse(meta.foundEntityFor);
 		assertEquals("com/artemis/PooledComponent", meta.superClass); 
@@ -28,17 +27,18 @@ public class ComponentTypeWeaverTest {
 	
 	@Test
 	public void packed_weaver_test() throws Exception {
-		ClassMetadata meta = setup(PackedToBeB.class);
+		ClassMetadata meta = transform(PackedToBeB.class);
+		assertEquals(WeaverType.NONE, meta.annotation);
 		assertTrue(meta.foundReset); 
 		assertTrue(meta.foundEntityFor);
 		assertEquals("com/artemis/PackedComponent", meta.superClass); 
 	}
 	
-	private ClassMetadata setup(Class<?> klazz) throws Exception {
-		cr = Weaver.classReaderFor(getClass().getResourceAsStream("/" + klazz.getName().replace('.', '/') + ".class"));
-		crScan = Weaver.scan(cr);
+	private ClassMetadata transform(Class<?> klazz) throws Exception {
+		ClassReader cr = Weaver.classReaderFor(getClass().getResourceAsStream("/" + klazz.getName().replace('.', '/') + ".class"));
+		ClassMetadata meta = Weaver.scan(cr);
 		
-		ComponentTypeWeaver weaver = new ComponentTypeWeaver(null, cr, crScan);
+		ComponentTypeWeaver weaver = new ComponentTypeWeaver(null, cr, meta);
 		weaver.call();
 		
 		ClassWriter cw = weaver.getClassWriter();
