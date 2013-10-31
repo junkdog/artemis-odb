@@ -3,11 +3,11 @@ package com.artemis.weaver;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 import com.artemis.Weaver;
 import com.artemis.meta.ClassMetadata;
-import com.artemis.meta.ClassMetadata.WeaverType;
 
 public class ComponentTypeVisitor extends ClassVisitor implements Opcodes{
 
@@ -31,6 +31,15 @@ public class ComponentTypeVisitor extends ClassVisitor implements Opcodes{
 			: super.visitAnnotation(desc, visible);
 	}
 	
+	@Override
+	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+		MethodVisitor method = super.visitMethod(access, name, desc, signature, exceptions);
+		if ("reset".equals(name) && "()V".equals(desc)) 
+			method = new ResetMethodVisitor(method, meta);
+		
+		return method;
+	}
+	
 	private static String superName(ClassMetadata.WeaverType type) {
 		switch (type) {
 			case PACKED:
@@ -38,10 +47,8 @@ public class ComponentTypeVisitor extends ClassVisitor implements Opcodes{
 			case POOLED:
 				return "com/artemis/PooledComponent";
 			case NONE:
-					throw new RuntimeException("Missing case : " + WeaverType.NONE);
 			default:
-				throw new RuntimeException("Missing case : " + WeaverType.NONE);
-			
+				throw new RuntimeException("Missing case : " + type);
 		}
 	}
 }

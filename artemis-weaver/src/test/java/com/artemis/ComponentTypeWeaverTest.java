@@ -4,9 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.InputStream;
+
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.Type;
 
 import com.artemis.component.ComponentToWeave;
 import com.artemis.component.PackedToBeB;
@@ -35,14 +38,18 @@ public class ComponentTypeWeaverTest {
 	}
 	
 	private ClassMetadata transform(Class<?> klazz) throws Exception {
-		ClassReader cr = Weaver.classReaderFor(getClass().getResourceAsStream("/" + klazz.getName().replace('.', '/') + ".class"));
+		InputStream classStream = getClass().getResourceAsStream("/" + klazz.getName().replace('.', '/') + ".class");
+		ClassReader cr = Weaver.classReaderFor(classStream);
 		ClassMetadata meta = Weaver.scan(cr);
+		meta.type = Type.getObjectType(cr.getClassName());
 		
 		ComponentTypeWeaver weaver = new ComponentTypeWeaver(null, cr, meta);
 		weaver.call();
 		
 		ClassWriter cw = weaver.getClassWriter();
 		assertEquals("", ClassUtil.verifyClass(cw));
+		
+		classStream.close();
 		
 		return Weaver.scan(new ClassReader(cw.toByteArray()));
 	}

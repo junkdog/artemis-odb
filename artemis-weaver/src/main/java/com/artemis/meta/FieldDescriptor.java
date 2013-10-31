@@ -4,9 +4,9 @@ import lombok.Data;
 
 @Data
 public class FieldDescriptor {
-	private final int access;
-	private final String name;
-	private final String desc;
-	private final String signature;
-	private final Object value;
+	public final int access;
+	public final String name;
+	public final String desc;
+	public final String signature;
+	public final Object value;
 }
