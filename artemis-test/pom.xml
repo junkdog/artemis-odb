@@ -26,11 +26,13 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>artemis-odb-validator</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>artemis-odb-weaver</artifactId>
 			<version>${project.version}</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
