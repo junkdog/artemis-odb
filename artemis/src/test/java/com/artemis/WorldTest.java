@@ -59,6 +59,15 @@ public class WorldTest
 		world.process();
 		assertEquals(1, es.expiredLastRound);
 		assertEquals(0.25f, es.deltas.get(e2.getId()), 0.01f);
+		assertEquals(1, es.getActives().size());
+		
+		world.setDelta(0.5f);
+		world.process();
+		
+		assertEquals(1, es.expiredLastRound);
+		
+		world.process();
+		assertEquals(0, es.getActives().size());
 	}
 
 	private Entity createEntity()
@@ -196,6 +205,7 @@ public class WorldTest
 		protected void processExpired(Entity e) {
 			expiredLastRound++;
 			deltas.set(e.getId(), null);
+			e.deleteFromWorld();
 		}
 		
 		@Override

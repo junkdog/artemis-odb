@@ -69,7 +69,10 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 				offerDelay(remaining);
 			}
 		}
-		stop();
+		
+		if (getActives().size() == 0) {
+			stop();
+		}
 	}
 
 
