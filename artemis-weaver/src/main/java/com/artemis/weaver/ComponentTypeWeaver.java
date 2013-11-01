@@ -43,10 +43,14 @@ public class ComponentTypeWeaver extends CallableWeaver implements Opcodes{
 		if (meta.annotation != WeaverType.NONE)
 			cv = new ComponentTypeVisitor(cv, meta);
 
-		cr.accept(cv, ClassReader.EXPAND_FRAMES);
-		
-		if (file != null)
-			ClassUtil.writeClass(cw, file);
+		try {
+			cr.accept(cv, ClassReader.EXPAND_FRAMES);
+			
+			if (file != null)
+				ClassUtil.writeClass(cw, file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public ClassWriter getClassWriter() {

@@ -70,9 +70,11 @@
 	</developers>
 	
 	<modules>
-		<module>artemis-weaver</module>
-		<module>artemis-validator</module>
 		<module>artemis</module>
+		<module>artemis-weaver</module>
+		<module>artemis-maven</module>
+		<module>artemis-validator</module>
+		<module>artemis-test</module>
 	</modules>
 	
 	<profiles>

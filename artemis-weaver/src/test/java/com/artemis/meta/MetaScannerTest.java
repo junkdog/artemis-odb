@@ -89,7 +89,6 @@ public class MetaScannerTest {
 		InputStream stream = MetaScannerTest.class.getResourceAsStream(classResource);
 		ClassReader cr = new ClassReader(stream);
 		ClassMetadata info = new ClassMetadata();
-		info.type = Type.getObjectType(cr.getClassName());
 		cr.accept(new MetaScanner(info), 0);
 		stream.close();
 		return info;

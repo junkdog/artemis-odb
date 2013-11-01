@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>net.onedaybeard.artemis</groupId>
+		<artifactId>artemis-parent</artifactId>
+		<version>0.4.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>artemis-odb-test</artifactId>
+	<packaging>jar</packaging>
+	<name>artemis-odb-integration-test</name>
+	
+	<properties>
+		<asm.version>4.1</asm.version>
+		<mainClass>net.onedaybeard.agrotera.ProcessArtemis</mainClass>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>artemis-odb</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>artemis-odb-validator</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>artemis-odb-weaver</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>net.onedaybeard.artemis</groupId>
+				<artifactId>artemis-odb-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>artemis</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

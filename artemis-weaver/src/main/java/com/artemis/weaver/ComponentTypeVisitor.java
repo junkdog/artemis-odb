@@ -33,7 +33,9 @@ public class ComponentTypeVisitor extends ClassVisitor implements Opcodes{
 	
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		MethodVisitor method = super.visitMethod(access, name, desc, signature, exceptions);
+		MethodVisitor method = cv.visitMethod(access, name, desc, signature, exceptions);
+		if ("<init>".equals(name) && "()V".equals(desc))
+			method = new ConstructorInvocationVisitor(method, meta);
 		if ("reset".equals(name) && "()V".equals(desc)) 
 			method = new ResetMethodVisitor(method, meta);
 		

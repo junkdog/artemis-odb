@@ -24,7 +24,7 @@ public class ResetMethodVisitor extends MethodVisitor implements Opcodes {
 		for (FieldDescriptor field : filter(meta.fields))
 			resetField(field);
 	}
-
+	
 	private void resetField(FieldDescriptor field) {
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitInsn(constInstructionFor(field));

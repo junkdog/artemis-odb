@@ -1,9 +1,12 @@
 package com.artemis;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
@@ -45,12 +48,34 @@ public final class ClassUtil implements Opcodes
 	}
 	
 	public static String verifyClass(ClassWriter writer) {
-//		cr.accept(cw, 0);
     	StringWriter sw = new StringWriter();
 		PrintWriter printer = new PrintWriter(sw);
     	
     	CheckClassAdapter.verify(new ClassReader(writer.toByteArray()), false, printer);
     	
     	return sw.toString();
+	}
+	
+	public static List<File> find(String root) {
+		return find(new File(root));
+	}
+	
+	public static List<File> find(File root) {
+		if (!root.isDirectory())
+			throw new IllegalAccessError(root + " must be a folder.");
+		
+		List<File> klazzes = new ArrayList<File>();
+		addFiles(klazzes, root);
+			
+		return klazzes;
+	}
+	
+	private static void addFiles(List<File> files, File folder) {
+		for (File f : folder.listFiles()) {
+			if (f.isFile() && f.getName().endsWith(".class"))
+				files.add(f);
+			else if (f.isDirectory())
+				addFiles(files, f);
+		}
 	}
 }

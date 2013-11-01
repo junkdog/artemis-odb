@@ -1,13 +1,18 @@
 package com.artemis;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Type;
 
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.WeaverType;
@@ -18,6 +23,23 @@ public class Weaver {
 	public static final String PACKED_ANNOTATION = "Lcom/artemis/annotations/PackedWeaver;";
 	public static final String POOLED_ANNOTATION = "Lcom/artemis/annotations/PooledWeaver;";
 	public static final String WOVEN_ANNOTATION = "Lcom/artemis/annotations/internal/Transmuted";
+	
+	private final File targetClasses;
+	
+	
+	public Weaver(File outputDirectory) {
+		this.targetClasses = outputDirectory;
+	}
+
+	public List<ClassMetadata> execute() {
+		ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+		List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
+		for (File f : ClassUtil.find(targetClasses))
+			processClass(threadPool, f.getAbsolutePath(), processed);
+		
+		awaitTermination(threadPool);
+		return processed;
+	}
 
 	private static void processClass(ExecutorService threadPool, String file, List<ClassMetadata> processed) {
 		
@@ -59,6 +81,16 @@ public class Weaver {
 	public static ClassMetadata scan(ClassReader source) {
 		ClassMetadata info = new ClassMetadata();
 		source.accept(new MetaScanner(info), 0);
+		info.type = Type.getObjectType(source.getClassName());
 		return info;
+	}
+	
+	private static void awaitTermination(ExecutorService threadPool) {
+		threadPool.shutdown();
+		try {
+			threadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }
