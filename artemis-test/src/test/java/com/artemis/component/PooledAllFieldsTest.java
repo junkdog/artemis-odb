@@ -13,7 +13,7 @@ import com.artemis.PooledComponent;
 import com.artemis.World;
 
 public class PooledAllFieldsTest {
-	
+
 	@Test @SuppressWarnings("static-method")
 	public void pooled_class_transformation() throws Exception {
 		World world = new World();
