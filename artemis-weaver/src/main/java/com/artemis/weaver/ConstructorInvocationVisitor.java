@@ -17,12 +17,15 @@ public class ConstructorInvocationVisitor extends MethodVisitor implements Opcod
 	@Override
 	public void visitMethodInsn(int opcode, String owner, String name, String desc) {
 		if (INVOKESPECIAL == opcode && "<init>".equals(name))
-			mv.visitMethodInsn(opcode, owner(meta), name, desc);
+			mv.visitMethodInsn(opcode, owner(meta, owner), name, desc);
 		else
 			mv.visitMethodInsn(opcode, owner, name, desc);
 	}
 
-	private static String owner(ClassMetadata meta) {
+	private static String owner(ClassMetadata meta, String owner) {
+		if (owner.equals(meta.type.getInternalName()))
+			return owner;
+		
 		switch (meta.annotation) {
 			case PACKED:
 				return "com/artemis/PackedComponent";

@@ -8,7 +8,7 @@ public class PolyConstructor extends Component {
 	public float diameter;
 
 	public PolyConstructor() {
-		
+		this(0);
 	}
 	
 	public PolyConstructor(float diameter) {
