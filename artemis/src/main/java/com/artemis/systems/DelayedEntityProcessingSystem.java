@@ -76,6 +76,7 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	@Override
 	protected void inserted(Entity e) {
 		float remainingDelay = getRemainingDelay(e);
+		processDelta(e, -acc);
 		if(remainingDelay > 0) {
 			offerDelay(remainingDelay);
 		}
