@@ -5,3 +5,5 @@
  - Entity instances are recycled.
  - New component types, `PooledComponent` and `PackedComponent`.
  - Annotation processor validates pooled and packed component types.
+ - Fix: DelayedEntityProcessingSystem prematurely expired entities.
+
