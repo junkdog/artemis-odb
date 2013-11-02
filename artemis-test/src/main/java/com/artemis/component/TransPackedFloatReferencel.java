@@ -3,6 +3,7 @@ package com.artemis.component;
 import com.artemis.Entity;
 import com.artemis.PackedComponent;
 
+@SuppressWarnings("unused")
 public class TransPackedFloatReferencel extends PackedComponent {
 	private float x;
 	private float y;

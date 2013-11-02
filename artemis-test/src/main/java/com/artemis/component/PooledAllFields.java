@@ -4,7 +4,7 @@ import com.artemis.Component;
 import com.artemis.annotations.PooledWeaver;
 
 
-@PooledWeaver
+@PooledWeaver @SuppressWarnings("unused")
 public class PooledAllFields extends Component {
 	private boolean _boolean = true;
 	private char _char = 'a';
