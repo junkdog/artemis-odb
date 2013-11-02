@@ -3,6 +3,7 @@ package com.artemis;
 import static com.artemis.FluentUtil.element;
 import static com.artemis.FluentUtil.Match.ONE_OF;
 import static javax.lang.model.element.Modifier.FINAL;
+import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.STATIC;
 import static javax.lang.model.util.ElementFilter.constructorsIn;
 import static javax.lang.model.util.ElementFilter.fieldsIn;
@@ -10,6 +11,7 @@ import static javax.lang.model.util.ElementFilter.typesIn;
 import static javax.tools.Diagnostic.Kind.ERROR;
 import static javax.tools.Diagnostic.Kind.MANDATORY_WARNING;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +27,7 @@ import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Types;
 
 import org.kohsuke.MetaInfServices;
@@ -46,9 +49,10 @@ public class ComponentValidatorProcessor extends AbstractProcessor {
 		for (TypeElement type: typesIn(roundEnv.getElementsAnnotatedWith(annotation))) {
 			if (element(type).hasAnnotation("@com.artemis.annotations.PooledWeaver")) {
 				ensureTypeExtendsComponent(type);
-				packedComponentCheck(type);
+				pooledComponentCheck(type);
 			} else if (element(type).hasAnnotation("@com.artemis.annotations.PackedWeaver")) {
 				ensureTypeExtendsComponent(type);
+				ensureAllFieldsAreOfSameType(type);
 				packedComponentCheck(type);
 			} else {
 				validate(type);
@@ -58,6 +62,21 @@ public class ComponentValidatorProcessor extends AbstractProcessor {
 		return false;
 	}
 	
+	private void ensureAllFieldsAreOfSameType(TypeElement type) {
+		Set<String> types = new HashSet<String>();
+		for (VariableElement field : fieldsIn(type.getEnclosedElements())) {
+			Set<Modifier> modifiers = field.getModifiers();
+			if (modifiers.contains(Modifier.PRIVATE))
+				types.add(field.asType().toString());
+			
+		}
+		
+		if (types.size() > 1) {
+			Messager messager = processingEnv.getMessager();
+			messager.printMessage(MANDATORY_WARNING, "All fields must be of same type, found:." + types);
+		}
+	}
+
 	private void validate(TypeElement component) {
 		Types typeUtils = processingEnv.getTypeUtils();
 		
@@ -78,10 +97,22 @@ public class ComponentValidatorProcessor extends AbstractProcessor {
 
 	private void packedComponentCheck(TypeElement component) {
 		ensureZeroArgConstructor(component);
+		ensureNoFinalInstanceFields(component);
+		ensureAllInstanceFieldsArePrivate(component);
+	}
+
+	private void ensureAllInstanceFieldsArePrivate(TypeElement component) {
+		for (VariableElement field : fieldsIn(component.getEnclosedElements())) {
+			Set<Modifier> modifiers = field.getModifiers();
+			if (!modifiers.contains(PRIVATE) && !modifiers.contains(FINAL) && !modifiers.contains(STATIC)) {
+				Messager messager = processingEnv.getMessager();
+				messager.printMessage(ERROR, "All instance fields must be private", field);
+			}
+		}
 	}
 
 	private void pooledComponentCheck(TypeElement component) {
-		packedComponentCheck(component);
+		ensureZeroArgConstructor(component);
 		ensureNoFinalInstanceFields(component);
 		checkIfPooledCanBePacked(component);
 	}
