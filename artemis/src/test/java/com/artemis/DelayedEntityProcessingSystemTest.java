@@ -33,48 +33,48 @@ public class DelayedEntityProcessingSystemTest
 
 		final Entity e1 = createEntity();
 
-		world.setDelta(0.2f);
+		world.setDelta(0.21f);
 		world.process();
 		assertEquals(0, es.expiredLastRound);
 
 		final Entity e2 = createEntity();
 
-		world.setDelta(0.2f);
+		world.setDelta(0.21f);
 		world.process();
 		assertEquals(0, es.expiredLastRound);
 
 		final Entity e3 = createEntity();
 
-		world.setDelta(0.2f);
+		world.setDelta(0.21f);
 		world.process();
 		assertEquals(0, es.expiredLastRound);
 
 		final Entity e4 = createEntity();
 
-		world.setDelta(0.2f);
+		world.setDelta(0.21f);
 		world.process();
 
 		assertEquals(0, es.expiredLastRound);
 
-		world.setDelta(0.2f);
+		world.setDelta(0.21f);
 		world.process();
 		assertEquals(1, es.expiredLastRound);
 
-		world.setDelta(0.2f);
+		world.setDelta(0.21f);
 		world.process();
 		assertEquals(1, es.expiredLastRound);
 
-		world.setDelta(0.2f);
+		world.setDelta(0.21f);
 		world.process();
 		assertEquals(1, es.expiredLastRound);
 
-		world.setDelta(0.2f);
+		world.setDelta(0.21f);
 		world.process();
 		assertEquals(1, es.expiredLastRound);
 
 		world.setDelta(0.75f);
 		world.process();
-		assertEquals(0, es.expiredLastRound);
+		// assertEquals(0, es.expiredLastRound); // begin() isn't run unless the system is processed
 		assertEquals(0, entitiesOrdered.size());
 		assertEquals(0, es.getActives().size());
 	}
@@ -104,25 +104,25 @@ public class DelayedEntityProcessingSystemTest
 
 		step200ms(es);
 
-		world.setDelta(0.2f);
+		world.setDelta(0.21f);
 		world.process();
 		assertEquals(1, es.expiredLastRound);
 
-		world.setDelta(0.2f);
+		world.setDelta(0.21f);
 		world.process();
 		assertEquals(1, es.expiredLastRound);
 
-		world.setDelta(0.2f);
+		world.setDelta(0.21f);
 		world.process();
 		assertEquals(1, es.expiredLastRound);
 
-		world.setDelta(0.2f);
+		world.setDelta(0.21f);
 		world.process();
 		assertEquals(1, es.expiredLastRound);
 
 		world.setDelta(0.75f);
 		world.process();
-		assertEquals(0, es.expiredLastRound);
+//		assertEquals(0, es.expiredLastRound); // begin() isn't run unless the system is processed
 		assertEquals(0, es.getActives().size());
 		assertEquals(0, entitiesOrdered.size());
 	}
@@ -183,14 +183,12 @@ public class DelayedEntityProcessingSystemTest
 		@Override
 		protected void processExpired(final Entity e) {
 			expiredLastRound++;
-			System.out.println("Evicted: " + e);
 			assertEquals(e, entitiesOrdered.removeFirst());
 			e.deleteFromWorld();
 		}
 
 		@Override
 		protected void begin() {
-			System.out.println("processing");
 			expiredLastRound = 0;
 		}
 	}
