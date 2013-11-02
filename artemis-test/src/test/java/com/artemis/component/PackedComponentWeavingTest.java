@@ -32,8 +32,6 @@ public class PackedComponentWeavingTest {
 	
 	@Test
 	public void packed_component_has_sizeof() throws Exception {
-		String fields = Arrays.toString(TransPackedFloat.class.getDeclaredFields());
-		System.out.println("FOUND FIELDS: " + fields);
 		Field sizeOf = TransPackedFloat.class.getDeclaredField("$_SIZE_OF");
 		assertNotNull(sizeOf);
 		sizeOf.setAccessible(true);
@@ -41,5 +39,15 @@ public class PackedComponentWeavingTest {
 		assertEquals(PRIVATE | STATIC | FINAL, sizeOf.getModifiers());
 		assertEquals(int.class, sizeOf.getType());
 		assertEquals(2, sizeOf.getInt(packed));
+	}
+	
+	@Test @SuppressWarnings("static-method")
+	public void packed_component_has_offset() throws Exception {
+		Field offset = TransPackedFloat.class.getDeclaredField("$offset");
+		assertNotNull(offset);
+		offset.setAccessible(true);
+		
+		assertEquals(PRIVATE, offset.getModifiers());
+		assertEquals(int.class, offset.getType());
 	}
 }

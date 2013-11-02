@@ -54,6 +54,7 @@ public class ComponentTypeWeaver extends CallableWeaver implements Opcodes {
 		
 		cw.visitField(ACC_PRIVATE | ACC_FINAL | ACC_STATIC, "$_SIZE_OF", "I", null,
 			Integer.valueOf(instanceFields(meta).size())).visitEnd();;
+		cw.visitField(ACC_PRIVATE, "$offset", "I", null, Integer.valueOf(0)).visitEnd();;
 		
 		// inject array
 		
