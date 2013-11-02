@@ -68,12 +68,11 @@ public class ComponentValidatorProcessor extends AbstractProcessor {
 			Set<Modifier> modifiers = field.getModifiers();
 			if (modifiers.contains(Modifier.PRIVATE))
 				types.add(field.asType().toString());
-			
 		}
 		
 		if (types.size() > 1) {
 			Messager messager = processingEnv.getMessager();
-			messager.printMessage(MANDATORY_WARNING, "All fields must be of same type, found:." + types);
+			messager.printMessage(ERROR, "All fields must be of same type, found: " + types);
 		}
 	}
 
