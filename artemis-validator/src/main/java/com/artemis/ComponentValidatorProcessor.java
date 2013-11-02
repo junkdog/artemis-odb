@@ -10,6 +10,7 @@ import static javax.lang.model.util.ElementFilter.typesIn;
 import static javax.tools.Diagnostic.Kind.ERROR;
 import static javax.tools.Diagnostic.Kind.MANDATORY_WARNING;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
@@ -18,6 +19,7 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
@@ -42,7 +44,15 @@ public class ComponentValidatorProcessor extends AbstractProcessor {
 		
 		TypeElement annotation = types.iterator().next();
 		for (TypeElement type: typesIn(roundEnv.getElementsAnnotatedWith(annotation))) {
-			validate(type);
+			if (element(type).hasAnnotation("@com.artemis.annotations.PooledWeaver")) {
+				ensureTypeExtendsComponent(type);
+				packedComponentCheck(type);
+			} else if (element(type).hasAnnotation("@com.artemis.annotations.PackedWeaver")) {
+				ensureTypeExtendsComponent(type);
+				packedComponentCheck(type);
+			} else {
+				validate(type);
+			}
 		}
 		
 		return false;
@@ -55,17 +65,25 @@ public class ComponentValidatorProcessor extends AbstractProcessor {
 		do {
 			superclass = component.getSuperclass();
 			if (PACKED_COMPONENT.equals(superclass.toString())) {
-				ensureZeroArgConstructor(component);
+				packedComponentCheck(component);
 				break;
 			} else if (POOLED_COMPONENT.equals(superclass.toString())) {
-				ensureZeroArgConstructor(component);
-				ensureNoFinalInstanceFields(component);
-				checkIfPooledCanBePacked(component);
+				pooledComponentCheck(component);
 				break;
 			} else {
 				component = (TypeElement)typeUtils.asElement(superclass);
 			}
 		} while (!COMPONENT.equals(superclass.toString()));
+	}
+
+	private void packedComponentCheck(TypeElement component) {
+		ensureZeroArgConstructor(component);
+	}
+
+	private void pooledComponentCheck(TypeElement component) {
+		packedComponentCheck(component);
+		ensureNoFinalInstanceFields(component);
+		checkIfPooledCanBePacked(component);
 	}
 
 	@Override
@@ -102,5 +120,22 @@ public class ComponentValidatorProcessor extends AbstractProcessor {
 				messager.printMessage(ERROR, "Instance fields must not be declared final.", field);
 			}
 		}
+	}
+	
+	private void ensureTypeExtendsComponent(TypeElement component) {
+		Types typeUtils = processingEnv.getTypeUtils();
+		TypeMirror superclass = null;
+		
+		do {
+			superclass = component.getSuperclass();
+			if (PACKED_COMPONENT.equals(superclass.toString()) || POOLED_COMPONENT.equals(superclass.toString())) {
+				processingEnv.getMessager().printMessage(ERROR, "Weaved components must extend com.artemis.Component", component);
+				break;
+			} else if (COMPONENT.equals(superclass.toString())) {
+				break;
+			} else {
+				component = (TypeElement)typeUtils.asElement(superclass);
+			}
+		} while (!"java.lang.Object".equals(superclass.toString()));
 	}
 }

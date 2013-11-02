@@ -23,7 +23,7 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>${project.groupId}</groupId> <!-- reqyures m2e-apt under eclipse  --> 
 			<artifactId>artemis-odb-validator</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
