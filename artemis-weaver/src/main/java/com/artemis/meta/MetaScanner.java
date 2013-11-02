@@ -49,7 +49,7 @@ public class MetaScanner extends ClassVisitor {
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 		if ("reset".equals(name) && "()V".equals(desc))
 			info.foundReset = true;
-		else if ("forEntity".equals(name) && "(Lcom/artemis/Entity;)V".equals(desc))
+		else if ("forEntity".equals(name) && desc.startsWith("(Lcom/artemis/Entity;)"))
 			info.foundEntityFor = true;
 		
 		info.methods.add(new MethodDescriptor(access, name, desc, signature, exceptions));

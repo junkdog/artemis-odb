@@ -1,5 +1,7 @@
 package com.artemis.weaver;
 
+import static com.artemis.meta.ClassMetadataUtil.instanceFields;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.meta.FieldDescriptor;
 
 public class ResetMethodVisitor extends MethodVisitor implements Opcodes {
@@ -21,7 +24,7 @@ public class ResetMethodVisitor extends MethodVisitor implements Opcodes {
 	@Override
 	public void visitCode() {
 		mv.visitCode();
-		for (FieldDescriptor field : filter(meta.fields))
+		for (FieldDescriptor field : instanceFields(meta))
 			resetField(field);
 	}
 	
@@ -31,15 +34,6 @@ public class ResetMethodVisitor extends MethodVisitor implements Opcodes {
 		mv.visitFieldInsn(PUTFIELD, meta.type.getInternalName(), field.getName(), field.getDesc());
 	}
 
-	private static List<FieldDescriptor> filter(List<FieldDescriptor> fields) {
-		List<FieldDescriptor> instanceFields = new ArrayList<FieldDescriptor>();
-		for (FieldDescriptor field : fields) {
-			if ((field.getAccess() & (ACC_FINAL | ACC_STATIC)) == 0) 
-				instanceFields.add(field);
-		}
-		return fields;
-	}
-	
 	private static int constInstructionFor(FieldDescriptor field) {
 		if ("Z".equals(field.desc))
 			return ICONST_0;
