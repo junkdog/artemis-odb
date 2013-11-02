@@ -54,12 +54,12 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 		super(aspect);
 	}
 
-
-
 	@Override
 	protected final void processEntities(ImmutableBag<Entity> entities) {
+		delay = Float.MAX_VALUE;
 		Object[] array = ((Bag<Entity>)entities).getData();
-		for (int i = 0, s = entities.size(); s > i; i++) {
+		int processed = entities.size();
+		for (int i = 0; processed > i; i++) {
 			Entity entity = (Entity)array[i];
 			processDelta(entity, acc);
 			float remaining = getRemainingDelay(entity);
@@ -69,10 +69,8 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 				offerDelay(remaining);
 			}
 		}
-		
-		if (getActives().size() == 0) {
-			stop();
-		}
+		acc = 0;
+		if (getActives().size() == 0) stop();
 	}
 
 
@@ -133,7 +131,8 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	 * 
 	 * @param delay
 	 *			time delay until processing starts
-	 */
+	 * @deprecated bugged and unnecessary. don't use.
+	 */ @Deprecated
 	public void restart(float delay) {
 		this.delay = delay;
 		this.acc = 0;
@@ -157,8 +156,11 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	 *			delay to offer
 	 */
 	public void offerDelay(float offeredDelay) {
-		if(!running || offeredDelay < getRemainingTimeUntilProcessing()) {
-			restart(offeredDelay);
+		if (!running) {
+			running = true;
+			delay = offeredDelay;
+		} else {
+			delay = Math.min(delay, offeredDelay);
 		}
 	}
 	
