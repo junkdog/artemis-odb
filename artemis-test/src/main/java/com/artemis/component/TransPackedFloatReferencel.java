@@ -9,14 +9,14 @@ public class TransPackedFloatReferencel extends PackedComponent {
 	private float y;
 	
 	private int $offset;
-	private static final int SIZE_OF = 2;
+	private static final int $_SIZE_OF = 2;
 	private static float[] $data = new float[64];
 	
 
 	@Override
 	protected PackedComponent forEntity(Entity e) {
-		this.$offset = SIZE_OF * e.getId();
-		if (($data.length - 1) <= $offset) grow();
+		this.$offset = $_SIZE_OF * e.getId();
+		if (($data.length - 1) <= $offset) $grow();
 		return this;
 	}
 
@@ -26,7 +26,7 @@ public class TransPackedFloatReferencel extends PackedComponent {
 		$data[$offset + 1] = 0;
 	}
 	
-	private static void grow()
+	private static void $grow()
 	{
 		float[] old = $data;
 		$data = new float[(old.length * 2)];

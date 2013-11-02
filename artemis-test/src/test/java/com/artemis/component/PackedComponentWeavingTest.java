@@ -6,8 +6,10 @@ import static java.lang.reflect.Modifier.STATIC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -54,6 +56,20 @@ public class PackedComponentWeavingTest {
 	}
 	
 	@Test
+	public void packed_component_has_backing_array() throws Exception {
+		Field data = field("$data");
+		
+		assertEquals(PRIVATE | STATIC, data.getModifiers());
+		assertEquals(float[].class, data.getType());
+		assertEquals(64, ((float[])data.get(null)).length);
+		
+		Method grow = method("$grow");
+		grow.invoke(packed);
+		assertTrue(64 < ((float[])data.get(null)).length);
+	}
+	
+	
+	@Test
 	public void packed_component_updates_offset() throws Exception {
 		assertNotEquals(getOffset(e1), getOffset(e2));
 	}
@@ -61,6 +77,13 @@ public class PackedComponentWeavingTest {
 	private int getOffset(Entity e) throws Exception {
 		ComponentMapper<TransPackedFloat> mapper = world.getMapper(TransPackedFloat.class);
 		return field("$offset").getInt(mapper.get(e));
+	}
+	
+	private static Method method(String name) throws SecurityException, NoSuchMethodException {
+		Method m = TransPackedFloat.class.getDeclaredMethod(name);
+		assertNotNull(m);
+		m.setAccessible(true);
+		return m;
 	}
 	
 	private static Field field(String name) throws NoSuchFieldException {
