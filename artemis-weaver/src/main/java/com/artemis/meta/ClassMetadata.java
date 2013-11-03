@@ -21,7 +21,9 @@ public final class ClassMetadata {
 	public String superClass;
 
 	public List<MethodDescriptor> methods = new ArrayList<MethodDescriptor>(); 
-	public List<FieldDescriptor> fields = new ArrayList<FieldDescriptor>(); 
+	public List<FieldDescriptor> fields = new ArrayList<FieldDescriptor>();
+
+	public boolean foundStaticInitializer; 
 
 	public static enum WeaverType { NONE, POOLED, PACKED };
 }

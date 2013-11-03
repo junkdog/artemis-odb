@@ -12,6 +12,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.artemis.ComponentMapper;
@@ -65,12 +66,21 @@ public class PackedComponentWeavingTest {
 		
 		Method grow = method("$grow");
 		grow.invoke(packed);
-		assertTrue(64 < ((float[])data.get(null)).length);
+		assertEquals(128, ((float[])data.get(null)).length);
 	}
 	
-	
-	@Test
+	@Test @Ignore
 	public void packed_component_updates_offset() throws Exception {
+		assertNotEquals(getOffset(e1), getOffset(e2));
+	}
+	
+	@Test @Ignore // TODO
+	public void packed_component_reset_component() throws Exception {
+		assertNotEquals(getOffset(e1), getOffset(e2));
+	}
+	
+	@Test @Ignore // TODO
+	public void packed_component_update_component() throws Exception {
 		assertNotEquals(getOffset(e1), getOffset(e2));
 	}
 	

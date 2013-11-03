@@ -51,6 +51,8 @@ public class MetaScanner extends ClassVisitor {
 			info.foundReset = true;
 		else if ("forEntity".equals(name) && desc.startsWith("(Lcom/artemis/Entity;)"))
 			info.foundEntityFor = true;
+		else if ("<clinit>".equals(name) && "()V".equals(desc))
+			info.foundStaticInitializer = true;
 		
 		info.methods.add(new MethodDescriptor(access, name, desc, signature, exceptions));
 		

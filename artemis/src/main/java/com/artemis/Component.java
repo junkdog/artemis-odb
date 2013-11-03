@@ -9,5 +9,4 @@ package com.artemis;
  * @author Arni Arent
  */
 @ComponentConformanceValidator
-public abstract class Component {
-}
+public abstract class Component {}
