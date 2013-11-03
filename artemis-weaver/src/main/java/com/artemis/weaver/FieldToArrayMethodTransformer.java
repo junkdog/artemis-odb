@@ -1,5 +1,6 @@
 package com.artemis.weaver;
 
+import java.util.List;
 import java.util.ListIterator;
 
 import org.objectweb.asm.Opcodes;
@@ -8,7 +9,6 @@ import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodNode;
-import org.objectweb.asm.tree.VarInsnNode;
 
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadataUtil;
@@ -19,10 +19,12 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 
 	private final ClassMetadata meta;
 	private final String fieldDesc;
+	private final List<String> dataFieldNames;
 
-	public FieldToArrayMethodTransformer(MethodTransformer mt, ClassMetadata meta) {
+	public FieldToArrayMethodTransformer(MethodTransformer mt, ClassMetadata meta, List<String> dataFieldNames) {
 		super(mt);
 		this.meta = meta;
+		this.dataFieldNames = dataFieldNames;
 		
 		FieldDescriptor f = ClassMetadataUtil.instanceFields(meta).get(0);
 		fieldDesc = f.desc;
@@ -55,7 +57,7 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 					it.add(new FieldInsnNode(GETSTATIC, meta.type.getInternalName(), "$data", "[" + fieldDesc));
 					it.next();
 					it.add(new FieldInsnNode(GETFIELD, meta.type.getInternalName(), "$offset", "I"));
-					it.add(new InsnNode(ICONST_0)); //TODO head offsets
+					it.add(new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name))); //FIXME only works with <= 5 data fields
 					it.add(new InsnNode(IADD));
 					it.next();
 					it.next();
@@ -68,7 +70,7 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 					it.add(new FieldInsnNode(GETSTATIC, meta.type.getInternalName(), "$data", "[" + fieldDesc));
 					it.next();
 					it.add(new FieldInsnNode(GETFIELD, meta.type.getInternalName(), "$offset", "I"));
-					it.add(new InsnNode(ICONST_0)); //TODO head offsets
+					it.add(new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name))); //FIXME only works with <= 5 data fields
 					it.add(new InsnNode(IADD));
 					it.next();
 					

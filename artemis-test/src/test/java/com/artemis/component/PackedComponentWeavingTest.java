@@ -82,10 +82,10 @@ public class PackedComponentWeavingTest {
 		mapper.get(e1).x(1).y(2);
 		mapper.get(e2).x(3).y(4);
 		
-		assertEquals(1f, mapper.get(e1).x(), 001f);
-		assertEquals(2f, mapper.get(e1).y(), 001f);
-		assertEquals(3f, mapper.get(e2).x(), 001f);
-		assertEquals(4f, mapper.get(e2).y(), 001f);
+		assertEquals(1f, mapper.get(e1).x(), .001f);
+		assertEquals(2f, mapper.get(e1).y(), .001f);
+		assertEquals(3f, mapper.get(e2).x(), .001f);
+		assertEquals(4f, mapper.get(e2).y(), .001f);
 		
 		try {
 			TransPackedFloat.class.getDeclaredField("x");
