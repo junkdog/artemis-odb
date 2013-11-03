@@ -6,7 +6,7 @@ import static java.lang.reflect.Modifier.STATIC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -74,15 +74,37 @@ public class PackedComponentWeavingTest {
 		assertEquals(0, getOffset(e1));
 		assertNotEquals(getOffset(e1), getOffset(e2));
 	}
+
+	
+	@Test 
+	public void packed_component_replaces_field_access_with_backing_array() throws Exception {
+		ComponentMapper<TransPackedFloat> mapper = world.getMapper(TransPackedFloat.class);
+		mapper.get(e1).x(1).y(2);
+		mapper.get(e2).x(3).y(4);
+		
+		assertEquals(1f, mapper.get(e1).x(), 001f);
+		assertEquals(2f, mapper.get(e1).y(), 001f);
+		assertEquals(3f, mapper.get(e2).x(), 001f);
+		assertEquals(4f, mapper.get(e2).y(), 001f);
+		
+		try {
+			TransPackedFloat.class.getDeclaredField("x");
+			fail("Failed to remove field from component");
+		} catch (Exception e) { /* expected */ }
+		try {
+			TransPackedFloat.class.getDeclaredField("y");
+			fail("Failed to remove field from component");
+		} catch (Exception e) { /* expected */ }
+	}
 	
 	@Test @Ignore // TODO
 	public void packed_component_reset_component() throws Exception {
-		assertNotEquals(getOffset(e1), getOffset(e2));
+		
 	}
 	
 	@Test @Ignore // TODO
 	public void packed_component_update_component() throws Exception {
-		assertNotEquals(getOffset(e1), getOffset(e2));
+		
 	}
 	
 	private int getOffset(Entity e) throws Exception {

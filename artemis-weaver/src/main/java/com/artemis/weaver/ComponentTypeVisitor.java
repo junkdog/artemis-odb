@@ -2,6 +2,7 @@ package com.artemis.weaver;
 
 
 import static com.artemis.meta.ClassMetadata.WeaverType.PACKED;
+import static com.artemis.meta.ClassMetadata.WeaverType.POOLED;
 import static com.artemis.meta.ClassMetadataUtil.instanceFields;
 
 import org.objectweb.asm.AnnotationVisitor;
@@ -26,7 +27,7 @@ public class ComponentTypeVisitor extends ClassVisitor implements Opcodes{
 	
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-		super.visit(version, access, name, signature, superName(meta.annotation), interfaces);
+		cv.visit(version, access, name, signature, superName(meta.annotation), interfaces);
 	}
 	
 	@Override
@@ -41,7 +42,7 @@ public class ComponentTypeVisitor extends ClassVisitor implements Opcodes{
 		MethodVisitor method = cv.visitMethod(access, name, desc, signature, exceptions);
 		if ("<init>".equals(name))
 			method = new ConstructorInvocationVisitor(method, meta);
-		if ("reset".equals(name) && "()V".equals(desc)) 
+		if ("reset".equals(name) && "()V".equals(desc) && meta.annotation == POOLED) 
 			method = new ResetMethodVisitor(method, meta);
 		if (meta.annotation == PACKED && instanceFields(meta).size() > 0 && "<clinit>".equals(name))
 			method = new StaticInitializerVisitor(method, meta);

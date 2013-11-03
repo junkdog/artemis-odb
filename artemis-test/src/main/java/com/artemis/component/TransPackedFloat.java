@@ -21,18 +21,20 @@ public class TransPackedFloat extends Component {
 		return this;
 	}
 	
-	public TransPackedFloat addX(float value) {
-		this.x += value;
-		return this;
-	}
+	// FIXME
+//	public TransPackedFloat addX(float value) {
+//		this.x += value;
+//		return this;
+//	}
 	
 	public TransPackedFloat y(float value) {
 		this.y = value;
 		return this;
 	}
 	
-	public TransPackedFloat add6(float value) {
-		this.y += value;
-		return this;
-	}
+	// FIXME
+//	public TransPackedFloat addY(float value) {
+//		this.y += value;
+//		return this;
+//	}
 }

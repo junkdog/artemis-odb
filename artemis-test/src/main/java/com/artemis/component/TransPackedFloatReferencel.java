@@ -22,8 +22,8 @@ public class TransPackedFloatReferencel extends PackedComponent {
 
 	@Override
 	protected void reset() {
-		$data[$offset + 0] = 0;
-		$data[$offset + 1] = 0;
+//		$data[$offset + 0] = 0;
+//		$data[$offset + 1] = 0;
 	}
 	
 	private static void $grow()

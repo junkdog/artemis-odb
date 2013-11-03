@@ -15,6 +15,7 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.ClassNode;
 
 import com.artemis.ClassUtil;
 import com.artemis.meta.ClassMetadata;
@@ -67,10 +68,16 @@ public class ComponentTypeWeaver extends CallableWeaver implements Opcodes {
 			cw.visitField(ACC_PRIVATE + ACC_STATIC, "$data", "[" + dataFields.get(0).desc, null, null).visitEnd();
 			String dataDesc = instanceFields(meta).get(0).desc;
 			injectGrow(meta.type.getInternalName(), arrayTypeDesc(dataDesc), arrayTypeInst(dataDesc));
+			
+			FieldToArrayClassTransformer transformer = new FieldToArrayClassTransformer(null, meta);
+			ClassNode cn = new ClassNode(ASM4);
+			cr.accept(cn, 0);
+			transformer.transform(cn);
+			
+			cn.accept(cw);
+		} else {
+			cr.accept(cw, 0);
 		}
-		
-		
-		cr.accept(cw, 0);
 		cr = new ClassReader(cw.toByteArray());
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 	}

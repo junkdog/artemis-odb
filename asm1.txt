@@ -1,0 +1,139 @@
+Compiled from "TransPackedFloat.java"
+public class com.artemis.component.TransPackedFloat extends com.artemis.PackedComponent {
+  private static final int $_SIZE_OF;
+    Signature: I
+
+  private int $offset;
+    Signature: I
+
+  private static float[] $data;
+    Signature: [F
+
+  private float x;
+    Signature: F
+
+  private float y;
+    Signature: F
+
+  public void reset();
+    Signature: ()V
+    Code:
+       0: aload_0       
+       1: fconst_0      
+       2: putfield      #19                 // Field x:F
+       5: aload_0       
+       6: fconst_0      
+       7: putfield      #21                 // Field y:F
+      10: return        
+
+  private static void $grow();
+    Signature: ()V
+    Code:
+       0: getstatic     #24                 // Field $data:[F
+       3: astore_0      
+       4: aload_0       
+       5: arraylength   
+       6: iconst_2      
+       7: imul          
+       8: newarray       float
+      10: putstatic     #24                 // Field $data:[F
+      13: aload_0       
+      14: iconst_0      
+      15: getstatic     #24                 // Field $data:[F
+      18: iconst_0      
+      19: aload_0       
+      20: arraylength   
+      21: invokestatic  #30                 // Method java/lang/System.arraycopy:(Ljava/lang/Object;ILjava/lang/Object;II)V
+      24: return        
+
+  static {};
+    Signature: ()V
+    Code:
+       0: bipush        64
+       2: newarray       float
+       4: putstatic     #24                 // Field $data:[F
+       7: return        
+
+  protected com.artemis.PackedComponent forEntity(com.artemis.Entity);
+    Signature: (Lcom/artemis/Entity;)Lcom/artemis/PackedComponent;
+    Code:
+       0: aload_0       
+       1: iconst_2      
+       2: aload_1       
+       3: invokevirtual #39                 // Method com/artemis/Entity.getId:()I
+       6: imul          
+       7: putfield      #41                 // Field $offset:I
+      10: getstatic     #24                 // Field $data:[F
+      13: arraylength   
+      14: iconst_1      
+      15: isub          
+      16: aload_0       
+      17: getfield      #41                 // Field $offset:I
+      20: if_icmpgt     26
+      23: invokestatic  #43                 // Method $grow:()V
+      26: aload_0       
+      27: areturn       
+
+  public com.artemis.component.TransPackedFloat();
+    Signature: ()V
+    Code:
+       0: aload_0       
+       1: invokespecial #50                 // Method com/artemis/PackedComponent."<init>":()V
+       4: return        
+
+  public float x();
+    Signature: ()F
+    Code:
+       0: aload_0       
+       1: getfield      #19                 // Field x:F
+       4: freturn       
+
+  public float y();
+    Signature: ()F
+    Code:
+       0: aload_0       
+       1: getfield      #21                 // Field y:F
+       4: freturn       
+
+  public com.artemis.component.TransPackedFloat x(float);
+    Signature: (F)Lcom/artemis/component/TransPackedFloat;
+    Code:
+       0: aload_0       
+       1: fload_1       
+       2: putfield      #19                 // Field x:F
+       5: aload_0       
+       6: areturn       
+
+  public com.artemis.component.TransPackedFloat addX(float);
+    Signature: (F)Lcom/artemis/component/TransPackedFloat;
+    Code:
+       0: aload_0       
+       1: dup           
+       2: getfield      #19                 // Field x:F
+       5: fload_1       
+       6: fadd          
+       7: putfield      #19                 // Field x:F
+      10: aload_0       
+      11: areturn       
+
+  public com.artemis.component.TransPackedFloat y(float);
+    Signature: (F)Lcom/artemis/component/TransPackedFloat;
+    Code:
+       0: aload_0       
+       1: fload_1       
+       2: putfield      #21                 // Field y:F
+       5: aload_0       
+       6: areturn       
+
+  public com.artemis.component.TransPackedFloat add6(float);
+    Signature: (F)Lcom/artemis/component/TransPackedFloat;
+    Code:
+       0: aload_0       
+       1: dup           
+       2: getfield      #21                 // Field y:F
+       5: fload_1       
+       6: fadd          
+       7: putfield      #21                 // Field y:F
+      10: aload_0       
+      11: areturn       
+}
