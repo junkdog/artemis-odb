@@ -69,8 +69,9 @@ public class PackedComponentWeavingTest {
 		assertEquals(128, ((float[])data.get(null)).length);
 	}
 	
-	@Test @Ignore
+	@Test
 	public void packed_component_updates_offset() throws Exception {
+		assertEquals(0, getOffset(e1));
 		assertNotEquals(getOffset(e1), getOffset(e2));
 	}
 	

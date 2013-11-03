@@ -155,15 +155,104 @@ public class ComponentTypeWeaver extends CallableWeaver implements Opcodes {
 		mv.visitEnd();
 	}
 	
+	private static int insn(String dataDesc) {
+		assert (dataDesc.length() == 1);
+		switch (dataDesc.charAt(0)) {
+			case 'I':
+				return T_INT;
+			case 'L':
+				return T_LONG;
+			case 'S':
+				return T_SHORT;
+			case 'B':
+				return T_BYTE;
+			case 'C':
+				return T_CHAR;
+			case 'F':
+				return T_FLOAT;
+			case 'D':
+				return T_DOUBLE;
+			case 'Z':
+				return T_BOOLEAN;
+			case 'A':
+			default:
+				throw new RuntimeException("Unknown type for " + dataDesc);
+		}
+	}
+	
 	private void injectForEntity() {
-		MethodVisitor method = cw.visitMethod(ACC_PUBLIC, "forEntity", "(Lcom/artemis/Entity;)Lcom/artemis/PackedComponent;", null, null);
-		method.visitCode();
-		method.visitVarInsn(ALOAD, 0);
-		method.visitInsn(ARETURN);
+		String owner = meta.type.getInternalName();
+		String dataDesc = instanceFields(meta).get(0).desc;
+		
+		MethodVisitor mv = cw.visitMethod(ACC_PROTECTED, "forEntity", "(Lcom/artemis/Entity;)Lcom/artemis/PackedComponent;", null, null);
+		mv.visitCode();
+		Label l0 = new Label();
+		mv.visitLabel(l0);
+		mv.visitLineNumber(18, l0);
+		mv.visitVarInsn(ALOAD, 0);
+		injectIntValue(mv, instanceFields(meta).size());
+//		mv.visitInsn(ICONST_2);
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitMethodInsn(INVOKEVIRTUAL, "com/artemis/Entity", "getId", "()I");
+		mv.visitInsn(IMUL);
+		mv.visitFieldInsn(PUTFIELD, owner, "$offset", "I");
+		mv.visitFieldInsn(GETSTATIC, owner, "$data", arrayTypeDesc(dataDesc));
+		mv.visitInsn(ARRAYLENGTH);
+		mv.visitInsn(ICONST_1);
+		mv.visitInsn(ISUB);
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitFieldInsn(GETFIELD, owner, "$offset", "I");
+		Label l2 = new Label();
+		mv.visitJumpInsn(IF_ICMPGT, l2);
+		mv.visitMethodInsn(INVOKESTATIC, owner, "$grow", "()V");
+		mv.visitLabel(l2);
+		mv.visitLineNumber(20, l2);
+		mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitInsn(ARETURN);
+		Label l3 = new Label();
+		mv.visitLabel(l3);
+//		mv.visitLocalVariable("this", "Lcom/artemis/component/TransPackedFloatReferencel;", null, l0, l3, 0);
+		mv.visitLocalVariable("this", meta.type.toString(), null, l0, l3, 0);
+		mv.visitLocalVariable("e", "Lcom/artemis/Entity;", null, l0, l3, 1);
+//		mv.visitMaxs(3, 2);
+		mv.visitEnd();
+		
+//		MethodVisitor mv = cw.visitMethod(ACC_PROTECTED, "reset", "()V", null, null);
+//		mv.visitCode();
+//		Label lBegin = new Label();
+//		mv.visitLabel(lBegin);
+//		mv.visitFieldInsn(GETSTATIC, owner, "$data", arrayTypeDesc(dataDesc));
+//		mv.visitVarInsn(ALOAD, 0);
+//		mv.visitFieldInsn(GETFIELD, owner, "$offset", "I");
+//		mv.visitInsn(ICONST_0);
+//		mv.visitInsn(IADD);
+//		mv.visitInsn(FCONST_0);
+//		mv.visitInsn(FASTORE);
+//		mv.visitFieldInsn(GETSTATIC, owner, "$data", arrayTypeDesc(dataDesc));
+//		mv.visitVarInsn(ALOAD, 0);
+//		mv.visitFieldInsn(GETFIELD, owner, "$offset", "I");
+//		mv.visitInsn(ICONST_1);
+//		mv.visitInsn(IADD);
+//		mv.visitInsn(FCONST_0);
+//		mv.visitInsn(FASTORE);
+//		mv.visitInsn(RETURN);
+//		Label lEnd = new Label();
+//		mv.visitLabel(lEnd);
+//		mv.visitLocalVariable("this", owner, null, lBegin, lEnd, 0);
+//		mv.visitMaxs(3, 1);
+//		mv.visitEnd();
 		
 		cr.accept(cw, 0);
 		cr = new ClassReader(cw.toByteArray());
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+	}
+	
+	private static void injectIntValue(MethodVisitor methodVisitor, int value) {
+		if (value > (ICONST_5 - ICONST_0))
+			methodVisitor.visitIntInsn(BIPUSH, value);
+		else
+			methodVisitor.visitInsn(ICONST_0 + value);
 	}
 	
 	private void injectMethodStub(String name, String description) {
