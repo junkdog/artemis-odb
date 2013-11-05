@@ -1,13 +1,7 @@
 package com.artemis.weaver;
 
-import static com.artemis.meta.ClassMetadataUtil.instanceFieldTypes;
-import static com.artemis.meta.ClassMetadataUtil.instanceFields;
-
-import java.beans.PropertyChangeSupport;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
-import java.util.Set;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -15,13 +9,10 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.tree.ClassNode;
 
 import com.artemis.ClassUtil;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.WeaverType;
-import com.artemis.meta.FieldDescriptor;
-import com.artemis.weaver.packed.FieldToArrayClassTransformer;
 import com.artemis.weaver.packed.PackedComponentWeaver;
 import com.artemis.weaver.packed.PackedStubs;
 import com.artemis.weaver.pooled.PooledComponentWeaver;
@@ -85,9 +76,5 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 		method.visitLabel(new Label());
 		method.visitInsn(RETURN);
 		method.visitEnd();
-
-		cr.accept(cw, 0);
-		cr = new ClassReader(cw.toByteArray());
-		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 	}
 }

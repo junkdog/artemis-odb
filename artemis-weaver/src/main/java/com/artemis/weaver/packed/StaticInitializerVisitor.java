@@ -18,6 +18,9 @@ public class StaticInitializerVisitor extends MethodVisitor implements Opcodes {
 	
 	@Override
 	public void visitCode() {
+		if (instanceFields(meta).size() == 0)
+			return;
+		
 		mv.visitCode();
 		mv.visitIntInsn(BIPUSH, 64);
 		mv.visitIntInsn(NEWARRAY, T_FLOAT);
