@@ -31,10 +31,8 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 	@Override
 	protected void process(String file) throws FileNotFoundException, IOException {
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-		if (meta.annotation == WeaverType.PACKED) {
+		if (meta.annotation == WeaverType.PACKED)
 			cr = new PackedStubs(cr, meta).transform();
-		}
-		
 		if (!meta.foundReset)
 			injectMethodStub("reset", "()V");
 		
@@ -51,7 +49,7 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 				cv = new PooledComponentWeaver(new CommonClassWeaver(cv, meta), meta);
 				break;
 			case NONE:
-				break;
+				return;
 			default:
 				throw new IllegalArgumentException("Missing case: " + meta.annotation);
 		}

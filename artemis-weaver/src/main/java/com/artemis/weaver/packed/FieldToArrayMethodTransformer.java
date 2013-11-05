@@ -96,25 +96,6 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 			hasInstanceField(meta, f.name);
 	}
 	
-	private static int constInstructionFor(FieldDescriptor field) {
-		if ("Z".equals(field.desc))
-			return ICONST_0;
-		if ("C".equals(field.desc))
-			return ICONST_0;
-		if ("S".equals(field.desc))
-			return ICONST_0;
-		if ("I".equals(field.desc))
-			return ICONST_0;
-		if ("J".equals(field.desc))
-			return LCONST_0;
-		if ("F".equals(field.desc))
-			return FCONST_0;
-		if ("D".equals(field.desc))
-			return DCONST_0;
-		else
-			return ACONST_NULL;
-	}
-	
 	private static boolean hasInstanceField(ClassMetadata meta, String fieldName) {
 		for (FieldDescriptor f : ClassMetadataUtil.instanceFields(meta)) {
 			if (f.name.equals(fieldName))
