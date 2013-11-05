@@ -7,7 +7,7 @@ import java.util.concurrent.Callable;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-public abstract class CallableWeaver implements Callable<Void>
+abstract class CallableTransmuter implements Callable<Void>
 {
 	private final String file;
 	

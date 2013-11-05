@@ -1,5 +1,5 @@
 
-package com.artemis.weaver;
+package com.artemis.weaver.packed;
 
 
 import java.util.ArrayList;

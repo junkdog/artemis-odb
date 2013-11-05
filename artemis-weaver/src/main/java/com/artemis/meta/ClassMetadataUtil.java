@@ -28,4 +28,16 @@ public final class ClassMetadataUtil {
 		}
 		return instanceFields;
 	}
+	
+	public static String superName(ClassMetadata meta) {
+		switch (meta.annotation) {
+			case PACKED:
+				return "com/artemis/PackedComponent";
+			case POOLED:
+				return "com/artemis/PooledComponent";
+			case NONE:
+			default:
+				throw new RuntimeException("Missing case : " + meta.annotation);
+		}
+	}
 }

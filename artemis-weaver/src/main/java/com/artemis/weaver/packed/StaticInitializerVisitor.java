@@ -1,4 +1,4 @@
-package com.artemis.weaver;
+package com.artemis.weaver.packed;
 
 import static com.artemis.meta.ClassMetadataUtil.instanceFields;
 

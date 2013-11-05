@@ -15,7 +15,7 @@ import com.artemis.component.ComponentToWeave;
 import com.artemis.component.PackedToBeB;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.WeaverType;
-import com.artemis.weaver.ComponentTypeWeaver;
+import com.artemis.weaver.ComponentTypeTransmuter;
 
 public class ComponentTypeWeaverTest {
 
@@ -43,7 +43,7 @@ public class ComponentTypeWeaverTest {
 		ClassMetadata meta = Weaver.scan(cr);
 		meta.type = Type.getObjectType(cr.getClassName());
 		
-		ComponentTypeWeaver weaver = new ComponentTypeWeaver(null, cr, meta);
+		ComponentTypeTransmuter weaver = new ComponentTypeTransmuter(null, cr, meta);
 		weaver.call();
 		
 		ClassWriter cw = weaver.getClassWriter();

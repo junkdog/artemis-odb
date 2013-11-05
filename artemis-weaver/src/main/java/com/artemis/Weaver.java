@@ -17,7 +17,7 @@ import org.objectweb.asm.Type;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.WeaverType;
 import com.artemis.meta.MetaScanner;
-import com.artemis.weaver.ComponentTypeWeaver;
+import com.artemis.weaver.ComponentTypeTransmuter;
 
 public class Weaver {
 	public static final String PACKED_ANNOTATION = "Lcom/artemis/annotations/PackedWeaver;";
@@ -49,7 +49,7 @@ public class Weaver {
 		if (meta.annotation == WeaverType.NONE)
 			return;
 
-		threadPool.submit(new ComponentTypeWeaver(file, cr, meta));
+		threadPool.submit(new ComponentTypeTransmuter(file, cr, meta));
 		processed.add(meta);
 	}
 	

@@ -11,7 +11,6 @@ import java.util.Set;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -20,15 +19,17 @@ import org.objectweb.asm.tree.ClassNode;
 import com.artemis.ClassUtil;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.WeaverType;
-import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.meta.FieldDescriptor;
+import com.artemis.weaver.packed.FieldToArrayClassTransformer;
+import com.artemis.weaver.packed.PackedComponentWeaver;
+import com.artemis.weaver.pooled.PooledComponentWeaver;
 
-public class ComponentTypeWeaver extends CallableWeaver implements Opcodes {
+public class ComponentTypeTransmuter extends CallableTransmuter implements Opcodes {
 	private ClassMetadata meta;
 	private ClassReader cr;
 	private ClassWriter cw;
 	
-	public ComponentTypeWeaver(String file, ClassReader cr, ClassMetadata meta) {
+	public ComponentTypeTransmuter(String file, ClassReader cr, ClassMetadata meta) {
 		super(file);
 		this.cr = cr;
 		this.meta = meta;
@@ -136,8 +137,18 @@ public class ComponentTypeWeaver extends CallableWeaver implements Opcodes {
 
 	private void compileClass(ClassMetadata meta, String file) {
 		ClassVisitor cv = cw;
-		if (meta.annotation != WeaverType.NONE)
-			cv = new ComponentTypeVisitor(cv, meta);
+		switch (meta.annotation) {
+			case PACKED:
+				cv = new PackedComponentWeaver(new CommonClassWeaver(cv, meta), meta);
+				break;
+			case POOLED:
+				cv = new PooledComponentWeaver(new CommonClassWeaver(cv, meta), meta);
+				break;
+			case NONE:
+				break;
+			default:
+				throw new IllegalArgumentException("Missing case: " + meta.annotation);
+		}
 
 		try {
 			cr.accept(cv, ClassReader.EXPAND_FRAMES);
@@ -153,8 +164,6 @@ public class ComponentTypeWeaver extends CallableWeaver implements Opcodes {
 		return cw;
 	}
 	
-	
-
 	private void injectStaticInitializer() {
 		MethodVisitor mv = cw.visitMethod(ACC_STATIC, "<clinit>", "()V", null, null);
 		mv.visitCode();
