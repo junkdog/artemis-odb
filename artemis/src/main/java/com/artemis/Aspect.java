@@ -93,7 +93,6 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	@SuppressWarnings("unchecked")
 	public Aspect all(Class<? extends Component> type, Class<? extends Component>... types) {
 		allSet.set(ComponentType.getIndexFor(type));
 		
@@ -118,7 +117,6 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	@SuppressWarnings("unchecked")
 	public Aspect exclude(Class<? extends Component> type, Class<? extends Component>... types) {
 		exclusionSet.set(ComponentType.getIndexFor(type));
 		
@@ -139,7 +137,6 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	@SuppressWarnings("unchecked")
 	public Aspect one(Class<? extends Component> type, Class<? extends Component>... types) {
 		oneSet.set(ComponentType.getIndexFor(type));
 		
@@ -165,7 +162,6 @@ public class Aspect {
 	 * 
 	 * @see getAspectForAll
 	 */
-	@Deprecated @SuppressWarnings("unchecked")
 	public static Aspect getAspectFor(Class<? extends Component> type, Class<? extends Component>... types) {
 		return getAspectForAll(type, types);
 	}
@@ -181,7 +177,6 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	@SuppressWarnings("unchecked")
 	public static Aspect getAspectForAll(Class<? extends Component> type, Class<? extends Component>... types) {
 		Aspect aspect = new Aspect();
 		aspect.all(type, types);
@@ -199,7 +194,6 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	@SuppressWarnings("unchecked")
 	public static Aspect getAspectForOne(Class<? extends Component> type, Class<? extends Component>... types) {
 		Aspect aspect = new Aspect();
 		aspect.one(type, types);
