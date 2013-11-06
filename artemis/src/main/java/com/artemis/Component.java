@@ -1,10 +1,10 @@
 package com.artemis;
 
 /**
- * A tag class.
- * <p>
- * All components in the system must extend this class.
- * </p>
+ * The most basic component type.
+ * 
+ * @see PackedComponent
+ * @see PooledComponent
  * 
  * @author Arni Arent
  */

@@ -28,6 +28,8 @@ public abstract class ComponentMapper<A extends Component> {
 	 * 
 	 * @param e
 	 *			the entity that should possess the component
+	 * @param forceNewInstance
+	 * 			Returns a new instance of the component (only applies to {@link PackedComponent}s)
 	 *
 	 * @return the instance of the component
 	 *
@@ -56,6 +58,8 @@ public abstract class ComponentMapper<A extends Component> {
 	 * 
 	 * @param e
 	 *			the entity that should possess the component
+	 * @param forceNewInstance
+	 * 			If true, returns a new instance of the component (only applies to {@link PackedComponent}s)
 	 *
 	 * @return the instance of the component
 	 */
