@@ -1,7 +1,8 @@
 package com.artemis.weaver.packed;
 
+import static com.artemis.weaver.packed.InstructionMutator.on;
+
 import java.util.List;
-import java.util.ListIterator;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -33,25 +34,27 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 	
 	@Override
 	public void transform(MethodNode mn) {
-		InsnList insts = mn.instructions;
+		InsnList instructions = mn.instructions;
 		
-		for (int i = 0; insts.size() > i; i++) {
-			AbstractInsnNode node = insts.get(i);
+		for (int i = 0; instructions.size() > i; i++) {
+			AbstractInsnNode node = instructions.get(i);
 			switch(node.getType()) {
 				case AbstractInsnNode.FIELD_INSN:
 					FieldInsnNode f = (FieldInsnNode)node;
 					if (isSettingField(f)) {
-						insts.insertBefore(insts.get(i - 2), new FieldInsnNode(GETSTATIC, meta.type.getInternalName(), "$data", "[" + fieldDesc));
-						i++;
-						
-						AbstractInsnNode node2 = insts.get(i - 1);
-						insts.insertBefore(node2, new FieldInsnNode(GETFIELD, meta.type.getInternalName(), "$offset", "I"));
-						insts.insertBefore(node2, new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name))); //FIXME only works with <= 5 data fields
-						insts.insertBefore(node2, new InsnNode(IADD));
-						insts.set(f, new InsnNode(FASTORE));
-						i += 3;
+						i = on(instructions, f)
+							.insertAtOffset(2, 
+								new FieldInsnNode(GETSTATIC, meta.type.getInternalName(), "$data", "[" + fieldDesc))
+							.insertAtOffset(1, 
+								new FieldInsnNode(GETFIELD, meta.type.getInternalName(), "$offset", "I"),
+								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
+								new InsnNode(IADD))
+							.insertAtOffset(0,
+								new InsnNode(FASTORE))
+							.delete(0)
+							.transform();
 					} else if (isGettingField(f)) {
-						i = generateGetField(insts, f);
+						i = generateGetField(instructions, f);
 					}
 					break;
 				default:
