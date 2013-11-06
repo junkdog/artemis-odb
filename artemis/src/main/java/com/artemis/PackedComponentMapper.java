@@ -24,7 +24,6 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 	private final PackedComponent component;
 	private final BitSet owners;
 
-	
 	/**
 	 * Creates a new {@code ComponentMapper} instance handling the given type
 	 * of component for the given world.
@@ -39,13 +38,7 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 		owners = cm.getPackedComponentOwners(ComponentType.getTypeFor(type));
 		
 		this.classType = type;
-		try {
-			component = classType.newInstance();
-		} catch (InstantiationException e) {
-			throw new InvalidComponentException(type, "Unable to instantiate component.", e);
-		} catch (IllegalAccessException e) {
-			throw new InvalidComponentException(type, "Missing public constructor or too restrictive access.", e);
-		}
+		component = newInstance(type);
 	}
 	
 	static PackedComponentMapper<PackedComponent> create(Class<PackedComponent> type, World world) {
@@ -66,5 +59,35 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 	@Override
 	public boolean has(Entity e) {
 		return owners.get(e.getId());
+	}
+
+	@Override
+	public A get(Entity e, boolean forceNewInstance) throws ArrayIndexOutOfBoundsException {
+		if (forceNewInstance) {
+			A c = newInstance(classType);
+			c.forEntity(e);
+			return c;
+		} else {
+			return get(e);
+		}
+	}
+
+	@Override
+	public A getSafe(Entity e, boolean forceNewInstance) {
+		if (has(e)) {
+			return get(e, forceNewInstance);
+		} else {
+			return null;
+		}
+	}
+
+	private A newInstance(Class<A> type) {
+		try {
+			return classType.newInstance();
+		} catch (InstantiationException e) {
+			throw new InvalidComponentException(type, "Unable to instantiate component.", e);
+		} catch (IllegalAccessException e) {
+			throw new InvalidComponentException(type, "Missing public constructor or too restrictive access.", e);
+		}
 	}
 }
