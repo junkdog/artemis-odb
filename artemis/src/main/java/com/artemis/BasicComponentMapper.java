@@ -59,4 +59,16 @@ class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 	public boolean has(Entity e) {
 		return getSafe(e) != null;		
 	}
+
+
+	@Override
+	public A get(Entity e, boolean forceNewInstance) throws ArrayIndexOutOfBoundsException {
+		return get(e);
+	}
+
+
+	@Override
+	public A getSafe(Entity e, boolean forceNewInstance) {
+		return getSafe(e);
+	}
 }
