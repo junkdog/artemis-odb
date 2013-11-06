@@ -30,56 +30,63 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 		fieldDesc = f.desc;
 	}
 	
+	
 	@Override
-	@SuppressWarnings("unchecked")
 	public void transform(MethodNode mn) {
-		InsnList instructions = mn.instructions;
-		ListIterator<AbstractInsnNode> it = instructions.iterator();
+		InsnList insts = mn.instructions;
 		
-		while (it.hasNext()) {
-			AbstractInsnNode node = it.next();
-			if (node instanceof FieldInsnNode) {
-				FieldInsnNode f = (FieldInsnNode)node;
-				if (isSettingField(f)) {
-//					AbstractInsnNode aload = instructions.get(0);
-//					instructions.insertBefore(aload, 
-//						new FieldInsnNode(GETSTATIC, meta.type.getInternalName(), "$data", "[" + fieldDesc));
-					
-//					InsnList dataInsn = new InsnList();
-//					dataInsn.add(new FieldInsnNode(GETSTATIC, meta.type.getInternalName(), "$offset", "I"));
-//					dataInsn.add(new InsnNode(ICONST_0)); //TODO head offsets
-//					dataInsn.add(new InsnNode(IADD));
-					
-//					instructions.insert(aload, dataInsn);
-					it.previous();
-					it.previous();
-					it.previous();
-					it.add(new FieldInsnNode(GETSTATIC, meta.type.getInternalName(), "$data", "[" + fieldDesc));
-					it.next();
-					it.add(new FieldInsnNode(GETFIELD, meta.type.getInternalName(), "$offset", "I"));
-					it.add(new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name))); //FIXME only works with <= 5 data fields
-					it.add(new InsnNode(IADD));
-					it.next();
-					it.next();
-					
-					it.set(new InsnNode(FASTORE));
-				}
-				if (isGettingField(f)) {
-					it.previous();
-					it.previous();
-					it.add(new FieldInsnNode(GETSTATIC, meta.type.getInternalName(), "$data", "[" + fieldDesc));
-					it.next();
-					it.add(new FieldInsnNode(GETFIELD, meta.type.getInternalName(), "$offset", "I"));
-					it.add(new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name))); //FIXME only works with <= 5 data fields
-					it.add(new InsnNode(IADD));
-					it.next();
-					
-					it.set(new InsnNode(FALOAD));
-				}
+		for (int i = 0; insts.size() > i; i++) {
+			AbstractInsnNode node = insts.get(i);
+			switch(node.getType()) {
+				case AbstractInsnNode.FIELD_INSN:
+					FieldInsnNode f = (FieldInsnNode)node;
+					if (isSettingField(f)) {
+						insts.insertBefore(insts.get(i - 2), new FieldInsnNode(GETSTATIC, meta.type.getInternalName(), "$data", "[" + fieldDesc));
+						i++;
+						
+						AbstractInsnNode node2 = insts.get(i - 1);
+						insts.insertBefore(node2, new FieldInsnNode(GETFIELD, meta.type.getInternalName(), "$offset", "I"));
+						insts.insertBefore(node2, new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name))); //FIXME only works with <= 5 data fields
+						insts.insertBefore(node2, new InsnNode(IADD));
+						insts.set(f, new InsnNode(FASTORE));
+						i += 3;
+					} else if (isGettingField(f)) {
+						i = generateGetField(insts, f);
+					}
+					break;
+				default:
+					break;
 			}
 		}
 		
 		super.transform(mn);
+	}
+
+
+	private int generateGetField(InsnList source, FieldInsnNode f) {
+		int i = source.indexOf(f);
+		boolean doDup2 = DUP == source.get(i -1).getOpcode();
+		if (doDup2) {
+			source.remove(source.get(i - 1));
+			i--;
+		}
+		
+		source.insertBefore(source.get(i - 2),
+			new FieldInsnNode(GETSTATIC, meta.type.getInternalName(), "$data", "[" + fieldDesc));
+		
+		i++;
+		
+		source.insertBefore(f, new FieldInsnNode(GETFIELD, meta.type.getInternalName(), "$offset", "I"));
+		source.insertBefore(f, new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name))); //FIXME only works with <= 5 data fields
+		source.insertBefore(f, new InsnNode(IADD));
+		if (doDup2) { // FIXME: no-nn, we're just storing the field value on the stack
+			source.insertBefore(f, new InsnNode(DUP2));
+			i++;
+		}
+		source.set(f, new InsnNode(FALOAD));
+		i += 3;
+		
+		return i;
 	}
 
 	private boolean isSettingField(FieldInsnNode f) {

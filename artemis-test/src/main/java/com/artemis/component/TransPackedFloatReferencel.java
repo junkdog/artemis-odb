@@ -60,4 +60,10 @@ public class TransPackedFloatReferencel extends PackedComponent {
 		$data[$offset + 1] += value;
 		return this;
 	}
+	
+	public TransPackedFloatReferencel add(float x, float y) {
+		$data[$offset + 0] += x;
+		$data[$offset + 1] += y;
+		return this;
+	}
 }
