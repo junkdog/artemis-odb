@@ -31,16 +31,16 @@ class InstructionMutator {
 	}
 	
 	public InstructionMutator insertAtOffset(int offset, AbstractInsnNode... nodes) {
-		if (nodes != null)
-			insertions.put(offset, nodes);
+		if (nodes == null)
+			return this;
 
+		insertions.put(offset, nodes);
 		indexChange += nodes.length;
 		return this;
 	}
 
 	public InstructionMutator delete(int offset) {
 		deletions.add(offset);
-		
 		indexChange--;
 		return this;
 	}
@@ -50,7 +50,6 @@ class InstructionMutator {
 		
 		ArrayList<Integer> offsets = new ArrayList<Integer>(insertions.keySet());
 		Collections.sort(offsets, new ReversedComparator());
-		
 		for (int offset : offsets) {
 			int refIndex = instructions.indexOf(reference);
 			AbstractInsnNode ref = instructions.get(refIndex - offset);
