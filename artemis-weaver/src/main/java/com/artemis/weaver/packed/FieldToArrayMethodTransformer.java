@@ -41,12 +41,13 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 			switch(node.getType()) {
 				case AbstractInsnNode.FIELD_INSN:
 					FieldInsnNode f = (FieldInsnNode)node;
+					String owner = meta.type.getInternalName();
 					if (isSettingField(f)) {
 						i = on(instructions, f)
-							.insertAtOffset(2, 
-								new FieldInsnNode(GETSTATIC, meta.type.getInternalName(), "$data", "[" + fieldDesc))
-							.insertAtOffset(1, 
-								new FieldInsnNode(GETFIELD, meta.type.getInternalName(), "$offset", "I"),
+							.insertAtOffset(2,
+								new FieldInsnNode(GETSTATIC, owner, "$data", "[" + fieldDesc))
+							.insertAtOffset(1,
+								new FieldInsnNode(GETFIELD, owner, "$offset", "I"),
 								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
 								new InsnNode(IADD))
 							.insertAtOffset(0,
@@ -54,7 +55,16 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 							.delete(0)
 							.transform();
 					} else if (isGettingField(f)) {
-						i = generateGetField(instructions, f);
+						i = on(instructions, f)
+							.insertAtOffset(1, 
+								new FieldInsnNode(GETSTATIC, owner, "$data", "[" + fieldDesc))
+							.insertAtOffset(0,
+								new FieldInsnNode(GETFIELD, owner, "$offset", "I"),
+								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
+								new InsnNode(IADD),
+								new InsnNode(FALOAD))
+							.delete(0)
+							.transform();
 					}
 					break;
 				default:
@@ -63,33 +73,6 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 		}
 		
 		super.transform(mn);
-	}
-
-
-	private int generateGetField(InsnList source, FieldInsnNode f) {
-		int i = source.indexOf(f);
-		boolean doDup2 = DUP == source.get(i -1).getOpcode();
-		if (doDup2) {
-			source.remove(source.get(i - 1));
-			i--;
-		}
-		
-		source.insertBefore(source.get(i - 2),
-			new FieldInsnNode(GETSTATIC, meta.type.getInternalName(), "$data", "[" + fieldDesc));
-		
-		i++;
-		
-		source.insertBefore(f, new FieldInsnNode(GETFIELD, meta.type.getInternalName(), "$offset", "I"));
-		source.insertBefore(f, new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name))); //FIXME only works with <= 5 data fields
-		source.insertBefore(f, new InsnNode(IADD));
-		if (doDup2) { // FIXME: no-nn, we're just storing the field value on the stack
-			source.insertBefore(f, new InsnNode(DUP2));
-			i++;
-		}
-		source.set(f, new InsnNode(FALOAD));
-		i += 3;
-		
-		return i;
 	}
 
 	private boolean isSettingField(FieldInsnNode f) {
