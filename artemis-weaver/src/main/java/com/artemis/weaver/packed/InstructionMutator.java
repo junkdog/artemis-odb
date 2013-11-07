@@ -10,6 +10,7 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
 
 class InstructionMutator {
+
 	private final InsnList instructions;
 	private final AbstractInsnNode reference;
 	private int indexChange;
@@ -48,15 +49,9 @@ class InstructionMutator {
 		int originalIndex = instructions.indexOf(reference);
 		
 		ArrayList<Integer> offsets = new ArrayList<Integer>(insertions.keySet());
-		Collections.sort(offsets, new Comparator<Integer>() {
-			@Override
-			public int compare(Integer o1, Integer o2) {
-				return o2.compareTo(o1);
-			}
-		});
+		Collections.sort(offsets, new ReversedComparator());
 		
 		for (int offset : offsets) {
-			System.out.println(offset);
 			int refIndex = instructions.indexOf(reference);
 			AbstractInsnNode ref = instructions.get(refIndex - offset);
 			for (AbstractInsnNode n :  insertions.get(offset)) {
@@ -64,15 +59,20 @@ class InstructionMutator {
 			}
 		}
 		
-		Collections.sort(deletions);
-		Collections.reverse(deletions);
+		Collections.sort(deletions, new ReversedComparator());
 		for (int offset : deletions) {
 			int refIndex = instructions.indexOf(reference);
 			AbstractInsnNode ref = instructions.get(refIndex - offset);
 			instructions.remove(ref);
 		}
 		
-		
 		return originalIndex + indexChange;
+	}
+	
+	private static final class ReversedComparator implements Comparator<Integer> {
+		@Override
+		public int compare(Integer o1, Integer o2) {
+			return o2.compareTo(o1);
+		}
 	}
 }
