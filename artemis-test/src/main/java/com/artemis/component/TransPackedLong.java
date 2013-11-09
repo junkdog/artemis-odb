@@ -21,6 +21,14 @@ public class TransPackedLong extends Component {
 		return z;
 	}
 	
+	public TransPackedLong init(long x, long y, long z) {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		
+		return this;
+	}
+	
 	public TransPackedLong x(long value) {
 		this.x = value;
 		return this;

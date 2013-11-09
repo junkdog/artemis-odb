@@ -57,6 +57,16 @@ public class LongPackedWeavingTest extends PackedWeavingTest {
 		grow.invoke(packed);
 		assertEquals(64 * fieldCount() * 2, ((long[])data.get(null)).length);
 	}
+
+	@Test
+	public void packed_component_init_all_setter() throws Exception {
+		ComponentMapper<TransPackedLong> mapper = world.getMapper(TransPackedLong.class);
+		mapper.get(e1).init(4, 2, 0);
+		
+		assertEquals(4, mapper.get(e1).x());
+		assertEquals(2, mapper.get(e1).y());
+		assertEquals(0, mapper.get(e1).z());
+	}
 	
 	@Test 
 	public void packed_component_replaces_field_access_with_backing_array() throws Exception {
