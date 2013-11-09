@@ -31,6 +31,6 @@ public class StaticInitializerVisitor extends MethodVisitor implements Opcodes {
 	}
 
 	private String arrayDesc() {
-		return "[" + instanceFields(meta).get(1).desc;
+		return "[" + instanceFields(meta).get(0).desc;
 	}
 }

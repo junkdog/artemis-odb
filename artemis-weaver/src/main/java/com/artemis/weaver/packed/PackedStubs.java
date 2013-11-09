@@ -181,7 +181,7 @@ public class PackedStubs implements Opcodes {
 		switch (dataDesc.charAt(0)) {
 			case 'I':
 				return T_INT;
-			case 'L':
+			case 'J':
 				return T_LONG;
 			case 'S':
 				return T_SHORT;

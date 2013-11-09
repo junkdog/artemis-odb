@@ -13,16 +13,16 @@ import org.junit.Test;
 
 import com.artemis.ComponentMapper;
 
-public class IntPackedWeavingTest extends PackedWeavingTest {
+public class LongPackedWeavingTest extends PackedWeavingTest {
 	
-	private TransPackedInt packed;
+	private TransPackedLong packed;
 
 	@Before @Override
 	public void setup() {
 		super.setup();
 		
-		packed = e1.createComponent(TransPackedInt.class);
-		packed = e2.createComponent(TransPackedInt.class);
+		packed = e1.createComponent(TransPackedLong.class);
+		packed = e2.createComponent(TransPackedLong.class);
 	}
 
 	@Override
@@ -32,17 +32,17 @@ public class IntPackedWeavingTest extends PackedWeavingTest {
 
 	@Override
 	Class<?> fieldType() {
-		return int[].class;
+		return long[].class;
 	}
 	
 	@Override
 	Class<?> componentType() {
-		return TransPackedInt.class;
+		return TransPackedLong.class;
 	}
 	
 	@Override
 	ComponentMapper<?> getMapper() {
-		return world.getMapper(TransPackedInt.class);
+		return world.getMapper(TransPackedLong.class);
 	}
 	
 	@Test
@@ -51,16 +51,16 @@ public class IntPackedWeavingTest extends PackedWeavingTest {
 		
 		assertEquals(PRIVATE | STATIC, data.getModifiers());
 		assertEquals(fieldType(), data.getType());
-		assertEquals(64 * fieldCount(), ((int[])data.get(null)).length);
+		assertEquals(64 * fieldCount(), ((long[])data.get(null)).length);
 		
 		Method grow = method("$grow");
 		grow.invoke(packed);
-		assertEquals(64 * fieldCount() * 2, ((int[])data.get(null)).length);
+		assertEquals(64 * fieldCount() * 2, ((long[])data.get(null)).length);
 	}
 	
 	@Test 
 	public void packed_component_replaces_field_access_with_backing_array() throws Exception {
-		ComponentMapper<TransPackedInt> mapper = world.getMapper(TransPackedInt.class);
+		ComponentMapper<TransPackedLong> mapper = world.getMapper(TransPackedLong.class);
 		mapper.get(e1).x(4).y(3).z(5);
 		mapper.get(e2).x(2).y(1).z(6);
 		
@@ -73,18 +73,18 @@ public class IntPackedWeavingTest extends PackedWeavingTest {
 		assertEquals(6, mapper.get(e2).z());
 		
 		try {
-			TransPackedInt.class.getDeclaredField("x");
+			TransPackedLong.class.getDeclaredField("x");
 			fail("Failed to remove field from component");
 		} catch (Exception e) { /* expected */ }
 		try {
-			TransPackedInt.class.getDeclaredField("y");
+			TransPackedLong.class.getDeclaredField("y");
 			fail("Failed to remove field from component");
 		} catch (Exception e) { /* expected */ }
 	}
 	
 	@Test
 	public void packed_component_sub_value() throws Exception {
-		ComponentMapper<TransPackedInt> mapper = world.getMapper(TransPackedInt.class);
+		ComponentMapper<TransPackedLong> mapper = world.getMapper(TransPackedLong.class);
 		mapper.get(e1).x(10).y(-10);
 		mapper.get(e2).x(20).y(-20);
 		
@@ -97,7 +97,7 @@ public class IntPackedWeavingTest extends PackedWeavingTest {
 	
 	@Test
 	public void packed_component_mul_value() throws Exception {
-		ComponentMapper<TransPackedInt> mapper = world.getMapper(TransPackedInt.class);
+		ComponentMapper<TransPackedLong> mapper = world.getMapper(TransPackedLong.class);
 		mapper.get(e1).x(10).y(20).z(105);
 		mapper.get(e2).x(30).y(40).z(10);
 		
@@ -110,7 +110,7 @@ public class IntPackedWeavingTest extends PackedWeavingTest {
 	
 	@Test
 	public void packed_component_div_value() throws Exception {
-		ComponentMapper<TransPackedInt> mapper = world.getMapper(TransPackedInt.class);
+		ComponentMapper<TransPackedLong> mapper = world.getMapper(TransPackedLong.class);
 		mapper.get(e1).x(10).y(20).z(55);
 		mapper.get(e2).x(30).y(40).z(10);
 		

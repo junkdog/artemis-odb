@@ -8,11 +8,9 @@ import com.artemis.meta.ClassMetadata;
 
 public final class TypedOpcodes implements Opcodes {
 
-	private final ClassMetadata meta;
 	private final char type;
 
 	public TypedOpcodes(ClassMetadata meta) {
-		this.meta = meta;
 		String type = instanceFieldTypes(meta).iterator().next();
 		assert(type.length() <= 1);
 		
@@ -23,7 +21,7 @@ public final class TypedOpcodes implements Opcodes {
 	
 	public int newArrayType() {
 		switch (type) {
-			case 'B':
+			case 'Z':
 				return T_BOOLEAN;
 			case 'C':
 				return T_CHAR;
@@ -31,7 +29,7 @@ public final class TypedOpcodes implements Opcodes {
 				return T_SHORT;
 			case 'I':
 				return T_INT;
-			case 'L':
+			case 'J':
 				return T_LONG;
 			case 'F':
 				return T_FLOAT;
@@ -45,12 +43,12 @@ public final class TypedOpcodes implements Opcodes {
 	
 	public int tRETURN() {
 		switch (type) {
-			case 'B':
+			case 'Z':
 			case 'C':
 			case 'S':
 			case 'I':
 				return IRETURN;
-			case 'L':
+			case 'J':
 				return LRETURN;
 			case 'F':
 				return FRETURN;
@@ -64,7 +62,7 @@ public final class TypedOpcodes implements Opcodes {
 	
 	public int tALOAD() {
 		switch (type) {
-			case 'B':
+			case 'Z':
 				return BALOAD;
 			case 'C':
 				return CALOAD;
@@ -72,7 +70,7 @@ public final class TypedOpcodes implements Opcodes {
 				return SALOAD;
 			case 'I':
 				return IALOAD;
-			case 'L':
+			case 'J':
 				return LALOAD;
 			case 'F':
 				return FALOAD;
@@ -86,12 +84,12 @@ public final class TypedOpcodes implements Opcodes {
 	
 	public int tSTORE() {
 		switch (type) {
-			case 'B':
+			case 'Z':
 			case 'C':
 			case 'S':
 			case 'I':
 				return ISTORE;
-			case 'L':
+			case 'J':
 				return LSTORE;
 			case 'F':
 				return FSTORE;
@@ -105,7 +103,7 @@ public final class TypedOpcodes implements Opcodes {
 	
 	public int tASTORE() {
 		switch (type) {
-			case 'B':
+			case 'Z':
 				return BASTORE;
 			case 'C':
 				return CASTORE;
@@ -113,7 +111,7 @@ public final class TypedOpcodes implements Opcodes {
 				return SASTORE;
 			case 'I':
 				return IASTORE;
-			case 'L':
+			case 'J':
 				return LASTORE;
 			case 'F':
 				return FASTORE;
@@ -134,7 +132,7 @@ public final class TypedOpcodes implements Opcodes {
 			case 'S':
 			case 'I':
 				return IADD;
-			case 'L':
+			case 'J':
 				return LADD;
 			case 'F':
 				return FADD;
@@ -154,7 +152,7 @@ public final class TypedOpcodes implements Opcodes {
 			case 'S':
 			case 'I':
 				return IDIV;
-			case 'L':
+			case 'J':
 				return LDIV;
 			case 'F':
 				return FDIV;
@@ -173,7 +171,7 @@ public final class TypedOpcodes implements Opcodes {
 			case 'S':
 			case 'I':
 				return IMUL;
-			case 'L':
+			case 'J':
 				return LMUL;
 			case 'F':
 				return FMUL;
@@ -192,7 +190,7 @@ public final class TypedOpcodes implements Opcodes {
 			case 'S':
 			case 'I':
 				return INEG;
-			case 'L':
+			case 'J':
 				return LNEG;
 			case 'F':
 				return FNEG;
@@ -211,7 +209,7 @@ public final class TypedOpcodes implements Opcodes {
 			case 'S':
 			case 'I':
 				return IREM;
-			case 'L':
+			case 'J':
 				return LREM;
 			case 'F':
 				return FREM;
@@ -230,7 +228,7 @@ public final class TypedOpcodes implements Opcodes {
 			case 'S':
 			case 'I':
 				return ISUB;
-			case 'L':
+			case 'J':
 				return LSUB;
 			case 'F':
 				return FSUB;
