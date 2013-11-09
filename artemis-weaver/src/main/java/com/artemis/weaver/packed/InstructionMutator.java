@@ -51,6 +51,7 @@ class InstructionMutator {
 		ArrayList<Integer> offsets = new ArrayList<Integer>(insertions.keySet());
 		Collections.sort(offsets, new ReversedComparator());
 		for (int offset : offsets) {
+			System.out.println("\t +opcodes: " + insertions.get(offset).length);
 			int refIndex = instructions.indexOf(reference);
 			AbstractInsnNode ref = instructions.get(refIndex - offset);
 			for (AbstractInsnNode n :  insertions.get(offset)) {
@@ -59,6 +60,7 @@ class InstructionMutator {
 		}
 		
 		Collections.sort(deletions, new ReversedComparator());
+		System.out.println("\t -opcodes: " + deletions.size());
 		for (int offset : deletions) {
 			int refIndex = instructions.indexOf(reference);
 			AbstractInsnNode ref = instructions.get(refIndex - offset);

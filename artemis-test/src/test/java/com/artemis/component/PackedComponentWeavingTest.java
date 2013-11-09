@@ -12,7 +12,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.artemis.ComponentMapper;
@@ -97,14 +96,28 @@ public class PackedComponentWeavingTest {
 		} catch (Exception e) { /* expected */ }
 	}
 	
-	@Test @Ignore // TODO
-	public void packed_component_reset_component() throws Exception {
+	@Test
+	public void packed_component_add_to_value() throws Exception {
+		ComponentMapper<TransPackedFloat> mapper = world.getMapper(TransPackedFloat.class);
+		mapper.get(e1).x(1).y(2);
+		mapper.get(e2).x(3).y(4);
 		
-	}
-	
-	@Test @Ignore // TODO
-	public void packed_component_update_component() throws Exception {
+		mapper.get(e1).addX(4);
+		mapper.get(e2).addX(8);
 		
+		assertEquals(5f, mapper.get(e1).x(), .001f);
+		assertEquals(2f, mapper.get(e1).y(), .001f);
+		assertEquals(11f, mapper.get(e2).x(), .001f);
+		assertEquals(4f, mapper.get(e2).y(), .001f);
+		
+		try {
+			TransPackedFloat.class.getDeclaredField("x");
+			fail("Failed to remove field from component");
+		} catch (Exception e) { /* expected */ }
+		try {
+			TransPackedFloat.class.getDeclaredField("y");
+			fail("Failed to remove field from component");
+		} catch (Exception e) { /* expected */ }
 	}
 	
 	private int getOffset(Entity e) throws Exception {

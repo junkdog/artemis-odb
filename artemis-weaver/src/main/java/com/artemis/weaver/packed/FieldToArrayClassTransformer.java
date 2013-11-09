@@ -25,7 +25,7 @@ public class FieldToArrayClassTransformer extends ClassTransformer implements Op
 		this.meta = meta;
 	}
 	
-	@Override
+	@Override @SuppressWarnings("unchecked")
 	public void transform(ClassNode cn) {
 		
 		List<FieldDescriptor> toPack = ClassMetadataUtil.instanceFields(meta);
@@ -45,7 +45,12 @@ public class FieldToArrayClassTransformer extends ClassTransformer implements Op
 			}
 		}
 		
-		super.transform(cn);
+		try {
+			super.transform(cn);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
 	}
 
 	private static List<String> getFieldNames(List<FieldDescriptor> toPack) {
