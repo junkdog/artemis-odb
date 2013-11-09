@@ -69,9 +69,27 @@ public class TransPackedFloatReferencel extends PackedComponent {
 	}
 	
 	
+	public TransPackedFloatReferencel set(Vec2f v) {
+		$data[$offset + 0] = v.x();
+		$data[$offset + 1] = v.y;
+		return this;
+	}
+	
 	public TransPackedFloatReferencel add(Vec2f v) {
 		$data[$offset + 0] += v.x();
-		$data[$offset + 1] += v.y;
+//		$data[$offset + 1] += v.y;
+		return this;
+	}
+	
+	public TransPackedFloatReferencel sub(Vec2f v) {
+		$data[$offset + 0] -= v.x();
+		$data[$offset + 1] -= v.y;
+		return this;
+	}
+	
+	public TransPackedFloatReferencel scl(Vec2f v) {
+		$data[$offset + 0] *= v.x();
+		$data[$offset + 1] *= v.y;
 		return this;
 	}
 }

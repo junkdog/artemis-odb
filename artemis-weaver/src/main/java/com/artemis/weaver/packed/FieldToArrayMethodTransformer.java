@@ -79,12 +79,30 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 							.insertAtOffset(2,
 								new FieldInsnNode(GETFIELD, owner, "$offset", "I"),
 								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
-								new InsnNode(IADD),
-								new InsnNode(DUP2),
-								new InsnNode(opcodes.tALOAD()))
+								new InsnNode(IADD))
+//								, new InsnNode(DUP2), // conditional
+//								new InsnNode(opcodes.tALOAD())) // conditional
 							.insertAtOffset(0, 
-								new InsnNode(opcodes.tADD()),
+//								new InsnNode(opcodes.tADD()), // conditional
 								new InsnNode(opcodes.tASTORE()))
+							.delete(0)
+							.transform();
+					} else if (isModifyingFieldWithObject(f)) {
+						if (LOG) System.out.println(">> SETTING-MODIFYING FIELD FROM OBJECT index=" + i);
+						i = on(instructions, f)
+							.insertAtOffset(6,
+								new FieldInsnNode(GETSTATIC, owner, "$data", "[" + fieldDesc))
+							.insertAtOffset(5,
+								new FieldInsnNode(GETFIELD, owner, "$offset", "I"),
+								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
+								new InsnNode(IADD),
+								new InsnNode(DUP2), // conditional
+								new InsnNode(opcodes.tALOAD())) // conditional
+							.insertAtOffset(0, 
+//								new InsnNode(opcodes.tADD()), // conditional
+								new InsnNode(opcodes.tASTORE()))
+							.delete(5)
+							.delete(4)
 							.delete(0)
 							.transform();
 					} else if (isLoadingFromField(f)) {
@@ -130,7 +148,8 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 			f.owner.equals(meta.type.getInternalName()) &&
 			f.desc.equals(fieldDesc) &&
 			hasInstanceField(meta, f.name) &&
-			!isObjectAccess(f.getPrevious());
+			!isObjectAccess(f.getPrevious()) &&
+			!isObjectAccess(f.getPrevious().getPrevious());
 	}
 	
 	private boolean isSettingFieldWithObject(FieldInsnNode f) {
@@ -140,11 +159,21 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 			f.desc.equals(fieldDesc) &&
 			hasInstanceField(meta, f.name);
 	}
+	
+	private boolean isModifyingFieldWithObject(FieldInsnNode f) {
+		return PUTFIELD == f.getOpcode() &&
+//			DUP == f.getPrevious().getOpcode() &&
+			isObjectAccess(f.getPrevious().getPrevious()) &&
+			f.owner.equals(meta.type.getInternalName()) &&
+			f.desc.equals(fieldDesc) &&
+			hasInstanceField(meta, f.name);
+	}
 
 
 	private boolean isLoadingFromField(FieldInsnNode f) {
 		return GETFIELD == f.getOpcode() &&
 			DUP == f.getPrevious().getOpcode() &&
+			!isObjectAccess(f.getNext().getNext()) &&
 			f.owner.equals(meta.type.getInternalName()) &&
 			f.desc.equals(fieldDesc) &&
 			hasInstanceField(meta, f.name);
@@ -169,13 +198,13 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 	}
 	
 	private boolean isObjectAccess(AbstractInsnNode n) {
-		int opcode = n.getOpcode();
+		if (n == null) return false;
 		
+		int opcode = n.getOpcode();
 		return 
 			opcode == INVOKESPECIAL ||
 			opcode == INVOKEVIRTUAL ||
 			opcode == INVOKEINTERFACE ||
 			(opcode == GETFIELD && !((FieldInsnNode)n).owner.equals(meta.type.getInternalName()));
-	
 	}
 }

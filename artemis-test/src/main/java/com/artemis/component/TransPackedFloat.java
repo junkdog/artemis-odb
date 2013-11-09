@@ -32,9 +32,15 @@ public class TransPackedFloat extends Component {
 		return this;
 	}
 	
-	public TransPackedFloat add(Vec2f v) {
+	public TransPackedFloat set(Vec2f v) {
 		this.x = v.x();
 		this.y = v.y;
+		return this;
+	}
+	
+	public TransPackedFloat add(Vec2f v) {
+		this.x += v.x();
+		this.y += v.y;
 		return this;
 	}
 
