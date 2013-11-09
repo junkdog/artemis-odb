@@ -1,8 +1,6 @@
 package com.artemis.component;
 
-import static java.lang.reflect.Modifier.FINAL;
 import static java.lang.reflect.Modifier.PRIVATE;
-import static java.lang.reflect.Modifier.STATIC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
@@ -34,9 +32,10 @@ public abstract class PackedWeavingTest {
 		e2.addToWorld();
 	}
 	
-	abstract int getFieldCount();
+	abstract int fieldCount();
 	abstract Class<?> componentType();
-	abstract Class<?> getFieldType();
+	abstract Class<?> fieldType();
+	abstract ComponentMapper<?> getMapper();
 	
 	public void packed_component_has_offset() throws Exception {
 		Field offset = field("$offset");
@@ -52,10 +51,10 @@ public abstract class PackedWeavingTest {
 	}
 	
 	private int getOffset(Entity e) throws Exception {
-		ComponentMapper<TransPackedFloat> mapper = world.getMapper(TransPackedFloat.class);
+		ComponentMapper<?> mapper = getMapper();
 		return field("$offset").getInt(mapper.get(e));
 	}
-	
+
 	Method method(String name) throws SecurityException, NoSuchMethodException {
 		Method m = componentType().getDeclaredMethod(name);
 		assertNotNull(m);

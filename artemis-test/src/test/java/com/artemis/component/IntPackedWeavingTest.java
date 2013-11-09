@@ -27,12 +27,12 @@ public class IntPackedWeavingTest extends PackedWeavingTest {
 	}
 
 	@Override
-	int getFieldCount() {
+	int fieldCount() {
 		return 3;
 	}
 
 	@Override
-	Class<?> getFieldType() {
+	Class<?> fieldType() {
 		return int[].class;
 	}
 	
@@ -41,17 +41,22 @@ public class IntPackedWeavingTest extends PackedWeavingTest {
 		return TransPackedInt.class;
 	}
 	
+	@Override
+	ComponentMapper<?> getMapper() {
+		return world.getMapper(TransPackedInt.class);
+	}
+	
 	@Test
 	public void packed_component_has_backing_array() throws Exception {
 		Field data = field("$data");
 		
 		assertEquals(PRIVATE | STATIC, data.getModifiers());
-		assertEquals(getFieldType(), data.getType());
-		assertEquals(64, ((int[])data.get(null)).length);
+		assertEquals(fieldType(), data.getType());
+		assertEquals(64 * fieldCount(), ((int[])data.get(null)).length);
 		
 		Method grow = method("$grow");
 		grow.invoke(packed);
-		assertEquals(64 * getFieldCount(), ((int[])data.get(null)).length);
+		assertEquals(64 * fieldCount() * 2, ((int[])data.get(null)).length);
 	}
 	
 	@Test 

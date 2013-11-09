@@ -15,12 +15,14 @@ import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.meta.FieldDescriptor;
 import com.artemis.transformer.MethodTransformer;
+import com.artemis.weaver.TypedOpcodes;
 
 public class FieldToArrayMethodTransformer extends MethodTransformer implements Opcodes {
 
 	private final ClassMetadata meta;
 	private final String fieldDesc;
 	private final List<String> dataFieldNames;
+	private final TypedOpcodes opcodes;
 	
 	private static final boolean LOG = true;
 
@@ -28,6 +30,7 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 		super(mt);
 		this.meta = meta;
 		this.dataFieldNames = dataFieldNames;
+		opcodes = new TypedOpcodes(meta);
 		
 		FieldDescriptor f = ClassMetadataUtil.instanceFields(meta).get(0);
 		fieldDesc = f.desc;
@@ -40,7 +43,6 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 		String owner = meta.type.getInternalName();
 		
 		if (LOG) System.out.println("OWNER: " + owner + " " + mn.name);
-		
 		
 		boolean shouldDoSetter = true;
 		for (int i = 0; instructions.size() > i; i++) {
@@ -58,7 +60,7 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
 								new InsnNode(IADD))
 							.insertAtOffset(0,
-								new InsnNode(FASTORE))
+								new InsnNode(opcodes.tASTORE()))
 							.delete(0)
 							.transform();
 						if (LOG) System.out.println("\tindex=" + i);
@@ -66,7 +68,7 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 //						f.setOpcode(FASTORE);
 						i = on(instructions, f)
 							.insertAtOffset(0,
-								new InsnNode(FASTORE))
+								new InsnNode(opcodes.tASTORE()))
 							.delete(0)
 							.transform();
 					} else if (isLoadingFromField(f)) {
@@ -79,7 +81,7 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
 								new InsnNode(IADD),
 								new InsnNode(DUP2),
-								new InsnNode(FALOAD))
+								new InsnNode(opcodes.tALOAD()))
 							.delete(1)
 							.delete(0)
 							.transform();
@@ -94,7 +96,7 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 								new FieldInsnNode(GETFIELD, owner, "$offset", "I"),
 								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
 								new InsnNode(IADD),
-								new InsnNode(FALOAD))
+								new InsnNode(opcodes.tALOAD()))
 							.delete(0)
 							.transform();
 						if (LOG) System.out.println("\tindex=" + i);

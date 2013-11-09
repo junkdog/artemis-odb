@@ -27,12 +27,12 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 	}
 
 	@Override
-	int getFieldCount() {
+	int fieldCount() {
 		return 2;
 	}
 
 	@Override
-	Class<?> getFieldType() {
+	Class<?> fieldType() {
 		return float[].class;
 	}
 	
@@ -41,13 +41,18 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 		return TransPackedFloat.class;
 	}
 	
+	@Override
+	ComponentMapper<?> getMapper() {
+		return world.getMapper(TransPackedFloat.class);
+	}
+	
 	@Test
 	public void packed_component_has_sizeof() throws Exception {
 		Field sizeOf = field("$_SIZE_OF");
 		
 		assertEquals(PRIVATE | STATIC | FINAL, sizeOf.getModifiers());
 		assertEquals(int.class, sizeOf.getType());
-		assertEquals(getFieldCount(), sizeOf.getInt(packed));
+		assertEquals(fieldCount(), sizeOf.getInt(packed));
 	}
 	
 	@Test
@@ -55,12 +60,12 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 		Field data = field("$data");
 		
 		assertEquals(PRIVATE | STATIC, data.getModifiers());
-		assertEquals(getFieldType(), data.getType());
-		assertEquals(64, ((float[])data.get(null)).length);
+		assertEquals(fieldType(), data.getType());
+		assertEquals(64 * fieldCount(), ((float[])data.get(null)).length);
 		
 		Method grow = method("$grow");
 		grow.invoke(packed);
-		assertEquals(64 * getFieldCount(), ((float[])data.get(null)).length);
+		assertEquals(64 * fieldCount() * 2, ((float[])data.get(null)).length);
 	}
 	
 	@Test 
