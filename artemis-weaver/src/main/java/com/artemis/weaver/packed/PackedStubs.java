@@ -14,7 +14,9 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.meta.FieldDescriptor;
+import com.artemis.weaver.TypedOpcodes;
 
 public class PackedStubs implements Opcodes {
 	
@@ -39,6 +41,7 @@ public class PackedStubs implements Opcodes {
 		if (!meta.foundEntityFor)
 			injectForEntity();
 		
+		
 		// inject sizeof
 		Set<String> types = instanceFieldTypes(meta);
 		if (types.size() > 1) {
@@ -50,8 +53,10 @@ public class PackedStubs implements Opcodes {
 			Integer.valueOf(dataFields.size())).visitEnd();;
 		cw.visitField(ACC_PRIVATE, "$offset", "I", null, Integer.valueOf(0)).visitEnd();
 		
+		injectReset();
 		// inject array & inject $grow()
 		if (dataFields.size() > 0) {
+			
 			cw.visitField(ACC_PRIVATE + ACC_STATIC, "$data", "[" + dataFields.get(0).desc, null, null).visitEnd();
 			String dataDesc = instanceFields(meta).get(0).desc;
 			injectGrow(meta.type.getInternalName(), arrayTypeDesc(dataDesc), arrayTypeInst(dataDesc));
@@ -106,10 +111,8 @@ public class PackedStubs implements Opcodes {
 		mv.visitCode();
 		Label l0 = new Label();
 		mv.visitLabel(l0);
-		mv.visitLineNumber(18, l0);
 		mv.visitVarInsn(ALOAD, 0);
 		injectIntValue(mv, instanceFields(meta).size());
-//		mv.visitInsn(ICONST_2);
 		mv.visitVarInsn(ALOAD, 1);
 		mv.visitMethodInsn(INVOKEVIRTUAL, "com/artemis/Entity", "getId", "()I");
 		mv.visitInsn(IMUL);
@@ -124,44 +127,45 @@ public class PackedStubs implements Opcodes {
 		mv.visitJumpInsn(IF_ICMPGT, l2);
 		mv.visitMethodInsn(INVOKESTATIC, owner, "$grow", "()V");
 		mv.visitLabel(l2);
-		mv.visitLineNumber(20, l2);
 		mv.visitFrame(F_SAME, 0, null, 0, null);
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitInsn(ARETURN);
 		Label l3 = new Label();
 		mv.visitLabel(l3);
-//		mv.visitLocalVariable("this", "Lcom/artemis/component/TransPackedFloatReferencel;", null, l0, l3, 0);
 		mv.visitLocalVariable("this", meta.type.toString(), null, l0, l3, 0);
 		mv.visitLocalVariable("e", "Lcom/artemis/Entity;", null, l0, l3, 1);
-//		mv.visitMaxs(3, 2);
 		mv.visitEnd();
-		
-//		MethodVisitor mv = cw.visitMethod(ACC_PROTECTED, "reset", "()V", null, null);
-//		mv.visitCode();
-//		Label lBegin = new Label();
-//		mv.visitLabel(lBegin);
-//		mv.visitFieldInsn(GETSTATIC, owner, "$data", arrayTypeDesc(dataDesc));
-//		mv.visitVarInsn(ALOAD, 0);
-//		mv.visitFieldInsn(GETFIELD, owner, "$offset", "I");
-//		mv.visitInsn(ICONST_0);
-//		mv.visitInsn(IADD);
-//		mv.visitInsn(FCONST_0);
-//		mv.visitInsn(FASTORE);
-//		mv.visitFieldInsn(GETSTATIC, owner, "$data", arrayTypeDesc(dataDesc));
-//		mv.visitVarInsn(ALOAD, 0);
-//		mv.visitFieldInsn(GETFIELD, owner, "$offset", "I");
-//		mv.visitInsn(ICONST_1);
-//		mv.visitInsn(IADD);
-//		mv.visitInsn(FCONST_0);
-//		mv.visitInsn(FASTORE);
-//		mv.visitInsn(RETURN);
-//		Label lEnd = new Label();
-//		mv.visitLabel(lEnd);
-//		mv.visitLocalVariable("this", owner, null, lBegin, lEnd, 0);
-//		mv.visitMaxs(3, 1);
-//		mv.visitEnd();
 	}
 	
+	private void injectReset() {
+		String owner = meta.type.getInternalName();
+		List<FieldDescriptor> fields = ClassMetadataUtil.instanceFields(meta);
+		TypedOpcodes opcodes = new TypedOpcodes(meta);
+		
+		MethodVisitor mv = cw.visitMethod(ACC_PROTECTED, "reset", "()V", null, null);
+		mv.visitCode();
+		
+		Label l0 = new Label();
+		mv.visitLabel(l0);
+		
+		for (int i = 0; fields.size() > i; i++) {
+			mv.visitFieldInsn(GETSTATIC, owner, "$data", arrayTypeDesc(fields.get(0).desc));
+			mv.visitVarInsn(ALOAD, 0);
+			mv.visitFieldInsn(GETFIELD, owner, "$offset", "I");
+			mv.visitInsn(ICONST_0);
+			mv.visitInsn(IADD);
+			mv.visitInsn(opcodes.tCONST());
+			mv.visitInsn(opcodes.tASTORE());
+		}
+		
+		mv.visitInsn(RETURN);
+		
+		Label l3 = new Label();
+		mv.visitLabel(l3);
+		
+		mv.visitLocalVariable("this", meta.type.toString(), null, l0, l3, 0);
+		mv.visitEnd();
+	}
 	
 	private static void injectIntValue(MethodVisitor methodVisitor, int value) {
 		if (value > (ICONST_5 - ICONST_0))

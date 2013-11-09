@@ -9,6 +9,7 @@ import org.objectweb.asm.Opcodes;
 
 import com.artemis.meta.ClassMetadata;
 import com.artemis.weaver.ConstructorInvocationVisitor;
+import com.artemis.weaver.pooled.ResetMethodVisitor;
 
 public class PackedComponentWeaver extends ClassVisitor implements Opcodes{
 

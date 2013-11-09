@@ -26,7 +26,7 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 		packed = e1.createComponent(TransPackedFloat.class);
 		packed = e2.createComponent(TransPackedFloat.class);
 	}
-
+	
 	@Override
 	int fieldCount() {
 		return 2;
@@ -120,8 +120,8 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 		Vec2f v1 = new Vec2f(1, 2);
 		Vec2f v2 = new Vec2f(3, 4);
 		
-		mapper.get(e1).init(0, 0);
-		mapper.get(e2).init(0, 0);
+		mapper.get(e1).x(0).y(0);
+		mapper.get(e2).x(0).y(0);
 		
 		mapper.get(e1).add(v1);
 		mapper.get(e2).add(v2);

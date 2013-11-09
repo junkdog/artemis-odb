@@ -8,11 +8,13 @@ import static org.junit.Assert.assertNotNull;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
+import com.artemis.EntityManager;
 import com.artemis.World;
 
 public abstract class PackedWeavingTest {
@@ -30,6 +32,14 @@ public abstract class PackedWeavingTest {
 		
 		e2 = world.createEntity();
 		e2.addToWorld();
+	}
+	
+	@After
+	public void endTheWorld() {
+		world.process();
+		world.deleteEntity(e1);
+		world.deleteEntity(e2);
+		world.process();
 	}
 	
 	abstract int fieldCount();

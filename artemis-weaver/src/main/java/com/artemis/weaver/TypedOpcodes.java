@@ -123,6 +123,25 @@ public final class TypedOpcodes implements Opcodes {
 		}
 	}
 	
+	public int tCONST() {
+		switch (type) {
+			case 'Z':
+			case 'C':
+			case 'S':
+			case 'I':
+				return ICONST_0;
+			case 'J':
+				return LCONST_0;
+			case 'F':
+				return FCONST_0;
+			case 'D':
+				return DCONST_0;
+			default:
+				String err = String.format("Unknown type: '%s'", type);
+				throw new RuntimeException(err);
+		}
+	}
+	
 	/* arithmetic */
 	
 	public int tADD() {

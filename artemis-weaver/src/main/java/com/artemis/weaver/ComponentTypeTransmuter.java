@@ -1,5 +1,8 @@
 package com.artemis.weaver;
 
+import static com.artemis.meta.ClassMetadata.WeaverType.PACKED;
+import static com.artemis.meta.ClassMetadata.WeaverType.POOLED;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -31,22 +34,25 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 	@Override
 	protected void process(String file) throws FileNotFoundException, IOException {
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-		if (meta.annotation == WeaverType.PACKED)
-			cr = new PackedStubs(cr, meta).transform();
-		if (!meta.foundReset)
+		if (POOLED == meta.annotation && !meta.foundReset)
 			injectMethodStub("reset", "()V");
+		if (PACKED == meta.annotation)
+			cr = new PackedStubs(cr, meta).transform();
 		
 		compileClass(meta, file);
 	}
 
 	private void compileClass(ClassMetadata meta, String file) {
 		ClassVisitor cv = cw;
+		
 		switch (meta.annotation) {
 			case PACKED:
-				cv = new PackedComponentWeaver(new CommonClassWeaver(cv, meta), meta);
+				cv = new CommonClassWeaver(cv, meta);
+				cv = new PackedComponentWeaver(cv, meta);
 				break;
 			case POOLED:
-				cv = new PooledComponentWeaver(new CommonClassWeaver(cv, meta), meta);
+				cv = new CommonClassWeaver(cv, meta);
+				cv = new PooledComponentWeaver(cv, meta);
 				break;
 			case NONE:
 				return;
