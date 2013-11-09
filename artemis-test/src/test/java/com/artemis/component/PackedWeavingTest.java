@@ -21,7 +21,6 @@ public abstract class PackedWeavingTest {
 	
 	World world;
 	Entity e1, e2;
-	TransPackedFloat packed;
 
 	@Before
 	public void setup() {
@@ -38,15 +37,6 @@ public abstract class PackedWeavingTest {
 	abstract int getFieldCount();
 	abstract Class<?> componentType();
 	abstract Class<?> getFieldType();
-	
-	@Test
-	public void packed_component_has_sizeof() throws Exception {
-		Field sizeOf = field("$_SIZE_OF");
-		
-		assertEquals(PRIVATE | STATIC | FINAL, sizeOf.getModifiers());
-		assertEquals(int.class, sizeOf.getType());
-		assertEquals(getFieldCount(), sizeOf.getInt(packed));
-	}
 	
 	public void packed_component_has_offset() throws Exception {
 		Field offset = field("$offset");

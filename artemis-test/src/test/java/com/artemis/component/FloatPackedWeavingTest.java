@@ -1,5 +1,6 @@
 package com.artemis.component;
 
+import static java.lang.reflect.Modifier.FINAL;
 import static java.lang.reflect.Modifier.PRIVATE;
 import static java.lang.reflect.Modifier.STATIC;
 import static org.junit.Assert.assertEquals;
@@ -15,6 +16,8 @@ import com.artemis.ComponentMapper;
 
 public class FloatPackedWeavingTest extends PackedWeavingTest {
 	
+	private TransPackedFloat packed;
+
 	@Before @Override
 	public void setup() {
 		super.setup();
@@ -22,7 +25,6 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 		packed = e1.createComponent(TransPackedFloat.class);
 		packed = e2.createComponent(TransPackedFloat.class);
 	}
-	
 
 	@Override
 	int getFieldCount() {
@@ -37,6 +39,15 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 	@Override
 	Class<?> componentType() {
 		return TransPackedFloat.class;
+	}
+	
+	@Test
+	public void packed_component_has_sizeof() throws Exception {
+		Field sizeOf = field("$_SIZE_OF");
+		
+		assertEquals(PRIVATE | STATIC | FINAL, sizeOf.getModifiers());
+		assertEquals(int.class, sizeOf.getType());
+		assertEquals(getFieldCount(), sizeOf.getInt(packed));
 	}
 	
 	@Test
