@@ -9,6 +9,7 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.artemis.meta.ClassMetadata;
@@ -50,7 +51,7 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 			switch(node.getType()) {
 				case AbstractInsnNode.FIELD_INSN:
 					FieldInsnNode f = (FieldInsnNode)node;
-					if (shouldDoSetter && isSettingField(f)) {
+					if (shouldDoSetter && isSettingFieldWithPrimitive(f)) {
 						if (LOG) System.out.println(">> SETTING FIELD index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(2,
@@ -63,16 +64,31 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 								new InsnNode(opcodes.tASTORE()))
 							.delete(0)
 							.transform();
-						if (LOG) System.out.println("\tindex=" + i);
-					} else if (!shouldDoSetter && isSettingField(f)) {
-//						f.setOpcode(FASTORE);
+					} else if (!shouldDoSetter && isSettingFieldWithPrimitive(f)) {
+						if (LOG) System.out.println(">> SETTING FIELD index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(0,
 								new InsnNode(opcodes.tASTORE()))
 							.delete(0)
 							.transform();
+					} else if (isSettingFieldWithObject(f)) {
+						if (LOG) System.out.println(">> SETTING FIELD FROM OBJECT index=" + i);
+						i = on(instructions, f)
+							.insertAtOffset(3,
+								new FieldInsnNode(GETSTATIC, owner, "$data", "[" + fieldDesc))
+							.insertAtOffset(2,
+								new FieldInsnNode(GETFIELD, owner, "$offset", "I"),
+								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
+								new InsnNode(IADD),
+								new InsnNode(DUP2),
+								new InsnNode(opcodes.tALOAD()))
+							.insertAtOffset(0, 
+								new InsnNode(opcodes.tADD()),
+								new InsnNode(opcodes.tASTORE()))
+							.delete(0)
+							.transform();
 					} else if (isLoadingFromField(f)) {
-						if (LOG) System.out.println("LOAD FIELD index=" + i);
+						if (LOG) System.out.println("<< LOAD FIELD index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(2, 
 								new FieldInsnNode(GETSTATIC, owner, "$data", "[" + fieldDesc))
@@ -85,7 +101,6 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 							.delete(1)
 							.delete(0)
 							.transform();
-						if (LOG) System.out.println("\tindex=" + i);
 						shouldDoSetter = false;
 					} else if (isGettingField(f)) {
 						if (LOG) System.out.println("<< GETTING FIELD index=" + i);
@@ -99,8 +114,8 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 								new InsnNode(opcodes.tALOAD()))
 							.delete(0)
 							.transform();
-						if (LOG) System.out.println("\tindex=" + i);
 					}
+					if (LOG) System.out.println("\tindex=" + i);
 					break;
 				default:
 					break;
@@ -110,13 +125,23 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 		super.transform(mn);
 	}
 
-	private boolean isSettingField(FieldInsnNode f) {
+	private boolean isSettingFieldWithPrimitive(FieldInsnNode f) {
 		return PUTFIELD == f.getOpcode() &&
+			f.owner.equals(meta.type.getInternalName()) &&
+			f.desc.equals(fieldDesc) &&
+			hasInstanceField(meta, f.name) &&
+			!isObjectAccess(f.getPrevious());
+	}
+	
+	private boolean isSettingFieldWithObject(FieldInsnNode f) {
+		return PUTFIELD == f.getOpcode() &&
+			isObjectAccess(f.getPrevious()) &&
 			f.owner.equals(meta.type.getInternalName()) &&
 			f.desc.equals(fieldDesc) &&
 			hasInstanceField(meta, f.name);
 	}
-	
+
+
 	private boolean isLoadingFromField(FieldInsnNode f) {
 		return GETFIELD == f.getOpcode() &&
 			DUP == f.getPrevious().getOpcode() &&
@@ -141,5 +166,16 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 		}
 		
 		return false;
+	}
+	
+	private boolean isObjectAccess(AbstractInsnNode n) {
+		int opcode = n.getOpcode();
+		
+		return 
+			opcode == INVOKESPECIAL ||
+			opcode == INVOKEVIRTUAL ||
+			opcode == INVOKEINTERFACE ||
+			(opcode == GETFIELD && !((FieldInsnNode)n).owner.equals(meta.type.getInternalName()));
+	
 	}
 }

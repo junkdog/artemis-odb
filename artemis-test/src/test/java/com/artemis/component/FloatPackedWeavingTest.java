@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.artemis.ComponentMapper;
+import com.artemis.util.Vec2f;
 
 public class FloatPackedWeavingTest extends PackedWeavingTest {
 	
@@ -102,6 +103,37 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 		assertEquals(2f, mapper.get(e1).y(), .001f);
 		assertEquals(11f, mapper.get(e2).x(), .001f);
 		assertEquals(4f, mapper.get(e2).y(), .001f);
+		
+		try {
+			TransPackedFloat.class.getDeclaredField("x");
+			fail("Failed to remove field from component");
+		} catch (Exception e) { /* expected */ }
+		try {
+			TransPackedFloat.class.getDeclaredField("y");
+			fail("Failed to remove field from component");
+		} catch (Exception e) { /* expected */ }
+	}
+	
+	@Test
+	public void packed_component_set_with_object() throws Exception {
+		ComponentMapper<TransPackedFloat> mapper = world.getMapper(TransPackedFloat.class);
+		Vec2f v1 = new Vec2f(1, 2);
+		Vec2f v2 = new Vec2f(3, 4);
+		
+		mapper.get(e1).init(0, 0);
+		mapper.get(e2).init(0, 0);
+		
+		mapper.get(e1).add(v1);
+		mapper.get(e2).add(v2);
+		
+		String err = String.format("e1=%.1f,%.1f e2=%.1f,%.1f",
+			mapper.get(e1).x(), mapper.get(e1).y(),
+			mapper.get(e2).x(), mapper.get(e2).y());
+		
+		assertEquals(err, 1f, mapper.get(e1).x(), .001f);
+		assertEquals(err, 2f, mapper.get(e1).y(), .001f);
+		assertEquals(err, 3f, mapper.get(e2).x(), .001f);
+		assertEquals(err, 4f, mapper.get(e2).y(), .001f);
 		
 		try {
 			TransPackedFloat.class.getDeclaredField("x");

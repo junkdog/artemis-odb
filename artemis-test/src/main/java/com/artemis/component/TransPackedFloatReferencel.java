@@ -2,6 +2,7 @@ package com.artemis.component;
 
 import com.artemis.Entity;
 import com.artemis.PackedComponent;
+import com.artemis.util.Vec2f;
 
 @SuppressWarnings("unused")
 public class TransPackedFloatReferencel extends PackedComponent {
@@ -64,6 +65,13 @@ public class TransPackedFloatReferencel extends PackedComponent {
 	public TransPackedFloatReferencel add(float x, float y) {
 		$data[$offset + 0] += x;
 		$data[$offset + 1] += y;
+		return this;
+	}
+	
+	
+	public TransPackedFloatReferencel add(Vec2f v) {
+		$data[$offset + 0] += v.x();
+		$data[$offset + 1] += v.y;
 		return this;
 	}
 }
