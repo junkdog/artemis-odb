@@ -16,14 +16,16 @@ class InstructionMutator {
 	private int indexChange;
 	
 	private TreeMap<Integer,AbstractInsnNode[]> insertions;
-	private List<Integer> deletions;
+	private List<AbstractInsnNode> deletions;
+	private int originalIndex;
 
 	private InstructionMutator(InsnList instructions, AbstractInsnNode reference) {
 		this.instructions = instructions;
 		this.reference = reference;
 		
 		insertions = new TreeMap<Integer, AbstractInsnNode[]>();
-		deletions = new ArrayList<Integer>();
+		deletions = new ArrayList<AbstractInsnNode>();
+		originalIndex = instructions.indexOf(reference);
 	}
 	
 	public static InstructionMutator on(InsnList instructions, AbstractInsnNode reference) {
@@ -40,18 +42,15 @@ class InstructionMutator {
 	}
 
 	public InstructionMutator delete(int offset) {
-		deletions.add(offset);
+		deletions.add(instructions.get(originalIndex - offset));
 		indexChange--;
 		return this;
 	}
 	
 	public int transform() {
-		int originalIndex = instructions.indexOf(reference);
-		
 		ArrayList<Integer> offsets = new ArrayList<Integer>(insertions.keySet());
 		Collections.sort(offsets, new ReversedComparator());
 		for (int offset : offsets) {
-			System.out.println("\t +opcodes: " + insertions.get(offset).length);
 			int refIndex = instructions.indexOf(reference);
 			AbstractInsnNode ref = instructions.get(refIndex - offset);
 			for (AbstractInsnNode n :  insertions.get(offset)) {
@@ -59,12 +58,8 @@ class InstructionMutator {
 			}
 		}
 		
-		Collections.sort(deletions, new ReversedComparator());
-		System.out.println("\t -opcodes: " + deletions.size());
-		for (int offset : deletions) {
-			int refIndex = instructions.indexOf(reference);
-			AbstractInsnNode ref = instructions.get(refIndex - offset);
-			instructions.remove(ref);
+		for (AbstractInsnNode node : deletions) {
+			instructions.remove(node);
 		}
 		
 		return originalIndex + indexChange;

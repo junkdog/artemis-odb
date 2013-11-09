@@ -80,7 +80,7 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 								new InsnNode(IADD),
 								new InsnNode(DUP2),
 								new InsnNode(FALOAD))
-							.delete(6)
+							.delete(1)
 							.delete(0)
 							.transform();
 						if (LOG) System.out.println("\tindex=" + i);
