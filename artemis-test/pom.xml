@@ -13,7 +13,6 @@
 	
 	<properties>
 		<asm.version>4.1</asm.version>
-		<mainClass>net.onedaybeard.agrotera.ProcessArtemis</mainClass>
 	</properties>
 
 	<dependencies>
