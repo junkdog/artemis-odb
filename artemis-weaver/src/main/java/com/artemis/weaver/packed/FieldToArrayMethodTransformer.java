@@ -9,7 +9,6 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.artemis.meta.ClassMetadata;
@@ -25,7 +24,7 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 	private final List<String> dataFieldNames;
 	private final TypedOpcodes opcodes;
 	
-	private static final boolean LOG = true;
+	private static final boolean LOG = false;
 
 	public FieldToArrayMethodTransformer(MethodTransformer mt, ClassMetadata meta, List<String> dataFieldNames) {
 		super(mt);

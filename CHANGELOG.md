@@ -6,5 +6,6 @@
  - New component types, `PooledComponent` and `PackedComponent`.
    - Optionally transform components with `@PackedWeaver` and `@PooledWeaver` by
      configuring the `artemis-odb-maven-plugin`.
+ - New method `Entity#createComponent(Class<Component>)`.
  - Annotation processor validates pooled and packed component types.
  - Fix: DelayedEntityProcessingSystem prematurely expired entities.
