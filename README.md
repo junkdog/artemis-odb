@@ -11,6 +11,18 @@ This is a [fork](https://code.google.com/p/artemis-framework/) of [Artemis Entit
  - Bag now sports <code>sort</code>; borrows [libGDX](http://libgdx.badlogicgames.com/)'s TimSort implementation.
  - Foreach-friendly Bag: implements a one instance per Bag iterator.
 
+### Module overview
+#### Required
+ - **artemis:** Base library.
+
+#### Optional
+ - **artemis-maven:** Maven plugin for transforming `@PooledWeaver` and `@PackedWeaver` components.
+ - **artemis-validator:** Annotation processor, performs rudimentary checks on components.
+
+#### Other
+ - **artemis-weaver:** Transforms `com.artemis.Component` classes when annotated with `@PooledWeaver` or `@PackedWeaver`, see _artemis-maven_.
+ - **artemis-test:** Compliance tests.
+
 ## Maven
 
 ```xml
@@ -20,6 +32,7 @@ This is a [fork](https://code.google.com/p/artemis-framework/) of [Artemis Entit
 	<version>0.4.0</version>
 </dependency>
 ```
+
 
 
 ## Agrotera: Anti-boilerplate lib for Artemis
