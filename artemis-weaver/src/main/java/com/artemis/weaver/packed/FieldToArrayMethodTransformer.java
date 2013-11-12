@@ -79,10 +79,7 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 								new FieldInsnNode(GETFIELD, owner, "$offset", "I"),
 								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
 								new InsnNode(IADD))
-//								, new InsnNode(DUP2), // conditional
-//								new InsnNode(opcodes.tALOAD())) // conditional
 							.insertAtOffset(0, 
-//								new InsnNode(opcodes.tADD()), // conditional
 								new InsnNode(opcodes.tASTORE()))
 							.delete(0)
 							.transform();
@@ -95,10 +92,9 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 								new FieldInsnNode(GETFIELD, owner, "$offset", "I"),
 								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
 								new InsnNode(IADD),
-								new InsnNode(DUP2), // conditional
-								new InsnNode(opcodes.tALOAD())) // conditional
+								new InsnNode(DUP2),
+								new InsnNode(opcodes.tALOAD()))
 							.insertAtOffset(0, 
-//								new InsnNode(opcodes.tADD()), // conditional
 								new InsnNode(opcodes.tASTORE()))
 							.delete(5)
 							.delete(4)
@@ -161,7 +157,6 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 	
 	private boolean isModifyingFieldWithObject(FieldInsnNode f) {
 		return PUTFIELD == f.getOpcode() &&
-//			DUP == f.getPrevious().getOpcode() &&
 			isObjectAccess(f.getPrevious().getPrevious()) &&
 			f.owner.equals(meta.type.getInternalName()) &&
 			f.desc.equals(fieldDesc) &&
