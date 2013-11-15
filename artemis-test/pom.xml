@@ -17,12 +17,12 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>${project.groupId}</groupId>
+			<groupId>net.onedaybeard.artemis</groupId>
 			<artifactId>artemis-odb</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>${project.groupId}</groupId> <!-- reqyures m2e-apt under eclipse  --> 
+			<groupId>net.onedaybeard.artemis</groupId> <!-- reqyures m2e-apt under eclipse  --> 
 			<artifactId>artemis-odb-validator</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
