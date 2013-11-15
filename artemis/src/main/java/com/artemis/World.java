@@ -437,6 +437,7 @@ public class World {
 		check(added, addedPerformer);
 		deleted.clear();
 
+		em.clean();
 		cm.clean();
 		
 		// Some systems may add other systems in their initialize() method.

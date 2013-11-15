@@ -189,18 +189,35 @@ public class EntityManager extends Manager {
 		return deleted;
 	}
 	
+	protected void clean() {
+		recyclingEntityFactory.recycle();
+	}
+	
 	private static final class RecyclingEntityFactory {
 		private final World world;
+		private final Bag<Entity> limbo;
 		private final Bag<Entity> recycled;
 		private int nextId;
 		
 		RecyclingEntityFactory(World world) {
 			this.world = world;
 			recycled = new Bag<Entity>();
+			limbo = new Bag<Entity>();
 		}
 		
 		void free(Entity e) {
-			recycled.add(e);
+			limbo.add(e);
+		}
+		
+		void recycle() {
+			int s = limbo.size();
+			if (s == 0)
+				return;
+			
+			Object[] data = limbo.getData();
+			for (int i = 0; s > i; i++) {
+				recycled.add((Entity)data[i]);
+			}
 		}
 		
 		Entity obtain() {

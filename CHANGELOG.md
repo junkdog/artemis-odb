@@ -9,3 +9,5 @@
  - New method `Entity#createComponent(Class<Component>)`.
  - Annotation processor validates pooled and packed component types.
  - Fix: DelayedEntityProcessingSystem prematurely expired entities.
+ - Fix: Recycled entities would sometimes have their components cleared when
+   recycled during the same round as the original entity was deleted.

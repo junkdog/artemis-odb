@@ -1,12 +1,18 @@
 package com.artemis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import com.artemis.component.ComponentX;
 
 public class EntityManagerTest {
 	
@@ -39,6 +45,8 @@ public class EntityManagerTest {
 		e2.deleteFromWorld();
 		e3.deleteFromWorld();
 		
+		world.process();
+		
 		Entity e1b = world.createEntity();
 		e1b.addToWorld();
 		Entity e2b = world.createEntity();
@@ -51,5 +59,43 @@ public class EntityManagerTest {
 		ids.add(System.identityHashCode(e3b));
 		
 		assertEquals(3, ids.size());
+	}
+	
+	@Test
+	public void recycled_entities_behave_nicely_with_components() {
+		ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
+		
+		Entity e1 = world.createEntity();
+		e1.addComponent(new ComponentX());
+		e1.addToWorld();
+		assertTrue(mapper.has(e1));
+		
+		int id1 = e1.getId();
+		e1.deleteFromWorld();
+		
+		Entity e2 = world.createEntity();
+		e2.addToWorld();
+		
+		assertNotEquals(id1, e2.getId());
+		assertFalse("Error:" + mapper.getSafe(e2), mapper.has(e2));
+	}
+	
+	@Test
+	public void should_recycle_entities_after_one_round() {
+		ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
+		
+		Entity e1 = world.createEntity();
+		e1.addComponent(new ComponentX());
+		e1.addToWorld();
+		assertTrue(mapper.has(e1));
+		
+		int id1 = e1.getId();
+		e1.deleteFromWorld();
+		world.process();
+		Entity e2 = world.createEntity();
+		e2.addToWorld();
+		
+		assertEquals(id1, e2.getId());
+		assertFalse("Error:" + mapper.getSafe(e2), mapper.has(e2));
 	}
 }
