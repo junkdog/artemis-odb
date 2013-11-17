@@ -195,14 +195,14 @@ public class EntityManager extends Manager {
 	
 	private static final class RecyclingEntityFactory {
 		private final World world;
-		private final Bag<Entity> limbo;
+		private final WildBag<Entity> limbo;
 		private final Bag<Entity> recycled;
 		private int nextId;
 		
 		RecyclingEntityFactory(World world) {
 			this.world = world;
 			recycled = new Bag<Entity>();
-			limbo = new Bag<Entity>();
+			limbo = new WildBag<Entity>();
 		}
 		
 		void free(Entity e) {
@@ -217,7 +217,9 @@ public class EntityManager extends Manager {
 			Object[] data = limbo.getData();
 			for (int i = 0; s > i; i++) {
 				recycled.add((Entity)data[i]);
+				data[i] = null;
 			}
+			limbo.setSize(0);
 		}
 		
 		Entity obtain() {
