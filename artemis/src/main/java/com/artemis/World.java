@@ -137,6 +137,9 @@ public class World {
 		managers.put(manager.getClass(), manager);
 		managersBag.add(manager);
 		manager.setWorld(this);
+		
+		ComponentMapperInitHelper.config(manager, this);
+		
 		return manager;
 	}
 
@@ -454,7 +457,6 @@ public class World {
 			}
 		}
 	}
-
 
 	private void initializeSystems() {
 		for (int i = 0, s = systemsToInit.size(); i < s; i++) {

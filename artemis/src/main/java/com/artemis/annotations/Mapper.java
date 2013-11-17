@@ -5,17 +5,17 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import com.artemis.ComponentMapper;
+import com.artemis.World;
+
 
 /**
- * Mapper.
+ * Reflexively injects {@link ComponentMapper} fields upon calling {@link World#setSystem(com.artemis.EntitySystem)}
+ * or {@link World#setManager(com.artemis.Manager)}.
  * <p>
- * Used to identify a {@link com.artemis.BasicComponentMapper} for injection.
- * </p>
  *
  * @author Arni Arent
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Mapper {
-
-}
+public @interface Mapper {}
