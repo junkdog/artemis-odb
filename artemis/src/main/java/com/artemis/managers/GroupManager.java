@@ -56,14 +56,14 @@ public class GroupManager extends Manager {
 			entities = new Bag<Entity>();
 			entitiesByGroup.put(group, entities);
 		}
-		entities.add(e);
+		if (!entities.contains(e)) entities.add(e);
 		
 		Bag<String> groups = groupsByEntity.get(e);
 		if(groups == null) {
 			groups = new Bag<String>();
 			groupsByEntity.put(e, groups);
 		}
-		groups.add(group);
+		if (!groups.contains(group)) groups.add(group);
 	}
 	
 	/**
@@ -83,6 +83,7 @@ public class GroupManager extends Manager {
 		Bag<String> groups = groupsByEntity.get(e);
 		if(groups != null) {
 			groups.remove(group);
+			if (groups.size() == 0) groupsByEntity.remove(e);
 		}
 	}
 
@@ -94,15 +95,14 @@ public class GroupManager extends Manager {
 	 */
 	public void removeFromAllGroups(Entity e) {
 		Bag<String> groups = groupsByEntity.get(e);
-		if(groups != null) {
-			for(int i = 0, s = groups.size(); s > i; i++) {
-				Bag<Entity> entities = entitiesByGroup.get(groups.get(i));
-				if(entities != null) {
-					entities.remove(e);
-				}
+		if(groups == null) return;
+		for(int i = 0, s = groups.size(); s > i; i++) {
+			Bag<Entity> entities = entitiesByGroup.get(groups.get(i));
+			if(entities != null) {
+				entities.remove(e);
 			}
-			groups.clear();
 		}
+		groupsByEntity.remove(e);
 	}
 	
 	/**
