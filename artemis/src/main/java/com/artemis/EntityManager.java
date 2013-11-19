@@ -211,8 +211,7 @@ public class EntityManager extends Manager {
 		
 		void recycle() {
 			int s = limbo.size();
-			if (s == 0)
-				return;
+			if (s == 0) return;
 			
 			Object[] data = limbo.getData();
 			for (int i = 0; s > i; i++) {
