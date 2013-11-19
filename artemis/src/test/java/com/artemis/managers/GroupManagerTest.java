@@ -43,6 +43,7 @@ public class GroupManagerTest {
 		entity.deleteFromWorld();
 		world.process();
 		assertEquals(0, gm.getEntities(GROUPIE).size());
+		assertFalse(gm.isInAnyGroup(entity));
 	}
 	
 	@Test
@@ -60,5 +61,6 @@ public class GroupManagerTest {
 		
 		assertEquals(0, gm.getEntities(GROUPIE).size());
 		assertEquals(0, gm.getEntities(GROUPIE2).size());
+		assertFalse(gm.isInAnyGroup(entity));
 	}
 }
