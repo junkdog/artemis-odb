@@ -52,4 +52,9 @@ public abstract class Manager implements EntityObserver {
 
 	@Override
 	public void enabled(Entity e) {}
+	
+	/**
+	 * see {@link World#dispose()}
+	 */
+	protected void dispose() {}
 }

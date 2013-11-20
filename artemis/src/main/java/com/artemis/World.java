@@ -2,7 +2,9 @@ package com.artemis;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.IdentityHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -99,6 +101,35 @@ public class World {
 		}
 		
 		initializeSystems();
+	}
+	
+	/**
+	 * Disposes all managers and systems. Only necessary if either need to free
+	 * managed resources upon bringing the world to an end.
+	 * 
+	 * @throws ArtemisMultiException if any managers or systems throws an exception.
+	 */
+	public void dispose() {
+		List<Throwable> exceptions = new ArrayList<Throwable>();
+		
+		for (Manager manager : managersBag) {
+			try {
+				manager.dispose();
+			} catch (Exception e) {
+				exceptions.add(e);
+			}
+		}
+		
+		for (EntitySystem system : systemsBag) {
+			try {
+				system.dispose();
+			} catch (Exception e) {
+				exceptions.add(e);
+			}
+		}
+		
+		if (exceptions.size() > 0)
+			throw new ArtemisMultiException(exceptions);
 	}
 	
 	/**

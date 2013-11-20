@@ -360,6 +360,11 @@ public abstract class EntitySystem implements EntityObserver {
 	}
 
 	/**
+	 * see {@link World#dispose()}
+	 */
+	protected void dispose() {}
+
+	/**
 	 * Used to generate a unique bit for each system.
 	 * <p>
 	 * Only used internally in EntitySystem.
