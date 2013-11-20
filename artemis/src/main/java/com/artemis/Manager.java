@@ -11,14 +11,13 @@ public abstract class Manager implements EntityObserver {
 	/** The world associated with this manager. */
 	protected World world;
 
-
 	/**
 	 * Called when the world initializes.
 	 * <p>
 	 * Override to implement custom behavior at initialization.
 	 * </p>
 	 */
-	protected abstract void initialize();
+	protected void initialize() {}
 
 	/**
 	 * Set the world associated with the manager.
@@ -39,29 +38,18 @@ public abstract class Manager implements EntityObserver {
 		return world;
 	}
 
+	@Override
+	public void added(Entity e) {}
 
 	@Override
-	public void added(Entity e) {
-	}
-
+	public void changed(Entity e) {}
 
 	@Override
-	public void changed(Entity e) {
-	}
-
-
-	@Override
-	public void deleted(Entity e) {
-	}
-
+	public void deleted(Entity e) {}
 	
 	@Override
-	public void disabled(Entity e) {
-	}
-
+	public void disabled(Entity e) {}
 
 	@Override
-	public void enabled(Entity e) {
-	}
-
+	public void enabled(Entity e) {}
 }

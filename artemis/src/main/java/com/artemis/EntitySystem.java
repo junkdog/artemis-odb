@@ -67,8 +67,7 @@ public abstract class EntitySystem implements EntityObserver {
 	/**
 	 * Called before processing of entities begins. 
 	 */
-	protected void begin() {
-	}
+	protected void begin() {}
 
 	/**
 	 * Process all entities this system is interested in.
@@ -359,7 +358,6 @@ public abstract class EntitySystem implements EntityObserver {
 	public ImmutableBag<Entity> getActives() {
 		return actives;
 	}
-	
 
 	/**
 	 * Used to generate a unique bit for each system.
@@ -399,7 +397,5 @@ public abstract class EntitySystem implements EntityObserver {
 			}
 			return index;
 		}
-
 	}
-
 }
