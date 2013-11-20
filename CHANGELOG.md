@@ -9,6 +9,8 @@
  - New method `Entity#createComponent(Class<Component>)`.
  - Annotation processor validates pooled and packed component types.
  - Managers support `@Mapper` annotation.
+ - `GroupManager#getGroups` returns an empty bag if entity isn't in any group.
+ - `World#dispose` for disposing managers and systems with managed resources.
  - **Fix**: DelayedEntityProcessingSystem prematurely expired entities.
  - **Fix**: Recycled entities would sometimes have their components cleared when
    recycled during the same round as the original entity was deleted.

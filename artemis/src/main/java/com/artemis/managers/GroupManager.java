@@ -21,7 +21,8 @@ import com.artemis.utils.ImmutableBag;
  * @author Arni Arent
  */
 public class GroupManager extends Manager {
-
+	private static final ImmutableBag<String> EMPTY_BAG = new Bag<String>();
+	
 	/** All entities and groups mapped with group names as key. */
 	private final Map<String, Bag<Entity>> entitiesByGroup;
 	/** All entities and groups mapped with entities as key. */
@@ -123,15 +124,17 @@ public class GroupManager extends Manager {
 	}
 	
 	/**
-	 * Get all groups the entity belongs to.
+	 * Get all groups the entity belongs to. An empty Bag is returned
+	 * if the entity doesn't belong to any groups.
 	 *
 	 * @param e
 	 *			the entity
 	 *
-	 * @return the groups the entity belongs to, null if none
+	 * @return the groups the entity belongs to.
 	 */
 	public ImmutableBag<String> getGroups(Entity e) {
-		return groupsByEntity.get(e);
+		Bag<String> groups = groupsByEntity.get(e);
+		return groups != null ? groups : EMPTY_BAG;
 	}
 	
 	/**
@@ -140,10 +143,10 @@ public class GroupManager extends Manager {
 	 * @param e
 	 *			the entity to check
 	 *
-	 * @return true if it is in any group, false if none
+	 * @return true. if it is in any group, false if none
 	 */
 	public boolean isInAnyGroup(Entity e) {
-		return getGroups(e) != null;
+		return getGroups(e).size() > 0;
 	}
 	
 	/**
