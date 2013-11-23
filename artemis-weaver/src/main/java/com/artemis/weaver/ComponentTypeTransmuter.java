@@ -15,7 +15,6 @@ import org.objectweb.asm.Opcodes;
 
 import com.artemis.ClassUtil;
 import com.artemis.meta.ClassMetadata;
-import com.artemis.meta.ClassMetadata.WeaverType;
 import com.artemis.weaver.packed.PackedComponentWeaver;
 import com.artemis.weaver.packed.PackedStubs;
 import com.artemis.weaver.pooled.PooledComponentWeaver;

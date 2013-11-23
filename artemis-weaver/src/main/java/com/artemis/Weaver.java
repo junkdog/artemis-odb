@@ -30,6 +30,24 @@ public class Weaver {
 	public Weaver(File outputDirectory) {
 		this.targetClasses = outputDirectory;
 	}
+	
+	public static void main(String[] args)
+	{
+		ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+		List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
+		if (args.length == 0) {
+			for (File f : ClassUtil.find(".")) {
+				processClass(threadPool, f.getAbsolutePath(), processed);
+			}
+		} else {
+			for (String arg : args) {
+				// eclipse sends folders along too
+				if (arg.endsWith(".class")) processClass(threadPool, arg, processed);
+			}
+		}
+		
+		awaitTermination(threadPool);
+	}
 
 	public List<ClassMetadata> execute() {
 		ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
