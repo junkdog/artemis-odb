@@ -9,7 +9,6 @@ import static javax.lang.model.util.ElementFilter.constructorsIn;
 import static javax.lang.model.util.ElementFilter.fieldsIn;
 import static javax.lang.model.util.ElementFilter.typesIn;
 import static javax.tools.Diagnostic.Kind.ERROR;
-import static javax.tools.Diagnostic.Kind.MANDATORY_WARNING;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -69,7 +68,7 @@ public class ComponentValidatorProcessor extends AbstractProcessor {
 		
 		if (types.size() > 1) {
 			Messager messager = processingEnv.getMessager();
-			messager.printMessage(ERROR, "All fields must be of same type, found: " + types);
+			messager.printMessage(ERROR, "All fields must be of same type, found: " + types, type);
 		}
 	}
 
@@ -110,19 +109,11 @@ public class ComponentValidatorProcessor extends AbstractProcessor {
 	private void pooledComponentCheck(TypeElement component) {
 		ensureZeroArgConstructor(component);
 		ensureNoFinalInstanceFields(component);
-		checkIfPooledCanBePacked(component);
 	}
 
 	@Override
 	public SourceVersion getSupportedSourceVersion() {
 		return SourceVersion.latestSupported();
-	}
-	
-	private void checkIfPooledCanBePacked(TypeElement component) {
-		if (fieldsIn(component.getEnclosedElements()).isEmpty()) {
-			Messager messager = processingEnv.getMessager();
-			messager.printMessage(MANDATORY_WARNING, "Component can safely be converted to PackedComponent.", component);
-		}
 	}
 	
 	private void ensureZeroArgConstructor(TypeElement component) {
