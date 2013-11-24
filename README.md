@@ -29,12 +29,54 @@ recent changes._
  - **artemis-test:** Compliance tests.
 
 ## Maven
+### Embracing Artemis
+```xml
+	<properties>
+		<artemis.version>0.5.0</artemis.version>
+	</properties>
+	
+	<dependencies>
+		<!-- base library -->
+		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId>
+			<artifactId>artemis-odb</artifactId>
+			<version>${artemis.version}</version>
+		</dependency>
+		
+		<!-- annotation processor, need to manually add this to eclipse if applicable -->
+		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId> <!-- doesn't work under eclipse... --> 
+			<artifactId>artemis-odb-validator</artifactId>
+			<version>${artemis.version}</version>
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<!-- enables @PooledWeaver and @PackedWeaver -->
+				<groupId>net.onedaybeard.artemis</groupId>
+				<artifactId>artemis-odb-maven-plugin</artifactId>
+				<version>${artemis.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>artemis</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+```
+
+### Minimal (no weaving/compile-time tranformations)
 ```xml
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>0.4.0</version>
+	<version>0.5.0</version>
 </dependency>
 ```
 

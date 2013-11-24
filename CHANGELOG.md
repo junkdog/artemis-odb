@@ -1,6 +1,6 @@
 # Change Log
 
-## Version: HEAD
+## Version: 0.5.0 - 2013-11-24
  - Changed artemis to a multi-module project (the `artemis` folder is the old root).
  - Entity instances are recycled.
  - New component types, `PooledComponent` and `PackedComponent`.
