@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>net.onedaybeard.artemis</groupId>
 		<artifactId>artemis-parent</artifactId>
-		<version>0.4.1-SNAPSHOT</version>
+		<version>0.5.0</version>
 	</parent>
 
 	<artifactId>artemis-odb-validator</artifactId>
