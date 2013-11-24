@@ -11,10 +11,6 @@
 	<packaging>jar</packaging>
 	<name>artemis-odb-integration-test</name>
 	
-	<properties>
-		<asm.version>4.1</asm.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>net.onedaybeard.artemis</groupId>
@@ -22,7 +18,7 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>net.onedaybeard.artemis</groupId> <!-- reqyures m2e-apt under eclipse  --> 
+			<groupId>net.onedaybeard.artemis</groupId> <!-- doesn't work under eclipse... --> 
 			<artifactId>artemis-odb-validator</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
