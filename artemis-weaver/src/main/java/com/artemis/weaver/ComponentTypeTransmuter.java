@@ -33,10 +33,12 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 	@Override
 	protected void process(String file) throws FileNotFoundException, IOException {
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-		if (POOLED == meta.annotation && !meta.foundReset)
+		if (POOLED == meta.annotation && !meta.foundReset) {
 			injectMethodStub("reset", "()V");
-		if (PACKED == meta.annotation)
+		} else if (PACKED == meta.annotation) {
+			cr = new AccessorGenerator(cr, meta).transform();
 			cr = new PackedStubs(cr, meta).transform();
+		}
 		
 		compileClass(meta, file);
 	}

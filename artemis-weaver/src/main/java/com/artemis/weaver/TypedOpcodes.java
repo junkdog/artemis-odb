@@ -5,22 +5,31 @@ import static com.artemis.meta.ClassMetadataUtil.instanceFieldTypes;
 import org.objectweb.asm.Opcodes;
 
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.FieldDescriptor;
 
 public final class TypedOpcodes implements Opcodes {
 
-	private final char type;
+	private final char desc;
 
 	public TypedOpcodes(ClassMetadata meta) {
 		String type = instanceFieldTypes(meta).iterator().next();
 		assert(type.length() <= 1);
 		
-		this.type = (type.length() == 1)
+		this.desc = (type.length() == 1)
 			? type.charAt(0)
 			: 'X';
 	}
 	
+	public TypedOpcodes(FieldDescriptor f) {
+		assert(f.desc.length() == 1);
+		
+		this.desc = (f.desc.length() == 1)
+			? f.desc.charAt(0)
+			: 'X';
+	}
+	
 	public int newArrayType() {
-		switch (type) {
+		switch (desc) {
 			case 'Z':
 				return T_BOOLEAN;
 			case 'C':
@@ -36,13 +45,13 @@ public final class TypedOpcodes implements Opcodes {
 			case 'D':
 				return T_DOUBLE;
 			default:
-				String err = String.format("Unknown type: '%s'", type);
+				String err = String.format("Unknown type: '%s'", desc);
 				throw new RuntimeException(err);
 		}
 	}
 	
 	public int tRETURN() {
-		switch (type) {
+		switch (desc) {
 			case 'Z':
 			case 'C':
 			case 'S':
@@ -55,13 +64,13 @@ public final class TypedOpcodes implements Opcodes {
 			case 'D':
 				return DRETURN;
 			default:
-				String err = String.format("Unknown type: '%s'", type);
+				String err = String.format("Unknown type: '%s'", desc);
 				throw new RuntimeException(err);
 		}
 	}
 	
 	public int tALOAD() {
-		switch (type) {
+		switch (desc) {
 			case 'Z':
 				return BALOAD;
 			case 'C':
@@ -77,13 +86,32 @@ public final class TypedOpcodes implements Opcodes {
 			case 'D':
 				return DALOAD;
 			default:
-				String err = String.format("Unknown type: '%s'", type);
+				String err = String.format("Unknown type: '%s'", desc);
+				throw new RuntimeException(err);
+		}
+	}
+	
+	public int tLOAD() {
+		switch (desc) {
+			case 'Z': // huh?
+			case 'C':
+			case 'S':
+			case 'I':
+				return ILOAD;
+			case 'J':
+				return LLOAD;
+			case 'F':
+				return FLOAD;
+			case 'D':
+				return DLOAD;
+			default:
+				String err = String.format("Unknown type: '%s'", desc);
 				throw new RuntimeException(err);
 		}
 	}
 	
 	public int tSTORE() {
-		switch (type) {
+		switch (desc) {
 			case 'Z':
 			case 'C':
 			case 'S':
@@ -96,13 +124,13 @@ public final class TypedOpcodes implements Opcodes {
 			case 'D':
 				return DSTORE;
 			default:
-				String err = String.format("Unknown type: '%s'", type);
+				String err = String.format("Unknown type: '%s'", desc);
 				throw new RuntimeException(err);
 		}
 	}
 	
 	public int tASTORE() {
-		switch (type) {
+		switch (desc) {
 			case 'Z':
 				return BASTORE;
 			case 'C':
@@ -118,13 +146,13 @@ public final class TypedOpcodes implements Opcodes {
 			case 'D':
 				return DASTORE;
 			default:
-				String err = String.format("Unknown type: '%s'", type);
+				String err = String.format("Unknown type: '%s'", desc);
 				throw new RuntimeException(err);
 		}
 	}
 	
 	public int tCONST() {
-		switch (type) {
+		switch (desc) {
 			case 'Z':
 			case 'C':
 			case 'S':
@@ -137,7 +165,7 @@ public final class TypedOpcodes implements Opcodes {
 			case 'D':
 				return DCONST_0;
 			default:
-				String err = String.format("Unknown type: '%s'", type);
+				String err = String.format("Unknown type: '%s'", desc);
 				throw new RuntimeException(err);
 		}
 	}
@@ -145,7 +173,7 @@ public final class TypedOpcodes implements Opcodes {
 	/* arithmetic */
 	
 	public int tADD() {
-		switch (type) {
+		switch (desc) {
 			case 'B':
 			case 'C':
 			case 'S':
@@ -158,14 +186,14 @@ public final class TypedOpcodes implements Opcodes {
 			case 'D':
 				return DADD;
 			default:
-				String err = String.format("Unknown type: '%s'", type);
+				String err = String.format("Unknown type: '%s'", desc);
 				throw new RuntimeException(err);
 		}
 	}
 	
 	
 	public int tDIV() {
-		switch (type) {
+		switch (desc) {
 			case 'B':
 			case 'C':
 			case 'S':
@@ -178,13 +206,13 @@ public final class TypedOpcodes implements Opcodes {
 			case 'D':
 				return DDIV;
 			default:
-				String err = String.format("Unknown type: '%s'", type);
+				String err = String.format("Unknown type: '%s'", desc);
 				throw new RuntimeException(err);
 		}
 	}
 	
 	public int tMUL() {
-		switch (type) {
+		switch (desc) {
 			case 'B':
 			case 'C':
 			case 'S':
@@ -197,13 +225,13 @@ public final class TypedOpcodes implements Opcodes {
 			case 'D':
 				return DMUL;
 			default:
-				String err = String.format("Unknown type: '%s'", type);
+				String err = String.format("Unknown type: '%s'", desc);
 				throw new RuntimeException(err);
 		}
 	}
 	
 	public int tNEG() {
-		switch (type) {
+		switch (desc) {
 			case 'B':
 			case 'C':
 			case 'S':
@@ -216,13 +244,13 @@ public final class TypedOpcodes implements Opcodes {
 			case 'D':
 				return DNEG;
 			default:
-				String err = String.format("Unknown type: '%s'", type);
+				String err = String.format("Unknown type: '%s'", desc);
 				throw new RuntimeException(err);
 		}
 	}
 	
 	public int tREM() {
-		switch (type) {
+		switch (desc) {
 			case 'B':
 			case 'C':
 			case 'S':
@@ -235,13 +263,13 @@ public final class TypedOpcodes implements Opcodes {
 			case 'D':
 				return DREM;
 			default:
-				String err = String.format("Unknown type: '%s'", type);
+				String err = String.format("Unknown type: '%s'", desc);
 				throw new RuntimeException(err);
 		}
 	}
 	
 	public int tSUB() {
-		switch (type) {
+		switch (desc) {
 			case 'B':
 			case 'C':
 			case 'S':
@@ -254,7 +282,7 @@ public final class TypedOpcodes implements Opcodes {
 			case 'D':
 				return DSUB;
 			default:
-				String err = String.format("Unknown type: '%s'", type);
+				String err = String.format("Unknown type: '%s'", desc);
 				throw new RuntimeException(err);
 		}
 	}
