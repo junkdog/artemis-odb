@@ -93,7 +93,7 @@ public class ComponentValidatorProcessor extends AbstractProcessor {
 	private void packedComponentCheck(TypeElement component) {
 		ensureZeroArgConstructor(component);
 		ensureNoFinalInstanceFields(component);
-		ensureAllInstanceFieldsArePrivate(component);
+//		ensureAllInstanceFieldsArePrivate(component);
 	}
 
 	private void ensureAllInstanceFieldsArePrivate(TypeElement component) {

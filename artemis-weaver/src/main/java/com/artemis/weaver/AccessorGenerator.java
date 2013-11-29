@@ -1,5 +1,7 @@
 package com.artemis.weaver;
 
+import static com.artemis.meta.ClassMetadataUtil.hasGetter;
+import static com.artemis.meta.ClassMetadataUtil.hasSetter;
 import static com.artemis.meta.ClassMetadataUtil.instanceFields;
 
 import java.util.List;
@@ -41,6 +43,9 @@ final class AccessorGenerator implements Opcodes {
 	}
 
 	private void setterFor(FieldDescriptor f) {
+		if (hasSetter(meta, f))
+			return;
+		
 		TypedOpcodes opcodes = new TypedOpcodes(f);
 		
 		MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, f.name, "(" + f.desc + ")V", null, null);
@@ -61,6 +66,9 @@ final class AccessorGenerator implements Opcodes {
 	}
 
 	private void getterFor(FieldDescriptor f) {	
+		if (hasGetter(meta, f))
+			return;
+		
 		TypedOpcodes opcodes = new TypedOpcodes(f);
 		
 		MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, f.name, "()" + f.desc, null, null);

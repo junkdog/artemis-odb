@@ -21,6 +21,26 @@ public final class ClassMetadataUtil {
 		return instanceFields;
 	}
 	
+	public static boolean hasSetter(ClassMetadata meta, FieldDescriptor f) {
+		String methodDesc = "(" + f.desc + ")";
+		for (MethodDescriptor m : meta.methods) {
+			if (m.name.equals(f.name) && m.desc.startsWith(methodDesc))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	public static boolean hasGetter(ClassMetadata meta, FieldDescriptor f) {
+		String methodDesc = "()" + f.desc;
+		for (MethodDescriptor m : meta.methods) {
+			if (m.name.equals(f.name) && m.desc.equals(methodDesc))
+				return true;
+		}
+		
+		return false;
+	}
+	
 	public static Set<String> instanceFieldTypes(ClassMetadata meta) {
 		Set<String> instanceFields = new HashSet<String>();
 		for (FieldDescriptor f : instanceFields(meta)) {

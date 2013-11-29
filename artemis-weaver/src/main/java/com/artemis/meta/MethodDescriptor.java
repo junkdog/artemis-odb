@@ -1,13 +1,13 @@
 package com.artemis.meta;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.ToString;
 
-@Data @AllArgsConstructor
+@AllArgsConstructor @ToString
 public class MethodDescriptor {
-	private final int access;
-	private final String name;
-	private final String desc;
-	private final String signature;
-	private final String[] exceptions;
+	public final int access;
+	public final String name;
+	public final String desc;
+	public final String signature;
+	public final String[] exceptions;
 }
