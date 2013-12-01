@@ -37,8 +37,7 @@ public class FieldToArrayClassTransformer extends ClassTransformer implements Op
 			methodTransformer.transform(method);
 		}
 		
-		List<FieldNode> fields = cn.fields;
-		for (Iterator<FieldNode> it = fields.iterator(); it.hasNext() ;) {
+		for (Iterator<FieldNode> it = cn.fields.iterator(); it.hasNext() ;) {
 			FieldNode next = it.next();
 			if (names.contains(next.name)) {
 				it.remove();

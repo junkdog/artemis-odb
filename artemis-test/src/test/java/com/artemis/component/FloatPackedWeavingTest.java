@@ -117,11 +117,11 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 	@Test
 	public void packed_component_add_with_object() throws Exception {
 		ComponentMapper<TransPackedFloat> mapper = world.getMapper(TransPackedFloat.class);
-		Vec2f v1 = new Vec2f(1, 2);
-		Vec2f v2 = new Vec2f(3, 4);
+		Vec2f v1 = new Vec2f(1f, 2f);
+		Vec2f v2 = new Vec2f(3f, 4f);
 		
-		mapper.get(e1).x(1).y(1);
-		mapper.get(e2).x(1).y(1);
+		mapper.get(e1).x(1f).y(1f);
+		mapper.get(e2).x(1f).y(1f);
 		
 		mapper.get(e1).add(v1);
 		mapper.get(e2).add(v2);
@@ -148,8 +148,8 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 	@Test
 	public void packed_component_set_with_object() throws Exception {
 		ComponentMapper<TransPackedFloat> mapper = world.getMapper(TransPackedFloat.class);
-		Vec2f v1 = new Vec2f(1, 2);
-		Vec2f v2 = new Vec2f(3, 4);
+		Vec2f v1 = new Vec2f(1f, 2f);
+		Vec2f v2 = new Vec2f(3f, 4f);
 		
 		mapper.get(e1).x(1).y(1);
 		mapper.get(e2).x(1).y(1);

@@ -61,6 +61,7 @@ public class PackedStubs implements Opcodes {
 			String dataDesc = instanceFields(meta).get(0).desc;
 			injectGrow(meta.type.getInternalName(), arrayTypeDesc(dataDesc), arrayTypeInst(dataDesc));
 			
+			// FIXME: refactor (encapsulate CN, transform with CW)
 			FieldToArrayClassTransformer transformer = new FieldToArrayClassTransformer(null, meta);
 			ClassNode cn = new ClassNode(ASM4);
 			cr.accept(cn, 0);

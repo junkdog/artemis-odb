@@ -23,7 +23,9 @@ public final class ClassMetadata {
 	public List<MethodDescriptor> methods = new ArrayList<MethodDescriptor>(); 
 	public List<FieldDescriptor> fields = new ArrayList<FieldDescriptor>();
 
-	public boolean foundStaticInitializer; 
+	// packed components
+	public boolean foundStaticInitializer;
+	public boolean directFieldAccess;
 
 	public static enum WeaverType { NONE, POOLED, PACKED };
 }

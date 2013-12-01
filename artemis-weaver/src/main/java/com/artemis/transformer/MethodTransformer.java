@@ -3,15 +3,16 @@ package com.artemis.transformer;
 import org.objectweb.asm.tree.MethodNode;
 
 public abstract class MethodTransformer {
-	protected MethodTransformer ct;
+	protected MethodTransformer mt;
 
-	public MethodTransformer(MethodTransformer ct) {
-		this.ct = ct;
+	public MethodTransformer(MethodTransformer mt) {
+		this.mt = mt;
 	}
 
-	public void transform(MethodNode mn) {
-		if (ct != null) {
-			ct.transform(mn);
+	public boolean transform(MethodNode mn) {
+		if (mt != null) {
+			return mt.transform(mn);
 		}
+		return false;
 	}
 }

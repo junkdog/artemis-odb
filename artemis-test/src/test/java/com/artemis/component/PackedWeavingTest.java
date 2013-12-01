@@ -65,8 +65,8 @@ public abstract class PackedWeavingTest {
 		return field("$offset").getInt(mapper.get(e));
 	}
 
-	Method method(String name) throws SecurityException, NoSuchMethodException {
-		Method m = componentType().getDeclaredMethod(name);
+	Method method(String name, Class<?>... parameterTypes) throws SecurityException, NoSuchMethodException {
+		Method m = componentType().getDeclaredMethod(name, parameterTypes);
 		assertNotNull(m);
 		m.setAccessible(true);
 		return m;

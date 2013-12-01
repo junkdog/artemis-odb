@@ -1,5 +1,8 @@
 package com.artemis;
 
+import static com.artemis.meta.ClassMetadataUtil.packedFieldAccess;
+import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,7 +19,9 @@ import org.objectweb.asm.Type;
 
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.WeaverType;
+import com.artemis.meta.FieldDescriptor;
 import com.artemis.meta.MetaScanner;
+import com.artemis.weaver.ComponentAccessTransmuter;
 import com.artemis.weaver.ComponentTypeTransmuter;
 
 public class Weaver {
@@ -33,7 +38,7 @@ public class Weaver {
 	
 	public static void main(String[] args)
 	{
-		ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+		ExecutorService threadPool = newThreadPool();
 		List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
 		if (args.length == 0) {
 			for (File f : ClassUtil.find(".")) {
@@ -46,17 +51,37 @@ public class Weaver {
 			}
 		}
 		
+//		rewriteFieldAccess(packedFieldAccess(processed));
+		
 		awaitTermination(threadPool);
 	}
 
 	public List<ClassMetadata> execute() {
-		ExecutorService threadPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+		ExecutorService threadPool = newThreadPool();
 		List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
 		for (File f : ClassUtil.find(targetClasses))
 			processClass(threadPool, f.getAbsolutePath(), processed);
 		
 		awaitTermination(threadPool);
+		rewriteFieldAccess(packedFieldAccess(processed));
+		
 		return processed;
+	}
+	
+	private void rewriteFieldAccess(List<ClassMetadata> packed) {
+		if (packed.isEmpty())
+			return;
+		
+		ExecutorService threadPool = newThreadPool();
+		for (File f : ClassUtil.find(targetClasses))
+			processRelatedClasses(threadPool, f.getAbsolutePath(), packed);
+		
+		
+		awaitTermination(threadPool);
+	}
+
+	private static ExecutorService newThreadPool() {
+		return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 	}
 
 	private static void processClass(ExecutorService threadPool, String file, List<ClassMetadata> processed) {
@@ -69,6 +94,12 @@ public class Weaver {
 
 		threadPool.submit(new ComponentTypeTransmuter(file, cr, meta));
 		processed.add(meta);
+	}
+	
+	private static void processRelatedClasses(ExecutorService threadPool, String file, List<ClassMetadata> packed) {
+		
+		ClassReader cr = classReaderFor(file);
+		threadPool.submit(new ComponentAccessTransmuter(file, cr, packed));
 	}
 	
 	static ClassReader classReaderFor(InputStream file) {
@@ -100,6 +131,13 @@ public class Weaver {
 		ClassMetadata info = new ClassMetadata();
 		source.accept(new MetaScanner(info), 0);
 		info.type = Type.getObjectType(source.getClassName());
+		
+		for (FieldDescriptor fd : info.fields) {
+			if ((fd.access & ACC_PUBLIC) == ACC_PUBLIC) {
+				info.directFieldAccess = true;
+			}
+		}
+		
 		return info;
 	}
 	

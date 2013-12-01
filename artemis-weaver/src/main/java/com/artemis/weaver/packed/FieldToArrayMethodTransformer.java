@@ -38,7 +38,7 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 	
 	
 	@Override
-	public void transform(MethodNode mn) {
+	public boolean transform(MethodNode mn) {
 		InsnList instructions = mn.instructions;
 		String owner = meta.type.getInternalName();
 		
@@ -135,7 +135,7 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 			}
 		}
 		
-		super.transform(mn);
+		return super.transform(mn);
 	}
 
 	private boolean isSettingFieldWithPrimitive(FieldInsnNode f) {

@@ -4,13 +4,18 @@ import static org.objectweb.asm.Opcodes.ACC_FINAL;
 import static org.objectweb.asm.Opcodes.ACC_STATIC;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public final class ClassMetadataUtil {
 	
-	private ClassMetadataUtil() {}
+	private ClassMetadata meta;
+
+	public ClassMetadataUtil(ClassMetadata meta) {
+		this.meta = meta;
+	}
 	
 	public static List<FieldDescriptor> instanceFields(ClassMetadata meta) {
 		List<FieldDescriptor> instanceFields = new ArrayList<FieldDescriptor>();
@@ -21,7 +26,7 @@ public final class ClassMetadataUtil {
 		return instanceFields;
 	}
 	
-	public static boolean hasSetter(ClassMetadata meta, FieldDescriptor f) {
+	public boolean hasSetter(FieldDescriptor f) {
 		String methodDesc = "(" + f.desc + ")";
 		for (MethodDescriptor m : meta.methods) {
 			if (m.name.equals(f.name) && m.desc.startsWith(methodDesc))
@@ -31,7 +36,7 @@ public final class ClassMetadataUtil {
 		return false;
 	}
 	
-	public static boolean hasGetter(ClassMetadata meta, FieldDescriptor f) {
+	public boolean hasGetter(FieldDescriptor f) {
 		String methodDesc = "()" + f.desc;
 		for (MethodDescriptor m : meta.methods) {
 			if (m.name.equals(f.name) && m.desc.equals(methodDesc))
@@ -47,6 +52,14 @@ public final class ClassMetadataUtil {
 			instanceFields.add(f.desc);
 		}
 		return instanceFields;
+	}
+	
+	public static List<ClassMetadata> packedFieldAccess(Collection<ClassMetadata> components) {
+		List<ClassMetadata> packedFieldComponents = new ArrayList<ClassMetadata>();
+		for (ClassMetadata c : components) {
+			if (c.directFieldAccess) packedFieldComponents.add(c);
+		}
+		return packedFieldComponents;
 	}
 	
 	public static String superName(ClassMetadata meta) {

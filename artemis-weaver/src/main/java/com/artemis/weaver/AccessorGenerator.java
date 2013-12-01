@@ -1,10 +1,6 @@
 package com.artemis.weaver;
 
-import static com.artemis.meta.ClassMetadataUtil.hasGetter;
-import static com.artemis.meta.ClassMetadataUtil.hasSetter;
 import static com.artemis.meta.ClassMetadataUtil.instanceFields;
-
-import java.util.List;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -13,6 +9,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.meta.FieldDescriptor;
 
 final class AccessorGenerator implements Opcodes {
@@ -32,20 +29,17 @@ final class AccessorGenerator implements Opcodes {
 	}
 
 	private byte[] injectAccessors() {
-		List<FieldDescriptor> fields = instanceFields(meta);
-		for (FieldDescriptor field : fields) {
-			getterFor(field);
-			setterFor(field);
+		ClassMetadataUtil util = new ClassMetadataUtil(meta);
+		for (FieldDescriptor field : instanceFields(meta)) {
+			if (!util.hasGetter(field)) injectGetter(field);
+			if (!util.hasSetter(field)) injectSetter(field);
 		}
 		
 		cr.accept(cw, 0);
 		return cw.toByteArray();
 	}
 
-	private void setterFor(FieldDescriptor f) {
-		if (hasSetter(meta, f))
-			return;
-		
+	private void injectSetter(FieldDescriptor f) {
 		TypedOpcodes opcodes = new TypedOpcodes(f);
 		
 		MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, f.name, "(" + f.desc + ")V", null, null);
@@ -65,10 +59,7 @@ final class AccessorGenerator implements Opcodes {
 		mv.visitEnd();
 	}
 
-	private void getterFor(FieldDescriptor f) {	
-		if (hasGetter(meta, f))
-			return;
-		
+	private void injectGetter(FieldDescriptor f) {	
 		TypedOpcodes opcodes = new TypedOpcodes(f);
 		
 		MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, f.name, "()" + f.desc, null, null);
