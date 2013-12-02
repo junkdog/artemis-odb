@@ -42,18 +42,15 @@ public class TransPackedFloatReferencel extends PackedComponent {
 	
 	public void x(float value) {
 		$data[$offset + 0] = value;
-		return this;
 	}
 	
 	public void y(float value) {
 		$data[$offset + 1] = value;
-		return this;
 	}
 	
 	
 	public void set(Vec2f v) {
 		$data[$offset + 0] = v.x();
 		$data[$offset + 1] = v.y;
-		return this;
 	}
 }
