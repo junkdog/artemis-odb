@@ -1,5 +1,6 @@
 package com.artemis.meta;
 
+import static com.artemis.meta.ClassMetadata.WeaverType.PACKED;
 import static org.objectweb.asm.Opcodes.ACC_FINAL;
 import static org.objectweb.asm.Opcodes.ACC_STATIC;
 
@@ -8,6 +9,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.artemis.meta.ClassMetadata.WeaverType;
 
 public final class ClassMetadataUtil {
 	
@@ -57,7 +60,8 @@ public final class ClassMetadataUtil {
 	public static List<ClassMetadata> packedFieldAccess(Collection<ClassMetadata> components) {
 		List<ClassMetadata> packedFieldComponents = new ArrayList<ClassMetadata>();
 		for (ClassMetadata c : components) {
-			if (c.directFieldAccess) packedFieldComponents.add(c);
+			if (PACKED == c.annotation && c.directFieldAccess)
+				packedFieldComponents.add(c);
 		}
 		return packedFieldComponents;
 	}

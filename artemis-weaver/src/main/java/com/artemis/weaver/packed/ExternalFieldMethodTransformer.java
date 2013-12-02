@@ -53,8 +53,6 @@ class ExternalFieldMethodTransformer extends MethodTransformer implements Opcode
 						new MethodInsnNode(INVOKEVIRTUAL, f.owner, f.name, param(f)))
 					.delete(0)
 					.transform();
-				
-				System.out.println("PUTFIELD: " + f.owner + " " + f.name);
 			} else if (GETFIELD == f.getOpcode() && components.containsKey(f.owner)) {
 				changed = true;
 				
@@ -63,8 +61,6 @@ class ExternalFieldMethodTransformer extends MethodTransformer implements Opcode
 						new MethodInsnNode(INVOKEVIRTUAL, f.owner, f.name, "()" + f.desc))
 					.delete(0)
 					.transform();
-				
-				System.out.println("GETFIELD: " + f.owner + " " + f.name);
 			}
 		}
 		

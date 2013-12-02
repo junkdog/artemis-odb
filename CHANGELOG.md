@@ -1,7 +1,7 @@
 # Change Log
 
-## In development
- - Direct field access works for `@PackedWeaver` components.
+## Developed but not released
+- Direct field access works for `@PackedWeaver` components.
 
 ## Version: 0.5.0 - 2013-11-24
  - Changed artemis to a multi-module project (the `artemis` folder is the old root).
