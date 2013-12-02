@@ -45,7 +45,7 @@ recent changes._
 		
 		<!-- annotation processor, need to manually add this to eclipse if applicable -->
 		<dependency>
-			<groupId>net.onedaybeard.artemis</groupId> <!-- doesn't work under eclipse... --> 
+			<groupId>net.onedaybeard.artemis</groupId>
 			<artifactId>artemis-odb-validator</artifactId>
 			<version>${artemis.version}</version>
 			<scope>provided</scope>
