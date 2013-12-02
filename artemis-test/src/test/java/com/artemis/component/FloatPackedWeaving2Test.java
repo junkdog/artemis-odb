@@ -88,6 +88,18 @@ public class FloatPackedWeaving2Test extends PackedWeavingTest {
 		assertEquals(position.toString(), 420, access.setAndGetF(420f), 0.001f);
 	}
 	
+	@Test
+	public void increment_and_get_field_value() throws Exception {
+		Access access = new Access(position);
+		assertEquals(position.toString(), 420, access.incAndGetF(415f), 0.001f);
+	}
+	
+	@Test
+	public void multiply_and_get_field_value_2() throws Exception {
+		Access access = new Access(position);
+		assertEquals(position.toString(), 420, access.mulAndGetF(4, 105), 0.001f);
+	}
+	
 //	@Test 
 //	public void packed_component_replaces_field_access_with_backing_array() throws Exception {
 //		ComponentMapper<Position> mapper = world.getMapper(Position.class);

@@ -17,6 +17,20 @@ public class Access {
 		return position.y;
 	}
 	
+	public float incAndGetF(float value) {
+		position.x = 5f;
+		position.x += value;
+		
+		return position.x;
+	}
+	
+	public float mulAndGetF(float value1, float value2) {
+		position.x += value1;
+		position.x *= value2;
+		
+		return position.x;
+	}
+	
 //	public float setAndGetF(float value) {
 //		vec.y = value;
 //		return vec.y;
