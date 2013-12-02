@@ -36,8 +36,6 @@ public final class ClassUtil implements Opcodes
 		try	{
 			fos = new FileOutputStream(file);
 			fos.write(writer.toByteArray());
-			
-			System.out.println("wrote class " + file);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {

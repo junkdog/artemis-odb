@@ -1,14 +1,10 @@
 package com.artemis.component;
 
-import com.artemis.util.Vec2f;
-
-
 public class Access {
 
-	private Position position;
-//	Vec2f vec = new Vec2f(2, 3);
+	private PackedFieldComponent position;
 	
-	public Access(Position position) {
+	public Access(PackedFieldComponent position) {
 		this.position = position;
 	}
 	
@@ -30,35 +26,4 @@ public class Access {
 		
 		return position.x;
 	}
-	
-//	public float setAndGetF(float value) {
-//		vec.y = value;
-//		return vec.y;
-//	}
-//	
-//	public float setAndGetM(float value) {
-//		vec.y(value);
-//		return vec.y();
-//	}
-	
-//	public void getM() {
-//		float value = 5;
-//		value = component.getX();
-//	}
-//	
-//	
-//	public void setM() {
-//		float value = 5;
-//		component.setX(value);
-//	}
-//	
-//	public void incF() {
-//		float value = 5;
-//		component.x += value;
-//	}
-//	
-//	public void incM() {
-//		float value = 5;
-//		component.setX(component.getX() + value);
-//	}
 }

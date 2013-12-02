@@ -50,10 +50,9 @@ public class Weaver {
 				if (arg.endsWith(".class")) processClass(threadPool, arg, processed);
 			}
 		}
+		awaitTermination(threadPool);
 		
 //		rewriteFieldAccess(packedFieldAccess(processed));
-		
-		awaitTermination(threadPool);
 	}
 
 	public List<ClassMetadata> execute() {

@@ -3,10 +3,8 @@ package com.artemis.weaver.packed;
 import static com.artemis.weaver.packed.InstructionMutator.on;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.AbstractInsnNode;
@@ -16,7 +14,6 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.artemis.meta.ClassMetadata;
-import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.transformer.MethodTransformer;
 
 class ExternalFieldMethodTransformer extends MethodTransformer implements Opcodes {

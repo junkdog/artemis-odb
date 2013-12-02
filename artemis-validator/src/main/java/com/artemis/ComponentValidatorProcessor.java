@@ -93,17 +93,6 @@ public class ComponentValidatorProcessor extends AbstractProcessor {
 	private void packedComponentCheck(TypeElement component) {
 		ensureZeroArgConstructor(component);
 		ensureNoFinalInstanceFields(component);
-//		ensureAllInstanceFieldsArePrivate(component);
-	}
-
-	private void ensureAllInstanceFieldsArePrivate(TypeElement component) {
-		for (VariableElement field : fieldsIn(component.getEnclosedElements())) {
-			Set<Modifier> modifiers = field.getModifiers();
-			if (!modifiers.contains(PRIVATE) && !modifiers.contains(FINAL) && !modifiers.contains(STATIC)) {
-				Messager messager = processingEnv.getMessager();
-				messager.printMessage(ERROR, "All instance fields must be private", field);
-			}
-		}
 	}
 
 	private void pooledComponentCheck(TypeElement component) {
