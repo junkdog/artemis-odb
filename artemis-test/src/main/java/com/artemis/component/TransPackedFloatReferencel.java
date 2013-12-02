@@ -6,9 +6,7 @@ import com.artemis.util.Vec2f;
 
 @SuppressWarnings("unused")
 public class TransPackedFloatReferencel extends PackedComponent {
-	private float x;
-	private float y;
-	
+
 	private int $offset;
 	private static final int $_SIZE_OF = 2;
 	private static float[] $data = new float[64];
