@@ -18,6 +18,7 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
 
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadata.GlobalConfiguration;
 import com.artemis.meta.ClassMetadata.WeaverType;
 import com.artemis.meta.FieldDescriptor;
 import com.artemis.meta.MetaScanner;
@@ -70,6 +71,11 @@ public class Weaver {
 		ClassMetadata.GlobalConfiguration.ideFriendlyPacking = ideFriendlyPacking;
 	}
 	
+
+	public static void enablePooledWeaving(boolean enablePooledWeaving) {
+		ClassMetadata.GlobalConfiguration.enabledPooledWeaving = enablePooledWeaving;
+	}
+	
 	private void rewriteFieldAccess(List<ClassMetadata> packed) {
 		if (packed.isEmpty())
 			return;
@@ -93,6 +99,10 @@ public class Weaver {
 		
 		if (meta.annotation == WeaverType.NONE)
 			return;
+		
+		if (meta.annotation == WeaverType.POOLED && !GlobalConfiguration.enabledPooledWeaving) {
+			if (!meta.forcePooledWeaving) return;
+		}
 
 		threadPool.submit(new ComponentTypeTransmuter(file, cr, meta));
 		processed.add(meta);

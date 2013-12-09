@@ -8,12 +8,10 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.artemis.ComponentMapper;
-import com.artemis.PackedComponent;
 
 public class LongPackedWeavingTest extends PackedWeavingTest {
 	

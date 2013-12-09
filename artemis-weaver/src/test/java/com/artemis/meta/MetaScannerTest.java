@@ -18,6 +18,7 @@ import com.artemis.component.PooledComponentNotScanned;
 import com.artemis.component.PooledComponentWithReset;
 import com.artemis.meta.ClassMetadata.WeaverType;
 
+@SuppressWarnings("static-method")
 public class MetaScannerTest {
 	
 	private World world;
@@ -28,7 +29,7 @@ public class MetaScannerTest {
 		world.initialize();
 	}
 	
-	@Test
+	@Test @SuppressWarnings("unused")
 	public void pooled_component_scanning() throws Exception {
 		Entity e1 = world.createEntity();
 		ComponentToWeave c1a = e1.createComponent(ComponentToWeave.class);

@@ -3,7 +3,6 @@ package com.artemis;
 import static com.artemis.FluentUtil.element;
 import static com.artemis.FluentUtil.Match.ONE_OF;
 import static javax.lang.model.element.Modifier.FINAL;
-import static javax.lang.model.element.Modifier.PRIVATE;
 import static javax.lang.model.element.Modifier.STATIC;
 import static javax.lang.model.util.ElementFilter.constructorsIn;
 import static javax.lang.model.util.ElementFilter.fieldsIn;

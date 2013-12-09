@@ -10,8 +10,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.artemis.meta.ClassMetadata.WeaverType;
-
 public final class ClassMetadataUtil {
 	
 	private ClassMetadata meta;

@@ -14,7 +14,6 @@ import org.junit.Test;
 
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityManager;
 import com.artemis.World;
 
 public abstract class PackedWeavingTest {

@@ -13,11 +13,30 @@ import org.objectweb.asm.Opcodes;
 
 import com.artemis.meta.ClassMetadata.WeaverType;
 
-public class MetaScanner extends ClassVisitor {
+public class MetaScanner extends ClassVisitor implements Opcodes {
+	
+	private static final class AnnotationReader extends AnnotationVisitor {
+		
+		private ClassMetadata info;
+
+		private AnnotationReader(AnnotationVisitor av, ClassMetadata meta) {
+			super(ASM4, av);
+			this.info = meta;
+		}
+
+		@Override
+		public void visit(String name, Object value) {
+			if ("forceWeaving".equals(name)) {
+				info.forcePooledWeaving = (Boolean)value;
+			}
+			super.visit(name, value);
+		}
+	}
+
 	private ClassMetadata info;
 
 	public MetaScanner(ClassMetadata metadata) {
-		super(Opcodes.ASM4);
+		super(ASM4);
 		info = metadata;
 	}
 
@@ -29,14 +48,18 @@ public class MetaScanner extends ClassVisitor {
 	
 	@Override
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		if (PACKED_ANNOTATION.equals(desc))
+		AnnotationVisitor av = super.visitAnnotation(desc, visible);
+		
+		if (PACKED_ANNOTATION.equals(desc)) {
 			info.annotation = WeaverType.PACKED;
-		else if (POOLED_ANNOTATION.equals(desc))
+		} else if (POOLED_ANNOTATION.equals(desc)) {
 			info.annotation = WeaverType.POOLED;
-		else if (WOVEN_ANNOTATION.equals(desc))
+			av = new AnnotationReader(av, info);
+		} else if (WOVEN_ANNOTATION.equals(desc)) {
 			info.isPreviouslyProcessed = true;
-			
-		return super.visitAnnotation(desc, visible);
+		}
+		
+		return av;
 	}
 	
 	@Override

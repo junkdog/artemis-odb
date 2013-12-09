@@ -23,13 +23,18 @@ public final class ClassMetadata {
 	public List<MethodDescriptor> methods = new ArrayList<MethodDescriptor>(); 
 	public List<FieldDescriptor> fields = new ArrayList<FieldDescriptor>();
 
+	// pooled components
+	public boolean forcePooledWeaving;
+	
 	// packed components
 	public boolean foundStaticInitializer;
 	public boolean directFieldAccess;
+
 
 	public static enum WeaverType { NONE, POOLED, PACKED };
 	
 	public static class GlobalConfiguration {
 		public static boolean ideFriendlyPacking;
+		public static boolean enabledPooledWeaving;
 	}
 }
