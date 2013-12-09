@@ -31,7 +31,6 @@ public class Weaver {
 	
 	private final File targetClasses;
 	
-	
 	public Weaver(File outputDirectory) {
 		this.targetClasses = outputDirectory;
 	}
@@ -65,6 +64,10 @@ public class Weaver {
 		rewriteFieldAccess(packedFieldAccess(processed));
 		
 		return processed;
+	}
+	
+	public static void retainFieldsWhenPacking(boolean ideFriendlyPacking) {
+		ClassMetadata.GlobalConfiguration.ideFriendlyPacking = ideFriendlyPacking;
 	}
 	
 	private void rewriteFieldAccess(List<ClassMetadata> packed) {

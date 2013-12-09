@@ -27,6 +27,9 @@ public class ArtemisMaven extends AbstractMojo{
 	@Parameter(property="project.build.sourceDirectory")
 	private File sourceDirectory;
 	
+	@Parameter
+	private boolean ideFriendlyPacking;
+	
 	@Component
 	private BuildContext context;
 	
@@ -35,6 +38,8 @@ public class ArtemisMaven extends AbstractMojo{
 		long start = System.currentTimeMillis();
 		if (context != null && !context.hasDelta(sourceDirectory))
 			return;
+		
+		Weaver.retainFieldsWhenPacking(ideFriendlyPacking);
 		
 		Weaver weaver = new Weaver(outputDirectory);
 		List<ClassMetadata> processed = weaver.execute();

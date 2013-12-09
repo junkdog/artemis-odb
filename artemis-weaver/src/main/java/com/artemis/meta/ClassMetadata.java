@@ -28,4 +28,8 @@ public final class ClassMetadata {
 	public boolean directFieldAccess;
 
 	public static enum WeaverType { NONE, POOLED, PACKED };
+	
+	public static class GlobalConfiguration {
+		public static boolean ideFriendlyPacking;
+	}
 }
