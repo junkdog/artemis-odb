@@ -58,7 +58,7 @@ public class World {
 	/** Contains all uninitilized systems. **/
 	private final Bag<EntitySystem> systemsToInit;
 
-
+	
 	/**
 	 * Creates a new world.
 	 * <p>
@@ -67,6 +67,19 @@ public class World {
 	 * </p>
 	 */
 	public World() {
+		this(64);
+	}
+
+	/**
+	 * Creates a new world.
+	 * <p>
+	 * An EntityManager and ComponentManager are created and added upon
+	 * creation.
+	 * </p>
+	 * 
+	 * @param expectedEntityCount To avoid resizing entity containers needlessly.
+	 */
+	public World(int expectedEntityCount) {
 		managers = new IdentityHashMap<Class<? extends Manager>, Manager>();
 		managersBag = new Bag<Manager>();
 		
@@ -83,10 +96,10 @@ public class World {
 		enabledPerformer = new EnabledPerformer();
 		disabledPerformer = new DisabledPerformer();
 
-		cm = new ComponentManager();
+		cm = new ComponentManager(expectedEntityCount);
 		setManager(cm);
 		
-		em = new EntityManager();
+		em = new EntityManager(expectedEntityCount);
 		setManager(em);
 	}
 

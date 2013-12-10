@@ -29,8 +29,8 @@ public class EntityManager extends Manager {
 	/**
 	 * Creates a new EntityManager Instance.
 	 */
-	public EntityManager() {
-		entities = new Bag<Entity>();
+	public EntityManager(int initialContainerSize) {
+		entities = new Bag<Entity>(initialContainerSize);
 		disabled = new BitSet();
 	}
 	@Override

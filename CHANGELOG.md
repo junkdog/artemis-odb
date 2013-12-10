@@ -1,6 +1,7 @@
 # Change Log
 
 ## Developed but not released
+- Optional `expectedEntityCount` parameters in `World` constructor.
 - Direct field access works for `@PackedWeaver` components.
 - `-DideFriendlyPacking`: If true, will leave field stubs to keep IDE:s 
   happy after transformations. Defaults to false.

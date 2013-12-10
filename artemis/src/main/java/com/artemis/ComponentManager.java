@@ -27,12 +27,14 @@ public class ComponentManager extends Manager {
 	/** Collects all Entites marked for deletion from this ComponentManager. */
 	private final WildBag<Entity> deleted;
 	private final ComponentPool pooledComponents;
-
+	
+	private int entityContainerSize;
 
 	/**
 	 * Creates a new instance of {@link ComponentManager}.
 	 */
-	public ComponentManager() {
+	public ComponentManager(int entityContainerSize) {
+		this.entityContainerSize = entityContainerSize;
 		componentsByType = new Bag<Bag<Component>>();
 		packedComponents = new Bag<PackedComponent>();
 		packedComponentOwners = new Bag<BitSet>();
@@ -88,9 +90,6 @@ public class ComponentManager extends Manager {
 			throw new InvalidComponentException(componentClass, "Missing public constructor.", e);
 		}
 	}
-
-	@Override
-	protected void initialize() {}
 
 	/**
 	 * Removes all components from the entity associated in this manager.
@@ -154,7 +153,7 @@ public class ComponentManager extends Manager {
 	{
 		Bag<Component> components = componentsByType.get(type.getIndex());
 		if(components == null) {
-			components = new Bag<Component>();
+			components = new Bag<Component>(entityContainerSize);
 			componentsByType.set(type.getIndex(), components);
 		}
 		
