@@ -35,11 +35,8 @@ public class ComponentAccessTransmuter extends CallableTransmuter implements Opc
 	private void compileClass(String file) {
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		
-		// FIXME: refactor (encapsulate CN, transform with CW)
 		ExternalFieldClassTransformer transformer = new ExternalFieldClassTransformer(null, packed);
-		ClassNode cn = new ClassNode(ASM4);
-		cr.accept(cn,  ClassReader.EXPAND_FRAMES);
-		transformer.transform(cn);
+		ClassNode cn = transformer.transform(cr);
 		
 		if (!transformer.isNeedsWriteToDisk())
 			return;

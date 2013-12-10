@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 import org.objectweb.asm.tree.FieldNode;
@@ -18,17 +19,18 @@ import com.artemis.meta.ClassMetadata.GlobalConfiguration;
 import com.artemis.meta.FieldDescriptor;
 import com.artemis.transformer.ClassTransformer;
 
-public class FieldToArrayClassTransformer extends ClassTransformer implements Opcodes {
+public class FieldToArrayClassTransformer implements ClassTransformer, Opcodes {
 
 	private final ClassMetadata meta;
 
-	public FieldToArrayClassTransformer(ClassTransformer ct, ClassMetadata meta) {
-		super(ct);
+	public FieldToArrayClassTransformer(ClassMetadata meta) {
 		this.meta = meta;
 	}
 	
 	@Override @SuppressWarnings("unchecked")
-	public void transform(ClassNode cn) {
+	public ClassNode transform(ClassReader cr) {
+		ClassNode cn = new ClassNode(ASM4);
+		cr.accept(cn,  ClassReader.EXPAND_FRAMES);
 		
 		List<FieldDescriptor> toPack = instanceFields(meta);
 		FieldToArrayMethodTransformer methodTransformer = new FieldToArrayMethodTransformer(null, meta, getFieldNames(toPack));
@@ -42,12 +44,7 @@ public class FieldToArrayClassTransformer extends ClassTransformer implements Op
 			removeFields(cn, getFieldNames(toPack));
 		}
 		
-		try {
-			super.transform(cn);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
+		return cn;
 	}
 
 	@SuppressWarnings("unchecked")
