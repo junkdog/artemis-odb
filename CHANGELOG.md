@@ -7,6 +7,8 @@
   happy after transformations. Defaults to false.
 - `-DenablePooledWeaving`: Enables weaving of pooled components (more viable on
   Android than JVM). Defaults to true.
+- `-DenableArtemisPlugin`: If set to false, no weaving will take place (useful
+  for debugging).
 
 ## Version: 0.5.0 - 2013-11-24
  - Changed artemis to a multi-module project (the `artemis` folder is the old root).

@@ -41,7 +41,6 @@ public class PackedStubs implements Opcodes {
 		if (!meta.foundEntityFor)
 			injectForEntity();
 		
-		
 		// inject sizeof
 		Set<String> types = instanceFieldTypes(meta);
 		if (types.size() > 1) {
