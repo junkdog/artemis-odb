@@ -90,5 +90,5 @@ Managers and EntitySystems. Can also simulate aspects for Managers and inject pr
 ## Games using this library
 ### Open source
 - [Sine](http://www.ludumdare.com/compo/2013/08/27/sine-post-mortem/) by [@timtipgames](http://twitter.com/timtipgames)
-- [Ned et les Maki](http://devnewton.bci.im/en/games/nedetlesmaki) [github](https://github.com/devnewton/nedetlesmaki) isometric puzzle game. 
+- [Ned et les Maki](http://devnewton.bci.im/en/games/nedetlesmaki) ([github](https://github.com/devnewton/nedetlesmaki)) isometric puzzle game. 
 
