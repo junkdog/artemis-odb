@@ -31,7 +31,7 @@ public abstract class EntitySystem implements EntityObserver {
 	private final BitSet allSet;
 	/** Component bits entities must not possess for the system to be interested. */
 	private final BitSet exclusionSet;
-	/** Component bits entities must at least posses one for the system to be interested. */
+	/** Component bits entities must at least possess one for the system to be interested. */
 	private final BitSet oneSet;
 	/** If the system is passive or not. */
 	private boolean passive;
@@ -39,7 +39,7 @@ public abstract class EntitySystem implements EntityObserver {
 	private boolean enabled;
 	/** If the system is interested in no entities at all. */
 	private final boolean dummy;
-	/** If the system is currently proccessing. */
+	/** If the system is currently processing. */
 	private boolean isProcessing;
 
 
@@ -204,7 +204,7 @@ public abstract class EntitySystem implements EntityObserver {
 			removeFromSystem(e);
 		}
 	}
-
+	
 	/**
 	 * Removes the entity from this system.
 	 *
