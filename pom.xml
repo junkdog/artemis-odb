@@ -17,6 +17,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jar.plugin.version>2.4.1</jar.plugin.version>
 	</properties>
 
 	<scm>
@@ -74,6 +75,7 @@
 		<module>artemis</module>
 		<module>artemis-weaver</module>
 		<module>artemis-maven</module>
+		<module>artemis-matrix</module>
 		<module>artemis-test</module>
 	</modules>
 	
