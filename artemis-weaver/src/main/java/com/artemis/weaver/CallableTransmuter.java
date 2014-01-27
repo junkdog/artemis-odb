@@ -11,6 +11,10 @@ abstract class CallableTransmuter implements Callable<Void>
 {
 	private final String file;
 	
+	public CallableTransmuter(String file) {
+		this.file = file;
+	}
+
 	protected abstract void process(String file) throws FileNotFoundException, IOException;
 
 	@Override
