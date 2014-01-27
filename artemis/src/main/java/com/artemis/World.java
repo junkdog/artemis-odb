@@ -265,7 +265,9 @@ public class World {
 		if (!deleted.contains(e)) {
 			deleted.add(e);
 			check(e, deletedPerformer);
-		} else {
+		}
+		
+		if(added.contains(e)) {
 			added.remove(e);
 		}
 	}
