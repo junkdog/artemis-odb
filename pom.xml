@@ -17,7 +17,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jar.plugin.version>2.4.1</jar.plugin.version>
+		<jar.plugin.version>2.4</jar.plugin.version>
 	</properties>
 
 	<scm>

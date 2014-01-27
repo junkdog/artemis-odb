@@ -15,10 +15,15 @@
 		<asm.version>4.1</asm.version>
 		<lombok.version>0.11.3</lombok.version>
 		<freemarker.version>2.3.18</freemarker.version>
-		<mainClass>net.onedaybeard.artemis.Matrix</mainClass>
+		<mainClass>com.artemis.Matrix</mainClass>
 	</properties>
 
 	<dependencies>
+		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId>
+			<artifactId>artemis-odb</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm</artifactId>
@@ -52,7 +57,7 @@
 		<dependency>
 			<groupId>org.reflections</groupId>
 			<artifactId>reflections</artifactId>
-			<version>0.9.8</version>
+			<version>0.9.9-RC1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.github.peichhorn</groupId>
