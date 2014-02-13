@@ -3,6 +3,8 @@ package com.artemis;
 import java.util.BitSet;
 
 import com.artemis.utils.Bag;
+import com.artemis.utils.reflect.ClassReflection;
+import com.artemis.utils.reflect.ReflectionException;
 
 
 /**
@@ -61,10 +63,8 @@ public class ComponentManager extends Manager {
 			case POOLED:
 				try {
 					return (T)pooledComponents.obtain((Class<PooledComponent>)componentClass);
-				} catch (InstantiationException e) {
+				} catch (ReflectionException e) {
 					throw new InvalidComponentException(componentClass, "Unable to instantiate component.", e);
-				} catch (IllegalAccessException e) {
-					throw new InvalidComponentException(componentClass, "Missing public constructor.", e);
 				}
 			default:
 				throw new InvalidComponentException(componentClass, " unknown component type: " + type.getTaxonomy());
@@ -83,11 +83,9 @@ public class ComponentManager extends Manager {
 
 	private  static <T extends Component> T newInstance(Class<T> componentClass) {
 		try {
-			return componentClass.newInstance();
-		} catch (InstantiationException e) {
+			return ClassReflection.newInstance(componentClass);
+		} catch (ReflectionException e) {
 			throw new InvalidComponentException(componentClass, "Unable to instantiate component.", e);
-		} catch (IllegalAccessException e) {
-			throw new InvalidComponentException(componentClass, "Missing public constructor.", e);
 		}
 	}
 

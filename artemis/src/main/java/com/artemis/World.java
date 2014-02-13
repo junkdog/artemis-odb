@@ -1,7 +1,5 @@
 package com.artemis;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -11,6 +9,8 @@ import java.util.UUID;
 import com.artemis.annotations.Mapper;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.reflect.ClassReflection;
+import com.artemis.utils.reflect.Field;
 
 
 /**
@@ -197,8 +197,9 @@ public class World {
 	 *
 	 * @return the manager
 	 */
-	public <T extends Manager> T getManager(Class<T> managerType) {
-		return managerType.cast(managers.get(managerType));
+	@SuppressWarnings("unchecked")
+    public <T extends Manager> T getManager(Class<T> managerType) {
+		return (T)managers.get(managerType);
 	}
 	
 	/**
@@ -443,8 +444,9 @@ public class World {
 	 *
 	 * @return instance of the system in this world
 	 */
-	public <T extends EntitySystem> T getSystem(Class<T> type) {
-		return type.cast(systems.get(type));
+	@SuppressWarnings("unchecked")
+    public <T extends EntitySystem> T getSystem(Class<T> type) {
+		return (T)systems.get(type);
 	}
 	
 	/**
@@ -618,14 +620,10 @@ public class World {
 		public static void config(Object target, World world) throws RuntimeException {
 			try {
 				Class<?> clazz = target.getClass();
-				for (Field field : clazz.getDeclaredFields()) {
-					Mapper annotation = field.getAnnotation(Mapper.class);
-					if (annotation != null && Mapper.class.isAssignableFrom(Mapper.class)) {
-						ParameterizedType genericType = (ParameterizedType) field.getGenericType();
-						
+				for (Field field : ClassReflection.getDeclaredFields(clazz)) {
+					if (field.hasAnnotation(Mapper.class)) {
 						@SuppressWarnings("unchecked")
-						Class<Component> componentType = (Class<Component>) genericType.getActualTypeArguments()[0];
-
+						Class<Component> componentType = (Class<Component>)  field.getElementType(0);
 						field.setAccessible(true);
 						field.set(target, world.getMapper(componentType));
 					}

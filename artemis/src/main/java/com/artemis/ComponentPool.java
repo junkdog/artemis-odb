@@ -4,6 +4,8 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 import com.artemis.utils.Bag;
+import com.artemis.utils.reflect.ClassReflection;
+import com.artemis.utils.reflect.ReflectionException;
 
 class ComponentPool {
 	
@@ -15,10 +17,10 @@ class ComponentPool {
 	
 	@SuppressWarnings("unchecked")
 	<T extends PooledComponent> T obtain(Class<T> componentClass)
-		throws InstantiationException, IllegalAccessException {
+		throws ReflectionException {
 		
 		Pool pool = getPool(componentClass);
-		return (T)((pool.size() > 0) ? pool.obtain() : componentClass.newInstance());
+		return (T)((pool.size() > 0) ? pool.obtain() :  ClassReflection.newInstance(componentClass));
 	}
 	
 	void free(PooledComponent c) {
