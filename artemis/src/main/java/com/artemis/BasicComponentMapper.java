@@ -42,15 +42,17 @@ class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 	}
 
 
-	@Override
+	@SuppressWarnings("unchecked")
+    @Override
 	public A get(Entity e) throws ArrayIndexOutOfBoundsException {
-		return classType.cast(components.get(e.getId()));
+		return (A) components.get(e.getId());
 	}
 
-	@Override
+	@SuppressWarnings("unchecked")
+    @Override
 	public A getSafe(Entity e) {
 		if(components.isIndexWithinBounds(e.getId())) {
-			return classType.cast(components.get(e.getId()));
+			return (A) components.get(e.getId());
 		}
 		return null;
 	}

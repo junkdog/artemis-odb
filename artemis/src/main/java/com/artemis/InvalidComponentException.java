@@ -1,5 +1,7 @@
 package com.artemis;
 
+import com.artemis.utils.reflect.ClassReflection;
+
 @SuppressWarnings("serial")
 public class InvalidComponentException extends RuntimeException {
 
@@ -16,7 +18,7 @@ public class InvalidComponentException extends RuntimeException {
 	}
 	
 	private static String message(Class<?> componentClass, String string) {
-		return componentClass.getSimpleName() + ": " + string;
+		return ClassReflection.getSimpleName(componentClass) + ": " + string;
 	}
 
 	public Class<?> getComponentClass() {

@@ -1,6 +1,8 @@
 package com.artemis;
 
 import java.util.BitSet;
+import com.artemis.utils.reflect.ClassReflection;
+import com.artemis.utils.reflect.ReflectionException;
 
 /**
  * High performance packed component retrieval from entities. Each instance
@@ -45,10 +47,11 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 		return new PackedComponentMapper<PackedComponent>(type, world);
 	}
 
-	@Override @SuppressWarnings("unchecked")
+	@Override
+	@SuppressWarnings("unchecked")
 	public A get(Entity e) throws ArrayIndexOutOfBoundsException {
 		component.forEntity(e);
-		return (A)component;
+		return (A) component;
 	}
 	
 	@Override
@@ -83,11 +86,9 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 
 	private A newInstance(Class<A> type) {
 		try {
-			return classType.newInstance();
-		} catch (InstantiationException e) {
+			return (A) ClassReflection.newInstance(classType);
+		} catch (ReflectionException e) {
 			throw new InvalidComponentException(type, "Unable to instantiate component.", e);
-		} catch (IllegalAccessException e) {
-			throw new InvalidComponentException(type, "Missing public constructor or too restrictive access.", e);
 		}
 	}
 }

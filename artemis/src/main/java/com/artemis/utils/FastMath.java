@@ -54,9 +54,12 @@ public class FastMath {
 	}
 
 	public final static double inverseSqrt(double x) {
-		final double xhalves = 0.5d * x;
-		x = Double.longBitsToDouble(0x5FE6EB50C7B537AAl - (Double.doubleToRawLongBits(x) >> 1));
-		return x * (1.5d - xhalves * x * x); // more iterations possible
+		double xhalf = 0.5d * x;
+		long i = Double.doubleToLongBits(x);
+		i = 0x5fe6ec85e7de30daL - (i >> 1);
+		x = Double.longBitsToDouble(i);
+		x = x * (1.5d - xhalf * x * x);
+		return x;
 	}
 
 	public final static double sqrt(final double x) {
