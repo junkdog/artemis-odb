@@ -137,33 +137,5 @@ public class Utils {
 		return d < 0;
 	}
 
-	public static String readFileContents(String file) {
-		InputStream is = Utils.class.getClassLoader().getResourceAsStream(file);
-		String contents = "";
-		try {
-			if (is != null) {
-				Writer writer = new StringWriter();
-
-				char[] buffer = new char[1024];
-				Reader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-				int n;
-				while ((n = reader.read(buffer)) != -1) {
-					writer.write(buffer, 0, n);
-				}
-
-				contents = writer.toString();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-
-		return contents;
-	}
 
 }

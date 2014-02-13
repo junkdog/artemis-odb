@@ -19,7 +19,7 @@ public class ComponentPoolTest
 		assertTrue(c1 == c1b);
 	}
 	
-	static final class SimplePooled extends PooledComponent {
+	public static final class SimplePooled extends PooledComponent {
 		
 		@Override
 		public void reset() {}

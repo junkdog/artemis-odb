@@ -75,6 +75,7 @@
 		<module>artemis-weaver</module>
 		<module>artemis-maven</module>
 		<module>artemis-test</module>
+		<module>artemis-gwt</module>
 	</modules>
 	
 	<profiles>

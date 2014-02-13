@@ -3,6 +3,7 @@ package com.artemis;
 import java.util.IdentityHashMap;
 
 import com.artemis.utils.Bag;
+import com.artemis.utils.reflect.ClassReflection;
 
 
 /**
@@ -42,13 +43,13 @@ public class ComponentType {
 	 * @param type
 	 *			the components class
 	 */
-	private ComponentType(Class<? extends Component> type) {
+	public ComponentType(Class<? extends Component> type) {
 		types.set(INDEX, this);
 		index = INDEX++;
 		this.type = type;
-		if (PackedComponent.class.isAssignableFrom(type)) {
+		if (ClassReflection.isAssignableFrom(PackedComponent.class, type)) {
 			taxonomy = Taxonomy.PACKED;
-		} else if (PooledComponent.class.isAssignableFrom(type)) {
+		} else if (ClassReflection.isAssignableFrom(PooledComponent.class, type)) {
 			taxonomy = Taxonomy.POOLED;
 		} else {
 			taxonomy = Taxonomy.BASIC;
@@ -66,7 +67,7 @@ public class ComponentType {
 
 	@Override
 	public String toString() {
-		return "ComponentType["+type.getSimpleName()+"] ("+index+")";
+		return "ComponentType["+ ClassReflection.getSimpleName(type) +"] ("+index+")";
 	}
 	
 	protected Taxonomy getTaxonomy() {
