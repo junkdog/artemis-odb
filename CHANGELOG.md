@@ -1,8 +1,11 @@
 # Change Log
 
 ## Developed but not released
-- GWT support ([demo](http://flet.github.io/spaceship-warrior-redux/) with
-  reflection support borrowed from [libgdx](https://github.com/libgdx/libgdx).
+- **GWT support** ([demo](http://flet.github.io/spaceship-warrior-redux/)) sporting
+  [libgdx](https://github.com/libgdx/libgdx)'s reflection wrapper code.
+  - This means that `@Mapper` works for GWT builds too.
+  - Note: `@PooledWeaver` and `@PackedWeaver` don't work under GWT, though the presence
+    of the annotations shouldn't break the build.
 - Optional `expectedEntityCount` parameters in `World` constructor.
 - Direct field access works for `@PackedWeaver` components.
 - `-DideFriendlyPacking`: If true, will leave field stubs to keep IDE:s 
