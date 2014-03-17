@@ -1,7 +1,7 @@
 package com.artemis;
 
-import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collection;
 
 
 /**
@@ -159,29 +159,7 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 */
 	@SuppressWarnings("unchecked")
-	public Aspect all(ArrayList<Class<? extends Component>> types) {
-		for (Class<? extends Component> t : types) {
-			allSet.set(ComponentType.getIndexFor(t));
-		}
-
-		return this;
-	}
-	
-	
-	/**
-	 * Returns an aspect where an entity must possess all of the specified
-	 * component types.
-	 *
-	 * @param type
-	 *			a required component type
-	 * @param types
-	 *			a required component type
-	 *
-	 * @return an aspect that can be matched against entities
-	 */
-	@SuppressWarnings("unchecked")
-	public Aspect all(Class<? extends Component>... types) {
-		
+	public Aspect all(Collection<Class<? extends Component>> types) {
 		for (Class<? extends Component> t : types) {
 			allSet.set(ComponentType.getIndexFor(t));
 		}
@@ -213,27 +191,6 @@ public class Aspect {
 		return this;
 	}
 	
-	/**
-	 * Excludes all of the specified component types from the aspect.
-	 * <p>
-	 * A system will not be interested in an entity that possesses one of the
-	 * specified exclusion component types.
-	 * </p>
-	 * 
-	 * @param type
-	 *			component type to exclude
-	 * @param types
-	 *			component type to exclude
-	 *
-	 * @return an aspect that can be matched against entities
-	 */
-	@SuppressWarnings("unchecked")
-	public Aspect exclude(Class<? extends Component>... types) {
-		for (Class<? extends Component> t : types) {
-			exclusionSet.set(ComponentType.getIndexFor(t));
-		}
-		return this;
-	}
 	
 	/**
 	 * Excludes all of the specified component types from the aspect.
@@ -250,7 +207,7 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 */
 	@SuppressWarnings("unchecked")
-	public Aspect exclude(ArrayList<Class<? extends Component>> types) {
+	public Aspect exclude(Collection<Class<? extends Component>> types) {
 		for (Class<? extends Component> t : types) {
 			exclusionSet.set(ComponentType.getIndexFor(t));
 		}
@@ -290,26 +247,7 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 */
 	@SuppressWarnings("unchecked")
-	public Aspect one(Class<? extends Component>... types) {
-		for (Class<? extends Component> t : types) {
-			oneSet.set(ComponentType.getIndexFor(t));
-		}
-		return this;
-	}
-	
-	/**
-	 * Returns an aspect where an entity must possess one of the specified
-	 * component types.
-	 *
-	 * @param type
-	 *			one of the types the entity must possess
-	 * @param types
-	 *			one of the types the entity must possess
-	 *
-	 * @return an aspect that can be matched against entities
-	 */
-	@SuppressWarnings("unchecked")
-	public Aspect one(ArrayList<Class<? extends Component>> types) {
+	public Aspect one(Collection<Class<? extends Component>> types) {
 		for (Class<? extends Component> t : types) {
 			oneSet.set(ComponentType.getIndexFor(t));
 		}
