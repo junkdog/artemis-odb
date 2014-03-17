@@ -598,7 +598,8 @@ public class World {
 
 
 	/**
-	 * Injects {@link BasicComponentMapper} instances into objects.
+	 * Injects {@link ComponentMapper}, {@link EntitySystem} and {@link Manager} into systems and
+	 * managers.
 	 */
 	private static final class ComponentMapperInitHelper {
 

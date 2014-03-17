@@ -14,8 +14,11 @@ import com.artemis.World;
  * or {@link World#setManager(com.artemis.Manager)}.
  * <p>
  *
+ * @deprecated See {@link Wire}.
+ *
  * @author Arni Arent
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
+@Deprecated
 public @interface Mapper {}
