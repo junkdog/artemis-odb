@@ -7,10 +7,12 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.artemis.annotations.Mapper;
+import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
+import com.artemis.utils.reflect.ReflectionException;
 
 
 /**
@@ -110,7 +112,9 @@ public class World {
 	 */
 	public void initialize() {
 		for (int i = 0; i < managersBag.size(); i++) {
-			managersBag.get(i).initialize();
+			Manager manager = managersBag.get(i);
+			ComponentMapperInitHelper.config(manager, this);
+			manager.initialize();
 		}
 		
 		initializeSystems();
@@ -181,8 +185,6 @@ public class World {
 		managers.put(manager.getClass(), manager);
 		managersBag.add(manager);
 		manager.setWorld(this);
-		
-		ComponentMapperInitHelper.config(manager, this);
 		
 		return manager;
 	}
@@ -387,8 +389,6 @@ public class World {
 		systemsBag.add(system);
 		systemsToInit.add(system);
 		
-		ComponentMapperInitHelper.config(system, this);
-		
 		return system;
 	}
 	
@@ -508,7 +508,9 @@ public class World {
 
 	private void initializeSystems() {
 		for (int i = 0, s = systemsToInit.size(); i < s; i++) {
-			systemsToInit.get(i).initialize();
+			EntitySystem es = systemsToInit.get(i);
+			ComponentMapperInitHelper.config(es, this);
+			es.initialize();
 		}
 		systemsToInit.clear();
 	}
@@ -536,7 +538,6 @@ public class World {
 		public void perform(EntityObserver observer, Entity e) {
 			observer.deleted(e);
 		}
-
 	}
 
 	/** Runs {@link EntityObserver#enabled}. */
@@ -546,7 +547,6 @@ public class World {
 		public void perform(EntityObserver observer, Entity e) {
 			observer.enabled(e);
 		}
-
 	}
 
 	/** Runs {@link EntityObserver#disabled}. */
@@ -556,7 +556,6 @@ public class World {
 		public void perform(EntityObserver observer, Entity e) {
 			observer.disabled(e);
 		}
-
 	}
 
 	/** Runs {@link EntityObserver#changed}. */
@@ -566,7 +565,6 @@ public class World {
 		public void perform(EntityObserver observer, Entity e) {
 			observer.changed(e);
 		}
-
 	}
 
 	/** Runs {@link EntityObserver#added}. */
@@ -576,7 +574,6 @@ public class World {
 		public void perform(EntityObserver observer, Entity e) {
 			observer.added(e);
 		}
-
 	}
 
 
@@ -597,7 +594,6 @@ public class World {
 		 *			the entity to pass as argument
 		 */
 		void perform(EntityObserver observer, Entity e);
-
 	}
 
 
@@ -620,19 +616,47 @@ public class World {
 		public static void config(Object target, World world) throws RuntimeException {
 			try {
 				Class<?> clazz = target.getClass();
-				for (Field field : ClassReflection.getDeclaredFields(clazz)) {
-					if (field.hasAnnotation(Mapper.class)) {
-						@SuppressWarnings("unchecked")
-						Class<Component> componentType = (Class<Component>)  field.getElementType(0);
-						field.setAccessible(true);
-						field.set(target, world.getMapper(componentType));
-					}
+				if (clazz.getAnnotation(Wire.class) != null) {
+					injectValidFields(target, world, clazz);
+				} else {
+					injectAnnotatedFields(target, world, clazz);
 				}
 			} catch (Exception e) {
 				throw new RuntimeException("Error while setting component mappers", e);
 			}
 		}
+		
+		private static void injectValidFields(Object target, World world, Class<?> clazz)
+			throws ReflectionException {
+			
+			for (Field field : ClassReflection.getDeclaredFields(clazz)) {
+				injectField(target, world, field);
+			}
+		}
 
+		private static void injectAnnotatedFields(Object target, World world, Class<?> clazz)
+			throws ReflectionException {
+			
+			for (Field field : ClassReflection.getDeclaredFields(clazz)) {
+				if (field.hasAnnotation(Mapper.class) || field.hasAnnotation(Wire.class)) {
+					injectField(target, world, field);
+				}
+			}
+		}
+
+		@SuppressWarnings("unchecked")
+		private static void injectField(Object target, World world, Field field)
+			throws ReflectionException {
+			
+			field.setAccessible(true);
+			Class<?> fieldType = field.getType();
+			if (ComponentMapper.class.isAssignableFrom(fieldType)) {
+				field.set(target, world.getMapper(field.getElementType(0)));
+			} else if (EntitySystem.class.isAssignableFrom(fieldType)) {
+				field.set(target, world.getSystem((Class<EntitySystem>)fieldType));
+			} else if (Manager.class.isAssignableFrom(fieldType)) {
+				field.set(target, world.getManager((Class<Manager>)fieldType));
+			}
+		}
 	}
-
 }
