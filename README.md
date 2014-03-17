@@ -71,7 +71,7 @@ recent changes._
 	</build>
 ```
 
-### Minimal (no weaving/compile-time tranformations)
+### Minimal (no weaving/compile-time transformations)
 ```xml
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
