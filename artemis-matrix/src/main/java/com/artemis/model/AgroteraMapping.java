@@ -11,8 +11,7 @@ import org.objectweb.asm.Type;
 
 import com.artemis.model.scan.ArtemisConfigurationData;
 
-public final class AgroteraMapping
-{
+public final class AgroteraMapping {
 	public final Type system;
 	public final boolean isSystem;
 	public final boolean isManager;
@@ -23,8 +22,7 @@ public final class AgroteraMapping
 	
 	public final boolean isPackage; // referenced by chtml
 	
-	public AgroteraMapping(String packageName)
-	{
+	public AgroteraMapping(String packageName) {
 		name = packageName;
 		system = null;
 		refSystems = null;
@@ -36,8 +34,7 @@ public final class AgroteraMapping
 		isManager = false;
 	}
 
-	private AgroteraMapping(ArtemisConfigurationData system, ComponentReference[] componentIndices)
-	{
+	private AgroteraMapping(ArtemisConfigurationData system, ComponentReference[] componentIndices) {
 		this.system = system.current;
 		this.componentIndices = componentIndices;
 		
@@ -57,8 +54,7 @@ public final class AgroteraMapping
 	}
 	
 	public static AgroteraMapping from(ArtemisConfigurationData system,
-		Map<Type, Integer> componentIndices)
-	{
+		Map<Type, Integer> componentIndices) {
 		ComponentReference[] components = new ComponentReference[componentIndices.size()];
 		Arrays.fill(components, ComponentReference.NOT_REFERENCED);
 		mapComponents(system.requires, ComponentReference.REQUIRED, componentIndices, components);
@@ -69,32 +65,27 @@ public final class AgroteraMapping
 		return new AgroteraMapping(system, components);
 	}
 	
-	public String getName()
-	{
+	public String getName() {
 		return shortName(system);
 	}
 	
-	private static String shortName(Type type)
-	{
+	private static String shortName(Type type) {
 		String name = type.getClassName();
 		return name.substring(name.lastIndexOf('.') + 1);
 	}
 
 	private static void mapComponents(List<Type> references, ComponentReference referenceType, Map<Type,Integer> componentIndices,
-		ComponentReference[] components)
-	{
+		ComponentReference[] components) {
 		for (Type component : references)
 			components[componentIndices.get(component)] = referenceType;
 	}
 	
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("[ ");
 		sb.append('"').append(getName()).append('"');
-		for (ComponentReference ref : componentIndices)
-		{
+		for (ComponentReference ref : componentIndices) {
 			sb.append(", \"").append(ref.symbol).append('"');
 		}
 		sb.append(" ]");

@@ -8,13 +8,11 @@ import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-final class ArtemisAnnotationReader extends AnnotationVisitor
-{
+final class ArtemisAnnotationReader extends AnnotationVisitor {
 	private final String annotationField;
 	private ArtemisConfigurationData info;
 
-	ArtemisAnnotationReader(String name, ArtemisConfigurationData info)
-	{
+	ArtemisAnnotationReader(String name, ArtemisConfigurationData info) {
 		super(Opcodes.ASM4);
 		this.annotationField = name;
 		this.info = info;
@@ -28,8 +26,7 @@ final class ArtemisAnnotationReader extends AnnotationVisitor
 	}
 	
 	@Override
-	public void visit(String ignore, Object value)
-	{
+	public void visit(String ignore, Object value) {
 		if ("requires".equals(annotationField) || "mappers".equals(annotationField))
 			info.requires.add((Type)value);
 		else if ("requiresOne".equals(annotationField))
@@ -47,8 +44,7 @@ final class ArtemisAnnotationReader extends AnnotationVisitor
 	}
 	
 	@Override
-	public AnnotationVisitor visitArray(final String name)
-	{
+	public AnnotationVisitor visitArray(final String name) {
 		return new ArtemisAnnotationReader(name, info);
 	}
 }

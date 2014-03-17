@@ -32,29 +32,25 @@ import com.artemis.util.ClassFinder;
 import com.x5.template.Chunk;
 import com.x5.template.Theme;
 
-public class MatrixBuilder implements Opcodes 
-{
+public class MatrixBuilder implements Opcodes  {
 	private final File root;
 	private final File output;
 	private final String projectName;
 	
-	public MatrixBuilder(String projectName, File root, File output)
-	{
+	public MatrixBuilder(String projectName, File root, File output) {
 		this.projectName = projectName;
 		this.root = root;
 		this.output = output;
 	}
 	
-	public void process()
-	{
+	public void process() {
 		List<ArtemisConfigurationData> systems = findSystems(root);
 		if (systems.size() == 0)
 			return;
 		SortedSet<Type> componentSet = findComponents(systems);
 		
 		List<AgroteraMapping> systemMappings = new ArrayList<AgroteraMapping>();
-		for (ArtemisConfigurationData system : systems)
-		{
+		for (ArtemisConfigurationData system : systems) {
 			AgroteraMapping mappedSystem = AgroteraMapping.from(
 				system, getComponentIndices(componentSet));
 			systemMappings.add(mappedSystem);
@@ -62,8 +58,7 @@ public class MatrixBuilder implements Opcodes
 		
 
 		List<String> columns = new ArrayList<String>();
-		for (Type component : componentSet)
-		{
+		for (Type component : componentSet) {
 			String name = component.getClassName();
 			name = name.substring(name.lastIndexOf('.') + 1);
 			columns.add(name);
@@ -72,12 +67,10 @@ public class MatrixBuilder implements Opcodes
 		write(toMap(systemMappings), columns);
 	}
 	
-	public static SortedMap<String,List<AgroteraMapping>> toMap(List<AgroteraMapping> systems)
-	{
+	public static SortedMap<String,List<AgroteraMapping>> toMap(List<AgroteraMapping> systems) {
 		String common = findCommonPackage(systems);
 		SortedMap<String, List<AgroteraMapping>> map = new TreeMap<String, List<AgroteraMapping>>();
-		for (int i = 0, s = systems.size(); s > i; i++)
-		{
+		for (int i = 0, s = systems.size(); s > i; i++) {
 			AgroteraMapping system = systems.get(i);
 			String packageName = toPackageName(system.system.getClassName());
 			packageName = (packageName.length() > common.length())
@@ -92,16 +85,12 @@ public class MatrixBuilder implements Opcodes
 		return map;
 	}
 	
-	private static String findCommonPackage(List<AgroteraMapping> systems)
-	{
+	private static String findCommonPackage(List<AgroteraMapping> systems) {
 		String prefix = toPackageName(systems.get(0).system.getClassName());
-		for (int i = 1, s = systems.size(); s > i; i++)
-		{
+		for (int i = 1, s = systems.size(); s > i; i++) {
 			String p = toPackageName(systems.get(i).system.getClassName());
-			for (int j = 0, l = Math.min(prefix.length(), p.length()); l > j; j++)
-			{
-				if (prefix.charAt(j) != p.charAt(j))
-				{
+			for (int j = 0, l = Math.min(prefix.length(), p.length()); l > j; j++) {
+				if (prefix.charAt(j) != p.charAt(j)) {
 					prefix = prefix.substring(0, j);
 					break;
 				}
@@ -111,13 +100,11 @@ public class MatrixBuilder implements Opcodes
 		return prefix;
 	}
 
-	private static String toPackageName(String className)
-	{
+	private static String toPackageName(String className) {
 		return className.substring(0, className.lastIndexOf('.'));
 	}
 
-	private static List<ArtemisConfigurationData> findSystems(File root)
-	{
+	private static List<ArtemisConfigurationData> findSystems(File root) {
 		List<ArtemisConfigurationData> systems = new ArrayList<ArtemisConfigurationData>();
 		for (File f : ClassFinder.find(root))
 			filterSystems(f, systems);
@@ -126,11 +113,9 @@ public class MatrixBuilder implements Opcodes
 		return systems;
 	}
 
-	private static SortedSet<Type> findComponents(List<ArtemisConfigurationData> systems)
-	{
+	private static SortedSet<Type> findComponents(List<ArtemisConfigurationData> systems) {
 		SortedSet<Type> componentSet = new TreeSet<Type>(new ComponentSorter());
-		for (ArtemisConfigurationData system : systems)
-		{
+		for (ArtemisConfigurationData system : systems) {
 			componentSet.addAll(system.requires);
 			componentSet.addAll(system.requiresOne);
 			componentSet.addAll(system.optional);
@@ -139,14 +124,12 @@ public class MatrixBuilder implements Opcodes
 		return componentSet;
 	}
 	
-	private void write(SortedMap<String, List<AgroteraMapping>> mappedSystems, List<String> columns)
-	{
+	private void write(SortedMap<String, List<AgroteraMapping>> mappedSystems, List<String> columns) {
 		Theme theme = new Theme();
 		Chunk chunk = theme.makeChunk("matrix");
 		
 		List<AgroteraMapping> mapping = new ArrayList<AgroteraMapping>();
-		for (Entry<String,List<AgroteraMapping>> entry : mappedSystems.entrySet())
-		{
+		for (Entry<String,List<AgroteraMapping>> entry : mappedSystems.entrySet()) {
 			mapping.add(new AgroteraMapping(entry.getKey()));
 			mapping.addAll(entry.getValue());
 		}
@@ -159,17 +142,14 @@ public class MatrixBuilder implements Opcodes
 		chunk.set("project", projectName);
 		
 		BufferedWriter out = null;
-		try
-		{
+		try {
 			out = new BufferedWriter(new FileWriter(output));
 			chunk.render(out);
 		}
-		catch (IOException e)
-		{
+		catch (IOException e) {
 			e.printStackTrace();
 		}
-		finally
-		{
+		finally {
 			if (out != null) try {
 				out.close();
 			}
@@ -180,22 +160,18 @@ public class MatrixBuilder implements Opcodes
 		}
 	}
 	
-	private static Map<Type,Integer> getComponentIndices(SortedSet<Type> componentSet)
-	{
+	private static Map<Type,Integer> getComponentIndices(SortedSet<Type> componentSet) {
 		Map<Type, Integer> componentIndices = new HashMap<Type, Integer>();
 		int index = 0;
-		for (Type component : componentSet)
-		{
+		for (Type component : componentSet) {
 			componentIndices.put(component, index++);
 		}
 		return componentIndices;
 	}
 	
-	private static void filterSystems(File file, List<ArtemisConfigurationData> destination)
-	{
+	private static void filterSystems(File file, List<ArtemisConfigurationData> destination) {
 		FileInputStream stream = null;
-		try
-		{
+		try {
 			stream = new FileInputStream(file);
 			
 			ClassReader cr = new ClassReader(stream);
@@ -205,16 +181,13 @@ public class MatrixBuilder implements Opcodes
 			if (meta.annotationType != null)
 				destination.add(meta);
 		}
-		catch (FileNotFoundException e)
-		{
+		catch (FileNotFoundException e) {
 			System.err.println("not found: " + file);
 		}
-		catch (IOException e)
-		{
+		catch (IOException e) {
 			e.printStackTrace();
 		}
-		finally
-		{
+		finally {
 			if (stream != null) try {
 				stream.close();
 			}
@@ -224,20 +197,16 @@ public class MatrixBuilder implements Opcodes
 		}
 	}
 	
-	private static class ComponentSorter implements Comparator<Type>
-	{
+	private static class ComponentSorter implements Comparator<Type> {
 		@Override
-		public int compare(Type o1, Type o2)
-		{
+		public int compare(Type o1, Type o2) {
 			return o1.getClassName().compareTo(o2.getClassName());
 		}
 	}
 
-	private static class SystemComparator implements Comparator<ArtemisConfigurationData>
-	{
+	private static class SystemComparator implements Comparator<ArtemisConfigurationData> {
 		@Override
-		public int compare(ArtemisConfigurationData o1, ArtemisConfigurationData o2)
-		{
+		public int compare(ArtemisConfigurationData o1, ArtemisConfigurationData o2) {
 			return o1.current.toString().compareTo(o2.current.toString());
 		}
 	}
