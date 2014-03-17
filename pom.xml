@@ -17,6 +17,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<asm.version>4.1</asm.version>
 	</properties>
 
 	<scm>
@@ -75,6 +76,7 @@
 		<module>artemis-weaver</module>
 		<module>artemis-maven</module>
 		<module>artemis-test</module>
+		<module>artemis-matrix</module>
 		<module>artemis-gwt</module>
 	</modules>
 	
