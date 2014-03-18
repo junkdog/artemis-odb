@@ -2,15 +2,11 @@ package com.artemis;
 
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Test;
 import org.reflections.Reflections;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 
 import com.artemis.util.CollectionsUtil;
-import com.google.common.base.Predicate;
 
 public class Prerequisites {
 	
@@ -19,6 +15,14 @@ public class Prerequisites {
 		Reflections reflections = new Reflections("com.artemis");
 		Set<Class<? extends EntitySystem>> systems = reflections.getSubTypesOf(EntitySystem.class);
 		systems = CollectionsUtil.filter(systems, "com.artemis.matrix.system");
-		System.out.println(systems);
+		Assert.assertEquals(2, systems.size());
+	}
+	
+	@Test
+	public void findComponents() {
+		Reflections reflections = new Reflections("com.artemis");
+		Set<Class<? extends Component>> components = reflections.getSubTypesOf(Component.class);
+		components = CollectionsUtil.filter(components, "com.artemis.component");
+		Assert.assertTrue(components.size() > 0);
 	}
 }
