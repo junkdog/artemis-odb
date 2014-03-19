@@ -18,6 +18,7 @@
 - `-DenableArtemisPlugin`: If set to false, no weaving will take place (useful
   for debugging).
 - **Fix**: Possible NPE when removing recently created entities.
+- **Fix**: `Entity#getComponent` would sometimes throw an `ArrayIndexOutOfBoundsException`.
 
 ## Version: 0.5.0 - 2013-11-24
  - Changed artemis to a multi-module project (the `artemis` folder is the old root).

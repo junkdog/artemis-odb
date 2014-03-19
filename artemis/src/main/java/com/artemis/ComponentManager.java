@@ -224,7 +224,7 @@ public class ComponentManager extends Manager {
 			return component;
 		} else {
 			Bag<Component> components = componentsByType.get(type.getIndex());
-			if(components != null) {
+			if (components != null && components.isIndexWithinBounds(e.getId())) {
 				return components.get(e.getId());
 			}
 		}

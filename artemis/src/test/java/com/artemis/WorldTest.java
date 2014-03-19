@@ -24,6 +24,26 @@ public class WorldTest
 	{
 		world = new World();
 	}
+	
+	@Test
+	public void get_component_should_not_throw_exception()
+	{
+		world = new World();
+		world.initialize();
+
+		for (int i = 0; i < 100; i++) {
+			Entity e = world.createEntity();
+			if (i == 0) e.addComponent(new ComponentX());
+			e.addToWorld();
+		}
+
+		world.process();
+
+		for (int i = 0; i < 100; i++) {
+			Entity e = world.getEntity(i);
+			e.getComponent(ComponentX.class);
+		}
+	}
 
 	@Test
 	public void access_component_after_deletion_in_previous_system()
@@ -77,25 +97,7 @@ public class WorldTest
 		return e;
 	}
 	
-	// @Test
-	public void system_adding_system_in_initialize()
-	{
-		world.setSystem(new SystemSpawner());
-		world.setSystem(new SystemB());
-		world.initialize();
-		
-		createEntity();
-		
-		world.process();
-		ImmutableBag<EntitySystem> systems = world.getSystems();
-		assertEquals(systems.toString(), 3, systems.size());
-		assertEquals(SystemSpawner.class, systems.get(0).getClass());
-		// FIXME: there should be a machanism for ordering systems
-		// if they are to be added into an already initialized world
-		// assertEquals(SystemY.class, systems.get(1).getClass());
-		// assertEquals(SystemB.class, systems.get(2).getClass());
-		assertEquals(1, world.getSystem(SystemY.class).getActives().size());
-	}
+	
 
 	static class SystemComponentXRemover extends EntityProcessingSystem
 	{
