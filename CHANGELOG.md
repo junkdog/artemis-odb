@@ -3,11 +3,11 @@
 ## Developed but not released
 - **GWT support** ([demo](http://flet.github.io/spaceship-warrior-redux/)) sporting
   [libgdx](https://github.com/libgdx/libgdx)'s reflection wrapper code.
-  - This means that `@Mapper` works for GWT builds too.
+  - This means that `@Mapper` and `@Wire` works for GWT builds too.
   - Note: `@PooledWeaver` and `@PackedWeaver` don't work under GWT, though the presence
     of the annotations shouldn't break the build.
 - Entity systems and managers can `@Wire` (inject) anything from the world: will eventually
-  replace `@Mappper`. No need to annotate each field - just annotate the class and artemis
+  replace `@Mapper`. No need to annotate each field - just annotate the class and artemis
   will take care of injecting applicable fields.
 - Optional `expectedEntityCount` parameters in `World` constructor.
 - Direct field access works for `@PackedWeaver` components.
