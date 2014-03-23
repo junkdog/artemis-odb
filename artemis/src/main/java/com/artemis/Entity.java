@@ -28,11 +28,6 @@ public final class Entity {
 	private final BitSet systemBits;
 	/** The world this entity belongs to. */
 	private final World world;
-	/** The manager handling this entity. */
-	private final EntityManager entityManager;
-	/** The manager handling this entities components. */
-	private final ComponentManager componentManager;
-
 
 	/**
 	 * Creates a new {@link Entity} instance in the given world.
@@ -67,8 +62,6 @@ public final class Entity {
 	protected Entity(World world, int id, UUID uuid) {
 		this.world = world;
 		this.id = id;
-		this.entityManager = world.getEntityManager();
-		this.componentManager = world.getComponentManager();
 		systemBits = new BitSet();
 		componentBits = new BitSet();
 		this.uuid = uuid;
@@ -125,6 +118,7 @@ public final class Entity {
 	}
 	
 	public <T extends Component> T createComponent(Class<T> componentKlazz) {
+		ComponentManager componentManager = world.getComponentManager();
 		T component = componentManager.create(this, componentKlazz);
 		componentManager.addComponent(this, ComponentType.getTypeFor(componentKlazz), component);
 		return component;
@@ -164,7 +158,7 @@ public final class Entity {
 			throw new InvalidComponentException(component.getClass(),
 				"Use Entity#createComponent for adding non-basic component types");
 		}
-		componentManager.addComponent(this, type, component);
+		world.getComponentManager().addComponent(this, type, component);
 		return this;
 	}
 
@@ -190,7 +184,7 @@ public final class Entity {
 	 * @return this entity for chaining
 	 */
 	public Entity removeComponent(ComponentType type) {
-		componentManager.removeComponent(this, type);
+		world.getComponentManager().removeComponent(this, type);
 		return this;
 	}
 	
@@ -217,7 +211,7 @@ public final class Entity {
 	 * @return {@code true} if it's active
 	 */
 	public boolean isActive() {
-		return entityManager.isActive(id);
+		return world.getEntityManager().isActive(id);
 	}
 	
 	/**
@@ -230,7 +224,7 @@ public final class Entity {
 	 * @return {@code true} if it's enabled
 	 */
 	public boolean isEnabled() {
-		return entityManager.isEnabled(id);
+		return world.getEntityManager().isEnabled(id);
 	}
 	
 	/**
@@ -248,7 +242,7 @@ public final class Entity {
 	 * @return
 	 */
 	public Component getComponent(ComponentType type) {
-		return componentManager.getComponent(this, type);
+		return world.getComponentManager().getComponent(this, type);
 	}
 
 	/**
@@ -283,7 +277,7 @@ public final class Entity {
 	 * @return the fillBag containing the components
 	 */
 	public Bag<Component> getComponents(Bag<Component> fillBag) {
-		return componentManager.getComponentsFor(this, fillBag);
+		return world.getComponentManager().getComponentsFor(this, fillBag);
 	}
 
 	/**
