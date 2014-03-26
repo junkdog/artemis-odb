@@ -12,11 +12,23 @@ import com.artemis.World;
 
 
 /**
- * Reflexively injects {@link ComponentMapper}, {@link EntitySystem} and {@link Manager} fiekds upon
+ * Reflexively injects {@link ComponentMapper}, {@link EntitySystem} and {@link Manager} fields upon
  * calling {@link World#setSystem(com.artemis.EntitySystem)} or {@link World#setManager(com.artemis.Manager)}.
  * <p>
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
-public @interface Wire {}
+public @interface Wire {
+	
+	/**
+	 * If true, also inject inherited fields.
+	 */
+	boolean injectInherited() default false;
+	
+	
+	/**
+	 * Throws a {@link NullPointerException} if field can't be injected.
+	 */
+	boolean failOnNull() default true;
+}

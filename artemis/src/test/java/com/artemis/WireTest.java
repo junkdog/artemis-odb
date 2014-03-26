@@ -1,7 +1,7 @@
 package com.artemis;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
+
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +11,7 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.systems.VoidEntitySystem;
 
 public class WireTest {
 	
@@ -18,8 +19,10 @@ public class WireTest {
 	
 	private MappedSystem mappedSystem;
 	private MappedSystemAll mappedSystemAll;
+	private ExtendedSystem extendedSystem;
 	private MappedManager mappedManager;
 	private MappedManagerAll mappedManagerAll;
+	private ExtendedManager extendedManager;
 	
 	private Entity entity;
 
@@ -28,8 +31,10 @@ public class WireTest {
 		world = new World();
 		mappedSystem = world.setSystem(new MappedSystem());
 		mappedSystemAll = world.setSystem(new MappedSystemAll());
+		extendedSystem = world.setSystem(new ExtendedSystem());
 		mappedManager = world.setManager(new MappedManager());
 		mappedManagerAll = world.setManager(new MappedManagerAll());
+		extendedManager = world.setManager(new ExtendedManager());
 		world.setManager(new TagManager());
 		
 		
@@ -49,6 +54,8 @@ public class WireTest {
 		assertNotNull(mappedSystem.y);
 		assertNotNull(mappedSystem.tagManager);
 		assertNotNull(mappedSystem.mappedSystemAll);
+		assertNotNull(extendedSystem.x);
+		assertNotNull(extendedSystem.y);
 		
 		assertEquals(ComponentX.class, mappedSystem.x.get(entity).getClass());
 		assertEquals(ComponentY.class, mappedSystem.y.get(entity).getClass());
@@ -82,9 +89,43 @@ public class WireTest {
 		assertNotNull(mappedManagerAll.y);
 		assertNotNull(mappedManagerAll.tagManager);
 		assertNotNull(mappedManagerAll.mappedSystem);
+		assertNotNull(extendedManager.x);
+		assertNotNull(extendedManager.y);
 		
 		assertEquals(ComponentX.class, mappedSystem.x.get(entity).getClass());
 		assertEquals(ComponentY.class, mappedSystem.y.get(entity).getClass());
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void ensure_inherited_systems_not_injected() {
+		World world = new World();
+		world.setSystem(new FailingSystem());
+		world.initialize();
+	}
+	
+	@Test
+	public void ensure_inherited_managers_not_injected() {
+		World world = new World();
+		FailingSystem failingSystem = world.setSystem(new FailingSystem());
+		FailingManager failingManager = world.setManager(new FailingManager());
+		world.initialize();
+		
+		assertNull(failingManager.x);
+		assertNull(failingSystem.x);
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void fail_on_system_not_injected() {
+		World world = new World();
+		FailingNpeSystem failingSystem = world.setSystem(new FailingNpeSystem());
+		world.initialize();
+	}
+	
+	@Test(expected=NullPointerException.class)
+	public void fail_on_manager_not_injected() {
+		World world = new World();
+		FailingNpeManager failingManager = world.setManager(new FailingNpeManager());
+		world.initialize();
 	}
 	
 	@Wire
@@ -131,5 +172,52 @@ public class WireTest {
 		private ComponentMapper<ComponentY> y;
 		private MappedSystem mappedSystem;
 		private TagManager tagManager;
+	}
+	
+	private static class BaseManager extends Manager {
+		protected ComponentMapper<ComponentX> x;
+	}
+	
+	@Wire(injectInherited=true)
+	private static class ExtendedManager extends BaseManager {
+		private ComponentMapper<ComponentY> y;
+	}
+	
+	@Wire
+	private static class FailingManager extends BaseManager {
+		private ComponentMapper<ComponentY> y;
+	}
+	
+	private static abstract class BaseSystem extends VoidEntitySystem {
+		protected ComponentMapper<ComponentX> x;
+	}
+	
+	@Wire(injectInherited=true)
+	private static class ExtendedSystem extends BaseSystem {
+		private ComponentMapper<ComponentY> y;
+		
+		@Override
+		protected void processSystem() {}
+	}
+	
+	@Wire
+	private static class FailingSystem extends BaseSystem {
+		private FailingManager manager;
+		
+		@Override
+		protected void processSystem() {}
+	}
+	
+	@Wire
+	private static class FailingNpeSystem extends VoidEntitySystem {
+		private FailingManager manager;
+		
+		@Override
+		protected void processSystem() {}
+	}
+	
+	@Wire
+	private static class FailingNpeManager extends Manager {
+		private FailingSystem fail;
 	}
 }

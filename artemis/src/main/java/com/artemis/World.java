@@ -617,46 +617,73 @@ public class World {
 		public static void config(Object target, World world) throws RuntimeException {
 			try {
 				Class<?> clazz = target.getClass();
-				if (clazz.getAnnotation(Wire.class) != null) {
-					injectValidFields(target, world, clazz);
+				Wire wire = clazz.getAnnotation(Wire.class);
+				if (wire != null) {
+					injectValidFields(target, world, clazz, wire);
 				} else {
 					injectAnnotatedFields(target, world, clazz);
 				}
-			} catch (Exception e) {
-				throw new RuntimeException("Error while setting component mappers", e);
+			} catch (ReflectionException e) {
+				throw new RuntimeException("Error while wiring", e);
 			}
 		}
 		
-		private static void injectValidFields(Object target, World world, Class<?> clazz)
+		private static void injectValidFields(Object target, World world, Class<?> clazz, Wire wire)
 			throws ReflectionException {
 			
 			for (Field field : ClassReflection.getDeclaredFields(clazz)) {
-				injectField(target, world, field);
+				injectField(target, world, field, wire.failOnNull());
+			}
+			
+			// should bail earlier, but it's just one more round.
+			while (wire.injectInherited() && (clazz = clazz.getSuperclass()) != Object.class) {
+				injectValidFields(target, world, clazz, wire);
 			}
 		}
 
 		private static void injectAnnotatedFields(Object target, World world, Class<?> clazz)
 			throws ReflectionException {
 			
+			injectClass(target, world, clazz);
+			
+		}
+
+		private static void injectClass(Object target, World world, Class<?> clazz) throws ReflectionException {
 			for (Field field : ClassReflection.getDeclaredFields(clazz)) {
 				if (field.hasAnnotation(Mapper.class) || field.hasAnnotation(Wire.class)) {
-					injectField(target, world, field);
+					injectField(target, world, field, field.hasAnnotation(Wire.class));
 				}
 			}
 		}
+		
+		private static boolean failOnNull(Wire wire) {
+			return (wire != null) ? wire.failOnNull() : false;
+		}
 
 		@SuppressWarnings("unchecked")
-		private static void injectField(Object target, World world, Field field)
+		private static void injectField(Object target, World world, Field field, boolean failOnNotInjected)
 			throws ReflectionException {
 			
 			field.setAccessible(true);
 			Class<?> fieldType = field.getType();
 			if (ComponentMapper.class.isAssignableFrom(fieldType)) {
-				field.set(target, world.getMapper(field.getElementType(0)));
+				ComponentMapper<?> mapper = world.getMapper(field.getElementType(0));
+				if (failOnNotInjected && mapper == null) {
+					throw new NullPointerException("ComponentMapper not found for " + fieldType);
+				}
+				field.set(target, mapper);
 			} else if (EntitySystem.class.isAssignableFrom(fieldType)) {
-				field.set(target, world.getSystem((Class<EntitySystem>)fieldType));
+				EntitySystem system = world.getSystem((Class<EntitySystem>)fieldType);
+				if (failOnNotInjected && system == null) {
+					throw new NullPointerException("EntitySystem not found for " + fieldType);
+				}
+				field.set(target, system);
 			} else if (Manager.class.isAssignableFrom(fieldType)) {
-				field.set(target, world.getManager((Class<Manager>)fieldType));
+				Manager manager = world.getManager((Class<Manager>)fieldType);
+				if (failOnNotInjected && manager == null) {
+					throw new NullPointerException("Manager not found for " + fieldType);
+				}
+				field.set(target, manager);
 			}
 		}
 	}
