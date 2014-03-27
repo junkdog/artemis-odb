@@ -655,10 +655,6 @@ public class World {
 				}
 			}
 		}
-		
-		private static boolean failOnNull(Wire wire) {
-			return (wire != null) ? wire.failOnNull() : false;
-		}
 
 		@SuppressWarnings("unchecked")
 		private static void injectField(Object target, World world, Field field, boolean failOnNotInjected)
