@@ -20,6 +20,9 @@ import com.artemis.gwtref.client.ReflectionCache;
 import com.artemis.gwtref.client.Type;
 import com.artemis.utils.reflect.ReflectionException;
 
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+
 /** Utilities for Class reflection.
  * @author nexsoftware */
 public final class ClassReflection {
@@ -35,7 +38,7 @@ public final class ClassReflection {
 
 	/** Returns the simple name of the underlying class as supplied in the source code. */
 	static public String getSimpleName (Class c) {
-		return c.getName();
+		return c.getSimpleName();
 	}
 
 	/** Determines if the supplied Object is assignment-compatible with the object represented by supplied Class. */
@@ -174,6 +177,16 @@ public final class ClassReflection {
 			result[i] = new Field(fields[i]);
 		}
 		return result;
+	}
+
+    /** Returns true if the class or interface represented by the supplied Class is annotated by given class. */
+    static public boolean hasAnnotation(Class c, Class annotationClass) {
+   	    return Arrays.asList(ReflectionCache.getType(c).getAnnotationClasses()).contains(annotationClass.getName());
+    }
+
+    /** Returns this element's annotation for the specified type if such an annotation is present, else null. */
+    static public <A extends Annotation> A getAnnotation(Class c, Class<A> annotationClass) throws ReflectionException {
+        return null; // Not yet supported on gwt client side.
 	}
 
 	/** Returns a {@link Field} that represents the specified declared field for the supplied class. */

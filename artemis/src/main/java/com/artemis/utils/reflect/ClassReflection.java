@@ -16,6 +16,7 @@
 
 package com.artemis.utils.reflect;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Modifier;
 
 /** Utilities for Class reflection.
@@ -172,6 +173,16 @@ public final class ClassReflection {
 		}
 		return result;
 	}
+
+    /** Returns true if the class or interface represented by the supplied Class is annotated by annotationClass */
+    static public boolean hasAnnotation(Class c, Class annotationClass) {
+        return  c.getAnnotation(annotationClass) != null;
+    }
+
+    /** Creates a new instance of the annotation represented by the supplied annotationClass. */
+    static public <A extends Annotation> A getAnnotation(Class c, Class<A> annotationClass) throws ReflectionException {
+        return (A) c.getAnnotation(annotationClass);
+    }
 
 	/** Returns a {@link Field} that represents the specified declared field for the supplied class. */
 	static public Field getDeclaredField (Class c, String name) throws ReflectionException {
