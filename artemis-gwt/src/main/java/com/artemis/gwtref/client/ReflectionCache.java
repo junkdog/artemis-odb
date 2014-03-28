@@ -16,9 +16,9 @@
 
 package com.artemis.gwtref.client;
 
-import java.util.Collection;
-
 import com.google.gwt.core.client.GWT;
+
+import java.util.Collection;
 
 public class ReflectionCache {
 	public static IReflectionCache instance = GWT.create(IReflectionCache.class);
