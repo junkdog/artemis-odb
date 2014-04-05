@@ -16,9 +16,9 @@
 
 package com.artemis.gwtref.client;
 
-import java.util.Collection;
-
 import com.google.gwt.core.client.GWT;
+
+import java.util.Collection;
 
 public class ReflectionCache {
 	public static IReflectionCache instance = GWT.create(IReflectionCache.class);
@@ -26,7 +26,7 @@ public class ReflectionCache {
 	public static Type forName (String name) throws ClassNotFoundException {
 		Type type = instance.forName(convert(name));
 		if (type == null) {
-			throw new RuntimeException("Couldn't find Type for class '" + name + "'");
+			throw new RuntimeException("(artemis-odb) Couldn't find Type for class '" + name + "'");
 		}
 		return type;
 	}
@@ -35,7 +35,7 @@ public class ReflectionCache {
 		if (clazz == null) return null;
 		Type type = instance.forName(convert(clazz.getName()));
 		if (type == null) {
-			throw new RuntimeException("Couldn't find Type for class '" + clazz.getName() + "'");
+			throw new RuntimeException("(artemis-odb) Couldn't find Type for class '" + clazz.getName() + "'");
 		}
 		return type;
 	}
@@ -71,7 +71,7 @@ public class ReflectionCache {
 			case 'S':
 				return "short" + suffix;
 			default:
-				throw new IllegalArgumentException("Couldn't transform '" + className + "' to qualified source name");
+				throw new IllegalArgumentException("(artemis-odb) Couldn't transform '" + className + "' to qualified source name");
 			}
 		} else {
 			return className.replace('$', '.');
