@@ -27,7 +27,8 @@ import java.util.Set;
 public class Type {
 	private static final Field[] EMPTY_FIELDS = new Field[0];
 	private static final Method[] EMPTY_METHODS = new Method[0];
-	private static final Constructor[] EMPTY_CONSTRUCTORS = new Constructor[0];
+    private static final Constructor[] EMPTY_CONSTRUCTORS = new Constructor[0];
+    private static final String[] EMPTY_ANNOTATIONCLASSES = new String[0];
 
 	String name;
 	int id;
@@ -45,6 +46,7 @@ public class Type {
 	Field[] fields = EMPTY_FIELDS;
 	Method[] methods = EMPTY_METHODS;
 	Constructor[] constructors = EMPTY_CONSTRUCTORS;
+    String[] annotationClasses = EMPTY_ANNOTATIONCLASSES;
 
 	Class componentType;
 	Object[] enumConstants;
@@ -243,4 +245,8 @@ public class Type {
 			+ Arrays.toString(constructors) + ",\n componentType=" + componentType + ",\n enumConstants="
 			+ Arrays.toString(enumConstants) + "]";
 	}
+
+    public String[] getAnnotationClasses() {
+        return annotationClasses;
+    }
 }

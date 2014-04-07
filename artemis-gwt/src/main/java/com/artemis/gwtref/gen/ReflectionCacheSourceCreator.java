@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -16,38 +16,18 @@
 
 package com.artemis.gwtref.gen;
 
-import java.io.PrintWriter;
-import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.google.gwt.core.ext.BadPropertyValueException;
 import com.google.gwt.core.ext.ConfigurationProperty;
 import com.google.gwt.core.ext.GeneratorContext;
 import com.google.gwt.core.ext.TreeLogger;
 import com.google.gwt.core.ext.TreeLogger.Type;
-import com.google.gwt.core.ext.typeinfo.JAbstractMethod;
-import com.google.gwt.core.ext.typeinfo.JArrayType;
-import com.google.gwt.core.ext.typeinfo.JClassType;
-import com.google.gwt.core.ext.typeinfo.JConstructor;
-import com.google.gwt.core.ext.typeinfo.JEnumConstant;
-import com.google.gwt.core.ext.typeinfo.JEnumType;
-import com.google.gwt.core.ext.typeinfo.JField;
-import com.google.gwt.core.ext.typeinfo.JMethod;
-import com.google.gwt.core.ext.typeinfo.JPackage;
-import com.google.gwt.core.ext.typeinfo.JParameter;
-import com.google.gwt.core.ext.typeinfo.JParameterizedType;
-import com.google.gwt.core.ext.typeinfo.JPrimitiveType;
-import com.google.gwt.core.ext.typeinfo.JType;
-import com.google.gwt.core.ext.typeinfo.NotFoundException;
-import com.google.gwt.core.ext.typeinfo.TypeOracle;
+import com.google.gwt.core.ext.typeinfo.*;
 import com.google.gwt.user.rebind.ClassSourceFileComposerFactory;
 import com.google.gwt.user.rebind.SourceWriter;
+
+import java.io.PrintWriter;
+import java.lang.annotation.Annotation;
+import java.util.*;
 
 public class ReflectionCacheSourceCreator {
 	private static final List<String> PRIMITIVE_TYPES = Collections.unmodifiableList(Arrays.asList(new String[] {"char", "int",
@@ -518,6 +498,17 @@ public class ReflectionCacheSourceCreator {
 			pb(varName + ".isStatic = " + c.isStatic() + ";");
 			pb(varName + ".isAbstract = " + c.isAbstract() + ";");
 
+            StringBuilder classAnnotationClasses = new StringBuilder("new String[]{");
+            Annotation[] classAnnotations = c.getAnnotations();
+            for (int i = 0; i < classAnnotations.length; i++) {
+                classAnnotationClasses.append("\"").append(classAnnotations[i].annotationType().getName()).append("\"");
+                if (i < classAnnotations.length - 1) {
+                    classAnnotationClasses.append(",");
+                }
+            }
+            classAnnotationClasses.append("}");
+            pb(varName + ".annotationClasses = " + classAnnotationClasses.toString() + ";");
+
 			if (c.getFields() != null) {
 				pb(varName + ".fields = new Field[] {");
 				for (JField f : c.getFields()) {
@@ -528,7 +519,7 @@ public class ReflectionCacheSourceCreator {
 					String elementType = getElementTypes(f);
 					Annotation[] annotations = f.getAnnotations();
 					StringBuilder annotationClasses = new StringBuilder("new String[]{");
-					
+
 					for (int i = 0; i < annotations.length; i++) {
 						annotationClasses.append("\"").append(annotations[i].annotationType().getName()).append("\"");
 						if(i < annotations.length-1) {
@@ -536,7 +527,7 @@ public class ReflectionCacheSourceCreator {
 						}
                     }
 					annotationClasses.append("}");
-					
+
 					pb("new Field(\"" + f.getName() + "\", " + enclosingType + ", " + fieldType + ", " + f.isFinal() + ", "
 						+ f.isDefaultAccess() + ", " + f.isPrivate() + ", " + f.isProtected() + ", " + f.isPublic() + ", "
 						+ f.isStatic() + ", " + f.isTransient() + ", " + f.isVolatile() + ", " + getter + ", " + setter + ", "

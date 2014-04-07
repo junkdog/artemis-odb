@@ -9,15 +9,20 @@
 
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.PackedComponent" />
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.PooledComponent" />
-	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.annotations.Mapper" />
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.annotations.Mapper" />
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.annotations.Wire" />
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.ComponentType" />
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.ComponentMapper" />
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.Component" />
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntityManager" />
-    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.managers.GroupManager" />
-    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.managers.PlayerManager" />
-    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.managers.TagManager" />
-    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.managers.TeamManager" />
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntitySystem" />
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.Manager" />
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.systems" />
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.managers" />
+
+    <source path="">
+    		<exclude name="**/gen/**" />
+    </source>
 
 	<generate-with class="com.artemis.gwtref.gen.ReflectionCacheGenerator">
 		<when-type-assignable class="com.artemis.gwtref.client.IReflectionCache" />
