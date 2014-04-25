@@ -338,7 +338,7 @@ public final class Entity {
 		return uuid;
 	}
 	
-	public void setUuid(UUID uuid) {
+	void setUuid(UUID uuid) {
 		this.uuid = uuid;
 	}
 
