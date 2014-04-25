@@ -11,7 +11,7 @@ public class UuidEntityManager extends Manager {
 	private final Map<UUID, Entity> entities;
 
 	public UuidEntityManager() {
-		this.entities = new HashMap<UUID,Entity>();
+		this.entities = new HashMap<UUID, Entity>();
 	}
 
 	@Override

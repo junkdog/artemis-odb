@@ -141,9 +141,10 @@ public class World {
 	 * added.
 	 */
 	public void initialize() {
+		ArtemisInitHelper initHelper = new ArtemisInitHelper(this);
 		for (int i = 0; i < managersBag.size(); i++) {
 			Manager manager = managersBag.get(i);
-			ComponentMapperInitHelper.config(manager, this);
+			initHelper.configure(manager);
 			manager.initialize();
 		}
 
@@ -501,9 +502,10 @@ public class World {
 	}
 
 	private void initializeSystems() {
+		ArtemisInitHelper initHelper = new ArtemisInitHelper(this);
 		for (int i = 0, s = systemsToInit.size(); i < s; i++) {
 			EntitySystem es = systemsToInit.get(i);
-			ComponentMapperInitHelper.config(es, this);
+			initHelper.configure(es);
 			es.initialize();
 		}
 		systemsToInit.clear();
@@ -597,70 +599,68 @@ public class World {
 
 
 	/**
-	 * Injects {@link ComponentMapper}, {@link EntitySystem} and {@link Manager} into systems and
+	 * Injects {@link ComponentMapper}, {@link EntitySystem} and {@link Manager} types into systems and
 	 * managers.
 	 */
-	private static final class ComponentMapperInitHelper {
+	private static final class ArtemisInitHelper {
+		private final World world;
+		
+		ArtemisInitHelper(World world) {
+			this.world = world;
+		}
+		
 
-		/**
-		 * Injects a {@link BasicComponentMapper} instance for every {@link Mapper}
-		 * annotation into the given system.
-		 *
-		 * @param target the object to inject into (usually an {@link EntitySystem})
-		 * @param world  the world responsible for the component mappers
-		 * @throws RuntimeException
-		 */
-		public static void config(Object target, World world) throws RuntimeException {
+		public void configure(Object target) throws RuntimeException {
 			try {
 				Class<?> clazz = target.getClass();
 
 				if (ClassReflection.hasAnnotation(clazz, Wire.class)) {
 					Wire wire = ClassReflection.getAnnotation(clazz, Wire.class);
 					if (wire != null) {
-						injectValidFields(target, world, clazz, wire.failOnNull(), wire.injectInherited());
+						injectValidFields(target, clazz, wire.failOnNull(), wire.injectInherited());
 					} else {
 						// getAnnotation not supported on GWT. Revert to defaults when this is the case.
 						// @todo Workaround, awaiting junkdog-ification.
-						injectValidFields(target, world, clazz, true, false);
+						injectValidFields(target, clazz, true, false);
 					}
 				} else {
-					injectAnnotatedFields(target, world, clazz);
+					injectAnnotatedFields(target, clazz);
 				}
 			} catch (ReflectionException e) {
 				throw new RuntimeException("Error while wiring", e);
 			}
 		}
 
-		private static void injectValidFields(Object target, World world, Class<?> clazz, boolean failOnNull, boolean injectInherited)
+		private void injectValidFields(Object target, Class<?> clazz, boolean failOnNull, boolean injectInherited)
 				throws ReflectionException {
 
 			for (Field field : ClassReflection.getDeclaredFields(clazz)) {
-				injectField(target, world, field, failOnNull);
+				injectField(target, field, failOnNull);
 			}
 
 			// should bail earlier, but it's just one more round.
 			while (injectInherited && (clazz = clazz.getSuperclass()) != Object.class) {
-				injectValidFields(target, world, clazz, failOnNull, injectInherited);
+				injectValidFields(target, clazz, failOnNull, injectInherited);
 			}
 		}
 
-		private static void injectAnnotatedFields(Object target, World world, Class<?> clazz)
+		private void injectAnnotatedFields(Object target, Class<?> clazz)
 			throws ReflectionException {
 
-			injectClass(target, world, clazz);
+			injectClass(target, clazz);
 
 		}
 
-		private static void injectClass(Object target, World world, Class<?> clazz) throws ReflectionException {
+		private void injectClass(Object target, Class<?> clazz) throws ReflectionException {
 			for (Field field : ClassReflection.getDeclaredFields(clazz)) {
 				if (field.hasAnnotation(Mapper.class) || field.hasAnnotation(Wire.class)) {
-					injectField(target, world, field, field.hasAnnotation(Wire.class));
+					injectField(target, field, field.hasAnnotation(Wire.class));
 				}
 			}
 		}
 
 		@SuppressWarnings("unchecked")
-		private static void injectField(Object target, World world, Field field, boolean failOnNotInjected)
+		private void injectField(Object target, Field field, boolean failOnNotInjected)
 			throws ReflectionException {
 
 			field.setAccessible(true);
