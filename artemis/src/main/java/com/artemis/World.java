@@ -605,8 +605,29 @@ public class World {
 	private static final class ArtemisInitHelper {
 		private final World world;
 		
+		private Map<Class<?>, Class<?>> systems;
+		private Map<Class<?>, Class<?>> managers;
+		
 		ArtemisInitHelper(World world) {
 			this.world = world;
+			
+			systems = new IdentityHashMap<Class<?>, Class<?>>();
+			for (EntitySystem es : world.getSystems()) {
+				Class<?> origin = es.getClass();
+				Class<?> clazz = origin;
+				do {
+					systems.put(clazz, origin);
+				} while ((clazz = clazz.getSuperclass()) != Object.class);
+			}
+			
+			managers = new IdentityHashMap<Class<?>, Class<?>>();
+			for (Manager manager : world.managersBag) {
+				Class<?> origin = manager.getClass();
+				Class<?> clazz = origin;
+				do {
+					managers.put(clazz, origin);
+				} while ((clazz = clazz.getSuperclass()) != Object.class);
+			}
 		}
 		
 
@@ -681,13 +702,13 @@ public class World {
 				}
 				field.set(target, mapper);
 			} else if (ClassReflection.isAssignableFrom(EntitySystem.class, fieldType)) {
-				EntitySystem system = world.getSystem((Class<EntitySystem>) fieldType);
+				EntitySystem system = world.getSystem((Class<EntitySystem>)systems.get(fieldType));
 				if (failOnNotInjected && system == null) {
 					throw new NullPointerException("EntitySystem not found for " + fieldType);
 				}
 				field.set(target, system);
 			} else if (ClassReflection.isAssignableFrom(Manager.class, fieldType)) {
-				Manager manager = world.getManager((Class<Manager>) fieldType);
+				Manager manager = world.getManager((Class<Manager>)managers.get(fieldType));
 				if (failOnNotInjected && manager == null) {
 					throw new NullPointerException("Manager not found for " + fieldType);
 				}

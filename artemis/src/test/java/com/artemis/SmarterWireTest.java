@@ -47,7 +47,7 @@ public class SmarterWireTest {
 		protected ComponentMapper<ComponentX> x;
 	}
 	
-	@Wire
+	@Wire(injectInherited=true)
 	class EntityFactory extends AbstractEntityFactory {
 		private ComponentMapper<ComponentY> y;
 	}
