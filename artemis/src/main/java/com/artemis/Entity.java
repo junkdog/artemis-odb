@@ -4,6 +4,7 @@ import java.util.BitSet;
 import java.util.UUID;
 
 import com.artemis.ComponentType.Taxonomy;
+import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 
 
@@ -338,8 +339,15 @@ public final class Entity {
 		return uuid;
 	}
 	
-	void setUuid(UUID uuid) {
-		this.uuid = uuid;
+	public void setUuid(UUID uuid) {
+		UuidEntityManager uuidManager = world.getManager(UuidEntityManager.class);
+		if (uuidManager != null) {
+			UUID oldUuid = this.uuid;
+			this.uuid = uuid;
+			uuidManager.updatedUuid(this, oldUuid);
+		} else {
+			this.uuid = uuid;
+		}
 	}
 
 	/**

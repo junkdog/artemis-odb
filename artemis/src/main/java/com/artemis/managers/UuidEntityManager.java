@@ -24,6 +24,14 @@ public class UuidEntityManager extends Manager {
 		entities.remove(e.getUuid());
 	}
 	
+	/**
+	 * Only called by {@link Entity#setUuid}
+	 */
+	public void updatedUuid(Entity e, UUID oldUuid) {
+		entities.remove(oldUuid);
+		added(e);
+	}
+	
 	public Entity getEntity(UUID uuid) {
 		return entities.get(uuid);
 	}
