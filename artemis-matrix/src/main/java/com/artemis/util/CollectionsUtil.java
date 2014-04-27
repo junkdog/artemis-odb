@@ -14,6 +14,5 @@ public final class CollectionsUtil {
 				filtered.add(klazz);
 		}
 		return filtered;
-//		return new HashSet<Class<T>>();
 	}
 }

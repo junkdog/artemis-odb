@@ -104,7 +104,7 @@ public class MatrixBuilder implements Opcodes  {
 		return className.substring(0, className.lastIndexOf('.'));
 	}
 
-	private static List<ArtemisConfigurationData> findSystems(File root) {
+	private List<ArtemisConfigurationData> findSystems(File root) {
 		List<ArtemisConfigurationData> systems = new ArrayList<ArtemisConfigurationData>();
 		for (File f : ClassFinder.find(root))
 			filterSystems(f, systems);
@@ -169,13 +169,14 @@ public class MatrixBuilder implements Opcodes  {
 		return componentIndices;
 	}
 	
-	private static void filterSystems(File file, List<ArtemisConfigurationData> destination) {
+	private void filterSystems(File file, List<ArtemisConfigurationData> destination) {
 		FileInputStream stream = null;
 		try {
 			stream = new FileInputStream(file);
 			
 			ClassReader cr = new ClassReader(stream);
-			ArtemisConfigurationData meta = ArtemisConfigurationResolver.scan(cr);
+			ArtemisConfigurationResolver scanner = new ArtemisConfigurationResolver("com.github.junkdog.shamans");
+			ArtemisConfigurationData meta = scanner.scan(cr);
 			meta.current = Type.getObjectType(cr.getClassName());
 			
 			if (meta.annotationType != null)
@@ -209,5 +210,13 @@ public class MatrixBuilder implements Opcodes  {
 		public int compare(ArtemisConfigurationData o1, ArtemisConfigurationData o2) {
 			return o1.current.toString().compareTo(o2.current.toString());
 		}
+	}
+	
+	// FIXME just for debugging
+	public static void main(String[] args) {
+		File root = new File("/home/junkdog/opt/dev/git/shamans-weirding-game/core/target/classes");
+		File output = new File("/home/junkdog/opt/dev/git/shamans-weirding-game/core/target/matrix.html");
+		MatrixBuilder mb = new MatrixBuilder("Shaman's Weirding Game", root, output);
+		mb.process();
 	}
 }

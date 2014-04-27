@@ -3,40 +3,42 @@ package com.artemis.model.scan;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
+// TODO: if manager or system, scan method bodies
 class ArtemisMetaScanner extends ClassVisitor {
 	
-	static final String SYSTEM_ANNOTATION = "Llombok/ArtemisSystem;";
-	static final String MANAGER_ANNOTATION = "Llombok/ArtemisManager;";
-	static final String INJECTED_ANNOTATION = "Llombok/ArtemisInjected;";
-	private ArtemisConfigurationData info;
+	private final ArtemisConfigurationData config;
+	private final ArtemisConfigurationResolver resolver;
 
-	ArtemisMetaScanner(ArtemisConfigurationData config) {
+	ArtemisMetaScanner(ArtemisConfigurationData config, ArtemisConfigurationResolver configurationResolver) {
 		super(Opcodes.ASM4);
-		this.info = config;
+		this.config = config;
+		this.resolver = configurationResolver;
 	}
 	
 	@Override
-	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-		super.visit(version, access, name, signature, superName, interfaces);
-	}
-	
-	@Override
-	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		if (SYSTEM_ANNOTATION.equals(desc))
-			return new ArtemisAnnotationReader(desc, info);
-		else if (MANAGER_ANNOTATION.equals(desc))
-			return new ArtemisAnnotationReader(desc, info);
-		else if (INJECTED_ANNOTATION.equals(desc))
-			return new ArtemisAnnotationReader(desc, info);
+	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
+		Type type = Type.getType(desc);
+		if (config.systems.contains(type)) {
 			
-		return super.visitAnnotation(desc, visible);
+		} else if (config.managers.contains(type)) {
+			
+		}
+		
+		// TODO: check component mappers
+		
+		return super.visitField(access, name, desc, signature, value);
 	}
 	
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		return super.visitMethod(access, name, desc, signature, exceptions);
+		if ("<init>".equals(name))
+			return new ArtemisConstructorReader(config, resolver);
+		else
+			return new ArtemisMethodReader(config, resolver);
 	}
 }
