@@ -26,8 +26,8 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import com.artemis.model.scan.ArtemisConfigurationData;
-import com.artemis.model.scan.ArtemisConfigurationResolver;
+import com.artemis.model.scan.ArtemisTypeData;
+import com.artemis.model.scan.ConfigurationResolver;
 import com.artemis.util.ClassFinder;
 import com.x5.template.Chunk;
 import com.x5.template.Theme;
@@ -44,13 +44,13 @@ public class MatrixBuilder implements Opcodes  {
 	}
 	
 	public void process() {
-		List<ArtemisConfigurationData> systems = findSystems(root);
+		List<ArtemisTypeData> systems = findSystems(root);
 		if (systems.size() == 0)
 			return;
 		SortedSet<Type> componentSet = findComponents(systems);
 		
 		List<AgroteraMapping> systemMappings = new ArrayList<AgroteraMapping>();
-		for (ArtemisConfigurationData system : systems) {
+		for (ArtemisTypeData system : systems) {
 			AgroteraMapping mappedSystem = AgroteraMapping.from(
 				system, getComponentIndices(componentSet));
 			systemMappings.add(mappedSystem);
@@ -104,8 +104,8 @@ public class MatrixBuilder implements Opcodes  {
 		return className.substring(0, className.lastIndexOf('.'));
 	}
 
-	private List<ArtemisConfigurationData> findSystems(File root) {
-		List<ArtemisConfigurationData> systems = new ArrayList<ArtemisConfigurationData>();
+	private List<ArtemisTypeData> findSystems(File root) {
+		List<ArtemisTypeData> systems = new ArrayList<ArtemisTypeData>();
 		for (File f : ClassFinder.find(root))
 			filterSystems(f, systems);
 		
@@ -113,9 +113,9 @@ public class MatrixBuilder implements Opcodes  {
 		return systems;
 	}
 
-	private static SortedSet<Type> findComponents(List<ArtemisConfigurationData> systems) {
+	private static SortedSet<Type> findComponents(List<ArtemisTypeData> systems) {
 		SortedSet<Type> componentSet = new TreeSet<Type>(new ComponentSorter());
-		for (ArtemisConfigurationData system : systems) {
+		for (ArtemisTypeData system : systems) {
 			componentSet.addAll(system.requires);
 			componentSet.addAll(system.requiresOne);
 			componentSet.addAll(system.optional);
@@ -169,17 +169,17 @@ public class MatrixBuilder implements Opcodes  {
 		return componentIndices;
 	}
 	
-	private void filterSystems(File file, List<ArtemisConfigurationData> destination) {
+	private void filterSystems(File file, List<ArtemisTypeData> destination) {
 		FileInputStream stream = null;
 		try {
 			stream = new FileInputStream(file);
 			
 			ClassReader cr = new ClassReader(stream);
-			ArtemisConfigurationResolver scanner = new ArtemisConfigurationResolver("com.github.junkdog.shamans");
-			ArtemisConfigurationData meta = scanner.scan(cr);
+			ConfigurationResolver scanner = new ConfigurationResolver("com.github.junkdog.shamans");
+			ArtemisTypeData meta = scanner.scan(cr);
 			meta.current = Type.getObjectType(cr.getClassName());
 			
-			if (meta.annotationType != null)
+//			if (meta.annotationType != null) //FIXME ?
 				destination.add(meta);
 		}
 		catch (FileNotFoundException e) {
@@ -205,9 +205,9 @@ public class MatrixBuilder implements Opcodes  {
 		}
 	}
 
-	private static class SystemComparator implements Comparator<ArtemisConfigurationData> {
+	private static class SystemComparator implements Comparator<ArtemisTypeData> {
 		@Override
-		public int compare(ArtemisConfigurationData o1, ArtemisConfigurationData o2) {
+		public int compare(ArtemisTypeData o1, ArtemisTypeData o2) {
 			return o1.current.toString().compareTo(o2.current.toString());
 		}
 	}

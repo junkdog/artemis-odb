@@ -16,20 +16,20 @@ import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.artemis.systems.IntervalEntitySystem;
 import com.artemis.systems.VoidEntitySystem;
 
-public final class ArtemisConfigurationResolver {
+public final class ConfigurationResolver {
 	final Set<Type> managers;
 	final Set<Type> systems;
 	final Set<Type> components;
 	
-	public ArtemisConfigurationResolver(String basePackage) {
+	public ConfigurationResolver(String basePackage) {
 		systems = findSystems(basePackage);
 		managers = findManagers(basePackage);
 		components = findComponents(basePackage);
 	}
 	
-	public ArtemisConfigurationData scan(ClassReader source) {
-		ArtemisConfigurationData info = new ArtemisConfigurationData();
-		source.accept(new ArtemisMetaScanner(info, this), 0);
+	public ArtemisTypeData scan(ClassReader source) {
+		ArtemisTypeData info = new ArtemisTypeData();
+		source.accept(new ArtemisTypeScanner(info, this), 0);
 		return info;
 	}
 	

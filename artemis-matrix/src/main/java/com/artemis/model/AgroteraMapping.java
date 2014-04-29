@@ -1,15 +1,12 @@
 package com.artemis.model;
 
-import static com.artemis.model.scan.ArtemisConfigurationData.AnnotationType.MANAGER;
-import static com.artemis.model.scan.ArtemisConfigurationData.AnnotationType.SYSTEM;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.objectweb.asm.Type;
 
-import com.artemis.model.scan.ArtemisConfigurationData;
+import com.artemis.model.scan.ArtemisTypeData;
 
 public final class AgroteraMapping {
 	public final Type system;
@@ -34,33 +31,39 @@ public final class AgroteraMapping {
 		isManager = false;
 	}
 
-	private AgroteraMapping(ArtemisConfigurationData system, ComponentReference[] componentIndices) {
+	private AgroteraMapping(ArtemisTypeData system, ComponentReference[] componentIndices) {
 		this.system = system.current;
 		this.componentIndices = componentIndices;
 		
 		name = shortName(this.system);
 		
 		refManagers = new String[system.managers.size()];
-		for (int i = 0; system.managers.size() > i; i++)
-			refManagers[i] = shortName(system.managers.get(i));
+		// FIXME
+//		for (int i = 0; system.managers.size() > i; i++)
+//			refManagers[i] = shortName(system.managers.get(i));
 		
 		refSystems = new String[system.systems.size()];
-		for (int i = 0; system.systems.size() > i; i++)
-			refSystems[i] = shortName(system.systems.get(i));
+		// FIXME
+//		for (int i = 0; system.systems.size() > i; i++)
+//			refSystems[i] = shortName(system.systems.get(i));
 		
-		isSystem = system.is(SYSTEM);
-		isManager = system.is(MANAGER);
+		// FIXME
+//		isSystem = system.is(SYSTEM);
+//		isManager = system.is(MANAGER);
 		isPackage = false;
+		isSystem = false;
+		isManager = false;
 	}
 	
-	public static AgroteraMapping from(ArtemisConfigurationData system,
+	public static AgroteraMapping from(ArtemisTypeData system,
 		Map<Type, Integer> componentIndices) {
 		ComponentReference[] components = new ComponentReference[componentIndices.size()];
 		Arrays.fill(components, ComponentReference.NOT_REFERENCED);
-		mapComponents(system.requires, ComponentReference.REQUIRED, componentIndices, components);
-		mapComponents(system.requiresOne, ComponentReference.ANY, componentIndices, components);
-		mapComponents(system.optional, ComponentReference.OPTIONAL, componentIndices, components);
-		mapComponents(system.exclude, ComponentReference.EXCLUDED, componentIndices, components);
+		// FIXME
+//		mapComponents(system.requires, ComponentReference.REQUIRED, componentIndices, components);
+//		mapComponents(system.requiresOne, ComponentReference.ANY, componentIndices, components);
+//		mapComponents(system.optional, ComponentReference.OPTIONAL, componentIndices, components);
+//		mapComponents(system.exclude, ComponentReference.EXCLUDED, componentIndices, components);
 		
 		return new AgroteraMapping(system, components);
 	}
