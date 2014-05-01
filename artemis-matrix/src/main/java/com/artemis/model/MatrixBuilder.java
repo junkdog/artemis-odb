@@ -170,29 +170,30 @@ public class MatrixBuilder implements Opcodes  {
 	}
 	
 	private void filterSystems(File file, List<ArtemisTypeData> destination) {
+		// FIXME: temp hack
+		if (!(file.toString().endsWith("System.class") || file.toString().endsWith("Manager.class")))
+			return;
+		
 		FileInputStream stream = null;
 		try {
 			stream = new FileInputStream(file);
 			
 			ClassReader cr = new ClassReader(stream);
+
 			ConfigurationResolver scanner = new ConfigurationResolver("com.github.junkdog.shamans");
 			ArtemisTypeData meta = scanner.scan(cr);
 			meta.current = Type.getObjectType(cr.getClassName());
 			
 //			if (meta.annotationType != null) //FIXME ?
 				destination.add(meta);
-		}
-		catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			System.err.println("not found: " + file);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			if (stream != null) try {
 				stream.close();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -216,7 +217,7 @@ public class MatrixBuilder implements Opcodes  {
 	public static void main(String[] args) {
 		File root = new File("/home/junkdog/opt/dev/git/shamans-weirding-game/core/target/classes");
 		File output = new File("/home/junkdog/opt/dev/git/shamans-weirding-game/core/target/matrix.html");
-		MatrixBuilder mb = new MatrixBuilder("Shaman's Weirding Game", root, output);
+		MatrixBuilder mb = new MatrixBuilder("SWG", root, output);
 		mb.process();
 	}
 }

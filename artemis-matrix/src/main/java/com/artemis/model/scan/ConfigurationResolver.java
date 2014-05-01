@@ -1,16 +1,22 @@
 package com.artemis.model.scan;
 
+import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.util.Printer;
+import org.objectweb.asm.util.Textifier;
+import org.objectweb.asm.util.TraceClassVisitor;
 import org.reflections.Reflections;
 
 import com.artemis.Component;
 import com.artemis.EntitySystem;
 import com.artemis.Manager;
+import com.artemis.PackedComponent;
+import com.artemis.PooledComponent;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.systems.IntervalEntityProcessingSystem;
 import com.artemis.systems.IntervalEntitySystem;
@@ -29,7 +35,12 @@ public final class ConfigurationResolver {
 	
 	public ArtemisTypeData scan(ClassReader source) {
 		ArtemisTypeData info = new ArtemisTypeData();
-		source.accept(new ArtemisTypeScanner(info, this), 0);
+//		Printer p = new Textifier();
+		PrintWriter pw = new PrintWriter(System.out);
+		
+		ArtemisTypeScanner typeScanner = new ArtemisTypeScanner(info, this);
+//		source.accept(new TraceClassVisitor(typeScanner, pw), 0);
+		source.accept(typeScanner, 0);
 		return info;
 	}
 	
@@ -62,6 +73,8 @@ public final class ConfigurationResolver {
 		Reflections reflections = new Reflections(basePackage);
 		Set<Class<Component>> components = new HashSet<Class<Component>>();
 		reursivelyGetSubTypes(reflections, Component.class, components);
+		reursivelyGetSubTypes(reflections, PooledComponent.class, components);
+		reursivelyGetSubTypes(reflections, PackedComponent.class, components);
 		return asTypes(components);
 	}
 	
