@@ -1,15 +1,10 @@
 package com.artemis.model.scan;
 
-import java.io.PrintWriter;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.util.Printer;
-import org.objectweb.asm.util.Textifier;
-import org.objectweb.asm.util.TraceClassVisitor;
 import org.reflections.Reflections;
 
 import com.artemis.Component;
@@ -23,9 +18,9 @@ import com.artemis.systems.IntervalEntitySystem;
 import com.artemis.systems.VoidEntitySystem;
 
 public final class ConfigurationResolver {
-	final Set<Type> managers;
-	final Set<Type> systems;
-	final Set<Type> components;
+	public final Set<Type> managers;
+	public final Set<Type> systems;
+	public final Set<Type> components;
 	
 	public ConfigurationResolver(String basePackage) {
 		systems = findSystems(basePackage);
@@ -35,11 +30,8 @@ public final class ConfigurationResolver {
 	
 	public ArtemisTypeData scan(ClassReader source) {
 		ArtemisTypeData info = new ArtemisTypeData();
-//		Printer p = new Textifier();
-		PrintWriter pw = new PrintWriter(System.out);
 		
 		ArtemisTypeScanner typeScanner = new ArtemisTypeScanner(info, this);
-//		source.accept(new TraceClassVisitor(typeScanner, pw), 0);
 		source.accept(typeScanner, 0);
 		return info;
 	}

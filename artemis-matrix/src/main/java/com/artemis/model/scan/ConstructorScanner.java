@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 public final class ConstructorScanner extends MethodVisitor {
@@ -31,8 +30,6 @@ public final class ConstructorScanner extends MethodVisitor {
 		this.config = config;
 		this.resolver = resolver;
 		queuedComponents = new HashSet<Type>();
-		
-		System.out.println("new " + this);
 	}
 	
 	@Override

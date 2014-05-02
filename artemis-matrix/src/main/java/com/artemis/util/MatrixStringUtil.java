@@ -5,28 +5,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.artemis.model.ArtemisMapping;
+import com.artemis.model.ArtemisTypeMapping;
 
 public final class MatrixStringUtil {
 	private MatrixStringUtil() {}
 	
-	public static String findLongestClassName(Map<String, List<ArtemisMapping>> mappings) {
+	public static String findLongestClassName(Map<String, List<ArtemisTypeMapping>> mappings) {
 		return findLongestString(mappings, new LongestClassName());
 	}
 	
-	public static String findLongestManagerList(Map<String, List<ArtemisMapping>> mappings) {
+	public static String findLongestManagerList(Map<String, List<ArtemisTypeMapping>> mappings) {
 		return findLongestString(mappings, new LongestManagers());
 	}
 	
-	public static String findLongestSystemList(Map<String, List<ArtemisMapping>> mappings) {
+	public static String findLongestSystemList(Map<String, List<ArtemisTypeMapping>> mappings) {
 		return findLongestString(mappings, new LongestSystems());
 	}
 	
-	private static String findLongestString(Map<String, List<ArtemisMapping>> mappings, LongestMapper longestStrategy) {
+	private static String findLongestString(Map<String, List<ArtemisTypeMapping>> mappings, LongestMapper longestStrategy) {
 		String longest = "";
-		for (Entry<String, List<ArtemisMapping>> entry : mappings.entrySet()) {
+		for (Entry<String, List<ArtemisTypeMapping>> entry : mappings.entrySet()) {
 			if (entry.getKey().length() > longest.length()) longest = entry.getKey();
-			for (ArtemisMapping mapping : entry.getValue()) {
+			for (ArtemisTypeMapping mapping : entry.getValue()) {
 				longest = longestStrategy.getMaxLength(mapping, longest);
 			}
 		}
@@ -34,12 +34,12 @@ public final class MatrixStringUtil {
 	}
 	
 	private static interface LongestMapper {
-		String getMaxLength(ArtemisMapping mapping, String previousLongest);
+		String getMaxLength(ArtemisTypeMapping mapping, String previousLongest);
 	}
 	
 	private static class LongestClassName implements LongestMapper {
 		@Override
-		public String getMaxLength(ArtemisMapping mapping, String longest) {
+		public String getMaxLength(ArtemisTypeMapping mapping, String longest) {
 			return (mapping.name.length() > longest.length())
 				? mapping.name
 				: longest;
@@ -48,7 +48,7 @@ public final class MatrixStringUtil {
 	
 	private static class LongestManagers implements LongestMapper {
 		@Override
-		public String getMaxLength(ArtemisMapping mapping, String longest) {
+		public String getMaxLength(ArtemisTypeMapping mapping, String longest) {
 			return (Arrays.toString(mapping.refManagers).length() > longest.length())
 				? Arrays.toString(mapping.refManagers)
 				: longest;
@@ -57,7 +57,7 @@ public final class MatrixStringUtil {
 	
 	private static class LongestSystems implements LongestMapper {
 		@Override
-		public String getMaxLength(ArtemisMapping mapping, String longest) {
+		public String getMaxLength(ArtemisTypeMapping mapping, String longest) {
 			return (Arrays.toString(mapping.refSystems).length() > longest.length())
 				? Arrays.toString(mapping.refSystems)
 				: longest;

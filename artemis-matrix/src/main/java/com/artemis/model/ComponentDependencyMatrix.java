@@ -32,30 +32,30 @@ import com.artemis.util.ClassFinder;
 import com.x5.template.Chunk;
 import com.x5.template.Theme;
 
-public class MatrixBuilder implements Opcodes  {
+public class ComponentDependencyMatrix implements Opcodes  {
 	private final File root;
 	private final File output;
 	private final String projectName;
 	private final ConfigurationResolver scanner;
 	
-	public MatrixBuilder(String projectName, File root, File output) {
+	public ComponentDependencyMatrix(String projectName, String basePackage, File root, File output) {
 		this.projectName = projectName;
 		this.root = root;
 		this.output = output;
-		this.scanner = new ConfigurationResolver("com.github.junkdog.shamans");
+		this.scanner = new ConfigurationResolver(basePackage);
 	}
 	
 	public void process() {
-		List<ArtemisTypeData> systems = findSystems(root);
+		List<ArtemisTypeData> systems = findArtemisTypes(root);
 		if (systems.size() == 0)
 			return;
 		SortedSet<Type> componentSet = findComponents(systems);
 		
-		List<ArtemisMapping> systemMappings = new ArrayList<ArtemisMapping>();
+		List<ArtemisTypeMapping> typeMappings = new ArrayList<ArtemisTypeMapping>();
 		for (ArtemisTypeData system : systems) {
-			ArtemisMapping mappedSystem = ArtemisMapping.from(
-				system, getComponentIndices(componentSet));
-			systemMappings.add(mappedSystem);
+			ArtemisTypeMapping mappedType = ArtemisTypeMapping.from(
+				system, scanner, getComponentIndices(componentSet));
+			typeMappings.add(mappedType);
 		}
 		
 
@@ -66,20 +66,20 @@ public class MatrixBuilder implements Opcodes  {
 			columns.add(name);
 		}
 		
-		write(toMap(systemMappings), columns);
+		write(toMap(typeMappings), columns);
 	}
 	
-	public static SortedMap<String,List<ArtemisMapping>> toMap(List<ArtemisMapping> systems) {
+	public static SortedMap<String,List<ArtemisTypeMapping>> toMap(List<ArtemisTypeMapping> systems) {
 		String common = findCommonPackage(systems);
-		SortedMap<String, List<ArtemisMapping>> map = new TreeMap<String, List<ArtemisMapping>>();
+		SortedMap<String, List<ArtemisTypeMapping>> map = new TreeMap<String, List<ArtemisTypeMapping>>();
 		for (int i = 0, s = systems.size(); s > i; i++) {
-			ArtemisMapping system = systems.get(i);
-			String packageName = toPackageName(system.system.getClassName());
+			ArtemisTypeMapping system = systems.get(i);
+			String packageName = toPackageName(system.artemisType.getClassName());
 			packageName = (packageName.length() > common.length())
 				? packageName.substring(common.length())
 				: ".";
 			if (!map.containsKey(packageName))
-				map.put(packageName, new ArrayList<ArtemisMapping>());
+				map.put(packageName, new ArrayList<ArtemisTypeMapping>());
 			
 			map.get(packageName).add(system);
 		}
@@ -87,10 +87,10 @@ public class MatrixBuilder implements Opcodes  {
 		return map;
 	}
 	
-	private static String findCommonPackage(List<ArtemisMapping> systems) {
-		String prefix = toPackageName(systems.get(0).system.getClassName());
+	private static String findCommonPackage(List<ArtemisTypeMapping> systems) {
+		String prefix = toPackageName(systems.get(0).artemisType.getClassName());
 		for (int i = 1, s = systems.size(); s > i; i++) {
-			String p = toPackageName(systems.get(i).system.getClassName());
+			String p = toPackageName(systems.get(i).artemisType.getClassName());
 			for (int j = 0, l = Math.min(prefix.length(), p.length()); l > j; j++) {
 				if (prefix.charAt(j) != p.charAt(j)) {
 					prefix = prefix.substring(0, j);
@@ -106,33 +106,33 @@ public class MatrixBuilder implements Opcodes  {
 		return className.substring(0, className.lastIndexOf('.'));
 	}
 
-	private List<ArtemisTypeData> findSystems(File root) {
+	private List<ArtemisTypeData> findArtemisTypes(File root) {
 		List<ArtemisTypeData> systems = new ArrayList<ArtemisTypeData>();
 		for (File f : ClassFinder.find(root))
-			filterSystems(f, systems);
+			scanTypes(f, systems);
 		
 		Collections.sort(systems, new SystemComparator());
 		return systems;
 	}
 
-	private static SortedSet<Type> findComponents(List<ArtemisTypeData> systems) {
+	private static SortedSet<Type> findComponents(List<ArtemisTypeData> artemisTypes) {
 		SortedSet<Type> componentSet = new TreeSet<Type>(new ComponentSorter());
-		for (ArtemisTypeData system : systems) {
-			componentSet.addAll(system.requires);
-			componentSet.addAll(system.requiresOne);
-			componentSet.addAll(system.optional);
-			componentSet.addAll(system.exclude);
+		for (ArtemisTypeData artemis : artemisTypes) {
+			componentSet.addAll(artemis.requires);
+			componentSet.addAll(artemis.requiresOne);
+			componentSet.addAll(artemis.optional);
+			componentSet.addAll(artemis.exclude);
 		}
 		return componentSet;
 	}
 	
-	private void write(SortedMap<String, List<ArtemisMapping>> mappedSystems, List<String> columns) {
+	private void write(SortedMap<String, List<ArtemisTypeMapping>> mappedSystems, List<String> columns) {
 		Theme theme = new Theme();
 		Chunk chunk = theme.makeChunk("matrix");
 		
-		List<ArtemisMapping> mapping = new ArrayList<ArtemisMapping>();
-		for (Entry<String,List<ArtemisMapping>> entry : mappedSystems.entrySet()) {
-			mapping.add(new ArtemisMapping(entry.getKey()));
+		List<ArtemisTypeMapping> mapping = new ArrayList<ArtemisTypeMapping>();
+		for (Entry<String,List<ArtemisTypeMapping>> entry : mappedSystems.entrySet()) {
+			mapping.add(new ArtemisTypeMapping(entry.getKey()));
 			mapping.addAll(entry.getValue());
 		}
 		
@@ -147,15 +147,12 @@ public class MatrixBuilder implements Opcodes  {
 		try {
 			out = new BufferedWriter(new FileWriter(output));
 			chunk.render(out);
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		finally {
+		} finally {
 			if (out != null) try {
 				out.close();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -171,23 +168,18 @@ public class MatrixBuilder implements Opcodes  {
 		return componentIndices;
 	}
 	
-	// TODO: rename method - handles managers and systems
-	private void filterSystems(File file, List<ArtemisTypeData> destination) {
-		// FIXME: temp hack
-		if (!(file.toString().endsWith("System.class") || file.toString().endsWith("Manager.class")))
-			return;
-		
+	private void scanTypes(File file, List<ArtemisTypeData> destination) {
 		FileInputStream stream = null;
 		try {
 			stream = new FileInputStream(file);
-			
 			ClassReader cr = new ClassReader(stream);
-
-			ArtemisTypeData meta = scanner.scan(cr);
-			meta.current = Type.getObjectType(cr.getClassName());
+			Type objectType = Type.getObjectType(cr.getClassName());
+			if (!(scanner.managers.contains(objectType) || scanner.systems.contains(objectType)))
+				return;
 			
-//			if (meta.annotationType != null) //FIXME ?
-				destination.add(meta);
+			ArtemisTypeData meta = scanner.scan(cr);
+			meta.current = objectType;
+			destination.add(meta);
 		} catch (FileNotFoundException e) {
 			System.err.println("not found: " + file);
 		} catch (IOException e) {
@@ -218,8 +210,8 @@ public class MatrixBuilder implements Opcodes  {
 	// FIXME just for debugging
 	public static void main(String[] args) {
 		File root = new File("/home/junkdog/opt/dev/git/shamans-weirding-game/core/target/classes");
-		File output = new File("/home/junkdog/opt/dev/git/shamans-weirding-game/core/target/matrix.html");
-		MatrixBuilder mb = new MatrixBuilder("SWG", root, output);
+		File output = new File("/home/junkdog/opt/dev/git/shamans-weirding-game/core/target/matrix2.html");
+		ComponentDependencyMatrix mb = new ComponentDependencyMatrix("SWG", "com.github.junkdog.shamans", root, output);
 		mb.process();
 	}
 }

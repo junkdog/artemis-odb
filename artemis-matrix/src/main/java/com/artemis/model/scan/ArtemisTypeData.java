@@ -8,7 +8,8 @@ import lombok.ToString;
 import org.objectweb.asm.Type;
 
 /**
- * Annotation blob bloat.
+ * Blob for an entity system or manager tracking references to
+ * systems, managers and components.
  */
 @ToString
 public class ArtemisTypeData {

@@ -21,13 +21,6 @@ class ArtemisTypeScanner extends ClassVisitor {
 	}
 	
 	@Override
-	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-		super.visit(version, access, name, signature, superName, interfaces);
-		
-		System.out.printf("%s\n", name);
-	}
-	
-	@Override
 	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
 		if (!desc.endsWith(";"))
 			return super.visitField(access, name, desc, signature, value);
