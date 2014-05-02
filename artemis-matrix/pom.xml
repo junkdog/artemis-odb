@@ -6,19 +6,14 @@
 		<artifactId>artemis-parent</artifactId>
 		<version>0.5.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>artemis-matrix</artifactId>
+	<artifactId>artemis-odb-matrix</artifactId>
 	<packaging>jar</packaging>
-	<name>artemis-matrix</name>
+	<name>artemis-odb-matrix</name>
 	
 	<dependencies>
 		<dependency>
 			<groupId>net.onedaybeard.artemis</groupId>
 			<artifactId>artemis-odb</artifactId>
-			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>net.onedaybeard.artemis</groupId>
-			<artifactId>artemis-odb-test</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

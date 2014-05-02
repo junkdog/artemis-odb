@@ -5,6 +5,7 @@
 			<pluginExecutionFilter>
 				<goals>
 					<goal>artemis</goal>
+					<goal>matrix</goal>
 				</goals>
 			</pluginExecutionFilter>
 			<action>

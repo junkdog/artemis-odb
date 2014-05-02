@@ -46,13 +46,22 @@ public class ComponentDependencyMatrix implements Opcodes  {
 	}
 	
 	public void process() {
-		List<ArtemisTypeData> systems = findArtemisTypes(root);
-		if (systems.size() == 0)
+		if (scanner.components.size() == 0
+			&& scanner.systems.size() == 0
+			&& scanner.managers.size() == 0) {
+			
+			String error = "No artemis classes found on classpath. "
+				+ "See https://github.com/junkdog/artemis-odb/wiki/Component-Dependency-Matrix for more info.";
+			throw new RuntimeException(error);
+		}
+		
+		List<ArtemisTypeData> artemisTypes = findArtemisTypes(root);
+		if (artemisTypes.size() == 0)
 			return;
-		SortedSet<Type> componentSet = findComponents(systems);
+		SortedSet<Type> componentSet = findComponents(artemisTypes);
 		
 		List<ArtemisTypeMapping> typeMappings = new ArrayList<ArtemisTypeMapping>();
-		for (ArtemisTypeData system : systems) {
+		for (ArtemisTypeData system : artemisTypes) {
 			ArtemisTypeMapping mappedType = ArtemisTypeMapping.from(
 				system, scanner, getComponentIndices(componentSet));
 			typeMappings.add(mappedType);
@@ -111,7 +120,7 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		for (File f : ClassFinder.find(root))
 			scanTypes(f, systems);
 		
-		Collections.sort(systems, new SystemComparator());
+		Collections.sort(systems, new TypeComparator());
 		return systems;
 	}
 
@@ -200,7 +209,7 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		}
 	}
 
-	private static class SystemComparator implements Comparator<ArtemisTypeData> {
+	private static class TypeComparator implements Comparator<ArtemisTypeData> {
 		@Override
 		public int compare(ArtemisTypeData o1, ArtemisTypeData o2) {
 			return o1.current.toString().compareTo(o2.current.toString());

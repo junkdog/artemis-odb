@@ -7,14 +7,19 @@ import com.artemis.systems.VoidEntitySystem;
 
 public class BasicVoidSystem extends VoidEntitySystem {
 
+	private TagManager manager;
+	private WiredBasicVoidSystem system;
+	private ComponentMapper<TransPackedInt> mapper1;
+
 	@Override
 	protected void initialize() {
-		world.getManager(TagManager.class);
-		world.getSystem(WiredBasicVoidSystem.class);
+		manager = world.getManager(TagManager.class);
+		system = world.getSystem(WiredBasicVoidSystem.class);
+		mapper1 = world.getMapper(TransPackedInt.class);
 	}
 	
 	@Override
 	protected void processSystem() {
-		ComponentMapper<TransPackedInt> mapper1 = world.getMapper(TransPackedInt.class);
+		mapper1 = world.getMapper(TransPackedInt.class);
 	}
 }
