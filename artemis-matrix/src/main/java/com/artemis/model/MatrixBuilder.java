@@ -36,11 +36,13 @@ public class MatrixBuilder implements Opcodes  {
 	private final File root;
 	private final File output;
 	private final String projectName;
+	private final ConfigurationResolver scanner;
 	
 	public MatrixBuilder(String projectName, File root, File output) {
 		this.projectName = projectName;
 		this.root = root;
 		this.output = output;
+		this.scanner = new ConfigurationResolver("com.github.junkdog.shamans");
 	}
 	
 	public void process() {
@@ -49,9 +51,9 @@ public class MatrixBuilder implements Opcodes  {
 			return;
 		SortedSet<Type> componentSet = findComponents(systems);
 		
-		List<AgroteraMapping> systemMappings = new ArrayList<AgroteraMapping>();
+		List<ArtemisMapping> systemMappings = new ArrayList<ArtemisMapping>();
 		for (ArtemisTypeData system : systems) {
-			AgroteraMapping mappedSystem = AgroteraMapping.from(
+			ArtemisMapping mappedSystem = ArtemisMapping.from(
 				system, getComponentIndices(componentSet));
 			systemMappings.add(mappedSystem);
 		}
@@ -67,17 +69,17 @@ public class MatrixBuilder implements Opcodes  {
 		write(toMap(systemMappings), columns);
 	}
 	
-	public static SortedMap<String,List<AgroteraMapping>> toMap(List<AgroteraMapping> systems) {
+	public static SortedMap<String,List<ArtemisMapping>> toMap(List<ArtemisMapping> systems) {
 		String common = findCommonPackage(systems);
-		SortedMap<String, List<AgroteraMapping>> map = new TreeMap<String, List<AgroteraMapping>>();
+		SortedMap<String, List<ArtemisMapping>> map = new TreeMap<String, List<ArtemisMapping>>();
 		for (int i = 0, s = systems.size(); s > i; i++) {
-			AgroteraMapping system = systems.get(i);
+			ArtemisMapping system = systems.get(i);
 			String packageName = toPackageName(system.system.getClassName());
 			packageName = (packageName.length() > common.length())
 				? packageName.substring(common.length())
 				: ".";
 			if (!map.containsKey(packageName))
-				map.put(packageName, new ArrayList<AgroteraMapping>());
+				map.put(packageName, new ArrayList<ArtemisMapping>());
 			
 			map.get(packageName).add(system);
 		}
@@ -85,7 +87,7 @@ public class MatrixBuilder implements Opcodes  {
 		return map;
 	}
 	
-	private static String findCommonPackage(List<AgroteraMapping> systems) {
+	private static String findCommonPackage(List<ArtemisMapping> systems) {
 		String prefix = toPackageName(systems.get(0).system.getClassName());
 		for (int i = 1, s = systems.size(); s > i; i++) {
 			String p = toPackageName(systems.get(i).system.getClassName());
@@ -124,13 +126,13 @@ public class MatrixBuilder implements Opcodes  {
 		return componentSet;
 	}
 	
-	private void write(SortedMap<String, List<AgroteraMapping>> mappedSystems, List<String> columns) {
+	private void write(SortedMap<String, List<ArtemisMapping>> mappedSystems, List<String> columns) {
 		Theme theme = new Theme();
 		Chunk chunk = theme.makeChunk("matrix");
 		
-		List<AgroteraMapping> mapping = new ArrayList<AgroteraMapping>();
-		for (Entry<String,List<AgroteraMapping>> entry : mappedSystems.entrySet()) {
-			mapping.add(new AgroteraMapping(entry.getKey()));
+		List<ArtemisMapping> mapping = new ArrayList<ArtemisMapping>();
+		for (Entry<String,List<ArtemisMapping>> entry : mappedSystems.entrySet()) {
+			mapping.add(new ArtemisMapping(entry.getKey()));
 			mapping.addAll(entry.getValue());
 		}
 		
@@ -169,6 +171,7 @@ public class MatrixBuilder implements Opcodes  {
 		return componentIndices;
 	}
 	
+	// TODO: rename method - handles managers and systems
 	private void filterSystems(File file, List<ArtemisTypeData> destination) {
 		// FIXME: temp hack
 		if (!(file.toString().endsWith("System.class") || file.toString().endsWith("Manager.class")))
@@ -180,7 +183,6 @@ public class MatrixBuilder implements Opcodes  {
 			
 			ClassReader cr = new ClassReader(stream);
 
-			ConfigurationResolver scanner = new ConfigurationResolver("com.github.junkdog.shamans");
 			ArtemisTypeData meta = scanner.scan(cr);
 			meta.current = Type.getObjectType(cr.getClassName());
 			

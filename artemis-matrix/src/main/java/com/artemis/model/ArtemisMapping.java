@@ -8,7 +8,7 @@ import org.objectweb.asm.Type;
 
 import com.artemis.model.scan.ArtemisTypeData;
 
-public final class AgroteraMapping {
+public final class ArtemisMapping {
 	public final Type system;
 	public final boolean isSystem;
 	public final boolean isManager;
@@ -19,7 +19,7 @@ public final class AgroteraMapping {
 	
 	public final boolean isPackage; // referenced by chtml
 	
-	public AgroteraMapping(String packageName) {
+	public ArtemisMapping(String packageName) {
 		name = packageName;
 		system = null;
 		refSystems = null;
@@ -31,7 +31,7 @@ public final class AgroteraMapping {
 		isManager = false;
 	}
 
-	private AgroteraMapping(ArtemisTypeData system, ComponentReference[] componentIndices) {
+	private ArtemisMapping(ArtemisTypeData system, ComponentReference[] componentIndices) {
 		this.system = system.current;
 		this.componentIndices = componentIndices;
 		
@@ -55,7 +55,7 @@ public final class AgroteraMapping {
 		isManager = false;
 	}
 	
-	public static AgroteraMapping from(ArtemisTypeData system,
+	public static ArtemisMapping from(ArtemisTypeData system,
 		Map<Type, Integer> componentIndices) {
 		ComponentReference[] components = new ComponentReference[componentIndices.size()];
 		Arrays.fill(components, ComponentReference.NOT_REFERENCED);
@@ -65,7 +65,7 @@ public final class AgroteraMapping {
 //		mapComponents(system.optional, ComponentReference.OPTIONAL, componentIndices, components);
 //		mapComponents(system.exclude, ComponentReference.EXCLUDED, componentIndices, components);
 		
-		return new AgroteraMapping(system, components);
+		return new ArtemisMapping(system, components);
 	}
 	
 	public String getName() {
