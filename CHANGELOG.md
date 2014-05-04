@@ -9,6 +9,9 @@
 - Entity systems and managers can `@Wire` (inject) anything from the world: will eventually
   replace `@Mapper`. No need to annotate each field - just annotate the class and artemis
   will take care of injecting applicable fields.
+  - `@Wire` can inject parent classes too.
+  - `@Wire` can resolve non-final references. Eg, AbstractEntityFactory is resolved as
+    EntityFactory etc. See [test/example](https://github.com/junkdog/artemis-odb/blob/6eb51ccc7a72a4ff16737277f609a58f9cae94ca/artemis/src/test/java/com/artemis/SmarterWireTest.java#L39).
 - Optional `expectedEntityCount` parameters in `World` constructor.
 - Direct field access works for `@PackedWeaver` components.
 - `-DideFriendlyPacking`: If true, will leave field stubs to keep IDE:s 
