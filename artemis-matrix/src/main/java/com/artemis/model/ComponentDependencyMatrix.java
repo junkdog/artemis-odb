@@ -231,7 +231,9 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		File root = new File(args[0]);
 //		addToClassLoader(root);
 		File output = (args.length == 2) ? new File(args[1]) : new File("matrix.html");
-		ComponentDependencyMatrix mb = new ComponentDependencyMatrix("SWG", args[0], root, output);
+		
+		// FIXME proper argument handling
+		ComponentDependencyMatrix mb = new ComponentDependencyMatrix("Unknown artemis project", args[0], root, output);
 		mb.process();
 	}
 	
