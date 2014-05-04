@@ -7,14 +7,14 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-class ArtemisTypeScanner extends ClassVisitor {
+class ArtemisScanner extends ClassVisitor {
 	
 	private static final Type COMPONENT_MAPPER = Type.getType("Lcom/artemis/ComponentMapper;");
 	
 	private final ArtemisTypeData config;
 	private final ConfigurationResolver resolver;
 
-	ArtemisTypeScanner(ArtemisTypeData config, ConfigurationResolver configurationResolver) {
+	ArtemisScanner(ArtemisTypeData config, ConfigurationResolver configurationResolver) {
 		super(Opcodes.ASM4);
 		this.config = config;
 		this.resolver = configurationResolver;

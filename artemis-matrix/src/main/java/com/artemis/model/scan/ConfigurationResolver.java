@@ -1,88 +1,68 @@
 package com.artemis.model.scan;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
-import org.reflections.Reflections;
 
-import com.artemis.Component;
-import com.artemis.EntitySystem;
-import com.artemis.Manager;
-import com.artemis.PackedComponent;
-import com.artemis.PooledComponent;
-import com.artemis.systems.EntityProcessingSystem;
-import com.artemis.systems.IntervalEntityProcessingSystem;
-import com.artemis.systems.IntervalEntitySystem;
-import com.artemis.systems.VoidEntitySystem;
+import com.artemis.util.ClassFinder;
 
 public final class ConfigurationResolver {
 	public final Set<Type> managers;
 	public final Set<Type> systems;
 	public final Set<Type> components;
+	private final TypeConfiguration typeConfiguration;
 	
-	public ConfigurationResolver(String basePackage) {
-		systems = findSystems(basePackage);
-		managers = findManagers(basePackage);
-		components = findComponents(basePackage);
+//	public ConfigurationResolver(String basePackage) {
+	public ConfigurationResolver(File rootFolder) {
+		if (!rootFolder.isDirectory())
+			throw new RuntimeException("Expected folder - " + rootFolder);
+		
+		managers = new HashSet<Type>();
+		systems = new HashSet<Type>();
+		components = new HashSet<Type>();
+		typeConfiguration = new TypeConfiguration();
+		
+		for (File f : ClassFinder.find(rootFolder)) {
+			findArtemisTypes(f);
+		}
 	}
 	
 	public ArtemisTypeData scan(ClassReader source) {
 		ArtemisTypeData info = new ArtemisTypeData();
 		
-		ArtemisTypeScanner typeScanner = new ArtemisTypeScanner(info, this);
+		ArtemisScanner typeScanner = new ArtemisScanner(info, this);
 		source.accept(typeScanner, 0);
 		return info;
 	}
 	
-	private Set<Type> findManagers(String basePackage) {
-		Reflections reflections = new Reflections(basePackage);
-		Set<Class<Manager>> managers = new HashSet<Class<Manager>>();
-		reursivelyGetSubTypes(reflections, Manager.class, managers);
-		return asTypes(managers);
-	}
-	
-	private Set<Type> findSystems(String basePackage) {
-		// annoying that Reflections can't recurse subclasses by itself, unless
-		// I'm missing something...
-		Set<Class<? extends EntitySystem>> systemTypes = new HashSet<Class<? extends EntitySystem>>();
-		systemTypes.add(EntitySystem.class);
-		systemTypes.add(EntityProcessingSystem.class);
-		systemTypes.add(IntervalEntitySystem.class);
-		systemTypes.add(IntervalEntityProcessingSystem.class);
-		systemTypes.add(VoidEntitySystem.class);
-		
-		Reflections reflections = new Reflections(basePackage);
-		Set<Class<EntitySystem>> systems = new HashSet<Class<EntitySystem>>();
-		for (Class<? extends EntitySystem> es : systemTypes)
-			reursivelyGetSubTypes(reflections, es, systems);
-		
-		return asTypes(systems);
-	}
-	
-	private Set<Type> findComponents(String basePackage) {
-		Reflections reflections = new Reflections(basePackage);
-		Set<Class<Component>> components = new HashSet<Class<Component>>();
-		reursivelyGetSubTypes(reflections, Component.class, components);
-		reursivelyGetSubTypes(reflections, PooledComponent.class, components);
-		reursivelyGetSubTypes(reflections, PackedComponent.class, components);
-		return asTypes(components);
-	}
-	
-	private static <T> Set<Type> asTypes(Set<Class<T>> systems) {
-		Set<Type> types = new HashSet<Type>();
-		for (Class<T> clazz : systems) {
-			types.add(Type.getType(clazz));
+	private void findArtemisTypes(FileInputStream stream) {
+		ClassReader cr;
+		try {
+			cr = new ClassReader(stream);
+			ArtemisTypeFinder artemisTypeFinder = new ArtemisTypeFinder(this, typeConfiguration);
+			cr.accept(artemisTypeFinder, 0);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (stream != null) try {
+				stream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
-		return types;
 	}
 	
-	@SuppressWarnings("unchecked")
-	private static <T> void reursivelyGetSubTypes(Reflections reflections, Class<? extends T> klazz, Set<Class<T>> dest) {
-		for (Class<? extends T> subclass : reflections.getSubTypesOf(klazz)) {
-			dest.add((Class<T>)subclass);
-			reursivelyGetSubTypes(reflections, (Class<T>)subclass, dest);
+	private void findArtemisTypes(File file) {
+		try {
+			findArtemisTypes(new FileInputStream(file));
+		} catch (FileNotFoundException e) {
+			System.err.println("not found: " + file);
 		}
 	}
 }

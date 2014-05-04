@@ -10,6 +10,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,7 +46,7 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		this.projectName = projectName;
 		this.root = root;
 		this.output = output;
-		this.scanner = new ConfigurationResolver(basePackage);
+		this.scanner = new ConfigurationResolver(root);
 	}
 	
 	public void process() {
@@ -118,7 +122,7 @@ public class ComponentDependencyMatrix implements Opcodes  {
 	private List<ArtemisTypeData> findArtemisTypes(File root) {
 		List<ArtemisTypeData> systems = new ArrayList<ArtemisTypeData>();
 		for (File f : ClassFinder.find(root))
-			scanTypes(f, systems);
+			inspectType(f, systems);
 		
 		Collections.sort(systems, new TypeComparator());
 		return systems;
@@ -162,8 +166,7 @@ public class ComponentDependencyMatrix implements Opcodes  {
 			if (out != null) try {
 				out.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new RuntimeException(e);
 			}
 		}
 	}
@@ -177,7 +180,7 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		return componentIndices;
 	}
 	
-	private void scanTypes(File file, List<ArtemisTypeData> destination) {
+	private void inspectType(File file, List<ArtemisTypeData> destination) {
 		FileInputStream stream = null;
 		try {
 			stream = new FileInputStream(file);
@@ -217,10 +220,27 @@ public class ComponentDependencyMatrix implements Opcodes  {
 	}
 	
 	// FIXME just for debugging
-	public static void main(String[] args) {
-		File root = new File("/home/junkdog/opt/dev/git/shamans-weirding-game/core/target/classes");
-		File output = new File("/home/junkdog/opt/dev/git/shamans-weirding-game/core/target/matrix2.html");
-		ComponentDependencyMatrix mb = new ComponentDependencyMatrix("SWG", "com.github.junkdog.shamans", root, output);
+	public static void main(String[] args) throws Exception{
+		if (args.length == 0 || args.length > 2) {
+			System.out.println(
+				"Usage: java -jar artemis-odb-matrix-0.6.0-cli.jar " +
+					"<class-folder> [<output, defaults to ./matrix.htlm>]");
+			System.exit(1);
+		}
+
+		File root = new File(args[0]);
+//		addToClassLoader(root);
+		File output = (args.length == 2) ? new File(args[1]) : new File("matrix.html");
+		ComponentDependencyMatrix mb = new ComponentDependencyMatrix("SWG", args[0], root, output);
 		mb.process();
+	}
+	
+	private static void addToClassLoader(File folder) throws Exception {
+		URI uri = folder.toURI();
+		URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
+		Class<URLClassLoader> urlClass = URLClassLoader.class;
+		Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
+		method.setAccessible(true);
+		method.invoke(urlClassLoader, new Object[]{uri.toURL()});
 	}
 }
