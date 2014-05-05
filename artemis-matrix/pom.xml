@@ -11,17 +11,15 @@
 	<name>artemis-odb-matrix</name>
 	
 	<properties>
-		<mainClass>com.artemis.model.ComponentDependencyMatrix</mainClass>
+		<mainClass>com.artemis.model.CdmCli</mainClass>
 	</properties>
 	
 	<dependencies>
-	<!-- 
 		<dependency>
-			<groupId>net.onedaybeard.artemis</groupId>
-			<artifactId>artemis-odb</artifactId>
-			<version>${project.version}</version>
+			<groupId>com.beust</groupId>
+			<artifactId>jcommander</artifactId>
+			<version>1.35</version>
 		</dependency>
-	 -->
 		<dependency>
 			<groupId>com.x5dev</groupId>
 			<artifactId>chunk-templates</artifactId>

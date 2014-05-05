@@ -39,9 +39,6 @@ public class ComponentMatrix extends AbstractMojo
 	@Parameter(property="project.build.sourceDirectory")
 	private File sourceDirectory;
 	
-	@Parameter(property="basePackage", required=true)
-	private String basePackage;
-	
 	@Component
 	private BuildContext context;
 
@@ -54,8 +51,8 @@ public class ComponentMatrix extends AbstractMojo
 	@Override
 	public void execute() throws MojoExecutionException
 	{
-		ComponentDependencyMatrix matrix = new ComponentDependencyMatrix(name, basePackage, 
-			classDirectory, new File(saveDirectory, "matrix.html"));
+		ComponentDependencyMatrix matrix = 
+			new ComponentDependencyMatrix(name, classDirectory, new File(saveDirectory, "matrix.html"));
 		matrix.process();
 	}
 }

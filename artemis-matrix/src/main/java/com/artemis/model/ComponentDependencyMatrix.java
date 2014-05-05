@@ -10,10 +10,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Method;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,7 +38,7 @@ public class ComponentDependencyMatrix implements Opcodes  {
 	private final String projectName;
 	private final ConfigurationResolver scanner;
 	
-	public ComponentDependencyMatrix(String projectName, String basePackage, File root, File output) {
+	public ComponentDependencyMatrix(String projectName, File root, File output) {
 		this.projectName = projectName;
 		this.root = root;
 		this.output = output;
@@ -217,32 +213,5 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		public int compare(ArtemisTypeData o1, ArtemisTypeData o2) {
 			return o1.current.toString().compareTo(o2.current.toString());
 		}
-	}
-	
-	// FIXME just for debugging
-	public static void main(String[] args) throws Exception{
-		if (args.length == 0 || args.length > 2) {
-			System.out.println(
-				"Usage: java -jar artemis-odb-matrix-0.6.0-cli.jar " +
-					"<class-folder> [<output, defaults to ./matrix.htlm>]");
-			System.exit(1);
-		}
-
-		File root = new File(args[0]);
-//		addToClassLoader(root);
-		File output = (args.length == 2) ? new File(args[1]) : new File("matrix.html");
-		
-		// FIXME proper argument handling
-		ComponentDependencyMatrix mb = new ComponentDependencyMatrix("Unknown artemis project", args[0], root, output);
-		mb.process();
-	}
-	
-	private static void addToClassLoader(File folder) throws Exception {
-		URI uri = folder.toURI();
-		URLClassLoader urlClassLoader = (URLClassLoader) ClassLoader.getSystemClassLoader();
-		Class<URLClassLoader> urlClass = URLClassLoader.class;
-		Method method = urlClass.getDeclaredMethod("addURL", new Class[]{URL.class});
-		method.setAccessible(true);
-		method.invoke(urlClassLoader, new Object[]{uri.toURL()});
 	}
 }
