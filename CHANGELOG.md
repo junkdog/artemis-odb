@@ -12,6 +12,7 @@
   - `@Wire` can inject parent classes too.
   - `@Wire` can resolve non-final references. Eg, AbstractEntityFactory is resolved as
     EntityFactory etc. See [test/example](https://github.com/junkdog/artemis-odb/blob/6eb51ccc7a72a4ff16737277f609a58f9cae94ca/artemis/src/test/java/com/artemis/SmarterWireTest.java#L39).
+- Automatically Generate a bird's eye view of artemis: [ComponentDependencyMatrix][CDM].
 - Optional `expectedEntityCount` parameters in `World` constructor.
 - Direct field access works for `@PackedWeaver` components.
 - `-DideFriendlyPacking`: If true, will leave field stubs to keep IDE:s 
@@ -39,4 +40,6 @@
  - **Fix**: Recycled entities would sometimes have their components cleared when
    recycled during the same round as the original entity was deleted.
  - **Fix**: GroupManager avoids duplicate entities and removes them upon deletion.
+
+ [CDM]: https://github.com/junkdog/artemis-odb/wiki/Component-Dependency-Matrix
 
