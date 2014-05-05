@@ -12,7 +12,7 @@
   - `@Wire` can inject parent classes too.
   - `@Wire` can resolve non-final references. Eg, AbstractEntityFactory is resolved as
     EntityFactory etc. See [test/example](https://github.com/junkdog/artemis-odb/blob/6eb51ccc7a72a4ff16737277f609a58f9cae94ca/artemis/src/test/java/com/artemis/SmarterWireTest.java#L39).
-- Automatically Generate a bird's eye view of artemis: [ComponentDependencyMatrix][CDM].
+- Automatically Generate a bird's eye view of artemis: [Component Dependency Matrix][CDM].
 - Optional `expectedEntityCount` parameters in `World` constructor.
 - Direct field access works for `@PackedWeaver` components.
 - `-DideFriendlyPacking`: If true, will leave field stubs to keep IDE:s 
