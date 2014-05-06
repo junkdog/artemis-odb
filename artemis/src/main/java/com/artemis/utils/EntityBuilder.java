@@ -7,37 +7,26 @@ import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
 
 /**
- * Entity creation helper.
- * <p>
- * Please call artemis directly if you need high performance creation.
- * <p>
- * Instance the builder once, call .create() per entity, chain steps, then .build()
+ * Entity creation helper for rapid prototyping.
  *
- * <p/>
- * myEntityBuilder
- * .in(world)
+ * Example: new Builder(world)
  * .with(Pos.class, Anim.class)
  * .tag("boss")
  * .group("enemies")
- * .build()
- * .addToWorld();
+ * .build();
  *
  * @author Daan van Yperen
+ * @author Junkdog 
  */
 public class EntityBuilder {
 
 	private final World world;
 	private final Entity entity;
 
-	/** Begin building new entity. Instead of instancing the builder over and over, we call this instead. */
+	/** Begin building new entity.*/
 	public EntityBuilder(World world) {
 		this.world = world;
 		entity = world.createEntity();
-	}
-
-	/** Begin building new entity. Instead of instancing the builder over and over, we call this instead. */
-	public EntityBuilder createEntity() {
-		return this;
 	}
 
 	/** Add component to entity. */
