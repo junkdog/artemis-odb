@@ -103,7 +103,6 @@ Managers and EntitySystems. Can also simulate aspects for Managers and inject pr
  [sine-auth]: http://twitter.com/timtipgames
  [ned]: http://devnewton.bci.im/en/games/nedetlesmaki
  [ned-src]: https://github.com/devnewton/nedetlesmaki
- [ned-cdm]:
  [ned-auth]: http://geekygoblin.org/
  [ns2d]: http://www.ludumdare.com/compo/minild-50/?action=preview&uid=22396
  [ns2d-src]: https://github.com/DaanVanYperen/naturally-selected-2d
