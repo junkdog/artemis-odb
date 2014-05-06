@@ -9,8 +9,7 @@ import com.artemis.managers.TagManager;
 /**
  * Entity creation helper for rapid prototyping.
  *
- * Example: new Builder()
- * .in(world)
+ * Example: new Builder(world)
  * .with(Pos.class, Anim.class)
  * .tag("boss")
  * .group("enemies")
