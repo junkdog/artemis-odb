@@ -89,7 +89,28 @@ Managers and EntitySystems. Can also simulate aspects for Managers and inject pr
 
 ## Games using this library
 ### Open source
-- [Sine](http://www.ludumdare.com/compo/2013/08/27/sine-post-mortem/) by [@timtipgames](http://twitter.com/timtipgames)
-- [Ned et les Maki](http://devnewton.bci.im/en/games/nedetlesmaki) ([github](https://github.com/devnewton/nedetlesmaki)) isometric puzzle game. 
-- [Naturally Selected 2D](http://www.ludumdare.com/compo/minild-50/?action=preview&uid=22396) ([github](https://github.com/DaanVanYperen/naturally-selected-2d)) by [@DaanVanYperen](https://twitter.com/DaanRedblade)
-- [The Underkeep](http://www.ludumdare.com/compo/ludum-dare-29/?action=preview&uid=22396) ([github](https://github.com/DaanVanYperen/underkeep)) by [@DaanVanYperen](https://twitter.com/DaanRedblade)
+| game                          | source/binaries                      | [matrix][cdm]     | author                         |
+|-------------------------------|--------------------------------------|-------------------|--------------------------------|
+| [Sine][sine]                  | [source][sine-src]                   | [cdm][sine-cdm]   | [@timtipgames][sine-auth]      |
+| [Ned et les Maki][ned]        | [source][ned-src]                    | N/A               | [Geeky Gobling Prod][ned-auth] |
+| [Naturally Selected 2D][ns2d] | [source][ns2d-src] [play][ns2d-play] | [cdm][ns2d-cdm]   | [@DaanVanYperen][dvy]          |
+| [The Underkeep][tu]           | [source][tu-src] [play][tu-play]     | [cdm][tu-cdm]     | [@DaanVanYperen][dvy]          |
+
+ [cdm]: https://github.com/junkdog/artemis-odb/wiki/Component-Dependency-Matrix
+ [sine]: http://www.ludumdare.com/compo/ludum-dare-27/?action=preview&uid=15341
+ [sine-src]: https://dl.dropboxusercontent.com/u/3057562/sine/sine-src.jar
+ [sine-cdm]: http://junkdog.github.io/matrix-sine.html
+ [sine-auth]: http://twitter.com/timtipgames
+ [ned]: http://devnewton.bci.im/en/games/nedetlesmaki
+ [ned-src]: https://github.com/devnewton/nedetlesmaki
+ [ned-auth]: http://geekygoblin.org/
+ [ns2d]: http://www.ludumdare.com/compo/minild-50/?action=preview&uid=22396
+ [ns2d-src]: https://github.com/DaanVanYperen/naturally-selected-2d
+ [ns2d-play]: http://ludum.mostlyoriginal.net/game/ns2d/
+ [ns2d-cdm]: http://junkdog.github.io/matrix-ns2d.html
+ [tu]: http://www.ludumdare.com/compo/ludum-dare-29/?action=preview&uid=22396
+ [tu-src]: https://github.com/DaanVanYperen/underkeep
+ [tu-play]: http://www.mostlyoriginal.net/play-underkeep/
+ [tu-cdm]: http://junkdog.github.io/matrix-tu.html
+ [dvy]: https://github.com/DaanVanYperen
+ 
