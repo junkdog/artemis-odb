@@ -6,9 +6,9 @@ import java.util.Set;
 import org.objectweb.asm.Type;
 
 class TypeConfiguration {
-	Set<Type> components;
-	Set<Type> managers;
-	Set<Type> systems;
+	protected Set<Type> components;
+	protected Set<Type> managers;
+	protected Set<Type> systems;
 
 	public TypeConfiguration() {
 		components = new HashSet<Type>();
