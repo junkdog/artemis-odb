@@ -18,7 +18,7 @@ public class CdmCli {
 	private String projectName = "Unknown artemis project";
 	
 	@Parameter(
-		names = {"-c", "--cless-folder"},
+		names = {"-c", "--class-folder"},
 		description = "Root class folder",
 		converter = FolderConverter.class,
 		required = true)
