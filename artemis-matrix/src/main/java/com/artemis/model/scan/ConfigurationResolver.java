@@ -18,7 +18,6 @@ public final class ConfigurationResolver {
 	public final Set<Type> components;
 	private final TypeConfiguration typeConfiguration;
 	
-//	public ConfigurationResolver(String basePackage) {
 	public ConfigurationResolver(File rootFolder) {
 		if (!rootFolder.isDirectory())
 			throw new RuntimeException("Expected folder - " + rootFolder);
@@ -26,7 +25,12 @@ public final class ConfigurationResolver {
 		managers = new HashSet<Type>();
 		systems = new HashSet<Type>();
 		components = new HashSet<Type>();
+		
 		typeConfiguration = new TypeConfiguration();
+		systems.addAll(typeConfiguration.systems);
+		managers.addAll(typeConfiguration.managers);
+		components.addAll(typeConfiguration.components);
+		
 		
 		for (File f : ClassFinder.find(rootFolder)) {
 			findArtemisTypes(f);
@@ -64,5 +68,12 @@ public final class ConfigurationResolver {
 		} catch (FileNotFoundException e) {
 			System.err.println("not found: " + file);
 		}
+	}
+	
+	public void clearNonDefaultTypes() {
+		TypeConfiguration tc = new TypeConfiguration();
+		systems.removeAll(tc.systems);
+		managers.removeAll(tc.managers);
+		components.removeAll(tc.components);
 	}
 }

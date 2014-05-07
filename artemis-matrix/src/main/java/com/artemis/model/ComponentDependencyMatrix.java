@@ -60,6 +60,9 @@ public class ComponentDependencyMatrix implements Opcodes  {
 			return;
 		SortedSet<Type> componentSet = findComponents(artemisTypes);
 		
+		// removes any artemis classes which aren't part of artemis
+		scanner.clearNonDefaultTypes();
+		
 		List<ArtemisTypeMapping> typeMappings = new ArrayList<ArtemisTypeMapping>();
 		for (ArtemisTypeData system : artemisTypes) {
 			ArtemisTypeMapping mappedType = ArtemisTypeMapping.from(

@@ -5,10 +5,10 @@ import java.util.Set;
 
 import org.objectweb.asm.Type;
 
-public class TypeConfiguration {
-	public Set<Type> components;
-	public Set<Type> managers;
-	public Set<Type> systems;
+class TypeConfiguration {
+	Set<Type> components;
+	Set<Type> managers;
+	Set<Type> systems;
 
 	public TypeConfiguration() {
 		components = new HashSet<Type>();
@@ -18,6 +18,11 @@ public class TypeConfiguration {
 		
 		managers = new HashSet<Type>();
 		addType("com.artemis.Manager", managers);
+		addType("com.artemis.managers.TagManager", managers);
+		addType("com.artemis.managers.GroupManager", managers);
+		addType("com.artemis.managers.PlayerManager", managers);
+		addType("com.artemis.managers.TeamManager", managers);
+		addType("com.artemis.managers.UuidEntityManager", managers);
 		
 		systems = new HashSet<Type>();
 		addType("com.artemis.EntitySystem", systems);
@@ -32,7 +37,7 @@ public class TypeConfiguration {
 		return Type.getType("L" + klazz + ";");
 	}
 	
-	private static void addType(String qualifiedName, Set<Type> containerType) {
+	static void addType(String qualifiedName, Set<Type> containerType) {
 		containerType.add(type(qualifiedName));
 	}
 }
