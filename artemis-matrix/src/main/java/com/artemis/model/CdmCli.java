@@ -7,7 +7,6 @@ import com.artemis.model.cli.FolderConverter;
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
-import com.beust.jcommander.Parameters;
 
 public class CdmCli {
 	
