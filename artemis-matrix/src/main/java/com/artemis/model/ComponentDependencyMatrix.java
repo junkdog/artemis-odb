@@ -3,6 +3,7 @@ package com.artemis.model;
 import static com.artemis.util.MatrixStringUtil.findLongestClassName;
 import static com.artemis.util.MatrixStringUtil.findLongestManagerList;
 import static com.artemis.util.MatrixStringUtil.findLongestSystemList;
+import static com.artemis.util.MatrixStringUtil.shortName;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -29,6 +30,7 @@ import org.objectweb.asm.Type;
 import com.artemis.model.scan.ArtemisTypeData;
 import com.artemis.model.scan.ConfigurationResolver;
 import com.artemis.util.ClassFinder;
+import com.artemis.util.MatrixStringUtil;
 import com.x5.template.Chunk;
 import com.x5.template.Theme;
 
@@ -207,7 +209,7 @@ public class ComponentDependencyMatrix implements Opcodes  {
 	private static class ComponentSorter implements Comparator<Type> {
 		@Override
 		public int compare(Type o1, Type o2) {
-			return o1.getClassName().compareTo(o2.getClassName());
+			return shortName(o1).compareTo(shortName(o2));
 		}
 	}
 

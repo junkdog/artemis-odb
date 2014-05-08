@@ -8,6 +8,7 @@ import org.objectweb.asm.Type;
 
 import com.artemis.model.scan.ArtemisTypeData;
 import com.artemis.model.scan.ConfigurationResolver;
+import com.artemis.util.MatrixStringUtil;
 
 public final class ArtemisTypeMapping {
 	public final Type artemisType;
@@ -36,19 +37,19 @@ public final class ArtemisTypeMapping {
 		this.artemisType = typeData.current;
 		this.componentIndices = componentIndices;
 		
-		name = shortName(this.artemisType);
+		name = MatrixStringUtil.shortName(this.artemisType);
 		
 		refManagers = new String[typeData.managers.size()];
 		int index = 0;
 		for (Type manager : typeData.managers) {
-			refManagers[index++] = shortName(manager);
+			refManagers[index++] = MatrixStringUtil.shortName(manager);
 		}
 		
 		refSystems = new String[typeData.systems.size()];
 		
 		index = 0;
 		for (Type es : typeData.systems) {
-			refSystems[index++] = shortName(es);
+			refSystems[index++] = MatrixStringUtil.shortName(es);
 		}
 		isPackage = false;
 		isSystem = resolver.systems.contains(this.artemisType);
@@ -78,12 +79,7 @@ public final class ArtemisTypeMapping {
 	}
 	
 	public String getName() {
-		return shortName(artemisType);
-	}
-	
-	private static String shortName(Type type) {
-		String name = type.getClassName();
-		return name.substring(name.lastIndexOf('.') + 1);
+		return MatrixStringUtil.shortName(artemisType);
 	}
 	
 	private static void mapComponents(Collection<Type> references, ComponentReference referenceType, Map<Type,Integer> componentIndices,

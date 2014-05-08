@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.objectweb.asm.Type;
+
 import com.artemis.model.ArtemisTypeMapping;
 
 public final class MatrixStringUtil {
@@ -62,5 +64,10 @@ public final class MatrixStringUtil {
 				? Arrays.toString(mapping.refSystems)
 				: longest;
 		}
+	}
+
+	public static String shortName(Type type) {
+		String name = type.getClassName();
+		return name.substring(name.lastIndexOf('.') + 1);
 	}
 }
