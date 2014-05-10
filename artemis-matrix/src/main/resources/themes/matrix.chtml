@@ -211,8 +211,12 @@
 					{.loop in $headers as $header}
 					<th class="vertical">{$header}</th>
 					{/loop}
-					<th class="horizontal" style="text-align: center;">Managers<span style="color: rgba(0,0,0,0)">{$longestManagers}</span></th>
-					<th class="horizontal" style="text-align: center;">Systems<span style="color: rgba(0,0,0,0)">{$longestSystems}</span></th>
+					{.loop in $headersManagers as $header}
+					<th class="vertical">{$header}</th>
+					{/loop}
+					{.loop in $headersSystems as $header}
+					<th class="vertical">{$header}</th>
+					{/loop}
 				</tr>
 			</thead>
 			<tbody>
@@ -229,15 +233,12 @@
 					{.loop in $system.component_indices as $component}
 					<td class="{$component.symbol}"></td>
 					{/loop}
-					<th class="referenced">
-						{.loop in $system.ref_managers as $manager}
-						{$manager} 
-						{.onEmpty}{/loop}
-					</th>
-					<th class="referenced">
-						{.loop in $system.ref_systems as $system}
-						{$system} 
-						{.onEmpty}{/loop}
+					{.loop in $system.manager_indices as $man}
+					<td class="{$man.symbol}"></td>
+					{/loop}
+					{.loop in $system.system_indices as $sys}
+					<td class="{$sys.symbol}"></td>
+					{/loop}
 					</th>
 				</tr>
 				{/if}

@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.objectweb.asm.Type;
 
+import com.artemis.model.ComponentDependencyMatrix.ColumnIndexMapping;
 import com.artemis.model.scan.ArtemisTypeData;
 import com.artemis.model.scan.ConfigurationResolver;
 import com.artemis.util.MatrixStringUtil;
@@ -18,6 +19,10 @@ public final class ArtemisTypeMapping {
 	public final String name;
 	public final String[] refSystems;
 	public final String[] refManagers;
+	
+	// FIXMEmeh, dirty... fix sometime.
+	public ComponentReference[] managerIndices;
+	public ComponentReference[] systemIndices;
 	
 	public final boolean isPackage; // referenced by chtml
 	
@@ -76,6 +81,21 @@ public final class ArtemisTypeMapping {
 		mapComponents(typeData.exclude, ComponentReference.EXCLUDED, componentIndices, components);
 		
 		return new ArtemisTypeMapping(typeData, resolver, components);
+	}
+	
+	void setArtemisTypeIndicies(ColumnIndexMapping mapping) {
+		managerIndices = artemisTypeIndicies(mapping.managerIndexMap, refManagers);
+		systemIndices = artemisTypeIndicies(mapping.systemIndexMap, refSystems);
+	}
+	
+	private static ComponentReference[] artemisTypeIndicies(Map<String, Integer> indexMapping, String[] referenced) {
+		ComponentReference[] indices = new ComponentReference[indexMapping.size()];
+		Arrays.fill(indices, ComponentReference.NOT_REFERENCED);
+		for (String ref : referenced) {
+			indices[indexMapping.get(ref)] = ComponentReference.OPTIONAL;
+		}
+		
+		return indices;
 	}
 	
 	public String getName() {

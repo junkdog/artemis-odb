@@ -30,7 +30,6 @@ import org.objectweb.asm.Type;
 import com.artemis.model.scan.ArtemisTypeData;
 import com.artemis.model.scan.ConfigurationResolver;
 import com.artemis.util.ClassFinder;
-import com.artemis.util.MatrixStringUtil;
 import com.x5.template.Chunk;
 import com.x5.template.Theme;
 
@@ -60,6 +59,8 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		List<ArtemisTypeData> artemisTypes = findArtemisTypes(root);
 		if (artemisTypes.size() == 0)
 			return;
+		
+		// TODO: move to ColumnIndexMapping
 		SortedSet<Type> componentSet = findComponents(artemisTypes);
 		
 		// removes any artemis classes which aren't part of artemis
@@ -68,19 +69,25 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		List<ArtemisTypeMapping> typeMappings = new ArrayList<ArtemisTypeMapping>();
 		for (ArtemisTypeData system : artemisTypes) {
 			ArtemisTypeMapping mappedType = ArtemisTypeMapping.from(
-				system, scanner, getComponentIndices(componentSet));
+				system, scanner, getComponentIndices(componentSet)); // TODO: move to outside loop
 			typeMappings.add(mappedType);
 		}
 		
 
-		List<String> columns = new ArrayList<String>();
+		List<String> componentColumns = new ArrayList<String>();
 		for (Type component : componentSet) {
 			String name = component.getClassName();
 			name = name.substring(name.lastIndexOf('.') + 1);
-			columns.add(name);
+			componentColumns.add(name);
 		}
 		
-		write(toMap(typeMappings), columns);
+		ColumnIndexMapping columnIndexMap = new ColumnIndexMapping(componentColumns, typeMappings);
+		for (ArtemisTypeMapping typeMapping : typeMappings) {
+			typeMapping.setArtemisTypeIndicies(columnIndexMap);
+		}
+		
+//		write(toMap(typeMappings), componentColumns);
+		write(toMap(typeMappings), columnIndexMap);
 	}
 	
 	public static SortedMap<String,List<ArtemisTypeMapping>> toMap(List<ArtemisTypeMapping> systems) {
@@ -130,7 +137,7 @@ public class ComponentDependencyMatrix implements Opcodes  {
 	}
 
 	private static SortedSet<Type> findComponents(List<ArtemisTypeData> artemisTypes) {
-		SortedSet<Type> componentSet = new TreeSet<Type>(new ComponentSorter());
+		SortedSet<Type> componentSet = new TreeSet<Type>(new ShortNameComparator());
 		for (ArtemisTypeData artemis : artemisTypes) {
 			componentSet.addAll(artemis.requires);
 			componentSet.addAll(artemis.requiresOne);
@@ -140,7 +147,8 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		return componentSet;
 	}
 	
-	private void write(SortedMap<String, List<ArtemisTypeMapping>> mappedSystems, List<String> columns) {
+//	private void write(SortedMap<String, List<ArtemisTypeMapping>> mappedSystems, List<String> columns) {
+	private void write(SortedMap<String, List<ArtemisTypeMapping>> mappedSystems, ColumnIndexMapping columnIndices) {
 		Theme theme = new Theme();
 		Chunk chunk = theme.makeChunk("matrix");
 		
@@ -151,10 +159,17 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		}
 		
 		chunk.set("longestName", findLongestClassName(mappedSystems).replaceAll(".", "_") + "______");
+		
+		// TODO: can remove once done
 		chunk.set("longestManagers", findLongestManagerList(mappedSystems).replaceAll(".", "_"));
 		chunk.set("longestSystems", findLongestSystemList(mappedSystems).replaceAll(".", "_"));
+		
+		
 		chunk.set("systems", mapping);
-		chunk.set("headers", columns);
+//		chunk.set("headers", columns);
+		chunk.set("headers", columnIndices.componentColumns);
+		chunk.set("headersManagers", columnIndices.managerColumns);
+		chunk.set("headersSystems", columnIndices.systemColumns);
 		chunk.set("project", projectName);
 		
 		BufferedWriter out = null;
@@ -206,7 +221,7 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		}
 	}
 	
-	private static class ComponentSorter implements Comparator<Type> {
+	private static class ShortNameComparator implements Comparator<Type> {
 		@Override
 		public int compare(Type o1, Type o2) {
 			return shortName(o1).compareTo(shortName(o2));
@@ -217,6 +232,51 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		@Override
 		public int compare(ArtemisTypeData o1, ArtemisTypeData o2) {
 			return o1.current.toString().compareTo(o2.current.toString());
+		}
+	}
+	
+	static class ColumnIndexMapping {
+		private final List<String> componentColumns;
+		private final List<String> managerColumns;
+		private final List<String> systemColumns;
+		final Map<String, Integer> managerIndexMap;
+		final Map<String, Integer> systemIndexMap;
+		
+		ColumnIndexMapping(List<String> componentColumns, List<ArtemisTypeMapping> typeMappings) {
+			this.componentColumns = new ArrayList<String>(componentColumns);
+			managerColumns = new ArrayList<String>();
+			systemColumns = new ArrayList<String>();
+			managerIndexMap = new HashMap<String,Integer>();
+			systemIndexMap = new HashMap<String,Integer>();
+			extractArtemisTypes(typeMappings);
+		}
+		
+		private void extractArtemisTypes(List<ArtemisTypeMapping> typeMappings) {
+			SortedSet<String> referencedManagers = new TreeSet<String>();
+			SortedSet<String> referencedSystems = new TreeSet<String>();
+			
+			for (ArtemisTypeMapping mapping : typeMappings) {
+				insert(referencedManagers, mapping.refManagers);
+				insert(referencedSystems, mapping.refSystems);
+			}
+			
+			int nextColumnIndex = 0;
+			for (String manager : referencedManagers) {
+				managerIndexMap.put(manager, nextColumnIndex++);
+			}
+			
+			nextColumnIndex = 0;
+			for (String system : referencedSystems) {
+				systemIndexMap.put(system, nextColumnIndex++);
+			}
+			
+			managerColumns.addAll(referencedManagers);
+			systemColumns.addAll(referencedSystems);
+		}
+
+		private static void insert(SortedSet<String> artemisSet, String[] referenced) {
+			for (String ref : referenced)
+				artemisSet.add(ref);
 		}
 	}
 }

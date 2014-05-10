@@ -65,6 +65,11 @@ public final class MatrixStringUtil {
 				: longest;
 		}
 	}
+	
+	public static String shortName(String s) {
+		String name = s;
+		return name.substring(name.lastIndexOf('.') + 1);
+	}
 
 	public static String shortName(Type type) {
 		String name = type.getClassName();
