@@ -216,12 +216,15 @@
 					<th style="color: rgba(0,0,0,0)">{$longestName}</th>
 					{.loop in $headersComponents as $header first_last="true"}
 					<th class="vertical{.if ($is_first)} separator{/if}">{$header}</th>
+					{.onEmpty}
 					{/loop}
 					{.loop in $headersManagers as $header first_last="true"}
 					<th class="vertical{.if ($is_first)} separator{/if}">{$header}</th>
+					{.onEmpty}
 					{/loop}
 					{.loop in $headersSystems as $header first_last="true"}
 					<th class="vertical{.if ($is_first)} separator{/if}"">{$header}</th>
+					{.onEmpty}
 					{/loop}
 				</tr>
 			</thead>
@@ -238,12 +241,15 @@
 					</th>
 					{.loop in $system.component_indices as $component first_last="true"}
 					<td class="{$component.symbol}{.if ($is_first)} separator{/if}"></td>
+					{.onEmpty}
 					{/loop}
 					{.loop in $system.manager_indices as $man first_last="true"}
 					<td class="{$man.symbol}{.if ($is_first)} separator{/if}"></td>
+					{.onEmpty}
 					{/loop}
 					{.loop in $system.system_indices as $sys first_last="true"}
 					<td class="{$sys.symbol}{.if ($is_first)} separator{/if}"></td>
+					{.onEmpty}
 					{/loop}
 					</th>
 				</tr>

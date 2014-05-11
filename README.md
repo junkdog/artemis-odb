@@ -32,6 +32,7 @@ recent changes._
  - **artemis-test:** Compliance tests.
 
 ## Maven
+
 ### Embracing Artemis
 ```xml
 	<properties>
@@ -78,6 +79,10 @@ recent changes._
 </dependency>
 ```
 
+## Direct Download
+
+Jars can be downloaded manually from the maven repository:
+  http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.5.0/
 
 
 ## Agrotera: Anti-boilerplate lib for Artemis
@@ -93,6 +98,7 @@ Managers and EntitySystems. Can also simulate aspects for Managers and inject pr
 | [Ned et les Maki][ned]        | [source][ned-src]                    | N/A               | [Geeky Gobling Prod][ned-auth] |
 | [Naturally Selected 2D][ns2d] | [source][ns2d-src] [play][ns2d-play] | [cdm][ns2d-cdm]   | [@DaanVanYperen][dvy]          |
 | [The Underkeep][tu]           | [source][tu-src] [play][tu-play]     | [cdm][tu-cdm]     | [@DaanVanYperen][dvy]          |
+| Spaceship Warrior Redux       | [source][sw-src] [play][sw-play]     | [cdm][sw-cdm]     | updated by [@Flet][flet]       |
 
  [cdm]: https://github.com/junkdog/artemis-odb/wiki/Component-Dependency-Matrix
  [sine]: http://www.ludumdare.com/compo/ludum-dare-27/?action=preview&uid=15341
@@ -111,4 +117,8 @@ Managers and EntitySystems. Can also simulate aspects for Managers and inject pr
  [tu-play]: http://www.mostlyoriginal.net/play-underkeep/
  [tu-cdm]: http://junkdog.github.io/matrix-tu.html
  [dvy]: https://github.com/DaanVanYperen
- 
+ [sw-src]: https://github.com/Flet/spasceship-warrior-gradle
+ [sw-play]: http://flet.github.io/spaceship-warrior-redux/
+ [sw-cdm]: http://junkdog.github.io/matrix-sw.html
+ [flet]: https://github.com/Flet/ 
+
