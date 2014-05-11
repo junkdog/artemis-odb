@@ -7,7 +7,7 @@ import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
 
 /**
- * Entity creation helper for rapid prototyping.
+ * Non-reusable entity creation helper for rapid prototyping.
  *
  * Example: new Builder(world)
  * .with(Pos.class, Anim.class)
@@ -142,6 +142,14 @@ public class EntityBuilder {
 			throw new RuntimeException("Register GroupManager with your artemis world.");
 		
 		groupManager.add(entity, group);
+		return this;
+	}
+	
+	/** Register entity with multiple groups. Requires registered TagManager */
+	public EntityBuilder groups(String... groups) {
+		for (int i = 0; groups.length > i; i++)
+			group(groups[i]);
+		
 		return this;
 	}
 
