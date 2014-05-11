@@ -147,7 +147,6 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		return componentSet;
 	}
 	
-//	private void write(SortedMap<String, List<ArtemisTypeMapping>> mappedSystems, List<String> columns) {
 	private void write(SortedMap<String, List<ArtemisTypeMapping>> mappedSystems, ColumnIndexMapping columnIndices) {
 		Theme theme = new Theme();
 		Chunk chunk = theme.makeChunk("matrix");
@@ -160,16 +159,13 @@ public class ComponentDependencyMatrix implements Opcodes  {
 		
 		chunk.set("longestName", findLongestClassName(mappedSystems).replaceAll(".", "_") + "______");
 		
-		// TODO: can remove once done
-		chunk.set("longestManagers", findLongestManagerList(mappedSystems).replaceAll(".", "_"));
-		chunk.set("longestSystems", findLongestSystemList(mappedSystems).replaceAll(".", "_"));
-		
-		
 		chunk.set("systems", mapping);
-//		chunk.set("headers", columns);
-		chunk.set("headers", columnIndices.componentColumns);
+		chunk.set("headersComponents", columnIndices.componentColumns);
+		chunk.set("componentCount", columnIndices.componentColumns.size());
 		chunk.set("headersManagers", columnIndices.managerColumns);
+		chunk.set("managerCount", columnIndices.managerColumns.size());
 		chunk.set("headersSystems", columnIndices.systemColumns);
+		chunk.set("systemCount", columnIndices.systemColumns.size());
 		chunk.set("project", projectName);
 		
 		BufferedWriter out = null;

@@ -48,9 +48,12 @@
 	<script>
 		(function ($) {
 			$.fn.doLegend = function (klazz, icon) {
-				$('td[class=' + klazz + ']').each(function() {
+				$('td[class*=' + klazz + ']').each(function() {
 					$(this).html('<i class="' + icon + '"></i>');
 				})
+				//$('td[class=' + klazz + '.separated]').each(function() {
+				//	$(this).html('<i class="' + icon + '"></i>');
+				//})
 			}
 		})(jQuery);
 		
@@ -184,6 +187,9 @@
 		td, th.referenced {
 			border: 1px solid #c2c5ee;
 		}
+		td.separator, th.separator {
+			border-left: 3px solid #c2c5ee;
+		}
 		td.R {
 			background-color: rgba(57, 201, 57, 0.5);
 			text-align: center;
@@ -208,14 +214,14 @@
 			<thead style="background-color: #eee;">
 				<tr>
 					<th style="color: rgba(0,0,0,0)">{$longestName}</th>
-					{.loop in $headers as $header}
-					<th class="vertical">{$header}</th>
+					{.loop in $headersComponents as $header first_last="true"}
+					<th class="vertical{.if ($is_first)} separator{/if}">{$header}</th>
 					{/loop}
-					{.loop in $headersManagers as $header}
-					<th class="vertical">{$header}</th>
+					{.loop in $headersManagers as $header first_last="true"}
+					<th class="vertical{.if ($is_first)} separator{/if}">{$header}</th>
 					{/loop}
-					{.loop in $headersSystems as $header}
-					<th class="vertical">{$header}</th>
+					{.loop in $headersSystems as $header first_last="true"}
+					<th class="vertical{.if ($is_first)} separator{/if}"">{$header}</th>
 					{/loop}
 				</tr>
 			</thead>
@@ -230,14 +236,14 @@
 					<th class="horizontal" style="padding-right: 5px;">{$system.name}
 						<i class="icon-{.if ($system.is_system)}gear{.elseif ($system.is_manager)}gears{.else}coffee{/if}"></i>
 					</th>
-					{.loop in $system.component_indices as $component}
-					<td class="{$component.symbol}"></td>
+					{.loop in $system.component_indices as $component first_last="true"}
+					<td class="{$component.symbol}{.if ($is_first)} separator{/if}"></td>
 					{/loop}
-					{.loop in $system.manager_indices as $man}
-					<td class="{$man.symbol}"></td>
+					{.loop in $system.manager_indices as $man first_last="true"}
+					<td class="{$man.symbol}{.if ($is_first)} separator{/if}"></td>
 					{/loop}
-					{.loop in $system.system_indices as $sys}
-					<td class="{$sys.symbol}"></td>
+					{.loop in $system.system_indices as $sys first_last="true"}
+					<td class="{$sys.symbol}{.if ($is_first)} separator{/if}"></td>
 					{/loop}
 					</th>
 				</tr>
