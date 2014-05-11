@@ -26,7 +26,6 @@ recent changes._
 
 #### Optional
  - **artemis-maven:** Maven plugin for transforming `@PooledWeaver` and `@PackedWeaver` components.
- - **artemis-validator:** Annotation processor, performs rudimentary checks on components.
 
 #### Other
  - **artemis-weaver:** Transforms `com.artemis.Component` classes when annotated with `@PooledWeaver` or `@PackedWeaver`, see _artemis-maven_.
@@ -46,27 +45,22 @@ recent changes._
 			<artifactId>artemis-odb</artifactId>
 			<version>${artemis.version}</version>
 		</dependency>
-		
-		<!-- annotation processor, need to manually add this to eclipse if applicable -->
-		<dependency>
-			<groupId>net.onedaybeard.artemis</groupId>
-			<artifactId>artemis-odb-validator</artifactId>
-			<version>${artemis.version}</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-				<!-- enables @PooledWeaver and @PackedWeaver -->
 				<groupId>net.onedaybeard.artemis</groupId>
 				<artifactId>artemis-odb-maven-plugin</artifactId>
 				<version>${artemis.version}</version>
 				<executions>
 					<execution>
 						<goals>
+							<!-- enables @PooledWeaver and @PackedWeaver -->
 							<goal>artemis</goal>
+							
+							<!-- generates the component dependency matrix report -->
+							<goal>matrix</goal>
 						</goals>
 					</execution>
 				</executions>

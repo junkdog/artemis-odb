@@ -71,7 +71,6 @@
 	</developers>
 	
 	<modules>
-		<module>artemis-validator</module>
 		<module>artemis</module>
 		<module>artemis-weaver</module>
 		<module>artemis-maven</module>

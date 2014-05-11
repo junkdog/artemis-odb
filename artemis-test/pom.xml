@@ -17,12 +17,6 @@
 			<artifactId>artemis-odb</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>net.onedaybeard.artemis</groupId> <!-- doesn't work under eclipse... --> 
-			<artifactId>artemis-odb-validator</artifactId>
-			<version>${project.version}</version>
-			<scope>provided</scope>
-		</dependency>
 	</dependencies>
 
 	<build>
