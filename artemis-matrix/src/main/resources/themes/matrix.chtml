@@ -141,9 +141,14 @@
 		}
 
 		h1 {
+			color: #003399;
 			font-family: "Lucida Sans Unicode","Lucida Grande",Sans-Serif;
 			font-size: 22px;
-			text-align: center;
+			text-align: left;
+			margin-top: 20px;
+			margin-bottom: 20px;
+			margin-left: 20px;
+			margin-right: 20px;
 		}
 		
 		body {
@@ -158,8 +163,8 @@
 			border-collapse: collapse;
 			margin-top: 20px;
 			margin-bottom: 20px;
-			margin-left: auto;
-			margin-right: auto;
+			margin-left: 20px;
+			margin-right: 20px;
 		}
 		
 		tr.systems:hover, .highlighted  {
