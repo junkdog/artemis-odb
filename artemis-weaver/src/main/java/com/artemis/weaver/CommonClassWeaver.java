@@ -10,7 +10,7 @@ import org.objectweb.asm.Opcodes;
 import com.artemis.Weaver;
 import com.artemis.meta.ClassMetadata;
 
-public class CommonClassWeaver extends ClassVisitor implements Opcodes {
+class CommonClassWeaver extends ClassVisitor implements Opcodes {
 
 	private ClassMetadata meta;
 	

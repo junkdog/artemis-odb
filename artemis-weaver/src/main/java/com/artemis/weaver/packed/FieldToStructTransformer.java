@@ -19,11 +19,11 @@ import com.artemis.meta.ClassMetadata.GlobalConfiguration;
 import com.artemis.meta.FieldDescriptor;
 import com.artemis.transformer.ClassTransformer;
 
-public class FieldToArrayClassTransformer implements ClassTransformer, Opcodes {
+public class FieldToStructTransformer implements ClassTransformer, Opcodes {
 
 	private final ClassMetadata meta;
 
-	public FieldToArrayClassTransformer(ClassMetadata meta) {
+	public FieldToStructTransformer(ClassMetadata meta) {
 		this.meta = meta;
 	}
 	
@@ -33,11 +33,14 @@ public class FieldToArrayClassTransformer implements ClassTransformer, Opcodes {
 		cr.accept(cn,  ClassReader.EXPAND_FRAMES);
 		
 		List<FieldDescriptor> toPack = instanceFields(meta);
-		FieldToArrayMethodTransformer methodTransformer = new FieldToArrayMethodTransformer(null, meta, getFieldNames(toPack));
 		
-		List<MethodNode> methods = cn.methods;
-		for (MethodNode method : methods) {
-			methodTransformer.transform(method);
+		for (FieldDescriptor fd : meta.fields) {
+			
+		FieldToArrayMethodTransformer methodTransformer = new FieldToArrayMethodTransformer(null, meta, fd);
+			List<MethodNode> methods = cn.methods;
+			for (MethodNode method : methods) {
+				methodTransformer.transform(method);
+			}
 		}
 		
 		if (!GlobalConfiguration.ideFriendlyPacking) {

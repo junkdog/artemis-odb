@@ -151,6 +151,28 @@ public final class TypedOpcodes implements Opcodes {
 		}
 	}
 	
+	public static int tCONST(FieldDescriptor fd) {
+		assert(fd.desc.length() == 1);
+		
+		char desc = fd.desc.charAt(0);
+		switch (desc) {
+			case 'Z':
+			case 'C':
+			case 'S':
+			case 'I':
+				return ICONST_0;
+			case 'J':
+				return LCONST_0;
+			case 'F':
+				return FCONST_0;
+			case 'D':
+				return DCONST_0;
+			default:
+				String err = String.format("Unknown type: '%s'", desc);
+				throw new RuntimeException(err);
+		}
+	}
+	
 	public int tCONST() {
 		switch (desc) {
 			case 'Z':

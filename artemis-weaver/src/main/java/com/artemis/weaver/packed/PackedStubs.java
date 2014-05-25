@@ -1,10 +1,8 @@
 package com.artemis.weaver.packed;
 
-import static com.artemis.meta.ClassMetadataUtil.instanceFieldTypes;
 import static com.artemis.meta.ClassMetadataUtil.instanceFields;
 
 import java.util.List;
-import java.util.Set;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -23,11 +21,13 @@ public class PackedStubs implements Opcodes {
 	private ClassMetadata meta;
 	private ClassReader cr;
 	private ClassWriter cw;
+	private TypedOpcodes opcodes;
 
 	public PackedStubs(ClassReader cr, ClassMetadata meta) {
 		this.cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		this.cr = cr;
 		this.meta = meta;
+		opcodes = new TypedOpcodes(meta);
 	}
 	
 	public ClassReader transform() {
@@ -41,26 +41,26 @@ public class PackedStubs implements Opcodes {
 		if (!meta.foundEntityFor)
 			injectForEntity();
 		
-		// inject sizeof
-		Set<String> types = instanceFieldTypes(meta);
-		if (types.size() > 1) {
-			System.err.println("Expected one type, found: " + types);
-		}
+		// TODO: check for disallowed file types
 		
 		List<FieldDescriptor> dataFields = instanceFields(meta);
 		cw.visitField(ACC_PRIVATE | ACC_FINAL | ACC_STATIC, "$_SIZE_OF", "I", null,
-			Integer.valueOf(dataFields.size())).visitEnd();;
-		cw.visitField(ACC_PRIVATE, "$offset", "I", null, Integer.valueOf(0)).visitEnd();
+			Integer.valueOf(ClassMetadataUtil.sizeOf(meta))).visitEnd();;
+		cw.visitField(ACC_PRIVATE, "$stride", "I", null, Integer.valueOf(0)).visitEnd();
 		
+		// Reason for recreating teh ClassReader/Writer combo:
+		// To make life simpler, the reset method acts on the original fields, 
+		// delegating the ByteBuffer weaving to the FieldToArrayClassTransformer.
 		injectReset();
-		// inject array & inject $grow()
+		cr.accept(cw, 0);
+		cr = new ClassReader(cw.toByteArray());
+		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+		
 		if (dataFields.size() > 0) {
+			cw.visitField(ACC_PRIVATE + ACC_STATIC, "$data", "Ljava/nio/ByteBuffer;", null, null).visitEnd();
+			injectGrow(meta.type.getInternalName());
 			
-			cw.visitField(ACC_PRIVATE + ACC_STATIC, "$data", "[" + dataFields.get(0).desc, null, null).visitEnd();
-			String dataDesc = instanceFields(meta).get(0).desc;
-			injectGrow(meta.type.getInternalName(), arrayTypeDesc(dataDesc), arrayTypeInst(dataDesc));
-			
-			FieldToArrayClassTransformer transformer = new FieldToArrayClassTransformer(meta);
+			FieldToStructTransformer transformer = new FieldToStructTransformer(meta);
 			ClassNode cn = transformer.transform(cr);
 			
 			cn.accept(cw);
@@ -70,25 +70,34 @@ public class PackedStubs implements Opcodes {
 		return cw.toByteArray();
 	}
 
-	private void injectGrow(String owner, String arrayTypeDesc, int arrayTypeInst) {
+	private void injectGrow(String owner) {
 		MethodVisitor mv = cw.visitMethod(ACC_PRIVATE + ACC_STATIC, "$grow", "()V", null, null);
 		mv.visitCode();
-		mv.visitFieldInsn(GETSTATIC, owner, "$data", arrayTypeDesc);
-		mv.visitVarInsn(ASTORE, 0);
-		mv.visitVarInsn(ALOAD, 0);
-		mv.visitInsn(ARRAYLENGTH);
+		Label l0 = new Label();
+		mv.visitLabel(l0);
+		mv.visitFieldInsn(GETSTATIC, owner, "$data", "Ljava/nio/ByteBuffer;");
+		mv.visitMethodInsn(INVOKEVIRTUAL, "java/nio/ByteBuffer", "capacity", "()I");
 		mv.visitInsn(ICONST_2);
 		mv.visitInsn(IMUL);
-		mv.visitIntInsn(NEWARRAY, arrayTypeInst);
-		mv.visitFieldInsn(PUTSTATIC, owner, "$data", arrayTypeDesc);
+		mv.visitMethodInsn(INVOKESTATIC, "java/nio/ByteBuffer", "allocateDirect", "(I)Ljava/nio/ByteBuffer;");
+		mv.visitVarInsn(ASTORE, 0);
+		Label l1 = new Label();
+		mv.visitLabel(l1);
 		mv.visitVarInsn(ALOAD, 0);
-		mv.visitInsn(ICONST_0);
-		mv.visitFieldInsn(GETSTATIC, owner, "$data", arrayTypeDesc);
-		mv.visitInsn(ICONST_0);
+		mv.visitFieldInsn(GETSTATIC, owner, "$data", "Ljava/nio/ByteBuffer;");
+		mv.visitMethodInsn(INVOKEVIRTUAL, "java/nio/ByteBuffer", "put", "(Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;");
+		mv.visitInsn(POP);
+		Label l2 = new Label();
+		mv.visitLabel(l2);
 		mv.visitVarInsn(ALOAD, 0);
-		mv.visitInsn(ARRAYLENGTH);
-		mv.visitMethodInsn(INVOKESTATIC, "java/lang/System", "arraycopy", "(Ljava/lang/Object;ILjava/lang/Object;II)V");
+		mv.visitFieldInsn(PUTSTATIC, owner, "$data", "Ljava/nio/ByteBuffer;");
+		Label l3 = new Label();
+		mv.visitLabel(l3);
 		mv.visitInsn(RETURN);
+		Label l4 = new Label();
+		mv.visitLabel(l4);
+		mv.visitLocalVariable("newBuffer", "Ljava/nio/ByteBuffer;", null, l1, l4, 0);
+		mv.visitMaxs(2, 1);
 		mv.visitEnd();
 	}
 
@@ -102,29 +111,30 @@ public class PackedStubs implements Opcodes {
 	
 	private void injectForEntity() {
 		String owner = meta.type.getInternalName();
-		String dataDesc = instanceFields(meta).get(0).desc;
 		
 		MethodVisitor mv = cw.visitMethod(ACC_PROTECTED, "forEntity", "(Lcom/artemis/Entity;)Lcom/artemis/PackedComponent;", null, null);
 		mv.visitCode();
 		Label l0 = new Label();
 		mv.visitLabel(l0);
 		mv.visitVarInsn(ALOAD, 0);
-		injectIntValue(mv, instanceFields(meta).size());
+		mv.visitFieldInsn(GETSTATIC, owner, "$_SIZE_OF", "I");
 		mv.visitVarInsn(ALOAD, 1);
 		mv.visitMethodInsn(INVOKEVIRTUAL, "com/artemis/Entity", "getId", "()I");
 		mv.visitInsn(IMUL);
-		mv.visitFieldInsn(PUTFIELD, owner, "$offset", "I");
-		mv.visitFieldInsn(GETSTATIC, owner, "$data", arrayTypeDesc(dataDesc));
-		mv.visitInsn(ARRAYLENGTH);
-		mv.visitInsn(ICONST_1);
+		mv.visitFieldInsn(PUTFIELD, owner, "$stride", "I");
+		Label l1 = new Label();
+		mv.visitLabel(l1);
+		mv.visitFieldInsn(GETSTATIC, owner, "$data", "Ljava/nio/ByteBuffer;");
+		mv.visitMethodInsn(INVOKEVIRTUAL, "java/nio/ByteBuffer", "capacity", "()I");
+		mv.visitIntInsn(BIPUSH, 8);
 		mv.visitInsn(ISUB);
 		mv.visitVarInsn(ALOAD, 0);
-		mv.visitFieldInsn(GETFIELD, owner, "$offset", "I");
+		mv.visitFieldInsn(GETFIELD, owner, "$stride", "I");
 		Label l2 = new Label();
 		mv.visitJumpInsn(IF_ICMPGT, l2);
 		mv.visitMethodInsn(INVOKESTATIC, owner, "$grow", "()V");
 		mv.visitLabel(l2);
-		mv.visitFrame(F_SAME, 0, null, 0, null);
+		mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitInsn(ARETURN);
 		Label l3 = new Label();
@@ -144,15 +154,10 @@ public class PackedStubs implements Opcodes {
 		
 		Label l0 = new Label();
 		mv.visitLabel(l0);
-		
-		for (int i = 0; fields.size() > i; i++) {
-			mv.visitFieldInsn(GETSTATIC, owner, "$data", arrayTypeDesc(fields.get(0).desc));
+		for (FieldDescriptor fd : fields) {
 			mv.visitVarInsn(ALOAD, 0);
-			mv.visitFieldInsn(GETFIELD, owner, "$offset", "I");
-			mv.visitInsn(ICONST_0);
-			mv.visitInsn(IADD);
-			mv.visitInsn(opcodes.tCONST());
-			mv.visitInsn(opcodes.tASTORE());
+			mv.visitInsn(TypedOpcodes.tCONST(fd));
+			mv.visitFieldInsn(PUTFIELD, owner, fd.name, fd.desc);
 		}
 		
 		mv.visitInsn(RETURN);
@@ -169,36 +174,5 @@ public class PackedStubs implements Opcodes {
 			methodVisitor.visitIntInsn(BIPUSH, value);
 		else
 			methodVisitor.visitInsn(ICONST_0 + value);
-	}
-	
-
-	private static String arrayTypeDesc(String dataDesc) {
-		return "[" + dataDesc;
-	}
-	
-	private static int arrayTypeInst(String dataDesc) {
-		assert (dataDesc.length() == 1);
-		
-		switch (dataDesc.charAt(0)) {
-			case 'I':
-				return T_INT;
-			case 'J':
-				return T_LONG;
-			case 'S':
-				return T_SHORT;
-			case 'B':
-				return T_BYTE;
-			case 'C':
-				return T_CHAR;
-			case 'F':
-				return T_FLOAT;
-			case 'D':
-				return T_DOUBLE;
-			case 'Z':
-				return T_BOOLEAN;
-			case 'A':
-			default:
-				throw new RuntimeException("Unknown array type for " + dataDesc);
-		}
 	}
 }

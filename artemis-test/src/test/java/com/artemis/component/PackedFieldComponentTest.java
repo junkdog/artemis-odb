@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -36,11 +37,6 @@ public class PackedFieldComponentTest extends PackedWeavingTest {
 	}
 
 	@Override
-	Class<?> fieldType() {
-		return float[].class;
-	}
-	
-	@Override
 	Class<?> componentType() {
 		return PackedFieldComponent.class;
 	}
@@ -56,20 +52,21 @@ public class PackedFieldComponentTest extends PackedWeavingTest {
 		
 		assertEquals(PRIVATE | STATIC | FINAL, sizeOf.getModifiers());
 		assertEquals(int.class, sizeOf.getType());
-		assertEquals(fieldCount(), sizeOf.getInt(packed));
+		assertEquals(2 * 4, sizeOf.getInt(packed));
 	}
 	
 	@Test
 	public void packed_component_has_backing_array() throws Exception {
 		Field data = field("$data");
+		int size = field("$_SIZE_OF").getInt(null);
 		
 		assertEquals(PRIVATE | STATIC, data.getModifiers());
 		assertEquals(fieldType(), data.getType());
-		assertEquals(64 * fieldCount(), ((float[])data.get(null)).length);
+		assertEquals(128 * size, ((ByteBuffer)data.get(null)).capacity());
 		
 		Method grow = method("$grow");
 		grow.invoke(packed);
-		assertEquals(64 * fieldCount() * 2, ((float[])data.get(null)).length);
+		assertEquals(256 * size, ((ByteBuffer)data.get(null)).capacity());
 	}
 	
 	@Test

@@ -8,6 +8,7 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -32,11 +33,6 @@ public class DoublePackedWeavingTest extends PackedWeavingTest {
 	}
 
 	@Override
-	Class<?> fieldType() {
-		return double[].class;
-	}
-	
-	@Override
 	Class<?> componentType() {
 		return TransPackedDouble.class;
 	}
@@ -49,23 +45,25 @@ public class DoublePackedWeavingTest extends PackedWeavingTest {
 	@Test
 	public void packed_component_has_sizeof() throws Exception {
 		Field sizeOf = field("$_SIZE_OF");
+		int size = field("$_SIZE_OF").getInt(null);
 		
 		assertEquals(PRIVATE | STATIC | FINAL, sizeOf.getModifiers());
 		assertEquals(int.class, sizeOf.getType());
-		assertEquals(fieldCount(), sizeOf.getInt(packed));
+		assertEquals(8, sizeOf.getInt(packed));
 	}
 	
 	@Test
 	public void packed_component_has_backing_array() throws Exception {
 		Field data = field("$data");
+		int size = field("$_SIZE_OF").getInt(null);
 		
 		assertEquals(PRIVATE | STATIC, data.getModifiers());
 		assertEquals(fieldType(), data.getType());
-		assertEquals(64 * fieldCount(), ((double[])data.get(null)).length);
+		assertEquals(128 * size, ((ByteBuffer)data.get(null)).capacity());
 		
 		Method grow = method("$grow");
 		grow.invoke(packed);
-		assertEquals(64 * fieldCount() * 2, ((double[])data.get(null)).length);
+		assertEquals(256 * size, ((ByteBuffer)data.get(null)).capacity());
 	}
 	
 	@Test 

@@ -9,30 +9,27 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
+import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.meta.FieldDescriptor;
 import com.artemis.transformer.MethodTransformer;
-import com.artemis.weaver.TypedOpcodes;
 
 public class FieldToArrayMethodTransformer extends MethodTransformer implements Opcodes {
 
 	private final ClassMetadata meta;
 	private final String fieldDesc;
-	private final List<String> dataFieldNames;
-	private final TypedOpcodes opcodes;
+	
+	private static final String BYTEBUFFER_DESC = "Ljava/nio/ByteBuffer;";
 	
 	private static final boolean LOG = false;
 
-	public FieldToArrayMethodTransformer(MethodTransformer mt, ClassMetadata meta, List<String> dataFieldNames) {
+	public FieldToArrayMethodTransformer(MethodTransformer mt, ClassMetadata meta, FieldDescriptor f) {
 		super(mt);
 		this.meta = meta;
-		this.dataFieldNames = dataFieldNames;
-		opcodes = new TypedOpcodes(meta);
 		
-		FieldDescriptor f = ClassMetadataUtil.instanceFields(meta).get(0);
 		fieldDesc = f.desc;
 	}
 	
@@ -44,6 +41,8 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 		
 		if (LOG) System.out.println("OWNER: " + owner + " " + mn.name);
 		
+		ByteBufferHelper bufferHelper = new ByteBufferHelper(meta);
+		
 		boolean shouldDoSetter = true;
 		for (int i = 0; instructions.size() > i; i++) {
 			AbstractInsnNode node = instructions.get(i);
@@ -54,48 +53,52 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 						if (LOG) System.out.println(">> SETTING FIELD index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(2,
-								new FieldInsnNode(GETSTATIC, owner, "$data", "[" + fieldDesc))
+								new FieldInsnNode(GETSTATIC, owner, "$data", BYTEBUFFER_DESC))
 							.insertAtOffset(1,
-								new FieldInsnNode(GETFIELD, owner, "$offset", "I"),
-								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
+								new FieldInsnNode(GETFIELD, owner, "$stride", "I"),
+								fieldOffsetInstruction(f.name),
 								new InsnNode(IADD))
 							.insertAtOffset(0,
-								new InsnNode(opcodes.tASTORE()))
+								bufferHelper.invokePutter(f.name),
+								new InsnNode(POP))
 							.delete(0)
 							.transform();
 					} else if (!shouldDoSetter && isSettingFieldWithPrimitive(f)) {
 						if (LOG) System.out.println(">> SETTING FIELD index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(0,
-								new InsnNode(opcodes.tASTORE()))
+								bufferHelper.invokePutter(f.name),
+								new InsnNode(POP))
 							.delete(0)
 							.transform();
 					} else if (isSettingFieldWithObject(f)) {
 						if (LOG) System.out.println(">> SETTING FIELD FROM OBJECT index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(3,
-								new FieldInsnNode(GETSTATIC, owner, "$data", "[" + fieldDesc))
+								new FieldInsnNode(GETSTATIC, owner, "$data", BYTEBUFFER_DESC))
 							.insertAtOffset(2,
-								new FieldInsnNode(GETFIELD, owner, "$offset", "I"),
-								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
+								new FieldInsnNode(GETFIELD, owner, "$stride", "I"),
+								fieldOffsetInstruction(f.name),
 								new InsnNode(IADD))
 							.insertAtOffset(0, 
-								new InsnNode(opcodes.tASTORE()))
+								bufferHelper.invokePutter(f.name),
+								new InsnNode(POP))
 							.delete(0)
 							.transform();
 					} else if (isModifyingFieldWithObject(f)) {
 						if (LOG) System.out.println(">> SETTING-MODIFYING FIELD FROM OBJECT index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(6,
-								new FieldInsnNode(GETSTATIC, owner, "$data", "[" + fieldDesc))
+								new FieldInsnNode(GETSTATIC, owner, "$data", BYTEBUFFER_DESC))
 							.insertAtOffset(5,
-								new FieldInsnNode(GETFIELD, owner, "$offset", "I"),
-								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
+								new FieldInsnNode(GETFIELD, owner, "$stride", "I"),
+								fieldOffsetInstruction(f.name),
 								new InsnNode(IADD),
 								new InsnNode(DUP2),
-								new InsnNode(opcodes.tALOAD()))
+								bufferHelper.invokeGetter(f.name))
 							.insertAtOffset(0, 
-								new InsnNode(opcodes.tASTORE()))
+								bufferHelper.invokePutter(f.name),
+								new InsnNode(POP))
 							.delete(5)
 							.delete(4)
 							.delete(0)
@@ -104,13 +107,13 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 						if (LOG) System.out.println("<< LOAD FIELD index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(2, 
-								new FieldInsnNode(GETSTATIC, owner, "$data", "[" + fieldDesc))
+								new FieldInsnNode(GETSTATIC, owner, "$data", BYTEBUFFER_DESC))
 							.insertAtOffset(0,
-								new FieldInsnNode(GETFIELD, owner, "$offset", "I"),
-								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
+								new FieldInsnNode(GETFIELD, owner, "$stride", "I"),
+								fieldOffsetInstruction(f.name),
 								new InsnNode(IADD),
 								new InsnNode(DUP2),
-								new InsnNode(opcodes.tALOAD()))
+								bufferHelper.invokeGetter(f.name))
 							.delete(1)
 							.delete(0)
 							.transform();
@@ -119,12 +122,12 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 						if (LOG) System.out.println("<< GETTING FIELD index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(1, 
-								new FieldInsnNode(GETSTATIC, owner, "$data", "[" + fieldDesc))
+								new FieldInsnNode(GETSTATIC, owner, "$data", BYTEBUFFER_DESC))
 							.insertAtOffset(0,
-								new FieldInsnNode(GETFIELD, owner, "$offset", "I"),
-								new InsnNode(ICONST_0 + dataFieldNames.indexOf(f.name)),
+								new FieldInsnNode(GETFIELD, owner, "$stride", "I"),
+								fieldOffsetInstruction(f.name),
 								new InsnNode(IADD),
-								new InsnNode(opcodes.tALOAD()))
+								bufferHelper.invokeGetter(f.name))
 							.delete(0)
 							.transform();
 					}
@@ -200,5 +203,30 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 			opcode == INVOKEVIRTUAL ||
 			opcode == INVOKEINTERFACE ||
 			(opcode == GETFIELD && !((FieldInsnNode)n).owner.equals(meta.type.getInternalName()));
+	}
+	
+	private AbstractInsnNode fieldOffsetInstruction(String name) {
+		int offset = offset(name);
+		
+		if (offset <= 5)
+			return new InsnNode(ICONST_0 + offset);
+		else if (offset <= 0xff)
+			return new IntInsnNode(BIPUSH, offset);
+		else
+			return new IntInsnNode(SIPUSH, offset);
+	}
+	
+	private int offset(String name) {
+		List<FieldDescriptor> fields = meta.fields;
+		
+		int offset = 0;
+		for (int i = 0; fields.size() > i; i++) {
+			FieldDescriptor fd = fields.get(i);
+			if (fd.name.equals(name))
+				break;
+			
+			offset += ClassMetadataUtil.sizeOf(fd);
+		}
+		return offset;
 	}
 }

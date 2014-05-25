@@ -1,6 +1,7 @@
 package com.artemis;
 
 import java.util.BitSet;
+
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.ReflectionException;
 

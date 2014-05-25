@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
 
 import org.junit.After;
 import org.junit.Before;
@@ -43,7 +44,6 @@ public abstract class PackedWeavingTest {
 	
 	abstract int fieldCount();
 	abstract Class<?> componentType();
-	abstract Class<?> fieldType();
 	abstract ComponentMapper<?> getMapper();
 	
 	public void packed_component_has_offset() throws Exception {
@@ -61,7 +61,7 @@ public abstract class PackedWeavingTest {
 	
 	private int getOffset(Entity e) throws Exception {
 		ComponentMapper<?> mapper = getMapper();
-		return field("$offset").getInt(mapper.get(e));
+		return field("$stride").getInt(mapper.get(e));
 	}
 
 	Method method(String name, Class<?>... parameterTypes) throws SecurityException, NoSuchMethodException {
@@ -76,5 +76,9 @@ public abstract class PackedWeavingTest {
 		assertNotNull(f);
 		f.setAccessible(true);
 		return f;
+	}
+
+	protected Class<?> fieldType() {
+		return ByteBuffer.class;
 	}
 }

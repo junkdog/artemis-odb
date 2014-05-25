@@ -13,7 +13,6 @@ import com.artemis.systems.DelayedEntityProcessingSystem;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.systems.VoidEntitySystem;
 import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
 
 public class WorldTest
 {

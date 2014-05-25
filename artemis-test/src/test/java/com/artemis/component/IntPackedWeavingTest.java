@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.ByteBuffer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -31,11 +32,6 @@ public class IntPackedWeavingTest extends PackedWeavingTest {
 	}
 
 	@Override
-	Class<?> fieldType() {
-		return int[].class;
-	}
-	
-	@Override
 	Class<?> componentType() {
 		return TransPackedInt.class;
 	}
@@ -48,14 +44,15 @@ public class IntPackedWeavingTest extends PackedWeavingTest {
 	@Test
 	public void packed_component_has_backing_array() throws Exception {
 		Field data = field("$data");
+		int size = field("$_SIZE_OF").getInt(null);
 		
 		assertEquals(PRIVATE | STATIC, data.getModifiers());
 		assertEquals(fieldType(), data.getType());
-		assertEquals(64 * fieldCount(), ((int[])data.get(null)).length);
+		assertEquals(128 * size, ((ByteBuffer)data.get(null)).capacity());
 		
 		Method grow = method("$grow");
 		grow.invoke(packed);
-		assertEquals(64 * fieldCount() * 2, ((int[])data.get(null)).length);
+		assertEquals(256 * size, ((ByteBuffer)data.get(null)).capacity());
 	}
 	
 	@Test 

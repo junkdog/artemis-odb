@@ -9,4 +9,5 @@ public class FieldDescriptor {
 	public final String desc;
 	public final String signature;
 	public final Object value;
+	public int offset; // byte offset, only used by @PackedComponent
 }

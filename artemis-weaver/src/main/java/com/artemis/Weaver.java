@@ -124,8 +124,7 @@ public class Weaver {
 	
 	static ClassReader classReaderFor(String file) {
 		FileInputStream stream = null;
-		try
-		{
+		try {
 			stream = new FileInputStream(file);
 			return classReaderFor(stream);
 		} catch (FileNotFoundException e) {

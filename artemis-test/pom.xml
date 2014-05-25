@@ -11,11 +11,30 @@
 	<packaging>jar</packaging>
 	<name>artemis-odb-integration-test</name>
 	
+	<properties>
+		<artemis.ideFriendlyPacking>false</artemis.ideFriendlyPacking>
+		<artemis.enableArtemisPlugin>true</artemis.enableArtemisPlugin>
+	</properties>
+	
+	<profiles>
+		<profile>
+			<id>ide</id>
+			<properties>
+				<artemis.ideFriendlyPacking>true</artemis.ideFriendlyPacking>
+			</properties>
+		</profile>
+	</profiles>
+	
 	<dependencies>
 		<dependency>
 			<groupId>net.onedaybeard.artemis</groupId>
 			<artifactId>artemis-odb</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
 		</dependency>
 	</dependencies>
 
@@ -30,6 +49,10 @@
 						<goals>
 							<goal>artemis</goal>
 						</goals>
+						<configuration>
+							<ideFriendlyPacking>${artemis.ideFriendlyPacking}</ideFriendlyPacking>
+							<enableArtemisPlugin>${artemis.enabled}</enableArtemisPlugin>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

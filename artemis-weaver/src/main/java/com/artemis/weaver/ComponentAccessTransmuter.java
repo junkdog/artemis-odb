@@ -41,7 +41,6 @@ public class ComponentAccessTransmuter extends CallableTransmuter implements Opc
 		if (!transformer.isNeedsWriteToDisk())
 			return;
 		
-		
 		try {
 			cn.accept(cw);
 			if (file != null)

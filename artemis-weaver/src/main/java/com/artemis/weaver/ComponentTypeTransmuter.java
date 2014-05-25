@@ -46,6 +46,7 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 	private void compileClass(ClassMetadata meta, String file) {
 		ClassVisitor cv = cw;
 		
+		// TODO: move to #process
 		switch (meta.annotation) {
 			case PACKED:
 				cv = new CommonClassWeaver(cv, meta);
@@ -63,9 +64,7 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 
 		try {
 			cr.accept(cv, ClassReader.EXPAND_FRAMES);
-			
-			if (file != null)
-				ClassUtil.writeClass(cw, file);
+			if (file != null) ClassUtil.writeClass(cw, file);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

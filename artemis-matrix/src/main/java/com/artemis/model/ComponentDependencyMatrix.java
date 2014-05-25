@@ -86,7 +86,6 @@ public class ComponentDependencyMatrix implements Opcodes  {
 			typeMapping.setArtemisTypeIndicies(columnIndexMap);
 		}
 		
-//		write(toMap(typeMappings), componentColumns);
 		write(toMap(typeMappings), columnIndexMap);
 	}
 	

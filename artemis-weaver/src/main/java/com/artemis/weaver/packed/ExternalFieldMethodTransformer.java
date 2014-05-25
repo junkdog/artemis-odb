@@ -14,6 +14,7 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.transformer.MethodTransformer;
 
 class ExternalFieldMethodTransformer extends MethodTransformer implements Opcodes {
@@ -41,24 +42,23 @@ class ExternalFieldMethodTransformer extends MethodTransformer implements Opcode
 			if (AbstractInsnNode.FIELD_INSN != node.getType())
 				continue;
 			
-			FieldInsnNode f = (FieldInsnNode)node;
-			if (className.equals(f.owner))
+			FieldInsnNode fn = (FieldInsnNode)node;
+			if (className.equals(fn.owner))
 				continue;
 			
-			// TODO: doesn't handle manual setters/getters
-			if (PUTFIELD == f.getOpcode() && components.containsKey(f.owner)) {
+			if (PUTFIELD == fn.getOpcode() && components.containsKey(fn.owner)) {
 				changed = true;
-				i = InstructionMutator.on(instructions, f)
+				i = InstructionMutator.on(instructions, fn)
 					.insertAtOffset(0,
-						new MethodInsnNode(INVOKEVIRTUAL, f.owner, f.name, param(f)))
+						new MethodInsnNode(INVOKEVIRTUAL, fn.owner, fn.name, param(fn)))
 					.delete(0)
 					.transform();
-			} else if (GETFIELD == f.getOpcode() && components.containsKey(f.owner)) {
+			} else if (GETFIELD == fn.getOpcode() && components.containsKey(fn.owner)) {
 				changed = true;
 				
-				i = on(instructions, f)
+				i = on(instructions, fn)
 					.insertAtOffset(0,
-						new MethodInsnNode(INVOKEVIRTUAL, f.owner, f.name, "()" + f.desc))
+						new MethodInsnNode(INVOKEVIRTUAL, fn.owner, fn.name, "()" + fn.desc))
 					.delete(0)
 					.transform();
 			}
