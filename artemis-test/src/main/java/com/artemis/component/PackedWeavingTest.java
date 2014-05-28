@@ -13,9 +13,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.World;
+import com.artemis.annotations.Mapper;
+import com.artemis.annotations.Wire;
+import com.artemis.systems.EntityProcessingSystem;
 
 public abstract class PackedWeavingTest {
 	
@@ -42,7 +46,6 @@ public abstract class PackedWeavingTest {
 		world.process();
 	}
 	
-	abstract int fieldCount();
 	abstract Class<?> componentType();
 	abstract ComponentMapper<?> getMapper();
 	
@@ -78,7 +81,7 @@ public abstract class PackedWeavingTest {
 		return f;
 	}
 
-	protected Class<?> fieldType() {
+	protected final Class<?> fieldType() {
 		return ByteBuffer.class;
 	}
 }

@@ -30,11 +30,6 @@ public class PackedFieldComponentTest extends PackedWeavingTest {
 		mapper = world.getMapper(PackedFieldComponent.class);
 		position = mapper.get(e1);
 	}
-	
-	@Override
-	int fieldCount() {
-		return 2;
-	}
 
 	@Override
 	Class<?> componentType() {

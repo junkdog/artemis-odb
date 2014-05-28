@@ -11,7 +11,7 @@ import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.WeaverType;
 
 @SuppressWarnings("static-method")
-public class PackedWithFieldAccess {
+public class PackedWithFieldAccessTest {
 
 	@Test
 	public void packed_direct_field_access() throws Exception {

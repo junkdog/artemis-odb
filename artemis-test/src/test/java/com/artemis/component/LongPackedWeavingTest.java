@@ -26,11 +26,6 @@ public class LongPackedWeavingTest extends PackedWeavingTest {
 		packed = e1.createComponent(TransPackedLong.class);
 		packed = e2.createComponent(TransPackedLong.class);
 	}
-	
-	@Override
-	int fieldCount() {
-		return 3;
-	}
 
 	@Override
 	Class<?> componentType() {

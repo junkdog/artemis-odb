@@ -28,11 +28,6 @@ public class DoublePackedWeavingTest extends PackedWeavingTest {
 	}
 
 	@Override
-	int fieldCount() {
-		return 1;
-	}
-
-	@Override
 	Class<?> componentType() {
 		return TransPackedDouble.class;
 	}

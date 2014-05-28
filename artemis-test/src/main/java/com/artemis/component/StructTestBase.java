@@ -33,11 +33,6 @@ public class StructTestBase extends PackedWeavingTest {
 	}
 	
 	@Override
-	int fieldCount() {
-		return 3;
-	}
-
-	@Override
 	Class<?> componentType() {
 		return StructComponentA.class;
 	}

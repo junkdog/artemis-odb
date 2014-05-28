@@ -1,5 +1,6 @@
 package com.artemis.component;
 
+import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 
 import com.artemis.Entity;
@@ -9,8 +10,8 @@ import com.artemis.util.Vec2f;
 public class TransPackedFloatReference extends PackedComponent {
 
 	private int $stride;
-	private static final int $_SIZE_OF = 8;
-	private static ByteBuffer $data = ByteBuffer.allocateDirect(64 * $_SIZE_OF);
+	private static int $_SIZE_OF = 8;
+	private static ByteBuffer $data = ByteBuffer.allocateDirect(128 * $_SIZE_OF);
 	
 
 	@Override
@@ -29,7 +30,10 @@ public class TransPackedFloatReference extends PackedComponent {
 	private static void $grow()
 	{
 		ByteBuffer newBuffer = ByteBuffer.allocateDirect($data.capacity() * 2);
-		newBuffer.put($data);
+		
+		for (int i = 0, s = $data.capacity(); s > i; i++)
+			newBuffer.put(i, $data.get(i));
+		
 		$data = newBuffer;
 	}
 	
@@ -41,8 +45,9 @@ public class TransPackedFloatReference extends PackedComponent {
 		return $data.getFloat($stride + 4);
 	}
 	
-	public void x(float value) {
+	public TransPackedFloatReference x(float value) {
 		$data.putFloat($stride + 0, value);
+		return this;
 	}
 	
 	public void y(float value) {

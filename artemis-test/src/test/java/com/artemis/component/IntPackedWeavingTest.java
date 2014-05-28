@@ -27,11 +27,6 @@ public class IntPackedWeavingTest extends PackedWeavingTest {
 	}
 
 	@Override
-	int fieldCount() {
-		return 3;
-	}
-
-	@Override
 	Class<?> componentType() {
 		return TransPackedInt.class;
 	}

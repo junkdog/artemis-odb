@@ -29,11 +29,6 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 	}
 	
 	@Override
-	int fieldCount() {
-		return 2;
-	}
-
-	@Override
 	Class<?> componentType() {
 		return TransPackedFloat.class;
 	}
@@ -49,7 +44,7 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 		
 		assertEquals(PRIVATE | STATIC | FINAL, sizeOf.getModifiers());
 		assertEquals(int.class, sizeOf.getType());
-		assertEquals(fieldCount() * 4, sizeOf.getInt(packed));
+		assertEquals(8, sizeOf.getInt(packed));
 	}
 	
 	@Test
