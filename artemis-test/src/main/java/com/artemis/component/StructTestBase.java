@@ -81,10 +81,6 @@ public class StructTestBase extends PackedWeavingTest {
 		mapper.get(e2).flag = true;
 		
 		ByteBuffer data = (ByteBuffer)field("$data").get(null);
-		LongBuffer dataArray = data.asLongBuffer();
-		for (int i = 0; 6 > i; i++) {
-			System.out.println(i + ": " + dataArray.get());
-		}
 		
 		assertEquals(4, mapper.get(e1).x, 0.001);
 		assertEquals(3, mapper.get(e1).y, 0.001);

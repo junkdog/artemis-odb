@@ -79,7 +79,6 @@ public class WorldStructWeavingBase {
 	@Test
 	public void run_the_world() {
 		for (int i = 0; 9 > i; i++) {
-			System.out.println("iteration " + i);
 			world.process();
 		}
 	}
@@ -111,10 +110,6 @@ public class WorldStructWeavingBase {
 			component.something += ((e.getId() + 1) * mod);
 			
 			component = mapper.get(e);
-			System.out.println(component);
-			System.out.println(component);
-			System.out.println(component.x);
-			System.out.println(component.y);
 			assertEquals(1 + iteration * 10f * mod, component.x, 0.1);
 			assertEquals(2 * Math.pow(-10f * mod, iteration), component.y, 0.1);
 			assertEquals(3 * Math.pow(20f * mod, iteration), component.z, 0.1);
@@ -143,15 +138,10 @@ public class WorldStructWeavingBase {
 			int mod = (e.getId() % 2 == 0) ? 1 : 2;
 			
 			Position pos = mapper.get(e);
-//			pos.x += 10 * mod;
 			pos.add(new Vec2f(10 * mod, 0));
-//			pos.y *= -10 * mod;
 			pos.xy(pos.x, pos.y * -10 * mod);
 			
 			pos = mapper.get(e);
-			System.out.println(pos);
-			System.out.println(pos.x);
-			System.out.println(pos.y);
 			assertEquals(3 + iteration * 10f * mod, pos.x, 0.1);
 			assertEquals(7 * Math.pow(-10f * mod, iteration), pos.y, 0.1);
 		}

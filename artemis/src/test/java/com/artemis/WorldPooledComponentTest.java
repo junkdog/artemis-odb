@@ -43,8 +43,6 @@ public class WorldPooledComponentTest
 
 	private Set<Integer> runWorld()
 	{
-		System.out.println();
-		
 		Set<Integer> hashes = new HashSet<Integer>();
 		hashes.add(createEntity());
 		hashes.add(createEntity());
@@ -72,7 +70,6 @@ public class WorldPooledComponentTest
 		ReusedComponent component = e.createComponent(ReusedComponent.class);
 		e.addToWorld();
 		int hash = System.identityHashCode(component);
-		System.out.println(hash);
 		return hash;
 	}
 	

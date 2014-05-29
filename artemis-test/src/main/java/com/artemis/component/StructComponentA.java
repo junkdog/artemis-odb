@@ -14,8 +14,6 @@ public class StructComponentA extends Component {
 		this.y = y;
 		this.z = z;
 		
-		System.out.println(this);
-		
 		return this;
 	}
 
