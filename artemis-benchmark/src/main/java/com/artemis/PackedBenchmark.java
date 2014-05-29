@@ -38,42 +38,71 @@ import org.openjdk.jmh.annotations.State;
 import org.openjdk.jmh.annotations.Warmup;
 
 import com.artemis.component.PlainPosition;
+import com.artemis.component.PlainStructComponentA;
 import com.artemis.component.Position;
+import com.artemis.component.StructComponentA;
 import com.artemis.system.EntityDeleterSystem;
 import com.artemis.system.PlainPositionSystem;
 import com.artemis.system.PositionSystem;
 
 @State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Warmup(iterations = 3, time = 2, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 10, time = 2, timeUnit = TimeUnit.SECONDS)
+@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 10, time = 20, timeUnit = TimeUnit.SECONDS)
 public class PackedBenchmark {
 	
-	public static final int ENTITY_COUNT = 1000;
+	public static final int ENTITY_COUNT = 4096;
 	
 	public static long seed = System.currentTimeMillis();
 	
 	private World worldPacked;
 	private World worldPlain;
+
+	private World worldBaseline;
 	
 	@Setup
 	public void init() {
-		System.out.println("setting up");
-		
 		worldPacked = new World();
 		worldPacked.setSystem(new PositionSystem());
-		worldPacked.setSystem(new EntityDeleterSystem(seed, Position.class));
+		worldPacked.setSystem(new EntityDeleterSystem(seed) {
+			@Override
+			protected void createEntity() {
+				Entity e = world.createEntity();
+				e.createComponent(Position.class);
+				e.createComponent(StructComponentA.class);
+				e.addToWorld();
+			}
+			
+		});
 		worldPacked.initialize();
 		
 		worldPlain = new World();
 		worldPlain.setSystem(new PlainPositionSystem());
-		worldPlain.setSystem(new EntityDeleterSystem(seed, PlainPosition.class));
+		worldPlain.setSystem(new EntityDeleterSystem(seed) {
+			@Override
+			protected void createEntity() {
+				Entity e = world.createEntity();
+				e.createComponent(PlainPosition.class);
+				e.createComponent(PlainStructComponentA.class);
+				e.addToWorld();
+			}
+		});
 		worldPlain.initialize();
 		
+		worldBaseline = new World();
+		worldBaseline.setSystem(new EntityDeleterSystem(seed) {
+			@Override
+			protected void createEntity() {
+				Entity e = world.createEntity();
+				e.addToWorld();
+			}
+		});
+		worldBaseline.initialize();
+		
 		for (int i = 0; ENTITY_COUNT > i; i++) {
-			createEntity(worldPacked, Position.class);
-			createEntity(worldPlain, PlainPosition.class);
+			createEntity(worldPacked, Position.class, PlainStructComponentA.class);
+			createEntity(worldPlain, PlainPosition.class, PlainStructComponentA.class);
 		}
 	}
 	
@@ -88,9 +117,15 @@ public class PackedBenchmark {
 		worldPlain.process();
 	}
 	
-	public static void createEntity(World world, Class<? extends Component> component) {
+	@GenerateMicroBenchmark
+	public void baseline_world() {
+		worldPlain.process();
+	}
+	
+	public static void createEntity(World world, Class<? extends Component> c1, Class<? extends Component> c2) {
 		Entity e = world.createEntity();
-		e.createComponent(component);
+		e.createComponent(c1);
+		e.createComponent(c2);
 		e.addToWorld();
 	}
 }
