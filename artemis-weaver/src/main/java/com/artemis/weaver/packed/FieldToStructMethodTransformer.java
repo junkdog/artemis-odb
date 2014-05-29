@@ -17,7 +17,7 @@ import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.meta.FieldDescriptor;
 import com.artemis.transformer.MethodTransformer;
 
-public class FieldToArrayMethodTransformer extends MethodTransformer implements Opcodes {
+public class FieldToStructMethodTransformer extends MethodTransformer implements Opcodes {
 
 	private final ClassMetadata meta;
 	private final String fieldDesc;
@@ -26,13 +26,12 @@ public class FieldToArrayMethodTransformer extends MethodTransformer implements 
 	
 	private static final boolean LOG = false;
 
-	public FieldToArrayMethodTransformer(MethodTransformer mt, ClassMetadata meta, FieldDescriptor f) {
+	public FieldToStructMethodTransformer(MethodTransformer mt, ClassMetadata meta, FieldDescriptor f) {
 		super(mt);
 		this.meta = meta;
 		
 		fieldDesc = f.desc;
 	}
-	
 	
 	@Override
 	public boolean transform(MethodNode mn) {

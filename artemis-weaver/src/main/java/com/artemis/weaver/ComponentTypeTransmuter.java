@@ -1,10 +1,8 @@
 package com.artemis.weaver;
 
-import static com.artemis.meta.ClassMetadata.WeaverType.PACKED;
-import static com.artemis.meta.ClassMetadata.WeaverType.POOLED;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -15,6 +13,8 @@ import org.objectweb.asm.Opcodes;
 
 import com.artemis.ClassUtil;
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.FieldDescriptor;
+import com.artemis.meta.ClassMetadata.WeaverType;
 import com.artemis.weaver.packed.PackedComponentWeaver;
 import com.artemis.weaver.packed.PackedStubs;
 import com.artemis.weaver.pooled.PooledComponentWeaver;
@@ -33,26 +33,18 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 	@Override
 	protected void process(String file) throws FileNotFoundException, IOException {
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
-		if (POOLED == meta.annotation && !meta.foundReset) {
-			injectMethodStub("reset", "()V");
-		} else if (PACKED == meta.annotation) {
-			cr = new AccessorGenerator(cr, meta).transform();
-			cr = new PackedStubs(cr, meta).transform();
-		}
-		
-		compileClass(meta, file);
-	}
-
-	private void compileClass(ClassMetadata meta, String file) {
 		ClassVisitor cv = cw;
 		
-		// TODO: move to #process
 		switch (meta.annotation) {
 			case PACKED:
+				validate(meta.fields);
+				cr = new AccessorGenerator(cr, meta).transform();
+				cr = new PackedStubs(cr, meta).transform();
 				cv = new CommonClassWeaver(cv, meta);
 				cv = new PackedComponentWeaver(cv, meta);
 				break;
 			case POOLED:
+				if (!meta.foundReset) injectMethodStub("reset", "()V");
 				cv = new CommonClassWeaver(cv, meta);
 				cv = new PooledComponentWeaver(cv, meta);
 				break;
@@ -61,7 +53,7 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 			default:
 				throw new IllegalArgumentException("Missing case: " + meta.annotation);
 		}
-
+		
 		try {
 			cr.accept(cv, ClassReader.EXPAND_FRAMES);
 			if (file != null) ClassUtil.writeClass(cw, file);
@@ -69,7 +61,7 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 			e.printStackTrace();
 		}
 	}
-	
+
 	public ClassWriter getClassWriter() {
 		return cw;
 	}
@@ -80,5 +72,15 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 		method.visitLabel(new Label());
 		method.visitInsn(RETURN);
 		method.visitEnd();
+	}
+	
+	private void validate(List<FieldDescriptor> fields) {
+		for (FieldDescriptor fd : fields) {
+			if (fd.desc.length() > 1) {
+				String error = String.format("%s: @PackedWeaver only works with primitive fields: %s",
+					meta.type, fd);
+				throw new IllegalArgumentException(error);
+			}
+		}
 	}
 }

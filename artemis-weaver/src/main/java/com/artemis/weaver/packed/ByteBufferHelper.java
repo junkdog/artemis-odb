@@ -8,19 +8,20 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.FieldDescriptor;
 
-@Data class ByteBufferHelper {
+@Data
+class ByteBufferHelper {
 	private final ClassMetadata meta;
 	
 	AbstractInsnNode invokeGetter(String name) {
 		FieldDescriptor fd = find(name);
-		return new MethodInsnNode(FieldToArrayMethodTransformer.INVOKEVIRTUAL, "java/nio/ByteBuffer", getter(name), "(I)" + castedDesc(fd));
+		return new MethodInsnNode(FieldToStructMethodTransformer.INVOKEVIRTUAL, "java/nio/ByteBuffer", getter(name), "(I)" + castedDesc(fd));
 	}
 	
 	AbstractInsnNode invokePutter(String name) {
 		FieldDescriptor fd = find(name);
 		
 		String desc = "(I" + castedDesc(fd) + ")Ljava/nio/ByteBuffer;";
-		return new MethodInsnNode(FieldToArrayMethodTransformer.INVOKEVIRTUAL, "java/nio/ByteBuffer", putter(name), desc);
+		return new MethodInsnNode(FieldToStructMethodTransformer.INVOKEVIRTUAL, "java/nio/ByteBuffer", putter(name), desc);
 	}
 
 	private static String castedDesc(FieldDescriptor fd) {

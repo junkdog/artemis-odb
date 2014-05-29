@@ -1,5 +1,5 @@
 package com.artemis.component;
 
-public class SimpleComponentTest extends PackedComponentsGrowAndAreHardResettTestBase {
+public class SimpleComponentTest extends PackedComponentsGrowAndAreHardResetTestBase {
 
 }

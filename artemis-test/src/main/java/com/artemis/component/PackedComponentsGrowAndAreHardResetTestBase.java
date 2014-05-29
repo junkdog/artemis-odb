@@ -3,7 +3,6 @@ package com.artemis.component;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +10,7 @@ import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.World;
 
-public class PackedComponentsGrowAndAreHardResettTestBase {
+public class PackedComponentsGrowAndAreHardResetTestBase {
 
 	private World world;
 

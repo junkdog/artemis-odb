@@ -2,6 +2,7 @@ package com.artemis.meta;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import lombok.ToString;
 
@@ -32,6 +33,8 @@ public final class ClassMetadata {
 
 
 	public static enum WeaverType { NONE, POOLED, PACKED };
+	
+	public Future<?> weaverTask;
 	
 	public static class GlobalConfiguration {
 		public static boolean ideFriendlyPacking;

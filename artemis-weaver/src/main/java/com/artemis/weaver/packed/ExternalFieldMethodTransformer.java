@@ -14,7 +14,6 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
 import com.artemis.meta.ClassMetadata;
-import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.transformer.MethodTransformer;
 
 class ExternalFieldMethodTransformer extends MethodTransformer implements Opcodes {

@@ -21,13 +21,11 @@ public class PackedStubs implements Opcodes {
 	private ClassMetadata meta;
 	private ClassReader cr;
 	private ClassWriter cw;
-	private TypedOpcodes opcodes;
 
 	public PackedStubs(ClassReader cr, ClassMetadata meta) {
 		this.cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		this.cr = cr;
 		this.meta = meta;
-		opcodes = new TypedOpcodes(meta);
 	}
 	
 	public ClassReader transform() {
@@ -40,8 +38,6 @@ public class PackedStubs implements Opcodes {
 		
 		if (!meta.foundEntityFor)
 			injectForEntity();
-		
-		// TODO: check for disallowed file types
 		
 		List<FieldDescriptor> dataFields = instanceFields(meta);
 		cw.visitField(ACC_PRIVATE | ACC_FINAL | ACC_STATIC, "$_SIZE_OF", "I", null,
@@ -174,7 +170,6 @@ public class PackedStubs implements Opcodes {
 	private void injectReset() {
 		String owner = meta.type.getInternalName();
 		List<FieldDescriptor> fields = ClassMetadataUtil.instanceFields(meta);
-		TypedOpcodes opcodes = new TypedOpcodes(meta);
 		
 		MethodVisitor mv = cw.visitMethod(ACC_PROTECTED, "reset", "()V", null, null);
 		mv.visitCode();
@@ -194,12 +189,5 @@ public class PackedStubs implements Opcodes {
 		
 		mv.visitLocalVariable("this", meta.type.toString(), null, l0, l3, 0);
 		mv.visitEnd();
-	}
-	
-	private static void injectIntValue(MethodVisitor methodVisitor, int value) {
-		if (value > (ICONST_5 - ICONST_0))
-			methodVisitor.visitIntInsn(BIPUSH, value);
-		else
-			methodVisitor.visitInsn(ICONST_0 + value);
 	}
 }

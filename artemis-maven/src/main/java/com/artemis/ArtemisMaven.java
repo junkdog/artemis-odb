@@ -6,6 +6,7 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.PROCESS_CLASSE
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -81,6 +82,16 @@ public class ArtemisMaven extends AbstractMojo {
 		List<ClassMetadata> processed = weaver.execute();
 		
 		log.info(getSummary(processed, start));
+		
+		for (ClassMetadata meta : processed) {
+			try {
+				meta.weaverTask.get();
+			} catch (InterruptedException e) {
+				throw new MojoExecutionException(e.getMessage(), e);
+			} catch (ExecutionException e) {
+				throw new MojoExecutionException(e.getCause().getMessage(), e.getCause());
+			}
+		}
 	}
 	
 	private static CharSequence getSummary(List<ClassMetadata> processed, long start) {
