@@ -37,7 +37,7 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 		
 		switch (meta.annotation) {
 			case PACKED:
-				validate(meta.fields);
+				validateOnlyPrimitives(meta.fields);
 				cr = new AccessorGenerator(cr, meta).transform();
 				cr = new PackedStubs(cr, meta).transform();
 				cv = new CommonClassWeaver(cv, meta);
@@ -74,12 +74,12 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 		method.visitEnd();
 	}
 	
-	private void validate(List<FieldDescriptor> fields) {
+	private void validateOnlyPrimitives(List<FieldDescriptor> fields) {
 		for (FieldDescriptor fd : fields) {
 			if (fd.desc.length() > 1) {
 				String error = String.format("%s: @PackedWeaver only works with primitive fields: %s",
 					meta.type, fd);
-				throw new IllegalArgumentException(error);
+				throw new WeaverException(error);
 			}
 		}
 	}

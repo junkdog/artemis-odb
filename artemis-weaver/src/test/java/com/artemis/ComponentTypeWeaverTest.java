@@ -10,12 +10,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.artemis.component.ComponentToWeave;
+import com.artemis.component.IllegalComponent;
 import com.artemis.component.PackedToBeB;
 import com.artemis.component.PooledForced;
 import com.artemis.component.PooledNotForced;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.GlobalConfiguration;
 import com.artemis.meta.ClassMetadata.WeaverType;
+import com.artemis.weaver.WeaverException;
 
 @SuppressWarnings("static-method")
 public class ComponentTypeWeaverTest {
@@ -41,6 +43,11 @@ public class ComponentTypeWeaverTest {
 		assertTrue(meta.foundReset); 
 		assertTrue(meta.foundEntityFor);
 		assertEquals("com/artemis/PackedComponent", meta.superClass); 
+	}
+	
+	@Test(expected=WeaverException.class)
+	public void fail_weaver_test() throws Exception {
+		transform(IllegalComponent.class);
 	}
 	
 	@Test @Ignore // rewrite to match actual waeving
