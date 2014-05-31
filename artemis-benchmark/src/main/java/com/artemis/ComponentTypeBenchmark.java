@@ -45,13 +45,14 @@ import com.artemis.component.Position;
 import com.artemis.component.StructComponentA;
 import com.artemis.system.EntityDeleterSystem;
 import com.artemis.system.PlainPositionSystem;
+import com.artemis.system.PooledPositionSystem;
 import com.artemis.system.PositionSystem;
 
 @State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 10, time = 20, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 5, time = 3, timeUnit = TimeUnit.MINUTES)
 public class ComponentTypeBenchmark {
 	
 	public static final int ENTITY_COUNT = 4096;
@@ -94,7 +95,7 @@ public class ComponentTypeBenchmark {
 		worldPlain.initialize();
 		
 		worldPooled = new World();
-		worldPooled.setSystem(new PlainPositionSystem());
+		worldPooled.setSystem(new PooledPositionSystem());
 		worldPooled.setSystem(new EntityDeleterSystem(seed) {
 			@Override
 			protected void createEntity() {
@@ -119,23 +120,29 @@ public class ComponentTypeBenchmark {
 		for (int i = 0; ENTITY_COUNT > i; i++) {
 			createEntity(worldPacked, Position.class, PlainStructComponentA.class);
 			createEntity(worldPlain, PlainPosition.class, PlainStructComponentA.class);
+			createEntity(worldPooled, PooledPosition.class, PooledStructComponentA.class);
+			createEntity(worldBaseline, PlainPosition.class, PlainStructComponentA.class);
 		}
 	}
 	
 	@GenerateMicroBenchmark
-	public void packed_position_world() {
+	public void packed_world() {
 		worldPacked.process();
 	}
 	
-	
 	@GenerateMicroBenchmark
-	public void plain_position_world() {
+	public void plain_world() {
 		worldPlain.process();
 	}
 	
 	@GenerateMicroBenchmark
 	public void baseline_world() {
-		worldPlain.process();
+		worldBaseline.process();
+	}
+	
+	@GenerateMicroBenchmark
+	public void pooled_world() {
+		worldPooled.process();
 	}
 	
 	public static void createEntity(World world, Class<? extends Component> c1, Class<? extends Component> c2) {
