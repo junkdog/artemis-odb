@@ -78,7 +78,7 @@
 		<module>artemis-test</module>
 		<module>artemis-matrix</module>
 		<module>artemis-gwt</module>
-    <module>artemis-odb-benchmark</module>
+    	<module>artemis-benchmark</module>
   </modules>
 	
 	<profiles>

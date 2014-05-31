@@ -39,6 +39,8 @@ import org.openjdk.jmh.annotations.Warmup;
 
 import com.artemis.component.PlainPosition;
 import com.artemis.component.PlainStructComponentA;
+import com.artemis.component.PooledPosition;
+import com.artemis.component.PooledStructComponentA;
 import com.artemis.component.Position;
 import com.artemis.component.StructComponentA;
 import com.artemis.system.EntityDeleterSystem;
@@ -50,13 +52,14 @@ import com.artemis.system.PositionSystem;
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
 @Warmup(iterations = 3, time = 5, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 10, time = 20, timeUnit = TimeUnit.SECONDS)
-public class PackedBenchmark {
+public class ComponentTypeBenchmark {
 	
 	public static final int ENTITY_COUNT = 4096;
 	
 	public static long seed = System.currentTimeMillis();
 	
 	private World worldPacked;
+	private World worldPooled;
 	private World worldPlain;
 
 	private World worldBaseline;
@@ -89,6 +92,19 @@ public class PackedBenchmark {
 			}
 		});
 		worldPlain.initialize();
+		
+		worldPooled = new World();
+		worldPooled.setSystem(new PlainPositionSystem());
+		worldPooled.setSystem(new EntityDeleterSystem(seed) {
+			@Override
+			protected void createEntity() {
+				Entity e = world.createEntity();
+				e.createComponent(PooledPosition.class);
+				e.createComponent(PooledStructComponentA.class);
+				e.addToWorld();
+			}
+		});
+		worldPooled.initialize();
 		
 		worldBaseline = new World();
 		worldBaseline.setSystem(new EntityDeleterSystem(seed) {

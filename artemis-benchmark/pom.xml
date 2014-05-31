@@ -18,7 +18,7 @@
 			<artifactId>artemis-odb</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- For @PackedWeaver components -->
+		<!-- For @PackedWeaver and @PooledWeaver components -->
 		<dependency>
 			<groupId>net.onedaybeard.artemis</groupId>
 			<artifactId>artemis-odb-test</artifactId>
@@ -53,8 +53,7 @@
 							<goal>artemis</goal>
 						</goals>
 						<configuration>
-							<ideFriendlyPacking>${artemis.ideFriendlyPacking}</ideFriendlyPacking>
-							<enableArtemisPlugin>${artemis.enabled}</enableArtemisPlugin>
+							<ideFriendlyPacking>false</ideFriendlyPacking>
 						</configuration>
 					</execution>
 				</executions>
