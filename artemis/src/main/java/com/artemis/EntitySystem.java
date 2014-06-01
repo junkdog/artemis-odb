@@ -3,7 +3,6 @@ package com.artemis;
 import java.util.BitSet;
 import java.util.IdentityHashMap;
 
-import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
 
@@ -23,8 +22,15 @@ public abstract class EntitySystem implements EntityObserver {
 	private final int systemIndex;
 	/** The world this system belongs to. */
 	protected World world;
-	/** Contains all entities processed by this system. */
-	private final Bag<Entity> actives;
+	
+	/* 
+	 * actives = only contains entities, sorted ASC by entity.id 
+	 * activesIsDirty = indicates that compressedActives needs rebuilding 
+	 */
+	private final WildBag<Entity> actives;
+	private final BitSet activeIds;
+	private boolean activesIsDirty;
+	
 	/** Collects entities to be deleted from the system after processing. */
 	private final WildBag<Entity> delayedDeletion;
 	/** Component bits entities must possess for the system to be interested. */
@@ -42,7 +48,6 @@ public abstract class EntitySystem implements EntityObserver {
 	/** If the system is currently processing. */
 	private boolean isProcessing;
 
-
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
 	 * against entities.
@@ -51,7 +56,9 @@ public abstract class EntitySystem implements EntityObserver {
 	 *			to match against entities
 	 */
 	public EntitySystem(Aspect aspect) {
-		actives = new Bag<Entity>();
+		activeIds = new BitSet();
+		actives = new WildBag<Entity>();
+		
 		delayedDeletion = new WildBag<Entity>();
 		allSet = aspect.getAllSet();
 		exclusionSet = aspect.getExclusionSet();
@@ -76,6 +83,9 @@ public abstract class EntitySystem implements EntityObserver {
 		if(enabled && checkProcessing()) {
 			begin();
 			
+			if (activesIsDirty)
+				rebuildCompressedActives();
+			
 			isProcessing = true;
 			processEntities(actives);
 			isProcessing = false;
@@ -89,16 +99,28 @@ public abstract class EntitySystem implements EntityObserver {
 				}
 				delayedDeletion.setSize(0);
 			}
-
+			
 			end();
 		}
 	}
 	
+	private void rebuildCompressedActives() {
+		actives.setSize(0);
+		
+		BitSet bs = activeIds;
+		EntityManager em = world.getEntityManager();
+		for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
+			actives.add(em.getEntity(i));
+		}
+		
+		activesIsDirty = false;
+	}
+
+
 	/**
 	 * Called after the processing of entities ends.
 	 */
-	protected void end() {
-	}
+	protected void end() {}
 	
 	/**
 	 * Any implementing entity system must implement this method and the logic
@@ -120,7 +142,7 @@ public abstract class EntitySystem implements EntityObserver {
 	 * Override to implement code that gets executed when systems are
 	 * initialized.
 	 */
-	protected void initialize() {};
+	protected void initialize() {}
 
 	/**
 	 * Called if the system has received a entity it is interested in, e.g
@@ -129,7 +151,7 @@ public abstract class EntitySystem implements EntityObserver {
 	 * @param e
 	 *			the entity that was added to this system
 	 */
-	protected void inserted(Entity e) {};
+	protected void inserted(Entity e) {}
 
 	/**
 	 * Called if a entity was removed from this system, e.g deleted or had one
@@ -138,7 +160,7 @@ public abstract class EntitySystem implements EntityObserver {
 	 * @param e
 	 *			the entity that was removed from this system
 	 */
-	protected void removed(Entity e) {};
+	protected void removed(Entity e) {}
 
 	/**
 	 * Returns true if the system is enabled.
@@ -217,7 +239,9 @@ public abstract class EntitySystem implements EntityObserver {
 			return;
 		}
 		
-		actives.remove(e);
+		activeIds.clear(e.getId());
+		activesIsDirty = true;
+		
 		e.getSystemBits().clear(systemIndex);
 		removed(e);
 	}
@@ -229,7 +253,9 @@ public abstract class EntitySystem implements EntityObserver {
 	 *			the entity to insert
 	 */
 	private void insertToSystem(Entity e) {
-		actives.add(e);
+		activeIds.set(e.getId());
+		activesIsDirty = true;
+		
 		e.getSystemBits().set(systemIndex);
 		inserted(e);
 	}
@@ -356,6 +382,9 @@ public abstract class EntitySystem implements EntityObserver {
 	 * @return a bag containing all active entities of the system
 	 */
 	public ImmutableBag<Entity> getActives() {
+		if (activesIsDirty)
+			rebuildCompressedActives();
+		
 		return actives;
 	}
 
