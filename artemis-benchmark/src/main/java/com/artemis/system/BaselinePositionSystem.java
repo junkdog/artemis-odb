@@ -1,32 +1,25 @@
 package com.artemis.system;
 
-
 import org.openjdk.jmh.logic.BlackHole;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.annotations.Wire;
-import com.artemis.component.Position;
+import com.artemis.component.PlainPosition;
 import com.artemis.systems.EntityProcessingSystem;
 
-@Wire
-public class PositionSystem extends EntityProcessingSystem {
-
+public class BaselinePositionSystem extends EntityProcessingSystem {
+	
 	BlackHole voidness = new BlackHole();
-	ComponentMapper<Position> positionMapper;
 	
 	@SuppressWarnings("unchecked")
-	public PositionSystem() {
-		super(Aspect.getAspectForAll(Position.class));
+	public BaselinePositionSystem() {
+		super(Aspect.getAspectForAll(PlainPosition.class));
 	}
 
 	@Override
 	protected void process(Entity e) {
-		Position pos = positionMapper.get(e);
-		pos.x(pos.x() + .1f % 100000);
-		pos.y(pos.y() - 0.1f % 100000);
-		
 		voidness.consume(e);
 	}
 }

@@ -1,10 +1,8 @@
 package com.artemis.component;
 
 import com.artemis.Component;
-import com.artemis.annotations.PackedWeaver;
 import com.artemis.util.Vec2f;
 
-@PackedWeaver
 public class PlainPosition extends Component
 {
 	public float x;

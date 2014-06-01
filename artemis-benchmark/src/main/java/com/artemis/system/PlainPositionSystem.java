@@ -1,5 +1,7 @@
 package com.artemis.system;
 
+import org.openjdk.jmh.logic.BlackHole;
+
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
@@ -11,6 +13,7 @@ import com.artemis.systems.EntityProcessingSystem;
 public class PlainPositionSystem extends EntityProcessingSystem {
 
 	ComponentMapper<PlainPosition> positionMapper;
+	BlackHole voidness = new BlackHole();
 	
 	@SuppressWarnings("unchecked")
 	public PlainPositionSystem() {
@@ -22,5 +25,7 @@ public class PlainPositionSystem extends EntityProcessingSystem {
 		PlainPosition pos = positionMapper.get(e);
 		pos.x += 0.1f % 100000;
 		pos.y -= 0.1f % 100000;
+		
+		voidness.consume(e);
 	}
 }

@@ -40,9 +40,9 @@ import org.openjdk.jmh.annotations.Warmup;
 import com.artemis.component.PlainPosition;
 import com.artemis.component.PlainStructComponentA;
 import com.artemis.component.PooledPosition;
-import com.artemis.component.PooledStructComponentA;
 import com.artemis.component.Position;
 import com.artemis.component.StructComponentA;
+import com.artemis.system.BaselinePositionSystem;
 import com.artemis.system.EntityDeleterSystem;
 import com.artemis.system.PlainPositionSystem;
 import com.artemis.system.PooledPositionSystem;
@@ -69,61 +69,24 @@ public class ComponentTypeBenchmark {
 	public void init() {
 		worldPacked = new World();
 		worldPacked.setSystem(new PositionSystem());
-		worldPacked.setSystem(new EntityDeleterSystem(seed) {
-			@Override
-			protected void createEntity() {
-				Entity e = world.createEntity();
-				e.createComponent(Position.class);
-				e.createComponent(StructComponentA.class);
-				e.addToWorld();
-			}
-			
-		});
+		worldPacked.setSystem(new EntityDeleterSystem(seed, Position.class, StructComponentA.class));
 		worldPacked.initialize();
 		
 		worldPlain = new World();
 		worldPlain.setSystem(new PlainPositionSystem());
-		worldPlain.setSystem(new EntityDeleterSystem(seed) {
-			@Override
-			protected void createEntity() {
-				Entity e = world.createEntity();
-				e.createComponent(PlainPosition.class);
-				e.createComponent(PlainStructComponentA.class);
-				e.addToWorld();
-			}
-		});
+		worldPlain.setSystem(new EntityDeleterSystem(seed, PlainPosition.class, PlainStructComponentA.class));
 		worldPlain.initialize();
 		
 		worldPooled = new World();
 		worldPooled.setSystem(new PooledPositionSystem());
-		worldPooled.setSystem(new EntityDeleterSystem(seed) {
-			@Override
-			protected void createEntity() {
-				Entity e = world.createEntity();
-				e.createComponent(PooledPosition.class);
-				e.createComponent(PooledStructComponentA.class);
-				e.addToWorld();
-			}
-		});
+		worldPooled.setSystem(new EntityDeleterSystem(seed, PooledPosition.class, PlainStructComponentA.class));
 		worldPooled.initialize();
 		
 		worldBaseline = new World();
-		worldBaseline.setSystem(new EntityDeleterSystem(seed) {
-			@Override
-			protected void createEntity() {
-				Entity e = world.createEntity();
-				e.addToWorld();
-			}
-		});
+		worldBaseline.setSystem(new EntityDeleterSystem(seed, PlainPosition.class, PlainStructComponentA.class));
+		worldBaseline.setSystem(new BaselinePositionSystem());
 		worldBaseline.initialize();
-		
-		for (int i = 0; ENTITY_COUNT > i; i++) {
-			createEntity(worldPacked, Position.class, PlainStructComponentA.class);
-			createEntity(worldPlain, PlainPosition.class, PlainStructComponentA.class);
-			createEntity(worldPooled, PooledPosition.class, PooledStructComponentA.class);
-			createEntity(worldBaseline, PlainPosition.class, PlainStructComponentA.class);
-		}
-	}
+	}		
 	
 	@GenerateMicroBenchmark
 	public void packed_world() {
@@ -143,12 +106,5 @@ public class ComponentTypeBenchmark {
 	@GenerateMicroBenchmark
 	public void pooled_world() {
 		worldPooled.process();
-	}
-	
-	public static void createEntity(World world, Class<? extends Component> c1, Class<? extends Component> c2) {
-		Entity e = world.createEntity();
-		e.createComponent(c1);
-		e.createComponent(c2);
-		e.addToWorld();
 	}
 }
