@@ -1,6 +1,6 @@
 # Change Log
 
-## Developed but not released
+## Version: 0.6.0 - 2014-06-01
 - **GWT support** ([demo](http://flet.github.io/spaceship-warrior-redux/)) sporting
   [libgdx](https://github.com/libgdx/libgdx)'s reflection wrapper code.
   - This means that `@Mapper` and `@Wire` works for GWT builds too.

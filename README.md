@@ -36,7 +36,7 @@ recent changes._
 ### Embracing Artemis
 ```xml
 	<properties>
-		<artemis.version>0.5.0</artemis.version>
+		<artemis.version>0.6.0</artemis.version>
 	</properties>
 	
 	<dependencies>
@@ -75,14 +75,14 @@ recent changes._
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>0.5.0</version>
+	<version>0.6.0</version>
 </dependency>
 ```
 
 ## Direct Download
 
 Jars can be downloaded manually from the maven repository:
-  http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.5.0/
+  http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.6.0/
 
 
 ## Agrotera: Anti-boilerplate lib for Artemis
