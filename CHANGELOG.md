@@ -5,7 +5,7 @@
   [libgdx](https://github.com/libgdx/libgdx)'s reflection wrapper code.
   - This means that `@Mapper` and `@Wire` works for GWT builds too.
   - Note: `@PooledWeaver` and `@PackedWeaver` don't work under GWT, though the presence
-    of the annotations shouldn't break the build.
+    of the annotations doesn't break anything.
 - Automatically generate a bird's eye view of artemis: **[Component Dependency Matrix][CDM]**.
 - **Faux structs** with [@PackedWeaver][Struct]`.
   - Looks and behaves just like normal java classes.
@@ -24,7 +24,6 @@
   - Slightly slower insert/remove (3-4% with 4096 entities)
 - New optional `UuidEntityManager`, tracks entities by UUID.
 - Optional `expectedEntityCount` parameters in `World` constructor.
-- Direct field access works for `@PackedWeaver` components.
 - `-DideFriendlyPacking`: If true, will leave field stubs to keep IDE:s 
   happy after transformations. Defaults to false.
 - `-DenablePooledWeaving`: Enables weaving of pooled components (more viable on
