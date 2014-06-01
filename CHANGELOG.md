@@ -18,6 +18,10 @@
   - `@Wire` can inject parent classes too.
   - `@Wire` can resolve non-final references. Eg, AbstractEntityFactory is resolved as
     EntityFactory etc. See [test/example](https://github.com/junkdog/artemis-odb/blob/6eb51ccc7a72a4ff16737277f609a58f9cae94ca/artemis/src/test/java/com/artemis/SmarterWireTest.java#L39).
+- EntitySystems process entities in ascending id order.
+  - Considerably faster processing when memory access is aligned (potential biggest gains from
+    PackedComponents).
+  - Slightly slower insert/remove (3-4% with 4096 entities)
 - New optional `UuidEntityManager`, tracks entities by UUID.
 - Optional `expectedEntityCount` parameters in `World` constructor.
 - Direct field access works for `@PackedWeaver` components.
