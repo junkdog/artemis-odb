@@ -11,7 +11,7 @@ There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - 
 _For more detailed changes, see [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md)_
 
  - Full GWT support.
- - New component types: [packed](https://github.com/junkdog/artemis-odb/wiki/Packed-Weaver) and pooled.
+ - New component types: [packed](https://github.com/junkdog/artemis-odb/wiki/Packed-Weaver) and pooled, leveraged by bytecode injection.
  - Better performance and less GC activity.
  - Generate [Component Dependency Matrices](https://github.com/junkdog/artemis-odb/wiki/Component-Dependency-Matrix) from existing classes.
    [![Shaman's Weirding Game: Component Dependency Matrix](https://raw.githubusercontent.com/wiki/junkdog/artemis-odb/images/cdm.png)](http://junkdog.github.io/matrix.html)
