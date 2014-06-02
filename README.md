@@ -8,15 +8,13 @@ There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - 
 
 ## What's changed
 
-_Somewhat outdated, see [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md) for
-recent changes._
+_For more detailed changes, see [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md)_
 
- - More efficient for loops, bounds checking performed once during loop initialization.
- - _processEntities_ forgoes Bag's getter in favor of direct array access.
- - No more classes instantiated every time [World.process](https://github.com/junkdog/artemis-odb/blob/ed9e9b4bc29362b3f95beb60f9160a433ddc045a/src/com/artemis/World.java#L325) is run.
- - Systems can be enabled/disabled, see <code>EntitySystem.setEnabled(boolean)</code> and <code>EntitySystem.isEnabled()</code>.
- - Bag now sports <code>sort</code>; borrows [libGDX](http://libgdx.badlogicgames.com/)'s TimSort implementation.
- - Foreach-friendly Bag: implements a one instance per Bag iterator.
+ - Full GWT support.
+ - New component types: [packed](https://github.com/junkdog/artemis-odb/wiki/Packed-Weaver) and pooled.
+ - Better performance and less GC activity.
+ - Generate [Component Dependency Matrices](https://github.com/junkdog/artemis-odb/wiki/Component-Dependency-Matrix) from existing classes.
+   [![Shaman's Weirding Game: Component Dependency Matrix](https://raw.githubusercontent.com/wiki/junkdog/artemis-odb/images/cdm.png)](http://junkdog.github.io/matrix.html)
 
 
 
