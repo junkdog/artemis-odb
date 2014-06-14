@@ -1,12 +1,12 @@
 package com.artemis;
-;
-import com.artemis.utils.ImmutableBag;
-import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 import java.util.NoSuchElementException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
+
+import com.artemis.utils.ImmutableBag;
 
 /**
  * Created by obartley on 6/9/14.
@@ -27,6 +27,7 @@ public class EntitySystemTest {
 		w.process();
 	}
 
+	@Test
 	public void test_process_one_active() {
 		World w = new World();
 

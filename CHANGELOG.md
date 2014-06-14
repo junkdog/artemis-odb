@@ -1,5 +1,9 @@
 # Change Log
 
+## Not yet released
+- **Fix**: Calling `Entity#changedInWorld` before an entity is added to the world yields null
+  in unexpected places.
+
 ## Version: 0.6.0 - 2014-06-01
 - **GWT support** ([demo](http://flet.github.io/spaceship-warrior-redux/)) sporting
   [libgdx](https://github.com/libgdx/libgdx)'s reflection wrapper code.
