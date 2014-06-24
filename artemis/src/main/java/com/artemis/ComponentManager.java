@@ -52,7 +52,7 @@ public class ComponentManager extends Manager {
 			case BASIC:
 				return newInstance(componentClass);
 			case PACKED:
-				PackedComponent packedComponent = packedComponents.get(type.getIndex());
+				PackedComponent packedComponent = packedComponents.safeGet(type.getIndex());
 				if (packedComponent == null) {
 					packedComponent = (PackedComponent)newInstance(componentClass);
 					packedComponents.set(type.getIndex(), packedComponent);
@@ -73,7 +73,7 @@ public class ComponentManager extends Manager {
 
 	protected BitSet getPackedComponentOwners(ComponentType type)
 	{
-		BitSet owners = packedComponentOwners.get(type.getIndex());
+		BitSet owners = packedComponentOwners.safeGet(type.getIndex());
 		if (owners == null) {
 			owners = new BitSet();
 			packedComponentOwners.set(type.getIndex(), owners);
@@ -141,7 +141,7 @@ public class ComponentManager extends Manager {
 	}
 	
 	private void addPackedComponent(ComponentType type, PackedComponent component) {
-		PackedComponent packed = packedComponents.get(type.getIndex());
+		PackedComponent packed = packedComponents.safeGet(type.getIndex());
 		if (packed == null) {
 			packedComponents.set(type.getIndex(), component);
 		}
@@ -149,7 +149,7 @@ public class ComponentManager extends Manager {
 	
 	private void addBasicComponent(Entity e, ComponentType type, Component component)
 	{
-		Bag<Component> components = componentsByType.get(type.getIndex());
+		Bag<Component> components = componentsByType.safeGet(type.getIndex());
 		if(components == null) {
 			components = new Bag<Component>(entityContainerSize);
 			componentsByType.set(type.getIndex(), components);
@@ -200,7 +200,7 @@ public class ComponentManager extends Manager {
 		if (type.isPackedComponent())
 			throw new InvalidComponentException(type.getType(), "PackedComponent types aren't supported.");
 
-		Bag<Component> components = componentsByType.get(type.getIndex());
+		Bag<Component> components = componentsByType.safeGet(type.getIndex());
 		if(components == null) {
 			components = new Bag<Component>();
 			componentsByType.set(type.getIndex(), components);
@@ -219,11 +219,11 @@ public class ComponentManager extends Manager {
 	 */
 	protected Component getComponent(Entity e, ComponentType type) {
 		if (type.isPackedComponent()) {
-			PackedComponent component = packedComponents.get(type.getIndex());
+			PackedComponent component = packedComponents.safeGet(type.getIndex());
 			if (component != null) component.forEntity(e);
 			return component;
 		} else {
-			Bag<Component> components = componentsByType.get(type.getIndex());
+			Bag<Component> components = componentsByType.safeGet(type.getIndex());
 			if (components != null && components.isIndexWithinBounds(e.getId())) {
 				return components.get(e.getId());
 			}

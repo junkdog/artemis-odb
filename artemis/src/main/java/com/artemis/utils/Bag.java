@@ -178,6 +178,22 @@ public class Bag<E> implements ImmutableBag<E> {
 	public E get(int index) throws ArrayIndexOutOfBoundsException {
 		return data[index];
 	}
+	
+	/**
+	 * Returns the element at the specified position in Bag. This method
+	 * ensures that the bag grows if the requested index is outside the bounds
+	 * of the current backing array.
+	 * 
+	 * @param index
+	 *			index of the element to return
+	 *
+	 * @return the element at the specified position in bag
+	 *
+	 */
+	public E safeGet(int index) {
+		ensureCapacity(index);
+		return data[index];
+	}
 
 	/**
 	 * Returns the number of elements in this bag.
