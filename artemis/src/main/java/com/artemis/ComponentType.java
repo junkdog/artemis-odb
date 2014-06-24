@@ -37,13 +37,7 @@ public class ComponentType {
 	private final Taxonomy taxonomy;
 	private static final Bag<ComponentType> types = new Bag<ComponentType>();
 
-	/**
-	 * Creates a new {@link ComponentType} instance of given component class.
-	 *
-	 * @param type
-	 *			the components class
-	 */
-	public ComponentType(Class<? extends Component> type) {
+	private ComponentType(Class<? extends Component> type) {
 		types.set(INDEX, this);
 		index = INDEX++;
 		this.type = type;
