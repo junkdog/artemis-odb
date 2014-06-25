@@ -1,5 +1,9 @@
 # Change Log
 
+## Version: 0.6.1-SNAPSHOT
+- **Fix**: OOB Exception in ComponentManager with componentsByType when component types > 64.
+- **Fix**: Calling `Entity#changedInWorld` before an entity is added to the world yields null.
+
 ## Version: 0.6.0 - 2014-06-01
 - **GWT support** ([demo](http://flet.github.io/spaceship-warrior-redux/)) sporting
   [libgdx](https://github.com/libgdx/libgdx)'s reflection wrapper code.
