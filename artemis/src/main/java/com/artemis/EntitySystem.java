@@ -197,11 +197,16 @@ public abstract class EntitySystem implements EntityObserver {
 		
 		boolean contains = e.getSystemBits().get(systemIndex);
 		boolean interested = true; // possibly interested, let's try to prove it wrong.
-		
+
+		// If the entity is inactive, then we aren't interested
+		if (!e.isActive()) {
+			interested = false;
+		}
+
 		BitSet componentBits = e.getComponentBits();
 
 		// Check if the entity possesses ALL of the components defined in the aspect.
-		if(!allSet.isEmpty()) {
+		if(!allSet.isEmpty() && interested) {
 			for (int i = allSet.nextSetBit(0); i >= 0; i = allSet.nextSetBit(i+1)) {
 				if(!componentBits.get(i)) {
 					interested = false;
