@@ -77,6 +77,7 @@
 		<module>artemis-maven</module>
 		<module>artemis-test</module>
 		<module>artemis-matrix</module>
+		<module>artemis-cli</module>
 		<module>artemis-gwt</module>
     	<module>artemis-benchmark</module>
   </modules>
