@@ -6,13 +6,16 @@ import com.artemis.cli.converter.FileOutputConverter;
 import com.artemis.cli.converter.FolderConverter;
 import com.artemis.model.ComponentDependencyMatrix;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.Parameters;
 
+@Parameters(
+		commandDescription="Generate the Component Dependency Matrix from existing classes")
 public class MatrixCommand {
 	static final String COMMAND = "matrix";
 	
 	@Parameter(
 			names = {"-l", "--label"},
-			description = "Project name.",
+			description = "Project name, used as page title",
 			required = false)
 		String projectName = "Unknown artemis project";
 		
@@ -25,7 +28,7 @@ public class MatrixCommand {
 		
 		@Parameter(
 			names = {"-o", "--output"},
-			description = "Save to file",
+			description = "Save to file, destination may be given as a folder path",
 			converter = FileOutputConverter.class,
 			required = false)
 		File output = new File("matrix.html");
