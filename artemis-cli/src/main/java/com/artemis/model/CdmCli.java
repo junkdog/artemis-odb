@@ -1,6 +1,7 @@
 package com.artemis.model;
 
 import java.io.File;
+import java.security.ProtectionDomain;
 
 import com.artemis.model.cli.FileOutputConverter;
 import com.artemis.model.cli.FolderConverter;
@@ -43,7 +44,7 @@ public class CdmCli {
 	private void parse(String[] args) {
 		JCommander parser = new JCommander(this);
 		try {
-			parser.setProgramName("artemis-odb-matrix");
+			parser.setProgramName(getJarName());
 			parser.parse(args);
 			
 			if (help) {
@@ -59,5 +60,12 @@ public class CdmCli {
 			System.err.println();
 			parser.usage();
 		}
+	}
+	
+	private static String getJarName() {
+		ProtectionDomain domain = CdmCli.class.getProtectionDomain();
+		String path = domain.getCodeSource().getLocation().getPath();
+		
+		return new File(path).getName();
 	}
 }
