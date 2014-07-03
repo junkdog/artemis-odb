@@ -1,6 +1,9 @@
 # Change Log
 
 ## Version: 0.6.1-SNAPSHOT
+- New standalone `artemis-odb-cli` artifact:
+  - Handles weaving (new in 0.6.1) and matrix generation.
+  - Replaces `artemis-odb-matrix-X.Y.Z-cli.jar`.
 - **Fix**: OOB Exception in ComponentManager with componentsByType when component types > 64.
 - **Fix**: Calling `Entity#changedInWorld` before an entity is added to the world yields null.
 
