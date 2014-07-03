@@ -14,28 +14,28 @@ public class MatrixCommand {
 	static final String COMMAND = "matrix";
 	
 	@Parameter(
-			names = {"-l", "--label"},
-			description = "Project name, used as page title",
-			required = false)
-		String projectName = "Unknown artemis project";
-		
-		@Parameter(
-			names = {"-c", "--class-folder"},
-			description = "Root class folder",
-			converter = FolderConverter.class,
-			required = true)
-		File classRoot;
-		
-		@Parameter(
-			names = {"-o", "--output"},
-			description = "Save to file, destination may be given as a folder path",
-			converter = FileOutputConverter.class,
-			required = false)
-		File output = new File("matrix.html");
-		
-		void execute() {
-			ComponentDependencyMatrix cdm = 
-				new ComponentDependencyMatrix(projectName, classRoot, output);
-			cdm.process();
-		}
+		names = {"-l", "--label"},
+		description = "Project name, used as page title",
+		required = false)
+	private String projectName = "Unknown artemis project";
+	
+	@Parameter(
+		names = {"-c", "--class-folder"},
+		description = "Root class folder",
+		converter = FolderConverter.class,
+		required = true)
+	private File classRoot;
+	
+	@Parameter(
+		names = {"-o", "--output"},
+		description = "Save to file, destination may be given as a folder path",
+		converter = FileOutputConverter.class,
+		required = false)
+	private File output = new File("matrix.html");
+	
+	void execute() {
+		ComponentDependencyMatrix cdm = 
+			new ComponentDependencyMatrix(projectName, classRoot, output);
+		cdm.process();
+	}
 }
