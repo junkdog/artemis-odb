@@ -21,8 +21,11 @@ public class CliApplication {
 	
 	private void parse(String[] args) {
 		MatrixCommand matrix = new MatrixCommand();
+		WeaveCommand weave = new WeaveCommand();
+		
 		JCommander parser = new JCommander(this);
 		parser.addCommand(MatrixCommand.COMMAND, matrix);
+		parser.addCommand(WeaveCommand.COMMAND, weave);
 		
 		try {
 			parser.setProgramName(getJarName());
@@ -34,11 +37,10 @@ public class CliApplication {
 			}
 			
 			String command = parser.getParsedCommand();
-			
 			if (MatrixCommand.COMMAND.equals(command)) {
 				matrix.execute();
-			} else  if ("weave".equals(command)) {
-				System.out.println("hello");
+			} else  if (WeaveCommand.COMMAND.equals(command)) {
+				weave.execute();
 			} else {
 				parser.usage();
 				System.exit(1);
