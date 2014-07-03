@@ -19,10 +19,10 @@ public class WeaveCommand {
 	static final String COMMAND = "weave";
 	
 	@Parameter(
-			names = {"-p", "--enable-pooled"},
-			description = "Enable weaving of pooled components",
+			names = {"-p", "--disable-pooled"},
+			description = "Disable weaving of pooled components",
 			required = false)
-		boolean enablePooledWeaving = true;
+		boolean disablePooledWeaving = false;
 		
 		@Parameter(
 			names = {"-c", "--class-folder"},
@@ -34,7 +34,7 @@ public class WeaveCommand {
 		void execute() {
 			long start = System.currentTimeMillis();
 			
-			Weaver.enablePooledWeaving(enablePooledWeaving);
+			Weaver.enablePooledWeaving(!disablePooledWeaving);
 			
 			Weaver weaver = new Weaver(classRoot);
 			List<ClassMetadata> processed = weaver.execute();
