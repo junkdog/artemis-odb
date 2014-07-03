@@ -2,6 +2,7 @@ package com.artemis.cli;
 
 import static com.artemis.meta.ClassMetadata.WeaverType.PACKED;
 import static com.artemis.meta.ClassMetadata.WeaverType.POOLED;
+import static java.lang.String.format;
 
 import java.io.File;
 import java.util.Collections;
@@ -35,7 +36,7 @@ public class WeaveCommand {
 	
 	@Parameter(
 		names = {"-v", "--verbose"},
-		description = "Print summary of all transformed classes",
+		description = "Print summary of all transformed components",
 		required = false)
 	private boolean verbose = false;
 	
@@ -82,8 +83,7 @@ public class WeaveCommand {
 		StringBuffer sb = new StringBuffer();
 		sb.append("------------------------------------------------------------------------\n");
 		for (ClassMetadata meta : processed) {
-			sb.append(String.format("%-64s |%s\n",
-					meta.type.getClassName() + "|", meta.annotation));
+			sb.append(format("%-64s |%s\n", meta.type.getClassName() + "|", meta.annotation));
 		}
 		sb.append("------------------------------------------------------------------------\n");
 		

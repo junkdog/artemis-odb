@@ -34,7 +34,7 @@ _For more detailed changes, see [CHANGELOG.md](https://github.com/junkdog/artemi
 ### Embracing Artemis
 ```xml
 	<properties>
-		<artemis.version>0.6.0</artemis.version>
+		<artemis.version>0.6.1</artemis.version>
 	</properties>
 	
 	<dependencies>
@@ -73,14 +73,14 @@ _For more detailed changes, see [CHANGELOG.md](https://github.com/junkdog/artemi
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>0.6.0</version>
+	<version>0.6.1</version>
 </dependency>
 ```
 
 ## Direct Download
 
 Jars can be downloaded manually from the maven repository:
-  http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.6.0/
+  http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.6.1/
 
 
 ## Agrotera: Anti-boilerplate lib for Artemis

@@ -1,6 +1,6 @@
 # Change Log
 
-## Version: 0.6.1-SNAPSHOT
+## Version: 0.6.1 - 2014-07-03
 - New standalone `artemis-odb-cli` artifact:
   - Handles weaving (new in 0.6.1) and matrix generation.
   - Replaces `artemis-odb-matrix-X.Y.Z-cli.jar`.
