@@ -11,7 +11,7 @@
 	<name>artemis-odb-cli</name>
 	
 	<properties>
-		<mainClass>com.artemis.model.CdmCli</mainClass>
+		<mainClass>com.artemis.cli.CliApplication</mainClass>
 	</properties>
 	
 	<dependencies>

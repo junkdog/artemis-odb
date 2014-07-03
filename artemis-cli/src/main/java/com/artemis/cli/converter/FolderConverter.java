@@ -1,4 +1,4 @@
-package com.artemis.model.cli;
+package com.artemis.cli.converter;
 
 import java.io.File;
 
