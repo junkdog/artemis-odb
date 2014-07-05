@@ -37,7 +37,13 @@ public class ComponentType {
 	private final Taxonomy taxonomy;
 	private static final Bag<ComponentType> types = new Bag<ComponentType>();
 
-	private ComponentType(Class<? extends Component> type) {
+	/**
+	 * <b>Do not call this constructor!</b> This method is only public so that
+	 * we play nice with GWT.
+	 * 
+	 *  @@see {@link ComponentType#getTypeFor(Class)}
+	 */
+	public ComponentType(Class<? extends Component> type) {
 		types.set(INDEX, this);
 		index = INDEX++;
 		this.type = type;
