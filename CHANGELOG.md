@@ -1,5 +1,8 @@
 # Change Log
 
+## Version: 0.6.2-SNAPSHOT
+- **Fix**: GWT build was broken in 0.6.1.
+
 ## Version: 0.6.1 - 2014-07-03
 - New standalone `artemis-odb-cli` artifact:
   - Handles weaving (new in 0.6.1) and matrix generation.
