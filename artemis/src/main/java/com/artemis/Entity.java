@@ -19,8 +19,6 @@ import com.artemis.utils.Bag;
  */
 public final class Entity {
 
-	/** The entities unique global identifier. */
-	private UUID uuid;
 	/** The entities identifier in the world. */
 	private final int id;
 	/** A BitSet containing bits of the components the entity possesses. */
@@ -65,7 +63,6 @@ public final class Entity {
 		this.id = id;
 		systemBits = new BitSet();
 		componentBits = new BitSet();
-		this.uuid = uuid;
 	}
 
 	
@@ -110,7 +107,6 @@ public final class Entity {
 	 */
 	protected void reset() {
 		systemBits.clear();
-		uuid = UUID.randomUUID();
 	}
 
 	@Override
@@ -336,17 +332,17 @@ public final class Entity {
 	 * @return uuid instance for this entity
 	 */
 	public UUID getUuid() {
-		return uuid;
+		UuidEntityManager uuidManager = world.getManager(UuidEntityManager.class);
+		if (uuidManager == null)
+			throw new MundaneWireException(UuidEntityManager.class);
+		
+		return uuidManager.getUuid(this);
 	}
 	
 	public void setUuid(UUID uuid) {
 		UuidEntityManager uuidManager = world.getManager(UuidEntityManager.class);
 		if (uuidManager != null) {
-			UUID oldUuid = this.uuid;
-			this.uuid = uuid;
-			uuidManager.updatedUuid(this, oldUuid);
-		} else {
-			this.uuid = uuid;
+			uuidManager.updatedUuid(this, uuid);
 		}
 	}
 

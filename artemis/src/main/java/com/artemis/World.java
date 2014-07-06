@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import com.artemis.annotations.Mapper;
 import com.artemis.annotations.Wire;
+import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.reflect.ClassReflection;
@@ -263,6 +264,10 @@ public class World {
 	 * @param e the entity to add
 	 */
 	public void addEntity(Entity e) {
+		UuidEntityManager uem = getManager(UuidEntityManager.class);
+		if (uem != null)
+			uem.add(e);
+		
 		added.add(e);
 	}
 

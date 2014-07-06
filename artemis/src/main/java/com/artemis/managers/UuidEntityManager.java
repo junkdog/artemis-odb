@@ -6,33 +6,48 @@ import java.util.UUID;
 
 import com.artemis.Entity;
 import com.artemis.Manager;
+import com.artemis.utils.Bag;
 
 public class UuidEntityManager extends Manager {
-	private final Map<UUID, Entity> entities;
+	private final Map<UUID, Entity> uuidToEntity;
+	private final Bag<UUID> entityToUuid;
 
 	public UuidEntityManager() {
-		this.entities = new HashMap<UUID, Entity>();
+		this.uuidToEntity = new HashMap<UUID, Entity>();
+		this.entityToUuid = new Bag<UUID>();
 	}
 
-	@Override
-	public void added(Entity e) {
-		entities.put(e.getUuid(), e);
+	/**
+	 * Method is automatically called when adding an Entity to the world.
+	 */
+	public void add(Entity e) {
+		UUID uuid = UUID.randomUUID();
+		setUuid(e, uuid);
 	}
 
 	@Override
 	public void deleted(Entity e) {
-		entities.remove(e.getUuid());
+		uuidToEntity.remove(e.getUuid());
+		entityToUuid.set(e.getId(), null);
 	}
 	
-	/**
-	 * Only called by {@link Entity#setUuid}
-	 */
-	public void updatedUuid(Entity e, UUID oldUuid) {
-		entities.remove(oldUuid);
-		added(e);
+	public void updatedUuid(Entity e, UUID newUuid) {
+		UUID oldUuid = entityToUuid.get(e.getId());
+		uuidToEntity.remove(oldUuid);
+		
+		setUuid(e, newUuid);
 	}
 	
 	public Entity getEntity(UUID uuid) {
-		return entities.get(uuid);
+		return uuidToEntity.get(uuid);
+	}
+
+	public UUID getUuid(Entity e) {
+		return entityToUuid.get(e.getId());
+	}
+	
+	private void setUuid(Entity e, UUID newUuid) {
+		uuidToEntity.put(newUuid, e);
+		entityToUuid.set(e.getId(), newUuid);
 	}
 }
