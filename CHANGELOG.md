@@ -1,6 +1,8 @@
 # Change Log
 
 ## Version: 0.6.2-SNAPSHOT
+- UUID is now optional for entities.
+  - Add UuidEntityManager to automatically map UUID:s to entities.
 - **Fix**: GWT build was broken in 0.6.1.
 
 ## Version: 0.6.1 - 2014-07-03

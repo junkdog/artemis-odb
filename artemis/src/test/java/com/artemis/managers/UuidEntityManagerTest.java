@@ -14,13 +14,10 @@ public class UuidEntityManagerTest {
 	@Test(expected=MundaneWireException.class)
 	public void throw_exception_missing_uuid_manager() {
 		World world = new World();
-//		UuidEntityManager uuid = world.setManager(new UuidEntityManager());
 		world.initialize();
 		
 		Entity entity = world.createEntity();
 		entity.addToWorld();
-		
-		world.process();
 		
 		Assert.assertNotNull(entity.getUuid());
 	}
