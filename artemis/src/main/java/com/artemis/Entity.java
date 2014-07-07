@@ -67,7 +67,7 @@ public final class Entity {
 		if (uuid != null) {
 			UuidEntityManager uem = world.getManager(UuidEntityManager.class);
 			if (uem != null)
-				uem.add(this);
+				uem.setUuid(this, uuid);
 		}
 	}
 
@@ -348,7 +348,7 @@ public final class Entity {
 	public void setUuid(UUID uuid) {
 		UuidEntityManager uuidManager = world.getManager(UuidEntityManager.class);
 		if (uuidManager != null) {
-			uuidManager.updatedUuid(this, uuid);
+			uuidManager.setUuid(this, uuid);
 		}
 	}
 

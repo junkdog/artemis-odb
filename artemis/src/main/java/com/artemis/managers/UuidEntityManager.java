@@ -17,16 +17,6 @@ public class UuidEntityManager extends Manager {
 		this.entityToUuid = new Bag<UUID>();
 	}
 
-	/**
-	 * Method is automatically called when adding an Entity to the world.
-	 */
-	public UUID add(Entity e) {
-		UUID uuid = UUID.randomUUID();
-		setUuid(e, uuid);
-		
-		return uuid;
-	}
-
 	@Override
 	public void deleted(Entity e) {
 		uuidToEntity.remove(e.getUuid());
@@ -46,13 +36,19 @@ public class UuidEntityManager extends Manager {
 
 	public UUID getUuid(Entity e) {
 		UUID uuid = entityToUuid.safeGet(e.getId());
-		if (uuid == null)
-			return add(e);
-		else
-			return uuid;
+		if (uuid == null) {
+			uuid = UUID.randomUUID();
+			setUuid(e, uuid);
+		}
+		
+		return uuid;
 	}
 	
-	private void setUuid(Entity e, UUID newUuid) {
+	public void setUuid(Entity e, UUID newUuid) {
+		UUID oldUuid = entityToUuid.safeGet(e.getId());
+		if (oldUuid != null)
+			uuidToEntity.remove(oldUuid);
+		
 		uuidToEntity.put(newUuid, e);
 		entityToUuid.set(e.getId(), newUuid);
 	}

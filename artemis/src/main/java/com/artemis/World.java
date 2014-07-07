@@ -339,6 +339,10 @@ public class World {
 	 * Will NOT add the entity to the world, use {@link #addEntity(Entity)} for
 	 * that.
 	 * </p>
+	 * <p>
+	 * The uuid parameter is ignored if {@link UuidEntityManager} hasn't been added to the
+	 * world. 
+	 * </p>
 	 *
 	 * @param uuid the UUID to give to the entity
 	 * @return entity
