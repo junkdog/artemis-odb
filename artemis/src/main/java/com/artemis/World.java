@@ -264,10 +264,6 @@ public class World {
 	 * @param e the entity to add
 	 */
 	public void addEntity(Entity e) {
-		UuidEntityManager uem = getManager(UuidEntityManager.class);
-		if (uem != null)
-			uem.add(e);
-		
 		added.add(e);
 	}
 

@@ -20,9 +20,11 @@ public class UuidEntityManager extends Manager {
 	/**
 	 * Method is automatically called when adding an Entity to the world.
 	 */
-	public void add(Entity e) {
+	public UUID add(Entity e) {
 		UUID uuid = UUID.randomUUID();
 		setUuid(e, uuid);
+		
+		return uuid;
 	}
 
 	@Override
@@ -43,7 +45,11 @@ public class UuidEntityManager extends Manager {
 	}
 
 	public UUID getUuid(Entity e) {
-		return entityToUuid.get(e.getId());
+		UUID uuid = entityToUuid.safeGet(e.getId());
+		if (uuid == null)
+			return add(e);
+		else
+			return uuid;
 	}
 	
 	private void setUuid(Entity e, UUID newUuid) {

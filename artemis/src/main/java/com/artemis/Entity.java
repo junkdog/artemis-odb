@@ -41,7 +41,7 @@ public final class Entity {
 	 *			the id to set
 	 */
 	protected Entity(World world, int id) {
-		this(world, id, UUID.randomUUID());
+		this(world, id, null);
 	}
 
 	/**
@@ -63,6 +63,12 @@ public final class Entity {
 		this.id = id;
 		systemBits = new BitSet();
 		componentBits = new BitSet();
+		
+		if (uuid != null) {
+			UuidEntityManager uem = world.getManager(UuidEntityManager.class);
+			if (uem != null)
+				uem.add(this);
+		}
 	}
 
 	
