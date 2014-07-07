@@ -1,5 +1,10 @@
 package com.artemis.managers;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+
 import java.util.UUID;
 
 import org.junit.Assert;
@@ -31,7 +36,7 @@ public class UuidEntityManagerTest {
 		Entity entity = world.createEntity();
 		entity.addToWorld();
 		
-		Assert.assertNotNull(entity.getUuid());
+		assertNotNull(entity.getUuid());
 		UUID uuid1 = entity.getUuid();
 		world.deleteEntity(entity);
 		
@@ -41,10 +46,34 @@ public class UuidEntityManagerTest {
 		entity = world.createEntity();
 		entity.addToWorld();
 		
-		Assert.assertNotNull(entity.getUuid());
+		assertNotNull(entity.getUuid());
 		UUID uuid2 = entity.getUuid();
 
-		Assert.assertNotEquals(uuid1, uuid2);
+		assertNotEquals(uuid1, uuid2);
+	}
+	
+	@Test
+	public void uuid_updates_work() {
+		World world = new World();
+		UuidEntityManager uuidManager = world.setManager(new UuidEntityManager());
+		world.initialize();
+		
+		Entity entity = world.createEntity();
+		entity.addToWorld();
+		
+		UUID uuid0 = entity.getUuid();
+		Assert.assertNotNull(uuid0);
+		
+		UUID uuid1 = UUID.randomUUID();
+		
+		assertEquals(uuid0, entity.getUuid());
+		entity.setUuid(uuid1);
+		assertEquals(uuid1, entity.getUuid());
+		
+		
+		assertNotEquals(uuid0, uuid1);
+		assertNull(uuidManager.getEntity(uuid0));
+		assertEquals(entity, uuidManager.getEntity(uuid1));
 	}
 	
 	@Test
@@ -65,8 +94,8 @@ public class UuidEntityManagerTest {
 		Entity e3 = world.createEntity(uuids[2]);
 		e3.addToWorld();
 		
-		Assert.assertEquals(uuids[0], e1.getUuid());
-		Assert.assertEquals(uuids[1], e2.getUuid());
-		Assert.assertEquals(uuids[2], e3.getUuid());
+		assertEquals(uuids[0], e1.getUuid());
+		assertEquals(uuids[1], e2.getUuid());
+		assertEquals(uuids[2], e3.getUuid());
 	}
 }
