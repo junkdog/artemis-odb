@@ -1,6 +1,6 @@
 # Change Log
 
-## Version: 0.6.2-SNAPSHOT
+## Version: 0.6.2 - 2014-07-07
 - UUID is now optional for entities.
   - Add UuidEntityManager to automatically map UUID:s to entities.
   - UUID:s are lazily instantiated.
