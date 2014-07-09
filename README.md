@@ -13,7 +13,7 @@ _For more detailed changes, see [CHANGELOG.md](https://github.com/junkdog/artemi
  - Full GWT support.
  - New component types: [packed](https://github.com/junkdog/artemis-odb/wiki/Packed-Weaver) and pooled, leveraged by bytecode injection.
  - Better performance, more GC-friendly, less boilerplate.
- - Generate [Component Dependency Matrices](https://github.com/junkdog/artemis-odb/wiki/Component-Dependency-Matrix) from existing classes.
+ - Generate [Component Dependency Matrices](cdm) from existing classes.
    [![Shaman's Weirding Game: Component Dependency Matrix](https://raw.githubusercontent.com/wiki/junkdog/artemis-odb/images/cdm.png)](http://junkdog.github.io/matrix.html)
 
 
@@ -23,11 +23,15 @@ _For more detailed changes, see [CHANGELOG.md](https://github.com/junkdog/artemi
  - **artemis:** Base library.
 
 #### Optional
- - **artemis-maven:** Maven plugin for transforming `@PooledWeaver` and `@PackedWeaver` components.
+ - **artemis-maven:** Maven plugin for generating the [CMD][cdm] and transforming `@PooledWeaver` and `@PackedWeaver` components.
+ - **artemis-cli:** Command-line tool version of the maven plugin.
+ - **artemis-gwt:** Required when compiling for the web.
 
 #### Other
  - **artemis-weaver:** Transforms `com.artemis.Component` classes when annotated with `@PooledWeaver` or `@PackedWeaver`, see _artemis-maven_.
  - **artemis-test:** Compliance tests.
+ - **artemis-benchmark:** Simple benchmark, take with a grain of salt.
+
 
 ## Maven
 
@@ -80,13 +84,9 @@ _For more detailed changes, see [CHANGELOG.md](https://github.com/junkdog/artemi
 ## Direct Download
 
 Jars can be downloaded manually from the maven repository:
-  http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.6.3/
+ - Main library: http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.6.3/
+ - [Command-line tool][cli]: http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.6.3/
 
-
-## Agrotera: Anti-boilerplate lib for Artemis
-[Agrotera](http://github.com/junkdog/agrotera) uses annotations to configure EntitySystems, removing the
-need for defining Aspects inside constructors and takes care of injecting ComponentMappers,
-Managers and EntitySystems. Can also simulate aspects for Managers and inject profiling calls.
 
 ## Games using this library
 ### Open source
@@ -99,6 +99,7 @@ Managers and EntitySystems. Can also simulate aspects for Managers and inject pr
 | Spaceship Warrior Redux       | [source][sw-src] [play][sw-play]     | [cdm][sw-cdm]     | updated by [@Flet][flet]       |
 
  [cdm]: https://github.com/junkdog/artemis-odb/wiki/Component-Dependency-Matrix
+ [cli]: https://github.com/junkdog/artemis-odb/wiki/Command-Line-Tool
  [sine]: http://www.ludumdare.com/compo/ludum-dare-27/?action=preview&uid=15341
  [sine-src]: https://dl.dropboxusercontent.com/u/3057562/sine/sine-src.jar
  [sine-cdm]: http://junkdog.github.io/matrix-sine.html
