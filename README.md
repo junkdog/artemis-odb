@@ -23,7 +23,7 @@ _For more detailed changes, see [CHANGELOG.md](https://github.com/junkdog/artemi
  - **artemis:** Base library.
 
 #### Optional
- - **artemis-maven:** Maven plugin for generating the [CMD][cdm] and transforming `@PooledWeaver` and `@PackedWeaver` components.
+ - **artemis-maven:** Maven plugin for generating the [matrix][cdm] and transforming `@PooledWeaver` and `@PackedWeaver` components.
  - **artemis-cli:** Command-line tool version of the maven plugin.
  - **artemis-gwt:** Required when compiling for the web.
 
