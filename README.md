@@ -84,8 +84,8 @@ _For more detailed changes, see [CHANGELOG.md](https://github.com/junkdog/artemi
 ## Direct Download
 
 Jars can be downloaded manually from the maven repository:
- - Main library: http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.6.3/
- - [Command-line tool][cli]: http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.6.3/
+ - **Main library:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.6.3/
+ - **[Command-line tool][cli]:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.6.3/
 
 
 ## Games using this library
