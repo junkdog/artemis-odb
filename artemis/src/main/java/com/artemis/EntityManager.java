@@ -46,11 +46,6 @@ public class EntityManager extends Manager {
 
 	/**
 	 * Create a new entity.
-	 * <p>
-	 * New entities will recieve a free ID from a global pool, ensuring
-	 * every entity has a unique ID. Deleted entities free their ID for new
-	 * entities.
-	 * </p>
 	 *
 	 * @return a new entity
 	 */
@@ -128,9 +123,6 @@ public class EntityManager extends Manager {
 	public void deleted(Entity e) {
 		entities.set(e.getId(), null);
 		disabled.clear(e.getId());
-		
-//		componentBits(e).clear();
-//		systemBits(e).clear();
 		
 		recyclingEntityFactory.free(e);
 		

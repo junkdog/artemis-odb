@@ -58,11 +58,8 @@ public final class Entity {
 		this.world = world;
 		this.id = id;
 		
-		if (uuid != null) {
-			UuidEntityManager uem = world.getManager(UuidEntityManager.class);
-			if (uem != null)
-				uem.setUuid(this, uuid);
-		}
+		if (uuid != null && world.hasUuidManager())
+			world.getManager(UuidEntityManager.class).setUuid(this, uuid);
 	}
 
 	
@@ -322,17 +319,15 @@ public final class Entity {
 	 * @return uuid instance for this entity
 	 */
 	public UUID getUuid() {
-		UuidEntityManager uuidManager = world.getManager(UuidEntityManager.class);
-		if (uuidManager == null)
+		if (!world.hasUuidManager())
 			throw new MundaneWireException(UuidEntityManager.class);
 		
-		return uuidManager.getUuid(this);
+		return world.getManager(UuidEntityManager.class).getUuid(this);
 	}
 	
 	public void setUuid(UUID uuid) {
-		UuidEntityManager uuidManager = world.getManager(UuidEntityManager.class);
-		if (uuidManager != null) {
-			uuidManager.setUuid(this, uuid);
+		if (world.hasUuidManager()) {
+			 world.getManager(UuidEntityManager.class).setUuid(this, uuid);
 		}
 	}
 

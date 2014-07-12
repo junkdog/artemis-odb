@@ -90,6 +90,7 @@ public class World {
 	 * Contains all uninitilized systems. *
 	 */
 	private final Bag<EntitySystem> systemsToInit;
+	private boolean registerUuids;
 
 
 	/**
@@ -214,6 +215,9 @@ public class World {
 		managers.put(manager.getClass(), manager);
 		managersBag.add(manager);
 		manager.setWorld(this);
+		
+		if (manager instanceof UuidEntityManager)
+			registerUuids = true;
 
 		return manager;
 	}
@@ -602,6 +606,9 @@ public class World {
 		void perform(EntityObserver observer, Entity e);
 	}
 
+	boolean hasUuidManager() {
+		return registerUuids;
+	}
 
 	/**
 	 * Injects {@link ComponentMapper}, {@link EntitySystem} and {@link Manager} types into systems and
