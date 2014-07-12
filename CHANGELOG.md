@@ -1,5 +1,9 @@
 # Change Log
 
+## Version: 0.6.4 - SNAPSHOT
+- Smaller entity instances.
+
+
 ## Version: 0.6.3 - 2014-07-07
 - **Fix**: Potential IOOB exceptions in UuidEntityManager.
 

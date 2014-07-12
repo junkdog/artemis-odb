@@ -21,10 +21,6 @@ public final class Entity {
 
 	/** The entities identifier in the world. */
 	private final int id;
-	/** A BitSet containing bits of the components the entity possesses. */
-	private final BitSet componentBits;
-	/** A BitSet containing bits of the systems interested in the entity. */
-	private final BitSet systemBits;
 	/** The world this entity belongs to. */
 	private final World world;
 
@@ -61,8 +57,6 @@ public final class Entity {
 	protected Entity(World world, int id, UUID uuid) {
 		this.world = world;
 		this.id = id;
-		systemBits = new BitSet();
-		componentBits = new BitSet();
 		
 		if (uuid != null) {
 			UuidEntityManager uem = world.getManager(UuidEntityManager.class);
@@ -92,7 +86,7 @@ public final class Entity {
 	 * @return a BitSet containing the entities component bits
 	 */
 	protected BitSet getComponentBits() {
-		return componentBits;
+		return world.getEntityManager().componentBits(this);
 	}
 	
 	/**
@@ -102,17 +96,7 @@ public final class Entity {
 	 * @return a BitSet containing the systems bits interested in the entity
 	 */
 	protected BitSet getSystemBits() {
-		return systemBits;
-	}
-
-	/**
-	 * Make entity ready for re-use.
-	 * <p>
-	 * Will generate a new uuid for the entity and remove all components.
-	 * </p>
-	 */
-	protected void reset() {
-		systemBits.clear();
+		return world.getEntityManager().systemBits(this);
 	}
 
 	@Override

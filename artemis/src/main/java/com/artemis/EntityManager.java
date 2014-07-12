@@ -25,6 +25,9 @@ public class EntityManager extends Manager {
 	/** Amount of entities ever deleted from the manager. */
 	private long deleted;
 	private RecyclingEntityFactory recyclingEntityFactory;
+	
+	private final Bag<BitSet> componentBits;
+	private final Bag<BitSet> systemBits;
 
 	/**
 	 * Creates a new EntityManager Instance.
@@ -32,6 +35,9 @@ public class EntityManager extends Manager {
 	public EntityManager(int initialContainerSize) {
 		entities = new Bag<Entity>(initialContainerSize);
 		disabled = new BitSet();
+		
+		componentBits = new Bag<BitSet>(initialContainerSize);
+		systemBits = new Bag<BitSet>(initialContainerSize);
 	}
 	@Override
 	protected void initialize() {
@@ -50,8 +56,28 @@ public class EntityManager extends Manager {
 	 */
 	protected Entity createEntityInstance() {
 		Entity e = recyclingEntityFactory.obtain();
+		componentBits(e).clear();
+		systemBits(e).clear();
 		created++;
 		return e;
+	}
+	
+	BitSet componentBits(Entity e) {
+		return getBitSet(e, componentBits);
+	}
+	
+	BitSet systemBits(Entity e) {
+		return getBitSet(e, systemBits);
+	}
+	
+	private static BitSet getBitSet(Entity e, Bag<BitSet> container) {
+		BitSet bitset = container.safeGet(e.getId());
+		if (bitset == null) {
+			bitset = new BitSet();
+			container.set(e.getId(), bitset);
+		}
+		
+		return bitset;
 	}
 	
 	/**
@@ -101,8 +127,10 @@ public class EntityManager extends Manager {
 	@Override
 	public void deleted(Entity e) {
 		entities.set(e.getId(), null);
-		
 		disabled.clear(e.getId());
+		
+//		componentBits(e).clear();
+//		systemBits(e).clear();
 		
 		recyclingEntityFactory.free(e);
 		
@@ -215,7 +243,8 @@ public class EntityManager extends Manager {
 			
 			Object[] data = limbo.getData();
 			for (int i = 0; s > i; i++) {
-				recycled.add((Entity)data[i]);
+				Entity e = (Entity) data[i];
+				recycled.add(e);
 				data[i] = null;
 			}
 			limbo.setSize(0);
@@ -225,9 +254,7 @@ public class EntityManager extends Manager {
 			if (recycled.isEmpty()) {
 				return new Entity(world, nextId++);
 			} else {
-				Entity entity = recycled.removeLast();
-				entity.reset();
-				return entity; 
+				return recycled.removeLast();
 			}
 		}
 	}
