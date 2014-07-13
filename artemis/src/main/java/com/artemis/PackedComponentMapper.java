@@ -38,7 +38,7 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 	 */
 	private PackedComponentMapper(Class<A> type, World world) {
 		ComponentManager cm = world.getComponentManager();
-		owners = cm.getPackedComponentOwners(ComponentType.getTypeFor(type));
+		owners = cm.getPackedComponentOwners(cm.typeFactory.getTypeFor(type));
 		
 		this.classType = type;
 		component = newInstance(type);

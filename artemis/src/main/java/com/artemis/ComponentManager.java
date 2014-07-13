@@ -31,6 +31,8 @@ public class ComponentManager extends Manager {
 	private final ComponentPool pooledComponents;
 	
 	private int entityContainerSize;
+	
+	protected final ComponentTypeFactory typeFactory;
 
 	/**
 	 * Creates a new instance of {@link ComponentManager}.
@@ -42,11 +44,13 @@ public class ComponentManager extends Manager {
 		packedComponentOwners = new Bag<BitSet>();
 		pooledComponents = new ComponentPool();
 		deleted = new WildBag<Entity>();
+		
+		typeFactory = new ComponentTypeFactory();
 	}
 
 	@SuppressWarnings("unchecked")
 	protected <T extends Component> T create(Entity owner, Class<T> componentClass) {
-		ComponentType type = ComponentType.getTypeFor(componentClass);
+		ComponentType type = typeFactory.getTypeFor(componentClass);
 		switch (type.getTaxonomy())
 		{
 			case BASIC:
@@ -98,7 +102,7 @@ public class ComponentManager extends Manager {
 	private void removeComponentsOfEntity(Entity e) {
 		BitSet componentBits = e.getComponentBits();
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
-			switch (ComponentType.getTaxonomy(i)) {
+			switch (typeFactory.getTaxonomy(i)) {
 				case BASIC:
 					componentsByType.get(i).set(e.getId(), null);
 					break;
@@ -111,7 +115,7 @@ public class ComponentManager extends Manager {
 					packedComponents.get(i).forEntity(e).reset();
 					break;
 				default:
-					throw new InvalidComponentException(Component.class, " unknown component type: " + ComponentType.getTaxonomy(i));
+					throw new InvalidComponentException(Component.class, " unknown component type: " + typeFactory.getTaxonomy(i));
 			}
 		}
 		componentBits.clear();
@@ -243,7 +247,7 @@ public class ComponentManager extends Manager {
 	public Bag<Component> getComponentsFor(Entity e, Bag<Component> fillBag) {
 		BitSet componentBits = e.getComponentBits();
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
-			if (ComponentType.isPackedComponent(i)) {
+			if (typeFactory.isPackedComponent(i)) {
 				fillBag.add(packedComponents.get(i));
 			} else {
 				fillBag.add(componentsByType.get(i).get(e.getId()));

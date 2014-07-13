@@ -20,8 +20,8 @@ public class ComponentManagerTest {
 		world.initialize();
 
 		try {
-			Field field = field("INDEX");
-			field.setInt(null, 0xffff);
+			Field field = field("componentTypeCount");
+			field.setInt(world.getComponentManager().typeFactory, 0xffff);
 		} catch (NoSuchFieldException e) {
 			fail(e.getMessage());
 		} catch (SecurityException e) {
@@ -36,26 +36,29 @@ public class ComponentManagerTest {
 	@Test
 	public void ensure_basic_components_dont_throw_aioob() throws Exception {
 		world.getMapper(Basic.class);
-		assertTrue(0xffff <= field("INDEX").getInt(null));
-		assertEquals(0xffff, ComponentType.getIndexFor(Basic.class));
+		ComponentTypeFactory typeFactory = world.getComponentManager().typeFactory;
+		assertTrue(0xffff <= field("componentTypeCount").getInt(typeFactory));
+		assertEquals(0xffff, typeFactory.getTypeFor(Basic.class).getIndex());
 	}
 	
 	@Test
 	public void ensure_pooled_components_dont_throw_aioob() throws Exception {
 		world.getMapper(Pooled.class);
-		assertTrue(0xffff <= field("INDEX").getInt(null));
-		assertEquals(0xffff, ComponentType.getIndexFor(Pooled.class));
+		ComponentTypeFactory typeFactory = world.getComponentManager().typeFactory;
+		assertTrue(0xffff <= field("componentTypeCount").getInt(typeFactory));
+		assertEquals(0xffff, typeFactory.getIndexFor(Pooled.class));
 	}
 	
 	@Test
 	public void ensure_packed_components_dont_throw_aioob() throws Exception {
 		world.getMapper(Packed.class);
-		assertTrue(0xffff <= field("INDEX").getInt(null));
-		assertEquals(0xffff, ComponentType.getIndexFor(Packed.class));
+		ComponentTypeFactory typeFactory = world.getComponentManager().typeFactory;
+		assertTrue(0xffff <= field("componentTypeCount").getInt(typeFactory));
+		assertEquals(0xffff, typeFactory.getIndexFor(Packed.class));
 	}
 	
 	private static Field field(String f) throws NoSuchFieldException {
-		Field field = ComponentType.class.getDeclaredField(f);
+		Field field = ComponentTypeFactory.class.getDeclaredField(f);
 		field.setAccessible(true);
 		return field;
 	}

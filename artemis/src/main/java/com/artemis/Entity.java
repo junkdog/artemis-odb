@@ -104,7 +104,8 @@ public final class Entity {
 	public <T extends Component> T createComponent(Class<T> componentKlazz) {
 		ComponentManager componentManager = world.getComponentManager();
 		T component = componentManager.create(this, componentKlazz);
-		componentManager.addComponent(this, ComponentType.getTypeFor(componentKlazz), component);
+		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+		componentManager.addComponent(this, tf.getTypeFor(componentKlazz), component);
 		return component;
 	}
 
@@ -118,7 +119,8 @@ public final class Entity {
 	 * @see {@link #createComponent(Class)}
 	 */
 	public Entity addComponent(Component component) {
-		addComponent(component, ComponentType.getTypeFor(component.getClass()));
+		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+		addComponent(component, tf.getTypeFor(component.getClass()));
 		return this;
 	}
 	
@@ -181,7 +183,8 @@ public final class Entity {
 	 * @return this entity for chaining
 	 */
 	public Entity removeComponent(Class<? extends Component> type) {
-		removeComponent(ComponentType.getTypeFor(type));
+		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+		removeComponent(tf.getTypeFor(type));
 		return this;
 	}
 
@@ -245,7 +248,8 @@ public final class Entity {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Component> T getComponent(Class<T> type) {
-		return (T)getComponent(ComponentType.getTypeFor(type));
+		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+		return (T)getComponent(tf.getTypeFor(type));
 	}
 
 	/**

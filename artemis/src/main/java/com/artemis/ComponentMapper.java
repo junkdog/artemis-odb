@@ -90,7 +90,8 @@ public abstract class ComponentMapper<A extends Component> {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Component> ComponentMapper<T> getFor(Class<T> type, World world) {
-		if (ComponentType.getTypeFor(type).isPackedComponent())
+		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+		if (tf.getTypeFor(type).isPackedComponent())
 			return (ComponentMapper<T>)PackedComponentMapper.create((Class<PackedComponent>)type, world);
 		else
 			return new BasicComponentMapper<T>(type, world);

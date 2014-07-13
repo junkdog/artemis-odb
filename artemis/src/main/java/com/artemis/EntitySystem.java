@@ -34,19 +34,20 @@ public abstract class EntitySystem implements EntityObserver {
 	/** Collects entities to be deleted from the system after processing. */
 	private final WildBag<Entity> delayedDeletion;
 	/** Component bits entities must possess for the system to be interested. */
-	private final BitSet allSet;
+	private BitSet allSet;
 	/** Component bits entities must not possess for the system to be interested. */
-	private final BitSet exclusionSet;
+	private BitSet exclusionSet;
 	/** Component bits entities must at least possess one for the system to be interested. */
-	private final BitSet oneSet;
+	private BitSet oneSet;
 	/** If the system is passive or not. */
 	private boolean passive;
 	/** If the system is enabled or not. */
 	private boolean enabled;
 	/** If the system is interested in no entities at all. */
-	private final boolean dummy;
+	private boolean dummy;
 	/** If the system is currently processing. */
 	private boolean isProcessing;
+	private Aspect aspect;
 
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
@@ -56,15 +57,12 @@ public abstract class EntitySystem implements EntityObserver {
 	 *			to match against entities
 	 */
 	public EntitySystem(Aspect aspect) {
+		this.aspect = aspect;
 		activeIds = new BitSet();
 		actives = new WildBag<Entity>();
 		
 		delayedDeletion = new WildBag<Entity>();
-		allSet = aspect.getAllSet();
-		exclusionSet = aspect.getExclusionSet();
-		oneSet = aspect.getOneSet();
 		systemIndex = SystemIndexManager.getIndexFor(this.getClass());
-		dummy = allSet.isEmpty() && oneSet.isEmpty(); // This system can't possibly be interested in any entity, so it must be "dummy"
 		
 		enabled = true;
 		isProcessing = false;
@@ -351,6 +349,12 @@ public abstract class EntitySystem implements EntityObserver {
 	 *			the world to set
 	 */
 	protected final void setWorld(World world) {
+		aspect.initialize(world);
+		allSet = aspect.getAllSet();
+		exclusionSet = aspect.getExclusionSet();
+		oneSet = aspect.getOneSet();
+		dummy = allSet.isEmpty() && oneSet.isEmpty(); // This system can't possibly be interested in any entity, so it must be "dummy"
+		
 		this.world = world;
 	}
 
