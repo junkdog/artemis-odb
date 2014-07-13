@@ -90,6 +90,8 @@ public class World {
 	 * Contains all uninitilized systems. *
 	 */
 	private final Bag<EntitySystem> systemsToInit;
+	final SystemIndexManager systemIndex;
+	
 	private boolean registerUuids;
 
 
@@ -130,6 +132,8 @@ public class World {
 		enabledPerformer = new EnabledPerformer();
 		disabledPerformer = new DisabledPerformer();
 
+		systemIndex = new SystemIndexManager();
+		
 		cm = new ComponentManager(expectedEntityCount);
 		setManager(cm);
 

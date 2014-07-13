@@ -1,5 +1,11 @@
 package com.artemis;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
+
+import java.lang.reflect.Field;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,7 +38,40 @@ public class MultiWorldTest
 		int yIndexInner = 
 				innerWorld.getComponentManager().typeFactory.getTypeFor(ComponentY.class).getIndex();
 		
-		Assert.assertEquals(xIndexOuter, yIndexInner);
+		assertEquals(xIndexOuter, yIndexInner);
+	}
+	
+	@Test
+	public void unique_system_bits_per_world() {
+		World innerWorld = new World();
+		VoidSystem innerVoid = innerWorld.setSystem(new VoidSystem());
+		innerWorld.initialize();
+		
+		world = new World();
+		world.setSystem(new InnerWorldProcessingSystem(innerWorld));
+		VoidSystem outerVoid = world.setSystem(new VoidSystem());
+		world.initialize();
+		
+		world.process();
+		
+		assertNotEquals(getSystemBit(innerVoid), getSystemBit(outerVoid));
+	}
+	
+	private static int getSystemBit(EntitySystem es) {
+		try {
+			Field f = EntitySystem.class.getDeclaredField("systemIndex");
+			f.setAccessible(true);
+			return f.getInt(es);
+		} catch (IllegalArgumentException e) {
+			fail(e.getMessage());
+		} catch (IllegalAccessException e) {
+			fail(e.getMessage());
+		} catch (NoSuchFieldException e) {
+			fail(e.getMessage());
+		} catch (SecurityException e) {
+			fail(e.getMessage());
+		}
+		return -1;
 	}
 
 	private static void createEntity(World w) {
@@ -56,5 +95,10 @@ public class MultiWorldTest
 			inner.process();
 		}
 		
+	}
+	
+	private static class VoidSystem extends VoidEntitySystem {
+		@Override
+		protected void processSystem() {}
 	}
 }
