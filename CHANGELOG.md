@@ -2,7 +2,7 @@
 
 ## Version: 0.6.4 - SNAPSHOT
 - Smaller entity instances.
-
+- **Fix**: Actually fixed GWT support, bumped gwt to 2.6.0.
 
 ## Version: 0.6.3 - 2014-07-07
 - **Fix**: Potential IOOB exceptions in UuidEntityManager.
