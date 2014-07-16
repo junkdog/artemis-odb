@@ -3,6 +3,8 @@ package com.artemis;
 import java.util.BitSet;
 import java.util.Collection;
 
+import com.artemis.utils.Bag;
+
 
 /**
  * An Aspect is used by systems as a matcher against entities, to check if a
@@ -33,11 +35,16 @@ import java.util.Collection;
 public class Aspect {
 
 	/** Component bits the entity must all possess. */
-	private final BitSet allSet;
+	private BitSet allSet;
 	/** Component bits the entity must not possess. */
-	private final BitSet exclusionSet;
+	private BitSet exclusionSet;
 	/** Component bits of which the entity must possess at least one. */
-	private final BitSet oneSet;
+	private BitSet oneSet;
+	
+	private boolean isInitialized;
+	private final Bag<Class<? extends Component>> allTypes;
+	private final Bag<Class<? extends Component>> exclusionTypes;
+	private final Bag<Class<? extends Component>> oneTypes;
 
 
 	/**
@@ -46,9 +53,35 @@ public class Aspect {
 	 * or {@link #getEmpty}.
 	 */
 	private Aspect() {
+		allTypes = new Bag<Class<? extends Component>>();
+		exclusionTypes = new Bag<Class<? extends Component>>();
+		oneTypes = new Bag<Class<? extends Component>>();
+	}
+	
+	public void initialize(World world) {
+		if (isInitialized)
+			return;
+		
 		this.allSet = new BitSet();
 		this.exclusionSet = new BitSet();
 		this.oneSet = new BitSet();
+		
+		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+		associate(tf, allTypes, allSet);
+		associate(tf, exclusionTypes, exclusionSet);
+		associate(tf, oneTypes, oneSet);
+		
+		allTypes.clear();
+		exclusionTypes.clear();
+		oneTypes.clear();
+		
+		isInitialized = true;
+	}
+	
+	private static void associate(ComponentTypeFactory tf, Bag<Class<? extends Component>> types, BitSet componentBits) {
+		for (Class<? extends Component> t : types) {
+			componentBits.set(tf.getIndexFor(t));
+		}
 	}
 
 
@@ -137,10 +170,10 @@ public class Aspect {
 	 */
 	@SuppressWarnings("unchecked")
 	public Aspect all(Class<? extends Component> type, Class<? extends Component>... types) {
-		allSet.set(ComponentType.getIndexFor(type));
+		allTypes.add(type);
 		
 		for (Class<? extends Component> t : types) {
-			allSet.set(ComponentType.getIndexFor(t));
+			allTypes.add(t);
 		}
 
 		return this;
@@ -161,7 +194,7 @@ public class Aspect {
 	@SuppressWarnings("unchecked")
 	public Aspect all(Collection<Class<? extends Component>> types) {
 		for (Class<? extends Component> t : types) {
-			allSet.set(ComponentType.getIndexFor(t));
+			allTypes.add(t);
 		}
 
 		return this;
@@ -183,10 +216,10 @@ public class Aspect {
 	 */
 	@SuppressWarnings("unchecked")
 	public Aspect exclude(Class<? extends Component> type, Class<? extends Component>... types) {
-		exclusionSet.set(ComponentType.getIndexFor(type));
+		exclusionTypes.add(type);
 		
 		for (Class<? extends Component> t : types) {
-			exclusionSet.set(ComponentType.getIndexFor(t));
+			exclusionTypes.add(t);
 		}
 		return this;
 	}
@@ -209,7 +242,7 @@ public class Aspect {
 	@SuppressWarnings("unchecked")
 	public Aspect exclude(Collection<Class<? extends Component>> types) {
 		for (Class<? extends Component> t : types) {
-			exclusionSet.set(ComponentType.getIndexFor(t));
+			exclusionTypes.add(t);
 		}
 		return this;
 	}
@@ -227,10 +260,10 @@ public class Aspect {
 	 */
 	@SuppressWarnings("unchecked")
 	public Aspect one(Class<? extends Component> type, Class<? extends Component>... types) {
-		oneSet.set(ComponentType.getIndexFor(type));
+		oneTypes.add(type);
 		
 		for (Class<? extends Component> t : types) {
-			oneSet.set(ComponentType.getIndexFor(t));
+			oneTypes.add(t);
 		}
 		return this;
 	}
@@ -249,30 +282,9 @@ public class Aspect {
 	@SuppressWarnings("unchecked")
 	public Aspect one(Collection<Class<? extends Component>> types) {
 		for (Class<? extends Component> t : types) {
-			oneSet.set(ComponentType.getIndexFor(t));
+			oneTypes.add(t);
 		}
 		return this;
-	}
-	
-	/**
-	 * Creates an aspect where an entity must possess all of the specified
-	 * component types.
-	 * 
-	 * @param type
-	 *			the type the entity must possess
-	 * @param types
-	 *			the type the entity must possess
-	 *
-	 * @return an aspect that can be matched against entities
-	 * 
-	 * @deprecated
-	 * 
-	 * @see getAspectForAll
-	 */
-	@Deprecated
-	@SuppressWarnings("unchecked")
-	public static Aspect getAspectFor(Class<? extends Component> type, Class<? extends Component>... types) {
-		return getAspectForAll(type, types);
 	}
 	
 	/**

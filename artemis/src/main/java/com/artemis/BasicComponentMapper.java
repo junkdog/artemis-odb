@@ -36,7 +36,8 @@ class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 	 *			the world to handle components for
 	 */
 	BasicComponentMapper(Class<A> type, World world) {
-		this.type = ComponentType.getTypeFor(type);
+		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+		this.type = tf.getTypeFor(type);
 		components = world.getComponentManager().getComponentsByType(this.type);
 		this.classType = type;
 	}

@@ -1,7 +1,6 @@
 package com.artemis;
 
 import java.util.BitSet;
-import java.util.IdentityHashMap;
 
 import com.artemis.utils.ImmutableBag;
 
@@ -19,7 +18,7 @@ import com.artemis.utils.ImmutableBag;
 public abstract class EntitySystem implements EntityObserver {
 
 	/** The system's index in the SystemIndexManager. */
-	private final int systemIndex;
+	private int systemIndex;
 	/** The world this system belongs to. */
 	protected World world;
 	
@@ -34,19 +33,20 @@ public abstract class EntitySystem implements EntityObserver {
 	/** Collects entities to be deleted from the system after processing. */
 	private final WildBag<Entity> delayedDeletion;
 	/** Component bits entities must possess for the system to be interested. */
-	private final BitSet allSet;
+	private BitSet allSet;
 	/** Component bits entities must not possess for the system to be interested. */
-	private final BitSet exclusionSet;
+	private BitSet exclusionSet;
 	/** Component bits entities must at least possess one for the system to be interested. */
-	private final BitSet oneSet;
+	private BitSet oneSet;
 	/** If the system is passive or not. */
 	private boolean passive;
 	/** If the system is enabled or not. */
 	private boolean enabled;
 	/** If the system is interested in no entities at all. */
-	private final boolean dummy;
+	private boolean dummy;
 	/** If the system is currently processing. */
 	private boolean isProcessing;
+	private Aspect aspect;
 
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
@@ -56,15 +56,11 @@ public abstract class EntitySystem implements EntityObserver {
 	 *			to match against entities
 	 */
 	public EntitySystem(Aspect aspect) {
+		this.aspect = aspect;
 		activeIds = new BitSet();
 		actives = new WildBag<Entity>();
 		
 		delayedDeletion = new WildBag<Entity>();
-		allSet = aspect.getAllSet();
-		exclusionSet = aspect.getExclusionSet();
-		oneSet = aspect.getOneSet();
-		systemIndex = SystemIndexManager.getIndexFor(this.getClass());
-		dummy = allSet.isEmpty() && oneSet.isEmpty(); // This system can't possibly be interested in any entity, so it must be "dummy"
 		
 		enabled = true;
 		isProcessing = false;
@@ -351,6 +347,14 @@ public abstract class EntitySystem implements EntityObserver {
 	 *			the world to set
 	 */
 	protected final void setWorld(World world) {
+		aspect.initialize(world);
+		allSet = aspect.getAllSet();
+		exclusionSet = aspect.getExclusionSet();
+		oneSet = aspect.getOneSet();
+		dummy = allSet.isEmpty() && oneSet.isEmpty(); // This system can't possibly be interested in any entity, so it must be "dummy"
+		
+		systemIndex = world.systemIndex.getIndexFor(this.getClass());
+		
 		this.world = world;
 	}
 
@@ -397,44 +401,4 @@ public abstract class EntitySystem implements EntityObserver {
 	 * see {@link World#dispose()}
 	 */
 	protected void dispose() {}
-
-	/**
-	 * Used to generate a unique bit for each system.
-	 * <p>
-	 * Only used internally in EntitySystem.
-	 * </p>
-	 */
-	private static final class SystemIndexManager {
-
-		/** Amount of EntitySystem indices. */
-		private static int INDEX = 0;
-		
-		/**
-		 * Contains the class types of all created systems.
-		 * <p>
-		 * Only one system per class is permitted in the world.
-		 * </p>
-		 */
-		private static final IdentityHashMap<Class<? extends EntitySystem>, Integer> indices
-				= new IdentityHashMap<Class<? extends EntitySystem>, Integer>();
-
-		/**
-		 * Called by the EntitySystem constructor.
-		 * Will give the new EntitySystem the next index, and store the systems
-		 * class as an (Index, Class) entry.
-		 *
-		 * @param es
-		 *			the systems class type
-		 *
-		 * @return the systems index
-		 */
-		private static int getIndexFor(Class<? extends EntitySystem> es) {
-			Integer index = indices.get(es);
-			if(index == null) {
-				index = INDEX++;
-				indices.put(es, index);
-			}
-			return index;
-		}
-	}
 }
