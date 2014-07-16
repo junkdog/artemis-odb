@@ -8,23 +8,23 @@
 	<artifactId>artemis-odb-gwt</artifactId>
 
 	<dependencies>
-	    
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>artemis-odb</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>artemis-odb</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
-			<version>2.5.1</version>
+			<version>2.6.0</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-dev</artifactId>
-			<version>2.5.1</version>
+			<version>2.6.0</version>
 			<scope>provided</scope>
 		</dependency>
 
