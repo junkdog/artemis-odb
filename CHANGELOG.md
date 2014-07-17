@@ -1,6 +1,6 @@
 # Change Log
 
-## Version: 0.6.4 - 2014-07-17
+## Version: 0.6.5 - 2014-07-17
 - Better support for multiple concurrent worlds in regards to memory usage.
 - Smaller entity instances.
 - **Fix**: Actually fixed GWT support, bumped gwt to 2.6.0.
