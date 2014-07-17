@@ -1,11 +1,13 @@
 package com.artemis;
 
+import com.artemis.utils.reflect.ClassReflection;
+
 
 @SuppressWarnings("serial")
 public class MundaneWireException extends RuntimeException {
 
 	public MundaneWireException(Class<? extends EntityObserver> klazz) {
-		super(String.format("Not added to world: %s", klazz.getName()));
+		super("Not added to world: " + ClassReflection.getSimpleName(klazz));
 	}
 
 	public MundaneWireException(String message, Throwable cause) {

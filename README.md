@@ -38,7 +38,7 @@ _For more detailed changes, see [CHANGELOG.md](https://github.com/junkdog/artemi
 ### Embracing Artemis
 ```xml
 	<properties>
-		<artemis.version>0.6.4</artemis.version>
+		<artemis.version>0.6.5</artemis.version>
 	</properties>
 	
 	<dependencies>
@@ -77,15 +77,15 @@ _For more detailed changes, see [CHANGELOG.md](https://github.com/junkdog/artemi
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>0.6.4</version>
+	<version>0.6.5</version>
 </dependency>
 ```
 
 ## Direct Download
 
 Jars can be downloaded manually from the maven repository:
- - **Main library:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.6.4/
- - **[Command-line tool][cli]:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.6.4/
+ - **Main library:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.6.5/
+ - **[Command-line tool][cli]:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.6.5/
 
 
 ## Games using this library
