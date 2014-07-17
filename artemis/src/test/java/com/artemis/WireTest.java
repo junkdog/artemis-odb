@@ -97,7 +97,7 @@ public class WireTest {
 		assertEquals(ComponentY.class, mappedSystem.y.get(entity).getClass());
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test(expected=MundaneWireException.class)
 	public void ensure_inherited_systems_not_injected() {
 		World world = new World();
 		world.setSystem(new FailingSystem());
@@ -115,14 +115,14 @@ public class WireTest {
 		assertNull(failingSystem.x);
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test(expected=MundaneWireException.class)
 	public void fail_on_system_not_injected() {
 		World world = new World();
 		FailingNpeSystem failingSystem = world.setSystem(new FailingNpeSystem());
 		world.initialize();
 	}
 	
-	@Test(expected=NullPointerException.class)
+	@Test(expected=MundaneWireException.class)
 	public void fail_on_manager_not_injected() {
 		World world = new World();
 		FailingNpeManager failingManager = world.setManager(new FailingNpeManager());

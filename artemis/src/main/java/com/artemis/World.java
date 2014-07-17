@@ -664,7 +664,7 @@ public class World {
 					injectAnnotatedFields(target, clazz);
 				}
 			} catch (ReflectionException e) {
-				throw new RuntimeException("Error while wiring", e);
+				throw new MundaneWireException("Error while wiring", e);
 			}
 		}
 
@@ -688,6 +688,7 @@ public class World {
 
 		}
 
+		@SuppressWarnings("deprecation")
 		private void injectClass(Object target, Class<?> clazz) throws ReflectionException {
 			for (Field field : ClassReflection.getDeclaredFields(clazz)) {
 				if (field.hasAnnotation(Mapper.class) || field.hasAnnotation(Wire.class)) {
@@ -714,19 +715,19 @@ public class World {
 			if (ClassReflection.isAssignableFrom(ComponentMapper.class, fieldType)) {
 				ComponentMapper<?> mapper = world.getMapper(field.getElementType(0));
 				if (failOnNotInjected && mapper == null) {
-					throw new NullPointerException("ComponentMapper not found for " + fieldType);
+					throw new MundaneWireException("ComponentMapper not found for " + fieldType);
 				}
 				field.set(target, mapper);
 			} else if (ClassReflection.isAssignableFrom(EntitySystem.class, fieldType)) {
 				EntitySystem system = world.getSystem((Class<EntitySystem>)systems.get(fieldType));
 				if (failOnNotInjected && system == null) {
-					throw new NullPointerException("EntitySystem not found for " + fieldType);
+					throw new MundaneWireException("EntitySystem not found for " + fieldType);
 				}
 				field.set(target, system);
 			} else if (ClassReflection.isAssignableFrom(Manager.class, fieldType)) {
 				Manager manager = world.getManager((Class<Manager>)managers.get(fieldType));
 				if (failOnNotInjected && manager == null) {
-					throw new NullPointerException("Manager not found for " + fieldType);
+					throw new MundaneWireException("Manager not found for " + fieldType);
 				}
 				field.set(target, manager);
 			}
