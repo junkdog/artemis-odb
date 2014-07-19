@@ -93,6 +93,7 @@ public class World {
 	final SystemIndexManager systemIndex;
 	
 	private boolean registerUuids;
+	private ArtemisInjector injector;
 
 
 	/**
@@ -147,14 +148,21 @@ public class World {
 	 * added.
 	 */
 	public void initialize() {
-		ArtemisInitHelper initHelper = new ArtemisInitHelper(this);
+		injector = new ArtemisInjector(this);
 		for (int i = 0; i < managersBag.size(); i++) {
 			Manager manager = managersBag.get(i);
-			initHelper.configure(manager);
+			injector.inject(manager);
 			manager.initialize();
 		}
 
 		initializeSystems();
+	}
+	
+	public void inject(Object obj) {
+		if (injector == null)
+			throw new MundaneWireException("World#initialize() has not been called.");
+		
+		injector.inject(obj);
 	}
 
 	/**
@@ -515,10 +523,10 @@ public class World {
 	}
 
 	private void initializeSystems() {
-		ArtemisInitHelper initHelper = new ArtemisInitHelper(this);
+		ArtemisInjector initHelper = new ArtemisInjector(this);
 		for (int i = 0, s = systemsToInit.size(); i < s; i++) {
 			EntitySystem es = systemsToInit.get(i);
-			initHelper.configure(es);
+			initHelper.inject(es);
 			es.initialize();
 		}
 		systemsToInit.clear();
@@ -618,13 +626,13 @@ public class World {
 	 * Injects {@link ComponentMapper}, {@link EntitySystem} and {@link Manager} types into systems and
 	 * managers.
 	 */
-	private static final class ArtemisInitHelper {
+	private static final class ArtemisInjector {
 		private final World world;
 		
 		private Map<Class<?>, Class<?>> systems;
 		private Map<Class<?>, Class<?>> managers;
 		
-		ArtemisInitHelper(World world) {
+		ArtemisInjector(World world) {
 			this.world = world;
 			
 			systems = new IdentityHashMap<Class<?>, Class<?>>();
@@ -647,7 +655,7 @@ public class World {
 		}
 		
 
-		public void configure(Object target) throws RuntimeException {
+		public void inject(Object target) throws RuntimeException {
 			try {
 				Class<?> clazz = target.getClass();
 

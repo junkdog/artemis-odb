@@ -129,6 +129,30 @@ public class WireTest {
 		world.initialize();
 	}
 	
+	@Test
+	public void inject_pojo_object() {
+		World world = new World();
+		world.setManager(new TagManager());
+		world.setSystem(new MappedSystem());
+		world.setSystem(new MappedSystemAll());
+		world.initialize();
+		
+		PojoWireNoWorld obj = new PojoWireNoWorld();
+		world.inject(obj);
+		
+		assertNotNull(obj.componentXMapper);
+		assertNotNull(obj.tagManager);
+		assertNotNull(obj.mappedSystem);
+	}
+	
+	
+	@Wire
+	private static class PojoWireNoWorld {
+		private ComponentMapper<ComponentX> componentXMapper;
+		private TagManager tagManager;
+		private MappedSystem mappedSystem;
+	}
+	
 	@Wire
 	private static class MappedSystemAll extends EntityProcessingSystem {
 		private ComponentMapper<ComponentX> x;
