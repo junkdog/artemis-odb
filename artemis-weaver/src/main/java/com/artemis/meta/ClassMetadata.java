@@ -13,11 +13,17 @@ public final class ClassMetadata {
 	public WeaverType annotation = WeaverType.NONE;
 	
 	public boolean isPreviouslyProcessed;
-	
+		
 	// methods
 	public boolean foundReset;
 	public boolean foundEntityFor;
 
+	// profiler annotation
+	public boolean profilingEnabled;
+	public Type profilerClass;
+	public boolean beginFound;
+	public boolean endFound;
+	
 	public Type type;
 	public String superClass;
 

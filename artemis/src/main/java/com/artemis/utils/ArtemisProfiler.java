@@ -1,5 +1,7 @@
 package com.artemis.utils;
 
+import com.artemis.EntitySystem;
+import com.artemis.World;
 import com.artemis.annotations.Profile;
 
 
@@ -9,5 +11,5 @@ import com.artemis.annotations.Profile;
 public interface ArtemisProfiler {
 	void start();
 	void stop();
-	void setTag(Object tag);
+	void initialize(EntitySystem owner, World world);
 }
