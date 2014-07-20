@@ -145,6 +145,17 @@ public class WireTest {
 		assertNotNull(obj.mappedSystem);
 	}
 	
+	@Test(expected=MundaneWireException.class)
+	public void inject_pojo_object_fail_before_world_initialize() {
+		World world = new World();
+		world.setManager(new TagManager());
+		world.setSystem(new MappedSystem());
+		world.setSystem(new MappedSystemAll());
+		
+		PojoWireNoWorld obj = new PojoWireNoWorld();
+		world.inject(obj);
+	}
+	
 	
 	@Wire
 	private static class PojoWireNoWorld {

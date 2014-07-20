@@ -1,5 +1,10 @@
 # Change Log
 
+## Version: 0.6.6-SNAPSHOT
+- `World#inject(Object)` can inject normal java classes with artemis types.
+  - Requires that the injected object is annotated with `@Wire`
+
+
 ## Version: 0.6.5 - 2014-07-17
 - Better support for multiple concurrent worlds in regards to memory usage.
 - Smaller entity instances.
