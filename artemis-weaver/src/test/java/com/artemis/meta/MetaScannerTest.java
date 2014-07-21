@@ -1,6 +1,8 @@
 package com.artemis.meta;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
 
@@ -17,6 +19,8 @@ import com.artemis.component.PackedToBeB;
 import com.artemis.component.PooledComponentNotScanned;
 import com.artemis.component.PooledComponentWithReset;
 import com.artemis.meta.ClassMetadata.WeaverType;
+import com.artemis.system.BeginEndSystem;
+import com.artemis.system.NoBeginEndSystem;
 
 @SuppressWarnings("static-method")
 public class MetaScannerTest {
@@ -80,6 +84,17 @@ public class MetaScannerTest {
 		assertEquals(1 /* default constructor*/, scan1.methods.size());
 		
 		assertEquals(2 /* default constructor*/, scan2.methods.size());
+	}
+	
+	@Test
+	public void detect_begin_end() throws Exception {
+		ClassMetadata scan1 = scan(NoBeginEndSystem.class);
+		ClassMetadata scan2 = scan(BeginEndSystem.class);
+		
+		assertFalse(scan1.foundBegin);
+		assertFalse(scan1.foundEnd);
+		assertTrue(scan2.foundBegin);
+		assertTrue(scan2.foundEnd);
 	}
 	
 	static ClassMetadata scan(Class<?> klazz) throws Exception {

@@ -74,6 +74,10 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 			info.foundReset = true;
 		else if ("forEntity".equals(name) && desc.startsWith("(Lcom/artemis/Entity;)"))
 			info.foundEntityFor = true;
+		else if ("begin".equals(name) && desc.equals("()V"))
+			info.foundBegin = true;
+		else if ("end".equals(name) && desc.equals("()V"))
+			info.foundEnd = true;
 		else if ("<clinit>".equals(name) && "()V".equals(desc))
 			info.foundStaticInitializer = true;
 		

@@ -21,8 +21,8 @@ public final class ClassMetadata {
 	// profiler annotation
 	public boolean profilingEnabled;
 	public Type profilerClass;
-	public boolean beginFound;
-	public boolean endFound;
+	public boolean foundBegin;
+	public boolean foundEnd;
 	
 	public Type type;
 	public String superClass;
