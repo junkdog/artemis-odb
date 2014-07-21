@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.objectweb.asm.ClassReader;
@@ -25,9 +24,11 @@ import com.artemis.meta.FieldDescriptor;
 import com.artemis.meta.MetaScanner;
 import com.artemis.weaver.ComponentAccessTransmuter;
 import com.artemis.weaver.ComponentTypeTransmuter;
+import com.artemis.weaver.ProfilerTransmuter;
 
 public class Weaver {
 	public static final String PACKED_ANNOTATION = "Lcom/artemis/annotations/PackedWeaver;";
+	public static final String PROFILER_ANNOTATION = "Lcom/artemis/annotations/Profile;";
 	public static final String POOLED_ANNOTATION = "Lcom/artemis/annotations/PooledWeaver;";
 	public static final String WOVEN_ANNOTATION = "Lcom/artemis/annotations/internal/Transmuted";
 	
@@ -58,35 +59,50 @@ public class Weaver {
 
 	public List<ClassMetadata> execute() {
 		ExecutorService threadPool = newThreadPool();
+		
+		List<File> classes = ClassUtil.find(targetClasses);
+		List<ClassMetadata> processed = rewriteComponents(classes, threadPool);
+		rewriteFieldAccess(classes, packedFieldAccess(processed));
+		rewriteProfilers(classes);
+		
+		return processed;
+	}
+
+	private static void rewriteProfilers(List<File> classes) {
+		ExecutorService threadPool = newThreadPool();
+		for (File f : classes)
+			processProfilers(threadPool, f.getAbsolutePath());
+		
+		awaitTermination(threadPool);
+	}
+
+	private static List<ClassMetadata> rewriteComponents(List<File> classes, ExecutorService threadPool) {
 		List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
-		for (File f : ClassUtil.find(targetClasses))
+		for (File f : classes)
 			processClass(threadPool, f.getAbsolutePath(), processed);
 		
 		awaitTermination(threadPool);
-		rewriteFieldAccess(packedFieldAccess(processed));
-		
 		return processed;
+	}
+	
+	private static void rewriteFieldAccess(List<File> classes, List<ClassMetadata> packed) {
+		if (packed.isEmpty())
+			return;
+		
+		ExecutorService threadPool = newThreadPool();
+		for (File f : classes)
+			processRelatedClasses(threadPool, f.getAbsolutePath(), packed);
+		
+		awaitTermination(threadPool);
 	}
 	
 	public static void retainFieldsWhenPacking(boolean ideFriendlyPacking) {
 		ClassMetadata.GlobalConfiguration.ideFriendlyPacking = ideFriendlyPacking;
 	}
 	
-
+	
 	public static void enablePooledWeaving(boolean enablePooledWeaving) {
 		ClassMetadata.GlobalConfiguration.enabledPooledWeaving = enablePooledWeaving;
-	}
-	
-	private void rewriteFieldAccess(List<ClassMetadata> packed) {
-		if (packed.isEmpty())
-			return;
-		
-		ExecutorService threadPool = newThreadPool();
-		for (File f : ClassUtil.find(targetClasses))
-			processRelatedClasses(threadPool, f.getAbsolutePath(), packed);
-		
-		
-		awaitTermination(threadPool);
 	}
 
 	private static ExecutorService newThreadPool() {
@@ -110,9 +126,17 @@ public class Weaver {
 	}
 	
 	private static void processRelatedClasses(ExecutorService threadPool, String file, List<ClassMetadata> packed) {
-		
 		ClassReader cr = classReaderFor(file);
 		threadPool.submit(new ComponentAccessTransmuter(file, cr, packed));
+	}
+	
+
+	private static void processProfilers(ExecutorService threadPool, String file) {
+		ClassReader cr = classReaderFor(file);
+		ClassMetadata meta = scan(cr);
+		
+		if (meta.profilingEnabled)
+			threadPool.submit(new ProfilerTransmuter(file, meta, cr));
 	}
 	
 	static ClassReader classReaderFor(InputStream file) {

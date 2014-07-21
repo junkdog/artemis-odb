@@ -3,6 +3,7 @@ package com.artemis.meta;
 
 import static com.artemis.Weaver.PACKED_ANNOTATION;
 import static com.artemis.Weaver.POOLED_ANNOTATION;
+import static com.artemis.Weaver.PROFILER_ANNOTATION;
 import static com.artemis.Weaver.WOVEN_ANNOTATION;
 
 import org.objectweb.asm.AnnotationVisitor;
@@ -55,6 +56,8 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 		} else if (POOLED_ANNOTATION.equals(desc)) {
 			info.annotation = WeaverType.POOLED;
 			av = new AnnotationReader(av, info);
+		} else if (PROFILER_ANNOTATION.equals(desc)) {
+			return new ProfileAnnotationReader(desc, info);
 		} else if (WOVEN_ANNOTATION.equals(desc)) {
 			info.isPreviouslyProcessed = true;
 		}
@@ -74,10 +77,12 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 			info.foundReset = true;
 		else if ("forEntity".equals(name) && desc.startsWith("(Lcom/artemis/Entity;)"))
 			info.foundEntityFor = true;
-		else if ("begin".equals(name) && desc.equals("()V"))
+		else if ("begin".equals(name) && "()V".equals(desc))
 			info.foundBegin = true;
 		else if ("end".equals(name) && desc.equals("()V"))
 			info.foundEnd = true;
+		else if ("initialize".equals(name) && "()V".equals(desc))
+			info.foundInitialize = true;
 		else if ("<clinit>".equals(name) && "()V".equals(desc))
 			info.foundStaticInitializer = true;
 		

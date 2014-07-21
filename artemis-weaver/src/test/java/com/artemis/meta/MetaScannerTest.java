@@ -10,8 +10,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 import com.artemis.Entity;
+import com.artemis.NullProfiler;
 import com.artemis.World;
 import com.artemis.component.ComponentToWeave;
 import com.artemis.component.PackedToBeA;
@@ -91,8 +93,14 @@ public class MetaScannerTest {
 		ClassMetadata scan1 = scan(NoBeginEndSystem.class);
 		ClassMetadata scan2 = scan(BeginEndSystem.class);
 		
+		assertEquals(Type.getType(NullProfiler.class), scan1.profilerClass);
+		assertTrue(scan1.profilingEnabled);
+		assertTrue(scan1.foundInitialize);
 		assertFalse(scan1.foundBegin);
 		assertFalse(scan1.foundEnd);
+		assertEquals(Type.getType(NullProfiler.class), scan2.profilerClass);
+		assertFalse(scan2.profilingEnabled);
+		assertFalse(scan2.foundInitialize);
 		assertTrue(scan2.foundBegin);
 		assertTrue(scan2.foundEnd);
 	}

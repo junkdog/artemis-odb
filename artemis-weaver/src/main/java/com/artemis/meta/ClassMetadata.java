@@ -23,6 +23,7 @@ public final class ClassMetadata {
 	public Type profilerClass;
 	public boolean foundBegin;
 	public boolean foundEnd;
+	public boolean foundInitialize;
 	
 	public Type type;
 	public String superClass;
@@ -41,6 +42,7 @@ public final class ClassMetadata {
 	public static enum WeaverType { NONE, POOLED, PACKED };
 	
 	public Future<?> weaverTask;
+
 	
 	public static class GlobalConfiguration {
 		public static boolean ideFriendlyPacking;

@@ -1,4 +1,4 @@
-package com.artemis.matrix.system;
+package com.artemis.system;
 
 
 import com.artemis.annotations.Profile;

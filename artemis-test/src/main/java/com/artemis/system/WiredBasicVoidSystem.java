@@ -1,4 +1,4 @@
-package com.artemis.matrix.system;
+package com.artemis.system;
 
 import com.artemis.ComponentMapper;
 import com.artemis.annotations.Wire;
