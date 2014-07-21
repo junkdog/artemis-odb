@@ -1,6 +1,7 @@
 # Change Log
 
 ## Version: 0.6.6-SNAPSHOT
+- `@Profile` entity systems with custom classes.
 - `World#inject(Object)` can inject normal java classes with artemis types.
   - Requires that the injected object is annotated with `@Wire`
 
