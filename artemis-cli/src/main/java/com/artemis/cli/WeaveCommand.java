@@ -17,7 +17,7 @@ import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
 
 @Parameters(
-		commandDescription="Weave packed and pooled components")
+		commandDescription="Weave component types and inject profiler code into entity systems")
 public class WeaveCommand {
 	static final String COMMAND = "weave";
 	
