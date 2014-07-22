@@ -33,6 +33,7 @@ public class ProfilerTransmuter extends CallableTransmuter implements Opcodes {
 		injectProfilerStubs(meta);
 		
 		ClassVisitor cv = new ProfileVisitor(cw, meta);
+		cv = new ProfileAnnotationRemoverWeaver(cv);
 		cr.accept(cv, ClassReader.EXPAND_FRAMES);
 		
 		ClassUtil.writeClass(cw, file);
