@@ -79,16 +79,9 @@
 		<module>artemis-matrix</module>
 		<module>artemis-cli</module>
 		<module>artemis-gwt</module>
-    	<module>artemis-benchmark</module>
   </modules>
 	
 	<profiles>
-		<profile>
-			<id>benchmark</id>
-			<modules>
-				<module>artemis-benchmark</module>
-			</modules>
-		</profile>
 		<profile>
 			<id>release</id>
 			<build>
