@@ -89,8 +89,8 @@ Jars can be downloaded manually from the maven repository:
 
 
 # Benchmarks
-See [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) benchmarkks comparing
-artemis-odb to other ESF:s and earlier artemis-odb versions.
+See [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) for benchmarks
+comparing artemis-odb to other ESF:s and earlier artemis-odb versions.
 
 ## Games using this library
 ### Open source
