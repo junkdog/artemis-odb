@@ -30,7 +30,6 @@ _For more detailed changes, see [CHANGELOG.md](https://github.com/junkdog/artemi
 #### Other
  - **artemis-weaver:** Transforms `com.artemis.Component` classes when annotated with `@PooledWeaver` or `@PackedWeaver`, see _artemis-maven_.
  - **artemis-test:** Compliance tests.
- - **artemis-benchmark:** Simple benchmark, take with a grain of salt.
 
 
 ## Maven
