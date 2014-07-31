@@ -84,7 +84,7 @@ public class MultiWorldTest
 			extends VoidEntitySystem {
 
 		@Override
-		protected void processSystem(Event e) {
+		protected void processSystem() {
 		}
 
 	}
