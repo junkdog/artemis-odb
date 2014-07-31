@@ -31,7 +31,7 @@ public class ComponentType {
 	 * 
 	 *  @@see {@link ComponentType#getTypeFor(Class)}
 	 */
-	ComponentType(Class<? extends Component> type, int index) {
+	public ComponentType(Class<? extends Component> type, int index) {
 		
 		this.index = index;
 		this.type = type;
