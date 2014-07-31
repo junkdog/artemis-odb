@@ -4,7 +4,7 @@ This is a [fork](https://code.google.com/p/artemis-framework/) of [Artemis Entit
 
 ## Discussion/Forum
 
-There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - in addition to the issues, where hitherto much of the discussion has taken place. The original artemis forum is still around too, though it doesn't see much traffic, nor is it specific to artemis-odb: http://slick.javaunlimited.net/viewforum.php?f=28
+There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - in addition to the issues, where hitherto much of the discussion has taken place. The original artemis forum is still around too, though it doesn't see much traffic, nor is it specific to artemis-odb: http://slick.ninjacave.com/forum/viewforum.php?f=28
 
 ## What's changed
 
