@@ -13,9 +13,13 @@ import com.artemis.World;
 
 /**
  * Reflexively injects {@link ComponentMapper}, {@link EntitySystem} and {@link Manager} fields upon
- * calling {@link World#setSystem(com.artemis.EntitySystem)} or {@link World#setManager(com.artemis.Manager)}.
+ * calling {@link World#setSystem(com.artemis.EntitySystem)} or
+ * {@link World#setManager(com.artemis.Manager)}.
+ * 
  * <p>
- *
+ * 
+ * This annotation also makes it possible to inject normal java classes by calling
+ * {@link World#inject(Object)}
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
