@@ -21,6 +21,7 @@ public class MultiWorldTest
 	public void uniqie_component_ids_per_world()
 	{
 		World innerWorld = new World();
+		innerWorld.setSystem(new EmptySystem());
 		innerWorld.initialize();
 		
 		world = new World();
@@ -29,7 +30,6 @@ public class MultiWorldTest
 		
 		world.createEntity().createComponent(ComponentX.class);
 		innerWorld.createEntity().createComponent(ComponentY.class);
-		createEntity(innerWorld);
 		
 		world.process();
 		
@@ -79,8 +79,18 @@ public class MultiWorldTest
 		e.createComponent(ComponentX.class);
 		e.createComponent(ComponentY.class);
 	}
-	
-	public static class InnerWorldProcessingSystem extends VoidEntitySystem {
+
+	public static class EmptySystem
+			extends VoidEntitySystem {
+
+		@Override
+		protected void processSystem(Event e) {
+		}
+
+	}
+
+	public static class InnerWorldProcessingSystem
+			extends VoidEntitySystem {
 
 		private final World inner;
 
