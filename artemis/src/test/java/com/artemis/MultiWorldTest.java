@@ -6,7 +6,6 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import com.artemis.component.ComponentX;
@@ -21,6 +20,7 @@ public class MultiWorldTest
 	public void uniqie_component_ids_per_world()
 	{
 		World innerWorld = new World();
+		innerWorld.setSystem(new EmptySystem());
 		innerWorld.initialize();
 		
 		world = new World();
@@ -29,15 +29,20 @@ public class MultiWorldTest
 		
 		world.createEntity().createComponent(ComponentX.class);
 		innerWorld.createEntity().createComponent(ComponentY.class);
-		createEntity(innerWorld);
+		innerWorld.createEntity().createComponent(ComponentX.class);
 		
 		world.process();
 		
-		int xIndexOuter = 
-				world.getComponentManager().typeFactory.getTypeFor(ComponentX.class).getIndex();
+		ComponentType xOuterType = world.getComponentManager().typeFactory.getTypeFor(ComponentX.class);
+		ComponentType xInnerType = innerWorld.getComponentManager().typeFactory.getTypeFor(ComponentX.class);
+		int xIndexOuter = xOuterType.getIndex();
+		int xIndexInner = xInnerType.getIndex();
 		int yIndexInner = 
 				innerWorld.getComponentManager().typeFactory.getTypeFor(ComponentY.class).getIndex();
 		
+		assertEquals(xOuterType, world.getComponentManager().typeFactory.getTypeFor(xOuterType.getIndex()));
+		assertEquals(xInnerType, innerWorld.getComponentManager().typeFactory.getTypeFor(xInnerType.getIndex()));
+		assertNotEquals(xIndexOuter, xIndexInner);
 		assertEquals(xIndexOuter, yIndexInner);
 	}
 	
@@ -79,8 +84,18 @@ public class MultiWorldTest
 		e.createComponent(ComponentX.class);
 		e.createComponent(ComponentY.class);
 	}
-	
-	public static class InnerWorldProcessingSystem extends VoidEntitySystem {
+
+	public static class EmptySystem
+			extends VoidEntitySystem {
+
+		@Override
+		protected void processSystem() {
+		}
+
+	}
+
+	public static class InnerWorldProcessingSystem
+			extends VoidEntitySystem {
 
 		private final World inner;
 
