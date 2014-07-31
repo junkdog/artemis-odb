@@ -22,6 +22,7 @@ public class EntitySystemTest {
 
 		Entity e = w.createEntity();
 		e.addComponent(new C());
+		e.disable();
 		e.changedInWorld();
 
 		w.process();

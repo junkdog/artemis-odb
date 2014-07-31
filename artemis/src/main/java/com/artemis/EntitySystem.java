@@ -195,7 +195,7 @@ public abstract class EntitySystem implements EntityObserver {
 		boolean interested = true; // possibly interested, let's try to prove it wrong.
 
 		// If the entity is inactive, then we aren't interested
-		if (!e.isActive()) {
+		if (!e.isActive() || !e.isEnabled()) {
 			interested = false;
 		}
 
