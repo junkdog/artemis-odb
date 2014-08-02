@@ -1,11 +1,5 @@
 package com.artemis;
 
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
 import com.artemis.annotations.Mapper;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.UuidEntityManager;
@@ -14,6 +8,8 @@ import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
+
+import java.util.*;
 
 
 /**
@@ -387,6 +383,15 @@ public class World {
 	public ImmutableBag<EntitySystem> getSystems() {
 		return systemsBag;
 	}
+
+    /**
+   	 * Gives you all the managers in this world for possible iteration.
+   	 *
+   	 * @return all managers in world
+   	 */
+   	public ImmutableBag<Manager> getManagers() {
+   		return managersBag;
+   	}
 
 	/**
 	 * Adds a system to this world that will be processed by
