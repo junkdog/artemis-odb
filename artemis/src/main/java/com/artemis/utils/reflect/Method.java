@@ -115,4 +115,8 @@ public final class Method {
 		}
 	}
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public boolean hasAnnotation(Class annotationClass) {
+    	return method.getAnnotation(annotationClass) != null;
+    }
 }

@@ -69,6 +69,7 @@ public class ReflectionCacheSourceCreator {
 		boolean isMethod;
 		String name;
 		boolean unused;
+        String annotationClasses;
 	}
 
 	public ReflectionCacheSourceCreator (TreeLogger logger, GeneratorContext context, JClassType type) {
@@ -589,10 +590,13 @@ public class ReflectionCacheSourceCreator {
 					stub.isAbstract = m.isMethod().isAbstract();
 					stub.isNative = m.isMethod().isAbstract();
 					stub.isFinal = m.isMethod().isFinal();
+
 				} else {
 					stub.isConstructor = true;
 					stub.returnType = stub.enclosingType;
 				}
+
+                stub.annotationClasses = getClassAnnotationsAsString(m);
 				stub.jnsi = "";
 				stub.methodId = nextId();
 				stub.name = m.getName();
@@ -615,13 +619,27 @@ public class ReflectionCacheSourceCreator {
 
 				pb(stub.isAbstract + ", " + stub.isFinal + ", " + stub.isStatic + ", " + m.isDefaultAccess() + ", " + m.isPrivate()
 					+ ", " + m.isProtected() + ", " + m.isPublic() + ", " + stub.isNative + ", " + m.isVarArgs() + ", "
-					+ stub.isMethod + ", " + stub.isConstructor + ", " + stub.methodId + "),");
+					+ stub.isMethod + ", " + stub.isConstructor + ", " + stub.methodId + ", " + stub.annotationClasses + "),");
 			}
 			pb("};");
 		}
 	}
 
-	private String getElementTypes (JField f) {
+    private String getClassAnnotationsAsString(JAbstractMethod m) {
+        Annotation[] annotations = m.getAnnotations();
+        StringBuilder annotationClasses = new StringBuilder("new String[]{");
+
+        for (int i = 0; i < annotations.length; i++) {
+                 annotationClasses.append("\"").append(annotations[i].annotationType().getName()).append("\"");
+                   if(i < annotations.length-1) {
+                       annotationClasses.append(",");
+                   }
+}
+        annotationClasses.append("}");
+        return annotationClasses.toString();
+    }
+
+    private String getElementTypes (JField f) {
 		StringBuilder b = new StringBuilder();
 		JParameterizedType params = f.getType().isParameterized();
 		if (params != null) {
