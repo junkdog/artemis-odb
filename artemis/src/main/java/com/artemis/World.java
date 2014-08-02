@@ -245,6 +245,13 @@ public class World {
 	public <T extends Manager> T getManager(Class<T> managerType) {
 		return (T) managers.get(managerType);
 	}
+	
+	/**
+	 * @return all managers in this world
+	 */
+	public ImmutableBag<Manager> getManagers() {
+		return managersBag;
+	}
 
 	/**
 	 * Deletes the manager from this world.
@@ -387,7 +394,7 @@ public class World {
 	public ImmutableBag<EntitySystem> getSystems() {
 		return systemsBag;
 	}
-
+	
 	/**
 	 * Adds a system to this world that will be processed by
 	 * {@link #process()}.
