@@ -11,6 +11,7 @@ import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
 
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadataUtil;
@@ -52,7 +53,8 @@ public class FieldToStructMethodTransformer extends MethodTransformer implements
 						if (LOG) System.out.println(">> SETTING FIELD index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(2,
-								new FieldInsnNode(GETSTATIC, owner, "$data", BYTEBUFFER_DESC))
+								new VarInsnNode(ALOAD, 0),
+								new FieldInsnNode(GETFIELD, owner, "$data", BYTEBUFFER_DESC))
 							.insertAtOffset(1,
 								new FieldInsnNode(GETFIELD, owner, "$stride", "I"),
 								fieldOffsetInstruction(f.name),
@@ -74,7 +76,8 @@ public class FieldToStructMethodTransformer extends MethodTransformer implements
 						if (LOG) System.out.println(">> SETTING FIELD FROM OBJECT index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(3,
-								new FieldInsnNode(GETSTATIC, owner, "$data", BYTEBUFFER_DESC))
+								new VarInsnNode(ALOAD, 0),
+								new FieldInsnNode(GETFIELD, owner, "$data", BYTEBUFFER_DESC))
 							.insertAtOffset(2,
 								new FieldInsnNode(GETFIELD, owner, "$stride", "I"),
 								fieldOffsetInstruction(f.name),
@@ -88,7 +91,8 @@ public class FieldToStructMethodTransformer extends MethodTransformer implements
 						if (LOG) System.out.println(">> SETTING-MODIFYING FIELD FROM OBJECT index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(6,
-								new FieldInsnNode(GETSTATIC, owner, "$data", BYTEBUFFER_DESC))
+								new VarInsnNode(ALOAD, 0),
+								new FieldInsnNode(GETFIELD, owner, "$data", BYTEBUFFER_DESC))
 							.insertAtOffset(5,
 								new FieldInsnNode(GETFIELD, owner, "$stride", "I"),
 								fieldOffsetInstruction(f.name),
@@ -106,7 +110,8 @@ public class FieldToStructMethodTransformer extends MethodTransformer implements
 						if (LOG) System.out.println("<< LOAD FIELD index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(2, 
-								new FieldInsnNode(GETSTATIC, owner, "$data", BYTEBUFFER_DESC))
+								new VarInsnNode(ALOAD, 0),
+								new FieldInsnNode(GETFIELD, owner, "$data", BYTEBUFFER_DESC))
 							.insertAtOffset(0,
 								new FieldInsnNode(GETFIELD, owner, "$stride", "I"),
 								fieldOffsetInstruction(f.name),
@@ -121,7 +126,8 @@ public class FieldToStructMethodTransformer extends MethodTransformer implements
 						if (LOG) System.out.println("<< GETTING FIELD index=" + i);
 						i = on(instructions, f)
 							.insertAtOffset(1, 
-								new FieldInsnNode(GETSTATIC, owner, "$data", BYTEBUFFER_DESC))
+								new VarInsnNode(ALOAD, 0),
+								new FieldInsnNode(GETFIELD, owner, "$data", BYTEBUFFER_DESC))
 							.insertAtOffset(0,
 								new FieldInsnNode(GETFIELD, owner, "$stride", "I"),
 								fieldOffsetInstruction(f.name),

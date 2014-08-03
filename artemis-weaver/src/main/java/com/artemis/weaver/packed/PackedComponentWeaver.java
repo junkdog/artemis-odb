@@ -24,8 +24,6 @@ public class PackedComponentWeaver extends ClassVisitor implements Opcodes{
 		MethodVisitor method = cv.visitMethod(access, name, desc, signature, exceptions);
 		if ("<init>".equals(name))
 			method = new ConstructorInvocationVisitor(method, meta);
-		if ("<clinit>".equals(name) && instanceFields(meta).size() > 0)
-			method = new StaticInitializerVisitor(method, meta);
 		
 		return method;
 	}
