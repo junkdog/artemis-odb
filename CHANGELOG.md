@@ -5,6 +5,7 @@
 - [@Profile](https://github.com/junkdog/artemis-odb/wiki/@Profile) entity systems with custom classes.
 - `World#inject(Object)` can inject normal java classes with artemis types.
   - Requires that the injected object is annotated with `@Wire`
+- Added `World#getManagers` method.
 - **Fix**: Disabled entities are no longer added to systems.
 
 
