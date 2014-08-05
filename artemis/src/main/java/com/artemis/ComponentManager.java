@@ -128,6 +128,19 @@ public class ComponentManager extends Manager {
 		}
 		componentBits.clear();
 	}
+	
+	@Override
+	protected void dispose() {
+		for (int i = 0, s = packedComponents.size(); s > i; i++) {
+			BitSet component = packedComponentOwners.get(i);
+			if (component == null)
+				continue;
+			
+			if (component instanceof PackedComponent.DisposedWithWorld) {
+				((PackedComponent.DisposedWithWorld)component).free(world);
+			}
+		}
+	}
 
 	/**
 	 * Adds the component of the given type to the entity.

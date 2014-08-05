@@ -6,11 +6,12 @@ import java.util.Map;
 
 import com.artemis.Entity;
 import com.artemis.PackedComponent;
+import com.artemis.PackedComponent.DisposedWithWorld;
 import com.artemis.World;
 import com.artemis.util.Vec2f;
 import com.artemis.utils.Bag;
 
-public class TransPackedFloatReference2 extends PackedComponent {
+public class TransPackedFloatReference2 extends PackedComponent implements DisposedWithWorld{
 
 	private int $stride;
 	private static final int $_SIZE_OF = 8;
@@ -54,6 +55,11 @@ public class TransPackedFloatReference2 extends PackedComponent {
 		
 		for (TransPackedFloatReference2 ref : $store.get($world))
 			ref.$data = newBuffer;
+	}
+	
+	@Override
+	public void free(World world) {
+		$store.remove(world);
 	}
 	
 	public float x() {

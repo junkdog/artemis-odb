@@ -36,7 +36,6 @@ public class PackedStubs implements Opcodes {
 		if (!meta.foundStaticInitializer)
 			injectStaticInitializer();
 		
-		
 		if (!meta.foundEntityFor)
 			injectForEntity();
 		
@@ -62,6 +61,7 @@ public class PackedStubs implements Opcodes {
 			cw.visitField(ACC_PRIVATE, "$world", "Lcom/artemis/World;", null, null).visitEnd();
 			cw.visitField(ACC_PRIVATE, "$data", "Ljava/nio/ByteBuffer;", null, null).visitEnd();
 			injectGrow(meta.type.getInternalName());
+			injectDispose(meta.type.getInternalName());
 			
 			FieldToStructTransformer transformer = new FieldToStructTransformer(meta);
 			ClassNode cn = transformer.transform(cr);
@@ -74,9 +74,29 @@ public class PackedStubs implements Opcodes {
 	}
 
 	private String mapSignature() {
-		// sought Lcom/artemis/component/TransPackedFloatReference;
 		return "Ljava/util/Map<Lcom/artemis/World;Lcom/artemis/utils/Bag<"
 				+ meta.type.getDescriptor() + ">;>;";
+	}
+	
+	private void injectDispose(String owner) {
+		MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "free", "(Lcom/artemis/World;)V", null, null);
+		mv.visitCode();
+		Label l0 = new Label();
+		mv.visitLabel(l0);
+		mv.visitLineNumber(62, l0);
+		mv.visitFieldInsn(GETSTATIC, owner, "$store", "Ljava/util/Map;");
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Map", "remove", "(Ljava/lang/Object;)Ljava/lang/Object;");
+		mv.visitInsn(POP);
+		Label l1 = new Label();
+		mv.visitLabel(l1);
+		mv.visitLineNumber(63, l1);
+		mv.visitInsn(RETURN);
+		Label l2 = new Label();
+		mv.visitLabel(l2);
+		mv.visitLocalVariable("this", meta.type.toString(), null, l0, l2, 0);
+		mv.visitLocalVariable("world", "Lcom/artemis/World;", null, l0, l2, 1);
+		mv.visitEnd();
 	}
 
 	private void injectGrow(String owner) {

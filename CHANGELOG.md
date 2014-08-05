@@ -3,6 +3,9 @@
 ## Version: 0.6.6-SNAPSHOT
 - Removed `artemis-benchmark`, refer to [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) instead.
 - [@Profile](https://github.com/junkdog/artemis-odb/wiki/@Profile) entity systems with custom classes.
+- New interface `PackedComponent.DisposedWithWorld` for freeing packed components' resources when
+  disposing the world.
+  - Automatically added to all `@PackedWeaver` components.
 - `World#inject(Object)` can inject normal java classes with artemis types.
   - Requires that the injected object is annotated with `@Wire`
 - Added `World#getManagers` method.

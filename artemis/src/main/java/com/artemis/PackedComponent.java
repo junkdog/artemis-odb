@@ -14,6 +14,9 @@ public abstract class PackedComponent extends Component {
 	protected abstract PackedComponent forEntity(Entity e);
 	protected abstract void reset();
 	
+	/**
+	 * Marks packed component for freeing of resources upon {@link World#dispose()}. Called once.
+	 */
 	public static interface DisposedWithWorld {
 		void free(World world);
 	}
