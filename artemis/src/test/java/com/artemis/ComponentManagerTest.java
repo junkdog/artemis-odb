@@ -1,6 +1,7 @@
 package com.artemis;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -57,6 +58,18 @@ public class ComponentManagerTest {
 		assertEquals(0xffff, typeFactory.getIndexFor(Packed.class));
 	}
 	
+	@Test
+	public void instantiate_packed_empty_constructor() {
+		Entity e = world.createEntity();
+		assertNotNull(e.createComponent(Packed.class));
+	}
+	
+	@Test
+	public void instantiate_packed_world_constructor() {
+		Entity e = world.createEntity();
+		assertNotNull(e.createComponent(PackedWorld.class));
+	}
+	
 	private static Field field(String f) throws NoSuchFieldException {
 		Field field = ComponentTypeFactory.class.getDeclaredField(f);
 		field.setAccessible(true);
@@ -65,7 +78,24 @@ public class ComponentManagerTest {
 	
 	public static class Packed extends PackedComponent {
 		public int entityId;
+		
+		@Override
+		protected PackedComponent forEntity(Entity e) {
+			entityId = e.getId();
+			return this;
+		}
+		
+		@Override
+		protected void reset() {}
+	}
+	
+	public static class PackedWorld extends PackedComponent {
+		public int entityId;
 
+		public PackedWorld(World world) {
+			assertNotNull(world);
+		}
+		
 		@Override
 		protected PackedComponent forEntity(Entity e) {
 			entityId = e.getId();

@@ -4,6 +4,7 @@ import java.util.BitSet;
 
 import com.artemis.utils.Bag;
 import com.artemis.utils.reflect.ClassReflection;
+import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
 
 
@@ -54,11 +55,12 @@ public class ComponentManager extends Manager {
 		switch (type.getTaxonomy())
 		{
 			case BASIC:
-				return newInstance(componentClass);
+				return newInstance(componentClass, false);
 			case PACKED:
 				PackedComponent packedComponent = packedComponents.safeGet(type.getIndex());
 				if (packedComponent == null) {
-					packedComponent = (PackedComponent)newInstance(componentClass);
+					packedComponent = (PackedComponent)newInstance(
+							componentClass, type.packedHasWorldConstructor);
 					packedComponents.set(type.getIndex(), packedComponent);
 				}
 				getPackedComponentOwners(type).set(owner.getId());
@@ -85,9 +87,15 @@ public class ComponentManager extends Manager {
 		return owners;
 	}
 
-	private  static <T extends Component> T newInstance(Class<T> componentClass) {
+	@SuppressWarnings("unchecked")
+	<T extends Component> T newInstance(Class<T> componentClass, boolean constructorHasWorldParameter) {
 		try {
-			return ClassReflection.newInstance(componentClass);
+			if (constructorHasWorldParameter) {
+				Constructor constructor = ClassReflection.getConstructor(componentClass, World.class);
+				return (T) constructor.newInstance(world);
+			} else {
+				return ClassReflection.newInstance(componentClass);
+			}
 		} catch (ReflectionException e) {
 			throw new InvalidComponentException(componentClass, "Unable to instantiate component.", e);
 		}

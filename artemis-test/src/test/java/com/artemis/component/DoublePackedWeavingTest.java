@@ -52,13 +52,13 @@ public class DoublePackedWeavingTest extends PackedWeavingTest {
 		Field data = field("$data");
 		int size = field("$_SIZE_OF").getInt(null);
 		
-		assertEquals(PRIVATE | STATIC, data.getModifiers());
+		assertEquals(PRIVATE, data.getModifiers());
 		assertEquals(fieldType(), data.getType());
-		assertEquals(128 * size, ((ByteBuffer)data.get(null)).capacity());
+		assertEquals(128 * size, ((ByteBuffer)data.get(packed)).capacity());
 		
 		Method grow = method("$grow");
 		grow.invoke(packed);
-		assertEquals(256 * size, ((ByteBuffer)data.get(null)).capacity());
+		assertEquals(256 * size, ((ByteBuffer)data.get(packed)).capacity());
 	}
 	
 	@Test 

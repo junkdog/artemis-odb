@@ -48,13 +48,13 @@ public class StructTestBase extends PackedWeavingTest {
 		int size = field("$_SIZE_OF").getInt(null);
 		assertEquals(15, size);
 		
-		assertEquals(PRIVATE | STATIC, data.getModifiers());
+		assertEquals(PRIVATE, data.getModifiers());
 		assertEquals(fieldType(), data.getType());
-		assertEquals(128 * size, ((ByteBuffer)data.get(null)).capacity());
+		assertEquals(128 * size, ((ByteBuffer)data.get(packed)).capacity());
 		
 		Method grow = method("$grow");
 		grow.invoke(packed);
-		assertEquals(256 * size, ((ByteBuffer)data.get(null)).capacity());
+		assertEquals(256 * size, ((ByteBuffer)data.get(packed)).capacity());
 	}
 
 	@Test
@@ -80,7 +80,7 @@ public class StructTestBase extends PackedWeavingTest {
 		mapper.get(e1).flag = false;
 		mapper.get(e2).flag = true;
 		
-		ByteBuffer data = (ByteBuffer)field("$data").get(null);
+		ByteBuffer data = (ByteBuffer)field("$data").get(packed);
 		
 		assertEquals(4, mapper.get(e1).x, 0.001);
 		assertEquals(3, mapper.get(e1).y, 0.001);

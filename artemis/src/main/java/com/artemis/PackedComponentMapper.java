@@ -3,6 +3,7 @@ package com.artemis;
 import java.util.BitSet;
 
 import com.artemis.utils.reflect.ClassReflection;
+import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
 
 /**
@@ -21,27 +22,35 @@ import com.artemis.utils.reflect.ReflectionException;
 class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A> {
 
 	/** The class of components this mapper handles. */
-	private final Class<A> classType;
+	private final Class<A> componentType;
 	
 	/** Holds all components of given type in the world. */
 	private final PackedComponent component;
 	private final BitSet owners;
+	
+	private boolean newInstanceWithWorld = false;
+
+	private World world;
 
 	/**
 	 * Creates a new {@code ComponentMapper} instance handling the given type
 	 * of component for the given world.
 	 *
-	 * @param type
+	 * @param componentType
 	 *			the class type of components to handle
 	 * @param world
 	 *			the world to handle components for
 	 */
-	private PackedComponentMapper(Class<A> type, World world) {
+	private PackedComponentMapper(Class<A> componentType, World world) {
+		this.world = world;
 		ComponentManager cm = world.getComponentManager();
-		owners = cm.getPackedComponentOwners(cm.typeFactory.getTypeFor(type));
+		ComponentType type = cm.typeFactory.getTypeFor(componentType);
+		newInstanceWithWorld = type.packedHasWorldConstructor;
+		owners = cm.getPackedComponentOwners(type);
 		
-		this.classType = type;
-		component = newInstance(type);
+		this.componentType = componentType;
+		
+		component = newInstance();
 	}
 	
 	static PackedComponentMapper<PackedComponent> create(Class<PackedComponent> type, World world) {
@@ -68,7 +77,7 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 	@Override
 	public A get(Entity e, boolean forceNewInstance) throws ArrayIndexOutOfBoundsException {
 		if (forceNewInstance) {
-			A c = newInstance(classType);
+			A c = newInstance();
 			c.forEntity(e);
 			return c;
 		} else {
@@ -85,11 +94,7 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 		}
 	}
 
-	private A newInstance(Class<A> type) {
-		try {
-			return (A) ClassReflection.newInstance(classType);
-		} catch (ReflectionException e) {
-			throw new InvalidComponentException(type, "Unable to instantiate component.", e);
-		}
+	private A newInstance() {
+		return world.getComponentManager().newInstance(componentType, newInstanceWithWorld);
 	}
 }

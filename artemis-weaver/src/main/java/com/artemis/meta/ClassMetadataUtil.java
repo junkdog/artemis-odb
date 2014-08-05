@@ -23,7 +23,7 @@ public final class ClassMetadataUtil {
 	public static List<FieldDescriptor> instanceFields(ClassMetadata meta) {
 		List<FieldDescriptor> instanceFields = new ArrayList<FieldDescriptor>();
 		for (FieldDescriptor field : meta.fields) {
-			if ("$data".equals(field.getName()))
+			if ("$data".equals(field.getName()) || "$world".equals(field.getName()))
 					continue;
 			
 			if ((field.getAccess() & (ACC_FINAL | ACC_STATIC)) == 0) 

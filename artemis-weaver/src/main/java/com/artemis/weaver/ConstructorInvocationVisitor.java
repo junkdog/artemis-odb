@@ -1,8 +1,5 @@
 package com.artemis.weaver;
 
-import static com.artemis.meta.ClassMetadata.WeaverType.PACKED;
-
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
@@ -19,20 +16,13 @@ public class ConstructorInvocationVisitor extends MethodVisitor implements Opcod
 
 	@Override
 	public void visitMethodInsn(int opcode, String owner, String name, String desc) {
-		if (PACKED == meta.annotation) {
-			mv.visitMethodInsn(opcode, owner(owner), name, desc);
-			Label l1 = new Label();
-			mv.visitLabel(l1);
-			mv.visitVarInsn(ALOAD, 0);
-			mv.visitIntInsn(SIPUSH, 1024); // 8 * 128
-			mv.visitMethodInsn(INVOKESTATIC, "java/nio/ByteBuffer", "allocateDirect", "(I)Ljava/nio/ByteBuffer;");
-			mv.visitFieldInsn(PUTFIELD, owner, "$data", "Ljava/nio/ByteBuffer;");
-		} else {
+		if (INVOKESPECIAL == opcode && "<init>".equals(name))
+			mv.visitMethodInsn(opcode, owner(meta, owner), name, desc);
+		else
 			mv.visitMethodInsn(opcode, owner, name, desc);
-		}
 	}
 
-	private String owner(String owner) {
+	private static String owner(ClassMetadata meta, String owner) {
 		if (owner.equals(meta.type.getInternalName()))
 			return owner;
 		
@@ -42,7 +32,7 @@ public class ConstructorInvocationVisitor extends MethodVisitor implements Opcod
 			case POOLED:
 				return "com/artemis/PooledComponent";
 			default:
-				throw new RuntimeException("Failed transforming super class from '" + owner + "'");
+				return "FailedTransformingSuperConstructorInvocation";
 		}
 	}
 }

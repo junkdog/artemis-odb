@@ -1,6 +1,7 @@
 package com.artemis;
 
 import com.artemis.utils.reflect.ClassReflection;
+import com.artemis.utils.reflect.Constructor;
 
 
 /**
@@ -23,6 +24,8 @@ public class ComponentType {
 	/** True if component type is a {@link PackedComponent} */
 	private final Taxonomy taxonomy;
 	
+	boolean packedHasWorldConstructor = false;
+	
 	private final int index;
 
 	/**
@@ -37,11 +40,24 @@ public class ComponentType {
 		this.type = type;
 		if (ClassReflection.isAssignableFrom(PackedComponent.class, type)) {
 			taxonomy = Taxonomy.PACKED;
+			packedHasWorldConstructor = hasWorldConstructor(type);
 		} else if (ClassReflection.isAssignableFrom(PooledComponent.class, type)) {
 			taxonomy = Taxonomy.POOLED;
 		} else {
 			taxonomy = Taxonomy.BASIC;
 		}
+	}
+
+	private static boolean hasWorldConstructor(Class<? extends Component> type) {
+		Constructor[] constructors = ClassReflection.getConstructors(type);
+		for (int i = 0; constructors.length > i; i++) {
+			@SuppressWarnings("rawtypes")
+			Class[] types = constructors[i].getParameterTypes();
+			if (types.length == 1 && types[0] == World.class)
+				return true;
+		}
+		
+		return false;
 	}
 
 	/**

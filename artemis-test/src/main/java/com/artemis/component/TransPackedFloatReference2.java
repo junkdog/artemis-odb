@@ -1,17 +1,37 @@
 package com.artemis.component;
 
 import java.nio.ByteBuffer;
+import java.util.IdentityHashMap;
+import java.util.Map;
 
 import com.artemis.Entity;
 import com.artemis.PackedComponent;
+import com.artemis.World;
 import com.artemis.util.Vec2f;
+import com.artemis.utils.Bag;
 
-public class TransPackedFloatReference extends PackedComponent {
+public class TransPackedFloatReference2 extends PackedComponent {
 
 	private int $stride;
-	private static int $_SIZE_OF = 8;
-	private static ByteBuffer $data = ByteBuffer.allocateDirect(128 * $_SIZE_OF);
+	private static final int $_SIZE_OF = 8;
+	private static Map<World, Bag<TransPackedFloatReference2>> $store = new IdentityHashMap<World, Bag<TransPackedFloatReference2>>();
+	private ByteBuffer $data = null;
+	private World $world;
 	
+	public TransPackedFloatReference2(World world) {
+		this.$world = world;
+		Bag<TransPackedFloatReference2> instances = $store.get(world);
+		if (instances != null) {
+			$data = instances.get(0).$data;
+		} else {
+			$data = ByteBuffer.allocateDirect(128 * $_SIZE_OF);
+			
+			instances = new Bag<TransPackedFloatReference2>();
+			$store.put(world, instances);
+		}
+		
+		instances.add(this);
+	}
 
 	@Override
 	protected PackedComponent forEntity(Entity e) {
@@ -26,14 +46,14 @@ public class TransPackedFloatReference extends PackedComponent {
 		$data.putFloat($stride + 4, 0);
 	}
 	
-	private static void $grow()
+	private void $grow()
 	{
 		ByteBuffer newBuffer = ByteBuffer.allocateDirect($data.capacity() * 2);
-		
 		for (int i = 0, s = $data.capacity(); s > i; i++)
 			newBuffer.put(i, $data.get(i));
 		
-		$data = newBuffer;
+		for (TransPackedFloatReference2 ref : $store.get($world))
+			ref.$data = newBuffer;
 	}
 	
 	public float x() {
@@ -44,7 +64,7 @@ public class TransPackedFloatReference extends PackedComponent {
 		return $data.getFloat($stride + 4);
 	}
 	
-	public TransPackedFloatReference x(float value) {
+	public TransPackedFloatReference2 x(float value) {
 		$data.putFloat($stride + 0, value);
 		return this;
 	}

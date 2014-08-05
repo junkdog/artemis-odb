@@ -11,7 +11,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 
-import com.artemis.ClassUtil;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.meta.FieldDescriptor;
@@ -34,16 +33,22 @@ public class PackedStubs implements Opcodes {
 	}
 	
 	private byte[] injectPackedComponentStubs() {
-//		if (!meta.foundStaticInitializer)
-//			injectStaticInitializer();
+		if (!meta.foundStaticInitializer)
+			injectStaticInitializer();
+		
 		
 		if (!meta.foundEntityFor)
 			injectForEntity();
 		
 		List<FieldDescriptor> dataFields = instanceFields(meta);
+		if (dataFields.size() > 0)
+			injectConstructor();
+		
 		cw.visitField(ACC_PRIVATE | ACC_FINAL | ACC_STATIC, "$_SIZE_OF", "I", null,
 			Integer.valueOf(ClassMetadataUtil.sizeOf(meta))).visitEnd();;
 		cw.visitField(ACC_PRIVATE, "$stride", "I", null, Integer.valueOf(0)).visitEnd();
+		cw.visitField(ACC_PRIVATE + ACC_STATIC, "$store", "Ljava/util/Map;",
+				mapSignature(), null).visitEnd();;
 		
 		// Reason for recreating teh ClassReader/Writer combo:
 		// To make life simpler, the reset method acts on the original fields, 
@@ -54,6 +59,7 @@ public class PackedStubs implements Opcodes {
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		
 		if (dataFields.size() > 0) {
+			cw.visitField(ACC_PRIVATE, "$world", "Lcom/artemis/World;", null, null).visitEnd();
 			cw.visitField(ACC_PRIVATE, "$data", "Ljava/nio/ByteBuffer;", null, null).visitEnd();
 			injectGrow(meta.type.getInternalName());
 			
@@ -67,8 +73,13 @@ public class PackedStubs implements Opcodes {
 		return cw.toByteArray();
 	}
 
+	private String mapSignature() {
+		// sought Lcom/artemis/component/TransPackedFloatReference;
+		return "Ljava/util/Map<Lcom/artemis/World;Lcom/artemis/utils/Bag<"
+				+ meta.type.getDescriptor() + ">;>;";
+	}
+
 	private void injectGrow(String owner) {
-		
 		MethodVisitor mv = cw.visitMethod(ACC_PRIVATE, "$grow", "()V", null, null);
 		mv.visitCode();
 		Label l0 = new Label();
@@ -115,28 +126,129 @@ public class PackedStubs implements Opcodes {
 		mv.visitJumpInsn(IF_ICMPGT, l5);
 		Label l7 = new Label();
 		mv.visitLabel(l7);
+		mv.visitFieldInsn(GETSTATIC, owner, "$store", "Ljava/util/Map;");
 		mv.visitVarInsn(ALOAD, 0);
+		mv.visitFieldInsn(GETFIELD, owner, "$world", "Lcom/artemis/World;");
+		mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Map", "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
+		mv.visitTypeInsn(CHECKCAST, "com/artemis/utils/Bag");
+		mv.visitMethodInsn(INVOKEVIRTUAL, "com/artemis/utils/Bag", "iterator", "()Ljava/util/Iterator;");
+		mv.visitVarInsn(ASTORE, 3);
+		Label l8 = new Label();
+		mv.visitJumpInsn(GOTO, l8);
+		Label l9 = new Label();
+		mv.visitLabel(l9);
+		mv.visitFrame(Opcodes.F_FULL, 4, new Object[] {owner, "java/nio/ByteBuffer", Opcodes.TOP, "java/util/Iterator"}, 0, new Object[] {});
+		mv.visitVarInsn(ALOAD, 3);
+		mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "next", "()Ljava/lang/Object;");
+		mv.visitTypeInsn(CHECKCAST, owner);
+		mv.visitVarInsn(ASTORE, 2);
+		Label l10 = new Label();
+		mv.visitLabel(l10);
+		mv.visitVarInsn(ALOAD, 2);
 		mv.visitVarInsn(ALOAD, 1);
 		mv.visitFieldInsn(PUTFIELD, owner, "$data", "Ljava/nio/ByteBuffer;");
-		Label l8 = new Label();
 		mv.visitLabel(l8);
+		mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+		mv.visitVarInsn(ALOAD, 3);
+		mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Iterator", "hasNext", "()Z");
+		mv.visitJumpInsn(IFNE, l9);
+		Label l11 = new Label();
+		mv.visitLabel(l11);
 		mv.visitInsn(RETURN);
-//		Label l9 = new Label();
-//		mv.visitLabel(l9);
-//		mv.visitLocalVariable("this", owner, null, l0, l9, 0);
-//		mv.visitLocalVariable("newBuffer", "Ljava/nio/ByteBuffer;", null, l1, l9, 1);
-//		mv.visitLocalVariable("i", "I", null, l2, l7, 2);
-//		mv.visitLocalVariable("s", "I", null, l3, l7, 3);
-//		mv.visitMaxs(4, 4);
-//		mv.visitEnd();
-
+		mv.visitEnd();
 	}
 
 	
 	private void injectStaticInitializer() {
+		String owner = meta.type.getInternalName();
+		
 		MethodVisitor mv = cw.visitMethod(ACC_STATIC, "<clinit>", "()V", null, null);
 		mv.visitCode();
+		Label l0 = new Label();
+		mv.visitLabel(l0);
+		mv.visitTypeInsn(NEW, "java/util/IdentityHashMap");
+		mv.visitInsn(DUP);
+		mv.visitMethodInsn(INVOKESPECIAL, "java/util/IdentityHashMap", "<init>", "()V");
+		mv.visitFieldInsn(PUTSTATIC, owner, "$store", "Ljava/util/Map;");
 		mv.visitInsn(RETURN);
+		mv.visitEnd();
+	}
+	
+	private void injectConstructor() {
+		String typeName = meta.type.getInternalName();
+		MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "<init>", "(Lcom/artemis/World;)V", null, null);
+		mv.visitCode();
+		Label l0 = new Label();
+		mv.visitLabel(l0);
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitMethodInsn(INVOKESPECIAL, "com/artemis/PackedComponent", "<init>", "()V");
+		Label l1 = new Label();
+		mv.visitLabel(l1);
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitInsn(ACONST_NULL);
+		mv.visitFieldInsn(PUTFIELD, typeName, "$data", "Ljava/nio/ByteBuffer;");
+		Label l2 = new Label();
+		mv.visitLabel(l2);
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitFieldInsn(PUTFIELD, typeName, "$world", "Lcom/artemis/World;");
+		Label l3 = new Label();
+		mv.visitLabel(l3);
+		mv.visitFieldInsn(GETSTATIC, typeName, "$store", "Ljava/util/Map;");
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Map", "get", "(Ljava/lang/Object;)Ljava/lang/Object;");
+		mv.visitTypeInsn(CHECKCAST, "com/artemis/utils/Bag");
+		mv.visitVarInsn(ASTORE, 2);
+		Label l4 = new Label();
+		mv.visitLabel(l4);
+		mv.visitVarInsn(ALOAD, 2);
+		Label l5 = new Label();
+		mv.visitJumpInsn(IFNULL, l5);
+		Label l6 = new Label();
+		mv.visitLabel(l6);
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitVarInsn(ALOAD, 2);
+		mv.visitInsn(ICONST_0);
+		mv.visitMethodInsn(INVOKEVIRTUAL, "com/artemis/utils/Bag", "get", "(I)Ljava/lang/Object;");
+		mv.visitTypeInsn(CHECKCAST, typeName);
+		mv.visitFieldInsn(GETFIELD, typeName, "$data", "Ljava/nio/ByteBuffer;");
+		mv.visitFieldInsn(PUTFIELD, typeName, "$data", "Ljava/nio/ByteBuffer;");
+		Label l7 = new Label();
+		mv.visitLabel(l7);
+		Label l8 = new Label();
+		mv.visitJumpInsn(GOTO, l8);
+		mv.visitLabel(l5);
+		mv.visitFrame(Opcodes.F_FULL, 3, new Object[] {typeName, "com/artemis/World", "com/artemis/utils/Bag"}, 0, new Object[] {});
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitIntInsn(SIPUSH, ClassMetadataUtil.sizeOf(meta) * 128);
+		mv.visitMethodInsn(INVOKESTATIC, "java/nio/ByteBuffer", "allocateDirect", "(I)Ljava/nio/ByteBuffer;");
+		mv.visitFieldInsn(PUTFIELD, typeName, "$data", "Ljava/nio/ByteBuffer;");
+		Label l9 = new Label();
+		mv.visitLabel(l9);
+		mv.visitTypeInsn(NEW, "com/artemis/utils/Bag");
+		mv.visitInsn(DUP);
+		mv.visitMethodInsn(INVOKESPECIAL, "com/artemis/utils/Bag", "<init>", "()V");
+		mv.visitVarInsn(ASTORE, 2);
+		Label l10 = new Label();
+		mv.visitLabel(l10);
+		mv.visitFieldInsn(GETSTATIC, typeName, "$store", "Ljava/util/Map;");
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitVarInsn(ALOAD, 2);
+		mv.visitMethodInsn(INVOKEINTERFACE, "java/util/Map", "put", "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;");
+		mv.visitInsn(POP);
+		mv.visitLabel(l8);
+		mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+		mv.visitVarInsn(ALOAD, 2);
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitMethodInsn(INVOKEVIRTUAL, "com/artemis/utils/Bag", "add", "(Ljava/lang/Object;)V");
+		Label l11 = new Label();
+		mv.visitLabel(l11);
+		mv.visitInsn(RETURN);
+		Label l12 = new Label();
+		mv.visitLabel(l12);
+		mv.visitLocalVariable("this", "Lcom/artemis/component/TransPackedFloatReference2;", null, l0, l12, 0);
+		mv.visitLocalVariable("world", "Lcom/artemis/World;", null, l0, l12, 1);
+		mv.visitLocalVariable("instances", "Lcom/artemis/utils/Bag;", "Lcom/artemis/utils/Bag<Lcom/artemis/component/TransPackedFloatReference2;>;", l4, l12, 2);
 		mv.visitEnd();
 	}
 	
@@ -167,7 +279,7 @@ public class PackedStubs implements Opcodes {
 			Label l2 = new Label();
 			mv.visitJumpInsn(IF_ICMPGT, l2);
 			mv.visitVarInsn(ALOAD, 0);
-			mv.visitMethodInsn(INVOKESPECIAL, owner, "$grow", "()V");
+			mv.visitMethodInsn(INVOKEVIRTUAL, owner, "$grow", "()V");
 			mv.visitLabel(l2);
 			mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
 		}
