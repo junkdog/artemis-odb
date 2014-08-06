@@ -18,6 +18,7 @@ package com.artemis.utils.reflect;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 
 import com.artemis.gwtref.client.Parameter;
 import com.artemis.utils.reflect.ReflectionException;
@@ -118,5 +119,10 @@ public final class Method {
 			throw new ReflectionException("Illegal argument(s) supplied to method: " + getName(), e);
 		}
 	}
+
+    @SuppressWarnings("rawtypes")
+       public boolean hasAnnotation(Class annotationClass) {
+   	    return Arrays.asList(method.getAnnotationClasses()).contains(annotationClass.getName());
+       }
 
 }

@@ -38,10 +38,11 @@ public class Method {
 	final boolean isConstructor;
 	final Parameter[] parameters;
 	final int methodId;
+    final String[] annotationClasses;
 
 	public Method (String name, Class enclosingType, Class returnType, Parameter[] parameters, boolean isAbstract,
 		boolean isFinal, boolean isStatic, boolean isDefaultAccess, boolean isPrivate, boolean isProtected, boolean isPublic,
-		boolean isNative, boolean isVarArgs, boolean isMethod, boolean isConstructor, int methodId) {
+		boolean isNative, boolean isVarArgs, boolean isMethod, boolean isConstructor, int methodId, String[] annotationClasses) {
 		this.name = name;
 		this.enclosingType = enclosingType;
 		this.parameters = parameters != null ? parameters : EMPTY_PARAMS;
@@ -58,7 +59,12 @@ public class Method {
 		this.isMethod = isMethod;
 		this.isConstructor = isConstructor;
 		this.methodId = methodId;
-	}
+        this.annotationClasses = annotationClasses;
+      	}
+
+      	public String[] getAnnotationClasses() {
+      		return annotationClasses;
+      	}
 
 	/** @return the {@link Class} of the enclosing type. */
 	public Class getEnclosingType () {
