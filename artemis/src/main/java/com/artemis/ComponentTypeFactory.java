@@ -15,8 +15,9 @@ public class ComponentTypeFactory {
 	
 	/** Amount of generated component types. */
 	private int componentTypeCount = 0;
-	/** Index of this component type in componentTypes. */	
-	private final Bag<ComponentType> types = new Bag<ComponentType>();
+	/** Index of this component type in componentTypes. */
+	
+	private static final Bag<ComponentType> types = new Bag<ComponentType>();
 	
 	
 	/**

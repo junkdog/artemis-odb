@@ -32,12 +32,6 @@ public abstract class EntitySystem implements EntityObserver {
 	
 	/** Collects entities to be deleted from the system after processing. */
 	private final WildBag<Entity> delayedDeletion;
-	/** Component bits entities must possess for the system to be interested. */
-	private BitSet allSet;
-	/** Component bits entities must not possess for the system to be interested. */
-	private BitSet exclusionSet;
-	/** Component bits entities must at least possess one for the system to be interested. */
-	private BitSet oneSet;
 	/** If the system is passive or not. */
 	private boolean passive;
 	/** If the system is enabled or not. */
@@ -187,40 +181,19 @@ public abstract class EntitySystem implements EntityObserver {
 	 *			entity to check
 	 */
 	protected final void check(Entity e) {
-		if(dummy) {
+		if(dummy)
 			return;
-		}
 		
-		boolean contains = e.getSystemBits().get(systemIndex);
 		boolean interested = true; // possibly interested, let's try to prove it wrong.
 
 		// If the entity is inactive, then we aren't interested
 		if (!e.isActive() || !e.isEnabled()) {
 			interested = false;
+		} else {
+			interested = aspect.isInterested(e);
 		}
 
-		BitSet componentBits = e.getComponentBits();
-
-		// Check if the entity possesses ALL of the components defined in the aspect.
-		if(!allSet.isEmpty() && interested) {
-			for (int i = allSet.nextSetBit(0); i >= 0; i = allSet.nextSetBit(i+1)) {
-				if(!componentBits.get(i)) {
-					interested = false;
-					break;
-				}
-			}
-		}
-		
-		// Check if the entity possesses ANY of the exclusion components, if it does then the system is not interested.
-		if(!exclusionSet.isEmpty() && interested) {
-			interested = !exclusionSet.intersects(componentBits);
-		}
-		
-		// Check if the entity possesses ANY of the components in the oneSet. If so, the system is interested.
-		if(!oneSet.isEmpty() && interested) {
-			interested = oneSet.intersects(componentBits);
-		}
-
+		boolean contains = e.getSystemBits().get(systemIndex);
 		if (interested && !contains) {
 			insertToSystem(e);
 		} else if (!interested && contains) {
@@ -348,11 +321,7 @@ public abstract class EntitySystem implements EntityObserver {
 	 */
 	protected final void setWorld(World world) {
 		aspect.initialize(world);
-		allSet = aspect.getAllSet();
-		exclusionSet = aspect.getExclusionSet();
-		oneSet = aspect.getOneSet();
-		dummy = allSet.isEmpty() && oneSet.isEmpty(); // This system can't possibly be interested in any entity, so it must be "dummy"
-		
+		dummy = aspect.getAllSet().isEmpty() && aspect.getOneSet().isEmpty();
 		systemIndex = world.systemIndex.getIndexFor(this.getClass());
 		
 		this.world = world;
