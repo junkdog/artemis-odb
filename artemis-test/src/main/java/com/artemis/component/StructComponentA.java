@@ -22,4 +22,8 @@ public class StructComponentA extends Component {
 		return "StructComponentA [x=" + x + ", y=" + y + ", z=" + z + ", something=" + something + ", flag=" + flag +
 			"]";
 	}
+	
+	protected void enscureCapacity(int id) {
+//		if (($data.capacity() - $_SIZE_OF) <= $stride) $grow();
+	}
 }

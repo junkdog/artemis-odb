@@ -14,10 +14,8 @@ public class TransPackedFloatReference extends PackedComponent {
 	
 
 	@Override
-	protected PackedComponent forEntity(Entity e) {
+	protected void forEntity(Entity e) {
 		this.$stride = $_SIZE_OF * e.getId();
-		if (($data.capacity() - $_SIZE_OF) <= $stride) $grow();
-		return this;
 	}
 
 	@Override
@@ -57,5 +55,10 @@ public class TransPackedFloatReference extends PackedComponent {
 	public void set(Vec2f v) {
 		$data.putFloat($stride + 0, v.x());
 		$data.putFloat($stride + 4, v.y);
+	}
+
+	@Override
+	protected void ensureCapacity(int id) {
+		if (($data.capacity() - $_SIZE_OF) <= (id  * $_SIZE_OF)) $grow();
 	}
 }

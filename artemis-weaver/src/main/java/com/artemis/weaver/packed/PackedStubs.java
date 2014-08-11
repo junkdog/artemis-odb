@@ -38,6 +38,7 @@ public class PackedStubs implements Opcodes {
 		
 		if (!meta.foundEntityFor)
 			injectForEntity();
+		injectEnsureCapacity();
 		
 		List<FieldDescriptor> dataFields = instanceFields(meta);
 		if (dataFields.size() > 0)
@@ -266,49 +267,61 @@ public class PackedStubs implements Opcodes {
 		mv.visitInsn(RETURN);
 		Label l12 = new Label();
 		mv.visitLabel(l12);
-		mv.visitLocalVariable("this", "Lcom/artemis/component/TransPackedFloatReference2;", null, l0, l12, 0);
+		mv.visitLocalVariable("this", meta.type.toString(), null, l0, l12, 0);
 		mv.visitLocalVariable("world", "Lcom/artemis/World;", null, l0, l12, 1);
-		mv.visitLocalVariable("instances", "Lcom/artemis/utils/Bag;", "Lcom/artemis/utils/Bag<Lcom/artemis/component/TransPackedFloatReference2;>;", l4, l12, 2);
+		mv.visitLocalVariable("instances", "Lcom/artemis/utils/Bag;", "Lcom/artemis/utils/Bag<" + meta.type.toString() + ">;", l4, l12, 2);
+		mv.visitEnd();
+	}
+	
+	private void injectEnsureCapacity() {
+		String owner = meta.type.getInternalName();
+		
+		MethodVisitor mv = cw.visitMethod(ACC_PROTECTED, "ensureCapacity", "(I)V", null, null);
+		mv.visitCode();
+		Label l0 = new Label();
+		mv.visitLabel(l0);
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitFieldInsn(GETFIELD, owner, "$data", "Ljava/nio/ByteBuffer;");
+		mv.visitMethodInsn(INVOKEVIRTUAL, "java/nio/ByteBuffer", "capacity", "()I");
+		mv.visitFieldInsn(GETSTATIC, owner, "$_SIZE_OF", "I");
+		mv.visitInsn(ISUB);
+		mv.visitVarInsn(ILOAD, 1);
+		mv.visitFieldInsn(GETSTATIC, owner, "$_SIZE_OF", "I");
+		mv.visitInsn(IMUL);
+		Label l1 = new Label();
+		mv.visitJumpInsn(IF_ICMPGT, l1);
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitMethodInsn(INVOKEVIRTUAL, owner, "$grow", "()V");
+		mv.visitLabel(l1);
+		mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
+		mv.visitInsn(RETURN);
+		Label l2 = new Label();
+		mv.visitLabel(l2);
+		mv.visitLocalVariable("this", meta.type.toString(), null, l0, l2, 0);
+		mv.visitLocalVariable("id", "I", null, l0, l2, 1);
 		mv.visitEnd();
 	}
 	
 	private void injectForEntity() {
 		String owner = meta.type.getInternalName();
 		
-		MethodVisitor mv = cw.visitMethod(ACC_PROTECTED, "forEntity", "(Lcom/artemis/Entity;)Lcom/artemis/PackedComponent;", null, null);
+		MethodVisitor mv = cw.visitMethod(ACC_PROTECTED, "forEntity", "(Lcom/artemis/Entity;)V", null, null);
 		mv.visitCode();
 		Label l0 = new Label();
-		if (meta.fields.size() > 0) {
-			mv.visitLabel(l0);
-			mv.visitVarInsn(ALOAD, 0);
-			mv.visitFieldInsn(GETSTATIC, owner, "$_SIZE_OF", "I");
-			mv.visitVarInsn(ALOAD, 1);
-			mv.visitMethodInsn(INVOKEVIRTUAL, "com/artemis/Entity", "getId", "()I");
-			mv.visitInsn(IMUL);
-			mv.visitFieldInsn(PUTFIELD, owner, "$stride", "I");
-			
-			Label l1 = new Label();
-			mv.visitLabel(l1);
-			mv.visitVarInsn(ALOAD, 0);
-			mv.visitFieldInsn(GETFIELD, owner, "$data", "Ljava/nio/ByteBuffer;");
-			mv.visitMethodInsn(INVOKEVIRTUAL, "java/nio/ByteBuffer", "capacity", "()I");
-			mv.visitIntInsn(BIPUSH, 8);
-			mv.visitInsn(ISUB);
-			mv.visitVarInsn(ALOAD, 0);
-			mv.visitFieldInsn(GETFIELD, owner, "$stride", "I");
-			Label l2 = new Label();
-			mv.visitJumpInsn(IF_ICMPGT, l2);
-			mv.visitVarInsn(ALOAD, 0);
-			mv.visitMethodInsn(INVOKEVIRTUAL, owner, "$grow", "()V");
-			mv.visitLabel(l2);
-			mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
-		}
+		mv.visitLabel(l0);
 		mv.visitVarInsn(ALOAD, 0);
-		mv.visitInsn(ARETURN);
-		Label l3 = new Label();
-		mv.visitLabel(l3);
-		mv.visitLocalVariable("this", meta.type.toString(), null, l0, l3, 0);
-		mv.visitLocalVariable("e", "Lcom/artemis/Entity;", null, l0, l3, 1);
+		mv.visitFieldInsn(GETSTATIC, owner, "$_SIZE_OF", "I");
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitMethodInsn(INVOKEVIRTUAL, "com/artemis/Entity", "getId", "()I");
+		mv.visitInsn(IMUL);
+		mv.visitFieldInsn(PUTFIELD, owner, "$stride", "I");
+		Label l1 = new Label();
+		mv.visitLabel(l1);
+		mv.visitInsn(RETURN);
+		Label l2 = new Label();
+		mv.visitLabel(l2);
+		mv.visitLocalVariable("this", "Lcom/artemis/component/TransPackedFloatReference;", null, l0, l2, 0);
+		mv.visitLocalVariable("e", "Lcom/artemis/Entity;", null, l0, l2, 1);
 		mv.visitEnd();
 	}
 	

@@ -20,8 +20,6 @@ class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 
 	/** The type of components this mapper handles. */
 	private final ComponentType type;
-	/** The class of components this mapper handles. */
-	private final Class<A> classType;
 	/** Holds all components of given type in the world. */
 	private final Bag<Component> components;
 
@@ -39,7 +37,6 @@ class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
 		this.type = tf.getTypeFor(type);
 		components = world.getComponentManager().getComponentsByType(this.type);
-		this.classType = type;
 	}
 
 

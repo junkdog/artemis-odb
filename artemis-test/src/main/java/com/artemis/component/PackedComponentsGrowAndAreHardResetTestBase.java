@@ -2,7 +2,9 @@ package com.artemis.component;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,8 +44,11 @@ public class PackedComponentsGrowAndAreHardResetTestBase {
 	}
 
 	private void check(int total) {
-		for (int i = 0; total > i; i++)
-			create();
+			for (int i = 0; total > i; i++) try {
+				create();
+			} catch (IndexOutOfBoundsException e) {
+				fail("failed at index " + i);
+			}
 		
 		world.process();
 		

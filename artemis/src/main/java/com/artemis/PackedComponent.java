@@ -11,7 +11,8 @@ import java.nio.ByteBuffer;
  * it's the equivalent of a {@link #clone()}.
  */
 public abstract class PackedComponent extends Component {
-	protected abstract PackedComponent forEntity(Entity e);
+	protected abstract void forEntity(Entity e);
+	protected abstract void ensureCapacity(int id);
 	protected abstract void reset();
 	
 	/**

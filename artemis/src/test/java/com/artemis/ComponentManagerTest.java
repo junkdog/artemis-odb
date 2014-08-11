@@ -80,13 +80,19 @@ public class ComponentManagerTest {
 		public int entityId;
 		
 		@Override
-		protected PackedComponent forEntity(Entity e) {
+		protected void forEntity(Entity e) {
 			entityId = e.getId();
-			return this;
+//			return this;
 		}
 		
 		@Override
 		protected void reset() {}
+
+		@Override
+		protected void ensureCapacity(int id) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 	
 	public static class PackedWorld extends PackedComponent {
@@ -97,13 +103,19 @@ public class ComponentManagerTest {
 		}
 		
 		@Override
-		protected PackedComponent forEntity(Entity e) {
+		protected void forEntity(Entity e) {
 			entityId = e.getId();
-			return this;
+//			return this;
 		}
 
 		@Override
 		protected void reset() {}
+
+		@Override
+		protected void ensureCapacity(int id) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 	
 	private static class Pooled extends PooledComponent {
