@@ -18,14 +18,12 @@ import com.artemis.utils.ImmutableBag;
  */
 public abstract class VoidEntitySystem extends EntitySystem {
 
-
 	/**
 	 * Creates a new VoidEntitySystem.
 	 */
 	public VoidEntitySystem() {
 		super(Aspect.getEmpty());
 	}
-
 
 	@Override
 	protected final void processEntities(ImmutableBag<Entity> entities) {
@@ -36,11 +34,4 @@ public abstract class VoidEntitySystem extends EntitySystem {
 	 * Override to implement behavior when this system is called by the world.
 	 */
 	protected abstract void processSystem();
-
-
-	@Override
-	protected boolean checkProcessing() {
-		return true;
-	}
-
 }

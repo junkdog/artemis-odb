@@ -126,7 +126,9 @@ public abstract class EntitySystem implements EntityObserver {
 	 *
 	 * @return true if the system should be processed, false if not.
 	 */
-	protected abstract boolean checkProcessing();
+	protected boolean checkProcessing() {
+		return true;
+	}
 
 	/**
 	 * Override to implement code that gets executed when systems are
