@@ -13,13 +13,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
 import com.artemis.World;
-import com.artemis.annotations.Mapper;
-import com.artemis.annotations.Wire;
-import com.artemis.systems.EntityProcessingSystem;
 
 public abstract class PackedWeavingTest {
 	
@@ -49,8 +45,9 @@ public abstract class PackedWeavingTest {
 	abstract Class<?> componentType();
 	abstract ComponentMapper<?> getMapper();
 	
+	@Test
 	public void packed_component_has_offset() throws Exception {
-		Field offset = field("$offset");
+		Field offset = field("$stride");
 		
 		assertEquals(PRIVATE, offset.getModifiers());
 		assertEquals(int.class, offset.getType());
@@ -81,7 +78,7 @@ public abstract class PackedWeavingTest {
 		return f;
 	}
 
-	protected final Class<?> fieldType() {
+	protected static final Class<?> fieldType() {
 		return ByteBuffer.class;
 	}
 }
