@@ -9,4 +9,12 @@ public class SimpleComponent extends Component {
 //	public float x, y;
 	public int value;
 //	public float x;
+	
+	public void set(int value) {
+		this.value = value;
+	}
+	
+	public int get() {
+		return value;
+	}
 }

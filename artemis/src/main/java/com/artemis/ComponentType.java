@@ -14,7 +14,7 @@ import com.artemis.utils.reflect.Constructor;
  * @author Arni Arent
  */
 public class ComponentType {
-	enum Taxonomy {
+	static enum Taxonomy {
 		BASIC, POOLED, PACKED;
 	}
 
@@ -28,12 +28,6 @@ public class ComponentType {
 	
 	private final int index;
 
-	/**
-	 * <b>Do not call this constructor!</b> This method is only public so that
-	 * we play nice with GWT.
-	 * 
-	 *  @@see {@link ComponentType#getTypeFor(Class)}
-	 */
 	ComponentType(Class<? extends Component> type, int index) {
 		
 		this.index = index;

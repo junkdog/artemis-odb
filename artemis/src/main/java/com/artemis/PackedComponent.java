@@ -11,8 +11,29 @@ import java.nio.ByteBuffer;
  * it's the equivalent of a {@link #clone()}.
  */
 public abstract class PackedComponent extends Component {
+	
+	/**
+	 * Sets the currently processed entity. Automatically
+	 * called by {@link PackedComponentMapper}.
+	 * 
+	 * @param e Entity to process.
+	 */
 	protected abstract void forEntity(Entity e);
+	
+	/**
+	 * Internal method, used by the {@link ComponentManager},
+	 * will always send the highest seen {@link Entity#getId()}.
+	 * <p/>
+	 * Ensures that the backing data storage can accomodate
+	 * all entities.
+	 * 
+	 * @param id Highest seen entity id.
+	 */
 	protected abstract void ensureCapacity(int id);
+	
+	/**
+	 * Resets the component upon deletion.
+	 */
 	protected abstract void reset();
 	
 	/**
