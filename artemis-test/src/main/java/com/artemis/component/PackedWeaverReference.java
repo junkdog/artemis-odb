@@ -77,7 +77,8 @@ public class PackedWeaverReference extends PackedComponent implements DisposedWi
 	@Override
 	protected void ensureCapacity(int id) {
 		int requested = id * $_SIZE_OF;
-		if (($data.capacity() - $_SIZE_OF) <= requested)
+//		if (($data.capacity() - $_SIZE_OF) <= requested)
+		if ($data.capacity() < requested)
 			$grow(2 * Math.max($data.capacity(), requested));
 	}
 }
