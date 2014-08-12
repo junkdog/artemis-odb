@@ -44,6 +44,14 @@ public class PackedWeaverReference extends PackedComponent implements DisposedWi
 		$data.putFloat($stride + 4, 0);
 	}
 	
+	
+	@Override
+	protected void ensureCapacity(int id) {
+		int requested = (1 + id) * $_SIZE_OF;
+		if ($data.capacity() < requested)
+			$grow(2 * Math.max($data.capacity(), requested));
+	}
+	
 	private void $grow(int capacity) {
 		ByteBuffer newBuffer = ByteBuffer.allocateDirect(capacity);
 		for (int i = 0, s = $data.capacity(); s > i; i++)
@@ -72,13 +80,5 @@ public class PackedWeaverReference extends PackedComponent implements DisposedWi
 	
 	public void y(float value) {
 		$data.putFloat($stride + 4, value);
-	}
-	
-	@Override
-	protected void ensureCapacity(int id) {
-		int requested = id * $_SIZE_OF;
-//		if (($data.capacity() - $_SIZE_OF) <= requested)
-		if ($data.capacity() < requested)
-			$grow(2 * Math.max($data.capacity(), requested));
 	}
 }

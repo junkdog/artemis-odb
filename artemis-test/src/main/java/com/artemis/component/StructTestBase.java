@@ -1,7 +1,6 @@
 package com.artemis.component;
 
 import static java.lang.reflect.Modifier.PRIVATE;
-import static java.lang.reflect.Modifier.STATIC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -10,7 +9,6 @@ import static org.junit.Assert.fail;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
-import java.nio.LongBuffer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -52,8 +50,8 @@ public class StructTestBase extends PackedWeavingTest {
 		assertEquals(fieldType(), data.getType());
 		assertEquals(128 * size, ((ByteBuffer)data.get(packed)).capacity());
 		
-		Method grow = method("$grow");
-		grow.invoke(packed);
+		Method grow = method("$grow", int.class);
+		grow.invoke(packed, 256 * size);
 		assertEquals(256 * size, ((ByteBuffer)data.get(packed)).capacity());
 	}
 

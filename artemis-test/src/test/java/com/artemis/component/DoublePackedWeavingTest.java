@@ -56,8 +56,8 @@ public class DoublePackedWeavingTest extends PackedWeavingTest {
 		assertEquals(fieldType(), data.getType());
 		assertEquals(128 * size, ((ByteBuffer)data.get(packed)).capacity());
 		
-		Method grow = method("$grow");
-		grow.invoke(packed);
+		Method grow = method("$grow", int.class);
+		grow.invoke(packed, 256 * size);
 		assertEquals(256 * size, ((ByteBuffer)data.get(packed)).capacity());
 	}
 	
