@@ -11,7 +11,7 @@
   - Requires that the injected object is annotated with `@Wire`
 - Added `World#getManagers` method.
 - **Fix**: Disabled entities are no longer added to systems.
-
+- **FIX**: Possible IOOB in `@PackedWeaver` components when accessing component data.
 
 ## Version: 0.6.5 - 2014-07-17
 - Better support for multiple concurrent worlds in regards to memory usage.
