@@ -104,6 +104,10 @@ public class Weaver {
 	public static void enablePooledWeaving(boolean enablePooledWeaving) {
 		ClassMetadata.GlobalConfiguration.enabledPooledWeaving = enablePooledWeaving;
 	}
+	
+	public static void optimizeEntitySystems(boolean enabled) {
+		ClassMetadata.GlobalConfiguration.optimizeEntitySystems = enabled;
+	}
 
 	private static ExecutorService newThreadPool() {
 		return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());

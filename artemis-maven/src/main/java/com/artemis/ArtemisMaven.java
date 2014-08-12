@@ -56,6 +56,9 @@ public class ArtemisMaven extends AbstractMojo {
 	@Parameter(defaultValue="true", property="enableArtemisPlugin")
 	private boolean enableArtemisPlugin;
 	
+	@Parameter(defaultValue="true", property="optimizeEntitySystems")
+	private boolean optimizeEntitySystems;
+	
 	@Component
 	private BuildContext context;
 	
@@ -72,11 +75,13 @@ public class ArtemisMaven extends AbstractMojo {
 		
 		Log log = getLog();
 		log.info("Configuration:"); 
-		log.info("\t ideFriendlyPacking=" + ideFriendlyPacking);
-		log.info("\tenablePooledWeaving=" + enablePooledWeaving);
+		log.info("\tideFriendlyPacking........." + ideFriendlyPacking);
+		log.info("\tenablePooledWeaving........" + enablePooledWeaving);
+		log.info("\toptimizeEntitySystems......" + optimizeEntitySystems);
 		
 		Weaver.retainFieldsWhenPacking(ideFriendlyPacking);
 		Weaver.enablePooledWeaving(enablePooledWeaving);
+		Weaver.optimizeEntitySystems(optimizeEntitySystems);
 		
 		Weaver weaver = new Weaver(outputDirectory);
 		List<ClassMetadata> processed = weaver.execute();
