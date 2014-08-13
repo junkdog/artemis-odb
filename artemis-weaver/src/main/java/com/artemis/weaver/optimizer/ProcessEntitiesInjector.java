@@ -65,7 +65,8 @@ public final class ProcessEntitiesInjector implements Opcodes {
 		mv.visitVarInsn(ILOAD, 3);
 		mv.visitInsn(AALOAD);
 		mv.visitTypeInsn(CHECKCAST, "com/artemis/Entity");
-		mv.visitMethodInsn(INVOKEVIRTUAL, owner, "process", "(Lcom/artemis/Entity;)V");
+//		mv.visitMethodInsn(INVOKEVIRTUAL, owner, "process", "(Lcom/artemis/Entity;)V");
+		mv.visitMethodInsn(INVOKESPECIAL, owner, "process", "(Lcom/artemis/Entity;)V");
 		Label l6 = new Label();
 		mv.visitLabel(l6);
 
