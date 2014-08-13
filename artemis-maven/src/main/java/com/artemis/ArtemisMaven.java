@@ -75,9 +75,9 @@ public class ArtemisMaven extends AbstractMojo {
 		
 		Log log = getLog();
 		log.info("Configuration:"); 
-		log.info("\tideFriendlyPacking........." + ideFriendlyPacking);
-		log.info("\tenablePooledWeaving........" + enablePooledWeaving);
-		log.info("\toptimizeEntitySystems......" + optimizeEntitySystems);
+		log.info("\tideFriendlyPacking .............. " + ideFriendlyPacking);
+		log.info("\tenablePooledWeaving ............. " + enablePooledWeaving);
+		log.info("\toptimizeEntitySystems ........... " + optimizeEntitySystems);
 		
 		Weaver.retainFieldsWhenPacking(ideFriendlyPacking);
 		Weaver.enablePooledWeaving(enablePooledWeaving);

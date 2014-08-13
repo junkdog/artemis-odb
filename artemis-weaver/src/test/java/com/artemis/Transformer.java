@@ -9,7 +9,9 @@ import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Type;
 
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadata.WeaverType;
 import com.artemis.weaver.ComponentTypeTransmuter;
+import com.artemis.weaver.EsOptimizationTransmuter;
 
 final class Transformer {
 	
@@ -21,10 +23,17 @@ final class Transformer {
 		ClassMetadata meta = Weaver.scan(cr);
 		meta.type = Type.getObjectType(cr.getClassName());
 		
-		ComponentTypeTransmuter weaver = new ComponentTypeTransmuter(null, cr, meta);
-		weaver.call();
+		ClassWriter cw = null;
+		if (meta.annotation != WeaverType.NONE) {
+			ComponentTypeTransmuter weaver = new ComponentTypeTransmuter(null, cr, meta);
+			weaver.call();
+			cw = weaver.getClassWriter();
+		} else if (meta.isOptimizableSystem) {
+			EsOptimizationTransmuter weaver = new EsOptimizationTransmuter(null, cr, meta);
+			weaver.call();
+			cw = weaver.getClassWriter();
+		}
 		
-		ClassWriter cw = weaver.getClassWriter();
 		assertEquals("", ClassUtil.verifyClass(cw));
 		
 		classStream.close();

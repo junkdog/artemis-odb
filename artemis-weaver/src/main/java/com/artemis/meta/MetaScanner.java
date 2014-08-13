@@ -44,6 +44,7 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		info.superClass = superName;
+		info.isOptimizableSystem =  superName.equals("com/artemis/systems/EntityProcessingSystem");
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
 	

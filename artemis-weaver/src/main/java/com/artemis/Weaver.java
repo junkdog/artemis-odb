@@ -24,6 +24,7 @@ import com.artemis.meta.FieldDescriptor;
 import com.artemis.meta.MetaScanner;
 import com.artemis.weaver.ComponentAccessTransmuter;
 import com.artemis.weaver.ComponentTypeTransmuter;
+import com.artemis.weaver.EsOptimizationTransmuter;
 import com.artemis.weaver.ProfilerTransmuter;
 
 public class Weaver {
@@ -65,7 +66,18 @@ public class Weaver {
 		rewriteFieldAccess(classes, packedFieldAccess(processed));
 		rewriteProfilers(classes);
 		
+		if (ClassMetadata.GlobalConfiguration.optimizeEntitySystems)
+			rewriteEntitySystems(classes);
+		
 		return processed;
+	}
+	
+	private static void rewriteEntitySystems(List<File> classes) {
+		ExecutorService threadPool = newThreadPool();
+		for (File f : classes)
+			optimizeEntitySystem(threadPool, f.getAbsolutePath());
+		
+		awaitTermination(threadPool);
 	}
 
 	private static void rewriteProfilers(List<File> classes) {
@@ -134,6 +146,13 @@ public class Weaver {
 		threadPool.submit(new ComponentAccessTransmuter(file, cr, packed));
 	}
 	
+	private static void optimizeEntitySystem(ExecutorService threadPool, String file) {
+		ClassReader cr = classReaderFor(file);
+		ClassMetadata meta = scan(cr);
+		
+		if (meta.isOptimizableSystem)
+			threadPool.submit(new EsOptimizationTransmuter(file, cr, meta));
+	}
 
 	private static void processProfilers(ExecutorService threadPool, String file) {
 		ClassReader cr = classReaderFor(file);

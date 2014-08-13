@@ -13,6 +13,9 @@ public final class ClassMetadata {
 	public WeaverType annotation = WeaverType.NONE;
 	
 	public boolean isPreviouslyProcessed;
+	
+	//  ie superclass is com/artemis/systems/EntityProcessingSystem
+	public boolean isOptimizableSystem;
 		
 	// methods
 	public boolean foundReset;
@@ -42,6 +45,7 @@ public final class ClassMetadata {
 	public static enum WeaverType { NONE, POOLED, PACKED };
 	
 	public Future<?> weaverTask;
+
 
 	
 	public static class GlobalConfiguration {
