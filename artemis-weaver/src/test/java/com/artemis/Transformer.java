@@ -15,7 +15,7 @@ final class Transformer {
 	
 	private Transformer() {}
 	
-	static ClassMetadata transform(Class<?> klazz) throws Exception {
+	static ClassReader transform(Class<?> klazz) throws Exception {
 		InputStream classStream = klazz.getResourceAsStream("/" + klazz.getName().replace('.', '/') + ".class");
 		ClassReader cr = Weaver.classReaderFor(classStream);
 		ClassMetadata meta = Weaver.scan(cr);
@@ -29,7 +29,11 @@ final class Transformer {
 		
 		classStream.close();
 		
-		return Weaver.scan(new ClassReader(cw.toByteArray()));
+		return new ClassReader(cw.toByteArray());
 	}
+	
+//	static ClassMetadata scan(ClassReader cr) throws Exception {
+//		return Weaver.scan(new ClassReader(cw.toByteArray()));
+//	}
 }
 

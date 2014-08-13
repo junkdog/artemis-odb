@@ -1,6 +1,7 @@
 package com.artemis;
 
 import static com.artemis.Transformer.transform;
+import static com.artemis.Weaver.scan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -29,7 +30,7 @@ public class ComponentTypeWeaverTest {
 	
 	@Test
 	public void pooled_weaver_test() throws Exception {
-		ClassMetadata meta = transform(ComponentToWeave.class);
+		ClassMetadata meta = scan(transform(ComponentToWeave.class));
 		assertEquals(WeaverType.NONE, meta.annotation);
 		assertTrue(meta.foundReset); 
 		assertFalse(meta.foundEntityFor);
@@ -38,7 +39,7 @@ public class ComponentTypeWeaverTest {
 	
 	@Test
 	public void packed_weaver_test() throws Exception {
-		ClassMetadata meta = transform(PackedToBeB.class);
+		ClassMetadata meta = scan(transform(PackedToBeB.class));
 		assertEquals(WeaverType.NONE, meta.annotation);
 		assertTrue(meta.foundReset); 
 		assertTrue(meta.foundEntityFor);
@@ -54,7 +55,7 @@ public class ComponentTypeWeaverTest {
 	public void pooled_disbled_weaving_test() throws Exception {
 		GlobalConfiguration.enabledPooledWeaving = false;
 		
-		ClassMetadata meta = transform(PooledNotForced.class);
+		ClassMetadata meta = scan(transform(PooledNotForced.class));
 		assertFalse(meta.foundReset); 
 		assertEquals("com/artemis/Component", meta.superClass); 
 	}
@@ -63,7 +64,7 @@ public class ComponentTypeWeaverTest {
 	public void pooled_forced_weaving_test() throws Exception {
 		GlobalConfiguration.enabledPooledWeaving = false;
 		
-		ClassMetadata meta = transform(PooledForced.class);
+		ClassMetadata meta = scan(transform(PooledForced.class));
 		assertEquals(WeaverType.NONE, meta.annotation);
 		assertTrue(meta.foundReset); 
 		assertEquals("com/artemis/PooledComponent", meta.superClass); 

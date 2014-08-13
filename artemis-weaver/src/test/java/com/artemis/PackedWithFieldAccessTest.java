@@ -1,6 +1,7 @@
 package com.artemis;
 
 import static com.artemis.Transformer.transform;
+import static com.artemis.Weaver.scan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -15,7 +16,7 @@ public class PackedWithFieldAccessTest {
 
 	@Test
 	public void packed_direct_field_access() throws Exception {
-		ClassMetadata meta = transform(PackedFields.class);
+		ClassMetadata meta = scan(transform(PackedFields.class));
 		assertEquals(WeaverType.NONE, meta.annotation);
 		assertTrue(meta.foundReset); 
 		assertTrue(meta.foundEntityFor);

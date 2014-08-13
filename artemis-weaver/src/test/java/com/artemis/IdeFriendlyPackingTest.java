@@ -1,6 +1,7 @@
 package com.artemis;
 
 import static com.artemis.Transformer.transform;
+import static com.artemis.Weaver.scan;
 import static com.artemis.meta.ClassMetadataUtil.instanceFields;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -28,7 +29,7 @@ public class IdeFriendlyPackingTest {
 	public void retain_fields_for_ide_friendliness() throws Exception {
 		GlobalConfiguration.ideFriendlyPacking = true;
 		
-		ClassMetadata meta = transform(PackedToBeC.class);
+		ClassMetadata meta = scan(transform(PackedToBeC.class));
 		List<FieldDescriptor> instanceFields = instanceFields(meta);
 		assertEquals(instanceFields.toString(), 3, instanceFields.size()); // +1 for $offset
 		assertEquals(WeaverType.NONE, meta.annotation);
@@ -41,7 +42,7 @@ public class IdeFriendlyPackingTest {
 	
 	@Test
 	public void remove_fields_no_ide() throws Exception {
-		ClassMetadata meta = transform(PackedToBeC.class);
+		ClassMetadata meta = scan(transform(PackedToBeC.class));
 		List<FieldDescriptor> instanceFields = instanceFields(meta);
 		assertEquals(instanceFields.toString(), 1, instanceFields.size()); // $offset
 		assertEquals(WeaverType.NONE, meta.annotation);
