@@ -20,6 +20,7 @@ import org.objectweb.asm.Type;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.GlobalConfiguration;
 import com.artemis.meta.ClassMetadata.WeaverType;
+import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.meta.FieldDescriptor;
 import com.artemis.meta.MetaScanner;
 import com.artemis.weaver.ComponentAccessTransmuter;
@@ -72,12 +73,20 @@ public class Weaver {
 		return processed;
 	}
 	
-	private static void rewriteEntitySystems(List<File> classes) {
-		ExecutorService threadPool = newThreadPool();
-		for (File f : classes)
-			optimizeEntitySystem(threadPool, f.getAbsolutePath());
+	public static List<ClassMetadata> rewriteEntitySystems(List<File> classes) {
+		List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
 		
+		ExecutorService threadPool = newThreadPool();
+		for (File f : classes) {
+			ClassMetadata meta = scan(classReaderFor(f.toString()));
+			if (meta.isOptimizableSystem) {
+				processed.add(meta);
+				optimizeEntitySystem(threadPool, f.getAbsolutePath());
+			}
+		}
 		awaitTermination(threadPool);
+		
+		return processed;
 	}
 
 	private static void rewriteProfilers(List<File> classes) {
