@@ -6,6 +6,10 @@
   - [Automatically optimize entity processing systems](https://github.com/junkdog/artemis-odb/issues/123).
 - Removed `artemis-benchmark`, refer to [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) instead.
 - [@Profile](https://github.com/junkdog/artemis-odb/wiki/@Profile) entity systems with custom classes.
+- New WorldConfiguration class
+  - Set expected entity count
+  - Limit number of rebuilt active entities per system/tick. Rebuilt indices ensure entities are
+    processed in sequential order.
 - New interface `PackedComponent.DisposedWithWorld` for freeing packed components' resources when
   disposing the world.
   - Automatically added to all `@PackedWeaver` components.

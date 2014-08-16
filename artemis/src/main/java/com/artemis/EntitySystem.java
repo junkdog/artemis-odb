@@ -73,7 +73,7 @@ public abstract class EntitySystem implements EntityObserver {
 		if(enabled && checkProcessing()) {
 			begin();
 			
-			if (activesIsDirty)
+			if (activesIsDirty && world.isRebuildingIndexAllowed())
 				rebuildCompressedActives();
 			
 			isProcessing = true;
@@ -104,6 +104,7 @@ public abstract class EntitySystem implements EntityObserver {
 		}
 		
 		activesIsDirty = false;
+		world.rebuiltIndices++;
 	}
 
 
@@ -126,6 +127,7 @@ public abstract class EntitySystem implements EntityObserver {
 	 *
 	 * @return true if the system should be processed, false if not.
 	 */
+	@SuppressWarnings("static-method")
 	protected boolean checkProcessing() {
 		return true;
 	}
@@ -215,6 +217,7 @@ public abstract class EntitySystem implements EntityObserver {
 			return;
 		}
 		
+		actives.remove(e);
 		activeIds.clear(e.getId());
 		activesIsDirty = true;
 		
@@ -223,7 +226,7 @@ public abstract class EntitySystem implements EntityObserver {
 	}
 
 	/**
-	 * Insterts the entity into this system.
+	 * Inserts the entity into this system.
 	 *
 	 * @param e
 	 *			the entity to insert
@@ -231,6 +234,7 @@ public abstract class EntitySystem implements EntityObserver {
 	private void insertToSystem(Entity e) {
 		activeIds.set(e.getId());
 		activesIsDirty = true;
+		actives.add(e);
 		
 		e.getSystemBits().set(systemIndex);
 		inserted(e);
@@ -362,7 +366,7 @@ public abstract class EntitySystem implements EntityObserver {
 	 * @return a bag containing all active entities of the system
 	 */
 	public ImmutableBag<Entity> getActives() {
-		if (activesIsDirty)
+		if (activesIsDirty && world.isRebuildingIndexAllowed())
 			rebuildCompressedActives();
 		
 		return actives;

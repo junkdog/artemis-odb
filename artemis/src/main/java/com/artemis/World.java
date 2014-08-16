@@ -94,7 +94,12 @@ public class World {
 	
 	private boolean registerUuids;
 	private ArtemisInjector injector;
+	
+	int rebuiltIndices;
+	private int maxRebuiltIndicesPerTick;
 
+	
+	
 
 	/**
 	 * Creates a new world.
@@ -145,9 +150,10 @@ public class World {
 
 		em = new EntityManager(configuration.expectedEntityCount());
 		setManager(em);
+		
+		maxRebuiltIndicesPerTick = configuration.maxRebuiltIndicesPerTick();
 	}
-
-
+	
 	/**
 	 * Makes sure all managers systems are initialized in the order they were
 	 * added.
@@ -322,6 +328,10 @@ public class World {
 		if (added.contains(e)) {
 			added.remove(e);
 		}
+	}
+	
+	boolean isRebuildingIndexAllowed() {
+		return maxRebuiltIndicesPerTick > rebuiltIndices;
 	}
 
 	/**
@@ -513,6 +523,8 @@ public class World {
 	 * Process all non-passive systems.
 	 */
 	public void process() {
+		rebuiltIndices = 0;
+		
 		check(added, addedPerformer);
 		deleted.clear();
 
