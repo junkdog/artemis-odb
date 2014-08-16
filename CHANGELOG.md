@@ -11,6 +11,7 @@
   - Automatically added to all `@PackedWeaver` components.
 - `World#inject(Object)` can inject normal java classes with artemis types.
   - Requires that the injected object is annotated with `@Wire`
+- Less bounds checking for PackedComponents.
 - Added `World#getManagers` method.
 - **Fix**: Disabled entities are no longer added to systems.
 - **FIX**: Possible IOOB in `@PackedWeaver` components when accessing component data.
