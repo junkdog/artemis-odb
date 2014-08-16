@@ -2,6 +2,8 @@
 
 ## Version: 0.6.6-SNAPSHOT
 - The GWT backend can now read values off annotations.
+- **Bytecode optimizations:** (invoked via maven plugin or the CLI tool)
+  - [Automatically optimize entity processing systems](https://github.com/junkdog/artemis-odb/issues/123).
 - Removed `artemis-benchmark`, refer to [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) instead.
 - [@Profile](https://github.com/junkdog/artemis-odb/wiki/@Profile) entity systems with custom classes.
 - New interface `PackedComponent.DisposedWithWorld` for freeing packed components' resources when
