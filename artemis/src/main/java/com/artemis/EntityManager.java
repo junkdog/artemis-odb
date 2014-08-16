@@ -32,7 +32,7 @@ public class EntityManager extends Manager {
 	/**
 	 * Creates a new EntityManager Instance.
 	 */
-	public EntityManager(int initialContainerSize) {
+	protected EntityManager(int initialContainerSize) {
 		entities = new Bag<Entity>(initialContainerSize);
 		disabled = new BitSet();
 		

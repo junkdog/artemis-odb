@@ -31,7 +31,6 @@ public class ComponentManager extends Manager {
 	private final WildBag<Entity> deleted;
 	private final ComponentPool pooledComponents;
 	
-	private int entityContainerSize;
 	private int highestSeenEntityId;
 	
 	protected final ComponentTypeFactory typeFactory;
@@ -39,8 +38,8 @@ public class ComponentManager extends Manager {
 	/**
 	 * Creates a new instance of {@link ComponentManager}.
 	 */
-	public ComponentManager(int entityContainerSize) {
-		this.entityContainerSize = entityContainerSize;
+	protected ComponentManager(int entityContainerSize) {
+		this.highestSeenEntityId = entityContainerSize;
 		componentsByType = new Bag<Bag<Component>>();
 		packedComponents = new Bag<PackedComponent>();
 		packedComponentOwners = new Bag<BitSet>();
@@ -81,14 +80,14 @@ public class ComponentManager extends Manager {
 
 	private void ensurePackedComponentCapacity(Entity owner) {
 		int id = owner.getId();
-		if (highestSeenEntityId < id) {
+		if ((highestSeenEntityId - 1) < id) {
 			highestSeenEntityId = id;
 			for (int i = 0, s = packedComponents.size(); s > i; i++) {
 				PackedComponent component = packedComponents.get(i);
 				if (component == null)
 					continue;
 
-				component.ensureCapacity(id);
+				component.ensureCapacity(id + 1);
 			}
 		}
 	}
@@ -194,7 +193,7 @@ public class ComponentManager extends Manager {
 	{
 		Bag<Component> components = componentsByType.safeGet(type.getIndex());
 		if(components == null) {
-			components = new Bag<Component>(entityContainerSize);
+			components = new Bag<Component>(highestSeenEntityId);
 			componentsByType.set(type.getIndex(), components);
 		}
 		
@@ -303,21 +302,12 @@ public class ComponentManager extends Manager {
 	public void deleted(Entity e) {
 		deleted.add(e);
 	}
-
-	
 	
 	@Override
 	public void added(Entity e) {
 		int id = e.getId();
-		if (highestSeenEntityId < id) {
-			highestSeenEntityId = id;
-			for (int i = 0, s = packedComponents.size(); s > i; i++) {
-				PackedComponent component = packedComponents.get(i);
-				if (component == null)
-					continue;
-
-				component.ensureCapacity(id);
-			}
+		if ((highestSeenEntityId - 1) < id) {
+			ensurePackedComponentCapacity(e);
 		}
 	}
 

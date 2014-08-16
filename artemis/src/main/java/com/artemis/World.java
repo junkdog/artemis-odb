@@ -104,9 +104,14 @@ public class World {
 	 * </p>
 	 */
 	public World() {
-		this(64);
+		this(new WorldConfiguration().maxRebuiltIndicesPerTick(64));
 	}
 
+	@Deprecated
+	public World(int expectedEntityCount) {
+		this(new WorldConfiguration().maxRebuiltIndicesPerTick(expectedEntityCount));
+	}
+	
 	/**
 	 * Creates a new world.
 	 * <p>
@@ -116,7 +121,7 @@ public class World {
 	 *
 	 * @param expectedEntityCount To avoid resizing entity containers needlessly.
 	 */
-	public World(int expectedEntityCount) {
+	public World(WorldConfiguration configuration) {
 		managers = new IdentityHashMap<Class<? extends Manager>, Manager>();
 		managersBag = new Bag<Manager>();
 
@@ -135,10 +140,10 @@ public class World {
 
 		systemIndex = new SystemIndexManager();
 		
-		cm = new ComponentManager(expectedEntityCount);
+		cm = new ComponentManager(configuration.expectedEntityCount());
 		setManager(cm);
 
-		em = new EntityManager(expectedEntityCount);
+		em = new EntityManager(configuration.expectedEntityCount());
 		setManager(em);
 	}
 
