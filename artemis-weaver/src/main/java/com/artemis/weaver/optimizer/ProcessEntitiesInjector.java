@@ -7,6 +7,7 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadata.OptimizationType;
 
 public final class ProcessEntitiesInjector implements Opcodes {
 
@@ -66,7 +67,7 @@ public final class ProcessEntitiesInjector implements Opcodes {
 		mv.visitInsn(AALOAD);
 		mv.visitTypeInsn(CHECKCAST, "com/artemis/Entity");
 //		mv.visitMethodInsn(INVOKEVIRTUAL, owner, "process", "(Lcom/artemis/Entity;)V");
-		mv.visitMethodInsn(INVOKESPECIAL, owner, "process", "(Lcom/artemis/Entity;)V");
+		mv.visitMethodInsn(invocation(meta.sysetemOptimizable), owner, "process", "(Lcom/artemis/Entity;)V");
 		Label l6 = new Label();
 		mv.visitLabel(l6);
 
@@ -88,5 +89,19 @@ public final class ProcessEntitiesInjector implements Opcodes {
 		mv.visitLocalVariable("i", "I", null, l2, l7, 3);
 		mv.visitLocalVariable("s", "I", null, l3, l7, 4);
 		mv.visitEnd();
+	}
+
+	private static int invocation(OptimizationType systemOptimization) {
+		switch (systemOptimization) {
+		case FULL:
+			return INVOKESPECIAL; 
+		case SAFE:
+			return INVOKEVIRTUAL;
+		case NOT_OPTIMIZABLE:
+			assert false;
+		default:
+			throw new RuntimeException("Missing case: " + systemOptimization);
+		
+		}
 	}
 }

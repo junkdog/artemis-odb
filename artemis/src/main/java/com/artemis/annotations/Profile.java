@@ -15,7 +15,7 @@ import com.artemis.utils.ArtemisProfiler;
  * point in <code>end()</code>.
  */
 @Target(ElementType.TYPE)
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.CLASS)
 @Documented
 public @interface Profile
 {

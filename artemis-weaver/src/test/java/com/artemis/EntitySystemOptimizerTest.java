@@ -1,9 +1,10 @@
 package com.artemis;
 
 import static com.artemis.Transformer.transform;
+import static com.artemis.meta.ClassMetadata.OptimizationType.FULL;
+import static com.artemis.meta.ClassMetadata.OptimizationType.NOT_OPTIMIZABLE;
+import static com.artemis.meta.ClassMetadata.OptimizationType.SAFE;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
 
@@ -17,6 +18,7 @@ import com.artemis.meta.ClassMetadata.GlobalConfiguration;
 import com.artemis.system.BeginEndSystem;
 import com.artemis.system.NoBeginEndSystem;
 import com.artemis.system.PoorFellowSystem;
+import com.artemis.system.SafeOptimizeSystem;
 
 @SuppressWarnings("static-method")
 public class EntitySystemOptimizerTest {
@@ -28,9 +30,9 @@ public class EntitySystemOptimizerTest {
 	
 	@Test
 	public void only_valid_entity_systems_test() {
-		assertFalse(scan(BeginEndSystem.class).isOptimizableSystem);
-		assertFalse(scan(NoBeginEndSystem.class).isOptimizableSystem);
-		assertTrue(scan(PoorFellowSystem.class).isOptimizableSystem);
+		assertEquals(NOT_OPTIMIZABLE, scan(BeginEndSystem.class).sysetemOptimizable);
+		assertEquals(NOT_OPTIMIZABLE, scan(NoBeginEndSystem.class).sysetemOptimizable);
+		assertEquals(FULL, scan(PoorFellowSystem.class).sysetemOptimizable);
 	}
 	
 	@Test
@@ -38,7 +40,13 @@ public class EntitySystemOptimizerTest {
 		ClassMetadata meta = Weaver.scan(transform(PoorFellowSystem.class));
 		
 		assertEquals("com/artemis/EntitySystem", meta.superClass);		
-		assertFalse(meta.isOptimizableSystem); 
+		assertEquals(NOT_OPTIMIZABLE, meta.sysetemOptimizable); 
+	}
+	
+	@Test
+	public void detect_preserve_process_visibility_test() throws Exception {
+		ClassMetadata meta = scan(SafeOptimizeSystem.class);
+		assertEquals(SAFE, meta.sysetemOptimizable); 
 	}
 	
 	private static ClassMetadata scan(Class<?> klazz) {

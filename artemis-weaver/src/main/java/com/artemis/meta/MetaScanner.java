@@ -12,6 +12,8 @@ import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
+import com.artemis.Weaver;
+import com.artemis.meta.ClassMetadata.OptimizationType;
 import com.artemis.meta.ClassMetadata.WeaverType;
 
 public class MetaScanner extends ClassVisitor implements Opcodes {
@@ -44,7 +46,9 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		info.superClass = superName;
-		info.isOptimizableSystem =  superName.equals("com/artemis/systems/EntityProcessingSystem");
+		if (superName.equals("com/artemis/systems/EntityProcessingSystem"))
+			info.sysetemOptimizable =  OptimizationType.FULL;
+		
 		super.visit(version, access, name, signature, superName, interfaces);
 	}
 	
@@ -61,6 +65,10 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 			return new ProfileAnnotationReader(desc, info);
 		} else if (WOVEN_ANNOTATION.equals(desc)) {
 			info.isPreviouslyProcessed = true;
+		} else if (info.sysetemOptimizable == OptimizationType.FULL
+				&& Weaver.PRESERVE_VISIBILITY_ANNOTATION.equals(desc)) {
+			
+			info.sysetemOptimizable = OptimizationType.SAFE;
 		}
 		
 		return av;

@@ -6,7 +6,6 @@ import java.io.File;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import com.artemis.ClassUtil;
 import com.artemis.Weaver;

@@ -1,5 +1,10 @@
 package com.artemis.annotations;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import com.artemis.Component;
 import com.artemis.PackedComponent;
 
@@ -10,6 +15,8 @@ import com.artemis.PackedComponent;
  * @see <a href="https://github.com/junkdog/artemis-odb/wiki/Component%20Types">Component types</a>
  *      on the wiki.
  */
+@Retention(RetentionPolicy.CLASS)
+@Target(ElementType.TYPE)
 public @interface PooledWeaver {
 	
 	/**

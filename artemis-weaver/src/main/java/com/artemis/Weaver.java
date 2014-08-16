@@ -19,8 +19,8 @@ import org.objectweb.asm.Type;
 
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.GlobalConfiguration;
+import com.artemis.meta.ClassMetadata.OptimizationType;
 import com.artemis.meta.ClassMetadata.WeaverType;
-import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.meta.FieldDescriptor;
 import com.artemis.meta.MetaScanner;
 import com.artemis.weaver.ComponentAccessTransmuter;
@@ -33,6 +33,7 @@ public class Weaver {
 	public static final String PROFILER_ANNOTATION = "Lcom/artemis/annotations/Profile;";
 	public static final String POOLED_ANNOTATION = "Lcom/artemis/annotations/PooledWeaver;";
 	public static final String WOVEN_ANNOTATION = "Lcom/artemis/annotations/internal/Transmuted";
+	public static final String PRESERVE_VISIBILITY_ANNOTATION = "Lcom/artemis/annotations/PreserveProcessVisiblity;";
 	
 	private final File targetClasses;
 	
@@ -79,7 +80,7 @@ public class Weaver {
 		ExecutorService threadPool = newThreadPool();
 		for (File f : classes) {
 			ClassMetadata meta = scan(classReaderFor(f.toString()));
-			if (meta.isOptimizableSystem) {
+			if (meta.sysetemOptimizable != OptimizationType.NOT_OPTIMIZABLE) {
 				processed.add(meta);
 				optimizeEntitySystem(threadPool, f.getAbsolutePath());
 			}
@@ -159,7 +160,7 @@ public class Weaver {
 		ClassReader cr = classReaderFor(file);
 		ClassMetadata meta = scan(cr);
 		
-		if (meta.isOptimizableSystem)
+		if (meta.sysetemOptimizable != OptimizationType.NOT_OPTIMIZABLE)
 			threadPool.submit(new EsOptimizationTransmuter(file, cr, meta));
 	}
 

@@ -15,7 +15,7 @@ public final class ClassMetadata {
 	public boolean isPreviouslyProcessed;
 	
 	//  ie superclass is com/artemis/systems/EntityProcessingSystem
-	public boolean isOptimizableSystem;
+	public OptimizationType sysetemOptimizable = OptimizationType.NOT_OPTIMIZABLE;
 		
 	// methods
 	public boolean foundReset;
@@ -43,6 +43,7 @@ public final class ClassMetadata {
 
 
 	public static enum WeaverType { NONE, POOLED, PACKED };
+	public static enum OptimizationType { NOT_OPTIMIZABLE, SAFE, FULL };
 	
 	public Future<?> weaverTask;
 

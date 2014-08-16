@@ -1,5 +1,10 @@
 package com.artemis.annotations;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import com.artemis.Component;
 import com.artemis.PooledComponent;
 
@@ -10,6 +15,8 @@ import com.artemis.PooledComponent;
  * @see <a href="https://github.com/junkdog/artemis-odb/wiki/Packed-Weaver">PackedWeaver</a>
  *      on the wiki.
  */
+@Retention(RetentionPolicy.CLASS)
+@Target(ElementType.TYPE)
 public @interface PackedWeaver {
 	
 	WorldStrategy usage() default WorldStrategy.GLOBAL_CONFIGURATION;

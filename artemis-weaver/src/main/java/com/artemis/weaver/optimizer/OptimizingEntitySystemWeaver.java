@@ -8,6 +8,7 @@ import org.objectweb.asm.Opcodes;
 
 import com.artemis.Weaver;
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadata.OptimizationType;
 
 public class OptimizingEntitySystemWeaver extends ClassVisitor implements Opcodes {
 
@@ -32,7 +33,9 @@ public class OptimizingEntitySystemWeaver extends ClassVisitor implements Opcode
 			method = cv.visitMethod(access, name, desc, signature, exceptions);
 			method = new EsConstructorVisitor(method, meta);
 		} else if ("process".equals(name) && "(Lcom/artemis/Entity;)V".equals(desc)) {
-			method = cv.visitMethod(ACC_PRIVATE, name, desc, signature, exceptions);
+			int visibility = meta.sysetemOptimizable == OptimizationType.FULL
+					? ACC_PRIVATE : access;
+			method = cv.visitMethod(visibility, name, desc, signature, exceptions);
 		} else {
 			method = cv.visitMethod(access, name, desc, signature, exceptions);
 		}
