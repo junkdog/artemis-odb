@@ -20,7 +20,7 @@ import org.sonatype.plexus.build.incremental.BuildContext;
 import com.artemis.meta.ClassMetadata;
 
 /**
- * The artemis plugin does bytecode-weaving on annotated components
+ * The artemis plugin performs bytecode-weaving on annotated components
  * and related classes.
  */
 @Mojo(name="artemis", defaultPhase=PROCESS_CLASSES)

@@ -18,6 +18,7 @@
   - Requires that the injected object is annotated with `@Wire`
 - Less bounds checking for PackedComponents.
 - Added `World#getManagers` method.
+- mvn plugin registered as "artemis", ie `mvn artemis:matrix`, or `mvn artemis:artemis`
 - **Fix**: Disabled entities are no longer added to systems.
 - **FIX**: Possible IOOB in `@PackedWeaver` components when accessing component data.
 
