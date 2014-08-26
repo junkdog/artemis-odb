@@ -95,12 +95,16 @@ comparing artemis-odb to other ESF:s and earlier artemis-odb versions.
 ### Open source
 | game                          | source/binaries                      | [matrix][cdm]     | author                         |
 |-------------------------------|--------------------------------------|-------------------|--------------------------------|
+| [Arktrail][ark]               | [source][ark-src] [play][ark-play]   | N/A               | [@DaanVanYperen][dvy]          |
 | [Sine][sine]                  | [source][sine-src]                   | [cdm][sine-cdm]   | [@timtipgames][sine-auth]      |
+| Spaceship Warrior Redux       | [source][sw-src] [play][sw-play]     | [cdm][sw-cdm]     | updated by [@Flet][flet]       |
 | [Ned et les Maki][ned]        | [source][ned-src]                    | N/A               | [Geeky Gobling Prod][ned-auth] |
 | [Naturally Selected 2D][ns2d] | [source][ns2d-src] [play][ns2d-play] | [cdm][ns2d-cdm]   | [@DaanVanYperen][dvy]          |
 | [The Underkeep][tu]           | [source][tu-src] [play][tu-play]     | [cdm][tu-cdm]     | [@DaanVanYperen][dvy]          |
-| Spaceship Warrior Redux       | [source][sw-src] [play][sw-play]     | [cdm][sw-cdm]     | updated by [@Flet][flet]       |
 
+ [ark]: http://www.ludumdare.com/compo/ludum-dare-30/?action=preview&uid=22396
+ [ark-src]: https://github.com/DaanVanYperen/arktrail
+ [ark-play]: http://www.mostlyoriginal.net/play-arktrail/
  [cdm]: https://github.com/junkdog/artemis-odb/wiki/Component-Dependency-Matrix
  [cli]: https://github.com/junkdog/artemis-odb/wiki/Command-Line-Tool
  [sine]: http://www.ludumdare.com/compo/ludum-dare-27/?action=preview&uid=15341
@@ -123,4 +127,3 @@ comparing artemis-odb to other ESF:s and earlier artemis-odb versions.
  [sw-play]: http://flet.github.io/spaceship-warrior-redux/
  [sw-cdm]: http://junkdog.github.io/matrix-sw.html
  [flet]: https://github.com/Flet/ 
-
