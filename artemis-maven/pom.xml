@@ -49,7 +49,7 @@
 				<configuration>
 					<!-- see http://jira.codehaus.org/browse/MNG-5346 -->
 					<skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-					<goalPrefix>artemis</goalPrefix>
+					<goalPrefix>artemis-odb</goalPrefix>
 				</configuration>
 				<executions>
 					<execution>

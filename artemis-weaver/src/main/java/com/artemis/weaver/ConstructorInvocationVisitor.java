@@ -8,6 +8,8 @@ import com.artemis.meta.ClassMetadata;
 public class ConstructorInvocationVisitor extends MethodVisitor implements Opcodes {
 
 	private final ClassMetadata meta;
+	
+	private boolean hasCalledSuper = false;
 
 	public ConstructorInvocationVisitor(MethodVisitor mv, ClassMetadata meta) {
 		super(ASM4, mv);
@@ -16,10 +18,12 @@ public class ConstructorInvocationVisitor extends MethodVisitor implements Opcod
 
 	@Override
 	public void visitMethodInsn(int opcode, String owner, String name, String desc) {
-		if (INVOKESPECIAL == opcode && "<init>".equals(name))
+		if (!hasCalledSuper && INVOKESPECIAL == opcode && "<init>".equals(name)) {
 			mv.visitMethodInsn(opcode, owner(meta, owner), name, desc);
-		else
+			hasCalledSuper = true;
+		} else {
 			mv.visitMethodInsn(opcode, owner, name, desc);
+		}
 	}
 
 	private static String owner(ClassMetadata meta, String owner) {

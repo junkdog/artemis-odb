@@ -86,10 +86,7 @@ public final class ClassMetadataUtil {
 	}
 	
 	public static int sizeOf(FieldDescriptor fd) {
-		String dataDesc = fd.desc;
-		
-		assert (dataDesc.length() == 1);
-		switch (dataDesc.charAt(0)) {
+		switch (fd.desc.charAt(0)) {
 			case 'J': // long
 			case 'D': // double
 				return 8;
@@ -102,8 +99,10 @@ public final class ClassMetadataUtil {
 			case 'B': // byte
 			case 'Z': // boolean
 				return 1;
+			case 'L': // object
+				return 0;
 			default:
-				throw new RuntimeException("Unknown primtive type: " + dataDesc);
+				throw new RuntimeException("Unknown primtive type: " + fd.desc);
 		}
 	}
 	

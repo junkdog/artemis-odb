@@ -1,11 +1,13 @@
 package com.artemis.weaver.pooled;
 
 import static com.artemis.meta.ClassMetadataUtil.instanceFields;
+import static com.artemis.meta.ClassMetadataUtil.sizeOf;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.meta.FieldDescriptor;
 
 public class ResetMethodVisitor extends MethodVisitor implements Opcodes {
@@ -20,8 +22,10 @@ public class ResetMethodVisitor extends MethodVisitor implements Opcodes {
 	@Override
 	public void visitCode() {
 		mv.visitCode();
-		for (FieldDescriptor field : instanceFields(meta))
-			resetField(field);
+		for (FieldDescriptor field : instanceFields(meta)) {
+			if (sizeOf(field) > 0) // if 0 then field is a complex type
+				resetField(field);
+		}
 	}
 	
 	private void resetField(FieldDescriptor field) {

@@ -43,7 +43,12 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 				cv = new PackedComponentWeaver(cv, meta);
 				break;
 			case POOLED:
-				if (!meta.foundReset) injectMethodStub("reset", "()V");
+				if (!meta.foundReset) {
+					injectMethodStub("reset", "()V");
+					cr.accept(cw, 0);
+					cr = new ClassReader(cw.toByteArray());
+					cv = cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+				}
 				cv = new CommonClassWeaver(cv, meta);
 				cv = new PooledComponentWeaver(cv, meta);
 				break;

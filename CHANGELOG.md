@@ -18,7 +18,9 @@
   - Requires that the injected object is annotated with `@Wire`
 - Less bounds checking for PackedComponents.
 - Added `World#getManagers` method.
-- maven plugin registered as "artemis", ie `mvn artemis:matrix`, or `mvn artemis:artemis`
+- maven plugin registered as "artemis-odb", ie `mvn artemis-odb:matrix`, or `mvn artemis-odb:artemis`
+- **Fix**: `@PooledWeaver` wasn't resetting components.
+  - Additionaly, only primitive fields are reset - objects are left intact.
 - **Fix**: Disabled entities are no longer added to systems.
 - **FIX**: Possible IOOB in `@PackedWeaver` components when accessing component data.
 
