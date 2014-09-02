@@ -16,6 +16,7 @@
 
 package com.artemis.utils.reflect;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -142,10 +143,13 @@ public final class Field {
 		}
 	}
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public boolean hasAnnotation(Class annotationClass) {
-    	return field.getAnnotation(annotationClass) != null ? true: false;
-    }
-	
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	public boolean hasAnnotation(Class annotationClass) {
+		return field.getAnnotation(annotationClass) != null ? true : false;
+	}
 
+	public <T extends Annotation>T getAnnotation(Class<T> annotationClass) {
+		return (T)field.getAnnotation(annotationClass);
+	}
+	
 }

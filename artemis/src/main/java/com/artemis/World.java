@@ -1,6 +1,7 @@
 package com.artemis;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,6 +153,7 @@ public class World {
 		setManager(em);
 		
 		maxRebuiltIndicesPerTick = configuration.maxRebuiltIndicesPerTick();
+		injector = new ArtemisInjector(this, configuration);
 	}
 	
 	/**
@@ -159,7 +161,7 @@ public class World {
 	 * added.
 	 */
 	public void initialize() {
-		injector = new ArtemisInjector(this);
+		injector.udpate();
 		for (int i = 0; i < managersBag.size(); i++) {
 			Manager manager = managersBag.get(i);
 			injector.inject(manager);
@@ -547,10 +549,9 @@ public class World {
 	}
 
 	private void initializeSystems() {
-		ArtemisInjector initHelper = new ArtemisInjector(this);
 		for (int i = 0, s = systemsToInit.size(); i < s; i++) {
 			EntitySystem es = systemsToInit.get(i);
-			initHelper.inject(es);
+			injector.inject(es);
 			es.initialize();
 		}
 		systemsToInit.clear();
@@ -653,13 +654,19 @@ public class World {
 	private static final class ArtemisInjector {
 		private final World world;
 		
-		private Map<Class<?>, Class<?>> systems;
-		private Map<Class<?>, Class<?>> managers;
+		private final Map<Class<?>, Class<?>> systems;
+		private final Map<Class<?>, Class<?>> managers;
+		private final Map<String, Object> pojos;
 		
-		ArtemisInjector(World world) {
+		ArtemisInjector(World world, WorldConfiguration config) {
 			this.world = world;
 			
 			systems = new IdentityHashMap<Class<?>, Class<?>>();
+			managers = new IdentityHashMap<Class<?>, Class<?>>();
+			pojos = new HashMap<String, Object>(config.injectables);
+		}
+		
+		void udpate() {
 			for (EntitySystem es : world.getSystems()) {
 				Class<?> origin = es.getClass();
 				Class<?> clazz = origin;
@@ -668,7 +675,6 @@ public class World {
 				} while ((clazz = clazz.getSuperclass()) != Object.class);
 			}
 			
-			managers = new IdentityHashMap<Class<?>, Class<?>>();
 			for (Manager manager : world.managersBag) {
 				Class<?> origin = manager.getClass();
 				Class<?> clazz = origin;
@@ -676,8 +682,8 @@ public class World {
 					managers.put(clazz, origin);
 				} while ((clazz = clazz.getSuperclass()) != Object.class);
 			}
+			
 		}
-		
 
 		public void inject(Object target) throws RuntimeException {
 			try {
@@ -703,8 +709,9 @@ public class World {
 		private void injectValidFields(Object target, Class<?> clazz, boolean failOnNull, boolean injectInherited)
 				throws ReflectionException {
 
-			for (Field field : ClassReflection.getDeclaredFields(clazz)) {
-				injectField(target, field, failOnNull);
+			Field[] declaredFields = ClassReflection.getDeclaredFields(clazz);
+			for (int i = 0, s = declaredFields.length; s > i; i++) {
+				injectField(target, declaredFields[i], failOnNull);
 			}
 
 			// should bail earlier, but it's just one more round.
@@ -717,12 +724,13 @@ public class World {
 			throws ReflectionException {
 
 			injectClass(target, clazz);
-
 		}
 
 		@SuppressWarnings("deprecation")
 		private void injectClass(Object target, Class<?> clazz) throws ReflectionException {
-			for (Field field : ClassReflection.getDeclaredFields(clazz)) {
+			Field[] declaredFields = ClassReflection.getDeclaredFields(clazz);
+			for (int i = 0, s = declaredFields.length; s > i; i++) {
+				Field field = declaredFields[i];
 				if (field.hasAnnotation(Mapper.class) || field.hasAnnotation(Wire.class)) {
 					injectField(target, field, field.hasAnnotation(Wire.class));
 				}
@@ -762,6 +770,13 @@ public class World {
 					throw new MundaneWireException("Manager not found for " + fieldType);
 				}
 				field.set(target, manager);
+			} else if (field.hasAnnotation(Wire.class)) {
+				String key = field.getAnnotation(Wire.class).name();
+				if ("".equals(key))
+					key = field.getType().getName();
+				
+				if (pojos.containsKey(key))
+					field.set(target, pojos.get(key));
 			}
 		}
 	}

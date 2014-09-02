@@ -156,6 +156,33 @@ public class WireTest {
 		world.inject(obj);
 	}
 	
+	@Test
+	public void inject_anything_into_everything() {
+		
+		World world = new World(new WorldConfiguration()
+			.register("world")
+			.register("hupp", "n1")
+			.register("blergh", "n2"));
+		world.setManager(new TagManager());
+		world.initialize();
+		
+		SomeThing st = new SomeThing();
+		world.inject(st);
+
+		assertNotNull(st.tagManager);
+		assertEquals("n1", st.helloN1);
+		assertEquals("world", st.hello);
+		assertEquals("n2", st.helloN2);
+	}
+
+	@Wire
+	private static class SomeThing {
+		@Wire(name="hupp") private String helloN1; 
+		@Wire private String hello;
+		@Wire(name="blergh") private String helloN2; 
+		
+		private TagManager tagManager;
+	}
 	
 	@Wire
 	private static class PojoWireNoWorld {

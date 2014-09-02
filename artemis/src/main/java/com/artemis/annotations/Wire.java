@@ -35,4 +35,10 @@ public @interface Wire {
 	 * Throws a {@link NullPointerException} if field can't be injected.
 	 */
 	boolean failOnNull() default true;
+	
+	
+	/**
+	 * 
+	 */
+	String name() default "";
 }

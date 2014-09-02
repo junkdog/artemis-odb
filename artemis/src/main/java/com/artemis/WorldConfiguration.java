@@ -1,8 +1,12 @@
 package com.artemis;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class WorldConfiguration {
 	private int expectedEntityCount = 128;
 	private int maxRebuiltIndicesPerTick = 1;
+	Map<String, Object> injectables = new HashMap<String, Object>();
 	
 	public int expectedEntityCount() {
 		return expectedEntityCount;
@@ -30,6 +34,14 @@ public class WorldConfiguration {
 	 */
 	public WorldConfiguration maxRebuiltIndicesPerTick(int maxRebuiltIndicesPerTick) {
 		this.maxRebuiltIndicesPerTick = Math.max(0, maxRebuiltIndicesPerTick);
+		return this;
+	}
+	
+	public WorldConfiguration register(Object o) {
+		return register(o.getClass().getName(), o);
+	}
+	public WorldConfiguration register(String name, Object o) {
+		injectables.put(name, o);
 		return this;
 	}
 }
