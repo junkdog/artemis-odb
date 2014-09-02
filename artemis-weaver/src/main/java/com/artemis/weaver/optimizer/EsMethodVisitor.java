@@ -5,11 +5,11 @@ import org.objectweb.asm.Opcodes;
 
 import com.artemis.meta.ClassMetadata;
 
-public class EsConstructorVisitor extends MethodVisitor implements Opcodes {
+public class EsMethodVisitor extends MethodVisitor implements Opcodes {
 
 	private final ClassMetadata meta;
 
-	public EsConstructorVisitor(MethodVisitor mv, ClassMetadata meta) {
+	public EsMethodVisitor(MethodVisitor mv, ClassMetadata meta) {
 		super(ASM4, mv);
 		this.meta = meta;
 	}

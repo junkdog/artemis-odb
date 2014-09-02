@@ -29,16 +29,12 @@ public class OptimizingEntitySystemWeaver extends ClassVisitor implements Opcode
 			String signature, String[] exceptions) {
 		
 		MethodVisitor method = null;
-		if ("<init>".equals(name)) {
-			method = cv.visitMethod(access, name, desc, signature, exceptions);
-			method = new EsConstructorVisitor(method, meta);
-		} else if ("process".equals(name) && "(Lcom/artemis/Entity;)V".equals(desc)) {
-			int visibility = meta.sysetemOptimizable == OptimizationType.FULL
-					? ACC_PRIVATE : access;
-			method = cv.visitMethod(visibility, name, desc, signature, exceptions);
-		} else {
-			method = cv.visitMethod(access, name, desc, signature, exceptions);
+		if ("process".equals(name) && "(Lcom/artemis/Entity;)V".equals(desc)) {
+			access = meta.sysetemOptimizable == OptimizationType.FULL ? ACC_PRIVATE : access;
 		}
+		
+		method = cv.visitMethod(access, name, desc, signature, exceptions);
+		method = new EsMethodVisitor(method, meta);
 		
 		return method;
 		

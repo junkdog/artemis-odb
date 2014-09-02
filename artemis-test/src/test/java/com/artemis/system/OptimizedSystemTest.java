@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
+import com.artemis.World;
 
 @SuppressWarnings("static-method")
 public class OptimizedSystemTest {
@@ -33,6 +34,18 @@ public class OptimizedSystemTest {
 		assertEquals(PROTECTED, m.getModifiers() & PROTECTED);
 	}
 	
+	@Test
+	public void fully_optimized_entity_system_with_additional_references() {
+		Assert.assertEquals(EntitySystem.class, OptimizedSystemAdditional.class.getSuperclass());
+
+		Method m = processMethod(OptimizedSystemAdditional.class);
+		assertEquals(PRIVATE, m.getModifiers() & PRIVATE);
+
+		World world = new World();
+		world.setSystem(new OptimizedSystemAdditional());
+		world.initialize();
+	}
+
 	private static Method processMethod(Class<?> klazz) {
 		try {
 			return klazz.getDeclaredMethod("process", Entity.class);
