@@ -4,6 +4,7 @@ import java.util.BitSet;
 import java.util.UUID;
 
 import com.artemis.ComponentType.Taxonomy;
+import com.artemis.EntityEditPool.EntityEdit;
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 
@@ -86,6 +87,7 @@ public final class Entity {
 		return world.getEntityManager().componentBits(this);
 	}
 	
+	
 	/**
 	 * Returns a BitSet instance containing bits of the systems interested in
 	 * the entity.
@@ -96,6 +98,10 @@ public final class Entity {
 		return world.getEntityManager().systemBits(this);
 	}
 
+	public EntityEdit edit() {
+		return world.editPool.obtainEditor(this);
+	}
+	
 	@Override
 	public String toString() {
 		return "Entity[" + id + "]";

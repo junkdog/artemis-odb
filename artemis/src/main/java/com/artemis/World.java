@@ -99,7 +99,7 @@ public class World {
 	int rebuiltIndices;
 	private int maxRebuiltIndicesPerTick;
 
-	
+	final EntityEditPool editPool = new EntityEditPool(this);
 	
 
 	/**
@@ -528,6 +528,7 @@ public class World {
 		rebuiltIndices = 0;
 		
 		check(added, addedPerformer);
+		editPool.processEntities();
 		deleted.clear();
 
 		em.clean();
@@ -543,6 +544,7 @@ public class World {
 		for (int i = 0, s = systemsBag.size(); s > i; i++) {
 			EntitySystem system = (EntitySystem) systemsData[i];
 			if (!system.isPassive()) {
+				editPool.processEntities();
 				system.process();
 			}
 		}
