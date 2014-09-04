@@ -3,7 +3,6 @@ package com.artemis;
 import java.util.BitSet;
 import java.util.UUID;
 
-import com.artemis.ComponentType.Taxonomy;
 import com.artemis.EntityEditPool.EntityEdit;
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
@@ -109,11 +108,7 @@ public final class Entity {
 	
 	@Deprecated
 	public <T extends Component> T createComponent(Class<T> componentKlazz) {
-		ComponentManager componentManager = world.getComponentManager();
-		T component = componentManager.create(this, componentKlazz);
-		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-		componentManager.addComponent(this, tf.getTypeFor(componentKlazz), component);
-		return component;
+		return edit().createComponent(componentKlazz);
 	}
 
 	/**
@@ -127,8 +122,7 @@ public final class Entity {
 	 */
 	@Deprecated
 	public Entity addComponent(Component component) {
-		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-		addComponent(component, tf.getTypeFor(component.getClass()));
+		edit().addComponent(component);
 		return this;
 	}
 	
@@ -149,11 +143,7 @@ public final class Entity {
 	 */
 	@Deprecated
 	public Entity addComponent(Component component, ComponentType type) {
-		if (type.getTaxonomy() != Taxonomy.BASIC) {
-			throw new InvalidComponentException(component.getClass(),
-				"Use Entity#createComponent for adding non-basic component types");
-		}
-		world.getComponentManager().addComponent(this, type, component);
+		edit().addComponent(component, type);
 		return this;
 	}
 
@@ -166,7 +156,7 @@ public final class Entity {
 	 * @return this entity for chaining
 	 */
 	public Entity removeComponent(Component component) {
-		removeComponent(component.getClass());
+		edit().removeComponent(component);
 		return this;
 	}
 
@@ -179,7 +169,7 @@ public final class Entity {
 	 * @return this entity for chaining
 	 */
 	public Entity removeComponent(ComponentType type) {
-		world.getComponentManager().removeComponent(this, type);
+		edit().removeComponent(type);
 		return this;
 	}
 	
@@ -192,8 +182,7 @@ public final class Entity {
 	 * @return this entity for chaining
 	 */
 	public Entity removeComponent(Class<? extends Component> type) {
-		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-		removeComponent(tf.getTypeFor(type));
+		edit().removeComponent(type);
 		return this;
 	}
 
@@ -278,25 +267,16 @@ public final class Entity {
 	}
 
 	/**
-	 * Refresh all changes to components for this entity.
-	 * <p>
-	 * After adding or removing components, you must call this method. It will
-	 * update all relevant systems. It is typical to call this after adding
-	 * components to a newly created entity.
-	 * </p>
+	 * Automatically managed.
 	 */
 	@Deprecated
-	public void addToWorld() {
-		world.addEntity(this);
-	}
+	public void addToWorld() {}
 	
 	/**
-	 * Refresh the entity if it has changed, a component added or deleted.
+	 * Automatically managed.
 	 */
 	@Deprecated
-	public void changedInWorld() {
-		world.changedEntity(this);
-	}
+	public void changedInWorld() {}
 
 	/**
 	 * Delete this entity from the world.
