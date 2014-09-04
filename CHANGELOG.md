@@ -22,6 +22,7 @@
 - **Fix**: `@PooledWeaver` wasn't resetting components.
   - Additionaly, only primitive fields are reset - objects are left intact.
 - **Fix**: Disabled entities are no longer added to systems.
+- **Fix**: `EntityManager#isActive` could throw an OOB exception..
 - **FIX**: Possible IOOB in `@PackedWeaver` components when accessing component data.
 
 ## Version: 0.6.5 - 2014-07-17
