@@ -142,7 +142,7 @@ public class EntityManager extends Manager {
 	 * @return true if active, false if not
 	 */
 	public boolean isActive(int entityId) {
-		return entities.get(entityId) != null;
+		return (entities.size() > entityId) ? entities.get(entityId) != null : false; 
 	}
 	
 	/**

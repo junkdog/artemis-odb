@@ -61,6 +61,15 @@ public class EntityManagerTest {
 	}
 	
 	@Test
+	public void is_active_check_never_throws() {
+		EntityManager em = world.getEntityManager();
+		for (int i = 0; 1024 > i; i++) {
+			Entity e = world.createEntity();
+			assertFalse(em.isActive(e.getId()));
+		}
+	}
+	
+	@Test
 	public void recycled_entities_behave_nicely_with_components() {
 		ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
 		
