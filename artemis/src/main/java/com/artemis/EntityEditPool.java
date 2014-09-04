@@ -2,6 +2,7 @@ package com.artemis;
 
 import java.util.BitSet;
 
+import com.artemis.ComponentType.Taxonomy;
 import com.artemis.utils.Bag;
 
 public class EntityEditPool {
@@ -10,14 +11,17 @@ public class EntityEditPool {
 	private final World world;
 	
 	private final WildBag<EntityEdit> changed = new WildBag<EntityEdit>();
+	private BitSet changedIds = new BitSet();
 	
 	EntityEditPool(World world) {
 		this.world = world;
 	}
 	
-	public EntityEdit obtainEditor(Entity entity) {
+	EntityEdit obtainEditor(Entity entity) {
 		EntityEdit edit;
-		if (pool.isEmpty()) {
+		if (changedIds.get(entity.getId())) {
+			edit = findEntityEdit(entity);
+		} else if (pool.isEmpty()) {
 			edit = new EntityEdit(world);
 		} else {
 			edit = pool.removeLast();
@@ -25,30 +29,46 @@ public class EntityEditPool {
 		}
 		
 		edit.entity = entity;
+		edit.hasBeenAddedToWorld = world.getEntityManager().isActive(entity.getId());
 		changed.add(edit);
 		return edit;
 	}
 	
+	private EntityEdit findEntityEdit(Entity entity) {
+		Object[] data = changed.getData();
+		for (int i = 0, s = changed.size(); s > i; i++) {
+			EntityEdit edit = (EntityEdit)data[i];
+			if (edit.entity == entity)
+				return edit;
+		}
+		
+		throw new RuntimeException();
+	}
+
 	void processEntities() {
 		int size = changed.size();
 		if (size > 0) {
 			Object[] data = changed.getData();
 			World w = world;
 			for (int i = 0; size > i; i++) {
-				w.changedEntity(((EntityEdit)data[i]).entity);
+				EntityEdit edit = (EntityEdit)data[i];
+				if (edit.hasBeenAddedToWorld)
+					w.changedEntity(edit.entity);
+				else
+					w.addEntity(edit.entity);
+				
+				pool.add(edit);
 			}
 			changed.setSize(0);
+			changedIds.clear();
 		}
-	}
-	
-	private void free(EntityEdit edit) {
-		pool.add(edit);
 	}
 	
 	public static final class EntityEdit {
 		private Entity entity;
-		private BitSet changedComponents;
+		private BitSet changedComponents; // currently not in use, in practice
 		private World world;
+		private boolean hasBeenAddedToWorld;
 		
 		public EntityEdit(World world) {
 			this.world = world;
@@ -66,6 +86,45 @@ public class EntityEditPool {
 			changedComponents.flip(componentType.getIndex());
 			
 			return component;
+		}
+		
+		/**
+		 * Add a component to this entity.
+		 * 
+		 * @param component
+		 *			the component to add to this entity
+		 * 
+		 * @return this entity for chaining
+		 * @see {@link #createComponent(Class)}
+		 */
+		public EntityEdit addComponent(Component component) {
+			ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+			addComponent(component, tf.getTypeFor(component.getClass()));
+			return this;
+		}
+		
+		/**
+		 * Faster adding of components into the entity.
+		 * <p>
+		 * Not necessary to use this, but in some cases you might need the extra
+		 * performance.
+		 * </p>
+		 *
+		 * @param component
+		 *			the component to add
+		 * @param type
+		 *			the type of the component
+		 * 
+		 * @return this entity for chaining
+		 * @see #createComponent(Class)
+		 */
+		public EntityEdit addComponent(Component component, ComponentType type) {
+			if (type.getTaxonomy() != Taxonomy.BASIC) {
+				throw new InvalidComponentException(component.getClass(),
+					"Use Entity#createComponent for adding non-basic component types");
+			}
+			world.getComponentManager().addComponent(entity, type, component);
+			return this;
 		}
 		
 		public Entity getEntity() {

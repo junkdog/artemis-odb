@@ -25,7 +25,7 @@ public class EntityManager extends Manager {
 	/** Amount of entities ever deleted from the manager. */
 	private long deleted;
 	private RecyclingEntityFactory recyclingEntityFactory;
-	
+
 	private final Bag<BitSet> componentBits;
 	private final Bag<BitSet> systemBits;
 

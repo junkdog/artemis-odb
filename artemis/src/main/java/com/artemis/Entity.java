@@ -107,6 +107,7 @@ public final class Entity {
 		return "Entity[" + id + "]";
 	}
 	
+	@Deprecated
 	public <T extends Component> T createComponent(Class<T> componentKlazz) {
 		ComponentManager componentManager = world.getComponentManager();
 		T component = componentManager.create(this, componentKlazz);
@@ -124,6 +125,7 @@ public final class Entity {
 	 * @return this entity for chaining
 	 * @see {@link #createComponent(Class)}
 	 */
+	@Deprecated
 	public Entity addComponent(Component component) {
 		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
 		addComponent(component, tf.getTypeFor(component.getClass()));
@@ -145,6 +147,7 @@ public final class Entity {
 	 * @return this entity for chaining
 	 * @see #createComponent(Class)
 	 */
+	@Deprecated
 	public Entity addComponent(Component component, ComponentType type) {
 		if (type.getTaxonomy() != Taxonomy.BASIC) {
 			throw new InvalidComponentException(component.getClass(),
@@ -282,6 +285,7 @@ public final class Entity {
 	 * components to a newly created entity.
 	 * </p>
 	 */
+	@Deprecated
 	public void addToWorld() {
 		world.addEntity(this);
 	}
@@ -289,6 +293,7 @@ public final class Entity {
 	/**
 	 * Refresh the entity if it has changed, a component added or deleted.
 	 */
+	@Deprecated
 	public void changedInWorld() {
 		world.changedEntity(this);
 	}

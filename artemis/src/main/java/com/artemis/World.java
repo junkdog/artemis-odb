@@ -361,16 +361,15 @@ public class World {
 	}
 
 	/**
-	 * Create and return a new or reused entity instance.
-	 * <p>
-	 * Will NOT add the entity to the world, use {@link #addEntity(Entity)} for
-	 * that.
-	 * </p>
+	 * Create and return a new or reused entity instance. Eentity is 
+	 * automatically added to the world.
 	 *
 	 * @return entity
 	 */
 	public Entity createEntity() {
-		return em.createEntityInstance();
+		Entity e = em.createEntityInstance();
+		e.edit();
+		return e;
 	}
 
 	/**
@@ -527,8 +526,8 @@ public class World {
 	public void process() {
 		rebuiltIndices = 0;
 		
-		check(added, addedPerformer);
 		editPool.processEntities();
+		check(added, addedPerformer);
 		deleted.clear();
 
 		em.clean();

@@ -18,8 +18,6 @@ public class EntityEditTest {
 		world.initialize();
 		
 		Entity e = world.createEntity();
-		e.addToWorld();
-
 		world.process();
 		
 		assertEquals(1, lm.added);
