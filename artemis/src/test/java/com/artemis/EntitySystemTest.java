@@ -13,6 +13,7 @@ import com.artemis.utils.ImmutableBag;
  */
 public class EntitySystemTest {
 
+	@SuppressWarnings("static-method")
 	@Test(expected = NoSuchElementException.class)
 	public void test_process_one_inactive() {
 		World w = new World();
@@ -21,13 +22,13 @@ public class EntitySystemTest {
 		w.initialize();
 
 		Entity e = w.createEntity();
-		e.addComponent(new C());
+		e.edit().addComponent(new C());
 		e.disable();
-		e.changedInWorld();
 
 		w.process();
 	}
 
+	@SuppressWarnings("static-method")
 	@Test
 	public void test_process_one_active() {
 		World w = new World();
@@ -36,9 +37,7 @@ public class EntitySystemTest {
 		w.initialize();
 
 		Entity e = w.createEntity();
-		e.addComponent(new C());
-		e.addToWorld();
-		e.changedInWorld();
+		e.edit().addComponent(new C());
 
 		w.process();
 	}
@@ -47,6 +46,8 @@ public class EntitySystemTest {
 
 	public static class IteratorTestSystem extends EntitySystem {
 		public int expectedSize;
+		
+		@SuppressWarnings("unchecked")
 		public IteratorTestSystem(int expectedSize) {
 			super(Aspect.getAspectForAll(C.class));
 			this.expectedSize = expectedSize;

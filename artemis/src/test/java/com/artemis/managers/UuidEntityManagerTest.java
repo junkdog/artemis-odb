@@ -14,6 +14,7 @@ import com.artemis.Entity;
 import com.artemis.MundaneWireException;
 import com.artemis.World;
 
+@SuppressWarnings("static-method")
 public class UuidEntityManagerTest {
 	
 	@Test(expected=MundaneWireException.class)
@@ -22,7 +23,6 @@ public class UuidEntityManagerTest {
 		world.initialize();
 		
 		Entity entity = world.createEntity();
-		entity.addToWorld();
 		
 		Assert.assertNotNull(entity.getUuid());
 	}
@@ -34,7 +34,6 @@ public class UuidEntityManagerTest {
 		world.initialize();
 		
 		Entity entity = world.createEntity();
-		entity.addToWorld();
 		
 		assertNotNull(entity.getUuid());
 		UUID uuid1 = entity.getUuid();
@@ -44,7 +43,6 @@ public class UuidEntityManagerTest {
 		world.process();
 		
 		entity = world.createEntity();
-		entity.addToWorld();
 		
 		assertNotNull(entity.getUuid());
 		UUID uuid2 = entity.getUuid();
@@ -59,7 +57,6 @@ public class UuidEntityManagerTest {
 		world.initialize();
 		
 		Entity entity = world.createEntity();
-		entity.addToWorld();
 		
 		UUID uuid0 = entity.getUuid();
 		Assert.assertNotNull(uuid0);
@@ -88,11 +85,8 @@ public class UuidEntityManagerTest {
 		uuids[2] = UUID.randomUUID();
 		
 		Entity e1 = world.createEntity(uuids[0]);
-		e1.addToWorld();
 		Entity e2 = world.createEntity(uuids[1]);
-		e2.addToWorld();
 		Entity e3 = world.createEntity(uuids[2]);
-		e3.addToWorld();
 		
 		assertEquals(uuids[0], e1.getUuid());
 		assertEquals(uuids[1], e2.getUuid());

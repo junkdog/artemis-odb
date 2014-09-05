@@ -26,7 +26,6 @@ public class GroupManagerTest {
 	@Test
 	public void added_entities_should_only_occur_once() {
 		Entity entity = world.createEntity();
-		entity.addToWorld();
 		gm.add(entity, GROUPIE);
 		gm.add(entity, GROUPIE);
 
@@ -36,7 +35,6 @@ public class GroupManagerTest {
 	@Test
 	public void deleted_entities_should_be_removed() {
 		Entity entity = world.createEntity();
-		entity.addToWorld();
 		gm.add(entity, GROUPIE);
 
 		assertEquals(1, gm.getEntities(GROUPIE).size());
@@ -50,7 +48,6 @@ public class GroupManagerTest {
 	@Test
 	public void deleted_entities_should_be_removed_from_all_groups() {
 		Entity entity = world.createEntity();
-		entity.addToWorld();
 		gm.add(entity, GROUPIE);
 		gm.add(entity, GROUPIE2);
 		

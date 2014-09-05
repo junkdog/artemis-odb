@@ -63,9 +63,9 @@ public class PackedComponentTest
 	private Entity createEntity(Class<?>... components) {
 		Entity e = world.createEntity();
 		for (Class<?> c : components) {
-			e.createComponent((Class<Component>)c);
+			e.edit().createComponent((Class<Component>)c);
 		}
-		e.addToWorld();
+		
 		return e;
 	}
 }

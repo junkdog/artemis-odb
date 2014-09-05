@@ -6,6 +6,7 @@ import org.junit.Test;
 
 public class ComponentPoolTest
 {
+	@SuppressWarnings("static-method")
 	@Test
 	public void reuse_pooled_components() throws Exception
 	{

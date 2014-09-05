@@ -61,13 +61,13 @@ public class ComponentManagerTest {
 	@Test
 	public void instantiate_packed_empty_constructor() {
 		Entity e = world.createEntity();
-		assertNotNull(e.createComponent(Packed.class));
+		assertNotNull(e.edit().createComponent(Packed.class));
 	}
 	
 	@Test
 	public void instantiate_packed_world_constructor() {
 		Entity e = world.createEntity();
-		assertNotNull(e.createComponent(PackedWorld.class));
+		assertNotNull(e.edit().createComponent(PackedWorld.class));
 	}
 	
 	private static Field field(String f) throws NoSuchFieldException {
@@ -124,6 +124,7 @@ public class ComponentManagerTest {
 	}
 	
 	private class Basic extends Component {
+		@SuppressWarnings("unused")
 		public String text;
 	}
 }

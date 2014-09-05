@@ -27,9 +27,9 @@ public class MultiWorldTest
 		world.setSystem(new InnerWorldProcessingSystem(innerWorld));
 		world.initialize();
 		
-		world.createEntity().createComponent(ComponentX.class);
-		innerWorld.createEntity().createComponent(ComponentY.class);
-		innerWorld.createEntity().createComponent(ComponentX.class);
+		world.createEntity().edit().createComponent(ComponentX.class);
+		innerWorld.createEntity().edit().createComponent(ComponentY.class);
+		innerWorld.createEntity().edit().createComponent(ComponentX.class);
 		
 		world.process();
 		
@@ -77,12 +77,6 @@ public class MultiWorldTest
 			fail(e.getMessage());
 		}
 		return -1;
-	}
-
-	private static void createEntity(World w) {
-		Entity e = w.createEntity();
-		e.createComponent(ComponentX.class);
-		e.createComponent(ComponentY.class);
 	}
 
 	public static class EmptySystem

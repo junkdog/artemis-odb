@@ -28,11 +28,8 @@ public class EntityManagerTest {
 		Set<Integer> ids = new HashSet<Integer>();
 		
 		Entity e1 = world.createEntity();
-		e1.addToWorld();
 		Entity e2 = world.createEntity();
-		e2.addToWorld();
 		Entity e3 = world.createEntity();
-		e3.addToWorld();
 		
 		ids.add(System.identityHashCode(e1));
 		ids.add(System.identityHashCode(e2));
@@ -47,11 +44,8 @@ public class EntityManagerTest {
 		world.process();
 		
 		Entity e1b = world.createEntity();
-		e1b.addToWorld();
 		Entity e2b = world.createEntity();
-		e2b.addToWorld();
 		Entity e3b = world.createEntity();
-		e3b.addToWorld();
 
 		ids.add(System.identityHashCode(e1b));
 		ids.add(System.identityHashCode(e2b));
@@ -74,15 +68,13 @@ public class EntityManagerTest {
 		ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
 		
 		Entity e1 = world.createEntity();
-		e1.addComponent(new ComponentX());
-		e1.addToWorld();
+		e1.edit().addComponent(new ComponentX());
 		assertTrue(mapper.has(e1));
 		
 		int id1 = e1.getId();
 		e1.deleteFromWorld();
 		
 		Entity e2 = world.createEntity();
-		e2.addToWorld();
 		
 		assertNotEquals(id1, e2.getId());
 		assertFalse("Error:" + mapper.getSafe(e2), mapper.has(e2));
@@ -93,15 +85,13 @@ public class EntityManagerTest {
 		ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
 		
 		Entity e1 = world.createEntity();
-		e1.addComponent(new ComponentX());
-		e1.addToWorld();
+		e1.edit().addComponent(new ComponentX());
 		assertTrue(mapper.has(e1));
 		
 		int id1 = e1.getId();
 		e1.deleteFromWorld();
 		world.process();
 		Entity e2 = world.createEntity();
-		e2.addToWorld();
 		
 		assertEquals(id1, e2.getId());
 		assertFalse("Error:" + mapper.getSafe(e2), mapper.has(e2));

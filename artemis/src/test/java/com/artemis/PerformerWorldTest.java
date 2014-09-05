@@ -19,7 +19,6 @@ public class PerformerWorldTest {
 	}
 
 	private World world;
-	private int step;
 
 	@BeforeClass
 	public static void setUpClass() {
@@ -31,15 +30,13 @@ public class PerformerWorldTest {
 
 	@Before
 	public void setUp() {
-		step = 0;
-
 		world = new World();
 		world.setSystem(new SystemA());
 		//world.setSystem(new SystemB());
 		world.initialize();
 
 		for (int i = 0; i < 10; i++) {
-			world.createEntity().addComponent(new TestComponent(i)).addToWorld();
+			world.createEntity().edit().addComponent(new TestComponent());
 		}
 	}
 
@@ -55,14 +52,10 @@ public class PerformerWorldTest {
 	}
 
 
-
-
-
-/////// System and Component classes
 	private static class SystemA extends EntityProcessingSystem {
-		private ComponentMapper<TestComponent> mapper;
 		public int step;
 
+		@SuppressWarnings("unchecked")
 		public SystemA() {
 			super(Aspect.getAspectForOne(TestComponent.class));
 		}
@@ -70,7 +63,6 @@ public class PerformerWorldTest {
 		@Override
 		protected void initialize() {
 			step = 0;
-			mapper = world.getMapper(TestComponent.class);
 		}
 
 		@Override
@@ -84,35 +76,7 @@ public class PerformerWorldTest {
 		}
 	}
 
-	private static class SystemB extends EntityProcessingSystem {
-		private ComponentMapper<TestComponent> mapper;
-		public int step;
-
-		public SystemB() {
-			super(Aspect.getAspectForOne(TestComponent.class));
-		}
-
-		@Override
-		protected void initialize() {
-			step = 0;
-			mapper = world.getMapper(TestComponent.class);
-		}
-
-		@Override
-		protected void process(Entity e) {
-			mapper.getSafe(e).getValue();
-		}
-	}
-
 	private static class TestComponent extends Component {
-		public final int value;
-
-		public TestComponent(int value) {
-			this.value = value;
-		}
-
-		public int getValue() {
-			return value;
-		}
+		public TestComponent() {}
 	}
 }

@@ -6,7 +6,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.annotations.Mapper;
+import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.DelayedEntityProcessingSystem;
@@ -32,8 +32,7 @@ public class WorldTest
 
 		for (int i = 0; i < 100; i++) {
 			Entity e = world.createEntity();
-			if (i == 0) e.addComponent(new ComponentX());
-			e.addToWorld();
+			if (i == 0) e.edit().addComponent(new ComponentX());
 		}
 
 		world.process();
@@ -52,8 +51,7 @@ public class WorldTest
 		world.initialize();
 		
 		Entity e = world.createEntity();
-		e.createComponent(ComponentX.class);
-		e.addToWorld();
+		e.edit().createComponent(ComponentX.class);
 		
 		world.process();
 	}
@@ -65,7 +63,7 @@ public class WorldTest
 		world.setSystem(es);
 		world.initialize();
 		
-		Entity e1 = createEntity();
+		createEntity();
 		
 		world.setDelta(0.5f);
 		world.process();
@@ -91,8 +89,7 @@ public class WorldTest
 	private Entity createEntity()
 	{
 		Entity e = world.createEntity();
-		e.createComponent(ComponentY.class);
-		e.addToWorld();
+		e.edit().createComponent(ComponentY.class);
 		return e;
 	}
 	
@@ -109,14 +106,13 @@ public class WorldTest
 		@Override
 		protected void process(Entity e)
 		{
-			e.removeComponent(ComponentX.class);
-			e.changedInWorld();
+			e.edit().removeComponent(ComponentX.class);
 		}
 	}
 
+	@Wire
 	static class SystemB extends EntityProcessingSystem
 	{
-		@Mapper
 		ComponentMapper<ComponentX> xm;
 
 		@SuppressWarnings("unchecked")
@@ -128,13 +124,13 @@ public class WorldTest
 		@Override
 		protected void process(Entity e)
 		{
-			ComponentX x = xm.get(e);
+			xm.get(e);
 		}
 	}
 	
+	@Wire
 	static class SystemY extends EntityProcessingSystem
 	{
-		@Mapper
 		ComponentMapper<ComponentY> ym;
 		
 		@SuppressWarnings("unchecked")
@@ -147,14 +143,13 @@ public class WorldTest
 		protected void process(Entity e)
 		{
 			Assert.assertNotNull(ym);
-			ComponentY y = ym.get(e);
-			System.out.println("Running " + getClass());
+			ym.get(e);
 		}
 	}
 	
+	@Wire
 	static class SystemSpawner extends VoidEntitySystem
 	{
-		@Mapper
 		ComponentMapper<ComponentY> ym;
 		
 		@Override
@@ -166,7 +161,6 @@ public class WorldTest
 		@Override
 		protected void processSystem()
 		{
-			System.out.println("Running " + getClass());
 			Assert.assertNotNull(ym);
 		}
 	}

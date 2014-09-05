@@ -6,7 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.annotations.Mapper;
+import com.artemis.EntityEditPool.EntityEdit;
+import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
@@ -27,9 +28,9 @@ public class MapperTest {
 		world.initialize();
 		
 		entity = world.createEntity();
-		entity.createComponent(ComponentX.class);
-		entity.createComponent(ComponentY.class);
-		entity.addToWorld();
+		EntityEdit edit = entity.edit();
+		edit.createComponent(ComponentX.class);
+		edit.createComponent(ComponentY.class);
 		
 		world.process();
 	}
@@ -52,9 +53,10 @@ public class MapperTest {
 		assertEquals(ComponentY.class, mappedSystem.y.get(entity).getClass());
 	}
 	
+	@Wire
 	private static class MappedSystem extends EntityProcessingSystem {
-		@Mapper private ComponentMapper<ComponentX> x;
-		@Mapper private ComponentMapper<ComponentY> y;
+		private ComponentMapper<ComponentX> x;
+		private ComponentMapper<ComponentY> y;
 		
 		@SuppressWarnings("unchecked")
 		public MappedSystem() {
@@ -66,9 +68,10 @@ public class MapperTest {
 		
 	}
 	
+	@Wire
 	private static class MappedManager extends Manager {
-		@Mapper private ComponentMapper<ComponentX> x;
-		@Mapper private ComponentMapper<ComponentY> y;
+		private ComponentMapper<ComponentX> x;
+		private ComponentMapper<ComponentY> y;
 		
 		@Override
 		protected void initialize() {}

@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.artemis.EntityEditPool.EntityEdit;
 import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
@@ -42,9 +43,9 @@ public class WireTest {
 		world.initialize();
 		
 		entity = world.createEntity();
-		entity.createComponent(ComponentX.class);
-		entity.createComponent(ComponentY.class);
-		entity.addToWorld();
+		EntityEdit edit = entity.edit();
+		edit.createComponent(ComponentX.class);
+		edit.createComponent(ComponentY.class);
 		
 		world.process();
 	}
@@ -118,14 +119,14 @@ public class WireTest {
 	@Test(expected=MundaneWireException.class)
 	public void fail_on_system_not_injected() {
 		World world = new World();
-		FailingNpeSystem failingSystem = world.setSystem(new FailingNpeSystem());
+		world.setSystem(new FailingNpeSystem());
 		world.initialize();
 	}
 	
 	@Test(expected=MundaneWireException.class)
 	public void fail_on_manager_not_injected() {
 		World world = new World();
-		FailingNpeManager failingManager = world.setManager(new FailingNpeManager());
+		world.setManager(new FailingNpeManager());
 		world.initialize();
 	}
 	
@@ -248,6 +249,7 @@ public class WireTest {
 	
 	@Wire
 	private static class FailingManager extends BaseManager {
+		@SuppressWarnings("unused")
 		private ComponentMapper<ComponentY> y;
 	}
 	
@@ -265,6 +267,7 @@ public class WireTest {
 	
 	@Wire
 	private static class FailingSystem extends BaseSystem {
+		@SuppressWarnings("unused")
 		private FailingManager manager;
 		
 		@Override
@@ -273,6 +276,7 @@ public class WireTest {
 	
 	@Wire
 	private static class FailingNpeSystem extends VoidEntitySystem {
+		@SuppressWarnings("unused")
 		private FailingManager manager;
 		
 		@Override
@@ -281,6 +285,7 @@ public class WireTest {
 	
 	@Wire
 	private static class FailingNpeManager extends Manager {
+		@SuppressWarnings("unused")
 		private FailingSystem fail;
 	}
 }

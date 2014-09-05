@@ -155,6 +155,7 @@ public final class Entity {
 	 * 
 	 * @return this entity for chaining
 	 */
+	@Deprecated
 	public Entity removeComponent(Component component) {
 		edit().removeComponent(component);
 		return this;
@@ -168,6 +169,7 @@ public final class Entity {
 	 * 
 	 * @return this entity for chaining
 	 */
+	@Deprecated
 	public Entity removeComponent(ComponentType type) {
 		edit().removeComponent(type);
 		return this;
@@ -181,6 +183,7 @@ public final class Entity {
 	 * 
 	 * @return this entity for chaining
 	 */
+	@Deprecated
 	public Entity removeComponent(Class<? extends Component> type) {
 		edit().removeComponent(type);
 		return this;

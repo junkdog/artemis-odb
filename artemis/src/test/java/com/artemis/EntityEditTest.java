@@ -11,6 +11,7 @@ import com.artemis.component.ComponentY;
 
 public class EntityEditTest {
 	
+	@SuppressWarnings("static-method")
 	@Test
 	public void basic_entity_edit_test() {
 		World world = new World();

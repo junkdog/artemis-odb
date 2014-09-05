@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+@SuppressWarnings("static-method")
 public class BagTest
 {
 	@Test // see https://code.google.com/p/artemis-framework/issues/detail?id=7

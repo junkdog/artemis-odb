@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.annotations.Mapper;
+import com.artemis.annotations.Wire;
 import com.artemis.systems.DelayedEntityProcessingSystem;
 
 public class DelayedEntityProcessingSystemTest
@@ -16,11 +16,11 @@ public class DelayedEntityProcessingSystemTest
 	private World world;
 
 	@Before
-    public void setUp() throws Exception
-    {
-        world = new World();
-        entitiesOrdered = new LinkedList<Entity>();
-    }
+	public void setUp() throws Exception
+	{
+		world = new World();
+		entitiesOrdered = new LinkedList<Entity>();
+	}
 
 	@Test
 	public void constant_firing()
@@ -31,25 +31,25 @@ public class DelayedEntityProcessingSystemTest
 		world.setSystem(es);
 		world.initialize();
 
-		final Entity e1 = createEntity();
+		createEntity();
 
 		world.setDelta(0.21f);
 		world.process();
 		assertEquals(0, es.expiredLastRound);
 
-		final Entity e2 = createEntity();
+		createEntity();
 
 		world.setDelta(0.21f);
 		world.process();
 		assertEquals(0, es.expiredLastRound);
 
-		final Entity e3 = createEntity();
+		createEntity();
 
 		world.setDelta(0.21f);
 		world.process();
 		assertEquals(0, es.expiredLastRound);
 
-		final Entity e4 = createEntity();
+		createEntity();
 
 		world.setDelta(0.21f);
 		world.process();
@@ -88,19 +88,19 @@ public class DelayedEntityProcessingSystemTest
 		world.setSystem(es);
 		world.initialize();
 
-		final Entity e1 = createEntity();
+		createEntity();
 
 		step200ms(es);
 
-		final Entity e2 = createEntity();
+		createEntity();
 
 		step200ms(es);
 
-		final Entity e3 = createEntity();
+		createEntity();
 
 		step200ms(es);
 
-		final Entity e4 = createEntity();
+		createEntity();
 
 		step200ms(es);
 
@@ -138,8 +138,7 @@ public class DelayedEntityProcessingSystemTest
 	private Entity createEntity()
 	{
 		final Entity e = world.createEntity();
-		e.addComponent(new Expiration(1f));
-		e.addToWorld();
+		e.edit().addComponent(new Expiration(1f));
 
 		entitiesOrdered.addLast(e);
 		return e;
@@ -157,11 +156,11 @@ public class DelayedEntityProcessingSystemTest
 		}
 	}
 
+	@Wire
 	public class ExpirationSystem extends DelayedEntityProcessingSystem
 	{
 		public int expiredLastRound;
 
-		@Mapper
 		ComponentMapper<Expiration> em;
 
 		@SuppressWarnings("unchecked")

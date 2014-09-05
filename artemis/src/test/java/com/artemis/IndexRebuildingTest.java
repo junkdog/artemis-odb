@@ -33,8 +33,7 @@ public class IndexRebuildingTest {
 
 	private static void create(World w) {
 		Entity e = w.createEntity();
-		e.createComponent(ComponentX.class);
-		e.addToWorld();
+		e.edit().createComponent(ComponentX.class);
 	}
 	
 	private static class ES1 extends EntityProcessingSystem {
