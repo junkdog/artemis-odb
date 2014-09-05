@@ -25,7 +25,7 @@ public class EntityEditPool {
 			edit = new EntityEdit(world);
 		} else {
 			edit = pool.removeLast();
-			edit.changedComponents.clear();
+//			edit.changedComponents.clear();
 		}
 		
 		edit.entity = entity;
@@ -66,13 +66,13 @@ public class EntityEditPool {
 	
 	public static final class EntityEdit {
 		private Entity entity;
-		private BitSet changedComponents; // currently not in use, in practice
+//		private BitSet changedComponents; // currently not in use, in practice
 		private World world;
 		private boolean hasBeenAddedToWorld;
 		
-		public EntityEdit(World world) {
+		EntityEdit(World world) {
 			this.world = world;
-			changedComponents = new BitSet();
+//			changedComponents = new BitSet();
 		}
 
 		public <T extends Component> T createComponent(Class<T> componentKlazz) {
@@ -83,7 +83,7 @@ public class EntityEditPool {
 			ComponentType componentType = tf.getTypeFor(componentKlazz);
 			componentManager.addComponent(entity, componentType, component);
 			
-			changedComponents.flip(componentType.getIndex());
+//			changedComponents.flip(componentType.getIndex());
 			
 			return component;
 		}
@@ -149,7 +149,7 @@ public class EntityEditPool {
 		 */
 		public void removeComponent(ComponentType type) {
 			world.getComponentManager().removeComponent(entity, type);
-			changedComponents.flip(type.getIndex());
+//			changedComponents.flip(type.getIndex());
 		}
 		
 		/**

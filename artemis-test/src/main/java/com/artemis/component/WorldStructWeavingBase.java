@@ -1,16 +1,6 @@
 package com.artemis.component;
 
-import static java.lang.reflect.Modifier.PRIVATE;
-import static java.lang.reflect.Modifier.STATIC;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.nio.ByteBuffer;
-import java.nio.LongBuffer;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -27,6 +17,7 @@ import com.artemis.util.Vec2f;
 /**
  * The weaving only happens for normal resources, not test classes.
  */
+@SuppressWarnings("static-method")
 public class WorldStructWeavingBase {
 	
 	private World world;
@@ -41,13 +32,10 @@ public class WorldStructWeavingBase {
 		Entity e1 = world.createEntity();
 		Entity e2 = world.createEntity();
 		
-		initComponent(e1.createComponent(StructComponentA.class));
-		initComponent(e1.createComponent(Position.class));
-		initComponent(e2.createComponent(StructComponentA.class));
-		initComponent(e2.createComponent(Position.class));
-		
-		e1.addToWorld();
-		e2.addToWorld();
+		initComponent(e1.edit().createComponent(StructComponentA.class));
+		initComponent(e1.edit().createComponent(Position.class));
+		initComponent(e2.edit().createComponent(StructComponentA.class));
+		initComponent(e2.edit().createComponent(Position.class));
 	}
 
 	private static void initComponent(Position pos) {

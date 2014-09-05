@@ -6,6 +6,8 @@
   - [Automatically optimize entity processing systems](https://github.com/junkdog/artemis-odb/issues/123).
   - `@PackedWeaver` components no longer overwrite data in multi-World scenarios.
 - Removed `artemis-benchmark`, refer to [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) instead.
+- It's no longer necessary to call `Entity#changedInWorld` and `Entity#addToWorld`
+  - Use `Entity#edit` when adding or removing components.
 - [@Profile](https://github.com/junkdog/artemis-odb/wiki/@Profile) entity systems with custom classes.
 - New WorldConfiguration class
   - Set expected entity count

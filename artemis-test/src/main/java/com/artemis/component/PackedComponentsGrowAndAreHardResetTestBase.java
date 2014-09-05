@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,8 +23,8 @@ public class PackedComponentsGrowAndAreHardResetTestBase {
 	
 	private void create() {
 		Entity e = world.createEntity();
-		e.createComponent(SimpleComponent.class).value = e.getId();
-		e.addToWorld();
+		e.edit().createComponent(SimpleComponent.class).value = e.getId();
+//		e.addToWorld();
 	}
 	
 	@Test

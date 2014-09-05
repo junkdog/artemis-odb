@@ -28,10 +28,8 @@ public abstract class PackedWeavingTest {
 		world.initialize();
 		
 		e1 = world.createEntity();
-		e1.addToWorld();
 		
 		e2 = world.createEntity();
-		e2.addToWorld();
 	}
 	
 	@After

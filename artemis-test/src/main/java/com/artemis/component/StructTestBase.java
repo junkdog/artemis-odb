@@ -26,8 +26,8 @@ public class StructTestBase extends PackedWeavingTest {
 	public void setup() {
 		super.setup();
 		
-		packed = e1.createComponent(StructComponentA.class);
-		packed = e2.createComponent(StructComponentA.class);
+		packed = e1.edit().createComponent(StructComponentA.class);
+		packed = e2.edit().createComponent(StructComponentA.class);
 	}
 	
 	@Override
@@ -78,6 +78,7 @@ public class StructTestBase extends PackedWeavingTest {
 		mapper.get(e1).flag = false;
 		mapper.get(e2).flag = true;
 		
+		@SuppressWarnings("unused")
 		ByteBuffer data = (ByteBuffer)field("$data").get(packed);
 		
 		assertEquals(4, mapper.get(e1).x, 0.001);
