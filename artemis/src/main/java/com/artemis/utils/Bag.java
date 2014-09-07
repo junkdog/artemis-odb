@@ -264,7 +264,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 */
 	public void set(int index, E e) {
 		if(index >= data.length) {
-			grow(index * 2);
+			grow(index * (7 / 4) + 1);
 		}
 		size = Math.max(size, index + 1);
 		data[index] = e;
@@ -277,7 +277,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * </p>
 	 */
 	private void grow() {
-		int newCapacity = (data.length * 3) / 2 + 1;
+		int newCapacity = data.length * (7 / 4) + 1;
 		grow(newCapacity);
 	}
 
@@ -307,7 +307,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 */
 	public void ensureCapacity(int index) {
 		if(index >= data.length) {
-			grow(index*2);
+			grow(index * (7 / 4) + 1);
 		}
 	}
 
