@@ -95,12 +95,15 @@ public abstract class EntitySystem implements EntityObserver {
 	}
 	
 	private void rebuildCompressedActives() {
-		actives.setSize(0);
 		
 		BitSet bs = activeIds;
+		int size = bs.cardinality();
+		actives.setSize(size);
+		actives.ensureCapacity(size);
 		EntityManager em = world.getEntityManager();
-		for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
-			actives.add(em.getEntity(i));
+		Object[] activesArray = actives.getData();
+		for (int i = bs.nextSetBit(0), index = 0; i >= 0; i = bs.nextSetBit(i + 1)) {
+			activesArray[index++] = em.getEntity(i);
 		}
 		
 		activesIsDirty = false;
