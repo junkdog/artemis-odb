@@ -182,7 +182,7 @@ public abstract class EntitySystem implements EntityObserver {
 		this.enabled = enabled;
 	}
 	
-	private BitSet aspectCache = new BitSet();
+	private final BitSet aspectCache = new BitSet();
 	
 	void processComponentIdenty(int id, BitSet componentBits) {
 		aspectCache.set(id, aspect.isInterested(componentBits));
@@ -198,9 +198,10 @@ public abstract class EntitySystem implements EntityObserver {
 		if(dummy)
 			return;
 		
-		boolean interested = e.isActive() && e.isEnabled() && aspectCache.get(e.getCompositionId());
-
-		boolean contains = e.getSystemBits().get(systemIndex);
+		EntityManager em = world.getEntityManager();
+		boolean interested = e.isActive() && e.isEnabled() && aspectCache.get(em.getIdentity(e));
+		boolean contains = em.systemBits(e).get(systemIndex);
+		
 		if (interested && !contains) {
 			insertToSystem(e);
 		} else if (!interested && contains) {

@@ -172,7 +172,7 @@ public class IntBag {
 	 */
 	public void set(int index, int e) {
 		if(index >= data.length) {
-			grow(index * (7 / 4) + 1);
+			grow((index * 7) / 4 + 1);
 		}
 		size = Math.max(size, index + 1);
 		data[index] = e;
@@ -185,7 +185,7 @@ public class IntBag {
 	 * </p>
 	 */
 	private void grow() {
-		int newCapacity = data.length * (7 / 4) + 1;
+		int newCapacity = (data.length * 7) / 4 + 1;
 		grow(newCapacity);
 	}
 
@@ -197,7 +197,6 @@ public class IntBag {
 	 *
 	 * @throws ArrayIndexOutOfBoundsException if new capacity is smaller than old
 	 */
-	@SuppressWarnings("unchecked")
 	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
 		int[] oldData = data;
 		data = new int[newCapacity];
@@ -215,7 +214,7 @@ public class IntBag {
 	 */
 	public void ensureCapacity(int index) {
 		if(index >= data.length) {
-			grow(index * (7 / 4) + 1);
+			grow((index * 7) / 4 + 1);
 		}
 	}
 
