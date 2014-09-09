@@ -2,6 +2,7 @@ package com.artemis;
 
 import java.util.BitSet;
 
+import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
 
@@ -180,6 +181,8 @@ public abstract class EntitySystem implements EntityObserver {
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+	
+	private Bag<Boolean> cache = new Bag<Boolean>();
 
 	/**
 	 * Will check if the entity is of interest to this system.
@@ -197,7 +200,14 @@ public abstract class EntitySystem implements EntityObserver {
 		if (!e.isActive() || !e.isEnabled()) {
 			interested = false;
 		} else {
-			interested = aspect.isInterested(e);
+			int index = e.getCompositionId();
+			Boolean cacheInterest = cache.safeGet(index);
+			if (cacheInterest != null) {
+				interested = cacheInterest.booleanValue();
+			} else {
+				interested = aspect.isInterested(e);
+				cache.set(index, Boolean.valueOf(interested));
+			}
 		}
 
 		boolean contains = e.getSystemBits().get(systemIndex);

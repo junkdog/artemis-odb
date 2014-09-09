@@ -337,4 +337,8 @@ public final class Entity {
 	public World getWorld() {
 		return world;
 	}
+
+	public int getCompositionId() {
+		return world.getEntityManager().getIdentity(this);
+	}
 }

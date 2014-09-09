@@ -3,6 +3,7 @@ package com.artemis;
 import java.util.BitSet;
 
 import com.artemis.utils.Bag;
+import com.artemis.utils.IntBag;
 
 
 /**
@@ -28,7 +29,10 @@ public class EntityManager extends Manager {
 
 	private final Bag<BitSet> componentBits;
 	private final Bag<BitSet> systemBits;
-
+	
+	CompoentIdentityResolver identityResolver = new CompoentIdentityResolver();
+	private IntBag entityToIdentity = new IntBag();
+	
 	/**
 	 * Creates a new EntityManager Instance.
 	 */
@@ -89,6 +93,8 @@ public class EntityManager extends Manager {
 		active++;
 		added++;
 		entities.set(e.getId(), e);
+		
+		entityToIdentity.set(e.getId(), identityResolver.getIdentity(e));
 	}
 
 	/**
@@ -128,6 +134,8 @@ public class EntityManager extends Manager {
 		
 		active--;
 		deleted++;
+		
+		entityToIdentity.set(e.getId(), 0);
 	}
 
 	/**
@@ -211,6 +219,38 @@ public class EntityManager extends Manager {
 	
 	protected void clean() {
 		recyclingEntityFactory.recycle();
+	}
+	
+	protected int getIdentity(Entity e) {
+		return identityResolver.getIdentity(e);
+	}
+	
+	private static final class CompoentIdentityResolver {
+		private final Bag<BitSet> composition;
+		
+		CompoentIdentityResolver() {
+			composition = new Bag<BitSet>();
+			composition.add(null);
+		}
+		
+		int getIdentity(BitSet components) {
+			Object[] bitsets = composition.getData();
+			int size = composition.size();
+			for (int i = 1; size > i; i++) { // want to start from 1 so that 0 can mean null
+				if (components.equals(bitsets[i]))
+					return i;
+			}
+			composition.add((BitSet)components.clone());
+			return size;
+		}
+		
+		int getIdentity(Entity e) {
+			return getIdentity(e.getComponentBits());
+		}
+		
+		BitSet getComponentBitSet(int id) {
+			return composition.get(id);
+		}
 	}
 	
 	private static final class RecyclingEntityFactory {
