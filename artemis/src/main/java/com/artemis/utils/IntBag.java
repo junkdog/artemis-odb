@@ -101,7 +101,7 @@ public class IntBag {
 	 *
 	 */
 	public int safeGet(int index) {
-		ensureCapacity(index);
+		ensureCapacity(index + 1);
 		return data[index];
 	}
 
@@ -214,7 +214,7 @@ public class IntBag {
 	 */
 	public void ensureCapacity(int index) {
 		if(index >= data.length) {
-			grow((index * 7) / 4 + 1);
+			grow(index);
 		}
 	}
 

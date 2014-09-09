@@ -2,7 +2,6 @@ package com.artemis;
 
 import java.util.BitSet;
 
-import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
 
@@ -42,6 +41,7 @@ public abstract class EntitySystem implements EntityObserver {
 	/** If the system is currently processing. */
 	private boolean isProcessing;
 	private Aspect aspect;
+	private final BitSet aspectCache = new BitSet();
 
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
@@ -182,8 +182,6 @@ public abstract class EntitySystem implements EntityObserver {
 		this.enabled = enabled;
 	}
 	
-	private final BitSet aspectCache = new BitSet();
-	
 	void processComponentIdenty(int id, BitSet componentBits) {
 		aspectCache.set(id, aspect.isInterested(componentBits));
 	}
@@ -200,7 +198,8 @@ public abstract class EntitySystem implements EntityObserver {
 		
 		EntityManager em = world.getEntityManager();
 		boolean interested = e.isActive() && e.isEnabled() && aspectCache.get(em.getIdentity(e));
-		boolean contains = em.systemBits(e).get(systemIndex);
+		BitSet systemBits = em.systemBits(e);
+		boolean contains = systemBits.get(systemIndex);
 		
 		if (interested && !contains) {
 			insertToSystem(e);

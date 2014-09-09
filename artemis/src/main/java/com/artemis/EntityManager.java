@@ -113,11 +113,14 @@ public class EntityManager extends Manager {
 	public void changed(Entity e) {
 		updateCompositionIdentity(e);
 	}
+	
 	private void updateCompositionIdentity(Entity e) {
 		int identity = identityResolver.getIdentity(componentBits(e));
 		entityToIdentity.set(e.getId(), identity);
-		if (identity > highestSeenIdentity)
+		if (identity > highestSeenIdentity) {
 			world.processComponentIdentity(identity, componentBits(e));
+			highestSeenIdentity = identity;
+		}
 	}
 
 	/**
@@ -254,10 +257,6 @@ public class EntityManager extends Manager {
 			}
 			composition.add((BitSet)components.clone());
 			return size;
-		}
-		
-		int getIdentity(Entity e) {
-			return getIdentity(e.getComponentBits());
 		}
 	}
 	

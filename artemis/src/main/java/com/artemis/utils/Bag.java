@@ -191,7 +191,10 @@ public class Bag<E> implements ImmutableBag<E> {
 	 *
 	 */
 	public E safeGet(int index) {
-		ensureCapacity(index);
+		if(index >= data.length) {
+			grow((index * 7) / 4 + 1);
+		}
+		
 		return data[index];
 	}
 
@@ -307,7 +310,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 */
 	public void ensureCapacity(int index) {
 		if(index >= data.length) {
-			grow(index * (7 / 4) + 1);
+			grow(index);
 		}
 	}
 
