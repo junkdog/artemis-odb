@@ -182,8 +182,12 @@ public abstract class EntitySystem implements EntityObserver {
 		this.enabled = enabled;
 	}
 	
-	private Bag<Boolean> cache = new Bag<Boolean>();
-
+	private BitSet aspectCache = new BitSet();
+	
+	void processComponentIdenty(int id, BitSet componentBits) {
+		aspectCache.set(id, aspect.isInterested(componentBits));
+	}
+	
 	/**
 	 * Will check if the entity is of interest to this system.
 	 *
@@ -194,21 +198,7 @@ public abstract class EntitySystem implements EntityObserver {
 		if(dummy)
 			return;
 		
-		boolean interested = true; // possibly interested, let's try to prove it wrong.
-
-		// If the entity is inactive, then we aren't interested
-		if (!e.isActive() || !e.isEnabled()) {
-			interested = false;
-		} else {
-			int index = e.getCompositionId();
-			Boolean cacheInterest = cache.safeGet(index);
-			if (cacheInterest != null) {
-				interested = cacheInterest.booleanValue();
-			} else {
-				interested = aspect.isInterested(e);
-				cache.set(index, Boolean.valueOf(interested));
-			}
-		}
+		boolean interested = e.isActive() && e.isEnabled() && aspectCache.get(e.getCompositionId());
 
 		boolean contains = e.getSystemBits().get(systemIndex);
 		if (interested && !contains) {

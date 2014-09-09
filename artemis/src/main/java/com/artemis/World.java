@@ -1,6 +1,7 @@
 package com.artemis;
 
 import java.util.ArrayList;
+import java.util.BitSet;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -518,6 +519,13 @@ public class World {
 	private void check(Entity e, Performer performer) {
 		notifyManagers(performer, e);
 		notifySystems(performer, e);
+	}
+	
+	void processComponentIdentity(int id, BitSet componentBits) {
+		Object[] data = systemsBag.getData();
+		for (int i = 0, s = systemsBag.size(); s > i; i++) {
+			((EntitySystem)data[i]).processComponentIdenty(id, componentBits);
+		}
 	}
 
 	/**

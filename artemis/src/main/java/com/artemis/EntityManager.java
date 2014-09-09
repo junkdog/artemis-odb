@@ -30,8 +30,9 @@ public class EntityManager extends Manager {
 	private final Bag<BitSet> componentBits;
 	private final Bag<BitSet> systemBits;
 	
-	CompoentIdentityResolver identityResolver = new CompoentIdentityResolver();
+	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
 	private IntBag entityToIdentity = new IntBag();
+	private int highestSeenIdentity;
 	
 	/**
 	 * Creates a new EntityManager Instance.
@@ -94,7 +95,7 @@ public class EntityManager extends Manager {
 		added++;
 		entities.set(e.getId(), e);
 		
-		entityToIdentity.set(e.getId(), identityResolver.getIdentity(e));
+		updateCompositionIdentity(e);
 	}
 
 	/**
@@ -106,6 +107,17 @@ public class EntityManager extends Manager {
 	@Override
 	public void enabled(Entity e) {
 		disabled.clear(e.getId());
+	}
+	
+	@Override
+	public void changed(Entity e) {
+		updateCompositionIdentity(e);
+	}
+	private void updateCompositionIdentity(Entity e) {
+		int identity = identityResolver.getIdentity(componentBits(e));
+		entityToIdentity.set(e.getId(), identity);
+		if (identity > highestSeenIdentity)
+			world.processComponentIdentity(identity, componentBits(e));
 	}
 
 	/**
@@ -222,13 +234,13 @@ public class EntityManager extends Manager {
 	}
 	
 	protected int getIdentity(Entity e) {
-		return identityResolver.getIdentity(e);
+		return entityToIdentity.get(e.getId());
 	}
 	
-	private static final class CompoentIdentityResolver {
+	private static final class ComponentIdentityResolver {
 		private final Bag<BitSet> composition;
 		
-		CompoentIdentityResolver() {
+		ComponentIdentityResolver() {
 			composition = new Bag<BitSet>();
 			composition.add(null);
 		}
@@ -246,10 +258,6 @@ public class EntityManager extends Manager {
 		
 		int getIdentity(Entity e) {
 			return getIdentity(e.getComponentBits());
-		}
-		
-		BitSet getComponentBitSet(int id) {
-			return composition.get(id);
 		}
 	}
 	
