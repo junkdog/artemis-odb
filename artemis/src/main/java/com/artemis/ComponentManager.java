@@ -143,7 +143,7 @@ public class ComponentManager extends Manager {
 					throw new InvalidComponentException(Component.class, " unknown component type: " + typeFactory.getTaxonomy(i));
 			}
 		}
-		componentBits.clear();
+//		componentBits.clear();
 	}
 	
 	@Override
@@ -179,7 +179,7 @@ public class ComponentManager extends Manager {
 		else
 			addBasicComponent(e, type, component); // pooled components are handled the same
 
-		e.getComponentBits().set(type.getIndex());
+//		e.getComponentBits().set(type.getIndex());
 	}
 	
 	private void addPackedComponent(ComponentType type, PackedComponent component) {
@@ -229,7 +229,7 @@ public class ComponentManager extends Manager {
 				default:
 					throw new InvalidComponentException(type.getType(), " unknown component type: " + type.getTaxonomy());
 			}
-			e.getComponentBits().clear(index);
+//			e.getComponentBits().clear(index);
 		}
 	}
 

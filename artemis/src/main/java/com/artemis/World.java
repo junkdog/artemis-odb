@@ -311,7 +311,7 @@ public class World {
 	 * world, then you need to invoke this method.
 	 * </p>
 	 *
-	 * @param e the changed entity
+	 * @param e the chang	ed entity
 	 */
 	public void changedEntity(Entity e) {
 		check(e, changedPerformer);

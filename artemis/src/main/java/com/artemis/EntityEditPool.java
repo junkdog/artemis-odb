@@ -5,7 +5,7 @@ import java.util.BitSet;
 import com.artemis.ComponentType.Taxonomy;
 import com.artemis.utils.Bag;
 
-public class EntityEditPool {
+public final class EntityEditPool {
 	
 	private final Bag<EntityEdit> pool = new Bag<EntityEditPool.EntityEdit>();
 	private final World world;
@@ -23,14 +23,17 @@ public class EntityEditPool {
 			edit = findEntityEdit(entity);
 		} else if (pool.isEmpty()) {
 			edit = new EntityEdit(world);
+			changedIds.set(entity.getId());
+			changed.add(edit);
 		} else {
 			edit = pool.removeLast();
-//			edit.changedComponents.clear();
+			edit.componentBits.clear();
+			changedIds.set(entity.getId());
+			changed.add(edit);
 		}
 		
 		edit.entity = entity;
 		edit.hasBeenAddedToWorld = world.getEntityManager().isActive(entity.getId());
-		changed.add(edit);
 		return edit;
 	}
 	
@@ -50,8 +53,10 @@ public class EntityEditPool {
 		if (size > 0) {
 			Object[] data = changed.getData();
 			World w = world;
+			EntityManager em = w.getEntityManager();
 			for (int i = 0; size > i; i++) {
 				EntityEdit edit = (EntityEdit)data[i];
+				em.updateCompositionIdentity(edit);
 				if (edit.hasBeenAddedToWorld)
 					w.changedEntity(edit.entity);
 				else
@@ -65,14 +70,14 @@ public class EntityEditPool {
 	}
 	
 	public static final class EntityEdit {
-		private Entity entity;
-//		private BitSet changedComponents; // currently not in use, in practice
+		Entity entity;
 		private World world;
-		private boolean hasBeenAddedToWorld;
+		boolean hasBeenAddedToWorld;
+		final BitSet componentBits;
 		
 		EntityEdit(World world) {
 			this.world = world;
-//			changedComponents = new BitSet();
+			componentBits = new BitSet();
 		}
 
 		public <T extends Component> T createComponent(Class<T> componentKlazz) {
@@ -82,8 +87,8 @@ public class EntityEditPool {
 			ComponentTypeFactory tf = world.getComponentManager().typeFactory;
 			ComponentType componentType = tf.getTypeFor(componentKlazz);
 			componentManager.addComponent(entity, componentType, component);
-			
-//			changedComponents.flip(componentType.getIndex());
+
+			componentBits.set(componentType.getIndex());
 			
 			return component;
 		}
@@ -124,6 +129,9 @@ public class EntityEditPool {
 					"Use Entity#createComponent for adding non-basic component types");
 			}
 			world.getComponentManager().addComponent(entity, type, component);
+			
+			componentBits.set(type.getIndex());
+			
 			return this;
 		}
 		
@@ -149,7 +157,7 @@ public class EntityEditPool {
 		 */
 		public void removeComponent(ComponentType type) {
 			world.getComponentManager().removeComponent(entity, type);
-//			changedComponents.flip(type.getIndex());
+			componentBits.clear(type.getIndex());
 		}
 		
 		/**
@@ -161,6 +169,11 @@ public class EntityEditPool {
 		public void removeComponent(Class<? extends Component> type) {
 			ComponentTypeFactory tf = world.getComponentManager().typeFactory;
 			removeComponent(tf.getTypeFor(type));
+		}
+		
+		@Override
+		public String toString() {
+			return "EntityEdit[" + entity.getId() + "]";
 		}
 	}
 }

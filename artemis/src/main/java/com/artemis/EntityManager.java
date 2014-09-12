@@ -2,6 +2,7 @@ package com.artemis;
 
 import java.util.BitSet;
 
+import com.artemis.EntityEditPool.EntityEdit;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 
@@ -27,7 +28,7 @@ public class EntityManager extends Manager {
 	private long deleted;
 	private RecyclingEntityFactory recyclingEntityFactory;
 
-	private final Bag<BitSet> componentBits;
+//	private final Bag<BitSet> componentBits;
 	private final Bag<BitSet> systemBits;
 	
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
@@ -41,7 +42,7 @@ public class EntityManager extends Manager {
 		entities = new Bag<Entity>(initialContainerSize);
 		disabled = new BitSet();
 		
-		componentBits = new Bag<BitSet>(initialContainerSize);
+//		componentBits = new Bag<BitSet>(initialContainerSize);
 		systemBits = new Bag<BitSet>(initialContainerSize);
 	}
 	@Override
@@ -56,14 +57,14 @@ public class EntityManager extends Manager {
 	 */
 	protected Entity createEntityInstance() {
 		Entity e = recyclingEntityFactory.obtain();
-		componentBits(e).clear();
+//		componentBits(e).clear();
 		systemBits(e).clear();
 		created++;
 		return e;
 	}
 	
 	BitSet componentBits(Entity e) {
-		return getBitSet(e, componentBits);
+		return identityResolver.composition.get(entityToIdentity.get(e.getId()));
 	}
 	
 	BitSet systemBits(Entity e) {
@@ -95,7 +96,7 @@ public class EntityManager extends Manager {
 		added++;
 		entities.set(e.getId(), e);
 		
-		updateCompositionIdentity(e);
+//		updateCompositionIdentity(e);
 	}
 
 	/**
@@ -109,19 +110,28 @@ public class EntityManager extends Manager {
 		disabled.clear(e.getId());
 	}
 	
-	@Override
-	public void changed(Entity e) {
-		updateCompositionIdentity(e);
-	}
+//	@Override
+//	public void changed(Entity e) {
+//		updateCompositionIdentity(e);
+//	}
 	
-	private void updateCompositionIdentity(Entity e) {
-		int identity = identityResolver.getIdentity(componentBits(e));
-		entityToIdentity.set(e.getId(), identity);
+	void updateCompositionIdentity(EntityEdit edit) {
+		int identity = identityResolver.getIdentity(edit.componentBits);
+		entityToIdentity.set(edit.entity.getId(), identity);
 		if (identity > highestSeenIdentity) {
-			world.processComponentIdentity(identity, componentBits(e));
+			world.processComponentIdentity(identity, edit.componentBits);
 			highestSeenIdentity = identity;
 		}
 	}
+	
+//	private void updateCompositionIdentity(Entity e) {
+//		int identity = identityResolver.getIdentity(componentBits(e));
+//		entityToIdentity.set(e.getId(), identity);
+//		if (identity > highestSeenIdentity) {
+//			world.processComponentIdentity(identity, componentBits(e));
+//			highestSeenIdentity = identity;
+//		}
+//	}
 
 	/**
 	 * Sets the entity as disabled in the manager.
