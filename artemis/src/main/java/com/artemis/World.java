@@ -1,5 +1,6 @@
 package com.artemis;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
@@ -772,7 +773,10 @@ public class World {
 				}
 				field.set(target, manager);
 			} else if (field.hasAnnotation(Wire.class)) {
-				String key = field.getAnnotation(Wire.class).name();
+                final Wire wire = field.getAnnotation(Wire.class);
+                // Parametrized annotations are not supported by our GWT emulation.
+                // @todo Workaround, awaiting junkdog-ification.
+                String key = wire != null ? wire.name() : "";
 				if ("".equals(key))
 					key = field.getType().getName();
 				
