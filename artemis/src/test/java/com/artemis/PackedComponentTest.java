@@ -40,7 +40,7 @@ public class PackedComponentTest
 		}
 		 assertFalse(packedMapper.has(notPresent));
 		 
-		 packed.get(1).removeComponent(Packed.class);
+		 packed.get(1).edit().removeComponent(Packed.class);
 		 for (int i = 0; packed.size() > i; i++) {
 			 if (i != 1) assertTrue(packedMapper.has(packed.get(i)));
 		 }

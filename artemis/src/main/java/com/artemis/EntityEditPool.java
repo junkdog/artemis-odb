@@ -17,6 +17,10 @@ public final class EntityEditPool {
 		this.world = world;
 	}
 	
+	boolean isEdited(Entity e) {
+		return changedIds.get(e.getId());
+	}
+	
 	EntityEdit obtainEditor(Entity entity) {
 		EntityEdit edit;
 		if (changedIds.get(entity.getId())) {

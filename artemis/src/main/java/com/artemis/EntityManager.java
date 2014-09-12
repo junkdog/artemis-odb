@@ -28,7 +28,6 @@ public class EntityManager extends Manager {
 	private long deleted;
 	private RecyclingEntityFactory recyclingEntityFactory;
 
-//	private final Bag<BitSet> componentBits;
 	private final Bag<BitSet> systemBits;
 	
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
@@ -42,12 +41,11 @@ public class EntityManager extends Manager {
 		entities = new Bag<Entity>(initialContainerSize);
 		disabled = new BitSet();
 		
-//		componentBits = new Bag<BitSet>(initialContainerSize);
 		systemBits = new Bag<BitSet>(initialContainerSize);
 	}
 	@Override
 	protected void initialize() {
-		recyclingEntityFactory = new RecyclingEntityFactory(world);
+		recyclingEntityFactory = new RecyclingEntityFactory(world, entityToIdentity);
 	}
 
 	/**
@@ -57,14 +55,17 @@ public class EntityManager extends Manager {
 	 */
 	protected Entity createEntityInstance() {
 		Entity e = recyclingEntityFactory.obtain();
-//		componentBits(e).clear();
 		systemBits(e).clear();
 		created++;
 		return e;
 	}
 	
 	BitSet componentBits(Entity e) {
-		return identityResolver.composition.get(entityToIdentity.get(e.getId()));
+		int identityIndex = entityToIdentity.get(e.getId());
+		if (identityIndex == 0)
+			identityIndex = forceResolveIdentity(e);
+		
+		return identityResolver.composition.get(identityIndex);
 	}
 	
 	BitSet systemBits(Entity e) {
@@ -95,8 +96,6 @@ public class EntityManager extends Manager {
 		active++;
 		added++;
 		entities.set(e.getId(), e);
-		
-//		updateCompositionIdentity(e);
 	}
 
 	/**
@@ -110,11 +109,6 @@ public class EntityManager extends Manager {
 		disabled.clear(e.getId());
 	}
 	
-//	@Override
-//	public void changed(Entity e) {
-//		updateCompositionIdentity(e);
-//	}
-	
 	void updateCompositionIdentity(EntityEdit edit) {
 		int identity = identityResolver.getIdentity(edit.componentBits);
 		entityToIdentity.set(edit.entity.getId(), identity);
@@ -124,15 +118,6 @@ public class EntityManager extends Manager {
 		}
 	}
 	
-//	private void updateCompositionIdentity(Entity e) {
-//		int identity = identityResolver.getIdentity(componentBits(e));
-//		entityToIdentity.set(e.getId(), identity);
-//		if (identity > highestSeenIdentity) {
-//			world.processComponentIdentity(identity, componentBits(e));
-//			highestSeenIdentity = identity;
-//		}
-//	}
-
 	/**
 	 * Sets the entity as disabled in the manager.
 	 *
@@ -159,8 +144,6 @@ public class EntityManager extends Manager {
 		
 		active--;
 		deleted++;
-		
-		entityToIdentity.set(e.getId(), 0);
 	}
 
 	/**
@@ -247,6 +230,15 @@ public class EntityManager extends Manager {
 	}
 	
 	protected int getIdentity(Entity e) {
+		int identity = entityToIdentity.get(e.getId());
+		if (identity == 0)
+			identity = forceResolveIdentity(e);
+
+		return identity;
+	}
+
+	private int forceResolveIdentity(Entity e) {
+		updateCompositionIdentity(e.edit());
 		return entityToIdentity.get(e.getId());
 	}
 	
@@ -275,9 +267,11 @@ public class EntityManager extends Manager {
 		private final WildBag<Entity> limbo;
 		private final Bag<Entity> recycled;
 		private int nextId;
+		private IntBag entityToIdentity;
 		
-		RecyclingEntityFactory(World world) {
+		RecyclingEntityFactory(World world, IntBag entityToIdentity) {
 			this.world = world;
+			this.entityToIdentity = entityToIdentity;
 			recycled = new Bag<Entity>();
 			limbo = new WildBag<Entity>();
 		}
@@ -303,7 +297,9 @@ public class EntityManager extends Manager {
 			if (recycled.isEmpty()) {
 				return new Entity(world, nextId++);
 			} else {
-				return recycled.removeLast();
+				Entity e = recycled.removeLast();
+				entityToIdentity.set(e.getId(), 0);
+				return e;
 			}
 		}
 	}
