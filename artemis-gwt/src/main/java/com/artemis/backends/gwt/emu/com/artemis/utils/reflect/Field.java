@@ -135,4 +135,8 @@ public final class Field {
 	    return Arrays.asList(field.getAnnotationClasses()).contains(annotationClass.getName());
     }
 
+    /** Returns this element's annotation for the specified type if such an annotation is present, else null. */
+    public <T extends Annotation>T getAnnotation(Class<T> annotationClass) {
+        return (T)null; // Not yet supported on gwt client side.
+    }
 }
