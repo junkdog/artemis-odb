@@ -67,6 +67,7 @@ public class ReflectionCacheSourceCreator {
 		boolean isNative;
 		boolean isConstructor;
 		boolean isMethod;
+        boolean isPublic;
 		String name;
 		boolean unused;
         String annotationClasses;
@@ -372,7 +373,7 @@ public class ReflectionCacheSourceCreator {
 				pbn(paramType + " p" + i + (i < stub.parameterTypes.size() - 1 ? "," : ""));
 				i++;
 			}
-			pb(") /*-{");
+			pbn(") /*-{");
 
 			if (!isVoid) pbn("return ");
 			if (stub.isStatic)
@@ -383,9 +384,9 @@ public class ReflectionCacheSourceCreator {
 			for (i = 0; i < stub.parameterTypes.size(); i++) {
 				pbn("p" + i + (i < stub.parameterTypes.size() - 1 ? ", " : ""));
 			}
-			pb(");");
-			if (isVoid) pb("return null;");
-			pb("}-*/;");
+			pbn(");");
+			if (isVoid) pbn("return null;");
+			pbn("}-*/;");
 		} else {
 			pbn("private static " + stub.returnType + " m" + stub.methodId + "(");
 			int i = 0;
@@ -393,15 +394,20 @@ public class ReflectionCacheSourceCreator {
 				pbn(paramType + " p" + i + (i < stub.parameterTypes.size() - 1 ? "," : ""));
 				i++;
 			}
-			pb(") {");
+			pbn(") {");
 
 			pbn("return new " + stub.returnType + "(");
 			for (i = 0; i < stub.parameterTypes.size(); i++) {
 				pbn("p" + i + (i < stub.parameterTypes.size() - 1 ? ", " : ""));
 			}
-			pb(");");
+            pbn(")");
+            if (!stub.isPublic) {
+                // Access non-public constructors through an anonymous class
+                pbn("{}");
+            }
+            pbn(";");
 
-			pb("}");
+			pbn("}");
 		}
 
 		return buffer.toString();
@@ -468,7 +474,7 @@ public class ReflectionCacheSourceCreator {
 		return true;
 	}
 
-	private Map<String, Integer> typeNames2typeIds = new HashMap();
+	private Map<String, Integer> typeNames2typeIds = new HashMap<String,Integer>();
 
 	private String createTypeGenerator (JType t) {
 		buffer.setLength(0);
@@ -550,7 +556,7 @@ public class ReflectionCacheSourceCreator {
 			}
 
 			printMethods(c, varName, "Method", c.getMethods());
-			if (!c.isAbstract() && (c.getEnclosingType() == null || c.isStatic())) {
+			if (c.isPublic() && !c.isAbstract() && (c.getEnclosingType() == null || c.isStatic())) {
 				printMethods(c, varName, "Constructor", c.getConstructors());
 			} else {
 				logger.log(Type.INFO, c.getName() + " can't be instantiated. Constructors not generated");
@@ -582,6 +588,7 @@ public class ReflectionCacheSourceCreator {
 			pb(varName + "." + methodType.toLowerCase() + "s = new " + methodType + "[] {");
 			for (JAbstractMethod m : methodTypes) {
 				MethodStub stub = new MethodStub();
+                stub.isPublic = m.isPublic();
 				stub.enclosingType = getType(c);
 				if (m.isMethod() != null) {
 					stub.isMethod = true;
@@ -592,6 +599,14 @@ public class ReflectionCacheSourceCreator {
 					stub.isFinal = m.isMethod().isFinal();
 
 				} else {
+                    if (m.isPrivate() || m.isDefaultAccess()) {
+                        logger.log(Type.INFO, "Skipping non-visible constructor for class " + c.getName());
+                        continue;
+                    }
+                    if (m.getEnclosingType().isFinal() && !m.isPublic()) {
+                        logger.log(Type.INFO, "Skipping non-public constructor for final class" + c.getName());
+                        continue;
+                    }
 					stub.isConstructor = true;
 					stub.returnType = stub.enclosingType;
 				}
@@ -872,7 +887,7 @@ public class ReflectionCacheSourceCreator {
 	}
 
 	class SwitchedCodeBlock {
-		private List<KeyedCodeBlock> blocks = new ArrayList();
+		private List<KeyedCodeBlock> blocks = new ArrayList<KeyedCodeBlock>();
 		private final String switchStatement;
 
 		SwitchedCodeBlock (String switchStatement) {
