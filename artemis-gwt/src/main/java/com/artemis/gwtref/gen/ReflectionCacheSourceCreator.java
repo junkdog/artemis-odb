@@ -67,10 +67,10 @@ public class ReflectionCacheSourceCreator {
 		boolean isNative;
 		boolean isConstructor;
 		boolean isMethod;
-        boolean isPublic;
+		boolean isPublic;
 		String name;
 		boolean unused;
-        String annotationClasses;
+		String annotationClasses;
 	}
 
 	public ReflectionCacheSourceCreator (TreeLogger logger, GeneratorContext context, JClassType type) {
@@ -400,12 +400,12 @@ public class ReflectionCacheSourceCreator {
 			for (i = 0; i < stub.parameterTypes.size(); i++) {
 				pbn("p" + i + (i < stub.parameterTypes.size() - 1 ? ", " : ""));
 			}
-            pbn(")");
-            if (!stub.isPublic) {
-                // Access non-public constructors through an anonymous class
-                pbn("{}");
-            }
-            pbn(";");
+			pbn(")");
+			if (!stub.isPublic) {
+				// Access non-public constructors through an anonymous class
+				pbn("{}");
+			}
+			pbn(";");
 
 			pbn("}");
 		}
@@ -505,16 +505,16 @@ public class ReflectionCacheSourceCreator {
 			pb(varName + ".isStatic = " + c.isStatic() + ";");
 			pb(varName + ".isAbstract = " + c.isAbstract() + ";");
 
-            StringBuilder classAnnotationClasses = new StringBuilder("new String[]{");
-            Annotation[] classAnnotations = c.getAnnotations();
-            for (int i = 0; i < classAnnotations.length; i++) {
-                classAnnotationClasses.append("\"").append(classAnnotations[i].annotationType().getName()).append("\"");
-                if (i < classAnnotations.length - 1) {
-                    classAnnotationClasses.append(",");
-                }
-            }
-            classAnnotationClasses.append("}");
-            pb(varName + ".annotationClasses = " + classAnnotationClasses.toString() + ";");
+			StringBuilder classAnnotationClasses = new StringBuilder("new String[]{");
+			Annotation[] classAnnotations = c.getAnnotations();
+			for (int i = 0; i < classAnnotations.length; i++) {
+				classAnnotationClasses.append("\"").append(classAnnotations[i].annotationType().getName()).append("\"");
+				if (i < classAnnotations.length - 1) {
+					classAnnotationClasses.append(",");
+				}
+			}
+			classAnnotationClasses.append("}");
+			pb(varName + ".annotationClasses = " + classAnnotationClasses.toString() + ";");
 
 			if (c.getFields() != null) {
 				pb(varName + ".fields = new Field[] {");
@@ -532,7 +532,7 @@ public class ReflectionCacheSourceCreator {
 						if(i < annotations.length-1) {
 							annotationClasses.append(",");
 						}
-                    }
+					}
 					annotationClasses.append("}");
 
 					pb("new Field(\"" + f.getName() + "\", " + enclosingType + ", " + fieldType + ", " + f.isFinal() + ", "
@@ -588,7 +588,7 @@ public class ReflectionCacheSourceCreator {
 			pb(varName + "." + methodType.toLowerCase() + "s = new " + methodType + "[] {");
 			for (JAbstractMethod m : methodTypes) {
 				MethodStub stub = new MethodStub();
-                stub.isPublic = m.isPublic();
+				stub.isPublic = m.isPublic();
 				stub.enclosingType = getType(c);
 				if (m.isMethod() != null) {
 					stub.isMethod = true;
@@ -599,19 +599,19 @@ public class ReflectionCacheSourceCreator {
 					stub.isFinal = m.isMethod().isFinal();
 
 				} else {
-                    if (m.isPrivate() || m.isDefaultAccess()) {
-                        logger.log(Type.INFO, "Skipping non-visible constructor for class " + c.getName());
-                        continue;
-                    }
-                    if (m.getEnclosingType().isFinal() && !m.isPublic()) {
-                        logger.log(Type.INFO, "Skipping non-public constructor for final class" + c.getName());
-                        continue;
-                    }
+					if (m.isPrivate() || m.isDefaultAccess()) {
+						logger.log(Type.INFO, "Skipping non-visible constructor for class " + c.getName());
+						continue;
+					}
+					if (m.getEnclosingType().isFinal() && !m.isPublic()) {
+						logger.log(Type.INFO, "Skipping non-public constructor for final class" + c.getName());
+						continue;
+					}
 					stub.isConstructor = true;
 					stub.returnType = stub.enclosingType;
 				}
 
-                stub.annotationClasses = getClassAnnotationsAsString(m);
+				stub.annotationClasses = getClassAnnotationsAsString(m);
 				stub.jnsi = "";
 				stub.methodId = nextId();
 				stub.name = m.getName();
@@ -640,21 +640,21 @@ public class ReflectionCacheSourceCreator {
 		}
 	}
 
-    private String getClassAnnotationsAsString(JAbstractMethod m) {
-        Annotation[] annotations = m.getAnnotations();
-        StringBuilder annotationClasses = new StringBuilder("new String[]{");
+	private String getClassAnnotationsAsString(JAbstractMethod m) {
+		Annotation[] annotations = m.getAnnotations();
+		StringBuilder annotationClasses = new StringBuilder("new String[]{");
 
-        for (int i = 0; i < annotations.length; i++) {
-                 annotationClasses.append("\"").append(annotations[i].annotationType().getName()).append("\"");
-                   if(i < annotations.length-1) {
-                       annotationClasses.append(",");
-                   }
+		for (int i = 0; i < annotations.length; i++) {
+				 annotationClasses.append("\"").append(annotations[i].annotationType().getName()).append("\"");
+				   if(i < annotations.length-1) {
+					   annotationClasses.append(",");
+				   }
 }
-        annotationClasses.append("}");
-        return annotationClasses.toString();
-    }
+		annotationClasses.append("}");
+		return annotationClasses.toString();
+	}
 
-    private String getElementTypes (JField f) {
+	private String getElementTypes (JField f) {
 		StringBuilder b = new StringBuilder();
 		JParameterizedType params = f.getType().isParameterized();
 		if (params != null) {
