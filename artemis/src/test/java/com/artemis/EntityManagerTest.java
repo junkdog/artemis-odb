@@ -22,6 +22,31 @@ public class EntityManagerTest {
 		world = new World();
 		world.initialize();
 	}
+
+	@Test
+	public void active_entities_never_negative() {
+		EntityManager em = world.getEntityManager();
+		assertEquals(0, em.getActiveEntityCount());
+		
+		Entity e = world.createEntity();
+		assertEquals(0, em.getActiveEntityCount());
+		
+		e.deleteFromWorld();
+		assertEquals(0, em.getActiveEntityCount());
+		
+		world.process();
+		assertEquals(0, em.getActiveEntityCount());
+		
+		e = world.createEntity();
+		world.process();
+		assertEquals(1, em.getActiveEntityCount());
+		e.deleteFromWorld();
+		assertEquals(1, em.getActiveEntityCount());
+		
+		world.process();
+		assertEquals(0, em.getActiveEntityCount());
+		
+	}
 	
 	@Test
 	public void old_entities_are_recycled() {

@@ -2,7 +2,6 @@ package com.artemis;
 
 import java.util.BitSet;
 
-import com.artemis.EntityEditPool.EntityEdit;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 
@@ -137,12 +136,13 @@ public class EntityManager extends Manager {
 	 */
 	@Override
 	public void deleted(Entity e) {
-		entities.set(e.getId(), null);
+		if (entities.get(e.getId()) != null) {
+			entities.set(e.getId(), null);
+			active--;
+		}
 		disabled.clear(e.getId());
 		
 		recyclingEntityFactory.free(e);
-		
-		active--;
 		deleted++;
 	}
 
@@ -248,6 +248,7 @@ public class EntityManager extends Manager {
 		ComponentIdentityResolver() {
 			composition = new Bag<BitSet>();
 			composition.add(null);
+			composition.add(new BitSet());
 		}
 		
 		int getIdentity(BitSet components) {

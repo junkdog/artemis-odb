@@ -2,6 +2,7 @@ package com.artemis;
 
 import java.util.BitSet;
 
+import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
 
@@ -30,16 +31,12 @@ public abstract class EntitySystem implements EntityObserver {
 	private final BitSet activeIds;
 	private boolean activesIsDirty;
 	
-	/** Collects entities to be deleted from the system after processing. */
-	private final WildBag<Entity> delayedDeletion;
 	/** If the system is passive or not. */
 	private boolean passive;
 	/** If the system is enabled or not. */
 	private boolean enabled;
 	/** If the system is interested in no entities at all. */
 	private boolean dummy;
-	/** If the system is currently processing. */
-	private boolean isProcessing;
 	private Aspect aspect;
 	private final BitSet aspectCache = new BitSet();
 
@@ -55,10 +52,7 @@ public abstract class EntitySystem implements EntityObserver {
 		activeIds = new BitSet();
 		actives = new WildBag<Entity>();
 		
-		delayedDeletion = new WildBag<Entity>();
-		
 		enabled = true;
-		isProcessing = false;
 	}
 
 
@@ -77,20 +71,8 @@ public abstract class EntitySystem implements EntityObserver {
 			if (activesIsDirty && world.isRebuildingIndexAllowed())
 				rebuildCompressedActives();
 			
-			isProcessing = true;
 			processEntities(actives);
-			isProcessing = false;
 
-			int s = delayedDeletion.size();
-			if (s > 0) {
-				Object[] data = delayedDeletion.getData();
-				for (int i = 0; i < s; i++) {
-					removeFromSystem((Entity)data[i]);
-					data[i] = null;
-				}
-				delayedDeletion.setSize(0);
-			}
-			
 			end();
 		}
 	}
@@ -215,11 +197,6 @@ public abstract class EntitySystem implements EntityObserver {
 	 *			the entity to remove
 	 */
 	private void removeFromSystem(Entity e) {
-		if (isProcessing) {
-			delayedDeletion.add(e);
-			return;
-		}
-		
 		actives.remove(e);
 		activeIds.clear(e.getId());
 		activesIsDirty = true;
@@ -257,6 +234,30 @@ public abstract class EntitySystem implements EntityObserver {
 	@Override
 	public final void added(Entity e) {
 		check(e);
+	}
+	
+	@Override
+	public final void added(ImmutableBag<Entity> entities) {
+		Object[] data = ((Bag<Entity>)entities).getData();
+		for (int i = 0, s = entities.size(); s > i; i++) {
+			check((Entity)data[i]);
+		}
+	}
+	
+	@Override
+	public final void changed(ImmutableBag<Entity> entities) {
+		Object[] data = ((Bag<Entity>)entities).getData();
+		for (int i = 0, s = entities.size(); s > i; i++) {
+			check((Entity)data[i]);
+		}
+	}
+	
+	@Override
+	public final void deleted(ImmutableBag<Entity> entities) {
+		Object[] data = ((Bag<Entity>)entities).getData();
+		for (int i = 0, s = entities.size(); s > i; i++) {
+			check((Entity)data[i]);
+		}
 	}
 
 	/**

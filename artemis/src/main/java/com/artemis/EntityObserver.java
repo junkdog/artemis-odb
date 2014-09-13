@@ -1,5 +1,7 @@
 package com.artemis;
 
+import com.artemis.utils.ImmutableBag;
+
 
 /**
  * Used to pass messages to objects that need to be notified about changes to
@@ -16,6 +18,7 @@ public interface EntityObserver {
 	 *			the added entity
 	 */
 	void added(Entity e);
+	void added(ImmutableBag<Entity> entities);
 
 	/**
 	 * Called when an entity the observer is interested in has changed.
@@ -24,6 +27,7 @@ public interface EntityObserver {
 	 *			the changed entity
 	 */
 	void changed(Entity e);
+	void changed(ImmutableBag<Entity> entities);
 
 	/**
 	 * Called when an entity the observer is interested in is deleted.
@@ -32,6 +36,7 @@ public interface EntityObserver {
 	 *			the deleted entity
 	 */
 	void deleted(Entity e);
+	void deleted(ImmutableBag<Entity> entities);
 
 	/**
 	 * Called when an entity the observer is interested in has been

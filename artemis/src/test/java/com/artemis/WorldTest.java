@@ -63,7 +63,7 @@ public class WorldTest
 		world.setSystem(es);
 		world.initialize();
 		
-		createEntity();
+		Entity e1 = createEntity();
 		
 		world.setDelta(0.5f);
 		world.process();
@@ -75,6 +75,8 @@ public class WorldTest
 		world.process();
 		assertEquals(1, es.expiredLastRound);
 		assertEquals(0.25f, es.deltas.get(e2.getId()), 0.01f);
+		world.delta = 0;
+		world.process();
 		assertEquals(1, es.getActives().size());
 		
 		world.setDelta(0.5f);

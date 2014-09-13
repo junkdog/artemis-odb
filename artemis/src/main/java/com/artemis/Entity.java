@@ -3,7 +3,6 @@ package com.artemis;
 import java.util.BitSet;
 import java.util.UUID;
 
-import com.artemis.EntityEditPool.EntityEdit;
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 
@@ -285,7 +284,7 @@ public final class Entity {
 	 * Delete this entity from the world.
 	 */
 	public void deleteFromWorld() {
-		world.deleteEntity(this);
+		edit().deleteEntity();;
 	}
 	
 	/**

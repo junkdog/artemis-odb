@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.artemis.EntityEditPool.EntityEdit;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 

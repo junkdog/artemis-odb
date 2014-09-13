@@ -1,5 +1,8 @@
 package com.artemis;
 
+import com.artemis.utils.Bag;
+import com.artemis.utils.ImmutableBag;
+
 
 /**
  * A manager for handling entities in the world.
@@ -53,6 +56,30 @@ public abstract class Manager implements EntityObserver {
 	@Override
 	public void enabled(Entity e) {}
 	
+	@Override
+	public final void added(ImmutableBag<Entity> entities) {
+		Object[] data = ((Bag<Entity>)entities).getData();
+		for (int i = 0, s = entities.size(); s > i; i++) {
+			added((Entity)data[i]);
+		}
+	}
+
+	@Override
+	public final void changed(ImmutableBag<Entity> entities) {
+		Object[] data = ((Bag<Entity>)entities).getData();
+		for (int i = 0, s = entities.size(); s > i; i++) {
+			changed((Entity)data[i]);
+		}
+	}
+
+	@Override
+	public final void deleted(ImmutableBag<Entity> entities) {
+		Object[] data = ((Bag<Entity>)entities).getData();
+		for (int i = 0, s = entities.size(); s > i; i++) {
+			deleted((Entity)data[i]);
+		}
+	}
+
 	/**
 	 * see {@link World#dispose()}
 	 */

@@ -42,14 +42,12 @@ public class World {
 	 * The time passed since the last update.
 	 */
 	public float delta;
-	/**
-	 * Entities added to the world since the last update.
-	 */
-	private final WildBag<Entity> added;
-	/**
-	 * Entities deleted from the world since the last update.
-	 */
-	private final Bag<Entity> deleted;
+
+	final WildBag<Entity> added;
+	final WildBag<Entity> changed;
+	final WildBag<Entity> disabled;
+	final WildBag<Entity> enabled;
+	final WildBag<Entity> deleted;
 
 	/**
 	 * Runs actions on systems and managers when entities get added.
@@ -89,7 +87,7 @@ public class World {
 	 */
 	private final Bag<EntitySystem> systemsBag;
 	/**
-	 * Contains all uninitilized systems. *
+	 * Contains all uninitialized systems. *
 	 */
 	private final Bag<EntitySystem> systemsToInit;
 	final SystemIndexManager systemIndex;
@@ -137,7 +135,10 @@ public class World {
 		systemsToInit = new Bag<EntitySystem>();
 
 		added = new WildBag<Entity>();
-		deleted = new Bag<Entity>();
+		changed = new WildBag<Entity>();
+		deleted = new WildBag<Entity>();
+		enabled = new WildBag<Entity>();
+		disabled = new WildBag<Entity>();
 
 		addedPerformer = new AddedPerformer();
 		changedPerformer = new ChangedPerformer();
@@ -311,10 +312,11 @@ public class World {
 	 * world, then you need to invoke this method.
 	 * </p>
 	 *
-	 * @param e the chang	ed entity
+	 * @param e the changed entity
 	 */
+	@Deprecated
 	public void changedEntity(Entity e) {
-		check(e, changedPerformer);
+//		check(e, changedPerformer);
 	}
 
 	/**
@@ -322,15 +324,17 @@ public class World {
 	 *
 	 * @param e the entity to delete
 	 */
+	@Deprecated // TODO: refactor
 	public void deleteEntity(Entity e) {
-		if (!deleted.contains(e)) {
-			deleted.add(e);
-			check(e, deletedPerformer);
-		}
-
-		if (added.contains(e)) {
-			added.remove(e);
-		}
+//		if (!deleted.contains(e)) {
+//			deleted.add(e);
+//			check(e, deletedPerformer);
+//		}
+//
+//		if (added.contains(e)) {
+//			added.remove(e);
+//		}
+		e.edit().deleteEntity();
 	}
 	
 	boolean isRebuildingIndexAllowed() {
@@ -346,7 +350,8 @@ public class World {
 	 * @param e the entity to enable
 	 */
 	public void enable(Entity e) {
-		check(e, enabledPerformer);
+//		check(e, enabledPerformer);
+		enabled.add(e);
 	}
 
 	/**
@@ -358,7 +363,8 @@ public class World {
 	 * @param e the entity to disable
 	 */
 	public void disable(Entity e) {
-		check(e, disabledPerformer);
+//		check(e, disabledPerformer);
+		disabled.add(e);
 	}
 
 	/**
@@ -461,10 +467,10 @@ public class World {
 	 * @param performer the performer to run
 	 * @param e		 the entity to pass as argument to the systems
 	 */
-	private void notifySystems(Performer performer, Entity e) {
+	private void notifySystems(Performer performer, WildBag<Entity> entities) {
 		Object[] data = systemsBag.getData();
 		for (int i = 0, s = systemsBag.size(); s > i; i++) {
-			performer.perform((EntitySystem) data[i], e);
+			performer.perform((EntitySystem) data[i], entities);
 		}
 	}
 
@@ -474,10 +480,10 @@ public class World {
 	 * @param performer the performer to run
 	 * @param e		 the entity to pass as argument to the managers
 	 */
-	private void notifyManagers(Performer performer, Entity e) {
+	private void notifyManagers(Performer performer, WildBag<Entity> entities) {
 		Object[] data = managersBag.getData();
 		for (int i = 0, s = managersBag.size(); s > i; i++) {
-			performer.perform((Manager) data[i], e);
+			performer.perform((Manager) data[i], entities);
 		}
 	}
 
@@ -500,25 +506,12 @@ public class World {
 	 * @param performer the performer that carries out the action
 	 */
 	private void check(WildBag<Entity> entityBag, Performer performer) {
-		Object[] entities = entityBag.getData();
-		for (int i = 0, s = entityBag.size(); s > i; i++) {
-			Entity e = (Entity) entities[i];
-			entities[i] = null;
-			notifyManagers(performer, e);
-			notifySystems(performer, e);
-		}
+		if (entityBag.size() == 0)
+			return;
+		
+		notifyManagers(performer, entityBag);
+		notifySystems(performer, entityBag);
 		entityBag.setSize(0);
-	}
-
-	/**
-	 * Performs an action on an entity.
-	 *
-	 * @param e		 the entity to use
-	 * @param performer the performer to run
-	 */
-	private void check(Entity e, Performer performer) {
-		notifyManagers(performer, e);
-		notifySystems(performer, e);
 	}
 	
 	void processComponentIdentity(int id, BitSet componentBits) {
@@ -534,9 +527,7 @@ public class World {
 	public void process() {
 		rebuiltIndices = 0;
 		
-		editPool.processEntities();
-		check(added, addedPerformer);
-		deleted.clear();
+		updateEntityStates();
 
 		em.clean();
 		cm.clean();
@@ -551,9 +542,19 @@ public class World {
 		for (int i = 0, s = systemsBag.size(); s > i; i++) {
 			EntitySystem system = (EntitySystem) systemsData[i];
 			if (!system.isPassive()) {
-				editPool.processEntities();
+				updateEntityStates();
 				system.process();
 			}
+		}
+	}
+
+	private void updateEntityStates() {
+		while(editPool.processEntities()) {
+			check(added, addedPerformer);
+			check(changed, changedPerformer);
+			check(deleted, deletedPerformer);
+			check(disabled, disabledPerformer);
+			check(enabled, enabledPerformer);
 		}
 	}
 
@@ -585,8 +586,8 @@ public class World {
 	private static final class DeletedPerformer implements Performer {
 
 		@Override
-		public void perform(EntityObserver observer, Entity e) {
-			observer.deleted(e);
+		public void perform(EntityObserver observer, WildBag<Entity> entities) {
+			observer.deleted(entities);
 		}
 	}
 
@@ -596,8 +597,11 @@ public class World {
 	private static final class EnabledPerformer implements Performer {
 
 		@Override
-		public void perform(EntityObserver observer, Entity e) {
-			observer.enabled(e);
+		public void perform(EntityObserver observer, WildBag<Entity> entities) {
+			Object[] data = entities.getData();
+			for (int i = 0, s = entities.size(); s > i; i++) {
+				observer.enabled((Entity)data[i]);
+			}
 		}
 	}
 
@@ -607,8 +611,11 @@ public class World {
 	private static final class DisabledPerformer implements Performer {
 
 		@Override
-		public void perform(EntityObserver observer, Entity e) {
-			observer.disabled(e);
+		public void perform(EntityObserver observer, WildBag<Entity> entities) {
+			Object[] data = entities.getData();
+			for (int i = 0, s = entities.size(); s > i; i++) {
+				observer.disabled((Entity)data[i]);
+			}
 		}
 	}
 
@@ -616,10 +623,10 @@ public class World {
 	 * Runs {@link EntityObserver#changed}.
 	 */
 	private static final class ChangedPerformer implements Performer {
-
+		
 		@Override
-		public void perform(EntityObserver observer, Entity e) {
-			observer.changed(e);
+		public void perform(EntityObserver observer, WildBag<Entity> entities) {
+			observer.changed(entities);
 		}
 	}
 
@@ -627,10 +634,10 @@ public class World {
 	 * Runs {@link EntityObserver#added}.
 	 */
 	private static final class AddedPerformer implements Performer {
-
+		
 		@Override
-		public void perform(EntityObserver observer, Entity e) {
-			observer.added(e);
+		public void perform(EntityObserver observer, WildBag<Entity> entities) {
+			observer.added(entities);
 		}
 	}
 
@@ -649,7 +656,7 @@ public class World {
 		 * @param observer the observer with the method to calll
 		 * @param e		the entity to pass as argument
 		 */
-		void perform(EntityObserver observer, Entity e);
+		void perform(EntityObserver observer, WildBag<Entity> entities);
 	}
 
 	boolean hasUuidManager() {
