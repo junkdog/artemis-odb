@@ -1,6 +1,5 @@
 package com.artemis;
 
-import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.HashMap;
@@ -32,7 +31,7 @@ import com.artemis.utils.reflect.ReflectionException;
 public class World {
 
 	/**
-	 * Mananges all entities for the world.
+	 * Manages all entities for the world.
 	 */
 	private final EntityManager em;
 	/**
@@ -316,9 +315,7 @@ public class World {
 	 * @param e the changed entity
 	 */
 	@Deprecated
-	public void changedEntity(Entity e) {
-//		check(e, changedPerformer);
-	}
+	public void changedEntity(Entity e) {}
 
 	/**
 	 * Delete the entity from the world.
@@ -343,7 +340,6 @@ public class World {
 	 * @param e the entity to enable
 	 */
 	public void enable(Entity e) {
-//		check(e, enabledPerformer);
 		enabled.add(e);
 	}
 
@@ -356,7 +352,6 @@ public class World {
 	 * @param e the entity to disable
 	 */
 	public void disable(Entity e) {
-//		check(e, disabledPerformer);
 		disabled.add(e);
 	}
 
@@ -791,10 +786,10 @@ public class World {
 				}
 				field.set(target, manager);
 			} else if (field.hasAnnotation(Wire.class)) {
-                final Wire wire = field.getAnnotation(Wire.class);
-                // Parametrized annotations are not supported by our GWT emulation.
-                // @todo Workaround, awaiting junkdog-ification.
-                String key = wire != null ? wire.name() : "";
+				final Wire wire = field.getAnnotation(Wire.class);
+				// Parametrized annotations are not supported by our GWT emulation
+				// @todo Workaround, awaiting junkdog-ification.
+				String key = wire != null ? wire.name() : "";
 				if ("".equals(key))
 					key = field.getType().getName();
 				

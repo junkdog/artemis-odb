@@ -2,10 +2,6 @@ package com.artemis;
 
 import java.util.BitSet;
 
-import com.artemis.utils.reflect.ClassReflection;
-import com.artemis.utils.reflect.Constructor;
-import com.artemis.utils.reflect.ReflectionException;
-
 /**
  * High performance packed component retrieval from entities. Each instance
  * holds its own view of the {@link PackedComponent}.
