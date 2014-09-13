@@ -8,6 +8,10 @@
 - Removed `artemis-benchmark`, refer to [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) instead.
 - It's no longer necessary to call `Entity#changedInWorld` and `Entity#addToWorld`
   - Use `Entity#edit` when adding or removing components.
+- Adding and removing entities to systems is now approximately 60% faster.
+  - Entity compositions are no longer primarily identified by BitSets, but instead
+    have a compositionId - EntitySystems track which composition ids are of interest.
+  - Optimized `EntitySystem#check`, entities are processed in bulk, less checks when removing entities.
 - [@Profile](https://github.com/junkdog/artemis-odb/wiki/@Profile) entity systems with custom classes.
 - New WorldConfiguration class
   - Set expected entity count
@@ -23,6 +27,8 @@
 - maven plugin registered as "artemis-odb", ie `mvn artemis-odb:matrix`, or `mvn artemis-odb:artemis`
 - **Fix**: `@PooledWeaver` wasn't resetting components.
   - Additionaly, only primitive fields are reset - objects are left intact.
+- **Fix**: `EntityManager#getActiveEntityCount` could report the wrong number if entities were
+  deleted before having been added to the world.
 - **Fix**: Disabled entities are no longer added to systems.
 - **Fix**: `EntityManager#isActive` could throw an OOB exception..
 - **FIX**: Possible IOOB in `@PackedWeaver` components when accessing component data.
