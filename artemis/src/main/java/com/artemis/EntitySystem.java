@@ -179,9 +179,9 @@ public abstract class EntitySystem implements EntityObserver {
 			return;
 		
 		EntityManager em = world.getEntityManager();
-		boolean interested = e.isActive() && e.isEnabled() && aspectCache.get(em.getIdentity(e));
-		BitSet systemBits = em.systemBits(e);
-		boolean contains = systemBits.get(systemIndex);
+		int id = e.getId();
+		boolean interested = aspectCache.get(em.getIdentity(e)) && em.isActive(id) && em.isActive(id);
+		boolean contains = activeIds.get(id);
 		
 		if (interested && !contains) {
 			insertToSystem(e);
@@ -256,7 +256,9 @@ public abstract class EntitySystem implements EntityObserver {
 	public final void deleted(ImmutableBag<Entity> entities) {
 		Object[] data = ((Bag<Entity>)entities).getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			check((Entity)data[i]);
+			Entity e = (Entity)data[i];
+			if (activeIds.get(e.getId()))
+				removeFromSystem(e);
 		}
 	}
 

@@ -324,16 +324,8 @@ public class World {
 	 *
 	 * @param e the entity to delete
 	 */
-	@Deprecated // TODO: refactor
+	@Deprecated
 	public void deleteEntity(Entity e) {
-//		if (!deleted.contains(e)) {
-//			deleted.add(e);
-//			check(e, deletedPerformer);
-//		}
-//
-//		if (added.contains(e)) {
-//			added.remove(e);
-//		}
 		e.edit().deleteEntity();
 	}
 	
@@ -368,7 +360,7 @@ public class World {
 	}
 
 	/**
-	 * Create and return a new or reused entity instance. Eentity is 
+	 * Create and return a new or reused entity instance. Entity is 
 	 * automatically added to the world.
 	 *
 	 * @return entity
@@ -377,6 +369,17 @@ public class World {
 		Entity e = em.createEntityInstance();
 		e.edit();
 		return e;
+	}
+	
+	/**
+	 * Create and return a {@link EntityEdit} wrapping a new or reused entity instance.
+	 * Entity is automatically added to the world.
+	 *
+	 * @return entity
+	 */
+	public EntityEdit createEntity(Archetype archetype) {
+		Entity e = em.createEntityInstance();
+		return e.edit();
 	}
 
 	/**
