@@ -112,6 +112,9 @@ public class World {
 		this(new WorldConfiguration().maxRebuiltIndicesPerTick(64));
 	}
 
+	/**
+	 * @deprecated {@link World#World(WorldConfiguration)} provides more fine-grained control.
+	 */
 	@Deprecated
 	public World(int expectedEntityCount) {
 		this(new WorldConfiguration().maxRebuiltIndicesPerTick(expectedEntityCount));
@@ -306,13 +309,7 @@ public class World {
 	}
 
 	/**
-	 * Ensure all systems are notified of changes to this entity.
-	 * <p>
-	 * If you're adding a component to an entity after it's been added to the
-	 * world, then you need to invoke this method.
-	 * </p>
-	 *
-	 * @param e the changed entity
+	 * @deprecated does nothing, internally tracked by artemis now.
 	 */
 	@Deprecated
 	public void changedEntity(Entity e) {}
@@ -321,8 +318,10 @@ public class World {
 	 * Delete the entity from the world.
 	 *
 	 * @param e the entity to delete
+	 * 
+	 * @deprecated Better invoke {@link Entity#deleteFromWorld()} or {@link EntityEdit#deleteEntity()}
 	 */
-	@Deprecated
+	@Deprecated @SuppressWarnings("static-method")
 	public void deleteEntity(Entity e) {
 		e.edit().deleteEntity();
 	}

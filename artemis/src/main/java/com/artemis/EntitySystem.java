@@ -180,7 +180,7 @@ public abstract class EntitySystem implements EntityObserver {
 		
 		EntityManager em = world.getEntityManager();
 		int id = e.getId();
-		boolean interested = aspectCache.get(em.getIdentity(e)) && em.isActive(id) && em.isActive(id);
+		boolean interested = aspectCache.get(em.getIdentity(e)) && em.isActive(id) && em.isEnabled(id);
 		boolean contains = activeIds.get(id);
 		
 		if (interested && !contains) {

@@ -105,19 +105,16 @@ public final class Entity {
 		return "Entity[" + id + "]";
 	}
 	
+	/**
+	 * @deprecated See {@link Entity#edit()}
+	 */
 	@Deprecated
 	public <T extends Component> T createComponent(Class<T> componentKlazz) {
 		return edit().createComponent(componentKlazz);
 	}
 
 	/**
-	 * Add a component to this entity.
-	 * 
-	 * @param component
-	 *			the component to add to this entity
-	 * 
-	 * @return this entity for chaining
-	 * @see {@link #createComponent(Class)}
+	 * @deprecated See {@link Entity#edit()}
 	 */
 	@Deprecated
 	public Entity addComponent(Component component) {
@@ -126,19 +123,7 @@ public final class Entity {
 	}
 	
 	/**
-	 * Faster adding of components into the entity.
-	 * <p>
-	 * Not necessary to use this, but in some cases you might need the extra
-	 * performance.
-	 * </p>
-	 *
-	 * @param component
-	 *			the component to add
-	 * @param type
-	 *			the type of the component
-	 * 
-	 * @return this entity for chaining
-	 * @see #createComponent(Class)
+	 * @deprecated See {@link Entity#edit()}
 	 */
 	@Deprecated
 	public Entity addComponent(Component component, ComponentType type) {
@@ -147,12 +132,7 @@ public final class Entity {
 	}
 
 	/**
-	 * Removes the component from this entity.
-	 * 
-	 * @param component
-	 *			the component to remove from this entity.
-	 * 
-	 * @return this entity for chaining
+	 * @deprecated See {@link Entity#edit()}
 	 */
 	@Deprecated
 	public Entity removeComponent(Component component) {
@@ -161,12 +141,7 @@ public final class Entity {
 	}
 
 	/**
-	 * Faster removal of components from a entity.
-	 * 
-	 * @param type
-	 *			the type of component to remove from this entity
-	 * 
-	 * @return this entity for chaining
+	 * @deprecated See {@link Entity#edit()}
 	 */
 	@Deprecated
 	public Entity removeComponent(ComponentType type) {
@@ -175,12 +150,7 @@ public final class Entity {
 	}
 	
 	/**
-	 * Remove component by its type.
-	 *
-	 * @param type
-	 *			the class type of component to remove from this entity
-	 * 
-	 * @return this entity for chaining
+	 * @deprecated See {@link Entity#edit()}
 	 */
 	@Deprecated
 	public Entity removeComponent(Class<? extends Component> type) {
@@ -269,13 +239,13 @@ public final class Entity {
 	}
 
 	/**
-	 * Automatically managed.
+	 * @deprecated Automatically managed.
 	 */
 	@Deprecated
 	public void addToWorld() {}
 	
 	/**
-	 * Automatically managed.
+	 * @deprecated Automatically managed.
 	 */
 	@Deprecated
 	public void changedInWorld() {}
