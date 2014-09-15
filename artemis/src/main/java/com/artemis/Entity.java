@@ -179,7 +179,9 @@ public final class Entity {
 	 * </p>
 	 * 
 	 * @return {@code true} if it's enabled
+	 * @deprecated use components to implement state instead.
 	 */
+	@Deprecated
 	public boolean isEnabled() {
 		return world.getEntityManager().isEnabled(id);
 	}
@@ -254,7 +256,7 @@ public final class Entity {
 	 * Delete this entity from the world.
 	 */
 	public void deleteFromWorld() {
-		edit().deleteEntity();;
+		edit().deleteEntity();
 	}
 	
 	/**
@@ -262,7 +264,9 @@ public final class Entity {
 	 * <p>
 	 * Won't do anything unless it was already disabled.
 	 * </p>
+	 * @deprecated create your own components to track state.
 	 */
+	@Deprecated
 	public void enable() {
 		world.enable(this);
 	}
@@ -272,7 +276,9 @@ public final class Entity {
 	 * <p>
 	 * Won't delete it, it will continue to exist but won't get processed.
 	 * </p>
+	 * @deprecated create your own components to track state.
 	 */
+	@Deprecated
 	public void disable() {
 		world.disable(this);
 	}
