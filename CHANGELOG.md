@@ -11,7 +11,8 @@
 - Adding and removing entities to systems is now approximately 60% faster.
   - Entity compositions are no longer primarily identified by BitSets, but instead
     have a compositionId - EntitySystems track which composition ids are of interest.
-  - Optimized `EntitySystem#check`, entities are processed in bulk, less checks when removing entities.
+  - Optimized `EntitySystem#check`, entities are processed in bulk, less checks when removing entities,
+    removed systemIndex.
 - [@Profile](https://github.com/junkdog/artemis-odb/wiki/@Profile) entity systems with custom classes.
 - New WorldConfiguration class
   - Set expected entity count
@@ -24,6 +25,9 @@
   - Requires that the injected object is annotated with `@Wire`
 - Less bounds checking for PackedComponents.
 - Added `World#getManagers` method.
+- Lots of methods now deprecated
+  - These will be removed when 1.0.0 is released.
+  - See the `@deprecated` notice for how things work in the new world.
 - maven plugin registered as "artemis-odb", ie `mvn artemis-odb:matrix`, or `mvn artemis-odb:artemis`
 - **Fix**: `@PooledWeaver` wasn't resetting components.
   - Additionaly, only primitive fields are reset - objects are left intact.
