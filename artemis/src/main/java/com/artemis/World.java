@@ -337,7 +337,9 @@ public class World {
 	 * </p>
 	 *
 	 * @param e the entity to enable
+	 * @deprecated create your own components to track state.
 	 */
+	@Deprecated
 	public void enable(Entity e) {
 		enabled.add(e);
 	}
@@ -349,7 +351,9 @@ public class World {
 	 * </p>
 	 *
 	 * @param e the entity to disable
+	 * @deprecated create your own components to track state.
 	 */
+	@Deprecated
 	public void disable(Entity e) {
 		disabled.add(e);
 	}
@@ -706,10 +710,6 @@ public class World {
 					Wire wire = ClassReflection.getAnnotation(clazz, Wire.class);
 					if (wire != null) {
 						injectValidFields(target, clazz, wire.failOnNull(), wire.injectInherited());
-					} else {
-						// getAnnotation not supported on GWT. Revert to defaults when this is the case.
-						// @todo Workaround, awaiting junkdog-ification.
-						injectValidFields(target, clazz, true, false);
 					}
 				} else {
 					injectAnnotatedFields(target, clazz);
@@ -785,9 +785,7 @@ public class World {
 				field.set(target, manager);
 			} else if (field.hasAnnotation(Wire.class)) {
 				final Wire wire = field.getAnnotation(Wire.class);
-				// Parametrized annotations are not supported by our GWT emulation
-				// @todo Workaround, awaiting junkdog-ification.
-				String key = wire != null ? wire.name() : "";
+				String key = wire.name();
 				if ("".equals(key))
 					key = field.getType().getName();
 				

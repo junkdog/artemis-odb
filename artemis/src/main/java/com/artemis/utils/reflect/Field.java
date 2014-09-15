@@ -16,7 +16,8 @@
 
 package com.artemis.utils.reflect;
 
-import java.lang.annotation.Annotation;
+import com.artemis.annotations.Wire;
+
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -143,13 +144,49 @@ public final class Field {
 		}
 	}
 
-	@SuppressWarnings({"rawtypes", "unchecked"})
+	/** Deprecated: Use isAnnotationPresent instead. */
+	@Deprecated
 	public boolean hasAnnotation(Class annotationClass) {
-		return field.getAnnotation(annotationClass) != null ? true : false;
+		return isAnnotationPresent(annotationClass);
 	}
 
-	public <T extends Annotation>T getAnnotation(Class<T> annotationClass) {
-		return (T)field.getAnnotation(annotationClass);
+	/** Deprecated: Use getDeclaredAnnotation instead. */
+	@Deprecated
+	public <T extends java.lang.annotation.Annotation> T getAnnotation(Class<T> annotationClass) {
+		final Annotation declaredAnnotation = getDeclaredAnnotation(annotationClass);
+		return declaredAnnotation != null ? declaredAnnotation.getAnnotation(annotationClass) : null;
 	}
-	
+
+	/** Returns true if the field includes an annotation of the provided class type. */
+	public boolean isAnnotationPresent (Class<? extends java.lang.annotation.Annotation> annotationType) {
+		return field.isAnnotationPresent(annotationType);
+	}
+
+	/** Returns an array of {@link Annotation} objects reflecting all annotations declared by this field,
+	 * or an empty array if there are none. Does not include inherited annotations. */
+	public Annotation[] getDeclaredAnnotations () {
+		java.lang.annotation.Annotation[] annotations = field.getDeclaredAnnotations();
+		Annotation[] result = new Annotation[annotations.length];
+		for (int i = 0; i < annotations.length; i++) {
+			result[i] = new Annotation(annotations[i]);
+		}
+		return result;
+	}
+
+	/** Returns an {@link Annotation} object reflecting the annotation provided, or null of this field doesn't
+	 * have such an annotation. This is a convenience function if the caller knows already which annotation
+	 * type he's looking for. */
+	public Annotation getDeclaredAnnotation (Class<? extends java.lang.annotation.Annotation> annotationType) {
+		java.lang.annotation.Annotation[] annotations = field.getDeclaredAnnotations();
+		if (annotations == null) {
+			return null;
+		}
+		for (java.lang.annotation.Annotation annotation : annotations) {
+			if (annotation.annotationType().equals(annotationType)) {
+				return new Annotation(annotation);
+			}
+		}
+		return null;
+	}
+
 }

@@ -16,6 +16,7 @@
 
 package com.artemis.gwtref.client;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -28,7 +29,7 @@ public class Type {
 	private static final Field[] EMPTY_FIELDS = new Field[0];
 	private static final Method[] EMPTY_METHODS = new Method[0];
     private static final Constructor[] EMPTY_CONSTRUCTORS = new Constructor[0];
-    private static final String[] EMPTY_ANNOTATIONCLASSES = new String[0];
+	private static final Annotation[] EMPTY_ANNOTATIONS = new Annotation[0];
 
 	String name;
 	int id;
@@ -42,11 +43,12 @@ public class Type {
 	boolean isArray;
 	boolean isMemberClass;
 	boolean isStatic;
+	boolean isAnnotation;
 
 	Field[] fields = EMPTY_FIELDS;
 	Method[] methods = EMPTY_METHODS;
 	Constructor[] constructors = EMPTY_CONSTRUCTORS;
-    String[] annotationClasses = EMPTY_ANNOTATIONCLASSES;
+	Annotation[] annotations = EMPTY_ANNOTATIONS;
 
 	Class componentType;
 	Object[] enumConstants;
@@ -205,6 +207,10 @@ public class Type {
 		return isStatic;
 	}
 
+	public boolean isAnnotation() {
+		return isAnnotation;
+	}
+
 	/** @return the class of the components if this is an array type or null. */
 	public Class getComponentType () {
 		return componentType;
@@ -239,14 +245,15 @@ public class Type {
 	@Override
 	public String toString () {
 		return "Type [name=" + name + ",\n clazz=" + clazz + ",\n superClass=" + superClass + ",\n assignables=" + assignables
-			+ ",\n isAbstract=" + isAbstract + ",\n isInterface=" + isInterface + ",\n isPrimitive=" + isPrimitive + ",\n isEnum="
-			+ isEnum + ",\n isArray=" + isArray + ",\n isMemberClass=" + isMemberClass + ",\n isStatic=" + isStatic + ",\n fields="
-			+ Arrays.toString(fields) + ",\n methods=" + Arrays.toString(methods) + ",\n constructors="
-			+ Arrays.toString(constructors) + ",\n componentType=" + componentType + ",\n enumConstants="
-			+ Arrays.toString(enumConstants) + "]";
+				+ ",\n isAbstract=" + isAbstract + ",\n isInterface=" + isInterface + ",\n isPrimitive=" + isPrimitive + ",\n isEnum="
+				+ isEnum + ",\n isArray=" + isArray + ",\n isMemberClass=" + isMemberClass + ",\n isStatic=" + isStatic
+				+ ",\n isAnnotation=" + isAnnotation + ",\n fields=" + Arrays.toString(fields) + ",\n methods="
+				+ Arrays.toString(methods) + ",\n constructors=" + Arrays.toString(constructors) + ",\n annotations="
+				+ Arrays.toString(annotations) + ",\n componentType=" + componentType + ",\n enumConstants="
+				+ Arrays.toString(enumConstants) + "]";
 	}
 
-    public String[] getAnnotationClasses() {
-        return annotationClasses;
-    }
+	public Annotation[] getDeclaredAnnotations() {
+		return annotations;
+	}
 }
