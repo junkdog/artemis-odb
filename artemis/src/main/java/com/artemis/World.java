@@ -90,7 +90,6 @@ public class World {
 	 * Contains all uninitialized systems. *
 	 */
 	private final Bag<EntitySystem> systemsToInit;
-	final SystemIndexManager systemIndex;
 	
 	private boolean registerUuids;
 	private ArtemisInjector injector;
@@ -149,8 +148,6 @@ public class World {
 		enabledPerformer = new EnabledPerformer();
 		disabledPerformer = new DisabledPerformer();
 
-		systemIndex = new SystemIndexManager();
-		
 		cm = new ComponentManager(configuration.expectedEntityCount());
 		setManager(cm);
 

@@ -85,17 +85,6 @@ public final class Entity {
 		return world.getEntityManager().componentBits(this);
 	}
 	
-	
-	/**
-	 * Returns a BitSet instance containing bits of the systems interested in
-	 * the entity.
-	 *
-	 * @return a BitSet containing the systems bits interested in the entity
-	 */
-	protected BitSet getSystemBits() {
-		return world.getEntityManager().systemBits(this);
-	}
-
 	public EntityEdit edit() {
 		return world.editPool.obtainEditor(this);
 	}

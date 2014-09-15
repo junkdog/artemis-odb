@@ -27,8 +27,6 @@ public class EntityManager extends Manager {
 	private long deleted;
 	private RecyclingEntityFactory recyclingEntityFactory;
 
-	private final Bag<BitSet> systemBits;
-	
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
 	private IntBag entityToIdentity = new IntBag();
 	private int highestSeenIdentity;
@@ -39,8 +37,6 @@ public class EntityManager extends Manager {
 	protected EntityManager(int initialContainerSize) {
 		entities = new Bag<Entity>(initialContainerSize);
 		disabled = new BitSet();
-		
-		systemBits = new Bag<BitSet>(initialContainerSize);
 	}
 	@Override
 	protected void initialize() {
@@ -54,7 +50,6 @@ public class EntityManager extends Manager {
 	 */
 	protected Entity createEntityInstance() {
 		Entity e = recyclingEntityFactory.obtain();
-		systemBits(e).clear();
 		created++;
 		return e;
 	}
@@ -65,20 +60,6 @@ public class EntityManager extends Manager {
 			identityIndex = forceResolveIdentity(e);
 		
 		return identityResolver.composition.get(identityIndex);
-	}
-	
-	BitSet systemBits(Entity e) {
-		return getBitSet(e, systemBits);
-	}
-	
-	private static BitSet getBitSet(Entity e, Bag<BitSet> container) {
-		BitSet bitset = container.safeGet(e.getId());
-		if (bitset == null) {
-			bitset = new BitSet();
-			container.set(e.getId(), bitset);
-		}
-		
-		return bitset;
 	}
 	
 	/**

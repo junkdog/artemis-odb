@@ -18,8 +18,6 @@ import com.artemis.utils.ImmutableBag;
  */
 public abstract class EntitySystem implements EntityObserver {
 
-	/** The system's index in the SystemIndexManager. */
-	private int systemIndex;
 	/** The world this system belongs to. */
 	protected World world;
 	
@@ -201,7 +199,6 @@ public abstract class EntitySystem implements EntityObserver {
 		activeIds.clear(e.getId());
 		activesIsDirty = true;
 		
-		e.getSystemBits().clear(systemIndex);
 		removed(e);
 	}
 
@@ -216,7 +213,6 @@ public abstract class EntitySystem implements EntityObserver {
 		activesIsDirty = true;
 		actives.add(e);
 		
-		e.getSystemBits().set(systemIndex);
 		inserted(e);
 	}
 	
@@ -289,9 +285,8 @@ public abstract class EntitySystem implements EntityObserver {
 	 */
 	@Override
 	public final void deleted(Entity e) {
-		if(e.getSystemBits().get(systemIndex)) {
+		if(activeIds.get(e.getId()))
 			removeFromSystem(e);
-		}
 	}
 
 	/**
@@ -306,9 +301,8 @@ public abstract class EntitySystem implements EntityObserver {
 	 */
 	@Override
 	public final void disabled(Entity e) {
-		if(e.getSystemBits().get(systemIndex)) {
+		if(activeIds.get(e.getId()))
 			removeFromSystem(e);
-		}
 	}
 
 	/**
@@ -334,7 +328,6 @@ public abstract class EntitySystem implements EntityObserver {
 	protected final void setWorld(World world) {
 		aspect.initialize(world);
 		dummy = aspect.getAllSet().isEmpty() && aspect.getOneSet().isEmpty();
-		systemIndex = world.systemIndex.getIndexFor(this.getClass());
 		
 		this.world = world;
 	}
