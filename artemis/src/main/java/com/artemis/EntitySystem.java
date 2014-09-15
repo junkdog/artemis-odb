@@ -22,8 +22,8 @@ public abstract class EntitySystem implements EntityObserver {
 	protected World world;
 	
 	/* 
-	 * actives = only contains entities, sorted ASC by entity.id 
-	 * activesIsDirty = indicates that compressedActives needs rebuilding 
+	 * actives = only contains entities, typically sorted ASC by entity.id 
+	 * activesIsDirty = indicates that actives isn't sorted; needs rebuilding 
 	 */
 	private final WildBag<Entity> actives;
 	private final BitSet activeIds;
@@ -164,7 +164,11 @@ public abstract class EntitySystem implements EntityObserver {
 		this.enabled = enabled;
 	}
 	
-	void processComponentIdenty(int id, BitSet componentBits) {
+	/**
+	 * A new unique component composition detected, check if this
+	 * system's aspect is interested in it.
+	 */
+	void processComponentIdentity(int id, BitSet componentBits) {
 		aspectCache.set(id, aspect.isInterested(componentBits));
 	}
 	

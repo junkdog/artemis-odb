@@ -513,7 +513,7 @@ public class World {
 	void processComponentIdentity(int id, BitSet componentBits) {
 		Object[] data = systemsBag.getData();
 		for (int i = 0, s = systemsBag.size(); s > i; i++) {
-			((EntitySystem)data[i]).processComponentIdenty(id, componentBits);
+			((EntitySystem)data[i]).processComponentIdentity(id, componentBits);
 		}
 	}
 
