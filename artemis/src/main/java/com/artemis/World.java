@@ -367,7 +367,7 @@ public class World {
 	}
 	
 	/**
-	 * Create and return a {@link EntityEdit} wrapping a new or reused entity instance.
+	 * Create and return an {@link EntityEdit} wrapping a new or reused entity instance.
 	 * Entity is automatically added to the world.
 	 *
 	 * @return entity
@@ -565,6 +565,10 @@ public class World {
 		systemsToInit.clear();
 	}
 
+	boolean hasUuidManager() {
+		return registerUuids;
+	}
+
 	/**
 	 * Retrieves a ComponentMapper instance for fast retrieval of components
 	 * from entities.
@@ -639,7 +643,6 @@ public class World {
 		}
 	}
 
-
 	/**
 	 * Calls methods on observers.
 	 * <p>
@@ -655,10 +658,6 @@ public class World {
 		 * @param e		the entity to pass as argument
 		 */
 		void perform(EntityObserver observer, WildBag<Entity> entities);
-	}
-
-	boolean hasUuidManager() {
-		return registerUuids;
 	}
 
 	/**
