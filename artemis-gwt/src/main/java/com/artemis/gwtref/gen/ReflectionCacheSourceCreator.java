@@ -719,6 +719,8 @@ public class ReflectionCacheSourceCreator {
 				stub.name = m.getName();
 				methodStubs.add(stub);
 
+				String methodAnnotations = getAnnotations(m.getDeclaredAnnotations());
+
 				pb("new " + methodType + "(\"" + m.getName() + "\", ");
 				pb(stub.enclosingType + ", ");
 				pb(stub.returnType + ", ");
@@ -736,7 +738,7 @@ public class ReflectionCacheSourceCreator {
 
 				pb(stub.isAbstract + ", " + stub.isFinal + ", " + stub.isStatic + ", " + m.isDefaultAccess() + ", " + m.isPrivate()
 					+ ", " + m.isProtected() + ", " + m.isPublic() + ", " + stub.isNative + ", " + m.isVarArgs() + ", "
-					+ stub.isMethod + ", " + stub.isConstructor + ", " + stub.methodId + "),");
+					+ stub.isMethod + ", " + stub.isConstructor + ", " + stub.methodId + ", "+methodAnnotations+"),");
 			}
 			pb("};");
 		}

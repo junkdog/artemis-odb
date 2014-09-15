@@ -53,7 +53,7 @@ public class Field {
 		this.getter = getter;
 		this.setter = setter;
 		this.elementTypes = elementTypes;
-		this.annotations = annotations;
+		this.annotations = annotations != null ? annotations : new Annotation[] {};
 	}
 
 	public Annotation[] getDeclaredAnnotations() {
