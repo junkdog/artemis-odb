@@ -2,6 +2,7 @@ package com.artemis.utils;
 
 import com.artemis.Component;
 import com.artemis.Entity;
+import com.artemis.EntityEdit;
 import com.artemis.World;
 import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
@@ -21,106 +22,106 @@ import com.artemis.managers.TagManager;
 public class EntityBuilder {
 
 	private final World world;
-	private final Entity entity;
+	private final EntityEdit edit;
 
 	/** Begin building new entity.*/
 	public EntityBuilder(World world) {
 		this.world = world;
-		entity = world.createEntity();
+		edit = world.createEntity().edit();
 	}
 
 	/** Add component to entity. */
 	public EntityBuilder with(Component component) {
-		entity.addComponent(component);
+		edit.addComponent(component);
 		return this;
 	}
 
 	/** Add components to entity. */
 	public EntityBuilder with(Component component1, Component component2) {
-		entity.addComponent(component1);
-		entity.addComponent(component2);
+		edit.addComponent(component1);
+		edit.addComponent(component2);
 		return this;
 	}
 
 	/** Add components to entity. */
 	public EntityBuilder with(Component component1, Component component2, Component component3) {
-		entity.addComponent(component1);
-		entity.addComponent(component2);
-		entity.addComponent(component3);
+		edit.addComponent(component1);
+		edit.addComponent(component2);
+		edit.addComponent(component3);
 		return this;
 	}
 
 	/** Add components to entity. */
 	public EntityBuilder with(Component component1, Component component2, Component component3, Component component4) {
-		entity.addComponent(component1);
-		entity.addComponent(component2);
-		entity.addComponent(component3);
-		entity.addComponent(component4);
+		edit.addComponent(component1);
+		edit.addComponent(component2);
+		edit.addComponent(component3);
+		edit.addComponent(component4);
 		return this;
 	}
 
 	/** Add components to entity. */
 	public EntityBuilder with(Component component1, Component component2, Component component3, Component component4, Component component5) {
-		entity.addComponent(component1);
-		entity.addComponent(component2);
-		entity.addComponent(component3);
-		entity.addComponent(component4);
-		entity.addComponent(component5);
+		edit.addComponent(component1);
+		edit.addComponent(component2);
+		edit.addComponent(component3);
+		edit.addComponent(component4);
+		edit.addComponent(component5);
 		return this;
 	}
 
 	/** Add components to entity. */
 	public EntityBuilder with(Component... components) {
 		for (int i = 0, n = components.length; i < n; i++) {
-			entity.addComponent(components[i]);
+			edit.addComponent(components[i]);
 		}
 		return this;
 	}
 
 	/** Add artemis managed components to entity. */
-	public EntityBuilder with(Class<Component> component) {
-		entity.createComponent(component);
+	public EntityBuilder with(Class<? extends Component> component) {
+		edit.createComponent(component);
 		return this;
 	}
 
 	/** Add artemis managed components to entity. */
-	public EntityBuilder with(Class<Component> component1, Class<Component> component2) {
-		entity.createComponent(component1);
-		entity.createComponent(component2);
+	public EntityBuilder with(Class<? extends Component> component1, Class<? extends Component> component2) {
+		edit.createComponent(component1);
+		edit.createComponent(component2);
 		return this;
 	}
 
 	/** Add artemis managed components to entity. */
-	public EntityBuilder with(Class<Component> component1, Class<Component> component2, Class<Component> component3) {
-		entity.createComponent(component1);
-		entity.createComponent(component2);
-		entity.createComponent(component3);
+	public EntityBuilder with(Class<? extends Component> component1, Class<? extends Component> component2, Class<? extends Component> component3) {
+		edit.createComponent(component1);
+		edit.createComponent(component2);
+		edit.createComponent(component3);
 		return this;
 	}
 
 	/** Add artemis managed components to entity. */
-	public EntityBuilder with(Class<Component> component1, Class<Component> component2, Class<Component> component3, Class<Component> component4) {
-		entity.createComponent(component1);
-		entity.createComponent(component2);
-		entity.createComponent(component3);
-		entity.createComponent(component4);
+	public EntityBuilder with(Class<? extends Component> component1, Class<? extends Component> component2, Class<? extends Component> component3, Class<? extends Component> component4) {
+		edit.createComponent(component1);
+		edit.createComponent(component2);
+		edit.createComponent(component3);
+		edit.createComponent(component4);
 		return this;
 	}
 
 	/** Add artemis managed components to entity. */
-	public EntityBuilder with(Class<Component> component1, Class<Component> component2, Class<Component> component3, Class<Component> component4, Class<Component> component5) {
-		entity.createComponent(component1);
-		entity.createComponent(component2);
-		entity.createComponent(component3);
-		entity.createComponent(component4);
-		entity.createComponent(component5);
+	public EntityBuilder with(Class<? extends Component> component1, Class<? extends Component> component2, Class<? extends Component> component3, Class<? extends Component> component4, Class<? extends Component> component5) {
+		edit.createComponent(component1);
+		edit.createComponent(component2);
+		edit.createComponent(component3);
+		edit.createComponent(component4);
+		edit.createComponent(component5);
 		return this;
 	}
 
 	/** Add artemis managed components to entity. */
-	public EntityBuilder with(Class<Component>... components) {
+	public EntityBuilder with(Class<? extends Component>... components) {
 		for (int i = 0, n = components.length; i < n; i++) {
-			entity.createComponent(components[i]);
+			edit.createComponent(components[i]);
 		}
 		return this;
 	}
@@ -131,7 +132,7 @@ public class EntityBuilder {
 		if ( tagManager == null )
 			throw new RuntimeException("Register TagManager with your artemis world.");
 		
-		tagManager.register(tag, entity);
+		tagManager.register(tag, edit.getEntity());
 		return this;
 	}
 
@@ -141,7 +142,7 @@ public class EntityBuilder {
 		if ( groupManager == null )
 			throw new RuntimeException("Register GroupManager with your artemis world.");
 		
-		groupManager.add(entity, group);
+		groupManager.add(edit.getEntity(), group);
 		return this;
 	}
 	
@@ -155,7 +156,6 @@ public class EntityBuilder {
 
 	/** Assemble, add to world */
 	public Entity build() {
-		world.addEntity(entity);
-		return entity;
+		return edit.getEntity();
 	}
 }

@@ -300,10 +300,10 @@ public class World {
 	 * Adds a entity to this world.
 	 *
 	 * @param e the entity to add
+	 * @deprecated internally managed by artemis
 	 */
-	public void addEntity(Entity e) {
-		added.add(e);
-	}
+	@Deprecated
+	public void addEntity(Entity e) {}
 
 	/**
 	 * @deprecated does nothing, internally tracked by artemis now.
@@ -381,10 +381,6 @@ public class World {
 	/**
 	 * Create and return a new or reused entity instance.
 	 * <p>
-	 * Will NOT add the entity to the world, use {@link #addEntity(Entity)} for
-	 * that.
-	 * </p>
-	 * <p>
 	 * The uuid parameter is ignored if {@link UuidEntityManager} hasn't been added to the
 	 * world. 
 	 * </p>
@@ -395,6 +391,7 @@ public class World {
 	public Entity createEntity(UUID uuid) {
 		Entity entity = em.createEntityInstance();
 		entity.setUuid(uuid);
+		entity.edit();
 		return entity;
 	}
 
