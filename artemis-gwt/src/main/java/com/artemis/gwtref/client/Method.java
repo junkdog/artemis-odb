@@ -16,6 +16,7 @@
 
 package com.artemis.gwtref.client;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
 /** Describes a method of a {@link Type}.
@@ -38,11 +39,11 @@ public class Method {
 	final boolean isConstructor;
 	final Parameter[] parameters;
 	final int methodId;
-    final String[] annotationClasses;
+	final Annotation[] annotations;
 
 	public Method (String name, Class enclosingType, Class returnType, Parameter[] parameters, boolean isAbstract,
 		boolean isFinal, boolean isStatic, boolean isDefaultAccess, boolean isPrivate, boolean isProtected, boolean isPublic,
-		boolean isNative, boolean isVarArgs, boolean isMethod, boolean isConstructor, int methodId, String[] annotationClasses) {
+		boolean isNative, boolean isVarArgs, boolean isMethod, boolean isConstructor, int methodId, Annotation[] annotations) {
 		this.name = name;
 		this.enclosingType = enclosingType;
 		this.parameters = parameters != null ? parameters : EMPTY_PARAMS;
@@ -59,11 +60,7 @@ public class Method {
 		this.isMethod = isMethod;
 		this.isConstructor = isConstructor;
 		this.methodId = methodId;
-        this.annotationClasses = annotationClasses;
-      	}
-
-      	public String[] getAnnotationClasses() {
-      		return annotationClasses;
+		this.annotations = annotations != null ? annotations : new Annotation[] {};
       	}
 
 	/** @return the {@link Class} of the enclosing type. */
@@ -156,12 +153,17 @@ public class Method {
 		return true;
 	}
 
+	public Annotation[] getDeclaredAnnotations() {
+		return annotations;
+	}
+
 	@Override
 	public String toString () {
 		return "Method [name=" + name + ", enclosingType=" + enclosingType + ", returnType=" + returnType + ", isAbstract="
 			+ isAbstract + ", isFinal=" + isFinal + ", isStatic=" + isStatic + ", isNative=" + isNative + ", isDefaultAccess="
 			+ isDefaultAccess + ", isPrivate=" + isPrivate + ", isProtected=" + isProtected + ", isPublic=" + isPublic
 			+ ", isVarArgs=" + isVarArgs + ", isMethod=" + isMethod + ", isConstructor=" + isConstructor + ", parameters="
-			+ Arrays.toString(parameters) + "]";
+			+ Arrays.toString(parameters) + ", annotations="
+				+ Arrays.toString(annotations) + "]";
 	}
 }

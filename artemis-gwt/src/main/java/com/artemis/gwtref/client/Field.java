@@ -16,6 +16,7 @@
 
 package com.artemis.gwtref.client;
 
+import java.lang.annotation.Annotation;
 import java.util.Arrays;
 
 public class Field {
@@ -33,11 +34,11 @@ public class Field {
 	final int getter;
 	final int setter;
 	final Class[] elementTypes;
-	final String[] annotationClasses;
-	
+	final Annotation[] annotations;
+
 	Field (String name, Class enclosingType, Class type, boolean isFinal, boolean isDefaultAccess, boolean isPrivate,
 		boolean isProtected, boolean isPublic, boolean isStatic, boolean isTransient, boolean isVolatile, int getter, int setter,
-		Class[] elementTypes, String[] annotationClasses) {
+		Class[] elementTypes, Annotation[] annotations) {
 		this.name = name;
 		this.enclosingType = enclosingType;
 		this.type = type;
@@ -52,11 +53,11 @@ public class Field {
 		this.getter = getter;
 		this.setter = setter;
 		this.elementTypes = elementTypes;
-		this.annotationClasses = annotationClasses;
+		this.annotations = annotations != null ? annotations : new Annotation[] {};
 	}
 
-	public String[] getAnnotationClasses() {
-		return annotationClasses;
+	public Annotation[] getDeclaredAnnotations() {
+		return annotations;
 	}
 
 	public Object get (Object obj) throws IllegalAccessException {
@@ -125,6 +126,8 @@ public class Field {
 		return "Field [name=" + name + ", enclosingType=" + enclosingType + ", type=" + type + ", isFinal=" + isFinal
 			+ ", isDefaultAccess=" + isDefaultAccess + ", isPrivate=" + isPrivate + ", isProtected=" + isProtected + ", isPublic="
 			+ isPublic + ", isStatic=" + isStatic + ", isTransient=" + isTransient + ", isVolatile=" + isVolatile + ", getter="
-			+ getter + ", setter=" + setter + ", elementTypes=" + Arrays.toString(elementTypes) + "]";
+			+ getter + ", setter=" + setter + ", elementTypes=" + Arrays.toString(elementTypes) + ", annotations="
+			+ Arrays.toString(annotations) + "]";
 	}
+
 }
