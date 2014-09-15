@@ -541,13 +541,12 @@ public class World {
 		for (int i = 0, s = systemsBag.size(); s > i; i++) {
 			EntitySystem system = (EntitySystem) systemsData[i];
 			if (!system.isPassive()) {
-				updateEntityStates();
 				system.process();
 			}
 		}
 	}
 
-	private void updateEntityStates() {
+	void updateEntityStates() {
 		while(editPool.processEntities()) {
 			check(added, addedPerformer);
 			check(changed, changedPerformer);
