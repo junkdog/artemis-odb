@@ -27,6 +27,11 @@ import com.google.gwt.user.rebind.SourceWriter;
 
 import java.io.PrintWriter;
 import java.lang.annotation.Annotation;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 public class ReflectionCacheSourceCreator {
@@ -70,7 +75,6 @@ public class ReflectionCacheSourceCreator {
 		boolean isPublic;
 		String name;
 		boolean unused;
-		String annotationClasses;
 	}
 
 	public ReflectionCacheSourceCreator (TreeLogger logger, GeneratorContext context, JClassType type) {
@@ -505,17 +509,6 @@ public class ReflectionCacheSourceCreator {
 			pb(varName + ".isStatic = " + c.isStatic() + ";");
 			pb(varName + ".isAbstract = " + c.isAbstract() + ";");
 
-			StringBuilder classAnnotationClasses = new StringBuilder("new String[]{");
-			Annotation[] classAnnotations = c.getAnnotations();
-			for (int i = 0; i < classAnnotations.length; i++) {
-				classAnnotationClasses.append("\"").append(classAnnotations[i].annotationType().getName()).append("\"");
-				if (i < classAnnotations.length - 1) {
-					classAnnotationClasses.append(",");
-				}
-			}
-			classAnnotationClasses.append("}");
-			pb(varName + ".annotationClasses = " + classAnnotationClasses.toString() + ";");
-
 			if (c.getFields() != null) {
 				pb(varName + ".fields = new Field[] {");
 				for (JField f : c.getFields()) {
@@ -524,21 +517,12 @@ public class ReflectionCacheSourceCreator {
 					int setter = nextId();
 					int getter = nextId();
 					String elementType = getElementTypes(f);
-					Annotation[] annotations = f.getAnnotations();
-					StringBuilder annotationClasses = new StringBuilder("new String[]{");
-
-					for (int i = 0; i < annotations.length; i++) {
-						annotationClasses.append("\"").append(annotations[i].annotationType().getName()).append("\"");
-						if(i < annotations.length-1) {
-							annotationClasses.append(",");
-						}
-					}
-					annotationClasses.append("}");
+					String annotations = getAnnotations(f.getDeclaredAnnotations());
 
 					pb("new Field(\"" + f.getName() + "\", " + enclosingType + ", " + fieldType + ", " + f.isFinal() + ", "
 						+ f.isDefaultAccess() + ", " + f.isPrivate() + ", " + f.isProtected() + ", " + f.isPublic() + ", "
 						+ f.isStatic() + ", " + f.isTransient() + ", " + f.isVolatile() + ", " + getter + ", " + setter + ", "
-						+ elementType + ", " + annotationClasses.toString() + "), ");
+						+ elementType + ", " + annotations + "), ");
 
 					SetterGetterStub stub = new SetterGetterStub();
 					stub.name = f.getName();
@@ -575,12 +559,131 @@ public class ReflectionCacheSourceCreator {
 					}
 				}
 			}
+
+			Annotation[] annotations = c.getDeclaredAnnotations();
+			if (annotations != null && annotations.length > 0) {
+				pb(varName + ".annotations = " + getAnnotations(annotations) + ";");
+			}
+		} else if (t.isAnnotation() != null) {
+			pb(varName + ".isAnnotation = true;");
 		} else {
 			pb(varName + ".isPrimitive = true;");
 		}
 
 		pb("types.put(\"" + t.getErasedType().getQualifiedSourceName() + "\", " + varName + ");");
 		return buffer.toString();
+	}
+
+	private String getAnnotations (Annotation[] annotations) {
+		if (annotations != null && annotations.length > 0) {
+			int numValidAnnotations = 0;
+			final Class<?>[] ignoredAnnotations = {Deprecated.class, Retention.class};
+			StringBuilder b = new StringBuilder();
+			b.append("new java.lang.annotation.Annotation[] {");
+			for (Annotation annotation : annotations) {
+				Class<?> type = annotation.annotationType();
+				// skip ignored types, assuming we are not interested in those at runtime
+				boolean ignoredType = false;
+				for (int i = 0; !ignoredType && i < ignoredAnnotations.length; i++) {
+					ignoredType = ignoredAnnotations[i].equals(type);
+				}
+				if (ignoredType) {
+					continue;
+				}
+				// skip if not annotated with RetentionPolicy.RUNTIME
+				Retention retention = type.getAnnotation(Retention.class);
+				if (retention == null || retention.value() != RetentionPolicy.RUNTIME) {
+					continue;
+				}
+				numValidAnnotations++;
+				// anonymous class
+				b.append(" new ").append(type.getCanonicalName()).append("() {");
+				// override all methods
+				Method[] methods = type.getDeclaredMethods();
+				for (Method method : methods) {
+					Class<?> returnType = method.getReturnType();
+					b.append(" @Override public");
+					b.append(" ").append(returnType.getCanonicalName());
+					b.append(" ").append(method.getName()).append("() { return");
+					if (returnType.isArray()) {
+						b.append(" new ").append(returnType.getCanonicalName()).append(" {");
+					}
+					// invoke the annotation method
+					Object invokeResult = null;
+					try {
+						invokeResult = method.invoke(annotation);
+					} catch (IllegalAccessException e) {
+						logger.log(Type.ERROR, "Error invoking annotation method.");
+					} catch (InvocationTargetException e) {
+						logger.log(Type.ERROR, "Error invoking annotation method.");
+					}
+					// write result as return value
+					if (invokeResult != null) {
+						if (returnType.equals(String[].class)) {
+							// String[]
+							for (String s : (String[])invokeResult) {
+								b.append(" \"").append(s).append("\",");
+							}
+						} else if (returnType.equals(String.class)) {
+							// String
+							b.append(" \"").append((String)invokeResult).append("\"");
+						} else if (returnType.equals(Class[].class)) {
+							// Class[]
+							for (Class c : (Class[])invokeResult) {
+								b.append(" ").append(c.getCanonicalName()).append(".class,");
+							}
+						} else if (returnType.equals(Class.class)) {
+							// Class
+							b.append(" ").append(((Class)invokeResult).getCanonicalName()).append(".class");
+						} else if (returnType.isArray() && returnType.getComponentType().isEnum()) {
+							// enum[]
+							String enumTypeName = returnType.getComponentType().getCanonicalName();
+							int length = Array.getLength(invokeResult);
+							for (int i = 0; i < length; i++) {
+								Object e = Array.get(invokeResult, i);
+								b.append(" ").append(enumTypeName).append(".").append(e.toString()).append(",");
+							}
+						} else if (returnType.isEnum()) {
+							// enum
+							b.append(" ").append(returnType.getCanonicalName()).append(".").append(invokeResult.toString());
+						} else if (returnType.isArray() && returnType.getComponentType().isPrimitive()) {
+							// primitive []
+							Class<?> primitiveType = returnType.getComponentType();
+							int length = Array.getLength(invokeResult);
+							for (int i = 0; i < length; i++) {
+								Object n = Array.get(invokeResult, i);
+								b.append(" ").append(n.toString());
+								if (primitiveType.equals(float.class)) {
+									b.append("f");
+								}
+								b.append(",");
+							}
+						} else if (returnType.isPrimitive()) {
+							// primitive
+							b.append(" ").append(invokeResult.toString());
+							if (returnType.equals(float.class)) {
+								b.append("f");
+							}
+						} else {
+							logger.log(Type.ERROR, "Return type not supported (or not yet implemented).");
+						}
+					}
+					if (returnType.isArray()) {
+						b.append(" }");
+					}
+					b.append("; ");
+					b.append("}");
+				}
+				// must override annotationType()
+				b.append(" @Override public Class<? extends java.lang.annotation.Annotation> annotationType() { return ");
+				b.append(type.getCanonicalName());
+				b.append(".class; }");
+				b.append("}, ");
+			}
+			b.append("}");
+			return (numValidAnnotations > 0) ? b.toString() : "null";
+		}
+		return "null";
 	}
 
 	private void printMethods (JClassType c, String varName, String methodType, JAbstractMethod[] methodTypes) {
@@ -611,7 +714,6 @@ public class ReflectionCacheSourceCreator {
 					stub.returnType = stub.enclosingType;
 				}
 
-				stub.annotationClasses = getClassAnnotationsAsString(m);
 				stub.jnsi = "";
 				stub.methodId = nextId();
 				stub.name = m.getName();
@@ -634,24 +736,10 @@ public class ReflectionCacheSourceCreator {
 
 				pb(stub.isAbstract + ", " + stub.isFinal + ", " + stub.isStatic + ", " + m.isDefaultAccess() + ", " + m.isPrivate()
 					+ ", " + m.isProtected() + ", " + m.isPublic() + ", " + stub.isNative + ", " + m.isVarArgs() + ", "
-					+ stub.isMethod + ", " + stub.isConstructor + ", " + stub.methodId + ", " + stub.annotationClasses + "),");
+					+ stub.isMethod + ", " + stub.isConstructor + ", " + stub.methodId + "),");
 			}
 			pb("};");
 		}
-	}
-
-	private String getClassAnnotationsAsString(JAbstractMethod m) {
-		Annotation[] annotations = m.getAnnotations();
-		StringBuilder annotationClasses = new StringBuilder("new String[]{");
-
-		for (int i = 0; i < annotations.length; i++) {
-				 annotationClasses.append("\"").append(annotations[i].annotationType().getName()).append("\"");
-				   if(i < annotations.length-1) {
-					   annotationClasses.append(",");
-				   }
-}
-		annotationClasses.append("}");
-		return annotationClasses.toString();
 	}
 
 	private String getElementTypes (JField f) {

@@ -22,6 +22,7 @@ import java.util.Arrays;
 
 import com.artemis.gwtref.client.Parameter;
 import com.artemis.utils.reflect.ReflectionException;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /** Provides information about, and access to, a single method on a class or interface.
  * @author nexsoftware */
@@ -121,8 +122,8 @@ public final class Method {
 	}
 
     @SuppressWarnings("rawtypes")
-       public boolean hasAnnotation(Class annotationClass) {
-   	    return Arrays.asList(method.getAnnotationClasses()).contains(annotationClass.getName());
-       }
+    public boolean hasAnnotation(Class annotationClass) {
+		throw new RuntimeException("Not implemented.");
+    }
 
 }
