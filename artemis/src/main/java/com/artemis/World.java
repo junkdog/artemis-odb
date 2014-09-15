@@ -337,7 +337,9 @@ public class World {
 	 * </p>
 	 *
 	 * @param e the entity to enable
+	 * @deprecated create your own components to track state.
 	 */
+	@Deprecated
 	public void enable(Entity e) {
 		enabled.add(e);
 	}
@@ -349,7 +351,9 @@ public class World {
 	 * </p>
 	 *
 	 * @param e the entity to disable
+	 * @deprecated create your own components to track state.
 	 */
+	@Deprecated
 	public void disable(Entity e) {
 		disabled.add(e);
 	}

@@ -102,8 +102,10 @@ public class EntityManager extends Manager {
 	 *
 	 * @param e
 	 *			the entity to (re)enable
+	 * @deprecated create your own components to track state.
 	 */
 	@Override
+	@Deprecated
 	public void enabled(Entity e) {
 		disabled.clear(e.getId());
 	}
@@ -168,7 +170,9 @@ public class EntityManager extends Manager {
 	 *			the entities id
 	 *
 	 * @return true if the entity is enabled, false if it is disabled
+	 * @deprecated create your own components to track state.
 	 */
+	@Deprecated
 	public boolean isEnabled(int entityId) {
 		return !disabled.get(entityId);
 	}

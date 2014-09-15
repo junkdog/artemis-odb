@@ -44,7 +44,9 @@ public interface EntityObserver {
 	 *
 	 * @param e
 	 *		the (re)enabled entity
+	 * @deprecated create your own components to track state.
 	 */
+	@Deprecated
 	void enabled(Entity e);
 
 	/**
@@ -52,7 +54,9 @@ public interface EntityObserver {
 	 *
 	 * @param e
 	 *		the disabled entity
+	 * @deprecated create your own components to track state.
 	 */
+	@Deprecated
 	void disabled(Entity e);
 
 }
