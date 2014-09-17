@@ -55,7 +55,12 @@ public abstract class EntitySystem implements EntityObserver {
 
 
 	/**
-	 * Called before processing of entities begins. 
+	 * Called before processing of entities begins.
+	 * <p>
+	 * <b>Nota Bene:</b> Any entities created in this method
+	 * won't become active until the next system starts processing
+	 * or when a new processing rounds beings, whichever comes first.
+	 * </p>
 	 */
 	protected void begin() {}
 
