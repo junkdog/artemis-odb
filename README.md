@@ -87,7 +87,7 @@ Jars can be downloaded manually from the maven repository:
  - **[Command-line tool][cli]:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.6.5/
 
 
-# Benchmarks
+## Benchmarks
 See [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) for benchmarks
 comparing artemis-odb to other ESF:s and earlier artemis-odb versions.
 
