@@ -33,19 +33,27 @@ public final class EntityEdit {
 		return component;
 	}
 	
+	public <T extends Component> T create(Class<T> componentKlazz) {
+		return createComponent(componentKlazz);
+	}
+	
 	/**
 	 * Add a component to this entity.
 	 * 
 	 * @param component
 	 *			the component to add to this entity
 	 * 
-	 * @return this entity for chaining
+	 * @return this EntityEdit for chaining
 	 * @see {@link #createComponent(Class)}
 	 */
 	public EntityEdit addComponent(Component component) {
 		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
 		addComponent(component, tf.getTypeFor(component.getClass()));
 		return this;
+	}
+	
+	public EntityEdit add(Component component) {
+		return addComponent(component);
 	}
 	
 	/**
@@ -60,7 +68,7 @@ public final class EntityEdit {
 	 * @param type
 	 *			the type of the component
 	 * 
-	 * @return this entity for chaining
+	 * @return this EntityEdit for chaining
 	 * @see #createComponent(Class)
 	 */
 	public EntityEdit addComponent(Component component, ComponentType type) {
@@ -84,9 +92,14 @@ public final class EntityEdit {
 	 * 
 	 * @param component
 	 *			the component to remove from this entity.
+	 * @return this EntityEdit for chaining
 	 */
-	public void removeComponent(Component component) {
-		removeComponent(component.getClass());
+	public EntityEdit removeComponent(Component component) {
+		return removeComponent(component.getClass());
+	}
+	
+	public EntityEdit remove(Component component) {
+		return removeComponent(component);
 	}
 
 	/**
@@ -94,10 +107,12 @@ public final class EntityEdit {
 	 * 
 	 * @param type
 	 *			the type of component to remove from this entity
+	 * @return this EntityEdit for chaining
 	 */
-	public void removeComponent(ComponentType type) {
+	public EntityEdit removeComponent(ComponentType type) {
 		world.getComponentManager().removeComponent(entity, type);
 		componentBits.clear(type.getIndex());
+		return this;
 	}
 	
 	/**
@@ -105,10 +120,15 @@ public final class EntityEdit {
 	 *
 	 * @param type
 	 *			the class type of component to remove from this entity
+	 * @return this EntityEdit for chaining
 	 */
-	public void removeComponent(Class<? extends Component> type) {
+	public EntityEdit removeComponent(Class<? extends Component> type) {
 		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-		removeComponent(tf.getTypeFor(type));
+		return removeComponent(tf.getTypeFor(type));
+	}
+	
+	public EntityEdit remove(Class<? extends Component> type) {
+		return removeComponent(type);
 	}
 	
 	@Override
