@@ -88,14 +88,53 @@ public class WorldTest
 		assertEquals(0, es.getActives().size());
 	}
 
+	@Test
+	public void entities_always_added() {
+		checkAddingEntities(true);
+	}
+	
+	@Test
+	public void entities_added_at_start_of_process() {
+		checkAddingEntities(false);
+	}
+
+	private static void checkAddingEntities(boolean alwaysAdded) {
+		World w = new World(new WorldConfiguration()
+			.alwaysUpdateEntityStates(alwaysAdded));
+		SystemB systemB = w.setSystem(new SystemB());
+		VoidEntitySystem es1 = w.setSystem(new VoidEntitySystem() {
+			@Override
+			protected void processSystem() {
+				EntityEdit e = world.createEntity().edit();
+				e.create(ComponentX.class);
+			}
+		});
+		w.setSystem(new VoidEntitySystem() {
+			@Override
+			protected void processSystem() {
+				//dummy system to trigger insertions before the next
+				// processing round begins
+			}
+		});
+		
+		w.initialize();
+		w.process();
+		
+		int expected = alwaysAdded ? 1 : 0;
+		
+		Assert.assertEquals(expected, systemB.getActives().size());
+		w.process();
+		expected++;
+		Assert.assertEquals(expected, systemB.getActives().size());
+	}
+
 	private Entity createEntity()
 	{
 		Entity e = world.createEntity();
 		e.edit().createComponent(ComponentY.class);
 		return e;
 	}
-	
-	
+
 
 	static class SystemComponentXRemover extends EntityProcessingSystem
 	{
