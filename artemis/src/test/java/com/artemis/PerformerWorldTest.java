@@ -36,7 +36,7 @@ public class PerformerWorldTest {
 		world.initialize();
 
 		for (int i = 0; i < 10; i++) {
-			world.createEntity().edit().addComponent(new TestComponent());
+			world.createEntity().edit().add(new TestComponent());
 		}
 	}
 

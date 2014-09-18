@@ -32,96 +32,96 @@ public class EntityBuilder {
 
 	/** Add component to entity. */
 	public EntityBuilder with(Component component) {
-		edit.addComponent(component);
+		edit.add(component);
 		return this;
 	}
 
 	/** Add components to entity. */
 	public EntityBuilder with(Component component1, Component component2) {
-		edit.addComponent(component1);
-		edit.addComponent(component2);
+		edit.add(component1);
+		edit.add(component2);
 		return this;
 	}
 
 	/** Add components to entity. */
 	public EntityBuilder with(Component component1, Component component2, Component component3) {
-		edit.addComponent(component1);
-		edit.addComponent(component2);
-		edit.addComponent(component3);
+		edit.add(component1);
+		edit.add(component2);
+		edit.add(component3);
 		return this;
 	}
 
 	/** Add components to entity. */
 	public EntityBuilder with(Component component1, Component component2, Component component3, Component component4) {
-		edit.addComponent(component1);
-		edit.addComponent(component2);
-		edit.addComponent(component3);
-		edit.addComponent(component4);
+		edit.add(component1);
+		edit.add(component2);
+		edit.add(component3);
+		edit.add(component4);
 		return this;
 	}
 
 	/** Add components to entity. */
 	public EntityBuilder with(Component component1, Component component2, Component component3, Component component4, Component component5) {
-		edit.addComponent(component1);
-		edit.addComponent(component2);
-		edit.addComponent(component3);
-		edit.addComponent(component4);
-		edit.addComponent(component5);
+		edit.add(component1);
+		edit.add(component2);
+		edit.add(component3);
+		edit.add(component4);
+		edit.add(component5);
 		return this;
 	}
 
 	/** Add components to entity. */
 	public EntityBuilder with(Component... components) {
 		for (int i = 0, n = components.length; i < n; i++) {
-			edit.addComponent(components[i]);
+			edit.add(components[i]);
 		}
 		return this;
 	}
 
 	/** Add artemis managed components to entity. */
 	public EntityBuilder with(Class<? extends Component> component) {
-		edit.createComponent(component);
+		edit.create(component);
 		return this;
 	}
 
 	/** Add artemis managed components to entity. */
 	public EntityBuilder with(Class<? extends Component> component1, Class<? extends Component> component2) {
-		edit.createComponent(component1);
-		edit.createComponent(component2);
+		edit.create(component1);
+		edit.create(component2);
 		return this;
 	}
 
 	/** Add artemis managed components to entity. */
 	public EntityBuilder with(Class<? extends Component> component1, Class<? extends Component> component2, Class<? extends Component> component3) {
-		edit.createComponent(component1);
-		edit.createComponent(component2);
-		edit.createComponent(component3);
+		edit.create(component1);
+		edit.create(component2);
+		edit.create(component3);
 		return this;
 	}
 
 	/** Add artemis managed components to entity. */
 	public EntityBuilder with(Class<? extends Component> component1, Class<? extends Component> component2, Class<? extends Component> component3, Class<? extends Component> component4) {
-		edit.createComponent(component1);
-		edit.createComponent(component2);
-		edit.createComponent(component3);
-		edit.createComponent(component4);
+		edit.create(component1);
+		edit.create(component2);
+		edit.create(component3);
+		edit.create(component4);
 		return this;
 	}
 
 	/** Add artemis managed components to entity. */
 	public EntityBuilder with(Class<? extends Component> component1, Class<? extends Component> component2, Class<? extends Component> component3, Class<? extends Component> component4, Class<? extends Component> component5) {
-		edit.createComponent(component1);
-		edit.createComponent(component2);
-		edit.createComponent(component3);
-		edit.createComponent(component4);
-		edit.createComponent(component5);
+		edit.create(component1);
+		edit.create(component2);
+		edit.create(component3);
+		edit.create(component4);
+		edit.create(component5);
 		return this;
 	}
 
 	/** Add artemis managed components to entity. */
 	public EntityBuilder with(Class<? extends Component>... components) {
 		for (int i = 0, n = components.length; i < n; i++) {
-			edit.createComponent(components[i]);
+			edit.create(components[i]);
 		}
 		return this;
 	}

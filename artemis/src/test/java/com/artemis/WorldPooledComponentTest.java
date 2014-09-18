@@ -67,7 +67,7 @@ public class WorldPooledComponentTest
 	private int createEntity()
 	{
 		Entity e = world.createEntity();
-		ReusedComponent component = e.edit().createComponent(ReusedComponent.class);
+		ReusedComponent component = e.edit().create(ReusedComponent.class);
 		int hash = System.identityHashCode(component);
 		return hash;
 	}
@@ -98,7 +98,7 @@ public class WorldPooledComponentTest
 		@Override
 		protected void process(Entity e)
 		{
-			e.edit().removeComponent(ReusedComponent.class);
+			e.edit().remove(ReusedComponent.class);
 		}
 	}
 }

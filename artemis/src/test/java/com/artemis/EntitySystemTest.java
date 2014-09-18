@@ -22,7 +22,7 @@ public class EntitySystemTest {
 		w.initialize();
 
 		Entity e = w.createEntity();
-		e.edit().addComponent(new C());
+		e.edit().add(new C());
 		e.disable();
 
 		w.process();
@@ -37,7 +37,7 @@ public class EntitySystemTest {
 		w.initialize();
 
 		Entity e = w.createEntity();
-		e.edit().addComponent(new C());
+		e.edit().add(new C());
 
 		w.process();
 	}

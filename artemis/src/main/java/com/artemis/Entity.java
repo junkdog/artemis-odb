@@ -99,7 +99,7 @@ public final class Entity {
 	 */
 	@Deprecated
 	public <T extends Component> T createComponent(Class<T> componentKlazz) {
-		return edit().createComponent(componentKlazz);
+		return edit().create(componentKlazz);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public final class Entity {
 	 */
 	@Deprecated
 	public Entity addComponent(Component component) {
-		edit().addComponent(component);
+		edit().add(component);
 		return this;
 	}
 	
@@ -116,7 +116,7 @@ public final class Entity {
 	 */
 	@Deprecated
 	public Entity addComponent(Component component, ComponentType type) {
-		edit().addComponent(component, type);
+		edit().add(component, type);
 		return this;
 	}
 
@@ -125,7 +125,7 @@ public final class Entity {
 	 */
 	@Deprecated
 	public Entity removeComponent(Component component) {
-		edit().removeComponent(component);
+		edit().remove(component);
 		return this;
 	}
 
@@ -134,7 +134,7 @@ public final class Entity {
 	 */
 	@Deprecated
 	public Entity removeComponent(ComponentType type) {
-		edit().removeComponent(type);
+		edit().remove(type);
 		return this;
 	}
 	
@@ -143,7 +143,7 @@ public final class Entity {
 	 */
 	@Deprecated
 	public Entity removeComponent(Class<? extends Component> type) {
-		edit().removeComponent(type);
+		edit().remove(type);
 		return this;
 	}
 

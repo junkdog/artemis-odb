@@ -26,8 +26,8 @@ public class StructTestBase extends PackedWeavingTest {
 	public void setup() {
 		super.setup();
 		
-		packed = e1.edit().createComponent(StructComponentA.class);
-		packed = e2.edit().createComponent(StructComponentA.class);
+		packed = e1.edit().create(StructComponentA.class);
+		packed = e2.edit().create(StructComponentA.class);
 	}
 	
 	@Override

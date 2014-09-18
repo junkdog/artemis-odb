@@ -24,8 +24,8 @@ public class EntityEditTest {
 		assertEquals(0, lm.changed);
 		
 		EntityEdit edit = e.edit();
-		edit.createComponent(ComponentX.class);
-		edit.createComponent(ComponentY.class);
+		edit.create(ComponentX.class);
+		edit.create(ComponentY.class);
 		
 		world.process();
 		

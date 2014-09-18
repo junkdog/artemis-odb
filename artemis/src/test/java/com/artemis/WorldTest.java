@@ -32,7 +32,7 @@ public class WorldTest
 
 		for (int i = 0; i < 100; i++) {
 			Entity e = world.createEntity();
-			if (i == 0) e.edit().addComponent(new ComponentX());
+			if (i == 0) e.edit().add(new ComponentX());
 		}
 
 		world.process();
@@ -51,7 +51,7 @@ public class WorldTest
 		world.initialize();
 		
 		Entity e = world.createEntity();
-		e.edit().createComponent(ComponentX.class);
+		e.edit().create(ComponentX.class);
 		
 		world.process();
 	}
@@ -131,7 +131,7 @@ public class WorldTest
 	private Entity createEntity()
 	{
 		Entity e = world.createEntity();
-		e.edit().createComponent(ComponentY.class);
+		e.edit().create(ComponentY.class);
 		return e;
 	}
 
@@ -147,7 +147,7 @@ public class WorldTest
 		@Override
 		protected void process(Entity e)
 		{
-			e.edit().removeComponent(ComponentX.class);
+			e.edit().remove(ComponentX.class);
 		}
 	}
 

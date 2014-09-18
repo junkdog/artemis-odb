@@ -40,7 +40,7 @@ public class PackedComponentTest
 		}
 		 assertFalse(packedMapper.has(notPresent));
 		 
-		 packed.get(1).edit().removeComponent(Packed.class);
+		 packed.get(1).edit().remove(Packed.class);
 		 for (int i = 0; packed.size() > i; i++) {
 			 if (i != 1) assertTrue(packedMapper.has(packed.get(i)));
 		 }
@@ -63,7 +63,7 @@ public class PackedComponentTest
 	private Entity createEntity(Class<?>... components) {
 		Entity e = world.createEntity();
 		for (Class<?> c : components) {
-			e.edit().createComponent((Class<Component>)c);
+			e.edit().create((Class<Component>)c);
 		}
 		
 		return e;

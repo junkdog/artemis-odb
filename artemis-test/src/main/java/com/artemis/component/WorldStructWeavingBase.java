@@ -8,6 +8,7 @@ import org.junit.Test;
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
+import com.artemis.EntityEdit;
 import com.artemis.PackedComponent;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
@@ -32,10 +33,12 @@ public class WorldStructWeavingBase {
 		Entity e1 = world.createEntity();
 		Entity e2 = world.createEntity();
 		
-		initComponent(e1.edit().createComponent(StructComponentA.class));
-		initComponent(e1.edit().createComponent(Position.class));
-		initComponent(e2.edit().createComponent(StructComponentA.class));
-		initComponent(e2.edit().createComponent(Position.class));
+		EntityEdit edit1 = e1.edit();
+		EntityEdit edit2 = e2.edit();
+		initComponent(edit1.create(StructComponentA.class));
+		initComponent(edit1.create(Position.class));
+		initComponent(edit2.create(StructComponentA.class));
+		initComponent(edit2.create(Position.class));
 	}
 
 	private static void initComponent(Position pos) {

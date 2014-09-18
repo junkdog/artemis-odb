@@ -28,8 +28,8 @@ public class MapperTest {
 		
 		entity = world.createEntity();
 		EntityEdit edit = entity.edit();
-		edit.createComponent(ComponentX.class);
-		edit.createComponent(ComponentY.class);
+		edit.create(ComponentX.class);
+		edit.create(ComponentY.class);
 		
 		world.process();
 	}

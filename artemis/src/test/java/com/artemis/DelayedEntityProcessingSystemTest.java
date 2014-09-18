@@ -138,7 +138,7 @@ public class DelayedEntityProcessingSystemTest
 	private Entity createEntity()
 	{
 		final Entity e = world.createEntity();
-		e.edit().addComponent(new Expiration(1f));
+		e.edit().add(new Expiration(1f));
 
 		entitiesOrdered.addLast(e);
 		return e;

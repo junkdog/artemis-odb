@@ -20,7 +20,7 @@ public final class EntityEdit {
 		scheduledDeletion = true;
 	}
 	
-	public <T extends Component> T createComponent(Class<T> componentKlazz) {
+	public <T extends Component> T create(Class<T> componentKlazz) {
 		ComponentManager componentManager = world.getComponentManager();
 		T component = componentManager.create(entity, componentKlazz);
 		
@@ -33,10 +33,6 @@ public final class EntityEdit {
 		return component;
 	}
 	
-	public <T extends Component> T create(Class<T> componentKlazz) {
-		return createComponent(componentKlazz);
-	}
-	
 	/**
 	 * Add a component to this entity.
 	 * 
@@ -46,14 +42,9 @@ public final class EntityEdit {
 	 * @return this EntityEdit for chaining
 	 * @see {@link #createComponent(Class)}
 	 */
-	public EntityEdit addComponent(Component component) {
-		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-		addComponent(component, tf.getTypeFor(component.getClass()));
-		return this;
-	}
-	
 	public EntityEdit add(Component component) {
-		return addComponent(component);
+		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+		return add(component, tf.getTypeFor(component.getClass()));
 	}
 	
 	/**
@@ -71,7 +62,7 @@ public final class EntityEdit {
 	 * @return this EntityEdit for chaining
 	 * @see #createComponent(Class)
 	 */
-	public EntityEdit addComponent(Component component, ComponentType type) {
+	public EntityEdit add(Component component, ComponentType type) {
 		if (type.getTaxonomy() != Taxonomy.BASIC) {
 			throw new InvalidComponentException(component.getClass(),
 				"Use Entity#createComponent for adding non-basic component types");
@@ -94,14 +85,10 @@ public final class EntityEdit {
 	 *			the component to remove from this entity.
 	 * @return this EntityEdit for chaining
 	 */
-	public EntityEdit removeComponent(Component component) {
-		return removeComponent(component.getClass());
+	public EntityEdit remove(Component component) {
+		return remove(component.getClass());
 	}
 	
-	public EntityEdit remove(Component component) {
-		return removeComponent(component);
-	}
-
 	/**
 	 * Faster removal of components from a entity.
 	 * 
@@ -109,7 +96,7 @@ public final class EntityEdit {
 	 *			the type of component to remove from this entity
 	 * @return this EntityEdit for chaining
 	 */
-	public EntityEdit removeComponent(ComponentType type) {
+	public EntityEdit remove(ComponentType type) {
 		world.getComponentManager().removeComponent(entity, type);
 		componentBits.clear(type.getIndex());
 		return this;
@@ -122,13 +109,9 @@ public final class EntityEdit {
 	 *			the class type of component to remove from this entity
 	 * @return this EntityEdit for chaining
 	 */
-	public EntityEdit removeComponent(Class<? extends Component> type) {
-		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-		return removeComponent(tf.getTypeFor(type));
-	}
-	
 	public EntityEdit remove(Class<? extends Component> type) {
-		return removeComponent(type);
+		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+		return remove(tf.getTypeFor(type));
 	}
 	
 	@Override

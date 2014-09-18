@@ -23,8 +23,7 @@ public class PackedComponentsGrowAndAreHardResetTestBase {
 	
 	private void create() {
 		Entity e = world.createEntity();
-		e.edit().createComponent(SimpleComponent.class).value = e.getId();
-//		e.addToWorld();
+		e.edit().create(SimpleComponent.class).value = e.getId();
 	}
 	
 	@Test

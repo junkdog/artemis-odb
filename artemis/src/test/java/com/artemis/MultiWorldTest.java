@@ -24,9 +24,9 @@ public class MultiWorldTest
 		world.setSystem(new InnerWorldProcessingSystem(innerWorld));
 		world.initialize();
 		
-		world.createEntity().edit().createComponent(ComponentX.class);
-		innerWorld.createEntity().edit().createComponent(ComponentY.class);
-		innerWorld.createEntity().edit().createComponent(ComponentX.class);
+		world.createEntity().edit().create(ComponentX.class);
+		innerWorld.createEntity().edit().create(ComponentY.class);
+		innerWorld.createEntity().edit().create(ComponentX.class);
 		
 		world.process();
 		

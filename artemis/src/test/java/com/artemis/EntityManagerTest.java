@@ -93,7 +93,7 @@ public class EntityManagerTest {
 		ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
 		
 		Entity e1 = world.createEntity();
-		e1.edit().addComponent(new ComponentX());
+		e1.edit().add(new ComponentX());
 		assertTrue(mapper.has(e1));
 		
 		int id1 = e1.getId();
@@ -110,7 +110,7 @@ public class EntityManagerTest {
 		ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
 		
 		Entity e1 = world.createEntity();
-		e1.edit().addComponent(new ComponentX());
+		e1.edit().add(new ComponentX());
 		assertTrue(mapper.has(e1));
 		
 		int id1 = e1.getId();
