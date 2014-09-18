@@ -4,7 +4,9 @@
 
 **MINOR BREAKING CHANGES**
 - Entity state changes aren't reflected until the next system starts processing
-  or a new `World#process` round begins, whichever comes first.
+  or a new `World#process` round begins, whichever comes first. This behavior
+  can be configured during world creation so entity state changes are only
+  propagated at start of `World#process` using the `WorldConfiguration` class.
 
 - The GWT backend can now read values off annotations.
 - **Bytecode optimizations:** (invoked via maven plugin or the CLI tool)
@@ -23,6 +25,7 @@
   - Set expected entity count
   - Limit number of rebuilt active entities per system/tick. Rebuilt indices ensure entities are
     processed in sequential order.
+  - Control how often entity state changes are propagated to systems and managers.
 - New interface `PackedComponent.DisposedWithWorld` for freeing packed components' resources when
   disposing the world.
   - Automatically added to all `@PackedWeaver` components.
