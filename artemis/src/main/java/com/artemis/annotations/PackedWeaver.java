@@ -19,35 +19,37 @@ import com.artemis.PooledComponent;
 @Target(ElementType.TYPE)
 public @interface PackedWeaver {
 	
-	WorldStrategy usage() default WorldStrategy.GLOBAL_CONFIGURATION;
-	DataStrategy strategy() default DataStrategy.GLOBAL_CONFIGURATION;
+	// Note: these will be activate when weaving with sun.misc.Unsafe becomes an option.
 	
-	public static enum WorldStrategy {
-		/**
-		 * World strategy is inferred from global configuration.
-		 * It is only ever necessary to override this value when certain components
-		 * can benefit from different weaver strategies.
-		 * <p>
-		 * Defaults to {@link WorldStrategy#SINGLE_WORLD} when no value is given.
-		 * </p>
-		 * TODO: implement + proper example
-		 */
-		GLOBAL_CONFIGURATION,
-		
-		/**
-		 * Component is present in multiple worlds simultaneously. Slower than {@link WorldStrategy#SINGLE_WORLD}.
-		 */
-		MULTI_WORLD,
-		
-		/**
-		 * Only one world instance with this component is present at any one time.
-		 */
-		SINGLE_WORLD;
-	}
-	
-	public static enum DataStrategy {
-		GLOBAL_CONFIGURATION,
-		BYTEBUFFER,
-		SUN_MISC_UNSAFE;
-	}
+//	WorldStrategy usage() default WorldStrategy.GLOBAL_CONFIGURATION;
+//	DataStrategy strategy() default DataStrategy.GLOBAL_CONFIGURATION;
+//	
+//	public static enum WorldStrategy {
+//		/**
+//		 * World strategy is inferred from global configuration.
+//		 * It is only ever necessary to override this value when certain components
+//		 * can benefit from different weaver strategies.
+//		 * <p>
+//		 * Defaults to {@link WorldStrategy#SINGLE_WORLD} when no value is given.
+//		 * </p>
+//		 * TODO: implement + proper example
+//		 */
+//		GLOBAL_CONFIGURATION,
+//		
+//		/**
+//		 * Component is present in multiple worlds simultaneously. Slower than {@link WorldStrategy#SINGLE_WORLD}.
+//		 */
+//		MULTI_WORLD,
+//		
+//		/**
+//		 * Only one world instance with this component is present at any one time.
+//		 */
+//		SINGLE_WORLD;
+//	}
+//	
+//	public static enum DataStrategy {
+//		GLOBAL_CONFIGURATION,
+//		BYTEBUFFER,
+//		SUN_MISC_UNSAFE;
+//	}
 }

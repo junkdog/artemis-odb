@@ -52,8 +52,15 @@ public final class EntityEditPool {
 	}
 	
 	private EntityEdit findEntityEdit(Entity entity) {
+		// Since it's quite likely that already edited entities are called
+		// repeatedly within the same scope, we start by first checking the last
+		// element, before checking the rest.
+		int last = edited.size() - 1;
+		if (edited.get(last).entity == entity)
+			return edited.get(last);
+		
 		Object[] data = edited.getData();
-		for (int i = 0, s = edited.size(); s > i; i++) {
+		for (int i = 0; last > i; i++) {
 			EntityEdit edit = (EntityEdit)data[i];
 			if (edit.entity == entity)
 				return edit;
