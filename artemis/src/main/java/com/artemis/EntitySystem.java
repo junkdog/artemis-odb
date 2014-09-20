@@ -10,8 +10,7 @@ import com.artemis.utils.ImmutableBag;
  * The most raw entity system.
  * <p>
  * It should not typically be used, but you can create your own entity system
- * handling by extending this. It is recommended that you use the other
- * provided entity system implementations.
+ * handling by extending this.
  * </p>
  *
  * @author Arni Arent
