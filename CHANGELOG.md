@@ -4,9 +4,7 @@
 
 - **MINOR BREAKING CHANGES**
   - Entity state changes aren't reflected until the next system starts processing
-    or a new `World#process` round begins, whichever comes first. This behavior
-    can be configured during world creation so entity state changes are only
-    propagated at start of `World#process` using the `WorldConfiguration` class.
+    or a new `World#process` round begins, whichever comes first. 
 
 - The GWT backend can now read values off annotations.
 - **Bytecode optimizations:** (invoked via maven plugin or the CLI tool)
