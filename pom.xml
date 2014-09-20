@@ -38,7 +38,7 @@
 			<name>The Apache Software License, Version 2.0</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
 			<distribution>repo</distribution>
-			<comments>libGDX TimSort</comments>
+			<comments>libGDX TimSort and GWT reflection</comments>
 		</license>
 	</licenses>
 	
@@ -63,10 +63,22 @@
 			<id>junkdog</id>
 			<timezone>1</timezone>
 			<roles>
+				<role>owner</role>
 				<role>developer</role>
 			</roles>
 			<properties>
 				<twitter>@junkdogAP</twitter>
+			</properties>
+		</developer>
+		<developer>
+			<name>Daan van Yperen</name>
+			<id>DaanVanYperen</id>
+			<roles>
+				<role>collaborator</role>
+				<role>developer</role>
+			</roles>
+			<properties>
+				<twitter>@DaanRedblade</twitter>
 			</properties>
 		</developer>
 	</developers>
