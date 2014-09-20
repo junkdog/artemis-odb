@@ -3,6 +3,7 @@ package com.artemis;
 import java.util.BitSet;
 import java.util.UUID;
 
+import com.artemis.ArchetypeBuilder.Archetype;
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 
@@ -89,6 +90,7 @@ public final class Entity {
 		return world.editPool.obtainEditor(this);
 	}
 	
+
 	@Override
 	public String toString() {
 		return "Entity[" + id + "]";

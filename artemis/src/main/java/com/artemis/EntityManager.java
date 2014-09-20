@@ -2,6 +2,7 @@ package com.artemis;
 
 import java.util.BitSet;
 
+import com.artemis.ArchetypeBuilder.Archetype;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 
@@ -26,7 +27,7 @@ public class EntityManager extends Manager {
 	/** Amount of entities ever deleted from the manager. */
 	private long deleted;
 	private RecyclingEntityFactory recyclingEntityFactory;
-
+	
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
 	private IntBag entityToIdentity = new IntBag();
 	private int highestSeenIdentity;
@@ -51,6 +52,17 @@ public class EntityManager extends Manager {
 	protected Entity createEntityInstance() {
 		Entity e = recyclingEntityFactory.obtain();
 		created++;
+		return e;
+	}
+	
+	/**
+	 * Create a new entity based on the supplied archetype.
+	 *
+	 * @return a new entity
+	 */
+	protected Entity createEntityInstance(Archetype archetype) {
+		Entity e = createEntityInstance();
+		entityToIdentity.set(e.getId(), archetype.compositionId);
 		return e;
 	}
 	
@@ -92,12 +104,17 @@ public class EntityManager extends Manager {
 	}
 	
 	void updateCompositionIdentity(EntityEdit edit) {
-		int identity = identityResolver.getIdentity(edit.componentBits);
+		int identity = compositionIdentity(edit.componentBits);
 		entityToIdentity.set(edit.entity.getId(), identity);
+	}
+	
+	int compositionIdentity(BitSet componentBits) {
+		int identity = identityResolver.getIdentity(componentBits);
 		if (identity > highestSeenIdentity) {
-			world.processComponentIdentity(identity, edit.componentBits);
+			world.processComponentIdentity(identity, componentBits);
 			highestSeenIdentity = identity;
 		}
+		return identity;
 	}
 	
 	/**

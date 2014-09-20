@@ -25,6 +25,7 @@ public final class EntityEditPool {
 		return editedIds.get(e.getId());
 	}
 	
+
 	EntityEdit obtainEditor(Entity entity) {
 		EntityEdit edit;
 		if (editedIds.get(entity.getId())) {

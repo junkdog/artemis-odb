@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.artemis.ArchetypeBuilder.Archetype;
 import com.artemis.annotations.Mapper;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.UuidEntityManager;
@@ -99,7 +100,6 @@ public class World {
 	private boolean alwaysUpdateEntityStates;
 
 	final EntityEditPool editPool = new EntityEditPool(this);
-	
 
 	/**
 	 * Creates a new world.
@@ -375,9 +375,10 @@ public class World {
 	 *
 	 * @return entity
 	 */
-	public EntityEdit createEntity(Archetype archetype) {
-		Entity e = em.createEntityInstance();
-		return e.edit();
+	public Entity createEntity(Archetype archetype) {
+		Entity e = em.createEntityInstance(archetype);
+		added.add(e);
+		return e;
 	}
 
 	/**
@@ -548,6 +549,10 @@ public class World {
 	}
 
 	private void updateEntityStates() {
+		if (added.size() > 0) {
+			check(added, addedPerformer);
+		}
+		
 		while(editPool.processEntities()) {
 			check(added, addedPerformer);
 			check(changed, changedPerformer);
