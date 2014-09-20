@@ -8,7 +8,7 @@
 
 - The GWT backend can now read values off annotations.
 - **Bytecode optimizations:** (invoked via maven plugin or the CLI tool)
-  - [Automatically optimize entity processing systems](https://github.com/junkdog/artemis-odb/issues/123).
+  - [Automatically optimize entity processing systems](https://github.com/junkdog/artemis-odb/wiki/Optimizing-Entity-Systems).
   - `@PackedWeaver` components no longer overwrite data in multi-World scenarios.
 - Removed `artemis-benchmark`, refer to [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) instead.
 - It's no longer necessary to call `Entity#changedInWorld` and `Entity#addToWorld`
