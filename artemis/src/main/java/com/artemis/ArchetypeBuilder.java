@@ -40,7 +40,9 @@ public class ArchetypeBuilder {
 	 * @return This instance for chaining.
 	 */
 	public ArchetypeBuilder add(Class<? extends Component> type) {
-		classes.add(type);
+		if ( !classes.contains(type) ) {
+			classes.add(type);
+		}
 		return this;
 	}
 
