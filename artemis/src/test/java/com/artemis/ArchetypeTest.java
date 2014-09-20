@@ -55,6 +55,20 @@ public class ArchetypeTest
 	}
 	
 	@Test
+	public void test_inherited_archetypes_and_composition_resolution() throws Exception {
+		Archetype arch4 = new ArchetypeBuilder(arch2).build(world);
+		Archetype arch5 = new ArchetypeBuilder(arch2).remove(ComponentY.class).build(world);
+		Archetype arch6 = new ArchetypeBuilder(arch2).remove(ComponentX.class).build(world);
+		
+		assertEquals(arch2.compositionId, arch4.compositionId);
+		assertEquals(arch3.compositionId, arch5.compositionId);
+		assertEquals(4, arch6.compositionId);
+		
+		assertEquals(1, arch6.types.length);
+		assertEquals(ComponentY.class, arch6.types[0].getType());
+	}
+	
+	@Test
 	public void test_adding_to_systems() {
 		archetypeEntity(arch1, 2); // never inserted
 		archetypeEntity(arch2, 4); // es1
