@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.artemis.ArchetypeBuilder.Archetype;
+import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
@@ -56,6 +57,8 @@ public class ArchetypeSystemTest {
 		
 		assertEquals(12, es1.getActives().size());
 		assertEquals(8, es2.getActives().size());
+		
+		world.process();
 	}
 
 	private void archetypeEntity(Archetype arch, int s) {
@@ -83,19 +86,26 @@ public class ArchetypeSystemTest {
 		protected void processSystem() {}
 	}
 	
+	@Wire
 	private static class Es1 extends EntityProcessingSystem {
 
+		private ComponentMapper<ComponentX> componentXMapper;
+		
 		@SuppressWarnings("unchecked")
 		public Es1() {
 			super(Aspect.getAspectForAll(ComponentX.class));
 		}
 
 		@Override
-		protected void process(Entity e) {}
-		
+		protected void process(Entity e) {
+			assertNotNull(componentXMapper.get(e));
+		}
 	}
 	
+	@Wire
 	private static class Es2 extends EntityProcessingSystem {
+		
+		private ComponentMapper<ComponentX> componentXMapper;
 		
 		@SuppressWarnings("unchecked")
 		public Es2() {
@@ -103,7 +113,8 @@ public class ArchetypeSystemTest {
 		}
 		
 		@Override
-		protected void process(Entity e) {}
-		
+		protected void process(Entity e) {
+			assertNotNull(componentXMapper.get(e));
+		}
 	}
 }

@@ -2,6 +2,7 @@ package com.artemis;
 
 import java.util.BitSet;
 
+import com.artemis.ArchetypeBuilder.Archetype;
 import com.artemis.utils.Bag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Constructor;
@@ -49,13 +50,22 @@ public class ComponentManager extends Manager {
 		typeFactory = new ComponentTypeFactory();
 	}
 
-	@SuppressWarnings("unchecked")
 	protected <T extends Component> T create(Entity owner, Class<T> componentClass) {
 		ComponentType type = typeFactory.getTypeFor(componentClass);
+		T component = create(owner, type);
+		return component;
+	}
+
+	@SuppressWarnings("unchecked")
+	private <T extends Component> T create(Entity owner, ComponentType type) {
+		Class<T> componentClass = (Class<T>)type.getType();
+		T component = null;
+		
 		switch (type.getTaxonomy())
 		{
 			case BASIC:
-				return newInstance(componentClass, false);
+				component = newInstance(componentClass, false); 
+				break;
 			case PACKED:
 				PackedComponent packedComponent = packedComponents.safeGet(type.getIndex());
 				if (packedComponent == null) {
@@ -66,16 +76,21 @@ public class ComponentManager extends Manager {
 				getPackedComponentOwners(type).set(owner.getId());
 				ensurePackedComponentCapacity(owner);
 				packedComponent.forEntity(owner);
-				return (T)packedComponent;
+				component = (T)packedComponent;
+				break;
 			case POOLED:
 				try {
-					return (T)pooledComponents.obtain((Class<PooledComponent>)componentClass);
+					component = (T)pooledComponents.obtain((Class<PooledComponent>)componentClass);
+					break;
 				} catch (ReflectionException e) {
 					throw new InvalidComponentException(componentClass, "Unable to instantiate component.", e);
 				}
 			default:
 				throw new InvalidComponentException(componentClass, " unknown component type: " + type.getTaxonomy());
 		}
+		
+		addComponent(owner, type, component);
+		return component;
 	}
 
 	private void ensurePackedComponentCapacity(Entity owner) {
@@ -178,8 +193,13 @@ public class ComponentManager extends Manager {
 			addPackedComponent(type, (PackedComponent)component);
 		else
 			addBasicComponent(e, type, component); // pooled components are handled the same
-
-//		e.getComponentBits().set(type.getIndex());
+	}
+	
+	protected void addComponents(Entity e, Archetype archetype) {
+		ComponentType[] types = archetype.types;
+		for (int i = 0, s = types.length; s > i; i++) {
+			create(e, types[i]);
+		}
 	}
 	
 	private void addPackedComponent(ComponentType type, PackedComponent component) {

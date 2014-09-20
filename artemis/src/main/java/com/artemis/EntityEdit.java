@@ -26,8 +26,8 @@ public final class EntityEdit {
 		
 		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
 		ComponentType componentType = tf.getTypeFor(componentKlazz);
-		componentManager.addComponent(entity, componentType, component);
-
+//		componentManager.addComponent(entity, componentType, component);
+//
 		componentBits.set(componentType.getIndex());
 		
 		return component;
