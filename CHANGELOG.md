@@ -25,7 +25,6 @@
   - Set expected entity count
   - Limit number of rebuilt active entities per system/tick. Rebuilt indices ensure entities are
     processed in sequential order.
-  - Control how often entity state changes are propagated to systems and managers.
 - New interface `PackedComponent.DisposedWithWorld` for freeing packed components' resources when
   disposing the world.
   - Automatically added to all `@PackedWeaver` components.
