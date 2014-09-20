@@ -249,7 +249,6 @@ public class ComponentManager extends Manager {
 				default:
 					throw new InvalidComponentException(type.getType(), " unknown component type: " + type.getTaxonomy());
 			}
-//			e.getComponentBits().clear(index);
 		}
 	}
 
