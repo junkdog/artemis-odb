@@ -163,7 +163,7 @@ public class World {
 	 * added.
 	 */
 	public void initialize() {
-		injector.udpate();
+		injector.update();
 		for (int i = 0; i < managersBag.size(); i++) {
 			Manager manager = managersBag.get(i);
 			injector.inject(manager);
@@ -684,7 +684,7 @@ public class World {
 			pojos = new HashMap<String, Object>(config.injectables);
 		}
 		
-		void udpate() {
+		void update() {
 			for (EntitySystem es : world.getSystems()) {
 				Class<?> origin = es.getClass();
 				Class<?> clazz = origin;

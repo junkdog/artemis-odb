@@ -65,7 +65,8 @@ public class EntityManager extends Manager {
 		entityToIdentity.set(e.getId(), archetype.compositionId);
 		return e;
 	}
-	
+
+	/** Get component composition of entity. */
 	BitSet componentBits(Entity e) {
 		int identityIndex = entityToIdentity.get(e.getId());
 		if (identityIndex == 0)
@@ -102,12 +103,19 @@ public class EntityManager extends Manager {
 	public void enabled(Entity e) {
 		disabled.clear(e.getId());
 	}
-	
+
+	/** Refresh entity composition identity if it changed. */
 	void updateCompositionIdentity(EntityEdit edit) {
 		int identity = compositionIdentity(edit.componentBits);
 		entityToIdentity.set(edit.entity.getId(), identity);
 	}
-	
+
+	/**
+	 * Fetches unique identifier for composition.
+	 *
+	 * @param componentBits composition to fetch unique identifier for.
+	 * @return Unique identifier for passed composition.
+	 */
 	int compositionIdentity(BitSet componentBits) {
 		int identity = identityResolver.getIdentity(componentBits);
 		if (identity > highestSeenIdentity) {
@@ -243,7 +251,8 @@ public class EntityManager extends Manager {
 		updateCompositionIdentity(e.edit());
 		return entityToIdentity.get(e.getId());
 	}
-	
+
+	/** Tracks all unique component compositions. */
 	private static final class ComponentIdentityResolver {
 		private final Bag<BitSet> composition;
 		
@@ -252,7 +261,8 @@ public class EntityManager extends Manager {
 			composition.add(null);
 			composition.add(new BitSet());
 		}
-		
+
+		/** Fetch unique identity for passed composition. */
 		int getIdentity(BitSet components) {
 			Object[] bitsets = composition.getData();
 			int size = composition.size();
