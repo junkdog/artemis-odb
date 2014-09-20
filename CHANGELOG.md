@@ -13,9 +13,11 @@
 - Removed `artemis-benchmark`, refer to [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) instead.
 - It's no longer necessary to call `Entity#changedInWorld` and `Entity#addToWorld`
   - Use `Entity#edit` when adding or removing components.
-- Adding and removing entities to systems is now approximately 60% faster.
+- **Adding and removing entities to systems is now approximately 250% faster**.
   - Entity compositions are no longer primarily identified by BitSets, but instead
     have a compositionId - EntitySystems track which composition ids are of interest.
+  - `ArchetypeBuilder` and `Archetype` precalculates compositionId, allowing for greatly increased
+    insertion performance.
   - Optimized `EntitySystem#check`, entities are processed in bulk, less checks when removing entities,
     removed systemIndex.
 - [@Profile](https://github.com/junkdog/artemis-odb/wiki/@Profile) entity systems with custom classes.
