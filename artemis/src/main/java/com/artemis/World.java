@@ -97,7 +97,6 @@ public class World {
 	
 	int rebuiltIndices;
 	private int maxRebuiltIndicesPerTick;
-	private boolean alwaysUpdateEntityStates;
 
 	final EntityEditPool editPool = new EntityEditPool(this);
 
@@ -156,7 +155,6 @@ public class World {
 		setManager(em);
 		
 		maxRebuiltIndicesPerTick = configuration.maxRebuiltIndicesPerTick();
-		alwaysUpdateEntityStates = configuration.alwaysUpdateEntityStates();
 		injector = new ArtemisInjector(this, configuration);
 	}
 	
@@ -539,7 +537,7 @@ public class World {
 
 		Object[] systemsData = systemsBag.getData();
 		for (int i = 0, s = systemsBag.size(); s > i; i++) {
-			if (alwaysUpdateEntityStates) updateEntityStates();
+			updateEntityStates();
 			
 			EntitySystem system = (EntitySystem) systemsData[i];
 			if (!system.isPassive()) {
