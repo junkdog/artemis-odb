@@ -10,30 +10,22 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 
-public class ArchetypeTest {
+public class ArchetypeManagerTest {
 	private World world;
 	private Es1 es1;
 	private Es2 es2;
 	private Archetype arch1;
 	private Archetype arch2;
 	private Archetype arch3;
+	private EntityFactory factory;
 
 	@Before
 	public void init() {
 		world = new World();
+		factory = world.setManager(new EntityFactory());
 		es1 = world.setSystem(new Es1());
 		es2 = world.setSystem(new Es2());
 		world.initialize();
-		
-		arch1 = new ArchetypeBuilder()
-			.build(world);
-		arch2 = new ArchetypeBuilder()
-			.add(ComponentX.class)
-			.add(ComponentY.class)
-			.build(world);
-		arch3 = new ArchetypeBuilder()
-			.add(ComponentX.class)
-			.build(world);
 	}
 	
 	@Test
@@ -54,20 +46,6 @@ public class ArchetypeTest {
 	}
 	
 	@Test
-	public void test_inherited_archetypes_and_composition_resolution() throws Exception {
-		Archetype arch4 = new ArchetypeBuilder(arch2).build(world);
-		Archetype arch5 = new ArchetypeBuilder(arch2).remove(ComponentY.class).build(world);
-		Archetype arch6 = new ArchetypeBuilder(arch2).remove(ComponentX.class).build(world);
-		
-		assertEquals(arch2.compositionId, arch4.compositionId);
-		assertEquals(arch3.compositionId, arch5.compositionId);
-		assertEquals(4, arch6.compositionId);
-		
-		assertEquals(1, arch6.types.length);
-		assertEquals(ComponentY.class, arch6.types[0].getType());
-	}
-	
-	@Test
 	public void test_adding_to_systems() {
 		archetypeEntity(arch1, 2); // never inserted
 		archetypeEntity(arch2, 4); // es1
@@ -85,6 +63,22 @@ public class ArchetypeTest {
 		}
 	}
 	
+	private class EntityFactory extends Manager {
+		
+		@Override
+		protected void initialize() {
+			arch1 = new ArchetypeBuilder()
+				.build(world);
+			arch2 = new ArchetypeBuilder()
+				.add(ComponentX.class)
+				.add(ComponentY.class)
+				.build(world);
+			arch3 = new ArchetypeBuilder()
+				.add(ComponentX.class)
+				.build(world);
+		}
+	}
+	
 	private static class Es1 extends EntityProcessingSystem {
 
 		@SuppressWarnings("unchecked")
@@ -94,6 +88,7 @@ public class ArchetypeTest {
 
 		@Override
 		protected void process(Entity e) {}
+		
 	}
 	
 	private static class Es2 extends EntityProcessingSystem {
@@ -105,5 +100,6 @@ public class ArchetypeTest {
 		
 		@Override
 		protected void process(Entity e) {}
+		
 	}
 }
