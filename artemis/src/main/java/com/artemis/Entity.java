@@ -3,7 +3,6 @@ package com.artemis;
 import java.util.BitSet;
 import java.util.UUID;
 
-import com.artemis.ArchetypeBuilder.Archetype;
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 
@@ -178,8 +177,7 @@ public final class Entity {
 	}
 	
 	/**
-	 * This is the preferred method to use when retrieving a component from a
-	 * entity.
+	 * Retrieves component from this entity.
 	 * <p>
 	 * It will provide good performance. But the recommended way to retrieve
 	 * components from an entity is using the ComponentMapper.

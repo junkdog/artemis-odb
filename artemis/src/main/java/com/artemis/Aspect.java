@@ -161,17 +161,13 @@ public class Aspect {
 	 * Returns an aspect where an entity must possess all of the specified
 	 * component types.
 	 *
-	 * @param type
-	 *			a required component type
 	 * @param types
 	 *			a required component type
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
 	@SuppressWarnings("unchecked")
-	public Aspect all(Class<? extends Component> type, Class<? extends Component>... types) {
-		allTypes.add(type);
-		
+	public Aspect all(Class<? extends Component>... types) {
 		for (Class<? extends Component> t : types) {
 			allTypes.add(t);
 		}
@@ -184,8 +180,6 @@ public class Aspect {
 	 * Returns an aspect where an entity must possess all of the specified
 	 * component types.
 	 *
-	 * @param type
-	 *			a required component type
 	 * @param types
 	 *			a required component type
 	 *
@@ -207,17 +201,13 @@ public class Aspect {
 	 * specified exclusion component types.
 	 * </p>
 	 *
-	 * @param type
-	 *			component type to exclude
 	 * @param types
 	 *			component type to exclude
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
 	@SuppressWarnings("unchecked")
-	public Aspect exclude(Class<? extends Component> type, Class<? extends Component>... types) {
-		exclusionTypes.add(type);
-		
+	public Aspect exclude(Class<? extends Component>... types) {
 		for (Class<? extends Component> t : types) {
 			exclusionTypes.add(t);
 		}
@@ -232,8 +222,6 @@ public class Aspect {
 	 * specified exclusion component types.
 	 * </p>
 	 * 
-	 * @param type
-	 *			component type to exclude
 	 * @param types
 	 *			component type to exclude
 	 *
@@ -251,17 +239,13 @@ public class Aspect {
 	 * Returns an aspect where an entity must possess one of the specified
 	 * component types.
 	 *
-	 * @param type
-	 *			one of the types the entity must possess
 	 * @param types
 	 *			one of the types the entity must possess
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
 	@SuppressWarnings("unchecked")
-	public Aspect one(Class<? extends Component> type, Class<? extends Component>... types) {
-		oneTypes.add(type);
-		
+	public Aspect one(Class<? extends Component>... types) {
 		for (Class<? extends Component> t : types) {
 			oneTypes.add(t);
 		}
@@ -272,8 +256,6 @@ public class Aspect {
 	 * Returns an aspect where an entity must possess one of the specified
 	 * component types.
 	 *
-	 * @param type
-	 *			one of the types the entity must possess
 	 * @param types
 	 *			one of the types the entity must possess
 	 *
@@ -291,17 +273,15 @@ public class Aspect {
 	 * Creates an aspect where an entity must possess all of the specified
 	 * component types.
 	 * 
-	 * @param type
-	 *			a required component type
 	 * @param types
 	 *			a required component type
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
 	@SuppressWarnings("unchecked")
-	public static Aspect getAspectForAll(Class<? extends Component> type, Class<? extends Component>... types) {
+	public static Aspect getAspectForAll(Class<? extends Component>... types) {
 		Aspect aspect = new Aspect();
-		aspect.all(type, types);
+		aspect.all(types);
 		return aspect;
 	}
 	
@@ -309,17 +289,15 @@ public class Aspect {
 	 * Creates an aspect where an entity must possess one of the specified
 	 * component types.
 	 * 
-	 * @param type
-	 *			one of the types the entity must possess
 	 * @param types
 	 *			one of the types the entity must possess
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
 	@SuppressWarnings("unchecked")
-	public static Aspect getAspectForOne(Class<? extends Component> type, Class<? extends Component>... types) {
+	public static Aspect getAspectForOne(Class<? extends Component>... types) {
 		Aspect aspect = new Aspect();
-		aspect.one(type, types);
+		aspect.one(types);
 		return aspect;
 	}
 	

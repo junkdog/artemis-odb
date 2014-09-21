@@ -5,6 +5,8 @@
 - **MINOR BREAKING CHANGES**
   - Entity state changes aren't reflected until the next system starts processing
     or a new `World#process` round begins, whichever comes first. 
+  - Removed initial parameter (type) from Aspect methods; this changes the method
+    descriptor, requiring any project to be recompiled.
 
 - The GWT backend can now read values off annotations.
 - **Bytecode optimizations:** (invoked via maven plugin or the CLI tool)

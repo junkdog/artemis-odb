@@ -12,11 +12,8 @@ import com.artemis.utils.reflect.ReflectionException;
 /**
  * Handles the association between entities and their components.
  * <p>
- * Usually only one component manager will exists per {@link World} instance,
- * managed by the world. Entites that add or remove components to them selves
- * will call {@link #addComponent(Entity, ComponentType, Component)} or
- * {@link #removeComponent(Entity, ComponentType)} respectively of the
- * component manager of their world.
+ * Only one component manager exists per {@link World} instance,
+ * managed by the world.
  * </p>
  *
  * @author Arni Arent
