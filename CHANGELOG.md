@@ -1,6 +1,10 @@
 # Change Log
 
-## Version: 0.6.6-SNAPSHOT
+
+## Version: 0.7.1-SNAPSHOT
+
+
+## Version: 0.7.0 - 2014-09-21
 
 - **MINOR BREAKING CHANGES**
   - Entity state changes aren't reflected until the next system starts processing
