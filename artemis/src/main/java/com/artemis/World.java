@@ -172,12 +172,25 @@ public class World {
 
 		initializeSystems();
 	}
-	
-	public void inject(Object obj) {
+
+	/**
+	 * Inject dependencies on object.
+	 *
+	 * Immediately perform dependency injection on the target.
+	 * {@link com.artemis.annotations.Wire} annotation is required on the target
+	 * or fields.
+	 *
+	 * If you want to specify nonstandard dependencies to inject, use
+	 * {@link com.artemis.WorldConfiguration#register(String, Object)} instead.
+	 *
+	 * @see com.artemis.annotations.Wire for more details about dependency injection.
+	 * @param target Object to inject into.
+	 */
+	public void inject(Object target) {
 		if (injector == null)
 			throw new MundaneWireException("World#initialize() has not been called.");
 		
-		injector.inject(obj);
+		injector.inject(target);
 	}
 
 	/**
