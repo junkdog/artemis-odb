@@ -92,6 +92,7 @@ public class Aspect {
 	 *		the "all" BitSet
 	 */
 	public BitSet getAllSet() {
+		requireInitialized(true);
 		return allSet;
 	}
 
@@ -102,6 +103,7 @@ public class Aspect {
 	 *		the "exclusion" BitSet
 	 */
 	public BitSet getExclusionSet() {
+		requireInitialized(true);
 		return exclusionSet;
 	}
 
@@ -113,6 +115,7 @@ public class Aspect {
 	 *		the "one" BitSet
 	 */
 	public BitSet getOneSet() {
+		requireInitialized(true);
 		return oneSet;
 	}
 
@@ -120,6 +123,7 @@ public class Aspect {
 	 * Returns whether this Aspect would accept the given Entity.
 	 */
 	public boolean isInterested(Entity e){
+		requireInitialized(true);
 		return isInterested(e.getComponentBits());
 	}
 	
@@ -127,6 +131,7 @@ public class Aspect {
 	 * Returns whether this Aspect would accept the given set.
 	 */
 	public boolean isInterested(BitSet componentBits){
+		requireInitialized(true);
 		
 		// Possibly interested, let's try to prove it wrong.
 		boolean interested = true;
@@ -167,6 +172,7 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 */
 	public Aspect all(Class<? extends Component>... types) {
+		requireInitialized(false);
 		for (Class<? extends Component> t : types) {
 			allTypes.add(t);
 		}
@@ -185,6 +191,7 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 */
 	public Aspect all(Collection<Class<? extends Component>> types) {
+		requireInitialized(false);
 		for (Class<? extends Component> t : types) {
 			allTypes.add(t);
 		}
@@ -205,6 +212,7 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 */
 	public Aspect exclude(Class<? extends Component>... types) {
+		requireInitialized(false);
 		for (Class<? extends Component> t : types) {
 			exclusionTypes.add(t);
 		}
@@ -225,6 +233,7 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 */
 	public Aspect exclude(Collection<Class<? extends Component>> types) {
+		requireInitialized(false);
 		for (Class<? extends Component> t : types) {
 			exclusionTypes.add(t);
 		}
@@ -241,6 +250,7 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 */
 	public Aspect one(Class<? extends Component>... types) {
+		requireInitialized(false);
 		for (Class<? extends Component> t : types) {
 			oneTypes.add(t);
 		}
@@ -257,10 +267,21 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 */
 	public Aspect one(Collection<Class<? extends Component>> types) {
+		requireInitialized(false);
 		for (Class<? extends Component> t : types) {
 			oneTypes.add(t);
 		}
 		return this;
+	}
+	
+	private void requireInitialized(boolean expected) {
+		if (isInitialized == expected)
+			return;
+		
+		String err = "Wrong Aspect state, cannot call method " + 
+			(expected ? "before" : "after") + " calling Aspect#initialize(World)";
+		
+		throw new MundaneWireException(err);
 	}
 	
 	/**
