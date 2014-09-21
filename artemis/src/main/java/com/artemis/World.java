@@ -340,6 +340,9 @@ public class World {
 	 */
 	@Deprecated
 	public void enable(Entity e) {
+		if (disabled.contains(e))
+			disabled.remove(e);
+		
 		enabled.add(e);
 	}
 
@@ -354,6 +357,9 @@ public class World {
 	 */
 	@Deprecated
 	public void disable(Entity e) {
+		if (enabled.contains(e))
+			enabled.remove(e);
+		
 		disabled.add(e);
 	}
 

@@ -1,35 +1,54 @@
 package com.artemis;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
-import com.artemis.component.Packed;
 
-public class EntityStateTest
-{
+@SuppressWarnings("deprecation")
+public class EntityStateTest {
 	private World world;
+	private Entity e;
+	private Management management;
 
 	@Before
 	public void init() {
 		world = new World();
+		management = world.setManager(new Management());
+		world.initialize();
+		
+		e = world.createEntity();
 	}
 	
-	@Test @Ignore
+	@Test
 	public void disable_enable_test() {
-		Assert.fail();
+		e.disable();
+		e.enable();
+		world.process();
+		
+		Assert.assertEquals(1, management.state);
 	}
 	
-	@Test @Ignore
+	@Test
 	public void enable_disable_test() {
-		Assert.fail();
+		e.enable();
+		e.disable();
+		world.process();
+		
+		Assert.assertEquals(-1, management.state);
+	}
+	
+	private static class Management extends Manager {
+		int state = 0;
+		
+		@Override
+		public void enabled(Entity e) {
+			state++;
+		}
+		
+		@Override
+		public void disabled(Entity e) {
+			state--;
+		}
 	}
 }

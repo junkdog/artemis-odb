@@ -166,7 +166,6 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	@SuppressWarnings("unchecked")
 	public Aspect all(Class<? extends Component>... types) {
 		for (Class<? extends Component> t : types) {
 			allTypes.add(t);
@@ -185,7 +184,6 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	@SuppressWarnings("unchecked")
 	public Aspect all(Collection<Class<? extends Component>> types) {
 		for (Class<? extends Component> t : types) {
 			allTypes.add(t);
@@ -206,7 +204,6 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	@SuppressWarnings("unchecked")
 	public Aspect exclude(Class<? extends Component>... types) {
 		for (Class<? extends Component> t : types) {
 			exclusionTypes.add(t);
@@ -227,7 +224,6 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	@SuppressWarnings("unchecked")
 	public Aspect exclude(Collection<Class<? extends Component>> types) {
 		for (Class<? extends Component> t : types) {
 			exclusionTypes.add(t);
@@ -244,7 +240,6 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	@SuppressWarnings("unchecked")
 	public Aspect one(Class<? extends Component>... types) {
 		for (Class<? extends Component> t : types) {
 			oneTypes.add(t);
@@ -261,7 +256,6 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	@SuppressWarnings("unchecked")
 	public Aspect one(Collection<Class<? extends Component>> types) {
 		for (Class<? extends Component> t : types) {
 			oneTypes.add(t);
@@ -278,7 +272,6 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	@SuppressWarnings("unchecked")
 	public static Aspect getAspectForAll(Class<? extends Component>... types) {
 		Aspect aspect = new Aspect();
 		aspect.all(types);
@@ -294,7 +287,6 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	@SuppressWarnings("unchecked")
 	public static Aspect getAspectForOne(Class<? extends Component>... types) {
 		Aspect aspect = new Aspect();
 		aspect.one(types);
