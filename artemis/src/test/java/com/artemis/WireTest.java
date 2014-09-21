@@ -174,6 +174,36 @@ public class WireTest {
 		assertEquals("world", st.hello);
 		assertEquals("n2", st.helloN2);
 	}
+	
+	@Test @SuppressWarnings("static-method")
+	public void inject_static_field() {
+		World w = new World();
+		w.setManager(new ManagerWithStaticField());
+		w.initialize();
+		w.process();
+		
+		assertNotNull(ManagerWithStaticField.mapper);
+	}
+	
+	@Test @SuppressWarnings("static-method")
+	public void inject_static_field_extended() {
+		World w = new World();
+		w.setManager(new ExtendedStaticManager());
+		w.initialize();
+		w.process();
+		
+		assertNotNull(ManagerWithStaticField.mapper);
+	}
+	
+	@Test @SuppressWarnings("static-method")
+	public void inject_static_field_inherited() {
+		World w = new World();
+		w.setManager(new ManagerWithStaticField());
+		w.initialize();
+		w.process();
+		
+		assertNotNull(ManagerWithStaticField.mapper);
+	}
 
 	@Wire
 	private static class SomeThing {
@@ -220,6 +250,14 @@ public class WireTest {
 
 		@Override
 		protected void process(Entity e) {}
+	}
+	
+	@Wire(injectInherited=true)
+	private static class ExtendedStaticManager extends ManagerWithStaticField {}
+	
+	@Wire
+	private static class ManagerWithStaticField extends Manager{
+		static ComponentMapper<ComponentX> mapper;
 	}
 	
 	private static class MappedManager extends Manager {

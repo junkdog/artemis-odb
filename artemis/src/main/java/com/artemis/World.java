@@ -717,7 +717,7 @@ public class World {
 			try {
 				Class<?> clazz = target.getClass();
 
-				if (ClassReflection.hasAnnotation(clazz, Wire.class)) {
+				if (ClassReflection.isAnnotationPresent(clazz, Wire.class)) {
 					Wire wire = ClassReflection.getAnnotation(clazz, Wire.class);
 					if (wire != null) {
 						injectValidFields(target, clazz, wire.failOnNull(), wire.injectInherited());
@@ -755,8 +755,8 @@ public class World {
 			Field[] declaredFields = ClassReflection.getDeclaredFields(clazz);
 			for (int i = 0, s = declaredFields.length; s > i; i++) {
 				Field field = declaredFields[i];
-				if (field.hasAnnotation(Mapper.class) || field.hasAnnotation(Wire.class)) {
-					injectField(target, field, field.hasAnnotation(Wire.class));
+				if (field.isAnnotationPresent(Mapper.class) || field.isAnnotationPresent(Wire.class)) {
+					injectField(target, field, field.isAnnotationPresent(Wire.class));
 				}
 			}
 		}
@@ -794,7 +794,7 @@ public class World {
 					throw new MundaneWireException("Manager not found for " + fieldType);
 				}
 				field.set(target, manager);
-			} else if (field.hasAnnotation(Wire.class)) {
+			} else if (field.isAnnotationPresent(Wire.class)) {
 				final Wire wire = field.getAnnotation(Wire.class);
 				String key = wire.name();
 				if ("".equals(key))

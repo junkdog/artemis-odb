@@ -39,6 +39,7 @@ public class EntityManager extends Manager {
 		entities = new Bag<Entity>(initialContainerSize);
 		disabled = new BitSet();
 	}
+	
 	@Override
 	protected void initialize() {
 		recyclingEntityFactory = new RecyclingEntityFactory(world, entityToIdentity);
