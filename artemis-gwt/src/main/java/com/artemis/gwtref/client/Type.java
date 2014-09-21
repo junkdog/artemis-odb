@@ -28,7 +28,7 @@ import java.util.Set;
 public class Type {
 	private static final Field[] EMPTY_FIELDS = new Field[0];
 	private static final Method[] EMPTY_METHODS = new Method[0];
-    private static final Constructor[] EMPTY_CONSTRUCTORS = new Constructor[0];
+	private static final Constructor[] EMPTY_CONSTRUCTORS = new Constructor[0];
 	private static final Annotation[] EMPTY_ANNOTATIONS = new Annotation[0];
 
 	String name;
@@ -85,7 +85,7 @@ public class Type {
 
 	/** @param name the name of the field
 	 * @return the public field of this type or one of its super interfaces with the given name or null. See
-	 *         {@link Class#getField(String)}. */
+	 *		 {@link Class#getField(String)}. */
 	public Field getField (String name) {
 		Type t = this;
 		while (t != null) {
@@ -117,7 +117,7 @@ public class Type {
 	}
 
 	/** @return an array containing all the fields of this class, including private and protected fields. See
-	 *         {@link Class#getDeclaredFields()}. */
+	 *		 {@link Class#getDeclaredFields()}. */
 	public Field[] getDeclaredFields () {
 		return fields;
 	}
@@ -157,7 +157,7 @@ public class Type {
 	}
 
 	/** @return an array containing all methods of this class, including abstract, private and protected methods. See
-	 *         {@link Class#getDeclaredMethods()}. */
+	 *		 {@link Class#getDeclaredMethods()}. */
 	public Method[] getDeclaredMethods () {
 		return methods;
 	}

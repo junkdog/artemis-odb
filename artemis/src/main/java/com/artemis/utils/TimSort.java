@@ -454,11 +454,11 @@ class TimSort<T> {
 	 * @param base the index of the first element in the range
 	 * @param len the length of the range; must be > 0
 	 * @param hint the index at which to begin the search, 0 <= hint < n. The closer hint is to the result, the faster this method
-	 *           will run.
+	 *		   will run.
 	 * @param c the comparator used to order the range, and to search
 	 * @return the int k, 0 <= k <= n such that a[b + k - 1] < key <= a[b + k], pretending that a[b - 1] is minus infinity and a[b
-	 *         + n] is infinity. In other words, key belongs at index b + k; or in other words, the first k elements of a should
-	 *         precede key, and the last n - k should follow it. */
+	 *		 + n] is infinity. In other words, key belongs at index b + k; or in other words, the first k elements of a should
+	 *		 precede key, and the last n - k should follow it. */
 	private static <T> int gallopLeft (T key, T[] a, int base, int len, int hint, Comparator<? super T> c) {
 		if (DEBUG) assert len > 0 && hint >= 0 && hint < len;
 		int lastOfs = 0;
@@ -520,7 +520,7 @@ class TimSort<T> {
 	 * @param base the index of the first element in the range
 	 * @param len the length of the range; must be > 0
 	 * @param hint the index at which to begin the search, 0 <= hint < n. The closer hint is to the result, the faster this method
-	 *           will run.
+	 *		   will run.
 	 * @param c the comparator used to order the range, and to search
 	 * @return the int k, 0 <= k <= n such that a[b + k - 1] <= key < a[b + k] */
 	private static <T> int gallopRight (T key, T[] a, int base, int len, int hint, Comparator<? super T> c) {
@@ -613,7 +613,7 @@ class TimSort<T> {
 		}
 
 		Comparator<? super T> c = this.c; // Use local variable for performance
-		int minGallop = this.minGallop; // "    " "     " "
+		int minGallop = this.minGallop; // "	" "	 " "
 		outer:
 		while (true) {
 			int count1 = 0; // Number of times in a row that first run won
@@ -719,7 +719,7 @@ class TimSort<T> {
 		}
 
 		Comparator<? super T> c = this.c; // Use local variable for performance
-		int minGallop = this.minGallop; // "    " "     " "
+		int minGallop = this.minGallop; // "	" "	 " "
 		outer:
 		while (true) {
 			int count1 = 0; // Number of times in a row that first run won

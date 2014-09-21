@@ -61,7 +61,7 @@ public class Method {
 		this.isConstructor = isConstructor;
 		this.methodId = methodId;
 		this.annotations = annotations != null ? annotations : new Annotation[] {};
-      	}
+	  	}
 
 	/** @return the {@link Class} of the enclosing type. */
 	public Class getEnclosingType () {

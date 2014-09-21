@@ -13,7 +13,7 @@ import com.artemis.PooledComponent;
  * takes place during the <code>artemis</code> goal defined in <code>artemis-odb-maven-plugin</code>.
  * 
  * @see <a href="https://github.com/junkdog/artemis-odb/wiki/Packed-Weaver">PackedWeaver</a>
- *      on the wiki.
+ *	  on the wiki.
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)

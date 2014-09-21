@@ -923,8 +923,8 @@ public class ReflectionCacheSourceCreator {
 
 	private void newArrayC () {
 		p("public Object newArray (Class componentType, int size) {");
-		p("    Type t = forName(componentType.getName().replace('$', '.'));");
-		p("    if (t != null) {");
+		p("	Type t = forName(componentType.getName().replace('$', '.'));");
+		p("	if (t != null) {");
 		SwitchedCodeBlock pc = new SwitchedCodeBlock("t.id");
 		for (JType type : types) {
 			if (type.getQualifiedSourceName().equals("void")) continue;
@@ -937,8 +937,8 @@ public class ReflectionCacheSourceCreator {
 			pc.add(typeNames2typeIds.get(type.getQualifiedSourceName()), "return new " + arrayType + ";");
 		}
 		pc.print();
-		p("    }");
-		p("    throw new RuntimeException(\"Couldn't create array with element type \" + componentType.getName());");
+		p("	}");
+		p("	throw new RuntimeException(\"Couldn't create array with element type \" + componentType.getName());");
 		p("}");
 	}
 
@@ -994,9 +994,9 @@ public class ReflectionCacheSourceCreator {
 		void print () {
 			if (blocks.isEmpty()) return;
 
-			p("    switch(" + switchStatement + ") {");
+			p("	switch(" + switchStatement + ") {");
 			for (KeyedCodeBlock b : blocks) {
-				p("    case " + b.key + ": " + b.codeBlock);
+				p("	case " + b.key + ": " + b.codeBlock);
 			}
 			p("}");
 		}

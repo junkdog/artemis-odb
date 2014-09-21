@@ -418,10 +418,10 @@ class ComparableTimSort {
 	 * @param base the index of the first element in the range
 	 * @param len the length of the range; must be > 0
 	 * @param hint the index at which to begin the search, 0 <= hint < n. The closer hint is to the result, the faster this method
-	 *           will run.
+	 *		   will run.
 	 * @return the int k, 0 <= k <= n such that a[b + k - 1] < key <= a[b + k], pretending that a[b - 1] is minus infinity and a[b
-	 *         + n] is infinity. In other words, key belongs at index b + k; or in other words, the first k elements of a should
-	 *         precede key, and the last n - k should follow it. */
+	 *		 + n] is infinity. In other words, key belongs at index b + k; or in other words, the first k elements of a should
+	 *		 precede key, and the last n - k should follow it. */
 	private static int gallopLeft (Comparable<Object> key, Object[] a, int base, int len, int hint) {
 		if (DEBUG) assert len > 0 && hint >= 0 && hint < len;
 
@@ -484,7 +484,7 @@ class ComparableTimSort {
 	 * @param base the index of the first element in the range
 	 * @param len the length of the range; must be > 0
 	 * @param hint the index at which to begin the search, 0 <= hint < n. The closer hint is to the result, the faster this method
-	 *           will run.
+	 *		   will run.
 	 * @return the int k, 0 <= k <= n such that a[b + k - 1] <= key < a[b + k] */
 	private static int gallopRight (Comparable<Object> key, Object[] a, int base, int len, int hint) {
 		if (DEBUG) assert len > 0 && hint >= 0 && hint < len;
