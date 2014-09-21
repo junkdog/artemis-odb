@@ -269,7 +269,7 @@ public class ComponentManager extends Manager {
 	}
 
 	/**
-	 * Get a component of a entity.
+	 * Get a component of an entity.
 	 *
 	 * @param e
 	 *			the entity associated with the component

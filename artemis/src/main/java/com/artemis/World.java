@@ -272,7 +272,9 @@ public class World {
 	 * Deletes the manager from this world.
 	 *
 	 * @param manager manager to delete
+	 * @deprecated A world should be static once initialized
 	 */
+	@Deprecated
 	public void deleteManager(Manager manager) {
 		managers.remove(manager.getClass());
 		managersBag.remove(manager);
@@ -452,7 +454,9 @@ public class World {
 	 * Remove the specified system from the world.
 	 *
 	 * @param system the system to be deleted from world
+	 * @deprecated A world should be static once initialized
 	 */
+	@Deprecated
 	public void deleteSystem(EntitySystem system) {
 		systems.remove(system.getClass());
 		systemsBag.remove(system);
