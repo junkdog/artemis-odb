@@ -5,11 +5,15 @@ import java.util.BitSet;
 import com.artemis.utils.Bag;
 
 /**
- * Builder for basic Archetype instances.
- *
+ * Builder for basic Archetype instances. To reap the maximum benefit of Archetypes,
+ * it's recommended to stash them away inside an EntityFactory or similar. Archetypes
+ * main advantage come from the improved insertion into systems and managers performance.
+ * Calling {@link Entity#edit() edit()} on the Entity returned by {@link World#createEntity(Archetype)}
+ * nullifies this optimization.  
+ * <p>
  * Generated archetypes provide a blueprint for quick entity creation.
- * Instance generated entities using {@link com.artemis.World#createEntity(com.artemis.ArchetypeBuilder.Archetype)}
- *
+ * Instance generated entities using {@link World#createEntity(Archetype)}
+ * 
  * @since 0.7
  */
 public class ArchetypeBuilder {
@@ -93,8 +97,9 @@ public class ArchetypeBuilder {
 	}
 
 	/**
-	 * Provides a blueprint for new entities.
-	 *
+	 * Provides a blueprint for new entities, offering greatly
+	 * improved insertion performance for systems and managers.
+	 * </p>
 	 * Instance entities using {@link com.artemis.World#createEntity(com.artemis.ArchetypeBuilder.Archetype)}
 	 */
 	public final static class Archetype {
