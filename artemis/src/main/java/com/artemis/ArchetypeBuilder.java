@@ -80,7 +80,11 @@ public class ArchetypeBuilder {
 
 	/** Converts java classes to component types. */
 	private ComponentType[] resolveTypes(World world) {
-		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+		ComponentManager cm = world.getComponentManager();
+		if (cm == null)
+			throw new MundaneWireException("World#initialize() has not been called.");
+		
+		ComponentTypeFactory tf = cm.typeFactory;
 		ComponentType[] types = new ComponentType[classes.size()];
 		for (int i = 0, s = classes.size(); s > i; i++)
 			types[i] = tf.getTypeFor(classes.get(i));

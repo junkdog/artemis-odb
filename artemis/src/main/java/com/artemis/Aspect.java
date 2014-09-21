@@ -274,12 +274,12 @@ public class Aspect {
 		return this;
 	}
 	
-	private void requireInitialized(boolean expected) {
-		if (isInitialized == expected)
+	private void requireInitialized(boolean actualState) {
+		if (isInitialized == actualState)
 			return;
 		
 		String err = "Wrong Aspect state, cannot call method " + 
-			(expected ? "before" : "after") + " calling Aspect#initialize(World)";
+			(actualState ? "before" : "after") + " calling Aspect#initialize(World)";
 		
 		throw new MundaneWireException(err);
 	}
