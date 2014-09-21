@@ -17,9 +17,16 @@ import com.artemis.World;
  * {@link World#setManager(com.artemis.Manager)}.
  * 
  * <p>
- * 
- * This annotation also makes it possible to inject normal java classes by calling
- * {@link World#inject(Object)}
+ *
+ * Inject into any object using <code>@Wire</code> and {@link World#inject(Object)}
+ *
+ * Nonstandard dependency fields must be explicitly annotated with
+ * <code>@Wire(name="myName")</code> to inject by name, or <code>@Wire</code>
+ * to inject by type. Class level <code>@Wire</code> annotation is not enough.
+ *
+ * To specify which nonstandard dependencies to inject, use
+ * {@link com.artemis.WorldConfiguration#register(String, Object)} and
+ * {@link com.artemis.WorldConfiguration#register(Object)}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})
