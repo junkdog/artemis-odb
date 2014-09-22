@@ -29,65 +29,65 @@ public class ArtemisMaven extends AbstractMojo {
 	/**
 	 * Root folder for class files.
 	 */
-	@Parameter(property="project.build.outputDirectory", readonly=true)
+	@Parameter(property = "project.build.outputDirectory", readonly = true)
 	private File outputDirectory;
 
 	/**
 	 * Root source folder.
 	 */
-	@Parameter(property="project.build.sourceDirectory", readonly=true)
+	@Parameter(property = "project.build.sourceDirectory", readonly = true)
 	private File sourceDirectory;
-	
+
 	/**
 	 * If true, will leave field stubs to keep IDE:s happy after transformations.
 	 */
-	@Parameter(property="ideFriendlyPacking")
+	@Parameter(property = "ideFriendlyPacking")
 	private boolean ideFriendlyPacking;
-	
+
 	/**
 	 * Enabled weaving of pooled components (more viable on Android than JVM).
 	 */
-	@Parameter(defaultValue="true", property="enablePooledWeaving")
+	@Parameter(defaultValue = "true", property = "enablePooledWeaving")
 	private boolean enablePooledWeaving;
-	
+
 	/**
 	 * If false, no weaving will take place (useful for debugging).
 	 */
-	@Parameter(defaultValue="true", property="enableArtemisPlugin")
+	@Parameter(defaultValue = "true", property = "enableArtemisPlugin")
 	private boolean enableArtemisPlugin;
-	
-	@Parameter(defaultValue="true", property="optimizeEntitySystems")
+
+	@Parameter(defaultValue = "true", property = "optimizeEntitySystems")
 	private boolean optimizeEntitySystems;
-	
+
 	@Component
 	private BuildContext context;
-	
+
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (!enableArtemisPlugin) {
 			getLog().info("Plugin disabled via 'enableArtemisPlugin' set to false.");
 			return;
 		}
-		
+
 		long start = System.currentTimeMillis();
 		if (context != null && !context.hasDelta(sourceDirectory))
 			return;
-		
+
 		Log log = getLog();
-		log.info("Configuration:"); 
+		log.info("Configuration:");
 		log.info("\tideFriendlyPacking .............. " + ideFriendlyPacking);
 		log.info("\tenablePooledWeaving ............. " + enablePooledWeaving);
 		log.info("\toptimizeEntitySystems ........... " + optimizeEntitySystems);
-		
+
 		Weaver.retainFieldsWhenPacking(ideFriendlyPacking);
 		Weaver.enablePooledWeaving(enablePooledWeaving);
 		Weaver.optimizeEntitySystems(optimizeEntitySystems);
-		
+
 		Weaver weaver = new Weaver(outputDirectory);
 		List<ClassMetadata> processed = weaver.execute();
-		
+
 		log.info(getSummary(processed, start));
-		
+
 		for (ClassMetadata meta : processed) {
 			try {
 				meta.weaverTask.get();
@@ -98,15 +98,16 @@ public class ArtemisMaven extends AbstractMojo {
 			}
 		}
 	}
-	
+
 	private static CharSequence getSummary(List<ClassMetadata> processed, long start) {
 		int pooled = 0, packed = 0;
 		for (ClassMetadata meta : processed) {
 			if (PACKED == meta.annotation) packed++;
 			else if (POOLED == meta.annotation) pooled++;
 		}
-		
+
 		return String.format("Processed %d PackedComponents and %d PooledComponents in %dms.",
-			packed, pooled, (System.currentTimeMillis() - start));
+				packed, pooled, (System.currentTimeMillis() - start));
 	}
+
 }
