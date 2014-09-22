@@ -1,0 +1,26 @@
+apply plugin: 'java'
+
+dependencies {
+    compile gradleApi()
+}
+
+apply plugin: 'maven'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.11'
+}
+
+group = 'net.onedaybeard.artemis'
+version = '0.7.1-SNAPSHOT'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri('../repo'))
+        }
+    }
+}

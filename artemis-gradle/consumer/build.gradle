@@ -1,0 +1,13 @@
+buildscript {
+    repositories {
+        maven {
+            url uri('../repo')
+        }
+    }
+    dependencies {
+        classpath group: 'net.onedaybeard.artemis',
+                name: 'ArtemisGradlePlugin',
+                version: '0.7.1-SNAPSHOT'
+    }
+}
+apply plugin: 'artemis-plugin'
