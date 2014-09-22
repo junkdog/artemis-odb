@@ -9,8 +9,9 @@ import com.artemis.Component;
 import com.artemis.PackedComponent;
 
 /**
- * Transforms a {@link Component} into a {@link PackedComponent}. Component transformation
- * takes place during the <code>artemis</code> goal defined in <code>artemis-odb-maven-plugin</code>.
+ * Transforms a {@link Component} into a {@link com.artemis.PooledComponent}. Component transformation
+ * takes place during the <code>artemis</code> goal defined in <code>artemis-odb-maven-plugin</code>
+ * or the <code>weave</code> task in <code>artemis-odb-gradle-plugin</code>.
  * 
  * @see <a href="https://github.com/junkdog/artemis-odb/wiki/Component%20Types">Component types</a>
  *	  on the wiki.

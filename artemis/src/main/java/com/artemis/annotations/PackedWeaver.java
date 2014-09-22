@@ -9,9 +9,10 @@ import com.artemis.Component;
 import com.artemis.PooledComponent;
 
 /**
- * Transforms a {@link Component} into a {@link PooledComponent}. Component transformation
- * takes place during the <code>artemis</code> goal defined in <code>artemis-odb-maven-plugin</code>.
- * 
+ * Transforms a {@link Component} into a {@link com.artemis.PackedComponent}. Component transformation
+ * takes place during the <code>artemis</code> goal defined in <code>artemis-odb-maven-plugin</code>
+ * or the <code>weave</code> task in <code>artemis-odb-gradle-plugin</code>.
+ *
  * @see <a href="https://github.com/junkdog/artemis-odb/wiki/Packed-Weaver">PackedWeaver</a>
  *	  on the wiki.
  */
