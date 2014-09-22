@@ -10,11 +10,11 @@ buildscript {
 
     dependencies {
         classpath group: 'net.onedaybeard.artemis',
-                name: 'ArtemisGradlePlugin',
+                name: 'artemis-gradle-plugin',
                 version: '0.7.1-SNAPSHOT'
     }
 }
-apply plugin: 'artemis-plugin'
+apply plugin: 'artemis'
 
 weavingTask {
     enableArtemisPlugin = true

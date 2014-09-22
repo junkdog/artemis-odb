@@ -8,37 +8,43 @@ import com.artemis.meta.ClassMetadata;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
-import org.gradle.mvn3.org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 
 /**
+ * Weaving wrapper for gradle.
+ *
+ * @author Adrian Papari
  * @author Daan van Yperen
  */
 public class ArtemisWeavingTask extends DefaultTask {
 
-	/** Root folder for class files. */
+	/**
+	 * Root folder for class files.
+	 */
 	@OutputDirectory
-	private File outputDirectory;
+	private File classesDir;
 
-	/** Root source folder. */
-	@InputDirectory
-	private File sourceDirectory;
-
-	/** If true, will leave field stubs to keep IDE:s happy after transformations. */
+	/**
+	 * If true, will leave field stubs to keep IDE:s happy after transformations.
+	 */
 	@Input
 	private boolean ideFriendlyPacking;
 
-	/** Enabled weaving of pooled components (more viable on Android than JVM). */
+	/**
+	 * Enabled weaving of pooled components (more viable on Android than JVM).
+	 */
 	@Input
 	private boolean enablePooledWeaving;
 
-	/** If false, no weaving will take place (useful for debugging). */
+	/**
+	 * If false, no weaving will take place (useful for debugging).
+	 */
 	@Input
 	private boolean enableArtemisPlugin;
 
@@ -46,7 +52,7 @@ public class ArtemisWeavingTask extends DefaultTask {
 	private boolean optimizeEntitySystems;
 
 	@TaskAction
-	public void weavingTask() {
+	public void weave() {
 		getLogger().info("Artemis plugin started.");
 
 		if (!enableArtemisPlugin) {
@@ -63,12 +69,13 @@ public class ArtemisWeavingTask extends DefaultTask {
 		log.info("\tideFriendlyPacking .............. " + ideFriendlyPacking);
 		log.info("\tenablePooledWeaving ............. " + enablePooledWeaving);
 		log.info("\toptimizeEntitySystems ........... " + optimizeEntitySystems);
+		log.info("\toutputDirectory ................. " + classesDir);
 
 		Weaver.retainFieldsWhenPacking(ideFriendlyPacking);
 		Weaver.enablePooledWeaving(enablePooledWeaving);
 		Weaver.optimizeEntitySystems(optimizeEntitySystems);
 
-		Weaver weaver = new Weaver(outputDirectory);
+		Weaver weaver = new Weaver(classesDir);
 		List<ClassMetadata> processed = weaver.execute();
 
 		log.info(getSummary(processed, start));
@@ -125,5 +132,13 @@ public class ArtemisWeavingTask extends DefaultTask {
 
 	public void setOptimizeEntitySystems(boolean optimizeEntitySystems) {
 		this.optimizeEntitySystems = optimizeEntitySystems;
+	}
+
+	public File getClassesDir() {
+		return classesDir;
+	}
+
+	public void setClassesDir(File classesDir) {
+		this.classesDir = classesDir;
 	}
 }
