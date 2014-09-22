@@ -72,7 +72,7 @@ public class ArtemisMaven extends AbstractMojo {
 		long start = System.currentTimeMillis();
 		if (context != null && !context.hasDelta(sourceDirectory))
 			return;
-		
+
 		Log log = getLog();
 		log.info("Configuration:"); 
 		log.info("\tideFriendlyPacking .............. " + ideFriendlyPacking);
@@ -109,4 +109,4 @@ public class ArtemisMaven extends AbstractMojo {
 		return String.format("Processed %d PackedComponents and %d PooledComponents in %dms.",
 			packed, pooled, (System.currentTimeMillis() - start));
 	}
-}
+

@@ -10,7 +10,6 @@ public class ArtemisGradlePlugin  implements Plugin<Project> {
 
 	@Override
 	public void apply(Project target) {
-		System.out.println("Gradle plugins are cool");
 		target.getTasks().create("weavingTask", ArtemisWeavingTask.class);
 	}
 

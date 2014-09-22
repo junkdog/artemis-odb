@@ -1,21 +1,25 @@
 apply plugin: 'java'
 
-dependencies {
-    compile gradleApi()
-}
-
-apply plugin: 'maven'
-
 repositories {
+    mavenLocal()
     mavenCentral()
-}
-
-dependencies {
-    testCompile 'junit:junit:4.11'
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 group = 'net.onedaybeard.artemis'
 version = '0.7.1-SNAPSHOT'
+
+dependencies {
+    compile gradleApi()
+    compile "net.onedaybeard.artemis:artemis-odb-weaver:$version"
+    compile "net.onedaybeard.artemis:artemis-odb-matrix:$version"
+}
+
+apply plugin: 'maven'
+
+dependencies {
+    testCompile 'junit:junit:4.11'
+}
 
 uploadArchives {
     repositories {

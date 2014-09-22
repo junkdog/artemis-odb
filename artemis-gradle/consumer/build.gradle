@@ -2,8 +2,12 @@ buildscript {
     repositories {
         maven {
             url uri('../repo')
+            mavenLocal()
+            mavenCentral()
+            maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         }
     }
+
     dependencies {
         classpath group: 'net.onedaybeard.artemis',
                 name: 'ArtemisGradlePlugin',
@@ -11,3 +15,10 @@ buildscript {
     }
 }
 apply plugin: 'artemis-plugin'
+
+weavingTask {
+    enableArtemisPlugin = true
+    enablePooledWeaving = true
+    ideFriendlyPacking = true
+    optimizeEntitySystems = true
+}
