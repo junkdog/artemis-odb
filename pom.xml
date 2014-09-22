@@ -86,7 +86,8 @@
 	<modules>
 		<module>artemis</module>
 		<module>artemis-weaver</module>
-		<module>artemis-maven</module>
+        <module>artemis-maven</module>
+        <module>artemis-gradle</module>
 		<module>artemis-test</module>
 		<module>artemis-matrix</module>
 		<module>artemis-cli</module>
