@@ -2,6 +2,7 @@
 
 
 ## Version: 0.7.1-SNAPSHOT
+- Gradle plugin for bytecode weaving. See [Weave Automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automation)
 
 
 ## Version: 0.7.0 - 2014-09-21
