@@ -30,62 +30,6 @@ There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - 
  - **artemis-weaver:** Transforms `com.artemis.Component` classes when annotated with `@PooledWeaver` or `@PackedWeaver`, see _artemis-maven_.
  - **artemis-test:** Compliance tests.
 
-
-## Maven
-
-### Embracing Artemis
-```xml
-	<properties>
-		<artemis.version>0.7.0</artemis.version>
-	</properties>
-	
-	<dependencies>
-		<!-- base library -->
-		<dependency>
-			<groupId>net.onedaybeard.artemis</groupId>
-			<artifactId>artemis-odb</artifactId>
-			<version>${artemis.version}</version>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>net.onedaybeard.artemis</groupId>
-				<artifactId>artemis-odb-maven-plugin</artifactId>
-				<version>${artemis.version}</version>
-				<executions>
-					<execution>
-						<goals>
-							<!-- enables @PooledWeaver and @PackedWeaver -->
-							<goal>artemis</goal>
-							
-							<!-- generates the component dependency matrix report -->
-							<goal>matrix</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-```
-
-### Minimal (no weaving/compile-time transformations)
-```xml
-<dependency>
-	<groupId>net.onedaybeard.artemis</groupId>
-	<artifactId>artemis-odb</artifactId>
-	<version>0.7.0</version>
-</dependency>
-```
-
-## Direct Download
-
-Jars can be downloaded manually from the maven repository:
- - **Main library:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.7.0/
- - **[Command-line tool][cli]:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.7.0/
-
-
 ## Benchmarks
 See [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) for benchmarks
 comparing artemis-odb to other ESF:s and earlier artemis-odb versions.
@@ -132,3 +76,28 @@ comparing artemis-odb to other ESF:s and earlier artemis-odb versions.
  [sw-play]: http://flet.github.io/spaceship-warrior-redux/
  [sw-cdm]: http://junkdog.github.io/matrix-sw.html
  [flet]: https://github.com/Flet/ 
+
+### Getting started
+
+#### Maven
+```xml
+<dependency>
+	<groupId>net.onedaybeard.artemis</groupId>
+	<artifactId>artemis-odb</artifactId>
+	<version>0.7.0</version>
+</dependency>
+```
+
+#### Gradle
+```groovy
+  dependencies { compile "net.onedaybeard.artemis:artemis-odb:0.7.0" }
+```
+
+See [[weave automation|Weave-Automation]] for more advanced configurations!
+
+#### Download
+
+Jars can be downloaded manually from the maven repository:
+ - **Main library:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.7.0/
+ - **[Command-line tool][cli]:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.7.0/
+
