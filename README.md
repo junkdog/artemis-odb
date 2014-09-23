@@ -13,19 +13,6 @@ It is actively maintained, and a continuation of the popular [Artemis](http://ga
 
 _For more details, see [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md)_
 
-### Module overview
-#### Required
- - **artemis:** Base library.
-
-#### Optional
- - **artemis-maven:** Maven plugin for generating the [matrix][cdm] and transforming `@PooledWeaver` and `@PackedWeaver` components.
- - **artemis-cli:** Command-line tool version of the maven plugin.
- - **artemis-gwt:** Required when compiling for the web.
-
-#### Other
- - **artemis-weaver:** Transforms `com.artemis.Component` classes when annotated with `@PooledWeaver` or `@PackedWeaver`, see _artemis-maven_.
- - **artemis-test:** Compliance tests.
-
 ## Benchmarks
 See [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) for benchmarks
 comparing artemis-odb to other ESF:s and earlier artemis-odb versions.
@@ -93,7 +80,7 @@ There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - 
   dependencies { compile "net.onedaybeard.artemis:artemis-odb:0.7.0" }
 ```
 
-See [[weave automation|Weave-Automation]] for more advanced configurations!
+See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automation) for more advanced configurations!
 
 #### Download
 
