@@ -80,7 +80,7 @@ There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - 
   dependencies { compile "net.onedaybeard.artemis:artemis-odb:0.7.0" }
 ```
 
-See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automation) for more advanced configurations!
+See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automation) and [module overview](https://github.com/junkdog/artemis-odb/wiki/Module-Overview)
 
 #### Download
 
