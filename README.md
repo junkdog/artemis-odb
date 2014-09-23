@@ -32,12 +32,12 @@ Don't take our word for it, run the benchmarks yourself!
 
 ### Made with artemis-odb
 
-#### Commercial
+#### Commercial games
 
 - [Dog Sled Saga](http://www.dogsledsaga.com/), upcoming "desktop and mobile racing game with a saga of rank climbing, reputation building, team management, and pet loving".
   - [Poloygon piece on Dog Sled Saga](http://www.polygon.com/2013/5/22/4344100/dog-sled-saga).
   
-#### Open source
+#### Open source games
 | game                          | source/binaries                      | [matrix][cdm]     | author                         |
 |-------------------------------|--------------------------------------|-------------------|--------------------------------|
 | [Arktrail][ark]               | [source][ark-src] [play][ark-play]   | N/A               | [@DaanVanYperen][dvy]          |
@@ -79,11 +79,11 @@ Generate dependency matrix of your existing systems, managers and components.
 
 [![Shaman's Weirding Game: Component Dependency Matrix](https://raw.githubusercontent.com/wiki/junkdog/artemis-odb/images/cdm.png)](http://junkdog.github.io/matrix.html)
 
-### Discussion/Forum
+### Getting started
+
+#### Discussion/Forum
 
 There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - in addition to the issues, where hitherto much of the discussion has taken place. The original artemis forum is still around too, though it doesn't see much traffic, nor is it specific to artemis-odb: http://slick.ninjacave.com/forum/viewforum.php?f=28
-
-### Getting started
 
 #### Maven
 ```xml
