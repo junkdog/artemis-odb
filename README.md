@@ -1,22 +1,21 @@
-## Preamble
+## Artemis-odb
 
-This is a [fork](https://code.google.com/p/artemis-framework/) of [Artemis Entity System Framework](http://gamadu.com/artemis/).
+[[Artemis-odb|About]] is a [high performance](https://github.com/junkdog/entity-system-benchmarks) java based [[Entity-Component-System|Introduction-to-Entity-Systems]] framework.
+
+It is actively maintained, and a continuation of the popular [Artemis](http://gamadu.com/artemis/).
+
+### Highlights
+- Full GWT support.
+- High performance, GC-friendly, [[less boilerplate|@Wire]]!
+- [[packed|Packed-Weaver]] and [[pooled|@PooledWeaver]] components, leveraged by [[bytecode injection|Bytecode weaving]].
+- Convenient [[dependency matrices|Component Dependency Matrix]] for your components and systems.
+   [![Shaman's Weirding Game: Component Dependency Matrix](https://raw.githubusercontent.com/wiki/junkdog/artemis-odb/images/cdm.png)](http://junkdog.github.io/matrix.html)
+
+_For more details, see [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md)_
 
 ## Discussion/Forum
 
 There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - in addition to the issues, where hitherto much of the discussion has taken place. The original artemis forum is still around too, though it doesn't see much traffic, nor is it specific to artemis-odb: http://slick.ninjacave.com/forum/viewforum.php?f=28
-
-## What's changed
-
-_For more detailed changes, see [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md)_
-
- - Full GWT support.
- - New component types: [packed](https://github.com/junkdog/artemis-odb/wiki/Packed-Weaver) and pooled, leveraged by bytecode injection.
- - Better performance, more GC-friendly, less boilerplate.
- - Generate [Component Dependency Matrices][cdm] from existing classes.
-   [![Shaman's Weirding Game: Component Dependency Matrix](https://raw.githubusercontent.com/wiki/junkdog/artemis-odb/images/cdm.png)](http://junkdog.github.io/matrix.html)
-
-
 
 ### Module overview
 #### Required
