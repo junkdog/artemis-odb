@@ -12,7 +12,7 @@ It is actively maintained, and a continuation of the popular [Artemis](http://ga
 
 _For more details, see [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md)_
 
-## Benchmarks
+### Benchmarks
 Artemis-ODB is one of the fastest incarnations of Artemis. 
 
 Operations/second. Higher is better.
@@ -30,20 +30,14 @@ Don't take our word for it, run the benchmarks yourself!
  [ir16k]: http://junkdog.github.io/images/ecs-bench/insert_remove-16384.png
  [ir65k]: http://junkdog.github.io/images/ecs-bench/insert_remove-65536.png 
 
-## Dependency Matrix
+### Made with artemis-odb
 
-Generate dependency matrix of your existing systems, managers and components.
-
-[![Shaman's Weirding Game: Component Dependency Matrix](https://raw.githubusercontent.com/wiki/junkdog/artemis-odb/images/cdm.png)](http://junkdog.github.io/matrix.html)
-
-## Made with artemis-odb
-
-### Commercial
+#### Commercial
 
 - [Dog Sled Saga](http://www.dogsledsaga.com/), upcoming "desktop and mobile racing game with a saga of rank climbing, reputation building, team management, and pet loving".
   - [Poloygon piece on Dog Sled Saga](http://www.polygon.com/2013/5/22/4344100/dog-sled-saga).
   
-### Open source
+#### Open source
 | game                          | source/binaries                      | [matrix][cdm]     | author                         |
 |-------------------------------|--------------------------------------|-------------------|--------------------------------|
 | [Arktrail][ark]               | [source][ark-src] [play][ark-play]   | N/A               | [@DaanVanYperen][dvy]          |
@@ -78,6 +72,12 @@ Generate dependency matrix of your existing systems, managers and components.
  [sw-play]: http://flet.github.io/spaceship-warrior-redux/
  [sw-cdm]: http://junkdog.github.io/matrix-sw.html
  [flet]: https://github.com/Flet/ 
+
+### Dependency Matrix
+
+Generate dependency matrix of your existing systems, managers and components.
+
+[![Shaman's Weirding Game: Component Dependency Matrix](https://raw.githubusercontent.com/wiki/junkdog/artemis-odb/images/cdm.png)](http://junkdog.github.io/matrix.html)
 
 ### Discussion/Forum
 
