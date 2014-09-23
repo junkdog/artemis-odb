@@ -94,15 +94,15 @@ There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - 
 </dependency>
 ```
 
+See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automation) and [module overview](https://github.com/junkdog/artemis-odb/wiki/Module-Overview)
+
 #### Gradle
 ```groovy
   dependencies { compile "net.onedaybeard.artemis:artemis-odb:0.7.0" }
 ```
 
-See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automation) and [module overview](https://github.com/junkdog/artemis-odb/wiki/Module-Overview)
-
 #### Manual Download
 
- - **Main library:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.7.0/
- - **Command-line tool[cli]:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.7.0/
+ - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.7.0/) 
+ - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.7.0/)
 
