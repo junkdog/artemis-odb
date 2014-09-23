@@ -1,14 +1,14 @@
 ## Artemis-odb
 
-[[Artemis-odb|About]] is a [high performance](https://github.com/junkdog/entity-system-benchmarks) java based [[Entity-Component-System|Introduction-to-Entity-Systems]] framework.
+[Artemis-odb](https://github.com/junkdog/artemis-odb/wiki/About) is a [high performance](https://github.com/junkdog/entity-system-benchmarks) java based [Entity-Component-System](https://github.com/junkdog/artemis-odb/wiki/Introduction-to-Entity-Systems) framework.
 
 It is actively maintained, and a continuation of the popular [Artemis](http://gamadu.com/artemis/).
 
 ### Highlights
 - Full GWT support.
-- High performance, GC-friendly, [[less boilerplate|@Wire]]!
-- [[packed|Packed-Weaver]] and [[pooled|@PooledWeaver]] components, leveraged by [[bytecode injection|Bytecode weaving]].
-- Convenient [[dependency matrices|Component Dependency Matrix]] for your components and systems.
+- High performance, GC-friendly, [less boilerplate](https://github.com/junkdog/artemis-odb/wiki/@Wire)!
+- [packed](https://github.com/junkdog/artemis-odb/wiki/Packed-Weaver) and [pooled](https://github.com/junkdog/artemis-odb/wiki/@PooledWeaver) components, leveraged by [bytecode injection](https://github.com/junkdog/artemis-odb/wiki/Bytecode weaving).
+- Convenient [dependency matrices](https://github.com/junkdog/artemis-odb/wiki/Component Dependency Matrix) for your components and systems.
    [![Shaman's Weirding Game: Component Dependency Matrix](https://raw.githubusercontent.com/wiki/junkdog/artemis-odb/images/cdm.png)](http://junkdog.github.io/matrix.html)
 
 _For more details, see [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md)_
@@ -96,9 +96,8 @@ There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - 
 
 See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automation) and [module overview](https://github.com/junkdog/artemis-odb/wiki/Module-Overview)
 
-#### Download
+#### Manual Download
 
-Jars can be downloaded manually from the maven repository:
  - **Main library:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.7.0/
- - **[Command-line tool][cli]:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.7.0/
+ - **Command-line tool[cli]:** http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.7.0/
 
