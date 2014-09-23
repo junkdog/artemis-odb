@@ -14,10 +14,30 @@ It is actively maintained, and a continuation of the popular [Artemis](http://ga
 _For more details, see [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md)_
 
 ## Benchmarks
-See [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) for benchmarks
-comparing artemis-odb to other ESF:s and earlier artemis-odb versions.
+Artemis-ODB is one of the fastest incarnations of Artemis. 
 
-## Games made with artemis-odb
+Operations/second. Higher is better.
+![it16k][it16k] ![ir16k][ir16k]
+
+See [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) for more benchmarks.
+Don't take our word for it, run the benchmarks yourself!
+
+ [it1k]: http://junkdog.github.io/images/ecs-bench/iteration-1024.png
+ [it4k]: http://junkdog.github.io/images/ecs-bench/iteration-4096.png
+ [it16k]: http://junkdog.github.io/images/ecs-bench/iteration-16384.png
+ [it65k]: http://junkdog.github.io/images/ecs-bench/iteration-65536.png
+ [ir1k]: http://junkdog.github.io/images/ecs-bench/insert_remove-1024.png
+ [ir4k]: http://junkdog.github.io/images/ecs-bench/insert_remove-4096.png
+ [ir16k]: http://junkdog.github.io/images/ecs-bench/insert_remove-16384.png
+ [ir65k]: http://junkdog.github.io/images/ecs-bench/insert_remove-65536.png 
+
+## Made with artemis-odb
+
+### Commercial
+
+- [Dog Sled Saga](http://www.dogsledsaga.com/), upcoming "desktop and mobile racing game with a saga of rank climbing, reputation building, team management, and pet loving".
+  - [Poloygon piece on Dog Sled Saga](http://www.polygon.com/2013/5/22/4344100/dog-sled-saga).
+  
 ### Open source
 | game                          | source/binaries                      | [matrix][cdm]     | author                         |
 |-------------------------------|--------------------------------------|-------------------|--------------------------------|
@@ -27,12 +47,6 @@ comparing artemis-odb to other ESF:s and earlier artemis-odb versions.
 | [Ned et les Maki][ned]        | [source][ned-src]                    | N/A               | [Geeky Gobling Prod][ned-auth] |
 | [Naturally Selected 2D][ns2d] | [source][ns2d-src] [play][ns2d-play] | [cdm][ns2d-cdm]   | [@DaanVanYperen][dvy]          |
 | [The Underkeep][tu]           | [source][tu-src] [play][tu-play]     | [cdm][tu-cdm]     | [@DaanVanYperen][dvy]          |
-
-
-### Commercial
-
-- [Dog Sled Saga](http://www.dogsledsaga.com/), upcoming "desktop and mobile racing game with a saga of rank climbing, reputation building, team management, and pet loving".
-  - [Poloygon piece on Dog Sled Saga](http://www.polygon.com/2013/5/22/4344100/dog-sled-saga).
 
  [ark]: http://www.ludumdare.com/compo/ludum-dare-30/?action=preview&uid=22396
  [ark-src]: https://github.com/DaanVanYperen/arktrail
