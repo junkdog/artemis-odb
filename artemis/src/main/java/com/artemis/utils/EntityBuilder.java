@@ -1,11 +1,10 @@
 package com.artemis.utils;
 
-import com.artemis.Component;
-import com.artemis.Entity;
-import com.artemis.EntityEdit;
-import com.artemis.World;
-import com.artemis.managers.GroupManager;
-import com.artemis.managers.TagManager;
+import com.artemis.*;
+import com.artemis.managers.*;
+import com.artemis.utils.reflect.ClassReflection;
+
+import java.util.UUID;
 
 /**
  * Non-reusable entity creation helper for rapid prototyping.
@@ -13,6 +12,7 @@ import com.artemis.managers.TagManager;
  * Example: new Builder(world)
  * .with(Pos.class, Anim.class)
  * .tag("boss")
+ * .player("player1")
  * .group("enemies")
  * .build();
  *
@@ -28,6 +28,12 @@ public class EntityBuilder {
 	public EntityBuilder(World world) {
 		this.world = world;
 		edit = world.createEntity().edit();
+	}
+
+	/** Begin building new entity based on archetype.*/
+	public EntityBuilder(World world, ArchetypeBuilder.Archetype archetype) {
+		this.world = world;
+		edit = world.createEntity(archetype).edit();
 	}
 
 	/** Add component to entity. */
@@ -126,36 +132,54 @@ public class EntityBuilder {
 		return this;
 	}
 
+	/** Set UUID of entity */
+	public EntityBuilder UUID(UUID uuid)
+	{
+		resolveManager(UuidEntityManager.class).setUuid(edit.getEntity(), uuid);
+		return this;
+	}
+
+	/**
+	 * Register entity with owning player.
+	 * An entity can only belong to a single player at a time.
+	 * Requires registered PlayerManager.
+	 */
+	public EntityBuilder player(String player) {
+		resolveManager(PlayerManager.class).setPlayer(edit.getEntity(), player);
+		return this;
+	}
+
 	/** Register entity with tag. Requires registered TagManager */
 	public EntityBuilder tag(String tag) {
-		TagManager tagManager = world.getManager(TagManager.class);
-		if ( tagManager == null )
-			throw new RuntimeException("Register TagManager with your artemis world.");
-		
-		tagManager.register(tag, edit.getEntity());
+		resolveManager(TagManager.class).register(tag, edit.getEntity());
 		return this;
 	}
 
 	/** Register entity with group. Requires registered TagManager */
 	public EntityBuilder group(String group) {
-		GroupManager groupManager = world.getManager(GroupManager.class);
-		if ( groupManager == null )
-			throw new RuntimeException("Register GroupManager with your artemis world.");
-		
-		groupManager.add(edit.getEntity(), group);
+		resolveManager(GroupManager.class).add(edit.getEntity(), group);
 		return this;
 	}
 	
 	/** Register entity with multiple groups. Requires registered TagManager */
 	public EntityBuilder groups(String... groups) {
-		for (int i = 0; groups.length > i; i++)
+		for (int i = 0; groups.length > i; i++) {
 			group(groups[i]);
-		
+		}
 		return this;
 	}
 
 	/** Assemble, add to world */
 	public Entity build() {
 		return edit.getEntity();
+	}
+
+	/** Fetch manager or throw RuntimeException if not registered. */
+	protected <T extends Manager> T resolveManager(Class<T> type) {
+		final T teamManager = world.getManager(type);
+		if ( teamManager == null ) {
+			throw new RuntimeException("Register " + ClassReflection.getSimpleName(type) + " with your artemis world.");
+		}
+		return teamManager;
 	}
 }
