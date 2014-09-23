@@ -35,7 +35,7 @@ Don't take our word for it, run the benchmarks yourself!
 #### Commercial games
 
 - [Dog Sled Saga](http://www.dogsledsaga.com/), upcoming "desktop and mobile racing game with a saga of rank climbing, reputation building, team management, and pet loving".
-  - [Poloygon piece on Dog Sled Saga](http://www.polygon.com/2013/5/22/4344100/dog-sled-saga).
+  - [Polygon piece on Dog Sled Saga](http://www.polygon.com/2013/5/22/4344100/dog-sled-saga).
   
 #### Open source games
 | game                          | source/binaries                      | [matrix][cdm]     | author                         |
