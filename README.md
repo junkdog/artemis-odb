@@ -13,10 +13,6 @@ It is actively maintained, and a continuation of the popular [Artemis](http://ga
 
 _For more details, see [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md)_
 
-## Discussion/Forum
-
-There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - in addition to the issues, where hitherto much of the discussion has taken place. The original artemis forum is still around too, though it doesn't see much traffic, nor is it specific to artemis-odb: http://slick.ninjacave.com/forum/viewforum.php?f=28
-
 ### Module overview
 #### Required
  - **artemis:** Base library.
@@ -76,6 +72,10 @@ comparing artemis-odb to other ESF:s and earlier artemis-odb versions.
  [sw-play]: http://flet.github.io/spaceship-warrior-redux/
  [sw-cdm]: http://junkdog.github.io/matrix-sw.html
  [flet]: https://github.com/Flet/ 
+
+### Discussion/Forum
+
+There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - in addition to the issues, where hitherto much of the discussion has taken place. The original artemis forum is still around too, though it doesn't see much traffic, nor is it specific to artemis-odb: http://slick.ninjacave.com/forum/viewforum.php?f=28
 
 ### Getting started
 
