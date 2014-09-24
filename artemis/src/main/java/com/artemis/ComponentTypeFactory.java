@@ -71,12 +71,10 @@ public class ComponentTypeFactory {
 	}
 	
 	protected Taxonomy getTaxonomy(int index) {
-		ComponentType type = types.get(index);
-		return type != null ? type.getTaxonomy() : Taxonomy.BASIC;
+		return types.get(index).getTaxonomy();
 	}
 	
 	protected boolean isPackedComponent(int index) {
-		ComponentType type = types.get(index);
-		return type != null ? type.isPackedComponent() : false;
+		return types.get(index).isPackedComponent();
 	}
 }

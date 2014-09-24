@@ -95,8 +95,10 @@ public final class EntityEdit {
 	 * @return this EntityEdit for chaining
 	 */
 	public EntityEdit remove(ComponentType type) {
-		world.getComponentManager().removeComponent(entity, type);
-		componentBits.clear(type.getIndex());
+		if (componentBits.get(type.getIndex())) {
+			world.getComponentManager().removeComponent(entity, type);
+			componentBits.clear(type.getIndex());
+		}
 		return this;
 	}
 	

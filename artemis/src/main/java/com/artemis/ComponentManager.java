@@ -134,7 +134,7 @@ public class ComponentManager extends Manager {
 	 * @param e
 	 *			the entity to remove components from
 	 */
-	private void removeComponentsOfEntity(Entity e) {
+	private void removeComponents(Entity e) {
 		BitSet componentBits = e.getComponentBits();
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
 			switch (typeFactory.getTaxonomy(i)) {
@@ -155,7 +155,6 @@ public class ComponentManager extends Manager {
 					throw new InvalidComponentException(Component.class, " unknown component type: " + typeFactory.getTaxonomy(i));
 			}
 		}
-//		componentBits.clear();
 	}
 	
 	@Override
@@ -227,25 +226,23 @@ public class ComponentManager extends Manager {
 	 */
 	protected void removeComponent(Entity e, ComponentType type) {
 		int index = type.getIndex();
-		if(e.getComponentBits().get(index)) {
-			switch (type.getTaxonomy()) {
-				case BASIC:
-					componentsByType.get(index).set(e.getId(), null);
-					break;
-				case POOLED:
-					Component pooled = componentsByType.get(index).get(e.getId());
-					pooledComponents.free((PooledComponent)pooled);
-					componentsByType.get(index).set(e.getId(), null);
-					break;
-				case PACKED:
-					PackedComponent pc = packedComponents.get(index);
-					pc.forEntity(e);
-					pc.reset();
-					getPackedComponentOwners(type).clear(e.getId());
-					break;
-				default:
-					throw new InvalidComponentException(type.getType(), " unknown component type: " + type.getTaxonomy());
-			}
+		switch (type.getTaxonomy()) {
+			case BASIC:
+				componentsByType.get(index).set(e.getId(), null);
+				break;
+			case POOLED:
+				Component pooled = componentsByType.get(index).get(e.getId());
+				pooledComponents.free((PooledComponent)pooled);
+				componentsByType.get(index).set(e.getId(), null);
+				break;
+			case PACKED:
+				PackedComponent pc = packedComponents.get(index);
+				pc.forEntity(e);
+				pc.reset();
+				getPackedComponentOwners(type).clear(e.getId());
+				break;
+			default:
+				throw new InvalidComponentException(type.getType(), " unknown component type: " + type.getTaxonomy());
 		}
 	}
 
@@ -335,7 +332,7 @@ public class ComponentManager extends Manager {
 		if(s > 0) {
 			Object[] data = deleted.getData();
 			for(int i = 0; s > i; i++) {
-				removeComponentsOfEntity((Entity)data[i]);
+				removeComponents((Entity)data[i]);
 				data[i] = null;
 			}
 			deleted.setSize(0);
