@@ -1,9 +1,9 @@
 # Change Log
 
 
-## Version: 0.7.1-SNAPSHOT
+## Version: 0.7.1 - 2014-09-24
 - Gradle plugin for bytecode weaving. See [Weave Automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automation)
-
+- Faster removal of components.
 
 ## Version: 0.7.0 - 2014-09-21
 
