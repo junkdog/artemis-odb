@@ -1,5 +1,7 @@
 # Change Log
 
+## Version: 0.7.2-SNAPSHOT
+- ArchetypeBuilder constructor accepts null passed as parent.
 
 ## Version: 0.7.1 - 2014-09-24
 - Gradle plugin for bytecode weaving. See [Weave Automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automation)

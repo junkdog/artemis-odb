@@ -26,6 +26,9 @@ public class ArchetypeBuilder {
 	 */
 	public ArchetypeBuilder(Archetype parent) {
 		classes = new Bag<Class<? extends Component>>();
+		if (parent == null)
+			return;
+		
 		for (int i = 0; parent.types.length > i; i++)
 			classes.add(parent.types[i].getType());
 	}
@@ -34,7 +37,7 @@ public class ArchetypeBuilder {
 	 * Constructs an empty archetype builder.
 	 */
 	public ArchetypeBuilder() {
-		classes = new Bag<Class<? extends Component>>();
+		this(null);
 	}
 
 	/**
