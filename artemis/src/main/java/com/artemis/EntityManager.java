@@ -2,7 +2,6 @@ package com.artemis;
 
 import java.util.BitSet;
 
-import com.artemis.ArchetypeBuilder.Archetype;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 

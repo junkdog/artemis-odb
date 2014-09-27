@@ -75,6 +75,11 @@ public class ArchetypeBuilder {
 		EntityManager em = world.getEntityManager();
 		return new Archetype(types, em.compositionIdentity(bitset(types)));
 	}
+	
+	public <T extends EntityFactory<T>> T buildTemplate(World world, Class<T> factory) {
+//		return world.createEntity(factory);
+		throw new RuntimeException("not impl");
+	}
 
 	/** generate bitset mask of types. */
 	private static BitSet bitset(ComponentType[] types) {
@@ -97,25 +102,5 @@ public class ArchetypeBuilder {
 			types[i] = tf.getTypeFor(classes.get(i));
 		
 		return types;
-	}
-
-	/**
-	 * Provides a blueprint for new entities, offering greatly
-	 * improved insertion performance for systems and managers.
-	 * </p>
-	 * Instance entities using {@link com.artemis.World#createEntity(com.artemis.ArchetypeBuilder.Archetype)}
-	 */
-	public final static class Archetype {
-		final ComponentType[] types;
-		final int compositionId;
-
-		/**
-		 * @param types Desired composition of derived components.
-		 * @param compositionId uniquely identifies component composition.
-		 */
-		public Archetype(ComponentType[] types, int compositionId) {
-			this.types = types;
-			this.compositionId = compositionId;
-		}
 	}
 }

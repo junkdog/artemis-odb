@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.artemis.ArchetypeBuilder.Archetype;
 import com.artemis.annotations.Mapper;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.UuidEntityManager;
@@ -399,6 +398,16 @@ public class World {
 		cm.addComponents(e, archetype);
 		added.add(e);
 		return e;
+	}
+	
+	/**
+	 * Create and return an {@link EntityEdit} wrapping a new or reused entity instance.
+	 * Entity is automatically added to the world.
+	 *
+	 * @return entity
+	 */
+	public Entity createEntity(EntityFactory<?> factory) {
+		throw new RuntimeException("not impl");
 	}
 
 	/**
