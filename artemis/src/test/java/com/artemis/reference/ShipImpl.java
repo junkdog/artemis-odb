@@ -92,21 +92,21 @@ public class ShipImpl implements Ship {
 	}
 
 	@Override
-	public EntityFactory<Ship> tag(String tag) {
+	public Ship tag(String tag) {
 		_tag = true;
 		this._tag_tag = tag;
 		return this;
 	}
 
 	@Override
-	public EntityFactory<Ship> group(String group) {
+	public Ship group(String group) {
 		_group = true;
 		_groups.add(group);
 		return this;
 	}
 
 	@Override
-	public EntityFactory<Ship> group(String groupA, String... groups) {
+	public Ship group(String groupA, String... groups) {
 		_groups.add(groupA);
 		for (int i = 0; groups.length > i; i++) {
 			_groups.add(groups[i]);
@@ -115,7 +115,7 @@ public class ShipImpl implements Ship {
 	}
 
 	@Override
-	public EntityFactory<Ship> group(String groupA, String groupB, String... groups) {
+	public Ship group(String groupA, String groupB, String... groups) {
 		_group = true;
 		_groups.add(groupA);
 		_groups.add(groupB);
