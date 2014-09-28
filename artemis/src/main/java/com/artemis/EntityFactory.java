@@ -1,5 +1,6 @@
 package com.artemis;
 
+
 public interface EntityFactory<T> {
 	T copy();
 	T tag(String tag);
