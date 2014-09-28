@@ -52,6 +52,24 @@ public class ArchetypeBuilder {
 		}
 		return this;
 	}
+	
+	/**
+	 * Ensure this builder includes the specified component types.
+	 *
+	 * @param type
+	 * @return This instance for chaining.
+	 */
+	public ArchetypeBuilder add(Class<? extends Component>... types) {
+		for (int i = 0; types.length > i; i++) {
+			Class<? extends Component> type = types[i];
+			
+			if (!classes.contains(type)) {
+				classes.add(type);
+			}
+		}
+		
+		return this;
+	}
 
 	/**
 	 * Remove the specified component from this builder, if it is present (optional operation).
@@ -61,6 +79,20 @@ public class ArchetypeBuilder {
 	 */
 	public ArchetypeBuilder remove(Class<? extends Component> type) {
 		classes.remove(type);
+		return this;
+	}
+	
+	/**
+	 * Remove the specified component from this builder, if it is present (optional operation).
+	 *
+	 * @param type
+	 * @return This instance for chaining.
+	 */
+	public ArchetypeBuilder remove(Class<? extends Component>... types) {
+		for (int i = 0; types.length > i; i++) {
+			classes.remove(types[i]);
+		}
+		
 		return this;
 	}
 
