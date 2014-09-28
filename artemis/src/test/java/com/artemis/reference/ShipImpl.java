@@ -86,6 +86,8 @@ public class ShipImpl implements Ship {
 		copy.archetype = archetype;
 		copy._hitPoints_hitpoints = _hitPoints_hitpoints;
 		
+		world.inject(copy);
+		
 		return copy;
 	}
 

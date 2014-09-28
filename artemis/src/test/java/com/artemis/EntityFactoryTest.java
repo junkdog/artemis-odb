@@ -33,8 +33,6 @@ public class EntityFactoryTest {
 		Entity e = shipFactory.create();
 		Entity e2 = shipFactory.create();
 		
-		w.process();
-		
 		// 1 is an entity with zero components.
 		assertEquals(2, e.getCompositionId());
 		assertEquals(2, e2.getCompositionId());
@@ -56,12 +54,37 @@ public class EntityFactoryTest {
 		Entity e1 = shipFactory.size(10, 20).create();
 		Entity e2 = shipFactory.create();
 		
-		
 		assertEquals(10, e1.getComponent(Size.class).width, 0.001f);
 		assertEquals(20, e1.getComponent(Size.class).height, 0.001f);
 		assertEquals(100, e1.getComponent(HitPoints.class).hitpoints);
 		assertEquals(0, e2.getComponent(Size.class).width, 0.001f);
 		assertEquals(0, e2.getComponent(Size.class).height, 0.001f);
 		assertEquals(100, e2.getComponent(HitPoints.class).hitpoints);
+	}
+	
+	@Test
+	public void test_update_sticky() {
+		World w = new World();
+		w.initialize();
+		
+		Ship shipFactory = w.createFactory(Ship.class);
+		Entity e1 = shipFactory.hitPoints(100).create();
+		Entity e2 = shipFactory.copy().hitPoints(200).create();
+		
+		assertEquals(100, e1.getComponent(HitPoints.class).hitpoints);
+		assertEquals(200, e2.getComponent(HitPoints.class).hitpoints);
+	}
+	
+	@Test(expected=RuntimeException.class)
+	public void test_fail_on_sticky_update_after_creation() {
+		World w = new World();
+		w.initialize();
+		
+		Ship shipFactory = w.createFactory(Ship.class);
+		assertNotNull(shipFactory);
+		assertEquals(ShipImpl.class, shipFactory.getClass());
+		
+		shipFactory.hitPoints(100).create();
+		shipFactory.hitPoints(200).create();
 	}
 }
