@@ -27,5 +27,26 @@ public class EntityFactoryTest {
 		Ship shipFactory = w.createFactory(Ship.class);
 		assertNotNull(shipFactory);
 		assertEquals(ShipImpl.class, shipFactory.getClass());
+		
+		Entity e = shipFactory.create();
+		Entity e2 = shipFactory.create();
+		
+		w.process();
+		
+		// 1 is 
+		assertEquals(2, e.getCompositionId());
+		assertEquals(2, e2.getCompositionId());
+		
+		assertNotEquals(e.getId(), e2.getId());
+	}
+	
+	@Test
+	public void test_sticky() {
+		World w = new World();
+		w.initialize();
+		
+		Ship shipFactory = w.createFactory(Ship.class);
+		assertNotNull(shipFactory);
+		assertEquals(ShipImpl.class, shipFactory.getClass());
 	}
 }
