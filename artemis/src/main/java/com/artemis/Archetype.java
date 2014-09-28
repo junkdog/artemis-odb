@@ -18,8 +18,4 @@ public final class Archetype {
 		this.types = types;
 		this.compositionId = compositionId;
 	}
-	
-	public static <T extends EntityFactory<T>> T of(World world, Class<T> factory) {
-		throw new RuntimeException("not impl");
-	}
 }

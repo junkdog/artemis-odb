@@ -14,6 +14,7 @@ import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.reflect.ClassReflection;
+import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
 
@@ -98,7 +99,11 @@ public class World {
 	private int maxRebuiltIndicesPerTick;
 
 	final EntityEditPool editPool = new EntityEditPool(this);
-
+	
+	final EntityTemplateFactory entityFactory = new EntityTemplateFactory(this);
+	
+	private boolean initialized;
+	
 	/**
 	 * Creates a new world.
 	 * <p>
@@ -162,6 +167,7 @@ public class World {
 	 * added.
 	 */
 	public void initialize() {
+		initialized = true;
 		injector.update();
 		for (int i = 0; i < managersBag.size(); i++) {
 			Manager manager = managersBag.get(i);
@@ -186,10 +192,13 @@ public class World {
 	 * @param target Object to inject into.
 	 */
 	public void inject(Object target) {
-		if (injector == null)
-			throw new MundaneWireException("World#initialize() has not been called.");
-		
+		assertInitialized();
 		injector.inject(target);
+	}
+
+	private void assertInitialized() {
+		if (!initialized)
+			throw new MundaneWireException("World#initialize() has not yet been called.");
 	}
 
 	/**
@@ -219,6 +228,24 @@ public class World {
 
 		if (exceptions.size() > 0)
 			throw new ArtemisMultiException(exceptions);
+	}
+	
+	<T extends EntityFactory<T>> T createFactory(Class<T> factory) {
+		if (!factory.isInterface())
+			throw new RuntimeException("Expected interface for type: " + factory);
+		
+		assertInitialized();
+
+		String impl = factory.getCanonicalName() + "Impl";
+		try {
+			Class<?> implClass = ClassReflection.forName(impl);
+			Constructor constructor = ClassReflection.getConstructor(implClass, World.class);
+			@SuppressWarnings("unchecked")
+			T instance = (T) constructor.newInstance(this);
+			return instance;
+		} catch (ReflectionException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -400,16 +427,6 @@ public class World {
 		return e;
 	}
 	
-	/**
-	 * Create and return an {@link EntityEdit} wrapping a new or reused entity instance.
-	 * Entity is automatically added to the world.
-	 *
-	 * @return entity
-	 */
-	public Entity createEntity(EntityFactory<?> factory) {
-		throw new RuntimeException("not impl");
-	}
-
 	/**
 	 * Create and return a new or reused entity instance.
 	 * <p>

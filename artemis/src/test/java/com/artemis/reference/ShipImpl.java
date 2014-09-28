@@ -17,7 +17,7 @@ import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
 import com.artemis.utils.Bag;
 
-@Wire
+@Wire(failOnNull=false)
 public class ShipImpl implements Ship {
 	
 	// default fields
