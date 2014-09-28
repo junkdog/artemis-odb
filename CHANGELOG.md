@@ -1,6 +1,9 @@
 # Change Log
 
 ## Version: 0.7.2-SNAPSHOT
+- **MINOR BREAKING CHANGES**
+  - Archetype moved to `com.artemis` package.
+
 - ArchetypeBuilder constructor accepts null passed as parent.
 
 ## Version: 0.7.1 - 2014-09-24

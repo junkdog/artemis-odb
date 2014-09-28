@@ -10,5 +10,5 @@ import com.artemis.Component;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface CRef {
-	Class<Component>[] value();
+	Class<? extends Component>[] value();
 }
