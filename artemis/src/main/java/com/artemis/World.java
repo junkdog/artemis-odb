@@ -100,8 +100,6 @@ public class World {
 
 	final EntityEditPool editPool = new EntityEditPool(this);
 	
-	final EntityTemplateFactory entityFactory = new EntityTemplateFactory(this);
-	
 	private boolean initialized;
 	
 	/**
