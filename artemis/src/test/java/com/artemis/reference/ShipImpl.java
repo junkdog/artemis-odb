@@ -201,6 +201,7 @@ public class ShipImpl implements Ship {
 
 	@Override
 	public Ship size(float width, float height) {
+		_size = true;
 		_size_width = width;
 		_size_height = height;
 		return this;

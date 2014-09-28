@@ -230,7 +230,7 @@ public class World {
 	
 	<T extends EntityFactory<T>> T createFactory(Class<T> factory) {
 		if (!factory.isInterface())
-			throw new RuntimeException("Expected interface for type: " + factory);
+			throw new MundaneWireException("Expected interface for type: " + factory);
 		
 		assertInitialized();
 

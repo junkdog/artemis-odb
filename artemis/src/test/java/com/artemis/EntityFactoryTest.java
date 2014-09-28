@@ -1,12 +1,14 @@
 package com.artemis;
 
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import com.artemis.component.ComponentX;
-import com.artemis.component.ComponentY;
+import com.artemis.ParamArchTest.HitPoints;
+import com.artemis.ParamArchTest.Size;
 import com.artemis.reference.Ship;
 import com.artemis.reference.ShipImpl;
 
@@ -33,7 +35,7 @@ public class EntityFactoryTest {
 		
 		w.process();
 		
-		// 1 is 
+		// 1 is an entity with zero components.
 		assertEquals(2, e.getCompositionId());
 		assertEquals(2, e2.getCompositionId());
 		
@@ -41,12 +43,25 @@ public class EntityFactoryTest {
 	}
 	
 	@Test
-	public void test_sticky() {
+	public void test_sticky_and_per_instance() {
 		World w = new World();
 		w.initialize();
 		
 		Ship shipFactory = w.createFactory(Ship.class);
 		assertNotNull(shipFactory);
 		assertEquals(ShipImpl.class, shipFactory.getClass());
+		
+		shipFactory.hitPoints(100);
+		
+		Entity e1 = shipFactory.size(10, 20).create();
+		Entity e2 = shipFactory.create();
+		
+		
+		assertEquals(10, e1.getComponent(Size.class).width, 0.001f);
+		assertEquals(20, e1.getComponent(Size.class).height, 0.001f);
+		assertEquals(100, e1.getComponent(HitPoints.class).hitpoints);
+		assertEquals(0, e2.getComponent(Size.class).width, 0.001f);
+		assertEquals(0, e2.getComponent(Size.class).height, 0.001f);
+		assertEquals(100, e2.getComponent(HitPoints.class).hitpoints);
 	}
 }
