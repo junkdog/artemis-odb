@@ -87,4 +87,14 @@ public class EntityFactoryTest {
 		shipFactory.hitPoints(100).create();
 		shipFactory.hitPoints(200).create();
 	}
+	
+	@Test
+	public void test_fluent_api_test() {
+		World w = new World();
+		w.initialize();
+		
+		Ship fac = w.createFactory(Ship.class);
+		fac.hitPoints(20).tag("hello").size(20, 10);
+		fac.hitPoints(20).group("hello").size(20, 10).tag("hello");
+	}
 }

@@ -76,11 +76,6 @@ public class ArchetypeBuilder {
 		return new Archetype(types, em.compositionIdentity(bitset(types)));
 	}
 	
-	public <T extends EntityFactory<T>> T buildTemplate(World world, Class<T> factory) {
-//		return world.createEntity(factory);
-		throw new RuntimeException("not impl");
-	}
-
 	/** generate bitset mask of types. */
 	private static BitSet bitset(ComponentType[] types) {
 		BitSet bs = new BitSet();
