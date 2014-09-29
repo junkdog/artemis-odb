@@ -35,12 +35,16 @@ public abstract class IntervalEntitySystem extends EntitySystem {
 
 	@Override
 	protected boolean checkProcessing() {
-		acc += world.getDelta();
+		acc += getTimeDelta();
 		if(acc >= interval) {
 			acc -= interval;
 			return true;
 		}
 		return false;
+	}
+	
+	protected float getTimeDelta() {
+		return world.getDelta();
 	}
 
 }

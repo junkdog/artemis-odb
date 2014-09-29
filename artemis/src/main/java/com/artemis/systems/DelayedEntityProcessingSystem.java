@@ -97,7 +97,7 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	@Override
 	protected final boolean checkProcessing() {
 		if(running) {
-			acc += world.getDelta();
+			acc += getTimeDelta();
 			
 			if(acc >= delay) {
 				return true;
@@ -106,6 +106,12 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 		return false;
 	}
 	
+	/**
+	 * Overridable method to provide custom time delta.
+	 */
+	protected float getTimeDelta() {
+		return world.getDelta();
+	}
 	
 	/**
 	 * Process a entity this system is interested in.
