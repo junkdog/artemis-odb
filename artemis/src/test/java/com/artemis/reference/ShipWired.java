@@ -9,13 +9,13 @@ import com.artemis.ParamArchTest.Velocity;
 import com.artemis.annotations.CRef;
 import com.artemis.annotations.Sticky;
 
-@CRef({Sprite.class, Cullible.class})
-public interface Ship extends EntityFactory<Ship> {
+@CRef({Sprite.class, Cullible.class, Position.class, Velocity.class, Asset.class, Size.class, HitPoints.class})
+public interface ShipWired extends EntityFactory<ShipWired> {
 	// method name maps Position
-	@CRef(Position.class) Ship position(float x, float y);
+	ShipWired position(float x, float y);
 	// parameter names must match field or setter name
-	@CRef(Velocity.class) Ship velocity(float x, float y);
-	@CRef(Asset.class) Ship asset(String path);
-	@CRef(Size.class) Ship size(float width, float height);
-	@CRef(HitPoints.class)@Sticky Ship hitPoints(int current);
+	ShipWired velocity(float x, float y);
+	ShipWired asset(String path);
+	ShipWired size(float width, float height);
+	@Sticky ShipWired hitPoints(int current);
 }

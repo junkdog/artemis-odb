@@ -28,7 +28,10 @@ public class EntityFactoryProcessor extends AbstractProcessor {
 		for (Iterator<? extends TypeElement> iterator = types.iterator(); iterator.hasNext(); ) {
 			factoryTypes.addAll(resolveTypes(roundEnv.getElementsAnnotatedWith(iterator.next())));
 		}
-		System.out.println("FOUND classes :" + factoryTypes);
+		for (TypeElement factory : factoryTypes) {
+			FactoryModel fm = new FactoryModel(factory, processingEnv);
+			System.out.println(fm);
+		}
 		
 		return false;
 	}

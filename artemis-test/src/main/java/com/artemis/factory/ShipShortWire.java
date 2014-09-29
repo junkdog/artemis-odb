@@ -11,13 +11,14 @@ import com.artemis.component.Size;
 import com.artemis.component.Sprite;
 import com.artemis.component.Velocity;
 
-@CRef({Sprite.class, Cullible.class})
-public interface Ship extends EntityFactory<Ship> {
+@CRef({Sprite.class, Cullible.class, Position.class, Velocity.class,
+	Asset.class, Size.class, HitPoints.class})
+public interface ShipShortWire extends EntityFactory<ShipShortWire> {
 	// method name maps Position
-	@CRef(Position.class) Ship position(float x, float y);
+	ShipShortWire position(float x, float y);
 	// parameter names must match field or setter name
-	@CRef(Velocity.class) Ship velocity(float x, float y);
-	@CRef(Asset.class) Ship asset(String path);
-	@CRef(Size.class) Ship size(float width, float height);
-	@CRef(HitPoints.class) @Sticky Ship hitPoints(int current);
+	ShipShortWire velocity(float x, float y);
+	ShipShortWire asset(String path);
+	ShipShortWire size(float width, float height);
+	@Sticky ShipShortWire hitPoints(int current);
 }

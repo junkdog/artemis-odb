@@ -4,6 +4,7 @@ import com.artemis.EntityFactory;
 import com.artemis.annotations.CRef;
 import com.artemis.annotations.Sticky;
 import com.artemis.component.Asset;
+import com.artemis.component.HitPoints;
 import com.artemis.component.Position;
 import com.artemis.component.Size;
 import com.artemis.component.Velocity;
@@ -15,5 +16,5 @@ public interface ShipOnlyMethods extends EntityFactory<ShipOnlyMethods> {
 	@CRef(Velocity.class) ShipOnlyMethods velocity(float x, float y);
 	@CRef(Asset.class) ShipOnlyMethods asset(String path);
 	@CRef(Size.class) ShipOnlyMethods size(float width, float height);
-	@Sticky ShipOnlyMethods hitPoints(int current);
+	@CRef(HitPoints.class) @Sticky ShipOnlyMethods hitPoints(int current);
 }
