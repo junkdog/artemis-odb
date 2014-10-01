@@ -1,5 +1,7 @@
 package com.artemis;
 
+import static java.lang.String.format;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -13,7 +15,6 @@ import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.AnnotationValueVisitor;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -47,7 +48,53 @@ public class FactoryModel {
 		readGlobalCRefs(declaration);
 		methods = scanMethods(declaration);
 	}
+	
+	public List<FactoryMethod> getStickyMethods() {
+		List<FactoryMethod> m = new ArrayList<FactoryMethod>();
+		for (FactoryMethod fm : methods)
+			if (fm.sticky) m.add(fm);
+		
+		return m;
+	}
+	
+	public List<FactoryMethod> getInstanceMethods() {
+		List<FactoryMethod> m = new ArrayList<FactoryMethod>();
+		for (FactoryMethod fm : methods)
+			if (!fm.sticky) m.add(fm);
+		
+		return m;
+	}
 
+	public String getPackageName() {
+		return declaration.getEnclosingElement().toString();
+	}
+	
+	public String getFactoryName() {
+		return declaration.getSimpleName().toString();
+	}
+	
+	public List<String> getComponents(boolean qualifiedName) {
+		List<String> components = new ArrayList<String>();
+		for (TypeElement c : this.components)
+			components.add((qualifiedName ? c.getQualifiedName() : c.getSimpleName()).toString());
+		
+		return components;
+	}
+	
+	public List<String> getFields() {
+		List<String> fields = new ArrayList<String>();
+		for (FactoryMethod m : methods) {
+			if (!m.sticky)
+				fields.add("private boolean " + m.getFlagName());
+			
+			for (Param p : m.getParams()) {
+				fields.add(format("private %s %s", p.type, p.field));
+			}
+		}
+		
+		return fields;
+	}
+	
 	private List<FactoryMethod> scanMethods(TypeElement factory) {
 		Elements util = env.getElementUtils();
 		return factoryMethods(util.getAllMembers(factory));
@@ -141,7 +188,7 @@ public class FactoryModel {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("FactoryModel:" + declaration.getSimpleName() + "(\n");
+		sb.append("FactoryModel:" + getPackageName() + declaration.getSimpleName() + "(\n");
 
 		String delim = "";
 		sb.append("\tarchetype=");
@@ -157,8 +204,11 @@ public class FactoryModel {
 		return sb.toString();
 	}
 
+	private static String camelCase(CharSequence s) {
+		return Character.toLowerCase(s.charAt(0)) + s.toString().substring(1);
+	}
 
-	static class FactoryMethod {
+	public static class FactoryMethod {
 		public final boolean sticky;
 		public final ExecutableElement method;
 		public final TypeElement component;
@@ -172,18 +222,64 @@ public class FactoryModel {
 			this.component = component;
 			params = method.getParameters();
 		}
-
-		@Override
-		public String toString() {
-			String stickied = sticky ? "@Sticky " : "";
-			String cref = "@CRef(" + component.getSimpleName() + ".class) ";
+		
+		public String getFlagName() {
+			return "_" + camelCase(method.getSimpleName());
+		}
+		
+		public String getName() {
+			return camelCase(method.getSimpleName());
+		}
+		
+		
+		public String getParamsFull() {
 			StringBuilder sb = new StringBuilder();
 			for (VariableElement param : params) {
 				if (sb.length() > 0) sb.append(", ");
 				sb.append(param.asType() + " " + param.getSimpleName());
 			}
+			return sb.toString();
+		}
+		
+		public List<Param> getParams() {
+			List<Param> params = new ArrayList<Param>();
+			for (VariableElement param : this.params)
+				params.add(new Param(component, param));
 			
-			return "FactoryMethod [" + stickied + cref + method.getSimpleName() + "(" + sb + ")]";
+			return params;
+		}
+		
+		@Override
+		public String toString() {
+			String stickied = sticky ? "@Sticky " : "";
+			String cref = "@CRef(" + component.getSimpleName() + ".class) ";
+			String params = getParamsFull();
+			
+			return "FactoryMethod [" + stickied + cref + method.getSimpleName() + "(" + params + ")]";
+		}
+	}
+	
+	public static class Param {
+		private final String field;
+		private final String param;
+		private final String type;
+		
+		Param(TypeElement component, VariableElement param) {
+			this.param = camelCase(param.getSimpleName());
+			this.field = String.format("_%s_%s", camelCase(component.getSimpleName()), this.param);
+			this.type = param.asType().toString();
+		}
+		
+		public String getType() {
+			return type;
+		}
+
+		public String getField() {
+			return field;
+		}
+
+		public String getParam() {
+			return param;
 		}
 	}
 }
