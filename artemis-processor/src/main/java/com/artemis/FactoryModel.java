@@ -29,7 +29,7 @@ import com.artemis.annotations.Sticky;
 public class FactoryModel {
 	private final Set<TypeElement> components = new HashSet<TypeElement>();
 	private final List<FactoryMethod> methods;
-	private final TypeElement declaration;
+	final TypeElement declaration;
 	private final Map<String, TypeElement> autoResolvable;
 	private final ProcessingEnvironment env;
 	private Messager messager;

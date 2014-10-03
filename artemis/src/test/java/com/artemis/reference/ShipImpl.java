@@ -4,7 +4,6 @@ import com.artemis.Archetype;
 import com.artemis.ArchetypeBuilder;
 import com.artemis.ComponentMapper;
 import com.artemis.Entity;
-import com.artemis.EntityFactory;
 import com.artemis.ParamArchTest.Asset;
 import com.artemis.ParamArchTest.HitPoints;
 import com.artemis.ParamArchTest.Position;

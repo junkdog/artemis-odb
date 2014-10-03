@@ -40,13 +40,13 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 	private ComponentMapper<${component}> ${component?uncap_first}Mapper;
 </#list>
 	
-	public ShipImpl(World world) {
+	public ${model.factoryName}Impl(World world) {
 		this.world = world;
 		world.inject(this);
 		
 		archetype = new ArchetypeBuilder()
 <#list model.getComponents(false) as component>
-			.add(${component}.class);
+			.add(${component}.class)
 </#list>
 			.build(world);
 	}
@@ -54,7 +54,7 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 	private ${model.factoryName}Impl() {}
 	
 	@Override
-	public Ship copy() {
+	public ${model.factoryName} copy() {
 		${model.factoryName}Impl copy = new ${model.factoryName}Impl();
 		copy.world = world;
 		copy.archetype = archetype;
@@ -70,21 +70,21 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 	}
 
 	@Override
-	public Ship tag(String tag) {
+	public ${model.factoryName} tag(String tag) {
 		_tag = true;
 		this._tag_tag = tag;
 		return this;
 	}
 
 	@Override
-	public Ship group(String group) {
+	public ${model.factoryName} group(String group) {
 		_group = true;
 		_groups.add(group);
 		return this;
 	}
 
 	@Override
-	public Ship group(String groupA, String... groups) {
+	public ${model.factoryName} group(String groupA, String... groups) {
 		_groups.add(groupA);
 		for (int i = 0; groups.length > i; i++) {
 			_groups.add(groups[i]);
@@ -93,7 +93,7 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 	}
 
 	@Override
-	public Ship group(String groupA, String groupB, String... groups) {
+	public ${model.factoryName} group(String groupA, String groupB, String... groups) {
 		_group = true;
 		_groups.add(groupA);
 		_groups.add(groupB);
@@ -119,7 +119,6 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 		}
 		
 </#list>
-
 <#list model.stickyMethods as m>
 		{
 			${m.name?cap_first} c = ${m.name}Mapper.get(e);
@@ -129,7 +128,6 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 		}
 		
 </#list>
-		
 		if (_tag) {
 			tagManager.register(_tag_tag, e);
 			_tag = false;
@@ -159,8 +157,8 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 </#list>
 		return this;
 	}
-</#list>
 
+</#list>
 <#list model.instanceMethods as m>	
 	@Override
 	public ${model.factoryName} ${m.name}(${m.paramsFull}) {
