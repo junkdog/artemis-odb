@@ -31,7 +31,7 @@ public class EntityBuilder {
 	}
 
 	/** Begin building new entity based on archetype.*/
-	public EntityBuilder(World world, ArchetypeBuilder.Archetype archetype) {
+	public EntityBuilder(World world, Archetype archetype) {
 		this.world = world;
 		edit = world.createEntity(archetype).edit();
 	}
