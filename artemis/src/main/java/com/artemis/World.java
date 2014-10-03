@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import com.artemis.annotations.Mapper;
 import com.artemis.annotations.Wire;
+import com.artemis.component.ReusedComponent;
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
@@ -228,19 +229,18 @@ public class World {
 			throw new ArtemisMultiException(exceptions);
 	}
 	
-	<T extends EntityFactory<T>> T createFactory(Class<T> factory) {
+	@SuppressWarnings("unchecked")
+	<T extends EntityFactory<T>> T createFactory(Class<?> factory) {
 		if (!factory.isInterface())
 			throw new MundaneWireException("Expected interface for type: " + factory);
 		
 		assertInitialized();
-
+		
 		String impl = factory.getCanonicalName() + "Impl";
 		try {
 			Class<?> implClass = ClassReflection.forName(impl);
 			Constructor constructor = ClassReflection.getConstructor(implClass, World.class);
-			@SuppressWarnings("unchecked")
-			T instance = (T) constructor.newInstance(this);
-			return instance;
+			return (T) constructor.newInstance(this);
 		} catch (ReflectionException e) {
 			throw new RuntimeException(e);
 		}
@@ -831,6 +831,12 @@ public class World {
 					throw new MundaneWireException("Manager not found for " + fieldType);
 				}
 				field.set(target, manager);
+			} else if (ClassReflection.isAssignableFrom(EntityFactory.class, fieldType)) {
+				EntityFactory<?> factory = world.createFactory(fieldType);
+				if (failOnNotInjected && factory == null) {
+					throw new MundaneWireException("Factory not found for " + fieldType);
+				}
+				field.set(target, factory);
 			} else if (field.isAnnotationPresent(Wire.class)) {
 				final Wire wire = field.getAnnotation(Wire.class);
 				String key = wire.name();
