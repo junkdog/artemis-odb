@@ -28,6 +28,12 @@
 			<artifactId>artemis-odb</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+		  <groupId>com.google.testing.compile</groupId>
+		  <artifactId>compile-testing</artifactId>
+		  <version>0.5</version>
+		  <scope>test</scope>
+		</dependency>
 	</dependencies>
 	
 	<build>
@@ -39,9 +45,6 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
-					<!-- 
-					<finalName>${project.artifactId}-${project.version}</finalName>
-					 -->
 					<appendAssemblyId>false</appendAssemblyId>
 				</configuration>
 				<executions>
