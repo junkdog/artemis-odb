@@ -23,6 +23,7 @@ import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.tools.Diagnostic.Kind;
 
@@ -50,7 +51,29 @@ public class FactoryModel {
 		autoResolvable = readGlobalCRefs(declaration);
 		
 		readGlobalCRefs(declaration);
+		validate();
+		
 		methods = scanMethods(declaration);
+	}
+	
+	private void validate() {
+		DeclaredType factory = ProcessorUtil.findFactory(declaration);
+		if (factory == null) {
+			success = false;
+			messager.printMessage(ERROR, "Interface must implement com.artemis.EntityFactory", declaration);
+			return;
+		}
+		
+		DeclaredType argument = ((DeclaredType) factory.getTypeArguments().get(0));
+		TypeElement factoryType = (TypeElement) argument.asElement();
+		if (!factoryType.getQualifiedName().equals(declaration.getQualifiedName())) {
+			success = false;
+			messager.printMessage(ERROR,
+					format("Expected EntityFactory<%s>, but found EntityFactory<%s>",
+							declaration.getSimpleName(),
+							factoryType.getSimpleName()),
+					declaration);
+		}
 	}
 	
 	public List<FactoryMethod> getStickyMethods() {
@@ -167,7 +190,7 @@ public class FactoryModel {
 
 	@SuppressWarnings("unchecked")
 	private static List<AnnotationValue> readCRef(Element element) {
-		AnnotationMirror cref = MirrorUtil.mirror(CRef.class, element);
+		AnnotationMirror cref = ProcessorUtil.mirror(CRef.class, element);
 		if (cref == null)
 			return Collections.emptyList();
 		

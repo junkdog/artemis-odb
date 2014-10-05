@@ -4,8 +4,23 @@ import java.lang.annotation.Annotation;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Name;
+import javax.lang.model.element.TypeElement;
+import javax.lang.model.type.DeclaredType;
+import javax.lang.model.type.TypeMirror;
 
-final class MirrorUtil {
+final class ProcessorUtil {
+	
+	public static DeclaredType findFactory(TypeElement klazz) {
+		for (TypeMirror declared : klazz.getInterfaces()) {
+			DeclaredType dt = (DeclaredType) declared;
+			Name interfaceName = ((TypeElement)dt.asElement()).getQualifiedName();
+			if ("com.artemis.EntityFactory".equals(interfaceName.toString()))
+				return dt;
+		}
+		
+		return null;
+	}
 	
 	/**
 	 * Finds and returns the requested annotation mirror, or null if element
