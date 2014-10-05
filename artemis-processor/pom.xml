@@ -29,10 +29,10 @@
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-		  <groupId>com.google.testing.compile</groupId>
-		  <artifactId>compile-testing</artifactId>
-		  <version>0.5</version>
-		  <scope>test</scope>
+			<groupId>com.google.testing.compile</groupId>
+			<artifactId>compile-testing</artifactId>
+			<version>0.5</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 	

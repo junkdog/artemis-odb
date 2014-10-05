@@ -305,6 +305,10 @@ public class FactoryModel {
 			return camelCase(method.getSimpleName());
 		}
 		
+		public String getComponentName() {
+			return component.getSimpleName().toString();
+		}
+		
 		
 		public String getParamsFull() {
 			StringBuilder sb = new StringBuilder();

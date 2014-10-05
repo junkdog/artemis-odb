@@ -109,7 +109,7 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 
 <#list model.instanceMethods as m>
 		if (${m.flagName}) {
-			${m.name?cap_first} c = ${m.name}Mapper.get(e);
+			${m.componentName} c = ${m.componentName?uncap_first}Mapper.get(e);
 	<#list m.params as param>
 			c.${param.param} = ${param.field};
 	</#list>
@@ -119,7 +119,7 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 </#list>
 <#list model.stickyMethods as m>
 		{
-			${m.name?cap_first} c = ${m.name}Mapper.get(e);
+			${m.componentName} c = ${m.componentName?uncap_first}Mapper.get(e);
 	<#list m.params as param>
 			c.${param.param} = ${param.field};
 	</#list>
