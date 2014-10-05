@@ -34,7 +34,7 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 </#list>
 	
 	// mappers
-<#list model.getComponents(false) as component>
+<#list model.mappedComponents as component>
 	private ComponentMapper<${component}> ${component?uncap_first}Mapper;
 </#list>
 	

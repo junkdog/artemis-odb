@@ -113,6 +113,14 @@ public class FactoryModel {
 		return components;
 	}
 	
+	public List<String> getMappedComponents() {
+		List<String> components = new ArrayList<String>();
+		for (FactoryMethod m : this.methods)
+			components.add(m.component.getSimpleName().toString());
+		
+		return components;
+	}
+	
 	public List<String> getFields() {
 		List<String> fields = new ArrayList<String>();
 		for (FactoryMethod m : methods) {
