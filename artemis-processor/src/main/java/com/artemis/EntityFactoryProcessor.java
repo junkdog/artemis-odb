@@ -48,9 +48,11 @@ public class EntityFactoryProcessor extends AbstractProcessor {
 		for (Iterator<? extends TypeElement> iterator = types.iterator(); iterator.hasNext(); ) {
 			factoryTypes.addAll(resolveTypes(roundEnv.getElementsAnnotatedWith(iterator.next())));
 		}
+		
 		for (TypeElement factory : factoryTypes) {
 			FactoryModel fm = new FactoryModel(factory, processingEnv);
-			generateSourceFile(fm);
+			if (fm.success)
+				generateSourceFile(fm);
 		}
 		
 		return false;

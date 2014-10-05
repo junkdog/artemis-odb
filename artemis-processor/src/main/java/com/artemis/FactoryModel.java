@@ -1,6 +1,7 @@
 package com.artemis;
 
 import static java.lang.String.format;
+import static javax.tools.Diagnostic.Kind.ERROR;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.annotation.processing.Messager;
@@ -17,6 +19,7 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
@@ -33,6 +36,7 @@ public class FactoryModel {
 	private final Map<String, TypeElement> autoResolvable;
 	private final ProcessingEnvironment env;
 	private Messager messager;
+	boolean success = true;
 	
 	private static final List<String> IGNORED_METHODS = Arrays.asList(new String[] {
 			"getClass", "wait", "notify", "notifyAll", "equals",
@@ -66,7 +70,9 @@ public class FactoryModel {
 	}
 
 	public String getPackageName() {
-		return declaration.getEnclosingElement().toString();
+		String pkg = declaration.getEnclosingElement().toString();
+		if (pkg.startsWith("package ")) pkg = pkg.substring("package ".length());
+		return pkg;
 	}
 	
 	public String getFactoryName() {
@@ -105,6 +111,7 @@ public class FactoryModel {
 		for (Element e : allMembers) {
 			FactoryMethod method;
 			if ((method = factoryMethod(e)) != null) {
+				success &= method.validate(messager);
 				methods.add(method);
 			}
 		}
@@ -212,7 +219,7 @@ public class FactoryModel {
 		public final boolean sticky;
 		public final ExecutableElement method;
 		public final TypeElement component;
-		public final List<? extends VariableElement> params;
+		public final Map<Name, VariableElement> params;
 		
 		private FactoryMethod(ExecutableElement method, TypeElement component) {
 			assert(method != null);
@@ -220,9 +227,34 @@ public class FactoryModel {
 			this.method = method;
 			this.sticky = method.getAnnotation(Sticky.class) != null;
 			this.component = component;
-			params = method.getParameters();
+			params = map(method.getParameters());
 		}
 		
+		boolean validate(Messager messager) {
+			Map<Name, Element> found = map(component.getEnclosedElements());
+			boolean success = true;
+			
+			for (Entry<Name, VariableElement> param : params.entrySet()) {
+				if (!found.containsKey(param.getKey())) {
+					success = false;
+					messager.printMessage(
+							ERROR,
+							format("%s has no field named %s", component.getSimpleName(), param.getKey()),
+							param.getValue());
+				}
+			}
+			
+			return success;
+		}
+		
+		private static <T extends Element> Map<Name, T> map(List<? extends T> elements) {
+			Map<Name, T> map = new HashMap<Name, T>();
+			for (T e : elements)
+				map.put(e.getSimpleName(), e);
+			
+			return map;
+		}
+
 		public String getFlagName() {
 			return "_" + camelCase(method.getSimpleName());
 		}
@@ -234,7 +266,7 @@ public class FactoryModel {
 		
 		public String getParamsFull() {
 			StringBuilder sb = new StringBuilder();
-			for (VariableElement param : params) {
+			for (VariableElement param : method.getParameters()) {
 				if (sb.length() > 0) sb.append(", ");
 				sb.append(param.asType() + " " + param.getSimpleName());
 			}
@@ -243,7 +275,7 @@ public class FactoryModel {
 		
 		public List<Param> getParams() {
 			List<Param> params = new ArrayList<Param>();
-			for (VariableElement param : this.params)
+			for (VariableElement param : method.getParameters())
 				params.add(new Param(component, param));
 			
 			return params;
