@@ -11,6 +11,20 @@ import javax.lang.model.type.TypeMirror;
 
 final class ProcessorUtil {
 	
+	public static boolean isString(TypeMirror mirror) {
+		if (!(mirror instanceof DeclaredType))
+			return false;
+		
+		DeclaredType type = (DeclaredType) mirror;
+		Element e = type.asElement();
+		if (!(e instanceof TypeElement))
+			return false;
+		
+		TypeElement typeElement = (TypeElement) e;
+		
+		return typeElement.getQualifiedName().toString().equals("java.lang.String");
+	}
+	
 	public static DeclaredType findFactory(TypeElement klazz) {
 		for (TypeMirror declared : klazz.getInterfaces()) {
 			DeclaredType dt = (DeclaredType) declared;

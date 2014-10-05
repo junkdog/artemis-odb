@@ -25,6 +25,7 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
+import javax.lang.model.util.Types;
 import javax.tools.Diagnostic.Kind;
 
 import com.artemis.annotations.CRef;
@@ -51,9 +52,8 @@ public class FactoryModel {
 		autoResolvable = readGlobalCRefs(declaration);
 		
 		readGlobalCRefs(declaration);
-		validate();
-		
 		methods = scanMethods(declaration);
+		validate();
 	}
 	
 	private void validate() {
@@ -74,6 +74,9 @@ public class FactoryModel {
 							factoryType.getSimpleName()),
 					declaration);
 		}
+		
+		for (FactoryMethod method : methods)
+			method.validate(messager, env.getTypeUtils());
 	}
 	
 	public List<FactoryMethod> getStickyMethods() {
@@ -134,7 +137,6 @@ public class FactoryModel {
 		for (Element e : allMembers) {
 			FactoryMethod method;
 			if ((method = factoryMethod(e)) != null) {
-				success &= method.validate(messager);
 				methods.add(method);
 			}
 		}
@@ -253,7 +255,7 @@ public class FactoryModel {
 			params = map(method.getParameters());
 		}
 		
-		boolean validate(Messager messager) {
+		boolean validate(Messager messager, Types types) {
 			Map<Name, Element> found = map(component.getEnclosedElements());
 			boolean success = true;
 			
@@ -263,6 +265,15 @@ public class FactoryModel {
 					messager.printMessage(
 							ERROR,
 							format("%s has no field named %s", component.getSimpleName(), param.getKey()),
+							param.getValue());
+				}
+				
+				TypeMirror type = param.getValue().asType();
+				if (!(type.getKind().isPrimitive() || ProcessorUtil.isString(type))) {
+					success = false;
+					messager.printMessage(
+							ERROR,
+							"Only primitive and string types supported",
 							param.getValue());
 				}
 			}
