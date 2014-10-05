@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import com.artemis.annotations.Mapper;
 import com.artemis.annotations.Wire;
-import com.artemis.component.ReusedComponent;
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
