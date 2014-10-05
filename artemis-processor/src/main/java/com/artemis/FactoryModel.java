@@ -113,8 +113,8 @@ public class FactoryModel {
 		return components;
 	}
 	
-	public List<String> getMappedComponents() {
-		List<String> components = new ArrayList<String>();
+	public Set<String> getMappedComponents() {
+		Set<String> components = new HashSet<String>();
 		for (FactoryMethod m : this.methods)
 			components.add(m.component.getSimpleName().toString());
 		
@@ -298,7 +298,12 @@ public class FactoryModel {
 		}
 
 		public String getFlagName() {
-			return "_" + camelCase(method.getSimpleName());
+			StringBuilder sb = new StringBuilder();
+			sb.append("_id_").append(camelCase(method.getSimpleName())).append("_");
+			for (VariableElement e : method.getParameters()) {
+				sb.append(e.getSimpleName()).append("_");
+			}
+			return sb.toString();
 		}
 		
 		public String getName() {
