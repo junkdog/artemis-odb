@@ -15,8 +15,8 @@ _For more details, see [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blo
 ### Benchmarks
 Artemis-ODB is one of the fastest incarnations of Artemis. 
 
-Operations/second. Higher is better.<br/>
-Empty bars indicate missing benchmarks (Ashley 1.2.0 insert/remove).
+Operations/second. Higher is better.
+
 ![it16k][it16k] ![ir16k][ir16k]
 
 See [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) for more benchmarks.
