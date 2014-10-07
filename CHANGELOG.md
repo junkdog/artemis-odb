@@ -6,6 +6,9 @@
 
 - Auto-generate EntityFactories.
 - ArchetypeBuilder constructor accepts null passed as parent.
+- **Fix**: Chaining Entity#edit caused the internal bitset to reset
+  between component removals.
+
 
 ## Version: 0.7.1 - 2014-09-24
 - Gradle plugin for bytecode weaving. See [Weave Automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automation)

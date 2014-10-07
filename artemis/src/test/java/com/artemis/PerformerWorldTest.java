@@ -15,24 +15,12 @@ import com.artemis.systems.EntityProcessingSystem;
  */
 public class PerformerWorldTest {
 
-	public PerformerWorldTest() {
-	}
-
 	private World world;
-
-	@BeforeClass
-	public static void setUpClass() {
-	}
-
-	@AfterClass
-	public static void tearDownClass() {
-	}
 
 	@Before
 	public void setUp() {
 		world = new World();
 		world.setSystem(new SystemA());
-		//world.setSystem(new SystemB());
 		world.initialize();
 
 		for (int i = 0; i < 10; i++) {
