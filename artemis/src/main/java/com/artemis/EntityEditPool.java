@@ -27,20 +27,12 @@ public final class EntityEditPool {
 	
 
 	EntityEdit obtainEditor(Entity entity) {
-		EntityEdit edit;
-		if (editedIds.get(entity.getId())) {
-			edit = findEntityEdit(entity);
-		} else {
-			if (pool.isEmpty()) {
-				edit = new EntityEdit(world);
-			} else {
-				edit = pool.removeLast();
-				edit.componentBits.clear();
-				edit.scheduledDeletion = false;
-			}
-			editedIds.set(entity.getId());
-			edited.add(edit);
-		}
+		if (editedIds.get(entity.getId()))
+			return findEntityEdit(entity);
+		
+		EntityEdit edit = entityEdit();
+		editedIds.set(entity.getId());
+		edited.add(edit);
 		
 		edit.entity = entity;
 		edit.hasBeenAddedToWorld = world.getEntityManager().isActive(entity.getId());
@@ -49,7 +41,19 @@ public final class EntityEditPool {
 			BitSet bits = entity.getComponentBits();
 			edit.componentBits.or(bits);
 		}
+		
 		return edit;
+	}
+
+	private EntityEdit entityEdit() {
+		if (pool.isEmpty()) {
+			return new EntityEdit(world);
+		} else {
+			EntityEdit edit = pool.removeLast();
+			edit.componentBits.clear();
+			edit.scheduledDeletion = false;
+			return edit;
+		}
 	}
 	
 	private EntityEdit findEntityEdit(Entity entity) {
