@@ -1,6 +1,6 @@
-# Change Log
+## Change Log
 
-## Version: 0.7.3-SNAPSHOT
+#### Version: 0.7.3-SNAPSHOT
 - **MINOR BREAKING CHANGES**
   - Archetype moved to `com.artemis` package.
 
@@ -8,15 +8,15 @@
 - ArchetypeBuilder constructor accepts null passed as parent.
 
 
-## Version: 0.7.2 - 2014-10-08
+#### Version: 0.7.2 - 2014-10-08
 - **Fix**: Chaining Entity#edit caused the internal bitset to reset
   between component removals.
 
-## Version: 0.7.1 - 2014-09-24
+#### Version: 0.7.1 - 2014-09-24
 - Gradle plugin for bytecode weaving. See [Weave Automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automation)
 - Faster removal of components.
 
-## Version: 0.7.0 - 2014-09-21
+#### Version: 0.7.0 - 2014-09-21
 
 - **MINOR BREAKING CHANGES**
   - Entity state changes aren't reflected until the next system starts processing
@@ -62,28 +62,28 @@
 - **Fix**: `EntityManager#isActive` could throw an OOB exception..
 - **FIX**: Possible IOOB in `@PackedWeaver` components when accessing component data.
 
-## Version: 0.6.5 - 2014-07-17
+#### Version: 0.6.5 - 2014-07-17
 - Better support for multiple concurrent worlds in regards to memory usage.
 - Smaller entity instances.
 - **Fix**: Actually fixed GWT support, bumped gwt to 2.6.0.
 
-## Version: 0.6.3 - 2014-07-07
+#### Version: 0.6.3 - 2014-07-07
 - **Fix**: Potential IOOB exceptions in UuidEntityManager.
 
-## Version: 0.6.2 - 2014-07-07
+#### Version: 0.6.2 - 2014-07-07
 - UUID is now optional for entities.
   - Add UuidEntityManager to automatically map UUID:s to entities.
   - UUID:s are lazily instantiated.
 - **Fix**: GWT build was broken in 0.6.1.
 
-## Version: 0.6.1 - 2014-07-03
+#### Version: 0.6.1 - 2014-07-03
 - New standalone `artemis-odb-cli` artifact:
   - Handles weaving (new in 0.6.1) and matrix generation.
   - Replaces `artemis-odb-matrix-X.Y.Z-cli.jar`.
 - **Fix**: OOB Exception in ComponentManager with componentsByType when component types > 64.
 - **Fix**: Calling `Entity#changedInWorld` before an entity is added to the world yields null.
 
-## Version: 0.6.0 - 2014-06-01
+#### Version: 0.6.0 - 2014-06-01
 - **GWT support** ([demo](http://flet.github.io/spaceship-warrior-redux/)) sporting
   [libgdx](https://github.com/libgdx/libgdx)'s reflection wrapper code.
   - This means that `@Mapper` and `@Wire` works for GWT builds too.
@@ -116,7 +116,7 @@
 - **Fix**: Possible NPE when removing recently created entities.
 - **Fix**: `Entity#getComponent` would sometimes throw an `ArrayIndexOutOfBoundsException`.
 
-## Version: 0.5.0 - 2013-11-24
+#### Version: 0.5.0 - 2013-11-24
  - Changed artemis to a multi-module project (the `artemis` folder is the old root).
  - Entity instances are recycled.
  - New component types, `PooledComponent` and `PackedComponent`.
