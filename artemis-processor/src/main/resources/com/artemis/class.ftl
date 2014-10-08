@@ -28,7 +28,7 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 	private GroupManager groupManager;
 	private Archetype archetype;
 	
-	// component fields
+	// component parameter fields
 <#list model.fields as field>
 	${field};
 </#list>

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -121,8 +122,8 @@ public class FactoryModel {
 		return components;
 	}
 	
-	public List<String> getFields() {
-		List<String> fields = new ArrayList<String>();
+	public Set<String> getFields() {
+		Set<String> fields = new TreeSet<String>();
 		for (FactoryMethod m : methods) {
 			if (!m.sticky)
 				fields.add("private boolean " + m.getFlagName());
@@ -363,6 +364,43 @@ public class FactoryModel {
 
 		public String getParam() {
 			return param;
+		}
+
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + ((field == null) ? 0 : field.hashCode());
+			result = prime * result + ((param == null) ? 0 : param.hashCode());
+			result = prime * result + ((type == null) ? 0 : type.hashCode());
+			return result;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			Param other = (Param) obj;
+			if (field == null) {
+				if (other.field != null)
+					return false;
+			} else if (!field.equals(other.field))
+				return false;
+			if (param == null) {
+				if (other.param != null)
+					return false;
+			} else if (!param.equals(other.param))
+				return false;
+			if (type == null) {
+				if (other.type != null)
+					return false;
+			} else if (!type.equals(other.type))
+				return false;
+			return true;
 		}
 	}
 }

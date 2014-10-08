@@ -6,7 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.artemis.Component;
-import com.artemis.PackedComponent;
 
 /**
  * Transforms a {@link Component} into a {@link com.artemis.PooledComponent}. Component transformation

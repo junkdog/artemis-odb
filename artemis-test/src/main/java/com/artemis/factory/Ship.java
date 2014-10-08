@@ -17,7 +17,9 @@ public interface Ship extends EntityFactory<Ship> {
 	@CRef(Position.class) Ship position(float x, float y);
 	// parameter names must match field or setter name
 	@CRef(Velocity.class) Ship velocity(float x, float y);
+	@CRef(Velocity.class) Ship velocity(float x);
 	@CRef(Asset.class) Ship asset(String path);
 	@CRef(Size.class) Ship size(float width, float height);
 	@CRef(HitPoints.class) @Sticky Ship hitPoints(int current);
+	@CRef(Cullible.class) Ship culled(boolean culled);
 }

@@ -26,7 +26,7 @@ public class Issue206SystemTest {
 		
 		assertSame(e.edit(), e.edit());
 		e.edit().remove(CompB.class);
-		// note bene: in 0.7.0 and 0.7.1, chaining edit() caused
+		// nota bene: in 0.7.0 and 0.7.1, chaining edit() caused
 		// the componentBits to reset
 		e.edit().remove(TestComponentC.class);
 
