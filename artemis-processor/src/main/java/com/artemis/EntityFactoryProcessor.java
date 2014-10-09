@@ -2,7 +2,6 @@ package com.artemis;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -18,13 +17,15 @@ import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import javax.tools.JavaFileObject;
 import javax.tools.Diagnostic.Kind;
+import javax.tools.JavaFileObject;
 
 import org.kohsuke.MetaInfServices;
 
 @MetaInfServices(Processor.class)
-@SupportedAnnotationTypes({"com.artemis.annotations.CRef", "com.artemis.annotations.MRef"})
+@SupportedAnnotationTypes({
+	"com.artemis.annotations.Bind",
+	"com.artemis.annotations.UseSetter"})
 public class EntityFactoryProcessor extends AbstractProcessor {
 	
 	private Filer filer;

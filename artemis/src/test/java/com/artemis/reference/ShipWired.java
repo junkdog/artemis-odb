@@ -6,10 +6,10 @@ import com.artemis.ParamArchTest.HitPoints;
 import com.artemis.ParamArchTest.Position;
 import com.artemis.ParamArchTest.Size;
 import com.artemis.ParamArchTest.Velocity;
-import com.artemis.annotations.CRef;
+import com.artemis.annotations.Bind;
 import com.artemis.annotations.Sticky;
 
-@CRef({Sprite.class, Cullible.class, Position.class, Velocity.class, Asset.class, Size.class, HitPoints.class})
+@Bind({Sprite.class, Cullible.class, Position.class, Velocity.class, Asset.class, Size.class, HitPoints.class})
 public interface ShipWired extends EntityFactory<ShipWired> {
 	// method name maps Position
 	ShipWired position(float x, float y);

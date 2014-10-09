@@ -29,7 +29,7 @@ import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 import javax.tools.Diagnostic.Kind;
 
-import com.artemis.annotations.CRef;
+import com.artemis.annotations.Bind;
 import com.artemis.annotations.Sticky;
 
 public class FactoryModel {
@@ -201,7 +201,7 @@ public class FactoryModel {
 
 	@SuppressWarnings("unchecked")
 	private static List<AnnotationValue> readCRef(Element element) {
-		AnnotationMirror cref = ProcessorUtil.mirror(CRef.class, element);
+		AnnotationMirror cref = ProcessorUtil.mirror(Bind.class, element);
 		if (cref == null)
 			return Collections.emptyList();
 		

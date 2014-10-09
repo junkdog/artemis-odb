@@ -9,6 +9,6 @@ import com.artemis.Component;
 
 @Retention(RetentionPolicy.CLASS)
 @Target({ElementType.TYPE, ElementType.METHOD})
-public @interface CRef {
+public @interface Bind {
 	Class<? extends Component>[] value();
 }

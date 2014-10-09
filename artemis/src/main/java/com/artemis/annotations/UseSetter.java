@@ -1,5 +1,5 @@
 package com.artemis.annotations;
 
-public @interface SetterRef {
+public @interface UseSetter {
 	String value() default "";
 }
