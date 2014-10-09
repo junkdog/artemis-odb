@@ -31,6 +31,7 @@ import javax.tools.Diagnostic.Kind;
 
 import com.artemis.annotations.Bind;
 import com.artemis.annotations.Sticky;
+import com.artemis.annotations.UseSetter;
 
 public class FactoryModel {
 	private final Set<TypeElement> components = new HashSet<TypeElement>();
@@ -77,7 +78,7 @@ public class FactoryModel {
 		}
 		
 		for (FactoryMethod method : methods)
-			method.validate(messager, env.getTypeUtils());
+			method.validate(messager);
 	}
 	
 	public List<FactoryMethod> getStickyMethods() {
@@ -175,16 +176,29 @@ public class FactoryModel {
 				return null;
 			}
 		} else if (referenced.size() == 1) {
-			Object val = referenced.get(0).getValue();
-			DeclaredType value = (DeclaredType)val;
-			TypeElement component = (TypeElement)value.asElement();
-			components.add(component);
-			return new FactoryMethod((ExecutableElement)e, component);
+			return bindMethod((ExecutableElement)e, (DeclaredType)referenced.get(0).getValue());
 		} else {
 			String err = "@CRef on methods limited to one component type, found " + referenced.size();
 			messager.printMessage(Kind.ERROR, err, e);
 			return null;
 		}
+	}
+
+	private FactoryMethod bindMethod(ExecutableElement method, DeclaredType value) {
+		TypeElement component = (TypeElement)value.asElement();
+		components.add(component);
+		
+		// scan for UseSetter
+		String setterMethod = null;
+		AnnotationMirror setterMirror = ProcessorUtil.mirror(UseSetter.class, method);
+		if (setterMirror != null) {
+			AnnotationValue setter = readAnnotationField(setterMirror, "value");
+			setterMethod = (setter != null) 
+					? (String)setter.getValue()
+					: method.getSimpleName().toString();
+		}
+		
+		return new FactoryMethod(method, component, setterMethod);
 	}
 
 	private Map<String, TypeElement> readGlobalCRefs(TypeElement declaration) {
@@ -254,40 +268,97 @@ public class FactoryModel {
 		public final ExecutableElement method;
 		public final TypeElement component;
 		public final Map<Name, VariableElement> params;
+		private final String setterMethod;
 		
 		private FactoryMethod(ExecutableElement method, TypeElement component) {
+			this(method, component, null);
+		}
+		
+		private FactoryMethod(ExecutableElement method, TypeElement component, String setterMethod) {
 			assert(method != null);
 			assert(component != null);
 			this.method = method;
 			this.sticky = method.getAnnotation(Sticky.class) != null;
 			this.component = component;
+			this.setterMethod = setterMethod;
+			
 			params = map(method.getParameters());
 		}
 		
-		boolean validate(Messager messager, Types types) {
+		// refactor into own class
+		boolean validate(Messager messager) {
 			Map<Name, Element> found = map(component.getEnclosedElements());
 			boolean success = true;
 			
 			for (Entry<Name, VariableElement> param : params.entrySet()) {
-				if (!found.containsKey(param.getKey())) {
-					success = false;
-					messager.printMessage(
-							ERROR,
-							format("%s has no field named %s", component.getSimpleName(), param.getKey()),
-							param.getValue());
-				}
-				
-				TypeMirror type = param.getValue().asType();
-				if (!(type.getKind().isPrimitive() || ProcessorUtil.isString(type))) {
-					success = false;
-					messager.printMessage(
-							ERROR,
-							"Only primitive and string types supported",
-							param.getValue());
-				}
+				if (setterMethod == null)
+					success &= validateFieldAccess(messager, found, param);
+				else // invoking setter
+					success &= validateSetterAccess(messager, found, param);
 			}
 			
 			return success;
+		}
+		
+		private boolean validateFieldAccess(Messager messager,
+				Map<Name, Element> found,	Entry<Name, VariableElement> param) {
+			
+			if (!found.containsKey(param.getKey())) {
+				messager.printMessage(
+						ERROR,
+						format("%s has no field named %s", component.getSimpleName(), param.getKey()),
+						param.getValue());
+				
+				return false;
+			}
+			
+			TypeMirror type = param.getValue().asType();
+			if (!(type.getKind().isPrimitive() || ProcessorUtil.isString(type))) {
+				messager.printMessage(
+						ERROR,
+						"Only primitive and string types supported",
+						param.getValue());
+				
+				return false;
+			}
+			
+			return true;
+		}
+		
+		private boolean validateSetterAccess(Messager messager,
+				Map<Name, Element> found,	Entry<Name, VariableElement> param) {
+			
+			TypeMirror type = param.getValue().asType();
+			
+			// component has method
+			if (!ProcessorUtil.hasMethod(component, setterMethod)) {
+				messager.printMessage(
+						ERROR,
+						format("Expected to find method '%s' in component '%s'",
+							setterMethod, component.getSimpleName()),
+						method);
+				
+				return false;
+			}
+			
+			// validate parameter list
+			if (!ProcessorUtil.hasMethod(component, setterMethod, method.getParameters())) {
+				StringBuilder signature = new StringBuilder();
+				for (VariableElement e : method.getParameters()) {
+					if (signature.length() > 0) signature.append(", ");
+					signature.append(e.asType().toString());
+				}
+				
+				messager.printMessage(
+						ERROR,
+						format("Expected to find %s.%s(%s)'",
+							setterMethod, component.getSimpleName(), signature),
+						method);
+				
+				return false;
+			}
+			
+			return true;
 		}
 		
 		private static <T extends Element> Map<Name, T> map(List<? extends T> elements) {
@@ -317,6 +388,10 @@ public class FactoryModel {
 		
 		
 		public String getParamsFull() {
+			return getParamsFull(method.getParameters());
+		}
+		
+		private String getParamsFull(List<? extends VariableElement> parameters) {
 			StringBuilder sb = new StringBuilder();
 			for (VariableElement param : method.getParameters()) {
 				if (sb.length() > 0) sb.append(", ");
@@ -337,7 +412,7 @@ public class FactoryModel {
 		public String toString() {
 			String stickied = sticky ? "@Sticky " : "";
 			String cref = "@CRef(" + component.getSimpleName() + ".class) ";
-			String params = getParamsFull();
+			String params = getParamsFull(method.getParameters());
 			
 			return "FactoryMethod [" + stickied + cref + method.getSimpleName() + "(" + params + ")]";
 		}

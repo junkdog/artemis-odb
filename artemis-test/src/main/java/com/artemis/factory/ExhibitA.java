@@ -35,5 +35,5 @@ public interface ExhibitA extends EntityFactory<ExhibitA> {
 	@Bind(Complex.class) @UseSetter ExhibitA pos(float x, float y);
 	
 	// setter, aliased
-	@Bind(Complex.class) @UseSetter("vel") ExhibitA hoho(float x, float y);
+	@Bind(Complex.class) @UseSetter("vel") ExhibitA hoho(float x, float y, float z);
 }

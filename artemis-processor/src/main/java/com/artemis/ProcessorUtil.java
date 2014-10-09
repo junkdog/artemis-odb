@@ -1,13 +1,18 @@
 package com.artemis;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.ElementKind;
+import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Types;
 
 final class ProcessorUtil {
 	
@@ -73,5 +78,47 @@ final class ProcessorUtil {
 	
 	public static boolean hasMirror(String annotation, Element element) {
 		return mirror(annotation, element) != null;
+	}
+
+	public static boolean hasMethod(TypeElement component, String setterMethod) {
+		for (Element e : component.getEnclosedElements()) {
+			if (nameMatches(e, setterMethod))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	public static boolean hasMethod(TypeElement component, String setterMethod,
+			List<? extends VariableElement> params) {
+		
+		for (Element e : component.getEnclosedElements()) {
+			if (!(e instanceof ExecutableElement))
+				continue;
+			
+			ExecutableElement method = (ExecutableElement) e;
+			if (nameMatches(e, setterMethod) && typesEqual(params, method.getParameters()))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	private static boolean typesEqual(List<? extends VariableElement> params,
+			List<? extends VariableElement> params2) {
+		
+		if (params.size() != params2.size())
+			return false;
+		
+		for (int i = 0; params.size() > i; i++){
+			if (!params.get(i).getSimpleName().equals(params2.get(i).getSimpleName()))
+				return false;
+		}
+		
+		return true;
+	}
+
+	private static boolean nameMatches(Element e, String setterMethod) {
+		return e.getKind() == ElementKind.METHOD && e.getSimpleName().toString().equals(setterMethod);
 	}
 }
