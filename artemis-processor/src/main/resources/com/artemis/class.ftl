@@ -126,6 +126,14 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 		}
 		
 </#list>
+<#list model.setterMethods as m>
+		if (${m.flagName}) {
+			${m.componentName} c = ${m.componentName?uncap_first}Mapper.get(e);
+			c.${m.setter}(${m.paramArgs});
+			${m.flagName} = false;
+		}
+		
+</#list>
 		if (_tag) {
 			tagManager.register(_tag_tag, e);
 			_tag = false;
@@ -148,7 +156,7 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 		if (_sealed) {
 			String err = "${m.name} are stickied, unable to change after creating " +
 					"first entity. See copy().";
-			throw new RuntimeException(err);
+			throw new IllegalArgumentException(err);
 		}
 <#list m.params as param>
 		${param.field} = ${param.param};
@@ -158,6 +166,16 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 
 </#list>
 <#list model.instanceMethods as m>	
+	@Override
+	public ${model.factoryName} ${m.name}(${m.paramsFull}) {
+		${m.flagName} = true;
+<#list m.params as param>
+		${param.field} = ${param.param};
+</#list>
+		return this;
+	}
+</#list>
+<#list model.setterMethods as m>	
 	@Override
 	public ${model.factoryName} ${m.name}(${m.paramsFull}) {
 		${m.flagName} = true;

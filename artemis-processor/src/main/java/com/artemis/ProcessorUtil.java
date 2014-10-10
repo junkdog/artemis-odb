@@ -1,20 +1,75 @@
 package com.artemis;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ElementKind;
 import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Name;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+
 final class ProcessorUtil {
+	
+	private static DeclaredType factoryInterface;
+	private static TypeElement  ObjectElement;
+	private static Types types;
+	private static Elements elements;
+
+
+	public static void init(ProcessingEnvironment env) {
+		types = env.getTypeUtils();
+		elements = env.getElementUtils();
+		factoryInterface = types.getDeclaredType(
+				elements.getTypeElement("com.artemis.EntityFactory"),
+				types.getWildcardType(null, null));
+		ObjectElement = (TypeElement) types.getDeclaredType(
+				elements.getTypeElement("java.lang.Object")).asElement();
+	}
+	
+	public static List<ExecutableElement> componentMethods(TypeElement element) {
+		List<Element> allMembers = new ArrayList<Element>(); 
+		allMembers.addAll(elements.getAllMembers(element));
+		allMembers.removeAll(elements.getAllMembers(ObjectElement));
+		allMembers.removeAll(
+				elements.getAllMembers((TypeElement) factoryInterface.asElement()));
+		
+		List<ExecutableElement> methods = new ArrayList<ExecutableElement>();
+		for (Element e : allMembers) {
+			if (e.getKind() == ElementKind.METHOD)
+				methods.add((ExecutableElement) e);
+		}
+		
+		return methods;
+	}
+	
+	public static Set<TypeElement> parentInterfaces(TypeElement main) {
+		Set<TypeElement> interfaces = new HashSet<TypeElement>();
+		interfaces.add(main);
+		parentInterfaces(main.getInterfaces(), interfaces);
+		return interfaces;
+		
+	}
+	
+	private static void parentInterfaces(List<? extends TypeMirror> interfaceMirrors,
+			Set<TypeElement> target) {
+		
+		for (TypeMirror mirror : interfaceMirrors) {
+			TypeElement found = (TypeElement) ((DeclaredType) mirror).asElement();
+			target.add(found);
+			parentInterfaces(found.getInterfaces(), target);
+		}
+	}
 	
 	public static boolean isString(TypeMirror mirror) {
 		if (!(mirror instanceof DeclaredType))
@@ -31,14 +86,16 @@ final class ProcessorUtil {
 	}
 	
 	public static DeclaredType findFactory(TypeElement klazz) {
-		for (TypeMirror declared : klazz.getInterfaces()) {
-			DeclaredType dt = (DeclaredType) declared;
-			Name interfaceName = ((TypeElement)dt.asElement()).getQualifiedName();
-			if ("com.artemis.EntityFactory".equals(interfaceName.toString()))
-				return dt;
-		}
 		
-		return null;
+		
+		while (true) {
+			for (TypeMirror declared : klazz.getInterfaces()) {
+				if (types.isSubtype(declared, factoryInterface))
+					return (DeclaredType) declared;
+			}
+			
+			return null;
+		}
 	}
 	
 	/**
@@ -111,7 +168,7 @@ final class ProcessorUtil {
 			return false;
 		
 		for (int i = 0; params.size() > i; i++){
-			if (!params.get(i).getSimpleName().equals(params2.get(i).getSimpleName()))
+			if (!params.get(i).asType().equals(params2.get(i).asType()))
 				return false;
 		}
 		
@@ -121,4 +178,5 @@ final class ProcessorUtil {
 	private static boolean nameMatches(Element e, String setterMethod) {
 		return e.getKind() == ElementKind.METHOD && e.getSimpleName().toString().equals(setterMethod);
 	}
+
 }

@@ -38,6 +38,8 @@ public class EntityFactoryProcessor extends AbstractProcessor {
 		filer = processingEnv.getFiler();
 		messager = processingEnv.getMessager();
 		formatter = new ModelFormatter();
+		
+		ProcessorUtil.init(processingEnv);
 	}
 	
 	@Override

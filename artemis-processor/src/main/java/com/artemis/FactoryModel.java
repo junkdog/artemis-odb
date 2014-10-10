@@ -51,9 +51,15 @@ public class FactoryModel {
 		this.declaration = declaration;
 		this.env = env;
 		messager = env.getMessager();
-		autoResolvable = readGlobalCRefs(declaration);
 		
-		readGlobalCRefs(declaration);
+		autoResolvable = new HashMap<String, TypeElement>();
+		for (TypeElement parent : ProcessorUtil.parentInterfaces(declaration)) {
+			autoResolvable.putAll(readGlobalCRefs(parent));
+		}
+		autoResolvable.putAll(readGlobalCRefs(declaration));
+		
+		// if something overrides
+		
 		methods = scanMethods(declaration);
 		validate();
 	}
@@ -62,29 +68,32 @@ public class FactoryModel {
 		DeclaredType factory = ProcessorUtil.findFactory(declaration);
 		if (factory == null) {
 			success = false;
-			messager.printMessage(ERROR, "Interface must implement com.artemis.EntityFactory", declaration);
+			messager.printMessage(ERROR, "Interface must extend com.artemis.EntityFactory", declaration);
 			return;
 		}
 		
-		DeclaredType argument = ((DeclaredType) factory.getTypeArguments().get(0));
-		TypeElement factoryType = (TypeElement) argument.asElement();
-		if (!factoryType.getQualifiedName().equals(declaration.getQualifiedName())) {
-			success = false;
-			messager.printMessage(ERROR,
-					format("Expected EntityFactory<%s>, but found EntityFactory<%s>",
-							declaration.getSimpleName(),
-							factoryType.getSimpleName()),
-					declaration);
+		// if empty, we're probably extending an existing factory
+		if (factory.getTypeArguments().size() > 0) { 
+			DeclaredType argument = ((DeclaredType) factory.getTypeArguments().get(0));
+			TypeElement factoryType = (TypeElement) argument.asElement();
+			if (!factoryType.getQualifiedName().equals(declaration.getQualifiedName())) {
+				success = false;
+				messager.printMessage(ERROR,
+						format("Expected EntityFactory<%s>, but found EntityFactory<%s>",
+								declaration.getSimpleName(),
+								factoryType.getSimpleName()),
+						declaration);
+			}
 		}
 		
 		for (FactoryMethod method : methods)
-			method.validate(messager);
+			success &= method.validate(messager);
 	}
 	
 	public List<FactoryMethod> getStickyMethods() {
 		List<FactoryMethod> m = new ArrayList<FactoryMethod>();
 		for (FactoryMethod fm : methods)
-			if (fm.sticky) m.add(fm);
+			if (fm.sticky && fm.setterMethod == null) m.add(fm);
 		
 		return m;
 	}
@@ -92,7 +101,15 @@ public class FactoryModel {
 	public List<FactoryMethod> getInstanceMethods() {
 		List<FactoryMethod> m = new ArrayList<FactoryMethod>();
 		for (FactoryMethod fm : methods)
-			if (!fm.sticky) m.add(fm);
+			if (!fm.sticky && fm.setterMethod == null) m.add(fm);
+		
+		return m;
+	}
+	
+	public List<FactoryMethod> getSetterMethods() {
+		List<FactoryMethod> m = new ArrayList<FactoryMethod>();
+		for (FactoryMethod fm : methods)
+			if (!fm.sticky && fm.setterMethod != null) m.add(fm);
 		
 		return m;
 	}
@@ -138,25 +155,26 @@ public class FactoryModel {
 	}
 	
 	private List<FactoryMethod> scanMethods(TypeElement factory) {
-		Elements util = env.getElementUtils();
-		return factoryMethods(util.getAllMembers(factory));
+//		Elements util = env.getElementUtils();
+//		return factoryMethods(util.getAllMembers(factory));
+		return factoryMethods(ProcessorUtil.componentMethods(factory));
 	}
 	
-	private List<FactoryMethod> factoryMethods(List<? extends Element> allMembers) {
+	private List<FactoryMethod> factoryMethods(List<ExecutableElement> allMembers) {
 		List<FactoryMethod> methods = new ArrayList<FactoryMethod>();
-		for (Element e : allMembers) {
-			FactoryMethod method;
-			if ((method = factoryMethod(e)) != null) {
+		for (ExecutableElement e : allMembers) {
+			
+			FactoryMethod method = factoryMethod(e);
+			if (method != null) {
 				methods.add(method);
+			} else {
+				success = false;
 			}
 		}
 		return methods;
 	}
 
-	private FactoryMethod factoryMethod(Element e) {
-		if (!(e instanceof ExecutableElement))
-			return null;
-		
+	private FactoryMethod factoryMethod(ExecutableElement e) {
 		String elementName = e.getSimpleName().toString();
 		if (IGNORED_METHODS.contains(elementName)) {
 			if (!readCRef(e).isEmpty()) {
@@ -169,16 +187,16 @@ public class FactoryModel {
 		List<AnnotationValue> referenced = readCRef(e);
 		if (referenced.size() == 0) {
 			if (autoResolvable.containsKey(elementName)) {
-				return new FactoryMethod((ExecutableElement)e, autoResolvable.get(elementName));
+				return new FactoryMethod(e, autoResolvable.get(elementName));
 			} else {
 				String err = "Unable to match component for " + e.getSimpleName();
 				messager.printMessage(Kind.ERROR, err, e);
 				return null;
 			}
 		} else if (referenced.size() == 1) {
-			return bindMethod((ExecutableElement)e, (DeclaredType)referenced.get(0).getValue());
+			return bindMethod(e, (DeclaredType)referenced.get(0).getValue());
 		} else {
-			String err = "@CRef on methods limited to one component type, found " + referenced.size();
+			String err = "@Bind on methods limited to one component type, found " + referenced.size();
 			messager.printMessage(Kind.ERROR, err, e);
 			return null;
 		}
@@ -211,7 +229,6 @@ public class FactoryModel {
 		
 		return autoResolvable;
 	}
-
 
 	@SuppressWarnings("unchecked")
 	private static List<AnnotationValue> readCRef(Element element) {
@@ -328,8 +345,6 @@ public class FactoryModel {
 		private boolean validateSetterAccess(Messager messager,
 				Map<Name, Element> found,	Entry<Name, VariableElement> param) {
 			
-			TypeMirror type = param.getValue().asType();
-			
 			// component has method
 			if (!ProcessorUtil.hasMethod(component, setterMethod)) {
 				messager.printMessage(
@@ -352,7 +367,7 @@ public class FactoryModel {
 				messager.printMessage(
 						ERROR,
 						format("Expected to find %s.%s(%s)'",
-							setterMethod, component.getSimpleName(), signature),
+							component.getSimpleName(), setterMethod, signature),
 						method);
 				
 				return false;
@@ -408,6 +423,22 @@ public class FactoryModel {
 			return params;
 		}
 		
+		public String getParamArgs() {
+			StringBuilder params = new StringBuilder();
+			String delim = "";
+			for (VariableElement param : method.getParameters()) {
+				params.append(delim);
+				params.append(new Param(component, param).field);
+				delim = ", ";
+			}
+			
+			return params.toString();
+		}
+		
+		public String getSetter() {
+			return setterMethod;
+		}
+
 		@Override
 		public String toString() {
 			String stickied = sticky ? "@Sticky " : "";

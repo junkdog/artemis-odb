@@ -1,6 +1,6 @@
 package com.artemis;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,14 +11,14 @@ import com.artemis.component.Complex;
 import com.artemis.component.Cullible;
 import com.artemis.component.HitPoints;
 import com.artemis.component.Position;
-import com.artemis.factory.ExhibitA;
+import com.artemis.component.Sprite;
 import com.artemis.factory.Extended;
 
 @Wire
-public class EntityFactoryTest {
+public class ExtendedEntityFactoryTest {
 	private static final double ACC = 0.001;
 	
-	private ExhibitA factory;
+	private Extended factory;
 	private World world;
 	
 	private ComponentMapper<Position> position;
@@ -26,6 +26,7 @@ public class EntityFactoryTest {
 	private ComponentMapper<Cullible> cullible;
 	private ComponentMapper<Complex> complex;
 	private ComponentMapper<HitPoints> hitpoints;
+	private ComponentMapper<Sprite> sprite;
 	
 	@Before
 	public void init() {
@@ -36,8 +37,8 @@ public class EntityFactoryTest {
 	
 	@Test
 	public void test_instance_methods() {
-		Entity e1 = factory.position(1, 2).asset("1").create();
-		Entity e2 = factory.position(3, 4).asset("2").create();
+		Entity e1 = factory.sprite("s").asset("1").position(1, 2).create();
+		Entity e2 = factory.sprite("h").position(3, 4).asset("2").create();
 		Entity e3 = factory.create();
 		
 		assertEquals(1, position.get(e1).x, ACC);
@@ -50,6 +51,9 @@ public class EntityFactoryTest {
 		assertEquals("1", asset.get(e1).path);
 		assertEquals("2", asset.get(e2).path);
 		assertEquals(null, asset.get(e3).path);
+		assertEquals("s", sprite.get(e1).dummy);
+		assertEquals("h", sprite.get(e2).dummy);
+		assertEquals(null, sprite.get(e3).dummy);
 	}
 	
 	@Test
