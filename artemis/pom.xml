@@ -13,15 +13,6 @@
 	<description>Fork of Artemis Entity System Framework.</description>
 	<url>https://github.com/junkdog/artemis-odb</url>
 
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
