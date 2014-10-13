@@ -1,0 +1,14 @@
+<module>
+
+    <!-- 
+	<inherits name="com.google.gwt.user.User"/>
+	<inherits name="com.google.gwt.junit.JUnit"/>
+     -->
+	<inherits name='com.artemis.backends.artemis_backends_gwt'/>
+
+	<source path='.'/>
+
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis"/>
+
+	<entry-point class='com.artemis.ArtemisTest'/>
+</module>
