@@ -1,12 +1,8 @@
 package com.artemis;
 
-import static com.artemis.meta.ClassMetadata.WeaverType.PACKED;
-import static com.artemis.meta.ClassMetadata.WeaverType.POOLED;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.PROCESS_CLASSES;
 
 import java.io.File;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -16,8 +12,6 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.sonatype.plexus.build.incremental.BuildContext;
-
-import com.artemis.meta.ClassMetadata;
 
 /**
  * The artemis plugin performs bytecode-weaving on annotated components
@@ -62,6 +56,8 @@ public class ArtemisMaven extends AbstractMojo {
 	@Component
 	private BuildContext context;
 
+	private Log log = getLog();
+	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (!enableArtemisPlugin) {
@@ -69,45 +65,125 @@ public class ArtemisMaven extends AbstractMojo {
 			return;
 		}
 
-		long start = System.currentTimeMillis();
 		if (context != null && !context.hasDelta(sourceDirectory))
 			return;
 
-		Log log = getLog();
-		log.info("Configuration:");
-		log.info("\tideFriendlyPacking .............. " + ideFriendlyPacking);
-		log.info("\tenablePooledWeaving ............. " + enablePooledWeaving);
-		log.info("\toptimizeEntitySystems ........... " + optimizeEntitySystems);
+		log.info("");
+		log.info("CONFIGURATION");
+		log.info(WeaverLog.LINE.replaceAll("\n", ""));
+		log.info(WeaverLog.format("ideFriendlyPacking", ideFriendlyPacking));
+		log.info(WeaverLog.format("enablePooledWeaving", enablePooledWeaving));
+		log.info(WeaverLog.format("optimizeEntitySystems", optimizeEntitySystems));
+		log.info(WeaverLog.LINE.replaceAll("\n", ""));
 
 		Weaver.retainFieldsWhenPacking(ideFriendlyPacking);
 		Weaver.enablePooledWeaving(enablePooledWeaving);
 		Weaver.optimizeEntitySystems(optimizeEntitySystems);
 
 		Weaver weaver = new Weaver(outputDirectory);
-		List<ClassMetadata> processed = weaver.execute();
+		WeaverLog weaverLog = weaver.execute();
 
-		log.info(getSummary(processed, start));
-
-		for (ClassMetadata meta : processed) {
-			try {
-				meta.weaverTask.get();
-			} catch (InterruptedException e) {
-				throw new MojoExecutionException(e.getMessage(), e);
-			} catch (ExecutionException e) {
-				throw new MojoExecutionException(e.getCause().getMessage(), e.getCause());
-			}
+//		log.info("");
+//		log.info(format("WOVEN COMPONENTS", weaverLog.timeComponents + "ms", ' '));
+//		log.info(LINE);
+//		for (String detail : getComponentSummary(weaverLog.components).split("\n"))
+//			log.info(detail);
+//		log.info(LINE);
+//		
+//		if (weaverLog.timeComponentSystems > 0) {
+//			log.info("");
+//			log.info(format("COMPONENT ACCESS REWRITTEN", weaverLog.timeComponentSystems + "ms", ' '));
+//			log.info(LINE);
+//			for (String detail : getRewrittenAccessSummary(weaverLog.componentSystems).split("\n"))
+//				log.info(detail);
+//			log.info(LINE);
+//		}
+//		
+//		if (weaverLog.timeSystems > 0) {
+//			log.info("");
+//			log.info(format("OPTIMIZED ENTITY SYSTEMS", weaverLog.timeSystems + "ms", ' '));
+//			log.info(LINE);
+//			for (String detail : getSystemSummary(weaverLog.systems).split("\n"))
+//				log.info(detail);
+//			log.info(LINE);
+//		}
+		for (String s : weaverLog.getFormattedLog().split("\n")) {
+			log.info(s);
 		}
 	}
-
-	private static CharSequence getSummary(List<ClassMetadata> processed, long start) {
-		int pooled = 0, packed = 0;
-		for (ClassMetadata meta : processed) {
-			if (PACKED == meta.annotation) packed++;
-			else if (POOLED == meta.annotation) pooled++;
-		}
-
-		return String.format("Processed %d PackedComponents and %d PooledComponents in %dms.",
-				packed, pooled, (System.currentTimeMillis() - start));
-	}
-
+	
+//	private static String format(String key, Object value, char delim) {
+//		int length = key.length() + value.toString().length() + 2; // margin
+//		length = Math.max(length, 3);
+//		
+//		char[] padding = new char[RELATIVE_WIDTH - length];
+//		Arrays.fill(padding, delim);
+//		
+//		return new StringBuilder(RELATIVE_WIDTH)
+//			.append(key)
+//			.append(" ").append(String.valueOf(padding)).append(" ")
+//			.append(value)
+//			.toString();
+//	}
+	
+//	private static String format(String key, Object value) {
+//		return format(key, value, '.');
+//	}
+//	
+//	private static String horizontalLine() {
+//		char[] raw = new char[RELATIVE_WIDTH];
+//		Arrays.fill(raw, '-');
+//		return String.valueOf(raw);
+//	}
+//
+//	private static String getComponentSummary(List<ClassMetadata> processed) {
+//		StringBuilder sb = new StringBuilder();
+//		
+//		for (ClassMetadata meta : processed) {
+//			if (meta.annotation == WeaverType.NONE)
+//				continue;
+//			
+//			String klazz = shortenClass(meta.type);
+//			sb.append(format(klazz, meta.annotation.name())).append("\n");
+//		}
+//		
+//		return sb.toString();
+//	}
+//	
+//	private static String shortenClass(Type type) {
+//		return shortenClass(type.getClassName());
+//	}
+//	
+//	private static String shortenClass(String className) {
+//		StringBuilder sb = new StringBuilder();
+//		
+//		String[] split = className.split("\\.");
+//		for (int i = 0; (split.length - 1) > i; i++) {
+//			sb.append(split[i].charAt(0)).append('.');
+//		}
+//		sb.append(split[split.length - 1]);
+//		return sb.toString();
+//	}
+//
+//	private static String getSystemSummary(List<ClassMetadata> processed) {
+//		StringBuilder sb= new StringBuilder();
+//		
+//		for (ClassMetadata meta : processed) {
+//			String klazz = shortenClass(meta.type);
+//			sb.append(format(klazz, meta.sysetemOptimizable.name())).append("\n");
+//		}
+//		
+//		return sb.toString();
+//	}
+//
+//	private static String getRewrittenAccessSummary(List<ClassMetadata> processed) {
+//		StringBuilder sb= new StringBuilder();
+//		
+//		for (ClassMetadata meta : processed) {
+//			String klazz = shortenClass(meta.type);
+//			sb.append(format(klazz, "SUCCESS")).append("\n");
+//		}
+//		
+//		return sb.toString();
+//	}
 }

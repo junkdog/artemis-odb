@@ -13,7 +13,7 @@ import com.artemis.meta.ClassMetadata;
 import com.artemis.weaver.optimizer.OptimizingEntitySystemWeaver;
 import com.artemis.weaver.optimizer.ProcessEntitiesInjector;
 
-public class EsOptimizationTransmuter extends CallableTransmuter implements Opcodes {
+public class EsOptimizationTransmuter extends CallableTransmuter<Void> implements Opcodes {
 	private ClassMetadata meta;
 	private ClassReader cr;
 	private ClassWriter cw;
@@ -25,7 +25,7 @@ public class EsOptimizationTransmuter extends CallableTransmuter implements Opco
 	}
 	
 	@Override
-	protected void process(String file) throws FileNotFoundException, IOException {
+	protected Void process(String file) throws FileNotFoundException, IOException {
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		ClassVisitor cv = cw;
 		
@@ -38,6 +38,8 @@ public class EsOptimizationTransmuter extends CallableTransmuter implements Opco
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		return null;
 	}
 
 	public ClassWriter getClassWriter() {

@@ -13,4 +13,5 @@ target/
 .settings/
 .factorypath
 .idea/
+*.jar
 

@@ -18,7 +18,7 @@ import com.artemis.weaver.packed.PackedComponentWeaver;
 import com.artemis.weaver.packed.PackedStubs;
 import com.artemis.weaver.pooled.PooledComponentWeaver;
 
-public class ComponentTypeTransmuter extends CallableTransmuter implements Opcodes {
+public class ComponentTypeTransmuter extends CallableTransmuter<Void> implements Opcodes {
 	private ClassMetadata meta;
 	private ClassReader cr;
 	private ClassWriter cw;
@@ -30,7 +30,7 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 	}
 	
 	@Override
-	protected void process(String file) throws FileNotFoundException, IOException {
+	protected Void process(String file) throws FileNotFoundException, IOException {
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		ClassVisitor cv = cw;
 		
@@ -53,7 +53,7 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 				cv = new PooledComponentWeaver(cv, meta);
 				break;
 			case NONE:
-				return;
+				return null;
 			default:
 				throw new IllegalArgumentException("Missing case: " + meta.annotation);
 		}
@@ -64,6 +64,8 @@ public class ComponentTypeTransmuter extends CallableTransmuter implements Opcod
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		return null;
 	}
 
 	public ClassWriter getClassWriter() {

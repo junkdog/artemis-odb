@@ -17,7 +17,7 @@ import com.artemis.weaver.profile.ProfileVisitor;
  * Rewrites access to packed components so that related classes can
  * access packed components with direct field access, syntactically.
  */
-public class ProfilerTransmuter extends CallableTransmuter implements Opcodes {
+public class ProfilerTransmuter extends CallableTransmuter<Void> implements Opcodes {
 	private ClassReader cr;
 	private ClassWriter cw;
 	private final ClassMetadata meta;
@@ -29,7 +29,7 @@ public class ProfilerTransmuter extends CallableTransmuter implements Opcodes {
 	}
 	
 	@Override
-	protected void process(String file) throws FileNotFoundException, IOException {
+	protected Void process(String file) throws FileNotFoundException, IOException {
 		injectProfilerStubs(meta);
 		
 		ClassVisitor cv = new ProfileVisitor(cw, meta);
@@ -37,6 +37,7 @@ public class ProfilerTransmuter extends CallableTransmuter implements Opcodes {
 		cr.accept(cv, ClassReader.EXPAND_FRAMES);
 		
 		ClassUtil.writeClass(cw, file);
+		return null;
 	}
 	
 	private void injectProfilerStubs(ClassMetadata meta) {
