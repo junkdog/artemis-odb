@@ -131,7 +131,7 @@ public class EntityManager extends Manager {
 	 * @param e
 	 *			the entity to disable
 	 */
-	@Override
+	@Override @Deprecated
 	public void disabled(Entity e) {
 		disabled.set(e.getId());
 	}

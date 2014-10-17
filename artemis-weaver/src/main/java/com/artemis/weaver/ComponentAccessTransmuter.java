@@ -10,14 +10,16 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.tree.ClassNode;
 
 import com.artemis.ClassUtil;
+import com.artemis.Weaver;
 import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.weaver.packed.ExternalFieldClassTransformer;
 
 /**
  * Rewrites access to packed components so that related classes can
  * access packed components with direct field access, syntactically.
  */
-public class ComponentAccessTransmuter extends CallableTransmuter implements Opcodes {
+public class ComponentAccessTransmuter extends CallableTransmuter<ClassMetadata> implements Opcodes {
 	private List<ClassMetadata> packed;
 	private ClassReader cr;
 	
@@ -28,26 +30,30 @@ public class ComponentAccessTransmuter extends CallableTransmuter implements Opc
 	}
 	
 	@Override
-	protected void process(String file) throws FileNotFoundException, IOException {
-		compileClass(file);
+	protected ClassMetadata process(String file) throws FileNotFoundException, IOException {
+		boolean changed = compileClass(file);
+		return changed ? Weaver.scan(cr) : null;
 	}
 
-	private void compileClass(String file) {
+	private boolean compileClass(String file) {
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		
 		ExternalFieldClassTransformer transformer = new ExternalFieldClassTransformer(null, packed);
 		ClassNode cn = transformer.transform(cr);
 		
-		if (!transformer.isNeedsWriteToDisk())
-			return;
+		if (!transformer.isComponentAccessChanged())
+			return false;
 		
 		try {
 			cn.accept(cw);
 			if (file != null)
 				ClassUtil.writeClass(cw, file);
 			
+			return true;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 }

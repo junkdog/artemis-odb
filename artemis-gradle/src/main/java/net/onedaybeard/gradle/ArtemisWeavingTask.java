@@ -4,7 +4,9 @@ import static com.artemis.meta.ClassMetadata.WeaverType.PACKED;
 import static com.artemis.meta.ClassMetadata.WeaverType.POOLED;
 
 import com.artemis.Weaver;
+import com.artemis.WeaverLog;
 import com.artemis.meta.ClassMetadata;
+
 import org.gradle.api.DefaultTask;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.tasks.Input;
@@ -65,41 +67,25 @@ public class ArtemisWeavingTask extends DefaultTask {
 		//if (context != null && !context.hasDelta(sourceDirectory)) return;
 
 		Logger log = getLogger();
-		log.info("Configuration:");
-		log.info("\tideFriendlyPacking .............. " + ideFriendlyPacking);
-		log.info("\tenablePooledWeaving ............. " + enablePooledWeaving);
-		log.info("\toptimizeEntitySystems ........... " + optimizeEntitySystems);
-		log.info("\toutputDirectory ................. " + classesDir);
-
+		
+//		log.info("");
+		log.info("CONFIGURATION");
+		log.info(WeaverLog.LINE.replaceAll("\n", ""));
+		log.info(WeaverLog.format("ideFriendlyPacking", ideFriendlyPacking));
+		log.info(WeaverLog.format("enablePooledWeaving", enablePooledWeaving));
+		log.info(WeaverLog.format("optimizeEntitySystems", optimizeEntitySystems));
+		log.info(WeaverLog.format("outputDirectory",  classesDir));
+		log.info(WeaverLog.LINE.replaceAll("\n", ""));
+		
 		Weaver.retainFieldsWhenPacking(ideFriendlyPacking);
 		Weaver.enablePooledWeaving(enablePooledWeaving);
 		Weaver.optimizeEntitySystems(optimizeEntitySystems);
 
 		Weaver weaver = new Weaver(classesDir);
-		List<ClassMetadata> processed = weaver.execute();
-
-		log.info(getSummary(processed, start));
-
-		for (ClassMetadata meta : processed) {
-			try {
-				meta.weaverTask.get();
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e.getMessage(), e);
-			} catch (ExecutionException e) {
-				throw new RuntimeException(e.getCause().getMessage(), e.getCause());
-			}
+		WeaverLog processed = weaver.execute();
+		for (String s : processed.getFormattedLog().split("\n")) {
+			log.info(s);
 		}
-	}
-
-	private static String getSummary(List<ClassMetadata> processed, long start) {
-		int pooled = 0, packed = 0;
-		for (ClassMetadata meta : processed) {
-			if (PACKED == meta.annotation) packed++;
-			else if (POOLED == meta.annotation) pooled++;
-		}
-
-		return String.format("Processed %d PackedComponents and %d PooledComponents in %dms.",
-				packed, pooled, (System.currentTimeMillis() - start));
 	}
 
 	public boolean isEnableArtemisPlugin() {

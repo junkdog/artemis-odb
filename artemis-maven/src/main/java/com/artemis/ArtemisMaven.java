@@ -1,12 +1,8 @@
 package com.artemis;
 
-import static com.artemis.meta.ClassMetadata.WeaverType.PACKED;
-import static com.artemis.meta.ClassMetadata.WeaverType.POOLED;
 import static org.apache.maven.plugins.annotations.LifecyclePhase.PROCESS_CLASSES;
 
 import java.io.File;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -16,8 +12,6 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.sonatype.plexus.build.incremental.BuildContext;
-
-import com.artemis.meta.ClassMetadata;
 
 /**
  * The artemis plugin performs bytecode-weaving on annotated components
@@ -62,6 +56,8 @@ public class ArtemisMaven extends AbstractMojo {
 	@Component
 	private BuildContext context;
 
+	private Log log = getLog();
+	
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (!enableArtemisPlugin) {
@@ -69,45 +65,26 @@ public class ArtemisMaven extends AbstractMojo {
 			return;
 		}
 
-		long start = System.currentTimeMillis();
 		if (context != null && !context.hasDelta(sourceDirectory))
 			return;
 
-		Log log = getLog();
-		log.info("Configuration:");
-		log.info("\tideFriendlyPacking .............. " + ideFriendlyPacking);
-		log.info("\tenablePooledWeaving ............. " + enablePooledWeaving);
-		log.info("\toptimizeEntitySystems ........... " + optimizeEntitySystems);
+		log.info("");
+		log.info("CONFIGURATION");
+		log.info(WeaverLog.LINE.replaceAll("\n", ""));
+		log.info(WeaverLog.format("ideFriendlyPacking", ideFriendlyPacking));
+		log.info(WeaverLog.format("enablePooledWeaving", enablePooledWeaving));
+		log.info(WeaverLog.format("optimizeEntitySystems", optimizeEntitySystems));
+		log.info(WeaverLog.LINE.replaceAll("\n", ""));
 
 		Weaver.retainFieldsWhenPacking(ideFriendlyPacking);
 		Weaver.enablePooledWeaving(enablePooledWeaving);
 		Weaver.optimizeEntitySystems(optimizeEntitySystems);
 
 		Weaver weaver = new Weaver(outputDirectory);
-		List<ClassMetadata> processed = weaver.execute();
+		WeaverLog weaverLog = weaver.execute();
 
-		log.info(getSummary(processed, start));
-
-		for (ClassMetadata meta : processed) {
-			try {
-				meta.weaverTask.get();
-			} catch (InterruptedException e) {
-				throw new MojoExecutionException(e.getMessage(), e);
-			} catch (ExecutionException e) {
-				throw new MojoExecutionException(e.getCause().getMessage(), e.getCause());
-			}
+		for (String s : weaverLog.getFormattedLog().split("\n")) {
+			log.info(s);
 		}
 	}
-
-	private static CharSequence getSummary(List<ClassMetadata> processed, long start) {
-		int pooled = 0, packed = 0;
-		for (ClassMetadata meta : processed) {
-			if (PACKED == meta.annotation) packed++;
-			else if (POOLED == meta.annotation) pooled++;
-		}
-
-		return String.format("Processed %d PackedComponents and %d PooledComponents in %dms.",
-				packed, pooled, (System.currentTimeMillis() - start));
-	}
-
 }

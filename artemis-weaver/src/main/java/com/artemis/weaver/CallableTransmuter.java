@@ -7,14 +7,14 @@ import java.util.concurrent.Callable;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
-abstract class CallableTransmuter implements Callable<Void> {
+abstract class CallableTransmuter<T> implements Callable<T> {
 	private final String file;
 	
-	protected abstract void process(String file) throws FileNotFoundException, IOException;
+	protected abstract T process(String file) throws FileNotFoundException, IOException;
 
 	@Override
-	public final Void call() throws Exception {
-		process(file);
-		return null;
+	public final T call() throws Exception {
+		T t = process(file);
+		return t;
 	}
 }

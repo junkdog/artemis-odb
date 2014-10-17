@@ -35,7 +35,7 @@ public class ExternalFieldClassTransformer implements ClassTransformer, Opcodes 
 		return cn;
 	}
 
-	public boolean isNeedsWriteToDisk() {
+	public boolean isComponentAccessChanged() {
 		return needsWriteToDisk;
 	}
 }

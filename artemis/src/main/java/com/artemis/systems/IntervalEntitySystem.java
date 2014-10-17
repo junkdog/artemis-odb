@@ -19,6 +19,7 @@ public abstract class IntervalEntitySystem extends EntitySystem {
 	/** How long to wait between updates. */
 	private final float interval;
 
+	private float intervalDelta;
 
 	/**
 	 * Creates a new IntervalEntitySystem.
@@ -38,9 +39,20 @@ public abstract class IntervalEntitySystem extends EntitySystem {
 		acc += getTimeDelta();
 		if(acc >= interval) {
 			acc -= interval;
+			intervalDelta = (acc - intervalDelta);
+			
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Gets the actual delta since this system was last processed.
+	 * 
+	 * @return Time passed since last process round.
+	 */
+	protected float getIntervalDelta() {
+		return interval + intervalDelta;
 	}
 	
 	protected float getTimeDelta() {

@@ -8,10 +8,16 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import org.objectweb.asm.ClassReader;
@@ -41,40 +47,37 @@ public class Weaver {
 		this.targetClasses = outputDirectory;
 	}
 	
-	public static void main(String[] args)
-	{
-		ExecutorService threadPool = newThreadPool();
-		List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
-		if (args.length == 0) {
-			for (File f : ClassUtil.find(".")) {
-				processClass(threadPool, f.getAbsolutePath(), processed);
-			}
-		} else {
-			for (String arg : args) {
-				// eclipse sends folders along too
-				if (arg.endsWith(".class")) processClass(threadPool, arg, processed);
-			}
-		}
-		awaitTermination(threadPool);
-		
-//		rewriteFieldAccess(packedFieldAccess(processed));
-	}
-
-	public List<ClassMetadata> execute() {
-		ExecutorService threadPool = newThreadPool();
+	public WeaverLog execute() {
+		WeaverLog log = new WeaverLog();
 		
 		List<File> classes = ClassUtil.find(targetClasses);
-		List<ClassMetadata> processed = rewriteComponents(classes, threadPool);
-		rewriteFieldAccess(classes, packedFieldAccess(processed));
+		rewriteComponents(classes, log);
+		rewriteFieldAccess(classes, packedFieldAccess(log.components), log);
 		rewriteProfilers(classes);
 		
 		if (ClassMetadata.GlobalConfiguration.optimizeEntitySystems)
-			rewriteEntitySystems(classes);
+			rewriteEntitySystems(classes, log);
 		
-		return processed;
+		sort(log);
+		
+		return log;
 	}
 	
-	public static List<ClassMetadata> rewriteEntitySystems(List<File> classes) {
+	private static void sort(WeaverLog log) {
+		Comparator<ClassMetadata> comparator = new Comparator<ClassMetadata>() {
+			@Override
+			public int compare(ClassMetadata o1, ClassMetadata o2) {
+				return o1.type.toString().compareTo(o2.type.toString());
+			}
+		};
+		
+		Collections.sort(log.components, comparator);
+		Collections.sort(log.componentSystems, comparator);
+		Collections.sort(log.systems, comparator);
+	}
+
+	public static List<ClassMetadata> rewriteEntitySystems(List<File> classes, WeaverLog log) {
+		Timer timer = new Timer();
 		List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
 		
 		ExecutorService threadPool = newThreadPool();
@@ -87,6 +90,9 @@ public class Weaver {
 		}
 		awaitTermination(threadPool);
 		
+		log.timeSystems = timer.duration();
+		log.systems = processed;
+		
 		return processed;
 	}
 
@@ -98,24 +104,56 @@ public class Weaver {
 		awaitTermination(threadPool);
 	}
 
-	private static List<ClassMetadata> rewriteComponents(List<File> classes, ExecutorService threadPool) {
+	private static void rewriteComponents(List<File> classes, WeaverLog log) {
+		Timer timer = new Timer();
+		ExecutorService threadPool = newThreadPool();
+		
 		List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
 		for (File f : classes)
 			processClass(threadPool, f.getAbsolutePath(), processed);
 		
 		awaitTermination(threadPool);
-		return processed;
+		
+		log.components = processed;
+		log.timeComponents = timer.duration();
 	}
 	
-	private static void rewriteFieldAccess(List<File> classes, List<ClassMetadata> packed) {
+	
+	// TODO: collect rewritten systems
+	private static void rewriteFieldAccess(List<File> classes, List<ClassMetadata> packed, WeaverLog log) {
 		if (packed.isEmpty())
 			return;
 		
-		ExecutorService threadPool = newThreadPool();
-		for (File f : classes)
-			processRelatedClasses(threadPool, f.getAbsolutePath(), packed);
+		Timer timer = new Timer();
 		
-		awaitTermination(threadPool);
+		ExecutorService threadPool = newThreadPool();
+		
+		List<Future<ClassMetadata>> tasks = new ArrayList<Future<ClassMetadata>>();
+		for (File file : classes) {
+			String path = file.getAbsolutePath();
+			ClassReader cr = classReaderFor(path);
+			ComponentAccessTransmuter transmuter =	new ComponentAccessTransmuter(path, cr, packed);
+			
+			tasks.add(threadPool.submit(transmuter));
+		}
+		
+		try {
+			
+			List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
+			for (Future<ClassMetadata> result : tasks) {
+				ClassMetadata metadata = result.get();
+				if (metadata != null)
+					processed.add(metadata);
+			}
+			
+			awaitTermination(threadPool);
+			log.timeComponentSystems = timer.duration();
+			log.componentSystems = processed; 
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void retainFieldsWhenPacking(boolean ideFriendlyPacking) {
@@ -151,10 +189,10 @@ public class Weaver {
 		processed.add(meta);
 	}
 	
-	private static void processRelatedClasses(ExecutorService threadPool, String file, List<ClassMetadata> packed) {
-		ClassReader cr = classReaderFor(file);
-		threadPool.submit(new ComponentAccessTransmuter(file, cr, packed));
-	}
+//	private static void processRelatedClasses(ExecutorService threadPool, String file, List<ClassMetadata> packed) {
+//		ClassReader cr = classReaderFor(file);
+//		threadPool.submit(new ComponentAccessTransmuter(file, cr, packed));
+//	}
 	
 	private static void optimizeEntitySystem(ExecutorService threadPool, String file) {
 		ClassReader cr = classReaderFor(file);
@@ -216,6 +254,14 @@ public class Weaver {
 			threadPool.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private static class Timer {
+		private long start = System.nanoTime(); 
+		
+		public int duration() {
+			return (int)((System.nanoTime() - start) / 1000000);
 		}
 	}
 }
