@@ -235,7 +235,7 @@ public class World {
 		
 		assertInitialized();
 		
-		String impl = factory.getCanonicalName() + "Impl";
+		String impl = factory.getName() + "Impl";
 		try {
 			Class<?> implClass = ClassReflection.forName(impl);
 			Constructor constructor = ClassReflection.getConstructor(implClass, World.class);

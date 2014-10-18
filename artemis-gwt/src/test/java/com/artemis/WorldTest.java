@@ -1,22 +1,18 @@
 package com.artemis;
 
 
-import junit.framework.Assert;
-
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
-import com.artemis.systems.DelayedEntityProcessingSystem;
-import com.artemis.systems.EntityProcessingSystem;
-import com.artemis.systems.VoidEntitySystem;
-import com.artemis.utils.Bag;
+import com.artemis.system.ExpirationSystem;
+import com.artemis.system.SystemB;
+import com.artemis.system.SystemComponentXRemover;
 import com.google.gwt.junit.client.GWTTestCase;
 
 public class WorldTest extends GWTTestCase {
 
 	@Override
 	public String getModuleName() {
-		return "com.artemis.ArtemisTest";
+		return "com.ArtemisTest";
 	}
 
 	private World world;
@@ -88,113 +84,5 @@ public class WorldTest extends GWTTestCase {
 		Entity e = world.createEntity();
 		e.edit().create(ComponentY.class);
 		return e;
-	}
-
-	static class SystemComponentXRemover extends EntityProcessingSystem {
-		@SuppressWarnings("unchecked")
-		public SystemComponentXRemover()
-		{
-			super(Aspect.getAspectForAll(ComponentX.class));
-		}
-
-		@Override
-		protected void process(Entity e)
-		{
-			e.edit().remove(ComponentX.class);
-		}
-	}
-
-	@Wire
-	static class SystemB extends EntityProcessingSystem {
-		ComponentMapper<ComponentX> xm;
-
-		@SuppressWarnings("unchecked")
-		public SystemB()
-		{
-			super(Aspect.getAspectForAll(ComponentX.class));
-		}
-
-		@Override
-		protected void process(Entity e)
-		{
-			xm.get(e);
-		}
-	}
-	
-	@Wire
-	static class SystemY extends EntityProcessingSystem {
-		ComponentMapper<ComponentY> ym;
-		
-		@SuppressWarnings("unchecked")
-		public SystemY()
-		{
-			super(Aspect.getAspectForAll(ComponentY.class));
-		}
-		
-		@Override
-		protected void process(Entity e)
-		{
-			Assert.assertNotNull(ym);
-			ym.get(e);
-		}
-	}
-	
-	@Wire
-	static class SystemSpawner extends VoidEntitySystem {
-		ComponentMapper<ComponentY> ym;
-		
-		@Override
-		protected void initialize()
-		{
-			world.setSystem(new SystemY());
-		}
-		
-		@Override
-		protected void processSystem()
-		{
-			Assert.assertNotNull(ym);
-		}
-	}
-	
-	static class ExpirationSystem extends DelayedEntityProcessingSystem {
-		// don't do this IRL
-		private Bag<Float> deltas = new Bag<Float>();
-		int expiredLastRound;
-
-		@SuppressWarnings("unchecked")
-		public ExpirationSystem() {
-			super(Aspect.getAspectForAll(ComponentY.class));
-		}
-		
-		@Override
-		protected void inserted(Entity e) {
-			deltas.set(e.getId(), 1f);
-			super.inserted(e);
-		}
-		
-		@Override
-		protected float getRemainingDelay(Entity e) {
-			return deltas.get(e.getId());
-		}
-
-		@Override
-		protected void processDelta(Entity e, float accumulatedDelta) {
-			float remaining = deltas.get(e.getId());
-			remaining -=  accumulatedDelta;
-			offerDelay(remaining);
-			deltas.set(e.getId(), remaining);
-		}
-
-		@Override
-		protected void processExpired(Entity e) {
-			expiredLastRound++;
-			deltas.set(e.getId(), null);
-			e.deleteFromWorld();
-		}
-		
-		@Override
-		protected void begin() {
-			expiredLastRound = 0;
-		}
 	}
 }

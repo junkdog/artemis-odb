@@ -19,6 +19,7 @@ package com.artemis.utils.reflect;
 import com.artemis.gwtref.client.ReflectionCache;
 import com.artemis.gwtref.client.Type;
 import com.artemis.utils.reflect.ReflectionException;
+import com.google.gwt.core.client.GWT;
 
 import java.util.Arrays;
 
@@ -43,6 +44,11 @@ public final class ClassReflection {
 	/** Determines if the supplied Object is assignment-compatible with the object represented by supplied Class. */
 	static public boolean isInstance (Class c, Object obj) {
 		return isAssignableFrom(c, obj.getClass());
+	}
+	
+	static public String getCanonicalName(Class c) {
+//		return c.getPackage().getName() + "." + c.getSimpleName();
+		return c.getSimpleName();
 	}
 
 	/** Determines if the class or interface represented by first Class parameter is either the same as, or is a superclass or
