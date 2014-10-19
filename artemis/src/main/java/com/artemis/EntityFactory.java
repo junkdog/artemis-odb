@@ -1,9 +1,5 @@
 package com.artemis;
 
-import com.artemis.annotations.Bind;
-import com.artemis.annotations.Sticky;
-
-
 /**
  *
  * <pre>

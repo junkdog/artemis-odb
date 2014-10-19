@@ -16,8 +16,6 @@
 
 package com.artemis.utils.reflect;
 
-import com.artemis.annotations.Wire;
-
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
@@ -25,6 +23,7 @@ import java.lang.reflect.Type;
 
 /** Provides information about, and access to, a single field of a class or interface.
  * @author nexsoftware */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public final class Field {
 
 	private final java.lang.reflect.Field field;

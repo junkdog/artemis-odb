@@ -20,6 +20,7 @@ import java.lang.reflect.Modifier;
 
 /** Utilities for Class reflection.
  * @author nexsoftware */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public final class ClassReflection {
 
 	/** Returns the Class object associated with the class or interface with the supplied string name. */

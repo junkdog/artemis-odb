@@ -20,6 +20,7 @@ import java.lang.reflect.InvocationTargetException;
 
 /** Provides information about, and access to, a single constructor for a Class.
  * @author nexsoftware */
+@SuppressWarnings("rawtypes")
 public final class Constructor {
 
 	private final java.lang.reflect.Constructor constructor;

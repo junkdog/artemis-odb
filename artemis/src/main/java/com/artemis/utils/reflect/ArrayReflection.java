@@ -18,6 +18,7 @@ package com.artemis.utils.reflect;
 
 /** Utilities for Array reflection.
  * @author nexsoftware */
+@SuppressWarnings({"rawtypes"})
 public final class ArrayReflection {
 
 	/** Creates a new array with the specified component type and length. */

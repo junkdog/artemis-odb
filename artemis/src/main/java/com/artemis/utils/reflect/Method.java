@@ -21,6 +21,7 @@ import java.lang.reflect.Modifier;
 
 /** Provides information about, and access to, a single method on a class or interface.
  * @author nexsoftware */
+@SuppressWarnings({"unchecked", "rawtypes"})
 public final class Method {
 
 	private final java.lang.reflect.Method method;
