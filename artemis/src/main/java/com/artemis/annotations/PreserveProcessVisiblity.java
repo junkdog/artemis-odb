@@ -1,5 +1,6 @@
 package com.artemis.annotations;
 
+import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,4 +14,5 @@ import com.artemis.systems.EntityProcessingSystem;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
+@Documented
 public @interface PreserveProcessVisiblity {}

@@ -1,14 +1,13 @@
 /**
- * Annotations used by Artemis.
- * <p>
- * Most prominently the {@link Mapper} annotation for injecting
- * ComponentMappers into systems and managers.
- * </p>
- * <p>
- * The weaver annotations can transform normal {@link com.artemis.Component} classes
- * into a more appropriate type without writing the required boilerplate. The
- * <code>artemis-odb-maven-plugin</code> is required for performing such
- * transformations.
- * </p>
+ * Annotations used by Artemis, both runtime and during compilation,
+ * 
+ * <p><b>Runtime:</b> {@link com.artemis.annotations.Wire} and {@link com.artemis.annotations.Mapper}.</p>
+ * 
+ * <p><b>Annotation Processor for {@link com.artemis.EntityFactory}:</b> {@link com.artemis.annotations.Bind},
+ * {@link com.artemis.annotations.Sticky}, {@link com.artemis.annotations.UseSetter}.</p>
+ * 
+ * <p><b>Bytecode weaving (provided by CLI tool and gradle/maven plugin):</b> {@link com.artemis.annotations.PackedWeaver},
+ * {@link com.artemis.annotations.PooledWeaver}, {@link com.artemis.annotations.PreserveProcessVisiblity},
+ * {@link com.artemis.annotations.Profile}.</p>
  */
 package com.artemis.annotations;

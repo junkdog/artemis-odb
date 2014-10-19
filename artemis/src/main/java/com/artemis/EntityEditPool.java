@@ -4,7 +4,7 @@ import java.util.BitSet;
 
 import com.artemis.utils.Bag;
 
-public final class EntityEditPool {
+final class EntityEditPool {
 	
 	private final Bag<EntityEdit> pool = new Bag<EntityEdit>();
 	private final World world;

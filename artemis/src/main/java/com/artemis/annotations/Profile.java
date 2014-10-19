@@ -9,10 +9,10 @@ import java.lang.annotation.Target;
 import com.artemis.utils.ArtemisProfiler;
 
 /**
- * Profile EntitySystems with user-specified profiler class, implementing ArtemisProfiler.<p/>
+ * Profile EntitySystems with user-specified profiler class, implementing ArtemisProfiler.
  * 
- * Injects conditional profiler call at start of <code>begin()</code> and before any exit
- * point in <code>end()</code>.
+ * <p>Injects conditional profiler call at start of <code>begin()</code> and before any exit
+ * point in <code>end()</code>.</p>
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.CLASS)
