@@ -89,18 +89,22 @@ final class EntityEditPool {
 		for (int i = 0; size > i; i++) {
 			EntityEdit edit = (EntityEdit)data[i];
 			em.updateCompositionIdentity(edit);
-			if (edit.scheduledDeletion) {
-				w.deleted.add(edit.entity);
-			} else if (edit.hasBeenAddedToWorld) {
-				w.changed.add(edit.entity);
-			} else {
-				w.added.add(edit.entity);
-			}
+			addToPerformer(w, edit);
 			
 			pool.add(edit);
 		}
 		
 		return true;
+	}
+
+	private static void addToPerformer(World w, EntityEdit edit) {
+		if (edit.scheduledDeletion) {
+			w.deleted.add(edit.entity);
+		} else if (edit.hasBeenAddedToWorld) {
+			w.changed.add(edit.entity);
+		} else {
+			w.added.add(edit.entity);
+		}
 	}
 
 	private void swapEditBags() {
