@@ -4,7 +4,7 @@
 - **MINOR BREAKING CHANGES**
   - Archetype moved to `com.artemis` package.
 
-- Auto-generate EntityFactories.
+- Auto-generate [EntityFactories](https://github.com/junkdog/artemis-odb/wiki/EntityFactory).
 - ArchetypeBuilder constructor accepts null passed as parent.
 
 
