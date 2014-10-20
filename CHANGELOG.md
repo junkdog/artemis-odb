@@ -1,12 +1,13 @@
 ## Change Log
 
-#### Version: 0.7.3-SNAPSHOT
+#### Version: 0.8.1-SNAPSHOT
+
+#### Version: 0.8.0 - 2014-10-20
 - **MINOR BREAKING CHANGES**
   - Archetype moved to `com.artemis` package.
 
 - Auto-generate [EntityFactories](https://github.com/junkdog/artemis-odb/wiki/EntityFactory).
 - ArchetypeBuilder constructor accepts null passed as parent.
-
 
 #### Version: 0.7.2 - 2014-10-08
 - **Fix**: Chaining Entity#edit caused the internal bitset to reset
