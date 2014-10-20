@@ -106,5 +106,5 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 
  - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.8.0/) 
  - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.8.0/)
- - [Entity Entity Factory Processor](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-processor/0.8.0/)
+ - [Entity Factory Processor](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-processor/0.8.0/)
 
