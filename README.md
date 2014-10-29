@@ -22,14 +22,14 @@ Operations/second. Higher is better.
 See [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) for more benchmarks.
 Don't take our word for it, run the benchmarks yourself!
 
- [it1k]: http://junkdog.github.io/images/ecs-bench/iteration-1024.png
- [it4k]: http://junkdog.github.io/images/ecs-bench/iteration-4096.png
- [it16k]: http://junkdog.github.io/images/ecs-bench/iteration-16384.png
- [it65k]: http://junkdog.github.io/images/ecs-bench/iteration-65536.png
- [ir1k]: http://junkdog.github.io/images/ecs-bench/insert_remove-1024.png
- [ir4k]: http://junkdog.github.io/images/ecs-bench/insert_remove-4096.png
- [ir16k]: http://junkdog.github.io/images/ecs-bench/insert_remove-16384.png
- [ir65k]: http://junkdog.github.io/images/ecs-bench/insert_remove-65536.png 
+ [it1k]: http://junkdog.github.io/images/ecs-bench/iteration__1024_entities.png
+ [it4k]: http://junkdog.github.io/images/ecs-bench/iteration__4096_entities.png
+ [it16k]: http://junkdog.github.io/images/ecs-bench/iteration__16384_entities.png
+ [it65k]: http://junkdog.github.io/images/ecs-bench/iteration__65536_entities.png
+ [ir1k]: http://junkdog.github.io/images/ecs-bench/insert_remove__1024_entities.png
+ [ir4k]: http://junkdog.github.io/images/ecs-bench/insert_remove__4096_entities.png
+ [ir16k]: http://junkdog.github.io/images/ecs-bench/insert_remove__16384_entities.png
+ [ir65k]: http://junkdog.github.io/images/ecs-bench/insert_remove__65536_entities.png 
 
 ### Made with artemis-odb
 
