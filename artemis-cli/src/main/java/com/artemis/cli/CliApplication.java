@@ -23,11 +23,13 @@ public class CliApplication {
 		MatrixCommand matrix = new MatrixCommand();
 		WeaveCommand weave = new WeaveCommand();
 		OptimizationCommand optimze = new OptimizationCommand();
+		EclipseProcessorCommand eclipse = new EclipseProcessorCommand();
 		
 		JCommander parser = new JCommander(this);
 		parser.addCommand(MatrixCommand.COMMAND, matrix);
 		parser.addCommand(WeaveCommand.COMMAND, weave);
 		parser.addCommand(OptimizationCommand.COMMAND, optimze);
+		parser.addCommand(EclipseProcessorCommand.COMMAND, eclipse);
 		
 		try {
 			parser.setProgramName(getJarName());
