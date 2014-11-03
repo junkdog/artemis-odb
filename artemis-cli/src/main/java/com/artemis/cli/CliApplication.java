@@ -37,16 +37,18 @@ public class CliApplication {
 			
 			if (help) {
 				parser.usage();
-				System.exit(1);
+				System.exit(0);
 			}
 			
 			String command = parser.getParsedCommand();
 			if (MatrixCommand.COMMAND.equals(command)) {
 				matrix.execute();
-			} else  if (WeaveCommand.COMMAND.equals(command)) {
+			} else if (WeaveCommand.COMMAND.equals(command)) {
 				weave.execute();
 			} else if (OptimizationCommand.COMMAND.equals(command)) {
 				optimze.execute();
+			} else if (EclipseProcessorCommand.COMMAND.equals(command)) {
+				eclipse.execute();
 			} else {
 				parser.usage();
 				System.exit(1);
