@@ -412,7 +412,7 @@ public class World {
 	}
 	
 	/**
-	 * Create and return an {@link EntityEdit} wrapping a new or reused entity instance.
+	 * Create and return an {@link Entity} wrapping a new or reused entity instance.
 	 * Entity is automatically added to the world.
 	 *
 	 * @return entity

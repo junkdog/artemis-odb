@@ -51,6 +51,7 @@ public class EntityManager extends Manager {
 	 */
 	protected Entity createEntityInstance() {
 		Entity e = recyclingEntityFactory.obtain();
+		entityToIdentity.set(e.getId(), 0);
 		created++;
 		return e;
 	}
