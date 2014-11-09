@@ -1,6 +1,9 @@
 ## Change Log
 
 #### Version: 0.8.1-SNAPSHOT
+- **Fix**: Adding a component to an archetyped entity prior to it being added to the world
+  resulted in the component never being registered.
+  - Note that editing an entity created by an archetype voids the performance benefit of archetypes..
 
 #### Version: 0.8.0 - 2014-10-20
 - **MINOR BREAKING CHANGES**
