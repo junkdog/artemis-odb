@@ -1,9 +1,10 @@
 package com.artemis;
 
-import java.util.BitSet;
-
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
+import com.artemis.EntityTransmuter.TransmuteOperation;
+
+import java.util.BitSet;
 
 
 /**
@@ -246,6 +247,10 @@ public class EntityManager extends Manager {
 			identity = forceResolveIdentity(e);
 
 		return identity;
+	}
+
+	void setIdentity(Entity e, TransmuteOperation operation) {
+		entityToIdentity.set(e.getId(), operation.compositionId);
 	}
 
 	private int forceResolveIdentity(Entity e) {
