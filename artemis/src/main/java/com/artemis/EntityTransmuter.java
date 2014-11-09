@@ -38,7 +38,7 @@ public final class EntityTransmuter {
 		bs.clear();
 		bs.or(origin);
 		bs.or(additions);
-		bs.xor(removals);
+		bs.andNot(removals);
 		int compositionId = world.getEntityManager().compositionIdentity(bs);
 		return new TransmuteOperation(compositionId, getAdditions(origin), getRemovals(origin));
 	}

@@ -12,6 +12,7 @@ import static org.junit.Assert.*;
 public class EntityTransmuterTest {
 
 	private World world;
+	private EntityTransmuter transmuter1;
 	private EntityTransmuter transmuter3;
 
 	@Before
@@ -24,13 +25,19 @@ public class EntityTransmuterTest {
 			.add(Packed.class)
 			.remove(ComponentY.class)
 			.build();
+
+		transmuter1 = new EntityTransmuterFactory(world)
+			.remove(ComponentX.class)
+			.remove(ComponentY.class)
+			.remove(Packed.class)
+			.remove(ReusedComponent.class)
+			.build();
 	}
 	
 	@Test
-	public void transmuting_entities_test() {
+	public void transmuting_entities() {
 		Entity e1 = createEntity(ComponentY.class, ReusedComponent.class);
 		Entity e2 = createEntity(ComponentY.class, ReusedComponent.class);
-
 		world.process();
 		assertEquals(2, e1.getCompositionId());
 
@@ -46,6 +53,25 @@ public class EntityTransmuterTest {
 
 		assertTrue("compositionId=" + e2.getCompositionId(), 2 != e2.getCompositionId());
 		assertEquals(e1.getCompositionId(), e2.getCompositionId());
+
+		assertNotNull(e1.getComponent(ComponentX.class));
+		assertNotNull(e1.getComponent(Packed.class));
+		assertNotNull(e1.getComponent(ReusedComponent.class));
+		assertNull(e1.getComponent(ComponentY.class));
+	}
+
+	@Test
+	public void transmute_twice() {
+		Entity e = createEntity(ComponentY.class, ReusedComponent.class);
+		world.process();
+
+		assertEquals(2, e.getCompositionId());
+
+		transmuter1.transmute(e);
+		assertEquals(1, e.getCompositionId());
+
+		transmuter3.transmute(e);
+		assertEquals(3, e.getCompositionId());
 	}
 
 	private Entity createEntity(Class<? extends Component>... components) {
