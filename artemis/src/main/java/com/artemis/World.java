@@ -127,8 +127,6 @@ public class World {
 	 * An EntityManager and ComponentManager are created and added upon
 	 * creation.
 	 * </p>
-	 *
-	 * @param expectedEntityCount To avoid resizing entity containers needlessly.
 	 */
 	public World(WorldConfiguration configuration) {
 		managers = new IdentityHashMap<Class<? extends Manager>, Manager>();
@@ -509,7 +507,7 @@ public class World {
 	 * Run performers on all systems.
 	 *
 	 * @param performer the performer to run
-	 * @param e		 the entity to pass as argument to the systems
+	 * @param entities the entity to pass as argument to the systems
 	 */
 	private void notifySystems(Performer performer, WildBag<Entity> entities) {
 		Object[] data = systemsBag.getData();
@@ -522,7 +520,7 @@ public class World {
 	 * Run performers on all managers.
 	 *
 	 * @param performer the performer to run
-	 * @param e		 the entity to pass as argument to the managers
+	 * @param entities the entity to pass as argument to the managers
 	 */
 	private void notifyManagers(Performer performer, WildBag<Entity> entities) {
 		Object[] data = managersBag.getData();

@@ -43,7 +43,7 @@ public final class EntityEdit {
 	 *			the component to add to this entity
 	 * 
 	 * @return this EntityEdit for chaining
-	 * @see {@link #createComponent(Class)}
+	 * @see {@link #create(Class)}
 	 */
 	public EntityEdit add(Component component) {
 		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
@@ -63,12 +63,12 @@ public final class EntityEdit {
 	 *			the type of the component
 	 * 
 	 * @return this EntityEdit for chaining
-	 * @see #createComponent(Class)
+	 * @see #create(Class)
 	 */
 	public EntityEdit add(Component component, ComponentType type) {
 		if (type.getTaxonomy() != Taxonomy.BASIC) {
 			throw new InvalidComponentException(component.getClass(),
-				"Use Entity#createComponent for adding non-basic component types");
+				"Use EntityEdit#create(Class<Component>) for adding non-basic component types");
 		}
 		world.getComponentManager().addComponent(entity, type, component);
 		
