@@ -1,6 +1,7 @@
 ## Change Log
 
 #### Version: 0.8.1-SNAPSHOT
+- CLI command for configuring eclipse projects with annotation processor (entity factories)
 - **Fix**: Adding a component to an archetyped entity prior to it being added to the world
   resulted in the component never being registered.
   - Note that editing an entity created by an archetype voids the performance benefit of archetypes..
