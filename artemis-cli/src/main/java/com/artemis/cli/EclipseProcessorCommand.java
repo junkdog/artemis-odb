@@ -58,6 +58,14 @@ public class EclipseProcessorCommand {
 
 	private void configureSavePaths() {
 		String basePath = projectFolder.getAbsolutePath();
+
+		if ("src-generated".equals(apSourceFolder.toString()))
+			apSourceFolder = new File(projectFolder, "src-generated");
+
+		if (".".equals(apSaveFolder.toString()))
+			apSaveFolder = projectFolder;
+
+
 		if (!apSaveFolder.getAbsolutePath().startsWith(basePath)) {
 			throw new RuntimeException("Save location for annotation " +
 				"processor must be a subpath of project.");
@@ -81,7 +89,7 @@ public class EclipseProcessorCommand {
 			URL downloadUrl = new URL(url);
 			File saveFile = new File(apSaveFolder, String.format("artemis-odb-processor-%s.jar", version));
 			
-			System.out.print("downloading processor... ");
+			System.out.print("downloading processor: " + url + " ... ");
 			FileUtils.copyURLToFile(downloadUrl, saveFile);
 			System.out.println("done");
 		} catch (IOException e) {
@@ -136,10 +144,10 @@ public class EclipseProcessorCommand {
 	}
 
 	private void writeFactoryPath() {
-		File factoryPath = new File(projectFolder, ".factoryPath");
+		File factoryPath = new File(projectFolder, ".factorypath");
 		
 		try {
-			List<String> lines = IOUtils.readLines(EclipseProcessorCommand.class.getResourceAsStream("/factoryPath"));
+			List<String> lines = IOUtils.readLines(EclipseProcessorCommand.class.getResourceAsStream("/factorypath"));
 			StringBuilder sb = new StringBuilder();
 			
 			String projectName = getProjectName();
