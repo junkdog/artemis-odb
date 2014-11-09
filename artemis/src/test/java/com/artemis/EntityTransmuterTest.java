@@ -4,6 +4,7 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.component.Packed;
 import com.artemis.component.ReusedComponent;
+import com.artemis.systems.EntityProcessingSystem;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,12 +13,14 @@ import static org.junit.Assert.*;
 public class EntityTransmuterTest {
 
 	private World world;
+	private ES1 es;
 	private EntityTransmuter transmuter1;
 	private EntityTransmuter transmuter3;
 
 	@Before
 	public void init() {
 		world = new World();
+		es = world.setSystem(new ES1());
 		world.initialize();
 
 		transmuter3 = new EntityTransmuterFactory(world)
@@ -74,6 +77,22 @@ public class EntityTransmuterTest {
 		assertEquals(3, e.getCompositionId());
 	}
 
+
+	@Test
+	public void entity_insertion_removal() {
+		Entity e = world.createEntity();
+		world.process();
+		transmuter3.transmute(e);
+		world.process();
+
+		assertEquals(1, es.getActives().size());
+
+		transmuter1.transmute(e);
+		world.process();
+
+		assertEquals(0, es.getActives().size());
+	}
+
 	private Entity createEntity(Class<? extends Component>... components) {
 		Entity e = world.createEntity();
 		EntityEdit edit = e.edit();
@@ -81,5 +100,14 @@ public class EntityTransmuterTest {
 			edit.create(c);
 
 		return e;
+	}
+
+	private static class ES1 extends EntityProcessingSystem {
+		public ES1() {
+			super(Aspect.getAspectForAll(ComponentX.class));
+		}
+
+		@Override
+		protected void process(Entity e) {}
 	}
 }

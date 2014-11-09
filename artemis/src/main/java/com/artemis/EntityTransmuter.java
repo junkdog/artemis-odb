@@ -22,15 +22,25 @@ public final class EntityTransmuter {
 	}
 
 	public void transmute(Entity e) {
+		TransmuteOperation operation = getOperation(e);
+
+		operation.perform(e, world.getComponentManager());
+		world.getEntityManager().setIdentity(e, operation);
+
+		if (e.isActive())
+			world.changed.add(e);
+		else
+			world.added.add(e);
+	}
+
+	private TransmuteOperation getOperation(Entity e) {
 		int compositionId = e.getCompositionId();
 		TransmuteOperation operation = operations.safeGet(compositionId);
 		if (operation == null) {
 			operation = createOperation(e);
 			operations.set(compositionId, operation);
 		}
-
-		operation.perform(e, world.getComponentManager());
-		world.getEntityManager().setIdentity(e, operation);
+		return operation;
 	}
 
 	private TransmuteOperation createOperation(Entity e) {

@@ -592,8 +592,9 @@ public class World {
 	}
 
 	private void updateEntityStates() {
-		if (added.size() > 0) {
+		while (added.size() > 0 || changed.size() > 0) {
 			check(added, addedPerformer);
+			check(changed, changedPerformer);
 		}
 		
 		while(editPool.processEntities()) {
@@ -704,7 +705,7 @@ public class World {
 		 * Call a method on the observer with the entity as argument.
 		 *
 		 * @param observer the observer with the method to calll
-		 * @param e		the entity to pass as argument
+		 * @param entities	the entities to pass as argument
 		 */
 		void perform(EntityObserver observer, WildBag<Entity> entities);
 	}
