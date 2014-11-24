@@ -22,7 +22,7 @@ public abstract class VoidEntitySystem extends EntitySystem {
 	 * Creates a new VoidEntitySystem.
 	 */
 	public VoidEntitySystem() {
-		super(Aspect.getEmpty());
+		super(null);
 	}
 
 	@Override

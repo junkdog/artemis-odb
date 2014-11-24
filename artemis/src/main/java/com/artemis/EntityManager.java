@@ -14,6 +14,7 @@ import java.util.BitSet;
  */
 public class EntityManager extends Manager {
 
+	static final int NO_COMPONENTS = 1;
 	/** Contains all entities in the manager. */
 	private final Bag<Entity> entities;
 	/** Stores the bits of all currently disabled entities IDs. */
@@ -272,7 +273,7 @@ public class EntityManager extends Manager {
 		int getIdentity(BitSet components) {
 			Object[] bitsets = composition.getData();
 			int size = composition.size();
-			for (int i = 1; size > i; i++) { // want to start from 1 so that 0 can mean null
+			for (int i = NO_COMPONENTS; size > i; i++) { // want to start from 1 so that 0 can mean null
 				if (components.equals(bitsets[i]))
 					return i;
 			}

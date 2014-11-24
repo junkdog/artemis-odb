@@ -334,8 +334,11 @@ public abstract class EntitySystem implements EntityObserver {
 	 *			the world to set
 	 */
 	protected final void setWorld(World world) {
-		aspect.initialize(world);
-		dummy = aspect.getAllSet().isEmpty() && aspect.getOneSet().isEmpty();
+		if (aspect != null) {
+			aspect.initialize(world);
+		} else {
+			dummy = true;
+		}
 		
 		this.world = world;
 	}

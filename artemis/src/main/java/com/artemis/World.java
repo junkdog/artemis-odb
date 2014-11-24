@@ -18,6 +18,8 @@ import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
 
+import static com.artemis.EntityManager.NO_COMPONENTS;
+
 
 /**
  * The primary instance for the framework.
@@ -613,6 +615,7 @@ public class World {
 			es.initialize();
 		}
 		systemsToInit.clear();
+		processComponentIdentity(NO_COMPONENTS, new BitSet());
 	}
 
 	boolean hasUuidManager() {
@@ -830,7 +833,7 @@ public class World {
 				}
 				field.set(target, manager);
 			} else if (ClassReflection.isAssignableFrom(EntityFactory.class, fieldType)) {
-				EntityFactory<?> factory = world.createFactory(fieldType);
+				EntityFactory<?> factory = (EntityFactory<?>)world.createFactory(fieldType);
 				if (failOnNotInjected && factory == null) {
 					throw new MundaneWireException("Factory not found for " + fieldType);
 				}

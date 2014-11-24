@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.NoSuchElementException;
 
+import com.artemis.systems.EntityProcessingSystem;
 import org.junit.Test;
 
 import com.artemis.utils.ImmutableBag;
@@ -42,7 +43,24 @@ public class EntitySystemTest {
 		w.process();
 	}
 
+	@Test
+	public void aspect_exclude_only() {
+		World w = new World();
+		ExcludingSystem es1 = w.setSystem(new ExcludingSystem());
+		EmptySystem es2 = w.setSystem(new EmptySystem());
+		w.initialize();
+
+		Entity e = w.createEntity();
+		w.process();
+
+		System.out.printf("%s=%d\n", e, e.getCompositionId());
+
+		assertEquals(1, es1.getActives().size());
+		assertEquals(1, es2.getActives().size());
+	}
+
 	public static class C extends Component {}
+	public static class C2 extends Component {}
 
 	public static class IteratorTestSystem extends EntitySystem {
 		public int expectedSize;
@@ -63,5 +81,23 @@ public class EntitySystemTest {
 		protected boolean checkProcessing() {
 			return true;
 		}
+	}
+
+	public static class ExcludingSystem extends EntityProcessingSystem {
+		public ExcludingSystem() {
+			super(Aspect.getEmpty().exclude(C.class));
+		}
+
+		@Override
+		protected void process(Entity e) {}
+	}
+
+	public static class EmptySystem extends EntityProcessingSystem {
+		public EmptySystem() {
+			super(Aspect.getEmpty());
+		}
+
+		@Override
+		protected void process(Entity e) {}
 	}
 }
