@@ -171,6 +171,9 @@ public abstract class EntitySystem implements EntityObserver {
 	 * system's aspect is interested in it.
 	 */
 	void processComponentIdentity(int id, BitSet componentBits) {
+		if (dummy)
+			return;
+
 		aspectCache.set(id, aspect.isInterested(componentBits));
 	}
 	
