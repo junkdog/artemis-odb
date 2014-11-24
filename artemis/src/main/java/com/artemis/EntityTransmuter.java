@@ -4,6 +4,18 @@ import com.artemis.utils.Bag;
 
 import java.util.BitSet;
 
+/**
+ * Fastest way of changing entity component compositions. Primarily useful when
+ * bootstrapping entities over several different managers/systems or when
+ * dealing with many entities at the same time (light particle systems etc).
+ * <p>
+ * Given a set of component additions/removals: for each encountered
+ * compositionId, cache the calculated new compositionId. This extends
+ * the performance benefits introduced with
+ * {@link com.artemis.Archetype Archetypes} in 0.7.0 to carry over to existing entities.
+ * </p>
+ * @see com.artemis.EntityTransmuterFactory
+ */
 public final class EntityTransmuter {
 	private final World world;
 	private final BitSet additions;
