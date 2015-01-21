@@ -81,8 +81,8 @@ public class MetaScannerTest {
 		ClassMetadata scan2 = scan(PackedToBeA.class);
 		
 		assertEquals(2, scan1.fields.size());
-		assertEquals("F", scan1.fields.get(1).getDesc());
-		assertEquals(Opcodes.ACC_PRIVATE, scan1.fields.get(1).getAccess());
+		assertEquals("F", scan1.fields.get(1).desc);
+		assertEquals(Opcodes.ACC_PRIVATE, scan1.fields.get(1).access);
 		assertEquals(1 /* default constructor*/, scan1.methods.size());
 		
 		assertEquals(2 /* default constructor*/, scan2.methods.size());

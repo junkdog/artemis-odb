@@ -43,12 +43,6 @@
 			<version>${asm.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>com.github.peichhorn</groupId>
-			<artifactId>lombok-pg</artifactId>
-			<version>0.11.3</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>artemis-odb</artifactId>
 			<version>${project.version}</version>

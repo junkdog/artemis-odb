@@ -1,17 +1,18 @@
 package com.artemis.weaver.packed;
 
-import lombok.Data;
-
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.FieldDescriptor;
 
-@Data
 class ByteBufferHelper {
 	private final ClassMetadata meta;
-	
+
+	ByteBufferHelper(ClassMetadata meta) {
+		this.meta = meta;
+	}
+
 	AbstractInsnNode invokeGetter(String name) {
 		FieldDescriptor fd = find(name);
 		return new MethodInsnNode(FieldToStructMethodTransformer.INVOKEVIRTUAL, "java/nio/ByteBuffer", getter(name), "(I)" + castedDesc(fd));

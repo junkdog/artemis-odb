@@ -229,7 +229,7 @@ public class World {
 	}
 	
 	@SuppressWarnings("unchecked")
-	<T extends EntityFactory<T>> T createFactory(Class<?> factory) {
+	<T extends EntityFactory> T createFactory(Class<?> factory) {
 		if (!factory.isInterface())
 			throw new MundaneWireException("Expected interface for type: " + factory);
 		

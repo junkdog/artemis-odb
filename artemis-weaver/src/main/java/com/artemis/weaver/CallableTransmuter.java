@@ -4,12 +4,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
-import lombok.AllArgsConstructor;
-
-@AllArgsConstructor
 abstract class CallableTransmuter<T> implements Callable<T> {
 	private final String file;
-	
+
+	protected CallableTransmuter(String file) {
+		this.file = file;
+	}
+
 	protected abstract T process(String file) throws FileNotFoundException, IOException;
 
 	@Override

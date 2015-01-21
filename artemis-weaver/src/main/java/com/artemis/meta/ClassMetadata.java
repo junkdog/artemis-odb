@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import lombok.ToString;
-
 import org.objectweb.asm.Type;
 
-@ToString
 public final class ClassMetadata {
 	public WeaverType annotation = WeaverType.NONE;
 	
