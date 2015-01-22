@@ -4,6 +4,7 @@ import java.util.BitSet;
 
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 
 
 /**
@@ -24,7 +25,8 @@ public abstract class EntitySystem implements EntityObserver {
 	 * actives = only contains entities, typically sorted ASC by entity.id 
 	 * activesIsDirty = indicates that actives isn't sorted; needs rebuilding 
 	 */
-	private final WildBag<Entity> actives;
+//	private final WildBag<Entity> actives;
+	private IntBag actives;
 	private final BitSet activeIds;
 	private boolean activesIsDirty;
 	
@@ -47,7 +49,7 @@ public abstract class EntitySystem implements EntityObserver {
 	public EntitySystem(Aspect aspect) {
 		this.aspect = aspect;
 		activeIds = new BitSet();
-		actives = new WildBag<Entity>();
+		actives = new IntBag();
 		
 		enabled = true;
 	}
@@ -86,9 +88,9 @@ public abstract class EntitySystem implements EntityObserver {
 		actives.setSize(size);
 		actives.ensureCapacity(size);
 		EntityManager em = world.getEntityManager();
-		Object[] activesArray = actives.getData();
+		int[] activesArray = actives.getData();
 		for (int i = bs.nextSetBit(0), index = 0; i >= 0; i = bs.nextSetBit(i + 1)) {
-			activesArray[index++] = em.getEntity(i);
+			activesArray[index++] = i;
 		}
 		
 		activesIsDirty = false;
@@ -108,7 +110,7 @@ public abstract class EntitySystem implements EntityObserver {
 	 * @param entities
 	 *			the entities this system contains.
 	 */
-	protected abstract void processEntities(ImmutableBag<Entity> entities);
+	protected abstract void processEntities(IntBag entities);
 	
 	/**
 	 * Check if the system should be processed.
@@ -206,7 +208,7 @@ public abstract class EntitySystem implements EntityObserver {
 	 *			the entity to remove
 	 */
 	private void removeFromSystem(Entity e) {
-		actives.remove(e);
+		actives.remove(e.getId());
 		activeIds.clear(e.getId());
 		activesIsDirty = true;
 		
@@ -222,7 +224,7 @@ public abstract class EntitySystem implements EntityObserver {
 	private void insertToSystem(Entity e) {
 		activeIds.set(e.getId());
 		activesIsDirty = true;
-		actives.add(e);
+		actives.add(e.getId());
 		
 		inserted(e);
 	}
@@ -378,11 +380,19 @@ public abstract class EntitySystem implements EntityObserver {
 	 *
 	 * @return a bag containing all active entities of the system
 	 */
+	@Deprecated
 	public ImmutableBag<Entity> getActives() {
 		if (activesIsDirty && world.isRebuildingIndexAllowed())
 			rebuildCompressedActives();
-		
-		return actives;
+
+		Bag<Entity> entities = new Bag<Entity>();
+
+		int[] array = actives.getData();
+		for (int i = 0, s = actives.size(); s > i; i++) {
+			entities.add(world.getEntity(array[i]));
+		}
+
+		return entities;
 	}
 
 	/**

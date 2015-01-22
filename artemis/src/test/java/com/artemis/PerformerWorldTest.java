@@ -50,6 +50,7 @@ public class PerformerWorldTest {
 
 		@Override
 		protected void initialize() {
+			super.initialize();
 			step = 0;
 		}
 

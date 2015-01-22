@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.NoSuchElementException;
 
 import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.utils.IntBag;
 import org.junit.Test;
 
 import com.artemis.utils.ImmutableBag;
@@ -72,9 +73,9 @@ public class EntitySystemTest {
 		}
 
 		@Override
-		protected void processEntities(ImmutableBag<Entity> entities) {
+		protected void processEntities(IntBag entities) {
 			assertEquals(expectedSize, entities.size());
-			entities.iterator().next();
+			getActives().iterator().next();
 		}
 
 		@Override

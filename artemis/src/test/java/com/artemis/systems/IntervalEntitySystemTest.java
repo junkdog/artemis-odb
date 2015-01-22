@@ -2,6 +2,7 @@ package com.artemis.systems;
 
 import static org.junit.Assert.*;
 
+import com.artemis.utils.IntBag;
 import org.junit.Test;
 
 import com.artemis.Aspect;
@@ -39,7 +40,7 @@ public class IntervalEntitySystemTest {
 		}
 
 		@Override
-		protected void processEntities(ImmutableBag<Entity> entities) {
+		protected void processEntities(IntBag entities) {
 			
 		}
 	}

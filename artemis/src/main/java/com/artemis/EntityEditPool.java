@@ -33,7 +33,12 @@ final class EntityEditPool {
 		EntityEdit edit = entityEdit();
 		editedIds.set(entity.getId());
 		edited.add(edit);
-		
+
+
+		Entity resolvedEntity = world.getEntity(entity.getId());
+		if (resolvedEntity != null)
+			entity = resolvedEntity;
+
 		edit.entity = entity;
 		edit.hasBeenAddedToWorld = world.getEntityManager().isActive(entity.getId());
 		// since archetypes add components, we can't assume that an
@@ -68,7 +73,7 @@ final class EntityEditPool {
 		Object[] data = edited.getData();
 		for (int i = 0; last > i; i++) {
 			EntityEdit edit = (EntityEdit)data[i];
-			if (edit.entity == entity)
+			if (edit.entity.equals(entity))
 				return edit;
 		}
 		

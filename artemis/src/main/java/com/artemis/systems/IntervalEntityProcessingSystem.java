@@ -4,6 +4,7 @@ import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 
 
 /**
@@ -40,12 +41,15 @@ public abstract class IntervalEntityProcessingSystem extends IntervalEntitySyste
 	 */
 	protected abstract void process(Entity e);
 
-	
+
+	private Entity e = new Entity(world, -1);
+
 	@Override
-	protected void processEntities(ImmutableBag<Entity> entities) {
-		Object[] array = ((Bag<Entity>)entities).getData();
+	protected void processEntities(IntBag entities) {
+		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			process((Entity)array[i]);
+			e.id = ids[i];
+			process(e);
 		}
 	}
 

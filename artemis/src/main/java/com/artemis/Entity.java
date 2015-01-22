@@ -19,7 +19,7 @@ import com.artemis.utils.Bag;
 public final class Entity {
 
 	/** The entities identifier in the world. */
-	private final int id;
+	public int id;
 	/** The world this entity belongs to. */
 	private final World world;
 
@@ -35,7 +35,7 @@ public final class Entity {
 	 * @param id
 	 *			the id to set
 	 */
-	protected Entity(World world, int id) {
+	public Entity(World world, int id) {
 		this(world, id, null);
 	}
 
@@ -86,7 +86,11 @@ public final class Entity {
 	}
 	
 	public EntityEdit edit() {
-		return world.editPool.obtainEditor(this);
+		Entity entity = world.getEntity(id);
+		if (entity == null)
+			entity = this;
+
+		return world.editPool.obtainEditor(entity);
 	}
 	
 
@@ -304,5 +308,22 @@ public final class Entity {
 
 	public int getCompositionId() {
 		return world.getEntityManager().getIdentity(this);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Entity entity = (Entity) o;
+
+		if (id != entity.id) return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return id;
 	}
 }

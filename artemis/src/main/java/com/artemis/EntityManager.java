@@ -195,7 +195,7 @@ public class EntityManager extends Manager {
 	 * @return the entity
 	 */
 	protected Entity getEntity(int entityId) {
-		return entities.get(entityId);
+		return entities.safeGet(entityId);
 	}
 	
 	/**

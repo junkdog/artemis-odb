@@ -243,6 +243,20 @@ public class IntBag {
 		return data;
 	}
 
+	/**
+	 * Set the size.
+	 * <p>
+	 * This will not resize the bag, nor will it clean up contents beyond the
+	 * given size. Use with caution.
+	 * </p>
+	 *
+	 * @param size
+	 *			the size to set
+	 */
+	public void setSize(int size) {
+		this.size = size;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

@@ -5,6 +5,7 @@ import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 
 
 /**
@@ -38,12 +39,20 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 	 */
 	protected abstract void process(Entity e);
 
+	private Entity e;
 
 	@Override
-	protected final void processEntities(ImmutableBag<Entity> entities) {
-		Object[] array = ((Bag<Entity>)entities).getData();
+	protected void initialize() {
+		e = new Entity(world, -1);
+	}
+
+	@Override
+	protected final void processEntities(IntBag entities) {
+		int[] array = entities.getData();
+		Entity e = this.e;
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			process((Entity)array[i]);
+			e.id = array[i];
+			process(e);
 		}
 	}
 }
