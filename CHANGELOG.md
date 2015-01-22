@@ -1,6 +1,8 @@
 ## Change Log
 
 #### Version: 0.8.2-SNAPSHOT
+- New EntityTransmuter class, an alternative but more efficient way of adding/removing
+  components.
 - **Fix**: Entity systems can now subscribe to all entities when aspect is empty.
 
 #### Version: 0.8.1 - 2014-11-10
