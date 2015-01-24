@@ -1,5 +1,7 @@
 package com.artemis.utils;
 
+import com.artemis.annotations.UnstableApi;
+
 import java.util.Arrays;
 
 
@@ -12,6 +14,7 @@ import java.util.Arrays;
  *
  * @author Arni Arent
  */
+@UnstableApi
 public class IntBag {
 
 	/** The backing array. */

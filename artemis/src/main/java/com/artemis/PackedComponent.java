@@ -1,5 +1,7 @@
 package com.artemis;
 
+import com.artemis.annotations.UnstableApi;
+
 import java.nio.ByteBuffer;
 
 /**
@@ -10,6 +12,7 @@ import java.nio.ByteBuffer;
  * Calling the constructor must not change the underlying component data - ie,
  * it's the equivalent of a {@link #clone()}.
  */
+@UnstableApi
 public abstract class PackedComponent extends Component {
 	
 	/**
