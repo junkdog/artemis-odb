@@ -11,10 +11,13 @@ public class ComponentPoolTest
 	public void reuse_pooled_components() throws Exception
 	{
 		ComponentPool pool = new ComponentPool();
-		SimplePooled c1 = pool.obtain(SimplePooled.class);
-		SimplePooled c2 = pool.obtain(SimplePooled.class);
-		pool.free(c1);
-		SimplePooled c1b = pool.obtain(SimplePooled.class);
+
+		ComponentType type = new ComponentType(SimplePooled.class, 0);
+
+		SimplePooled c1 = pool.obtain(SimplePooled.class, type);
+		SimplePooled c2 = pool.obtain(SimplePooled.class, type);
+		pool.free(c1, type);
+		SimplePooled c1b = pool.obtain(SimplePooled.class, type);
 		
 		assertTrue(c1 != c2);
 		assertTrue(c1 == c1b);

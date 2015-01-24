@@ -76,7 +76,7 @@ public class ComponentManager extends Manager {
 				break;
 			case POOLED:
 				try {
-					component = (T)pooledComponents.obtain((Class<PooledComponent>)componentClass);
+					component = (T)pooledComponents.obtain((Class<PooledComponent>)componentClass, type);
 					break;
 				} catch (ReflectionException e) {
 					throw new InvalidComponentException(componentClass, "Unable to instantiate component.", e);
@@ -142,7 +142,7 @@ public class ComponentManager extends Manager {
 					break;
 				case POOLED:
 					Component pooled = componentsByType.get(i).get(e.getId());
-					pooledComponents.free((PooledComponent)pooled);
+					pooledComponents.free((PooledComponent)pooled, i);
 					componentsByType.get(i).set(e.getId(), null);
 					break;
 				case PACKED:
@@ -231,7 +231,7 @@ public class ComponentManager extends Manager {
 				break;
 			case POOLED:
 				Component pooled = componentsByType.get(index).get(e.getId());
-				pooledComponents.free((PooledComponent)pooled);
+				pooledComponents.free((PooledComponent)pooled, type);
 				componentsByType.get(index).set(e.getId(), null);
 				break;
 			case PACKED:

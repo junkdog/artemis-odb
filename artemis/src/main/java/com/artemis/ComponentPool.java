@@ -9,31 +9,34 @@ import com.artemis.utils.reflect.ReflectionException;
 
 class ComponentPool {
 	
-	private final Map<Class<? extends PooledComponent>, Pool> pools;
-	
+	private Bag<Pool> pools;
+
 	ComponentPool() {
-		pools = new IdentityHashMap<Class<? extends PooledComponent>, ComponentPool.Pool>();
+		pools = new Bag<Pool>();
 	}
 	
 	@SuppressWarnings("unchecked")
-	<T extends PooledComponent> T obtain(Class<T> componentClass)
+	<T extends PooledComponent> T obtain(Class<T> componentClass, ComponentType type)
 		throws ReflectionException {
 		
-		Pool pool = getPool(componentClass);
+		Pool pool = getPool(type.getIndex());
 		return (T)((pool.size() > 0) ? pool.obtain() :  ClassReflection.newInstance(componentClass));
 	}
 	
-	void free(PooledComponent c) {
-		c.reset();
-		getPool(c.getClass()).free(c);
+	void free(PooledComponent c, ComponentType type) {
+		free(c, type.getIndex());
 	}
-	
-	private <T extends PooledComponent>Pool getPool(Class<T> componentClass)
-	{
-		Pool pool = pools.get(componentClass);
+
+	void free(PooledComponent c, int typeIndex) {
+		c.reset();
+		getPool(typeIndex).free(c);
+	}
+
+	private <T extends PooledComponent>Pool getPool(int typeIndex) {
+		Pool pool = pools.safeGet(typeIndex);
 		if (pool == null) {
 			pool = new Pool();
-			pools.put(componentClass, pool);
+			pools.set(typeIndex, pool);
 		}
 		return pool;
 	}

@@ -94,7 +94,6 @@ public abstract class EntitySystem implements EntityObserver {
 		}
 		
 		activesIsDirty = false;
-//		world.rebuiltIndices++;
 	}
 
 
