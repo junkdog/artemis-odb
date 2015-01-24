@@ -20,12 +20,12 @@ public abstract class EntitySystem implements EntityObserver {
 
 	/** The world this system belongs to. */
 	protected World world;
+	protected Entity flyweight;
 	
 	/* 
 	 * actives = only contains entities, typically sorted ASC by entity.id 
 	 * activesIsDirty = indicates that actives isn't sorted; needs rebuilding 
 	 */
-//	private final WildBag<Entity> actives;
 	private IntBag actives;
 	private final BitSet activeIds;
 	private boolean activesIsDirty;

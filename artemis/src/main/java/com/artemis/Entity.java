@@ -35,7 +35,7 @@ public final class Entity {
 	 * @param id
 	 *			the id to set
 	 */
-	public Entity(World world, int id) {
+	protected Entity(World world, int id) {
 		this(world, id, null);
 	}
 

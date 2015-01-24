@@ -55,6 +55,9 @@ public class EntityManager extends Manager {
 		Entity e = recyclingEntityFactory.obtain();
 		entityToIdentity.set(e.getId(), 0);
 		created++;
+
+		// growing backing array just in case
+		entities.set(e.getId(), null);
 		return e;
 	}
 	
@@ -195,7 +198,7 @@ public class EntityManager extends Manager {
 	 * @return the entity
 	 */
 	protected Entity getEntity(int entityId) {
-		return entities.safeGet(entityId);
+		return entities.get(entityId);
 	}
 	
 	/**

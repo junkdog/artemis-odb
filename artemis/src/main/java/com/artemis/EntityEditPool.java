@@ -34,11 +34,6 @@ final class EntityEditPool {
 		editedIds.set(entity.getId());
 		edited.add(edit);
 
-
-//		Entity resolvedEntity = world.getEntity(entity.getId());
-//		if (resolvedEntity != null)
-//			entity = resolvedEntity;
-
 		edit.entity = entity;
 		edit.hasBeenAddedToWorld = world.getEntityManager().isActive(entity.getId());
 		// since archetypes add components, we can't assume that an

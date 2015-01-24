@@ -3,8 +3,6 @@ package com.artemis.systems;
 import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
-import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 
 
@@ -44,9 +42,6 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	/** The countdown, accumulates world deltas. */
 	private float acc;
 
-	private Entity e;
-
-
 	/**
 	 * Creates a new DelayedEntityProcessingSystem.
 	 *
@@ -58,15 +53,11 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	}
 
 	@Override
-	protected void initialize() {
-		e = new Entity(world, -1);
-	}
-
-	@Override
 	protected final void processEntities(IntBag entities) {
 		delay = Float.MAX_VALUE;
 		int[] array = entities.getData();
 		int processed = entities.size();
+		Entity e = flyweight;
 		for (int i = 0; processed > i; i++) {
 			e.id = array[i];
 			processDelta(e, acc);

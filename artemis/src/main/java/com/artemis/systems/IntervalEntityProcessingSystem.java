@@ -42,11 +42,10 @@ public abstract class IntervalEntityProcessingSystem extends IntervalEntitySyste
 	protected abstract void process(Entity e);
 
 
-	private Entity e = new Entity(world, -1);
-
 	@Override
 	protected void processEntities(IntBag entities) {
 		int[] ids = entities.getData();
+		Entity e = flyweight;
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			e.id = ids[i];
 			process(e);

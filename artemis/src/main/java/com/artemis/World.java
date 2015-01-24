@@ -613,6 +613,7 @@ public class World {
 			EntitySystem es = systemsToInit.get(i);
 			injector.inject(es);
 			es.initialize();
+			es.flyweight = new Entity(this, -1);
 		}
 		systemsToInit.clear();
 		processComponentIdentity(NO_COMPONENTS, new BitSet());
