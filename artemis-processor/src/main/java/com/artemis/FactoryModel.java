@@ -163,12 +163,22 @@ public class FactoryModel {
 	private List<FactoryMethod> factoryMethods(List<ExecutableElement> allMembers) {
 		List<FactoryMethod> methods = new ArrayList<FactoryMethod>();
 		for (ExecutableElement e : allMembers) {
-			
-			FactoryMethod method = factoryMethod(e);
-			if (method != null) {
-				methods.add(method);
-			} else {
-				success = false;
+			String elementName = e.getSimpleName().toString();
+
+			if (!IGNORED_METHODS.contains(elementName)) {
+				FactoryMethod method = factoryMethod(e);
+				if (method != null) {
+					methods.add(method);
+				} else {
+					success = false;
+				}
+			}
+			else {
+				if (!readCRef(e).isEmpty()) {
+					String err = "Invalid method name for factory method";
+					messager.printMessage(Kind.ERROR, err, e);
+					success = false;
+				}
 			}
 		}
 		return methods;
@@ -176,14 +186,7 @@ public class FactoryModel {
 
 	private FactoryMethod factoryMethod(ExecutableElement e) {
 		String elementName = e.getSimpleName().toString();
-		if (IGNORED_METHODS.contains(elementName)) {
-			if (!readCRef(e).isEmpty()) {
-				String err = "Invalid method name for factory method";
-				messager.printMessage(Kind.WARNING, err, e);
-			}
-			return null;
-		}
-		
+
 		List<AnnotationValue> referenced = readCRef(e);
 		if (referenced.size() == 0) {
 			if (autoResolvable.containsKey(elementName)) {
