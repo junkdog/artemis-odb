@@ -1,6 +1,11 @@
 ## Change Log
 
 #### Version: 0.8.2-SNAPSHOT
+- **MINOR BREAKING CHANGES**
+  - Entity instances should never be compared by reference equality; always do
+    `entity1.equals(entity2)`.
+
+- Systems' entity iteration speed slightly faster.
 - New EntityTransmuter class, an alternative but more efficient way of adding/removing
   components.
 - **Fix**: Entity systems can now subscribe to all entities when aspect is empty.
