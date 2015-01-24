@@ -35,9 +35,9 @@ final class EntityEditPool {
 		edited.add(edit);
 
 
-		Entity resolvedEntity = world.getEntity(entity.getId());
-		if (resolvedEntity != null)
-			entity = resolvedEntity;
+//		Entity resolvedEntity = world.getEntity(entity.getId());
+//		if (resolvedEntity != null)
+//			entity = resolvedEntity;
 
 		edit.entity = entity;
 		edit.hasBeenAddedToWorld = world.getEntityManager().isActive(entity.getId());
