@@ -72,7 +72,7 @@ public abstract class EntitySystem implements EntityObserver {
 		if(enabled && checkProcessing()) {
 			begin();
 			
-			if (activesIsDirty && world.isRebuildingIndexAllowed())
+			if (activesIsDirty) // && world.isRebuildingIndexAllowed())
 				rebuildCompressedActives();
 			
 			processEntities(actives);
@@ -94,7 +94,7 @@ public abstract class EntitySystem implements EntityObserver {
 		}
 		
 		activesIsDirty = false;
-		world.rebuiltIndices++;
+//		world.rebuiltIndices++;
 	}
 
 
@@ -208,7 +208,6 @@ public abstract class EntitySystem implements EntityObserver {
 	 *			the entity to remove
 	 */
 	private void removeFromSystem(Entity e) {
-		actives.remove(e.getId());
 		activeIds.clear(e.getId());
 		activesIsDirty = true;
 		
@@ -224,7 +223,6 @@ public abstract class EntitySystem implements EntityObserver {
 	private void insertToSystem(Entity e) {
 		activeIds.set(e.getId());
 		activesIsDirty = true;
-		actives.add(e.getId());
 		
 		inserted(e);
 	}
@@ -382,7 +380,7 @@ public abstract class EntitySystem implements EntityObserver {
 	 */
 	@Deprecated
 	public ImmutableBag<Entity> getActives() {
-		if (activesIsDirty && world.isRebuildingIndexAllowed())
+		if (activesIsDirty) // && world.isRebuildingIndexAllowed())
 			rebuildCompressedActives();
 
 		Bag<Entity> entities = new Bag<Entity>();

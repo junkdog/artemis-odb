@@ -97,9 +97,6 @@ public class World {
 	private boolean registerUuids;
 	private ArtemisInjector injector;
 	
-	int rebuiltIndices;
-	private int maxRebuiltIndicesPerTick;
-
 	final EntityEditPool editPool = new EntityEditPool(this);
 	
 	private boolean initialized;
@@ -156,7 +153,7 @@ public class World {
 		em = new EntityManager(configuration.expectedEntityCount());
 		setManager(em);
 		
-		maxRebuiltIndicesPerTick = configuration.maxRebuiltIndicesPerTick();
+//		maxRebuiltIndicesPerTick = configuration.maxRebuiltIndicesPerTick();
 		injector = new ArtemisInjector(this, configuration);
 	}
 	
@@ -361,9 +358,9 @@ public class World {
 		e.edit().deleteEntity();
 	}
 	
-	boolean isRebuildingIndexAllowed() {
-		return maxRebuiltIndicesPerTick > rebuiltIndices;
-	}
+//	boolean isRebuildingIndexAllowed() {
+//		return maxRebuiltIndicesPerTick > rebuiltIndices;
+//	}
 
 	/**
 	 * (Re)enable the entity in the world, after it having being disabled.
@@ -569,8 +566,6 @@ public class World {
 	 * Process all non-passive systems.
 	 */
 	public void process() {
-		rebuiltIndices = 0;
-		
 		updateEntityStates();
 
 		em.clean();
