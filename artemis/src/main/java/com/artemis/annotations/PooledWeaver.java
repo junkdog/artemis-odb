@@ -13,7 +13,7 @@ import com.artemis.Component;
  * takes place during the <code>artemis</code> goal defined in <code>artemis-odb-maven-plugin</code>
  * or the <code>weave</code> task in <code>artemis-odb-gradle-plugin</code>.
  * 
- * @see <a href="https://github.com/junkdog/artemis-odb/wiki/Component%20Types">Component types</a>
+ * @see <a href="https://github.com/junkdog/artemis-odb/wiki/%40PooledWeaver">Component pooling</a>
  *	  on the wiki.
  */
 @Retention(RetentionPolicy.CLASS)

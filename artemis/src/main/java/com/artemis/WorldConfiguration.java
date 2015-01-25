@@ -5,7 +5,6 @@ import java.util.Map;
 
 public final class WorldConfiguration {
 	private int expectedEntityCount = 128;
-	private int maxRebuiltIndicesPerTick = 1;
 	Map<String, Object> injectables = new HashMap<String, Object>();
 	
 	public int expectedEntityCount() {
@@ -17,13 +16,15 @@ public final class WorldConfiguration {
 	 * @param expectedEntityCount count of expected entities.
 	 * @return This instance for chaining.
 	 */
+	@Deprecated
 	public WorldConfiguration expectedEntityCount(int expectedEntityCount) {
 		this.expectedEntityCount = expectedEntityCount;
 		return this;
 	}
-	
+
+	@Deprecated
 	public int maxRebuiltIndicesPerTick() {
-		return maxRebuiltIndicesPerTick;
+		return -1;
 	}
 	
 	/**
@@ -33,9 +34,10 @@ public final class WorldConfiguration {
 	 * 
 	 * @param maxRebuiltIndicesPerTick 0 or more.
 	 * @return This instance for chaining.
+	 * @deprecated All indices are always rebuilt now. This method has no effect.
 	 */
+	@Deprecated
 	public WorldConfiguration maxRebuiltIndicesPerTick(int maxRebuiltIndicesPerTick) {
-		this.maxRebuiltIndicesPerTick = Math.max(0, maxRebuiltIndicesPerTick);
 		return this;
 	}
 

@@ -9,17 +9,15 @@ import java.util.Arrays;
  * Collection type a bit like ArrayList but does not preserve the order of its
  * entities, speedwise it is very good, especially suited for games.
  * 
- * @param <E>
- *		object type this bag holds
  *
- * @author Arni Arent
+ * @author original Bag by Arni Arent
  */
 @UnstableApi
 public class IntBag {
 
 	/** The backing array. */
 	private int[] data;
-	/** The amount of elements contained in bag. */
+	/** The number of values stored by this bag. */
 	protected int size = 0;
 
 	/**
@@ -92,22 +90,6 @@ public class IntBag {
 		return data[index];
 	}
 	
-	/**
-	 * Returns the element at the specified position in Bag. This method
-	 * ensures that the bag grows if the requested index is outside the bounds
-	 * of the current backing array.
-	 * 
-	 * @param index
-	 *			index of the element to return
-	 *
-	 * @return the element at the specified position in bag
-	 *
-	 */
-	public int safeGet(int index) {
-		ensureCapacity(index + 1);
-		return data[index];
-	}
-
 	/**
 	 * Returns the number of elements in this bag.
 	 * 

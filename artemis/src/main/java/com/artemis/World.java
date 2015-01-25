@@ -153,7 +153,6 @@ public class World {
 		em = new EntityManager(configuration.expectedEntityCount());
 		setManager(em);
 		
-//		maxRebuiltIndicesPerTick = configuration.maxRebuiltIndicesPerTick();
 		injector = new ArtemisInjector(this, configuration);
 	}
 	
@@ -358,10 +357,6 @@ public class World {
 		e.edit().deleteEntity();
 	}
 	
-//	boolean isRebuildingIndexAllowed() {
-//		return maxRebuiltIndicesPerTick > rebuiltIndices;
-//	}
-
 	/**
 	 * (Re)enable the entity in the world, after it having being disabled.
 	 * <p>

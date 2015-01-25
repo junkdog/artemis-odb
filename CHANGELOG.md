@@ -9,6 +9,8 @@
 - New EntityTransmuter class, an alternative but more efficient way of adding/removing
   components.
 - **Fix**: Entity systems can now subscribe to all entities when aspect is empty.
+- **Fix**: EntityFactory annotation processor sometimes failed generating the
+  factory implementation when running from within Eclipse.
 
 #### Version: 0.8.1 - 2014-11-10
 - CLI command for configuring eclipse projects with annotation processor (entity factories)
