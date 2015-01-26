@@ -23,7 +23,8 @@ public final class ArtemisTypeMapping {
 	// FIXMEmeh, dirty... fix sometime.
 	public ComponentReference[] managerIndices;
 	public ComponentReference[] systemIndices;
-	
+	public ComponentReference[] factoryIndices;
+
 	public final boolean isPackage; // referenced by chtml
 	
 	public ArtemisTypeMapping(String packageName) {

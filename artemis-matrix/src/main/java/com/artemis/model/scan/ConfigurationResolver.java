@@ -16,10 +16,11 @@ import org.objectweb.asm.Type;
 import com.artemis.util.ClassFinder;
 
 public final class ConfigurationResolver {
-	public final Set<Type> managers;
-	public final Set<Type> systems;
-	public final Set<Type> components;
-	private final TypeConfiguration typeConfiguration;
+	public Set<Type> managers;
+	public Set<Type> systems;
+	public Set<Type> components;
+	public Set<Type> factories;
+	private TypeConfiguration typeConfiguration;
 	private final Map<Type,Set<Type>> parentChildrenMap;
 	
 	public ConfigurationResolver(File rootFolder) {
@@ -29,17 +30,19 @@ public final class ConfigurationResolver {
 		managers = new HashSet<Type>();
 		systems = new HashSet<Type>();
 		components = new HashSet<Type>();
+		factories = new HashSet<Type>();
 		
 		typeConfiguration = new TypeConfiguration();
 		systems.addAll(typeConfiguration.systems);
 		managers.addAll(typeConfiguration.managers);
 		components.addAll(typeConfiguration.components);
+		factories.addAll(typeConfiguration.factories);
 		
 		parentChildrenMap = new HashMap<Type,Set<Type>>();
 		
 		List<File> classes = ClassFinder.find(rootFolder);
 		for (File f : classes) {
-			findExtendedArtemisTypes(f); // for resolving children of choldren
+			findExtendedArtemisTypes(f); // for resolving children of children
 		}
 		
 		resolveExtendedTypes(typeConfiguration, parentChildrenMap);
@@ -50,25 +53,26 @@ public final class ConfigurationResolver {
 	}
 
 	private static void resolveExtendedTypes(TypeConfiguration main, Map<Type,Set<Type>> found) {
-		main.systems = recursiveResultion(main.systems, found);
-		main.managers = recursiveResultion(main.managers, found);
-		main.components = recursiveResultion(main.components, found);
+		main.systems = recursiveResolution(main.systems, found);
+		main.managers = recursiveResolution(main.managers, found);
+		main.components = recursiveResolution(main.components, found);
+		main.factories = recursiveResolution(main.factories, found);
 	}
 
-	private static Set<Type> recursiveResultion(Set<Type> types, Map<Type,Set<Type>> found) {
+	private static Set<Type> recursiveResolution(Set<Type> types, Map<Type, Set<Type>> found) {
 		Set<Type> destination = new HashSet<Type>();
 		for (Type t : types) {
-			recursiveResultion(t, found, destination);
+			recursiveResolution(t, found, destination);
 		}
 		
 		return destination;
 	}
 
-	private static void recursiveResultion(Type t, Map<Type,Set<Type>> found, Set<Type> destination) {
+	private static void recursiveResolution(Type t, Map<Type, Set<Type>> found, Set<Type> destination) {
 		if (found.containsKey(t)) {
 			destination.add(t);
 			for (Type foundType : found.get(t)) {
-				recursiveResultion(foundType, found, destination);
+				recursiveResolution(foundType, found, destination);
 			}
 		}
 	}

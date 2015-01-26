@@ -47,6 +47,12 @@
 			<artifactId>asm-commons</artifactId>
 			<version>${asm.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId>
+			<artifactId>artemis-odb</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 	
 </project>

@@ -49,7 +49,8 @@ public class ComponentDependencyMatrix implements Opcodes  {
 	public void process() {
 		if (scanner.components.size() == 0
 			&& scanner.systems.size() == 0
-			&& scanner.managers.size() == 0) {
+			&& scanner.managers.size() == 0
+			&& scanner.factories.size() == 0) {
 			
 			String error = "No artemis classes found on classpath. "
 				+ "See https://github.com/junkdog/artemis-odb/wiki/Component-Dependency-Matrix for more info.";

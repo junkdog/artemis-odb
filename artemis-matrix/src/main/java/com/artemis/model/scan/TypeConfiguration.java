@@ -9,6 +9,7 @@ class TypeConfiguration {
 	protected Set<Type> components;
 	protected Set<Type> managers;
 	protected Set<Type> systems;
+	protected Set<Type> factories;
 
 	public TypeConfiguration() {
 		components = new HashSet<Type>();
@@ -30,6 +31,9 @@ class TypeConfiguration {
 		addType("com.artemis.systems.IntervalEntitySystem", systems);
 		addType("com.artemis.systems.IntervalEntityProcessingSystem", systems);
 		addType("com.artemis.systems.VoidEntitySystem", systems);
+
+		factories = new HashSet<Type>();
+		addType("com.artemis.EntityFactory", factories);
 	}
 	
 	static Type type(String klazz) {
