@@ -21,8 +21,14 @@ public class ParentChainFinder extends ClassVisitor {
 	
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-		if (superName != null && !"java/lang/Object".equals(superName)) {
-			addToMap(type(superName), type(name));
+		if (superName != null) {
+			Type visited = type(name);
+			if (!"java/lang/Object".equals(superName))
+				addToMap(type(superName), visited);
+
+			for (String iface : interfaces) {
+				addToMap(type(iface), visited);
+			}
 		}
 		
 		super.visit(version, access, name, signature, superName, interfaces);

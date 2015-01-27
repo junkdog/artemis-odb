@@ -33,6 +33,8 @@ class ArtemisScanner extends ClassVisitor {
 		} else if (COMPONENT_MAPPER.equals(type)) {
 			String componentDesc = signature.substring(signature.indexOf('<') + 1, signature.indexOf('>'));
 			config.optional.add(Type.getType(componentDesc));
+		} else if (resolver.factories.contains(type)) {
+			config.factories.add(type);
 		}
 		
 		return super.visitField(access, name, desc, signature, value);

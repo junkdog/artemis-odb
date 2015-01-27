@@ -26,6 +26,8 @@ public class MethodScanner extends MethodVisitor {
 				config.systems.add(type);
 			} else if (resolver.managers.contains(type)) {
 				config.managers.add(type);
+			} else if (resolver.factories.contains(type)) {
+				config.factories.add(type);
 			}
 		}
 		super.visitLdcInsn(cst);

@@ -27,6 +27,12 @@ public class ArtemisTypeFinder extends ClassVisitor {
 				resolver.systems.add(type(name));
 			} else if (mainTypes.managers.contains(superType)) {
 				resolver.managers.add(type(name));
+			} else if (interfaces.length > 0) {
+				for (String iface : interfaces) {
+					if (mainTypes.factories.contains(type(iface))) {
+						resolver.factories.add(type(name));
+					}
+				}
 			}
 		}
 		

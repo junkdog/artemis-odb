@@ -19,7 +19,8 @@ public class ArtemisTypeData {
 	public final Set<Type> exclude = new HashSet<Type>();
 	public final Set<Type> systems = new HashSet<Type>();
 	public final Set<Type> managers = new HashSet<Type>();
-	
+	public final Set<Type> factories = new HashSet<Type>();
+
 	public Type current;
 	
 	ArtemisTypeData() {}

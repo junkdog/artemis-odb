@@ -90,6 +90,7 @@ public final class ConfigurationResolver {
 		systems.removeAll(tc.systems);
 		managers.removeAll(tc.managers);
 		components.removeAll(tc.components);
+		factories.removeAll(tc.factories);
 	}
 	
 	// TODO: merge with findArtemisType

@@ -35,6 +35,10 @@ class TypeConfiguration {
 		factories = new HashSet<Type>();
 		addType("com.artemis.EntityFactory", factories);
 	}
+
+	static Type type(Class<?> klazz) {
+		return type(klazz.getName());
+	}
 	
 	static Type type(String klazz) {
 		klazz = klazz.replace('.', '/');
