@@ -5,9 +5,13 @@
   - Entity instances should never be compared by reference equality; always do
     `entity1.equals(entity2)`.
 
+- MundaneWireException thrown by World#inject if class lacks @Wire.
+  Previously, it silently failed to inject.
 - Systems' entity iteration speed slightly faster.
 - New EntityTransmuter class, an alternative but more efficient way of adding/removing
   components.
+- Optimized entity removal speed. 
+- Add enablePackedWeaving to maven, gradle and CLI tool.
 - **Fix**: Entity systems can now subscribe to all entities when aspect is empty.
 - **Fix**: EntityFactory annotation processor sometimes failed generating the
   factory implementation when running from within Eclipse.

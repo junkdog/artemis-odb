@@ -22,7 +22,7 @@ import com.artemis.EntityFactory;
  * @see Sticky
  * @see UseSetter
  */
-@Retention(RetentionPolicy.SOURCE)
+@Retention(RetentionPolicy.CLASS)
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface Bind {
 	Class<? extends Component>[] value();

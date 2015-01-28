@@ -100,7 +100,7 @@ public final class EntityTransmuter {
 
 		public void perform(Entity e, ComponentManager cm) {
 			for (int i = 0, s = additions.size(); s > i; i++)
-				cm.create(e, additions.get(i).getType());
+				cm.create(e, additions.get(i));
 
 			for (int i = 0, s = removals.size(); s > i; i++)
 				cm.removeComponent(e, removals.get(i));

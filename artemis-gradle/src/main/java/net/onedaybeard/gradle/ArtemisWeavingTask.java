@@ -1,11 +1,7 @@
 package net.onedaybeard.gradle;
 
-import static com.artemis.meta.ClassMetadata.WeaverType.PACKED;
-import static com.artemis.meta.ClassMetadata.WeaverType.POOLED;
-
 import com.artemis.Weaver;
 import com.artemis.WeaverLog;
-import com.artemis.meta.ClassMetadata;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.logging.Logger;
@@ -14,9 +10,6 @@ import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 
 import java.io.File;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Weaving wrapper for gradle.
@@ -43,6 +36,12 @@ public class ArtemisWeavingTask extends DefaultTask {
 	 */
 	@Input
 	private boolean enablePooledWeaving;
+
+	/**
+	 * Enabled weaving of packed components.
+	 */
+	@Input
+	private boolean enablePackedWeaving;
 
 	/**
 	 * If false, no weaving will take place (useful for debugging).
@@ -72,6 +71,7 @@ public class ArtemisWeavingTask extends DefaultTask {
 		log.info("CONFIGURATION");
 		log.info(WeaverLog.LINE.replaceAll("\n", ""));
 		log.info(WeaverLog.format("ideFriendlyPacking", ideFriendlyPacking));
+		log.info(WeaverLog.format("enablePackedWeaving", enablePackedWeaving));
 		log.info(WeaverLog.format("enablePooledWeaving", enablePooledWeaving));
 		log.info(WeaverLog.format("optimizeEntitySystems", optimizeEntitySystems));
 		log.info(WeaverLog.format("outputDirectory",  classesDir));
@@ -79,6 +79,7 @@ public class ArtemisWeavingTask extends DefaultTask {
 		
 		Weaver.retainFieldsWhenPacking(ideFriendlyPacking);
 		Weaver.enablePooledWeaving(enablePooledWeaving);
+		Weaver.enablePackedWeaving(enablePackedWeaving);
 		Weaver.optimizeEntitySystems(optimizeEntitySystems);
 
 		Weaver weaver = new Weaver(classesDir);
@@ -110,6 +111,10 @@ public class ArtemisWeavingTask extends DefaultTask {
 
 	public void setEnablePooledWeaving(boolean enablePooledWeaving) {
 		this.enablePooledWeaving = enablePooledWeaving;
+	}
+
+	public void setEnablePackedWeaving(boolean enablePackedWeaving) {
+		this.enablePackedWeaving = enablePackedWeaving;
 	}
 
 	public boolean isOptimizeEntitySystems() {

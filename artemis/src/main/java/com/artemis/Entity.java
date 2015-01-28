@@ -322,6 +322,10 @@ public final class Entity {
 		return true;
 	}
 
+	public boolean equals(Entity o) {
+		return o != null && o.id == id;
+	}
+
 	@Override
 	public int hashCode() {
 		return id;

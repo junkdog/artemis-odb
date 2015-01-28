@@ -45,9 +45,9 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>artemis-odb-matrix</artifactId>
-            <version>${project.version}</version>
+            <groupId>net.onedaybeard.ecs</groupId>
+            <artifactId>matrix-artemis</artifactId>
+            <version>${matrix.artemis.version}</version>
         </dependency>
     </dependencies>
 

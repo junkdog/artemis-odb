@@ -26,9 +26,9 @@
 			<version>1.35</version>
 		</dependency>
 		<dependency>
-			<groupId>net.onedaybeard.artemis</groupId>
-			<artifactId>artemis-odb-matrix</artifactId>
-			<version>${project.version}</version>
+			<groupId>net.onedaybeard.ecs</groupId>
+			<artifactId>matrix-artemis</artifactId>
+			<version>${matrix.artemis.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>net.onedaybeard.artemis</groupId>

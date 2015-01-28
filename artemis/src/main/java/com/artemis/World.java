@@ -2,20 +2,18 @@ package com.artemis;
 
 import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.artemis.annotations.Mapper;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.reflect.Annotation;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Constructor;
-import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
 
 import static com.artemis.EntityManager.NO_COMPONENTS;
@@ -95,7 +93,7 @@ public class World {
 	private final Bag<EntitySystem> systemsToInit;
 	
 	private boolean registerUuids;
-	private ArtemisInjector injector;
+	private Injector injector;
 	
 	final EntityEditPool editPool = new EntityEditPool(this);
 	
@@ -153,7 +151,7 @@ public class World {
 		em = new EntityManager(configuration.expectedEntityCount());
 		setManager(em);
 		
-		injector = new ArtemisInjector(this, configuration);
+		injector = new Injector(this, configuration);
 	}
 	
 	/**
@@ -187,6 +185,9 @@ public class World {
 	 */
 	public void inject(Object target) {
 		assertInitialized();
+		if (!ClassReflection.isAnnotationPresent(target.getClass(), Wire.class))
+			throw new MundaneWireException(target.getClass().getName() + " must be annotated with @Wire");
+
 		injector.inject(target);
 	}
 
@@ -704,140 +705,4 @@ public class World {
 		void perform(EntityObserver observer, WildBag<Entity> entities);
 	}
 
-	/**
-	 * Injects {@link ComponentMapper}, {@link EntitySystem} and {@link Manager} types into systems and
-	 * managers.
-	 */
-	private static final class ArtemisInjector {
-		private final World world;
-		
-		private final Map<Class<?>, Class<?>> systems;
-		private final Map<Class<?>, Class<?>> managers;
-		private final Map<String, Object> pojos;
-		
-		ArtemisInjector(World world, WorldConfiguration config) {
-			this.world = world;
-			
-			systems = new IdentityHashMap<Class<?>, Class<?>>();
-			managers = new IdentityHashMap<Class<?>, Class<?>>();
-			pojos = new HashMap<String, Object>(config.injectables);
-		}
-		
-		void update() {
-			for (EntitySystem es : world.getSystems()) {
-				Class<?> origin = es.getClass();
-				Class<?> clazz = origin;
-				do {
-					systems.put(clazz, origin);
-				} while ((clazz = clazz.getSuperclass()) != Object.class);
-			}
-			
-			for (Manager manager : world.managersBag) {
-				Class<?> origin = manager.getClass();
-				Class<?> clazz = origin;
-				do {
-					managers.put(clazz, origin);
-				} while ((clazz = clazz.getSuperclass()) != Object.class);
-			}
-			
-		}
-
-		public void inject(Object target) throws RuntimeException {
-			try {
-				Class<?> clazz = target.getClass();
-
-				if (ClassReflection.isAnnotationPresent(clazz, Wire.class)) {
-					Wire wire = ClassReflection.getAnnotation(clazz, Wire.class);
-					if (wire != null) {
-						injectValidFields(target, clazz, wire.failOnNull(), wire.injectInherited());
-					}
-				} else {
-					injectAnnotatedFields(target, clazz);
-				}
-			} catch (ReflectionException e) {
-				throw new MundaneWireException("Error while wiring", e);
-			}
-		}
-
-		private void injectValidFields(Object target, Class<?> clazz, boolean failOnNull, boolean injectInherited)
-				throws ReflectionException {
-
-			Field[] declaredFields = ClassReflection.getDeclaredFields(clazz);
-			for (int i = 0, s = declaredFields.length; s > i; i++) {
-				injectField(target, declaredFields[i], failOnNull);
-			}
-
-			// should bail earlier, but it's just one more round.
-			while (injectInherited && (clazz = clazz.getSuperclass()) != Object.class) {
-				injectValidFields(target, clazz, failOnNull, injectInherited);
-			}
-		}
-
-		private void injectAnnotatedFields(Object target, Class<?> clazz)
-			throws ReflectionException {
-
-			injectClass(target, clazz);
-		}
-
-		@SuppressWarnings("deprecation")
-		private void injectClass(Object target, Class<?> clazz) throws ReflectionException {
-			Field[] declaredFields = ClassReflection.getDeclaredFields(clazz);
-			for (int i = 0, s = declaredFields.length; s > i; i++) {
-				Field field = declaredFields[i];
-				if (field.isAnnotationPresent(Mapper.class) || field.isAnnotationPresent(Wire.class)) {
-					injectField(target, field, field.isAnnotationPresent(Wire.class));
-				}
-			}
-		}
-
-		@SuppressWarnings("unchecked")
-		private void injectField(Object target, Field field, boolean failOnNotInjected)
-			throws ReflectionException {
-
-			field.setAccessible(true);
-
-			Class<?> fieldType;
-			try {
-				fieldType = field.getType();
-			} catch (RuntimeException ignore) {
-				// Swallow exception caused by missing typedata on gwt platform.
-				// @todo Workaround, awaiting junkdog-ification. Silently failing injections might be undesirable for users failing to add systems/components to gwt reflection inclusion config.
-				return;
-			}
-
-			if (ClassReflection.isAssignableFrom(ComponentMapper.class, fieldType)) {
-				ComponentMapper<?> mapper = world.getMapper(field.getElementType(0));
-				if (failOnNotInjected && mapper == null) {
-					throw new MundaneWireException("ComponentMapper not found for " + fieldType);
-				}
-				field.set(target, mapper);
-			} else if (ClassReflection.isAssignableFrom(EntitySystem.class, fieldType)) {
-				EntitySystem system = world.getSystem((Class<EntitySystem>)systems.get(fieldType));
-				if (failOnNotInjected && system == null) {
-					throw new MundaneWireException("EntitySystem not found for " + fieldType);
-				}
-				field.set(target, system);
-			} else if (ClassReflection.isAssignableFrom(Manager.class, fieldType)) {
-				Manager manager = world.getManager((Class<Manager>)managers.get(fieldType));
-				if (failOnNotInjected && manager == null) {
-					throw new MundaneWireException("Manager not found for " + fieldType);
-				}
-				field.set(target, manager);
-			} else if (ClassReflection.isAssignableFrom(EntityFactory.class, fieldType)) {
-				EntityFactory<?> factory = (EntityFactory<?>)world.createFactory(fieldType);
-				if (failOnNotInjected && factory == null) {
-					throw new MundaneWireException("Factory not found for " + fieldType);
-				}
-				field.set(target, factory);
-			} else if (field.isAnnotationPresent(Wire.class)) {
-				final Wire wire = field.getAnnotation(Wire.class);
-				String key = wire.name();
-				if ("".equals(key))
-					key = field.getType().getName();
-				
-				if (pojos.containsKey(key))
-					field.set(target, pojos.get(key));
-			}
-		}
-	}
 }

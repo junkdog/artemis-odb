@@ -79,9 +79,6 @@
 					<productionMode>true</productionMode>
 					<htmlunit>IE8</htmlunit>
 					<mode>htmlunit</mode>
-					<!--
-					<includes>**/*GwtTest.java</includes>
-					-->
 					<includes>**/*TestSuite.java</includes>
 				</configuration>
 				<executions>

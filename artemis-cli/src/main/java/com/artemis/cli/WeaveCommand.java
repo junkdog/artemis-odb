@@ -23,7 +23,19 @@ public class WeaveCommand {
 		description = "Disable weaving of pooled components",
 		required = false)
 	private boolean disablePooledWeaving = false;
-	
+
+	@Parameter(
+		names = {"-P", "--disable-packed"},
+		description = "Disable weaving of pooled components",
+		required = false)
+	private boolean disablePackedWeaving = false;
+
+	@Parameter(
+		names = {"-e", "--disable-es-optimization"},
+		description = "Disable callsite devirtualization",
+		required = false)
+	private boolean disableOptimizeEntitySystems = false;
+
 	@Parameter(
 		names = {"-c", "--class-folder"},
 		description = "Root class folder",
@@ -41,6 +53,8 @@ public class WeaveCommand {
 		long start = System.currentTimeMillis();
 		
 		Weaver.enablePooledWeaving(!disablePooledWeaving);
+		Weaver.enablePackedWeaving(!disablePackedWeaving);
+		Weaver.optimizeEntitySystems(!disableOptimizeEntitySystems);
 		Weaver weaver = new Weaver(classRoot);
 		WeaverLog processed = weaver.execute();
 		if (verbose && processed.components.size() > 0) {

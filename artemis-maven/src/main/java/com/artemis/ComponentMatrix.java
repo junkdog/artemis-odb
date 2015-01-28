@@ -5,14 +5,13 @@ import static org.apache.maven.plugins.annotations.ResolutionScope.COMPILE_PLUS_
 
 import java.io.File;
 
+import net.onedaybeard.ecs.model.ComponentDependencyMatrix;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.sonatype.plexus.build.incremental.BuildContext;
-
-import com.artemis.model.ComponentDependencyMatrix;
 
 /**
  * Generates the component dependency report.
@@ -38,7 +37,7 @@ public class ComponentMatrix extends AbstractMojo
 	@Override
 	public void execute() throws MojoExecutionException
 	{
-		ComponentDependencyMatrix matrix = 
+		ComponentDependencyMatrix matrix =
 			new ComponentDependencyMatrix(name, classDirectory, new File(saveDirectory, "matrix.html"));
 		matrix.process();
 	}

@@ -4,9 +4,9 @@ import java.io.File;
 
 import com.artemis.cli.converter.FileOutputConverter;
 import com.artemis.cli.converter.FolderConverter;
-import com.artemis.model.ComponentDependencyMatrix;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
+import net.onedaybeard.ecs.model.ComponentDependencyMatrix;
 
 @Parameters(
 		commandDescription="Generate the Component Dependency Matrix from existing classes")
@@ -34,7 +34,7 @@ public class MatrixCommand {
 	private File output = new File("matrix.html");
 	
 	void execute() {
-		ComponentDependencyMatrix cdm = 
+		ComponentDependencyMatrix cdm =
 			new ComponentDependencyMatrix(projectName, classRoot, output);
 		cdm.process();
 	}

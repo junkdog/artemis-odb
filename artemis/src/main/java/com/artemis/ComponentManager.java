@@ -53,7 +53,7 @@ public class ComponentManager extends Manager {
 	}
 
 	@SuppressWarnings("unchecked")
-	private <T extends Component> T create(Entity owner, ComponentType type) {
+	<T extends Component> T create(Entity owner, ComponentType type) {
 		Class<T> componentClass = (Class<T>)type.getType();
 		T component = null;
 		

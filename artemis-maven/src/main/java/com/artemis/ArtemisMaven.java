@@ -45,6 +45,12 @@ public class ArtemisMaven extends AbstractMojo {
 	private boolean enablePooledWeaving;
 
 	/**
+	 * Enabled weaving of pooled components (more viable on Android than JVM).
+	 */
+	@Parameter(defaultValue = "true", property = "enablePackedWeaving")
+	private boolean enablePackedWeaving;
+
+	/**
 	 * If false, no weaving will take place (useful for debugging).
 	 */
 	@Parameter(defaultValue = "true", property = "enableArtemisPlugin")
@@ -72,12 +78,14 @@ public class ArtemisMaven extends AbstractMojo {
 		log.info("CONFIGURATION");
 		log.info(WeaverLog.LINE.replaceAll("\n", ""));
 		log.info(WeaverLog.format("ideFriendlyPacking", ideFriendlyPacking));
+		log.info(WeaverLog.format("enablePackedWeaving", enablePackedWeaving));
 		log.info(WeaverLog.format("enablePooledWeaving", enablePooledWeaving));
 		log.info(WeaverLog.format("optimizeEntitySystems", optimizeEntitySystems));
 		log.info(WeaverLog.LINE.replaceAll("\n", ""));
 
 		Weaver.retainFieldsWhenPacking(ideFriendlyPacking);
 		Weaver.enablePooledWeaving(enablePooledWeaving);
+		Weaver.enablePackedWeaving(enablePackedWeaving);
 		Weaver.optimizeEntitySystems(optimizeEntitySystems);
 
 		Weaver weaver = new Weaver(outputDirectory);

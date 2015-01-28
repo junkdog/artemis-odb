@@ -21,6 +21,7 @@
 		<asm.version>4.1</asm.version>
 		<junit.version>4.11</junit.version>
 		<gwt.version>2.6.0</gwt.version>
+		<matrix.artemis.version>0.1.0-SNAPSHOT</matrix.artemis.version>
 	</properties>
 
 	<scm>
@@ -92,7 +93,6 @@
 		<module>artemis-gradle</module>
 		<module>artemis-processor</module>
 		<module>artemis-test</module>
-		<module>artemis-matrix</module>
 		<module>artemis-cli</module>
 		<module>artemis-gwt</module>
   </modules>
@@ -105,7 +105,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.4</version>
+						<version>1.6</version>
 						<executions>
 							<execution>
 								<id>sign-artifacts</id>
@@ -132,7 +132,7 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.9</version>
+						<version>2.10.1</version>
 						<executions>
 							<execution>
 								<id>attach-javadocs</id>

@@ -159,12 +159,15 @@ public class Weaver {
 	public static void retainFieldsWhenPacking(boolean ideFriendlyPacking) {
 		ClassMetadata.GlobalConfiguration.ideFriendlyPacking = ideFriendlyPacking;
 	}
-	
-	
+
 	public static void enablePooledWeaving(boolean enablePooledWeaving) {
 		ClassMetadata.GlobalConfiguration.enabledPooledWeaving = enablePooledWeaving;
 	}
-	
+
+	public static void enablePackedWeaving(boolean enablePackedWeaving) {
+		ClassMetadata.GlobalConfiguration.enabledPackedWeaving = enablePackedWeaving;
+	}
+
 	public static void optimizeEntitySystems(boolean enabled) {
 		ClassMetadata.GlobalConfiguration.optimizeEntitySystems = enabled;
 	}
@@ -184,6 +187,9 @@ public class Weaver {
 		if (meta.annotation == WeaverType.POOLED && !GlobalConfiguration.enabledPooledWeaving) {
 			if (!meta.forcePooledWeaving) return;
 		}
+
+		if  (meta.annotation == WeaverType.PACKED && !GlobalConfiguration.enabledPackedWeaving)
+			return;
 
 		meta.weaverTask = threadPool.submit(new ComponentTypeTransmuter(file, cr, meta));
 		processed.add(meta);
