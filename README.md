@@ -18,7 +18,7 @@ Artemis-ODB is one of the fastest incarnations of Artemis.
 
 Operations/second. Higher is better.
 
-![it16k][it16k] ![ir16k][ir16k]
+![it16k][it16k] ![ir16k][ir16k ]![arc16k][arc16k]
 
 See [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) for more benchmarks.
 Don't take our word for it, run the benchmarks yourself!
@@ -31,6 +31,11 @@ Don't take our word for it, run the benchmarks yourself!
  [ir4k]: http://junkdog.github.io/images/ecs-bench/insert_remove__4096_entities.png
  [ir16k]: http://junkdog.github.io/images/ecs-bench/insert_remove__16384_entities.png
  [ir65k]: http://junkdog.github.io/images/ecs-bench/insert_remove__65536_entities.png 
+ [arc1k]: http://junkdog.github.io/images/ecs-bench/add_remove_components__1024_entities.png
+ [arc4k]: http://junkdog.github.io/images/ecs-bench/add_remove_components__4096_entities.png
+ [arc16k]: http://junkdog.github.io/images/ecs-bench/add_remove_components__16384_entities.png
+ [arc64k]: http://junkdog.github.io/images/ecs-bench/add_remove_components__65536_entities.png 
+
 
 ### Made with artemis-odb
 
