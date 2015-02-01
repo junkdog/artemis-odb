@@ -18,7 +18,7 @@ Artemis-ODB is one of the fastest incarnations of Artemis.
 
 Operations/second. Higher is better.
 
-![it16k][it16k] ![ir16k][ir16k ]![arc16k][arc16k]
+![it16k][it16k] ![ir16k][ir16k] ![arc16k][arc16k]
 
 See [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) for more benchmarks.
 Don't take our word for it, run the benchmarks yourself!
