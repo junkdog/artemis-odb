@@ -272,6 +272,11 @@ public class World {
 	 * @return the manager
 	 */
 	public final <T extends Manager> T setManager(T manager) {
+		if (initialized) {
+			String err = "It is forbidden to add managers after calling World#initialized.";
+			throw new RuntimeException(err);
+		}
+
 		managers.put(manager.getClass(), manager);
 		managersBag.add(manager);
 		manager.setWorld(this);
@@ -475,6 +480,13 @@ public class World {
 	 * @return the added system
 	 */
 	public <T extends EntitySystem> T setSystem(T system, boolean passive) {
+
+		if (initialized) {
+			String err = "It is forbidden to add systems after calling World#initialized.";
+			throw new RuntimeException(err);
+		}
+				
+
 		system.setWorld(this);
 		system.setPassive(passive);
 

@@ -21,7 +21,7 @@
 		<asm.version>4.1</asm.version>
 		<junit.version>4.11</junit.version>
 		<gwt.version>2.6.0</gwt.version>
-		<matrix.artemis.version>0.1.0-SNAPSHOT</matrix.artemis.version>
+		<matrix.artemis.version>0.1.0</matrix.artemis.version>
 	</properties>
 
 	<scm>
