@@ -1,10 +1,12 @@
 ## Change Log
 
-#### Version: 0.8.2-SNAPSHOT
+#### Version: 0.9.1-SNAPSHOT
+
+#### Version: 0.9.0 - 2015-02-03
 - **MINOR BREAKING CHANGES**
   - Entity instances should never be compared by reference equality; always do
     `entity1.equals(entity2)`.
-  - It is no longer valid to additional managers or systems to initialized worlds.
+  - It is no longer valid to add additional managers or systems to initialized worlds.
 
 - MundaneWireException thrown by World#inject if class lacks @Wire.
   Previously, it silently failed to inject.
