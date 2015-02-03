@@ -14,6 +14,7 @@
 - New EntityTransmuter class, an alternative but more efficient way of adding/removing
   components.
 - Optimized entity removal speed. 
+- Adding and removing existing entities from systems is now considerably faster.
 - Add enablePackedWeaving to maven, gradle and CLI tool.
 - **Fix**: Entity systems can now subscribe to all entities when aspect is empty.
 - **Fix**: EntityFactory annotation processor sometimes failed generating the
