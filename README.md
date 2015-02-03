@@ -97,7 +97,7 @@ There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - 
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>0.8.1</version>
+	<version>0.9.0</version>
 </dependency>
 ```
 
@@ -105,12 +105,12 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 
 #### Gradle
 ```groovy
-  dependencies { compile "net.onedaybeard.artemis:artemis-odb:0.8.1" }
+  dependencies { compile "net.onedaybeard.artemis:artemis-odb:0.9.0" }
 ```
 
 #### Manual Download
 
- - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.8.1/) 
- - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.8.1/)
- - [Entity Factory Processor](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-processor/0.8.1/)
+ - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.9.0/) 
+ - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.9.0/)
+ - [Entity Factory Processor](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-processor/0.9.0/)
 
