@@ -15,6 +15,7 @@
   components.
 - Optimized entity removal speed. 
 - Add enablePackedWeaving to maven, gradle and CLI tool.
+- Reduced EntitySystem memory footprint by 2/3.
 - **Fix**: Entity systems can now subscribe to all entities when aspect is empty.
 - **Fix**: EntityFactory annotation processor sometimes failed generating the
   factory implementation when running from within Eclipse.
