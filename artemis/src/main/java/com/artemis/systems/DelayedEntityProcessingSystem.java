@@ -48,7 +48,7 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	 * @param aspect
 	 *			the aspect to match against entities
 	 */
-	public DelayedEntityProcessingSystem(Aspect aspect) {
+	public DelayedEntityProcessingSystem(Aspect.Builder aspect) {
 		super(aspect);
 	}
 

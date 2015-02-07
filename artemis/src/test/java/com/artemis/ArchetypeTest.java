@@ -118,7 +118,7 @@ public class ArchetypeTest {
 
 		@SuppressWarnings("unchecked")
 		public Es1() {
-			super(Aspect.getAspectForAll(ComponentX.class));
+			super(Aspect.all(ComponentX.class));
 		}
 
 		@Override
@@ -134,7 +134,7 @@ public class ArchetypeTest {
 
 		@SuppressWarnings("unchecked")
 		public Es2() {
-			super(Aspect.getAspectForAll(ComponentX.class).exclude(ComponentY.class));
+			super(Aspect.all(ComponentX.class).exclude(ComponentY.class));
 		}
 
 		@Override

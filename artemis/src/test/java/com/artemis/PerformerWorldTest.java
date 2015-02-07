@@ -45,7 +45,7 @@ public class PerformerWorldTest {
 
 		@SuppressWarnings("unchecked")
 		public SystemA() {
-			super(Aspect.getAspectForOne(TestComponent.class));
+			super(Aspect.one(TestComponent.class));
 		}
 
 		@Override

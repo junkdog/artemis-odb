@@ -68,7 +68,7 @@ public class EntitySystemTest {
 		
 		@SuppressWarnings("unchecked")
 		public IteratorTestSystem(int expectedSize) {
-			super(Aspect.getAspectForAll(C.class));
+			super(Aspect.all(C.class));
 			this.expectedSize = expectedSize;
 		}
 
@@ -86,7 +86,7 @@ public class EntitySystemTest {
 
 	public static class ExcludingSystem extends EntityProcessingSystem {
 		public ExcludingSystem() {
-			super(Aspect.getEmpty().exclude(C.class));
+			super(Aspect.exclude(C.class));
 		}
 
 		@Override
@@ -95,7 +95,7 @@ public class EntitySystemTest {
 
 	public static class EmptySystem extends EntityProcessingSystem {
 		public EmptySystem() {
-			super(Aspect.getEmpty());
+			super(Aspect.all());
 		}
 
 		@Override

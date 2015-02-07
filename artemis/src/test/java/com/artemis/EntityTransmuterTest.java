@@ -104,7 +104,7 @@ public class EntityTransmuterTest {
 
 	private static class ES1 extends EntityProcessingSystem {
 		public ES1() {
-			super(Aspect.getAspectForAll(ComponentX.class));
+			super(Aspect.all(ComponentX.class));
 		}
 
 		@Override

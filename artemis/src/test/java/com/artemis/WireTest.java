@@ -230,7 +230,7 @@ public class WireTest {
 		
 		@SuppressWarnings("unchecked")
 		public MappedSystemAll() {
-			super(Aspect.getAspectForAll(ComponentX.class, ComponentY.class));
+			super(Aspect.all(ComponentX.class, ComponentY.class));
 		}
 		
 		@Override
@@ -245,7 +245,7 @@ public class WireTest {
 		
 		@SuppressWarnings("unchecked")
 		public MappedSystem() {
-			super(Aspect.getAspectForAll(ComponentX.class, ComponentY.class));
+			super(Aspect.all(ComponentX.class, ComponentY.class));
 		}
 
 		@Override

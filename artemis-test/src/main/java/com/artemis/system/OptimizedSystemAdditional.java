@@ -7,7 +7,7 @@ import com.artemis.systems.EntityProcessingSystem;
 public class OptimizedSystemAdditional extends EntityProcessingSystem {
 
 	public OptimizedSystemAdditional() {
-		super(Aspect.getEmpty());
+		super(null);
 
 		setEnabled(true);
 		begin();

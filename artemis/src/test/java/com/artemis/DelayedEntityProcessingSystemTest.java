@@ -165,7 +165,7 @@ public class DelayedEntityProcessingSystemTest
 
 		@SuppressWarnings("unchecked")
 		public ExpirationSystem() {
-			super(Aspect.getAspectForAll(Expiration.class));
+			super(Aspect.all(Expiration.class));
 		}
 
 		@Override

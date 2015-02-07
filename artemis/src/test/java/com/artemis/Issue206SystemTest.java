@@ -39,7 +39,7 @@ public class Issue206SystemTest {
 	private static class TestSystemAB extends EntityProcessingSystem {
 		@SuppressWarnings("unchecked")
 		public TestSystemAB() {
-			super(Aspect.getAspectForAll(CompA.class, CompB.class));
+			super(Aspect.all(CompA.class, CompB.class));
 		}
 
 		@Override

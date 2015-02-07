@@ -82,7 +82,7 @@ public class WorldStructWeavingBase {
 		
 		@SuppressWarnings("unchecked")
 		public EntitySystemA() {
-			super(Aspect.getAspectForAll(StructComponentA.class));
+			super(Aspect.all(StructComponentA.class));
 		}
 		
 		@Override
@@ -116,7 +116,7 @@ public class WorldStructWeavingBase {
 		
 		@SuppressWarnings("unchecked")
 		public EntitySystemB() {
-			super(Aspect.getAspectForAll(Position.class));
+			super(Aspect.all(Position.class));
 		}
 		
 		@Override

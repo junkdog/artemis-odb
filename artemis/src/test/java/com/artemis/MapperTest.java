@@ -59,7 +59,7 @@ public class MapperTest {
 		
 		@SuppressWarnings("unchecked")
 		public MappedSystem() {
-			super(Aspect.getAspectForAll(ComponentX.class, ComponentY.class));
+			super(Aspect.all(ComponentX.class, ComponentY.class));
 		}
 
 		@Override

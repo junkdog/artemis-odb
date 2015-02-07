@@ -77,7 +77,7 @@ public class WorldPooledComponentTest
 		@SuppressWarnings("unchecked")
 		public SystemComponentEntityRemover()
 		{
-			super(Aspect.getAspectForAll(ReusedComponent.class));
+			super(Aspect.all(ReusedComponent.class));
 		}
 
 		@Override
@@ -92,7 +92,7 @@ public class WorldPooledComponentTest
 		@SuppressWarnings("unchecked")
 		public SystemComponentPooledRemover()
 		{
-			super(Aspect.getAspectForAll(ReusedComponent.class));
+			super(Aspect.all(ReusedComponent.class));
 		}
 		
 		@Override

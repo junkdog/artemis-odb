@@ -28,7 +28,7 @@ public abstract class IntervalEntityProcessingSystem extends IntervalEntitySyste
 	 * @param interval
 	 *			the interval at which the system is processed
 	 */
-	public IntervalEntityProcessingSystem(Aspect aspect, float interval) {
+	public IntervalEntityProcessingSystem(Aspect.Builder aspect, float interval) {
 		super(aspect, interval);
 	}
 

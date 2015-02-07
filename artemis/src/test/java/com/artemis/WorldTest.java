@@ -100,7 +100,7 @@ public class WorldTest
 		@SuppressWarnings("unchecked")
 		public SystemComponentXRemover()
 		{
-			super(Aspect.getAspectForAll(ComponentX.class));
+			super(Aspect.all(ComponentX.class));
 		}
 
 		@Override
@@ -118,7 +118,7 @@ public class WorldTest
 		@SuppressWarnings("unchecked")
 		public SystemB()
 		{
-			super(Aspect.getAspectForAll(ComponentX.class));
+			super(Aspect.all(ComponentX.class));
 		}
 
 		@Override
@@ -136,7 +136,7 @@ public class WorldTest
 		@SuppressWarnings("unchecked")
 		public SystemY()
 		{
-			super(Aspect.getAspectForAll(ComponentY.class));
+			super(Aspect.all(ComponentY.class));
 		}
 		
 		@Override
@@ -173,7 +173,7 @@ public class WorldTest
 
 		@SuppressWarnings("unchecked")
 		public ExpirationSystem() {
-			super(Aspect.getAspectForAll(ComponentY.class));
+			super(Aspect.all(ComponentY.class));
 		}
 		
 		@Override

@@ -36,7 +36,7 @@ public class IntervalEntitySystemTest {
 
 		@SuppressWarnings("unchecked")
 		public IntervalSystem() {
-			super(Aspect.getAspectForAll(ComponentX.class), 1);
+			super(Aspect.all(ComponentX.class), 1);
 		}
 
 		@Override

@@ -26,7 +26,7 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 	 * @param aspect
 	 *			the aspect to match entites
 	 */
-	public EntityProcessingSystem(Aspect aspect) {
+	public EntityProcessingSystem(Aspect.Builder aspect) {
 		super(aspect);
 	}
 

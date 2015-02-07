@@ -28,7 +28,7 @@ public abstract class IntervalEntitySystem extends EntitySystem {
 	 * @param interval
 	 *			the interval at which the system processes
 	 */
-	public IntervalEntitySystem(Aspect aspect, float interval) {
+	public IntervalEntitySystem(Aspect.Builder aspect, float interval) {
 		super(aspect);
 		this.interval = interval;
 	}

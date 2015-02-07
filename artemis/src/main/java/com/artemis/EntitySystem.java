@@ -36,6 +36,7 @@ public abstract class EntitySystem implements EntityObserver {
 	private boolean enabled;
 	/** If the system is interested in no entities at all. */
 	private boolean dummy;
+	private Aspect.Builder aspectConfiguration;
 	private Aspect aspect;
 	private final BitSet aspectCache = new BitSet();
 
@@ -46,8 +47,8 @@ public abstract class EntitySystem implements EntityObserver {
 	 * @param aspect
 	 *			to match against entities
 	 */
-	public EntitySystem(Aspect aspect) {
-		this.aspect = aspect;
+	public EntitySystem(Aspect.Builder aspect) {
+		this.aspectConfiguration = aspect;
 		activeIds = new BitSet();
 		actives = new IntBag();
 		
@@ -336,8 +337,8 @@ public abstract class EntitySystem implements EntityObserver {
 	 *			the world to set
 	 */
 	protected final void setWorld(World world) {
-		if (aspect != null) {
-			aspect.initialize(world);
+		if (aspectConfiguration != null) {
+			aspect = aspectConfiguration.build(world);
 		} else {
 			dummy = true;
 		}

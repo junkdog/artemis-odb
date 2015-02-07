@@ -7,7 +7,7 @@ import com.artemis.systems.EntityProcessingSystem;
 public final class PoorFellowSystem extends EntityProcessingSystem {
 
 	public PoorFellowSystem(Aspect aspect) {
-		super(Aspect.getEmpty());
+		super(Aspect.all());
 	}
 
 	@Override

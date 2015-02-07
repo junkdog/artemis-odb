@@ -9,7 +9,7 @@ import com.artemis.systems.EntityProcessingSystem;
 public class OptimizedSystemSafe extends EntityProcessingSystem {
 
 	public OptimizedSystemSafe() {
-		super(Aspect.getEmpty());
+		super(null);
 	}
 
 	@Override
