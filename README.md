@@ -53,6 +53,7 @@ Don't take our word for it, run the benchmarks yourself!
 | [Ned et les Maki][ned]        | [source][ned-src]                    | N/A               | [Geeky Gobling Prod][ned-auth] |
 | [Naturally Selected 2D][ns2d] | [source][ns2d-src] [play][ns2d-play] | [cdm][ns2d-cdm]   | [@DaanVanYperen][dvy]          |
 | [The Underkeep][tu]           | [source][tu-src] [play][tu-play]     | [cdm][tu-cdm]     | [@DaanVanYperen][dvy]          |
+| [Tox][tox]                    | [source][tox-src] [play][tox-play]   | N/A               | [@DaanVanYperen][dvy]          |
 
  [ark]: http://www.ludumdare.com/compo/ludum-dare-30/?action=preview&uid=22396
  [ark-src]: https://github.com/DaanVanYperen/arktrail
@@ -74,6 +75,9 @@ Don't take our word for it, run the benchmarks yourself!
  [tu-src]: https://github.com/DaanVanYperen/underkeep
  [tu-play]: http://www.mostlyoriginal.net/play-underkeep/
  [tu-cdm]: http://junkdog.github.io/matrix-tu.html
+ [tox]: http://7drl.org/2014/03/17/tox-puzzle-roguelike-dont-do-drugs-kids/
+ [tox-src]: https://github.com/DaanVanYperen/tox/
+ [tox-play]: http://ludum.mostlyoriginal.net/game/tox/
  [dvy]: https://github.com/DaanVanYperen
  [sw-src]: https://github.com/Flet/spasceship-warrior-gradle
  [sw-play]: http://flet.github.io/spaceship-warrior-redux/
