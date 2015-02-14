@@ -1,6 +1,14 @@
 ## Change Log
 
 #### Version: 0.9.1-SNAPSHOT
+- **MINOR BREAKING CHANGES**
+  - EntitySystem constructor expects AspectBuilder:
+    - Implies existing classes have to be recompiled against this release.
+	- Existing custom entity systems need to pass ArspectBuilder to EntitySystem.
+
+- Aspect split into Aspect and AspectBuilder.
+  - Simplified static method names, mirroring Aspect's old instance methods.
+
 
 #### Version: 0.9.0 - 2015-02-03
 - **MINOR BREAKING CHANGES**
