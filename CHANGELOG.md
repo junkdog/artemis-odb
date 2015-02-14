@@ -2,11 +2,11 @@
 
 #### Version: 0.9.1-SNAPSHOT
 - **MINOR BREAKING CHANGES**
-  - EntitySystem constructor expects AspectBuilder:
+  - EntitySystem constructor expects Aspect.Builder:
     - Implies existing classes have to be recompiled against this release.
-	- Existing custom entity systems need to pass ArspectBuilder to EntitySystem.
+	- Existing custom entity systems need to pass Arspect.Builder to EntitySystem.
 
-- Aspect split into Aspect and AspectBuilder.
+- Aspect split into Aspect and Aspect.Builder.
   - Simplified static method names, mirroring Aspect's old instance methods.
 
 

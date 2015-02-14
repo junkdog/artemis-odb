@@ -16,8 +16,12 @@ public abstract class ComponentMapper<A extends Component> {
 	 *
 	 * @throws ArrayIndexOutOfBoundsException
 	 */
-	public abstract A get(Entity e) throws ArrayIndexOutOfBoundsException;
-	
+	public A get(Entity e) throws ArrayIndexOutOfBoundsException {
+		return get(e.getId());
+	}
+
+	public abstract A get(int entityId) throws ArrayIndexOutOfBoundsException;
+
 	/**
 	 * Fast but unsafe retrieval of a component for this entity.
 	 * <p>

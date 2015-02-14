@@ -42,8 +42,8 @@ class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public A get(Entity e) throws ArrayIndexOutOfBoundsException {
-		return (A) components.get(e.getId());
+	public A get(int entityId) throws ArrayIndexOutOfBoundsException {
+		return (A) components.get(entityId);
 	}
 
 	@SuppressWarnings("unchecked")

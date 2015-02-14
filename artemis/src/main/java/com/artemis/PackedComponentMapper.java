@@ -55,11 +55,17 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 
 	@Override
 	@SuppressWarnings("unchecked")
+	public A get(int entityId) throws ArrayIndexOutOfBoundsException {
+		return get(world.getEntity(entityId));
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
 	public A get(Entity e) throws ArrayIndexOutOfBoundsException {
 		component.forEntity(e);
 		return (A) component;
 	}
-	
+
 	@Override
 	public A getSafe(Entity e) {
 		return has(e) ? get(e) : null;
