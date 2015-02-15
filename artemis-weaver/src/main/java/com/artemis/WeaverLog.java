@@ -1,13 +1,12 @@
 package com.artemis;
 
+import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadata.WeaverType;
+import org.objectweb.asm.Type;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.objectweb.asm.Type;
-
-import com.artemis.meta.ClassMetadata;
-import com.artemis.meta.ClassMetadata.WeaverType;
 
 public class WeaverLog {
 	public static final int RELATIVE_WIDTH = 72;
@@ -24,7 +23,7 @@ public class WeaverLog {
 		int length = key.length() + value.toString().length() + 2; // margin
 		length = Math.max(length, 3);
 		
-		char[] padding = new char[RELATIVE_WIDTH - length];
+		char[] padding = new char[Math.max(RELATIVE_WIDTH - length, 0)];
 		Arrays.fill(padding, delim);
 		
 		return new StringBuilder(RELATIVE_WIDTH)
