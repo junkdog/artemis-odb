@@ -7,7 +7,7 @@ It is actively maintained, and a continuation of the popular [Artemis](http://ga
 ### Highlights
 - Full GWT support.
 - High performance, GC-friendly, [less boilerplate](https://github.com/junkdog/artemis-odb/wiki/@Wire)!
-- [packed](https://github.com/junkdog/artemis-odb/wiki/Packed-Weaver) and [pooled](https://github.com/junkdog/artemis-odb/wiki/@PooledWeaver) components, [optimized systems](https://github.com/junkdog/artemis-odb/wiki/Hotspot-Optimization), leveraged by [bytecode injection](https://github.com/junkdog/artemis-odb/wiki/Bytecode weaving).
+- [struct emulation](https://github.com/junkdog/artemis-odb/wiki/Packed-Weaver) and [pooled](https://github.com/junkdog/artemis-odb/wiki/@PooledWeaver) components, [hotspot optimization](https://github.com/junkdog/artemis-odb/wiki/Hotspot-Optimization), leveraged by [bytecode injection](https://github.com/junkdog/artemis-odb/wiki/Bytecode weaving).
 - Convenient [dependency matrices](https://github.com/junkdog/artemis-odb/wiki/Component Dependency Matrix) for your components and systems.
 - Backwards compatible with vanilla artemis, mostly. See CHANGELOG for minor breaking changes.
 
