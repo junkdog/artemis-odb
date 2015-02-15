@@ -355,12 +355,19 @@ public class World {
 	 * Delete the entity from the world.
 	 *
 	 * @param e the entity to delete
-	 * 
-	 * @deprecated Better invoke {@link Entity#deleteFromWorld()} or {@link EntityEdit#deleteEntity()}
 	 */
-	@Deprecated @SuppressWarnings("static-method")
 	public void deleteEntity(Entity e) {
 		e.edit().deleteEntity();
+	}
+
+
+	/**
+	 * Delete the entity from the world.
+	 *
+	 * @param entityId the entity to delete
+	 */
+	public void deleteEntity(int entityId) {
+		em.getEntity(entityId).edit().deleteEntity();
 	}
 	
 	/**

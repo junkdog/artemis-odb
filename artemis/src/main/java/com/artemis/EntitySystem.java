@@ -380,17 +380,24 @@ public abstract class EntitySystem implements EntityObserver {
 	 */
 	@Deprecated
 	public ImmutableBag<Entity> getActives() {
-		if (activesIsDirty) // && world.isRebuildingIndexAllowed())
-			rebuildCompressedActives();
+		return getActives(new Bag<Entity>());
+	}
 
-		Bag<Entity> entities = new Bag<Entity>();
+	/**
+	 * Get all entities being processed by this system.
+	 *
+	 * @return a bag containing all active entities of the system
+	 */
+	public Bag<Entity> getActives(Bag<Entity> fillBag) {
+		if (activesIsDirty)
+			rebuildCompressedActives();
 
 		int[] array = actives.getData();
 		for (int i = 0, s = actives.size(); s > i; i++) {
-			entities.add(world.getEntity(array[i]));
+			fillBag.add(world.getEntity(array[i]));
 		}
 
-		return entities;
+		return fillBag;
 	}
 
 	/**
