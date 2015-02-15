@@ -581,6 +581,8 @@ public class World {
 	 * Process all non-passive systems.
 	 */
 	public void process() {
+		assertInitialized();
+
 		updateEntityStates();
 
 		em.clean();

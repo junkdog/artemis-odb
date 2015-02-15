@@ -8,6 +8,7 @@
 
 - Aspect split into Aspect and Aspect.Builder.
   - Simplified static method names, mirroring Aspect's old instance methods.
+- **Fix**: Uninitialized worlds threw cryptic NPE when invoking #process.
 
 #### Version: 0.9.0 - 2015-02-03
 - **MINOR BREAKING CHANGES**
