@@ -361,11 +361,17 @@ public class Aspect {
 		}
 
 		public Aspect build(World world) {
+			AspectSubscriptionManager aspectManager = world.getManager(AspectSubscriptionManager.class);
+			if (aspectManager.has(this))
+				return aspectManager.get(this);
+
 			ComponentTypeFactory tf = world.getComponentManager().typeFactory;
 			Aspect aspect = new Aspect();
 			associate(tf, allTypes, aspect.allSet);
 			associate(tf, exclusionTypes, aspect.exclusionSet);
 			associate(tf, oneTypes, aspect.oneSet);
+
+			aspectManager.add(this, aspect);
 
 			return aspect;
 		}
@@ -374,6 +380,31 @@ public class Aspect {
 			for (Class<? extends Component> t : types) {
 				componentBits.set(tf.getIndexFor(t));
 			}
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+
+			Builder builder = (Builder) o;
+
+			if (!allTypes.equals(builder.allTypes))
+				return false;
+			if (!exclusionTypes.equals(builder.exclusionTypes))
+				return false;
+			if (!oneTypes.equals(builder.oneTypes))
+				return false;
+
+			return true;
+		}
+
+		@Override
+		public int hashCode() {
+			int result = allTypes.hashCode();
+			result = 31 * result + exclusionTypes.hashCode();
+			result = 31 * result + oneTypes.hashCode();
+			return result;
 		}
 	}
 }

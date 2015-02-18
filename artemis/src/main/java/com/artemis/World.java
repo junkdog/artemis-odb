@@ -11,7 +11,6 @@ import com.artemis.annotations.Wire;
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
-import com.artemis.utils.reflect.Annotation;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
@@ -150,6 +149,8 @@ public class World {
 
 		em = new EntityManager(configuration.expectedEntityCount());
 		setManager(em);
+
+		setManager(new AspectSubscriptionManager());
 		
 		injector = new Injector(this, configuration);
 	}

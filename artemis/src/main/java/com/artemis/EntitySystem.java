@@ -16,7 +16,7 @@ import com.artemis.utils.IntBag;
  *
  * @author Arni Arent
  */
-public abstract class EntitySystem implements EntityObserver {
+public abstract class EntitySystem implements EntityObserver, EntitySubscription.SubscriptionListener {
 
 	/** The world this system belongs to. */
 	protected World world;
@@ -128,6 +128,13 @@ public abstract class EntitySystem implements EntityObserver {
 	 */
 	protected void initialize() {}
 
+	public void inserted(ImmutableBag<Entity> entities) {
+		Object[] data = ((Bag<Entity>)entities).getData();
+		for (int i = 0, s = entities.size(); s > i; i++) {
+			inserted((Entity) data[i]);
+		}
+	}
+
 	/**
 	 * Called if the system has received a entity it is interested in, e.g
 	 * created or a component was added to it.
@@ -136,6 +143,13 @@ public abstract class EntitySystem implements EntityObserver {
 	 *			the entity that was added to this system
 	 */
 	protected void inserted(Entity e) {}
+
+	public void removed(ImmutableBag<Entity> entities) {
+		Object[] data = ((Bag<Entity>)entities).getData();
+		for (int i = 0, s = entities.size(); s > i; i++) {
+			removed((Entity) data[i]);
+		}
+	}
 
 	/**
 	 * Called if a entity was removed from this system, e.g deleted or had one
