@@ -38,6 +38,8 @@ public class World {
 	 * Manages all component-entity associations for the world.
 	 */
 	private final ComponentManager cm;
+	final AspectSubscriptionManager am;
+
 	/**
 	 * The time passed since the last update.
 	 */
@@ -144,14 +146,10 @@ public class World {
 		enabledPerformer = new EnabledPerformer();
 		disabledPerformer = new DisabledPerformer();
 
-		cm = new ComponentManager(configuration.expectedEntityCount());
-		setManager(cm);
+		cm = setManager(new ComponentManager(configuration.expectedEntityCount()));
+		em = setManager(new EntityManager(configuration.expectedEntityCount()));
+		am = setManager(new AspectSubscriptionManager());
 
-		em = new EntityManager(configuration.expectedEntityCount());
-		setManager(em);
-
-		setManager(new AspectSubscriptionManager());
-		
 		injector = new Injector(this, configuration);
 	}
 	
@@ -524,7 +522,7 @@ public class World {
 	 * @param performer the performer to run
 	 * @param entities the entity to pass as argument to the systems
 	 */
-	private void notifySystems(Performer performer, WildBag<Entity> entities) {
+	private void notifySubscribers(Performer performer, WildBag<Entity> entities) {
 		Object[] data = systemsBag.getData();
 		for (int i = 0, s = systemsBag.size(); s > i; i++) {
 			performer.perform((EntitySystem) data[i], entities);
@@ -567,17 +565,10 @@ public class World {
 			return;
 		
 		notifyManagers(performer, entityBag);
-		notifySystems(performer, entityBag);
-		entityBag.setSize(0);
+//		notifySubscribers(performer, entityBag);
+//		entityBag.setSize(0);
 	}
 	
-	void processComponentIdentity(int id, BitSet componentBits) {
-		Object[] data = systemsBag.getData();
-		for (int i = 0, s = systemsBag.size(); s > i; i++) {
-			((EntitySystem)data[i]).processComponentIdentity(id, componentBits);
-		}
-	}
-
 	/**
 	 * Process all non-passive systems.
 	 */
@@ -610,6 +601,8 @@ public class World {
 		while (added.size() > 0 || changed.size() > 0) {
 			check(added, addedPerformer);
 			check(changed, changedPerformer);
+
+
 		}
 		
 		while(editPool.processEntities()) {

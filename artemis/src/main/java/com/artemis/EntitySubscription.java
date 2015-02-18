@@ -76,7 +76,7 @@ public class EntitySubscription {
 		inserted.add(e);
 	}
 
-	void process(ImmutableBag<Entity> added, ImmutableBag<Entity> changed, ImmutableBag<Entity> deleted) {
+	void process(Bag<Entity> added, Bag<Entity> changed, Bag<Entity> deleted) {
 		added(added);
 		changed(changed);
 		deleted(deleted);

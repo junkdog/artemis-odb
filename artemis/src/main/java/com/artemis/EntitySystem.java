@@ -391,6 +391,7 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 * Get all entities being processed by this system.
 	 *
 	 * @return a bag containing all active entities of the system
+	 * @deprecated This method allocates a new Bag each time, refer to {@link #getActives(com.artemis.utils.Bag)}
 	 */
 	@Deprecated
 	public ImmutableBag<Entity> getActives() {

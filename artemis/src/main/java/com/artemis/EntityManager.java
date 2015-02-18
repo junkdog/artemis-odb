@@ -125,7 +125,7 @@ public class EntityManager extends Manager {
 	int compositionIdentity(BitSet componentBits) {
 		int identity = identityResolver.getIdentity(componentBits);
 		if (identity > highestSeenIdentity) {
-			world.processComponentIdentity(identity, componentBits);
+			world.am.processComponentIdentity(identity, componentBits);
 			highestSeenIdentity = identity;
 		}
 		return identity;
