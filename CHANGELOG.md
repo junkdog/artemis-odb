@@ -11,8 +11,8 @@
   resulting in cleaner and more flexible EntitySystems.
 - Aspect split into Aspect and Aspect.Builder.
   - Simplified static method names, mirroring Aspect's old instance methods.
-
 - **Fix**: Uninitialized worlds threw cryptic NPE when invoking #process.
+- **Fix**: `World#createFactory(Class<EntityFactory>)` was package local.
 
 #### Version: 0.9.0 - 2015-02-03
 - **MINOR BREAKING CHANGES**
