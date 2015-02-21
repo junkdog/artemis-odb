@@ -11,7 +11,7 @@ public class EntitySubscription {
 	private final Aspect.Builder aspectReflection;
 	private final BitSet aspectCache;
 
-	private final IntBag entityIds;
+	private final IntBag entities;
 	private final BitSet activeEntityIds;
 	private final EntityManager em;
 
@@ -20,19 +20,27 @@ public class EntitySubscription {
 	private final WildBag<Entity> inserted;
 	private final WildBag<Entity> removed;
 
-	public EntitySubscription(World world, Aspect.Builder builder) {
+	EntitySubscription(World world, Aspect.Builder builder) {
 		aspect = builder.build(world);
 		aspectReflection = builder;
 		aspectCache = new BitSet();
 		em = world.getEntityManager();
 
 		activeEntityIds = new BitSet();
-		entityIds = new IntBag();
+		entities = new IntBag();
 
 		listeners = new Bag<SubscriptionListener>();
 
 		inserted = new WildBag<Entity>();
 		removed = new WildBag<Entity>();
+	}
+
+	public IntBag getEntities() {
+		return entities;
+	}
+
+	public BitSet getActiveEntityIds() {
+		return activeEntityIds;
 	}
 
 	/**
@@ -46,9 +54,9 @@ public class EntitySubscription {
 	private void rebuildCompressedActives() {
 		BitSet bs = activeEntityIds;
 		int size = bs.cardinality();
-		entityIds.setSize(size);
-		entityIds.ensureCapacity(size);
-		int[] activesArray = entityIds.getData();
+		entities.setSize(size);
+		entities.ensureCapacity(size);
+		int[] activesArray = entities.getData();
 		for (int i = bs.nextSetBit(0), index = 0; i >= 0; i = bs.nextSetBit(i + 1)) {
 			activesArray[index++] = i;
 		}
@@ -76,7 +84,7 @@ public class EntitySubscription {
 		inserted.add(e);
 	}
 
-	void process(Bag<Entity> added, Bag<Entity> changed, Bag<Entity> deleted) {
+	void process(WildBag<Entity> added, WildBag<Entity> changed, WildBag<Entity> deleted) {
 		added(added);
 		changed(changed);
 		deleted(deleted);
@@ -127,6 +135,10 @@ public class EntitySubscription {
 	private final void deleted(Entity e) {
 		if(activeEntityIds.get(e.getId()))
 			remove(e);
+	}
+
+	public void addSubscriptionListener(SubscriptionListener listener) {
+		listeners.add(listener);
 	}
 
 	public static interface SubscriptionListener {

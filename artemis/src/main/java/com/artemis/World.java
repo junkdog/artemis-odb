@@ -602,7 +602,7 @@ public class World {
 			check(added, addedPerformer);
 			check(changed, changedPerformer);
 
-
+			am.process(added, changed, deleted);
 		}
 		
 		while(editPool.processEntities()) {
@@ -611,6 +611,8 @@ public class World {
 			check(deleted, deletedPerformer);
 			check(disabled, disabledPerformer);
 			check(enabled, enabledPerformer);
+
+			am.process(added, changed, deleted);
 		}
 	}
 
@@ -622,7 +624,8 @@ public class World {
 			es.flyweight = new Entity(this, -1);
 		}
 		systemsToInit.clear();
-		processComponentIdentity(NO_COMPONENTS, new BitSet());
+
+		am.processComponentIdentity(NO_COMPONENTS, new BitSet());
 	}
 
 	boolean hasUuidManager() {

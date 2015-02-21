@@ -361,17 +361,11 @@ public class Aspect {
 		}
 
 		public Aspect build(World world) {
-			AspectSubscriptionManager aspectManager = world.getManager(AspectSubscriptionManager.class);
-			if (aspectManager.has(this))
-				return aspectManager.get(this);
-
 			ComponentTypeFactory tf = world.getComponentManager().typeFactory;
 			Aspect aspect = new Aspect();
 			associate(tf, allTypes, aspect.allSet);
 			associate(tf, exclusionTypes, aspect.exclusionSet);
 			associate(tf, oneTypes, aspect.oneSet);
-
-			aspectManager.add(this, aspect);
 
 			return aspect;
 		}

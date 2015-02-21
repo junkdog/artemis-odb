@@ -27,9 +27,7 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 * activesIsDirty = indicates that actives isn't sorted; needs rebuilding 
 	 */
 	private IntBag actives;
-	private final BitSet activeIds;
-	private boolean activesIsDirty;
-	
+
 	/** If the system is passive or not. */
 	private boolean passive;
 	/** If the system is enabled or not. */
@@ -37,8 +35,6 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	/** If the system is interested in no entities at all. */
 	private boolean dummy;
 	private Aspect.Builder aspectConfiguration;
-	private Aspect aspect;
-	private final BitSet aspectCache = new BitSet();
 
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
@@ -49,9 +45,6 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 */
 	public EntitySystem(Aspect.Builder aspect) {
 		this.aspectConfiguration = aspect;
-		activeIds = new BitSet();
-		actives = new IntBag();
-		
 		enabled = true;
 	}
 
@@ -72,32 +65,11 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	public final void process() {
 		if(enabled && checkProcessing()) {
 			begin();
-			
-			if (activesIsDirty) // && world.isRebuildingIndexAllowed())
-				rebuildCompressedActives();
-			
 			processEntities(actives);
-
 			end();
 		}
 	}
 	
-	private void rebuildCompressedActives() {
-		
-		BitSet bs = activeIds;
-		int size = bs.cardinality();
-		actives.setSize(size);
-		actives.ensureCapacity(size);
-		EntityManager em = world.getEntityManager();
-		int[] activesArray = actives.getData();
-		for (int i = bs.nextSetBit(0), index = 0; i >= 0; i = bs.nextSetBit(i + 1)) {
-			activesArray[index++] = i;
-		}
-		
-		activesIsDirty = false;
-	}
-
-
 	/**
 	 * Called after the processing of entities ends.
 	 */
@@ -183,136 +155,60 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	}
 	
 	/**
-	 * A new unique component composition detected, check if this
-	 * system's aspect is interested in it.
+	 * This method no longer performs any operations due to entity subscriptions lists
+	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
+	 * {@link com.artemis.EntitySubscription}.
 	 */
-	void processComponentIdentity(int id, BitSet componentBits) {
-		if (dummy)
-			return;
-
-		aspectCache.set(id, aspect.isInterested(componentBits));
-	}
-	
-	/**
-	 * Will check if the entity is of interest to this system.
-	 *
-	 * @param e
-	 *			entity to check
-	 */
-	protected final void check(Entity e) {
-		if(dummy)
-			return;
-		
-		EntityManager em = world.getEntityManager();
-		int id = e.getId();
-		boolean interested = aspectCache.get(em.getIdentity(e)) && em.isActive(id) && em.isEnabled(id);
-		boolean contains = activeIds.get(id);
-		
-		if (interested && !contains) {
-			insertToSystem(e);
-		} else if (!interested && contains) {
-			removeFromSystem(e);
-		}
-	}
-	
-	/**
-	 * Removes the entity from this system.
-	 *
-	 * @param e
-	 *			the entity to remove
-	 */
-	private void removeFromSystem(Entity e) {
-		activeIds.clear(e.getId());
-		activesIsDirty = true;
-		
-		removed(e);
-	}
+	@Deprecated
+	protected final void check(Entity e) {}
 
 	/**
-	 * Inserts the entity into this system.
-	 *
-	 * @param e
-	 *			the entity to insert
+	 * This method no longer performs any operations due to entity subscriptions lists
+	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
+	 * {@link com.artemis.EntitySubscription}.
 	 */
-	private void insertToSystem(Entity e) {
-		activeIds.set(e.getId());
-		activesIsDirty = true;
-		
-		inserted(e);
-	}
-	
-	/**
-	 * Call when an entity interesting to the system is added to the world.
-	 *
-	 * <p>
-	 * Checks if the system is interested in the added entity, if so, will
-	 * insert it in to the system.
-	 * </p>
-	 *
-	 * @param e
-	 *			the added entity
-	 */
-	@Override
-	public final void added(Entity e) {
-		check(e);
-	}
-	
-	@Override
-	public final void added(ImmutableBag<Entity> entities) {
-		Object[] data = ((Bag<Entity>)entities).getData();
-		for (int i = 0, s = entities.size(); s > i; i++) {
-			check((Entity)data[i]);
-		}
-	}
-	
-	@Override
-	public final void changed(ImmutableBag<Entity> entities) {
-		Object[] data = ((Bag<Entity>)entities).getData();
-		for (int i = 0, s = entities.size(); s > i; i++) {
-			check((Entity)data[i]);
-		}
-	}
-	
-	@Override
-	public final void deleted(ImmutableBag<Entity> entities) {
-		Object[] data = ((Bag<Entity>)entities).getData();
-		for (int i = 0, s = entities.size(); s > i; i++) {
-			Entity e = (Entity)data[i];
-			if (activeIds.get(e.getId()))
-				removeFromSystem(e);
-		}
-	}
+	@Override @Deprecated
+	public final void added(Entity e) {}
 
 	/**
-	 * Call when an entity interesting to the system has changed in the world.
-	 * <p>
-	 * Checks if the system is still interested after the entity has changed,
-	 * e.g a component was removed.
-	 * </p>
-	 *
-	 * @param e
-	 *			the changed entity
+	 * This method no longer performs any operations due to entity subscriptions lists
+	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
+	 * {@link com.artemis.EntitySubscription}.
 	 */
-	@Override
-	public final void changed(Entity e) {
-		check(e);
-	}
+	@Override @Deprecated
+	public final void added(ImmutableBag<Entity> entities) {}
 
 	/**
-	 * Call when an entity interesting to the system was deleted from the
-	 * world.
-	 * <p>
-	 * If the deleted entity is in this system, it will be removed.
-	 * </p>
-	 *
-	 * @param e
-	 *			the deleted entity
+	 * This method no longer performs any operations due to entity subscriptions lists
+	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
+	 * {@link com.artemis.EntitySubscription}.
 	 */
-	@Override
-	public final void deleted(Entity e) {
-		if(activeIds.get(e.getId()))
-			removeFromSystem(e);
-	}
+	@Override @Deprecated
+	public final void changed(ImmutableBag<Entity> entities) {}
+
+	/**
+	 * This method no longer performs any operations due to entity subscriptions lists
+	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
+	 * {@link com.artemis.EntitySubscription}.
+	 */
+	@Override @Deprecated
+	public final void deleted(ImmutableBag<Entity> entities) {}
+
+	/**
+	 * This method no longer performs any operations due to entity subscriptions lists
+	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
+	 * {@link com.artemis.EntitySubscription}.
+	 */
+	@Override @Deprecated
+	public final void changed(Entity e) {}
+
+	/**
+	 * This method no longer performs any operations due to entity subscriptions lists
+	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
+	 * {@link com.artemis.EntitySubscription}.
+	 */
+	@Override @Deprecated
+	public final void deleted(Entity e) {}
 
 	/**
 	 * Call when an entity interesting to the system was disabled.
@@ -324,11 +220,8 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 * @param e
 	 *			the disabled entity
 	 */
-	@Override
-	public final void disabled(Entity e) {
-		if(activeIds.get(e.getId()))
-			removeFromSystem(e);
-	}
+	@Override @Deprecated
+	public final void disabled(Entity e) {}
 
 	/**
 	 * Call when an entity interesting to the system was (re)enabled.
@@ -339,10 +232,8 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 * @param e
 	 *			the (re)enabled entity
 	 */
-	@Override
-	public final void enabled(Entity e) {
-		check(e);
-	}
+	@Override @Deprecated
+	public final void enabled(Entity e) {}
 	
 	/**
 	 * Set the world this manager works on.
@@ -352,7 +243,10 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 */
 	protected final void setWorld(World world) {
 		if (aspectConfiguration != null) {
-			aspect = aspectConfiguration.build(world);
+			AspectSubscriptionManager sm = world.getManager(AspectSubscriptionManager.class);
+			EntitySubscription subscription = sm.get(aspectConfiguration);
+			subscription.addSubscriptionListener(this);
+			actives = subscription.getEntities();
 		} else {
 			dummy = true;
 		}
@@ -404,9 +298,6 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 * @return a bag containing all active entities of the system
 	 */
 	public Bag<Entity> getActives(Bag<Entity> fillBag) {
-		if (activesIsDirty)
-			rebuildCompressedActives();
-
 		int[] array = actives.getData();
 		for (int i = 0, s = actives.size(); s > i; i++) {
 			fillBag.add(world.getEntity(array[i]));

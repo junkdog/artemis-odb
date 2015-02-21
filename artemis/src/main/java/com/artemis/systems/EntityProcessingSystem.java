@@ -3,8 +3,6 @@ package com.artemis.systems;
 import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
-import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 
 
@@ -18,8 +16,6 @@ import com.artemis.utils.IntBag;
  * @author Arni Arent
  */
 public abstract class EntityProcessingSystem extends EntitySystem {
-
-
 	/**
 	 * Creates a new EntityProcessingSystem.
 	 *
@@ -29,7 +25,6 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 	public EntityProcessingSystem(Aspect.Builder aspect) {
 		super(aspect);
 	}
-
 
 	/**
 	 * Process a entity this system is interested in.
