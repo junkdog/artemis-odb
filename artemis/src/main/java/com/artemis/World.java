@@ -517,19 +517,6 @@ public class World {
 	}
 
 	/**
-	 * Run performers on all systems.
-	 *
-	 * @param performer the performer to run
-	 * @param entities the entity to pass as argument to the systems
-	 */
-	private void notifySubscribers(Performer performer, WildBag<Entity> entities) {
-		Object[] data = systemsBag.getData();
-		for (int i = 0, s = systemsBag.size(); s > i; i++) {
-			performer.perform((EntitySystem) data[i], entities);
-		}
-	}
-
-	/**
 	 * Run performers on all managers.
 	 *
 	 * @param performer the performer to run
@@ -565,8 +552,6 @@ public class World {
 			return;
 		
 		notifyManagers(performer, entityBag);
-//		notifySubscribers(performer, entityBag);
-//		entityBag.setSize(0);
 	}
 	
 	/**

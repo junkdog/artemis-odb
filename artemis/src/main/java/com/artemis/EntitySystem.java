@@ -1,7 +1,5 @@
 package com.artemis;
 
-import java.util.BitSet;
-
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
@@ -16,7 +14,7 @@ import com.artemis.utils.IntBag;
  *
  * @author Arni Arent
  */
-public abstract class EntitySystem implements EntityObserver, EntitySubscription.SubscriptionListener {
+public abstract class EntitySystem implements EntitySubscription.SubscriptionListener {
 
 	/** The world this system belongs to. */
 	protected World world;
@@ -33,7 +31,6 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	/** If the system is enabled or not. */
 	private boolean enabled;
 	/** If the system is interested in no entities at all. */
-	private boolean dummy;
 	private Aspect.Builder aspectConfiguration;
 
 	/**
@@ -167,7 +164,7 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
 	 * {@link com.artemis.EntitySubscription}.
 	 */
-	@Override @Deprecated
+	@Deprecated
 	public final void added(Entity e) {}
 
 	/**
@@ -175,7 +172,7 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
 	 * {@link com.artemis.EntitySubscription}.
 	 */
-	@Override @Deprecated
+	@Deprecated
 	public final void added(ImmutableBag<Entity> entities) {}
 
 	/**
@@ -183,7 +180,7 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
 	 * {@link com.artemis.EntitySubscription}.
 	 */
-	@Override @Deprecated
+	@Deprecated
 	public final void changed(ImmutableBag<Entity> entities) {}
 
 	/**
@@ -191,7 +188,7 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
 	 * {@link com.artemis.EntitySubscription}.
 	 */
-	@Override @Deprecated
+	@Deprecated
 	public final void deleted(ImmutableBag<Entity> entities) {}
 
 	/**
@@ -199,7 +196,7 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
 	 * {@link com.artemis.EntitySubscription}.
 	 */
-	@Override @Deprecated
+	@Deprecated
 	public final void changed(Entity e) {}
 
 	/**
@@ -207,7 +204,7 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
 	 * {@link com.artemis.EntitySubscription}.
 	 */
-	@Override @Deprecated
+	@Deprecated
 	public final void deleted(Entity e) {}
 
 	/**
@@ -220,7 +217,7 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 * @param e
 	 *			the disabled entity
 	 */
-	@Override @Deprecated
+	@Deprecated
 	public final void disabled(Entity e) {}
 
 	/**
@@ -232,7 +229,7 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 	 * @param e
 	 *			the (re)enabled entity
 	 */
-	@Override @Deprecated
+	@Deprecated
 	public final void enabled(Entity e) {}
 	
 	/**
@@ -247,8 +244,6 @@ public abstract class EntitySystem implements EntityObserver, EntitySubscription
 			EntitySubscription subscription = sm.get(aspectConfiguration);
 			subscription.addSubscriptionListener(this);
 			actives = subscription.getEntities();
-		} else {
-			dummy = true;
 		}
 		
 		this.world = world;
