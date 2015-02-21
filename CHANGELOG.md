@@ -6,6 +6,7 @@
     - Implies existing classes have to be recompiled against this release.
 	- Existing custom entity systems need to pass Aspect.Builder to EntitySystem.
   - EntitySystem no longer implements EntityObserver.
+  - It is no longer possible to add or remove systems after initializing the world.
 
 - New internal EntitySubscription and accompanying AspectSubscriptionManager
   resulting in cleaner and more flexible EntitySystems.

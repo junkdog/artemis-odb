@@ -38,7 +38,7 @@ public class World {
 	 * Manages all component-entity associations for the world.
 	 */
 	private final ComponentManager cm;
-	final AspectSubscriptionManager am;
+	private final AspectSubscriptionManager am;
 
 	/**
 	 * The time passed since the last update.
@@ -83,16 +83,12 @@ public class World {
 	/**
 	 * Contains all systems and systems classes mapped.
 	 */
-	private final Map<Class<?>, EntitySystem> systems;
+	private final Map<Class<?>, BaseSystem> systems;
 	/**
 	 * Contains all systems unordered.
 	 */
-	private final Bag<EntitySystem> systemsBag;
-	/**
-	 * Contains all uninitialized systems. *
-	 */
-	private final Bag<EntitySystem> systemsToInit;
-	
+	private final Bag<BaseSystem> systemsBag;
+
 	private boolean registerUuids;
 	private Injector injector;
 	
@@ -130,9 +126,8 @@ public class World {
 		managers = new IdentityHashMap<Class<? extends Manager>, Manager>();
 		managersBag = new Bag<Manager>();
 
-		systems = new IdentityHashMap<Class<?>, EntitySystem>();
-		systemsBag = new Bag<EntitySystem>();
-		systemsToInit = new Bag<EntitySystem>();
+		systems = new IdentityHashMap<Class<?>, BaseSystem>();
+		systemsBag = new Bag<BaseSystem>();
 
 		added = new WildBag<Entity>();
 		changed = new WildBag<Entity>();
@@ -212,7 +207,7 @@ public class World {
 			}
 		}
 
-		for (EntitySystem system : systemsBag) {
+		for (BaseSystem system : systemsBag) {
 			try {
 				system.dispose();
 			} catch (Exception e) {
@@ -460,7 +455,7 @@ public class World {
 	 *
 	 * @return all entity systems in world
 	 */
-	public ImmutableBag<EntitySystem> getSystems() {
+	public ImmutableBag<BaseSystem> getSystems() {
 		return systemsBag;
 	}
 	
@@ -472,7 +467,7 @@ public class World {
 	 * @param system the system to add
 	 * @return the added system
 	 */
-	public <T extends EntitySystem> T setSystem(T system) {
+	public <T extends BaseSystem> T setSystem(T system) {
 		return setSystem(system, false);
 	}
 
@@ -485,7 +480,7 @@ public class World {
 	 *				{@link #process()}
 	 * @return the added system
 	 */
-	public <T extends EntitySystem> T setSystem(T system, boolean passive) {
+	public <T extends BaseSystem> T setSystem(T system, boolean passive) {
 
 		if (initialized) {
 			String err = "It is forbidden to add systems after calling World#initialized.";
@@ -498,7 +493,6 @@ public class World {
 
 		systems.put(system.getClass(), system);
 		systemsBag.add(system);
-		systemsToInit.add(system);
 
 		return system;
 	}
@@ -510,11 +504,7 @@ public class World {
 	 * @deprecated A world should be static once initialized
 	 */
 	@Deprecated
-	public void deleteSystem(EntitySystem system) {
-		systems.remove(system.getClass());
-		systemsBag.remove(system);
-		systemsToInit.remove(system);
-	}
+	public void deleteSystem(BaseSystem system) {}
 
 	/**
 	 * Run performers on all managers.
@@ -537,7 +527,7 @@ public class World {
 	 * @return instance of the system in this world
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends EntitySystem> T getSystem(Class<T> type) {
+	public <T extends BaseSystem> T getSystem(Class<T> type) {
 		return (T) systems.get(type);
 	}
 
@@ -565,17 +555,11 @@ public class World {
 		em.clean();
 		cm.clean();
 
-		// Some systems may add other systems in their initialize() method.
-		// Initialize those newly added systems right after setSystem() call.
-		if (systemsToInit.size() > 0) {
-			initializeSystems();
-		}
-
 		Object[] systemsData = systemsBag.getData();
 		for (int i = 0, s = systemsBag.size(); s > i; i++) {
 			updateEntityStates();
 			
-			EntitySystem system = (EntitySystem) systemsData[i];
+			BaseSystem system = (BaseSystem) systemsData[i];
 			if (!system.isPassive()) {
 				system.process();
 			}
@@ -598,18 +582,20 @@ public class World {
 			check(enabled, enabledPerformer);
 
 			am.process(added, changed, deleted);
+
+			// we're cheating here to support disabled and enabled entities with the
+			// new subscription lists
+			// @deprecate
+			am.process(added, enabled, disabled);
 		}
 	}
 
 	private void initializeSystems() {
-		for (int i = 0, s = systemsToInit.size(); i < s; i++) {
-			EntitySystem es = systemsToInit.get(i);
+		for (int i = 0, s = systemsBag.size(); i < s; i++) {
+			BaseSystem es = systemsBag.get(i);
 			injector.inject(es);
 			es.initialize();
-			es.flyweight = new Entity(this, -1);
 		}
-		systemsToInit.clear();
-
 		am.processComponentIdentity(NO_COMPONENTS, new BitSet());
 	}
 

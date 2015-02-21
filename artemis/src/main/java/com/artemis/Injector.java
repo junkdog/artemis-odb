@@ -11,7 +11,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 /**
- * Injects {@link com.artemis.ComponentMapper}, {@link com.artemis.EntitySystem} and {@link com.artemis.Manager} types into systems and
+ * Injects {@link com.artemis.ComponentMapper}, {@link com.artemis.BaseSystem} and {@link com.artemis.Manager} types into systems and
  * managers. Can also inject arbitrary types if registered through {@link com.artemis.WorldConfiguration#register}.
  */
 final class Injector {
@@ -30,7 +30,7 @@ final class Injector {
 	}
 
 	void update() {
-		for (EntitySystem es : world.getSystems()) {
+		for (BaseSystem es : world.getSystems()) {
 			Class<?> origin = es.getClass();
 			Class<?> clazz = origin;
 			do {
@@ -117,10 +117,10 @@ final class Injector {
 				throw onFailedInjection("ComponentMapper", field);
 
 			field.set(target, mapper);
-		} else if (ClassReflection.isAssignableFrom(EntitySystem.class, fieldType)) {
-			EntitySystem system = world.getSystem((Class<EntitySystem>)systems.get(fieldType));
+		} else if (ClassReflection.isAssignableFrom(BaseSystem.class, fieldType)) {
+			BaseSystem system = world.getSystem((Class<BaseSystem>)systems.get(fieldType));
 			if (failOnNotInjected && system == null)
-				throw onFailedInjection("EntitySystem", field);
+				throw onFailedInjection("BaseSystem", field);
 
 			field.set(target, system);
 		} else if (ClassReflection.isAssignableFrom(Manager.class, fieldType)) {

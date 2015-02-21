@@ -16,7 +16,7 @@ import com.artemis.World;
 /**
  * Reflexively injects {@link ComponentMapper}, {@link EntitySystem},
  * {@link Manager} and {@link EntityFactory} fields upon calling
- * {@link World#setSystem(com.artemis.EntitySystem)} or
+ * {@link World#setSystem(com.artemis.BaseSystem)} or
  * {@link World#setManager(com.artemis.Manager)}.
  * 
  * <p>

@@ -32,7 +32,8 @@ public class EntityManager extends Manager {
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
 	private IntBag entityToIdentity = new IntBag();
 	private int highestSeenIdentity;
-	
+	private AspectSubscriptionManager subscriptionManager;
+
 	/**
 	 * Creates a new EntityManager Instance.
 	 */
@@ -44,6 +45,7 @@ public class EntityManager extends Manager {
 	@Override
 	protected void initialize() {
 		recyclingEntityFactory = new RecyclingEntityFactory(world, entityToIdentity);
+		subscriptionManager = world.getManager(AspectSubscriptionManager.class);
 	}
 
 	/**
@@ -125,7 +127,7 @@ public class EntityManager extends Manager {
 	int compositionIdentity(BitSet componentBits) {
 		int identity = identityResolver.getIdentity(componentBits);
 		if (identity > highestSeenIdentity) {
-			world.am.processComponentIdentity(identity, componentBits);
+			subscriptionManager.processComponentIdentity(identity, componentBits);
 			highestSeenIdentity = identity;
 		}
 		return identity;

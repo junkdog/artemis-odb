@@ -14,24 +14,12 @@ import com.artemis.utils.IntBag;
  *
  * @author Arni Arent
  */
-public abstract class EntitySystem implements EntitySubscription.SubscriptionListener {
+public abstract class EntitySystem extends BaseSystem
+		implements EntitySubscription.SubscriptionListener {
 
-	/** The world this system belongs to. */
-	protected World world;
-	protected Entity flyweight;
-	
-	/* 
-	 * actives = only contains entities, typically sorted ASC by entity.id 
-	 * activesIsDirty = indicates that actives isn't sorted; needs rebuilding 
-	 */
+	private final Aspect.Builder aspectConfiguration;
 	private IntBag actives;
-
-	/** If the system is passive or not. */
-	private boolean passive;
-	/** If the system is enabled or not. */
-	private boolean enabled;
-	/** If the system is interested in no entities at all. */
-	private Aspect.Builder aspectConfiguration;
+	protected Entity flyweight;
 
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
@@ -41,24 +29,25 @@ public abstract class EntitySystem implements EntitySubscription.SubscriptionLis
 	 *			to match against entities
 	 */
 	public EntitySystem(Aspect.Builder aspect) {
-		this.aspectConfiguration = aspect;
-		enabled = true;
+		super();
+		aspectConfiguration = aspect;
 	}
 
+	protected void setWorld(World world) {
+		super.setWorld(world);
 
-	/**
-	 * Called before processing of entities begins.
-	 * <p>
-	 * <b>Nota Bene:</b> Any entities created in this method
-	 * won't become active until the next system starts processing
-	 * or when a new processing rounds beings, whichever comes first.
-	 * </p>
-	 */
-	protected void begin() {}
+		AspectSubscriptionManager sm = world.getManager(AspectSubscriptionManager.class);
+		EntitySubscription subscription = sm.get(aspectConfiguration);
+		subscription.addSubscriptionListener(this);
+		actives = subscription.getEntities();
+
+		flyweight = new Entity(world, -1);
+	}
 
 	/**
 	 * Process all entities this system is interested in.
 	 */
+	@Override
 	public final void process() {
 		if(enabled && checkProcessing()) {
 			begin();
@@ -66,12 +55,7 @@ public abstract class EntitySystem implements EntitySubscription.SubscriptionLis
 			end();
 		}
 	}
-	
-	/**
-	 * Called after the processing of entities ends.
-	 */
-	protected void end() {}
-	
+
 	/**
 	 * Any implementing entity system must implement this method and the logic
 	 * to process the given entities of the system.
@@ -80,23 +64,8 @@ public abstract class EntitySystem implements EntitySubscription.SubscriptionLis
 	 *			the entities this system contains.
 	 */
 	protected abstract void processEntities(IntBag entities);
-	
-	/**
-	 * Check if the system should be processed.
-	 *
-	 * @return true if the system should be processed, false if not.
-	 */
-	@SuppressWarnings("static-method")
-	protected boolean checkProcessing() {
-		return true;
-	}
 
-	/**
-	 * Override to implement code that gets executed when systems are
-	 * initialized.
-	 */
-	protected void initialize() {}
-
+	@Override
 	public void inserted(ImmutableBag<Entity> entities) {
 		Object[] data = ((Bag<Entity>)entities).getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
@@ -113,6 +82,7 @@ public abstract class EntitySystem implements EntitySubscription.SubscriptionLis
 	 */
 	protected void inserted(Entity e) {}
 
+	@Override
 	public void removed(ImmutableBag<Entity> entities) {
 		Object[] data = ((Bag<Entity>)entities).getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
@@ -129,28 +99,24 @@ public abstract class EntitySystem implements EntitySubscription.SubscriptionLis
 	 */
 	protected void removed(Entity e) {}
 
-	/**
-	 * Returns true if the system is enabled.
-	 * 
-	 * @return {@code true} if enabled, otherwise false
-	 */
-	public boolean isEnabled() {
-		return enabled;
-	}
 
 	/**
-	 * Enabled systems are run during {@link #process()}.
-	 * <p>
-	 * Systems are enabled by default.
-	 * </p>
-	 * 
-	 * @param enabled
-	 *			system will not run when set to false
+	 * Get all entities being processed by this system.
+	 *
+	 * @return a bag containing all active entities of the system
 	 */
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+	public Bag<Entity> getActives(Bag<Entity> fillBag) {
+		if (actives == null)
+			return fillBag;
+
+		int[] array = actives.getData();
+		for (int i = 0, s = actives.size(); s > i; i++) {
+			fillBag.add(world.getEntity(array[i]));
+		}
+
+		return fillBag;
 	}
-	
+
 	/**
 	 * This method no longer performs any operations due to entity subscriptions lists
 	 * being refactored into {@link com.artemis.AspectSubscriptionManager} and
@@ -231,50 +197,6 @@ public abstract class EntitySystem implements EntitySubscription.SubscriptionLis
 	 */
 	@Deprecated
 	public final void enabled(Entity e) {}
-	
-	/**
-	 * Set the world this manager works on.
-	 *
-	 * @param world
-	 *			the world to set
-	 */
-	protected final void setWorld(World world) {
-		if (aspectConfiguration != null) {
-			AspectSubscriptionManager sm = world.getManager(AspectSubscriptionManager.class);
-			EntitySubscription subscription = sm.get(aspectConfiguration);
-			subscription.addSubscriptionListener(this);
-			actives = subscription.getEntities();
-		}
-		
-		this.world = world;
-	}
-
-	/**
-	 * Check if this system is passive.
-	 * <p>
-	 * A passive system will not process when {@link World#process()}
-	 * is called.
-	 * </p>
-	 *
-	 * @return {@code true} if the system is passive
-	 */
-	public boolean isPassive() {
-		return passive;
-	}
-
-	/**
-	 * Set if the system is passive or not.
-	 * <p>
-	 * A passive system will not process when {@link World#process()}
-	 * is called.
-	 * </p>
-	 *
-	 * @param passive
-	 *			{@code true} if passive, {@code false} if not
-	 */
-	protected void setPassive(boolean passive) {
-		this.passive = passive;
-	}
 
 	/**
 	 * Get all entities being processed by this system.
@@ -286,23 +208,4 @@ public abstract class EntitySystem implements EntitySubscription.SubscriptionLis
 	public ImmutableBag<Entity> getActives() {
 		return getActives(new Bag<Entity>());
 	}
-
-	/**
-	 * Get all entities being processed by this system.
-	 *
-	 * @return a bag containing all active entities of the system
-	 */
-	public Bag<Entity> getActives(Bag<Entity> fillBag) {
-		int[] array = actives.getData();
-		for (int i = 0, s = actives.size(); s > i; i++) {
-			fillBag.add(world.getEntity(array[i]));
-		}
-
-		return fillBag;
-	}
-
-	/**
-	 * see {@link World#dispose()}
-	 */
-	protected void dispose() {}
 }

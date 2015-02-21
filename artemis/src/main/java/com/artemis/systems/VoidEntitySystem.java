@@ -1,11 +1,6 @@
 package com.artemis.systems;
 
-import com.artemis.Aspect;
-import com.artemis.Entity;
-import com.artemis.EntitySystem;
-import com.artemis.utils.ImmutableBag;
-import com.artemis.utils.IntBag;
-
+import com.artemis.BaseSystem;
 
 /**
  * This system has an empty aspect so it processes no entities, but it still
@@ -17,22 +12,15 @@ import com.artemis.utils.IntBag;
  * 
  * @author Arni Arent
  */
-public abstract class VoidEntitySystem extends EntitySystem {
-
-	/**
-	 * Creates a new VoidEntitySystem.
-	 */
-	public VoidEntitySystem() {
-		super(null);
-	}
-
-	@Override
-	protected final void processEntities(IntBag entities) {
-		processSystem();
-	}
+public abstract class VoidEntitySystem extends BaseSystem {
 
 	/**
 	 * Override to implement behavior when this system is called by the world.
 	 */
 	protected abstract void processSystem();
+
+	@Override
+	public final void process() {
+		processSystem();
+	}
 }
