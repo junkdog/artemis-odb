@@ -7,12 +7,13 @@
 	<define-configuration-property name="artemis.reflect.exclude"
 		is-multi-valued="true" />
 
-	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.PackedComponent" />
-	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.PooledComponent" />
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.AspectSubscriptionManager" />
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.PackedComponent" />
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.PooledComponent" />
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.annotations.Mapper" />
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.annotations.Wire" />
-	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.ComponentType" />
-	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.ComponentMapper" />
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.ComponentType" />
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.ComponentMapper" />
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.Component" />
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntityManager" />
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntityFactory" />
