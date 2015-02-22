@@ -34,7 +34,6 @@ public class SimpleProfiler implements ArtemisProfiler {
 
 	@Override
 	public void initialize(BaseSystem owner, World world) {
-		System.out.println("\tinitializing " + owner.getClass());
 		assertNotNull(owner);
 		assertNotNull(world);
 	}

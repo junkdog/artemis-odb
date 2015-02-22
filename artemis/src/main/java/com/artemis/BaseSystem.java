@@ -11,7 +11,7 @@ public abstract class BaseSystem {
 	public BaseSystem() {}
 
 	/**
-	 * Called before processing of entities begins.
+	 * Called before system processing begins.
 	 * <p>
 	 * <b>Nota Bene:</b> Any entities created in this method
 	 * won't become active until the next system starts processing
@@ -20,7 +20,18 @@ public abstract class BaseSystem {
 	 */
 	protected void begin() {}
 
-	public abstract void process();
+	public final void process() {
+		if(enabled && checkProcessing()) {
+			begin();
+			processSystem();
+			end();
+		}
+	}
+
+	/**
+	 * Any implementing entity system must implement this method.
+	 */
+	protected abstract void processSystem();
 
 	/**
 	 * Called after the processing of entities ends.

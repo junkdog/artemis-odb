@@ -18,7 +18,7 @@ public abstract class EntitySystem extends BaseSystem
 		implements EntitySubscription.SubscriptionListener {
 
 	private final Aspect.Builder aspectConfiguration;
-	private IntBag actives;
+	protected IntBag actives;
 	protected Entity flyweight;
 
 	/**
@@ -50,27 +50,6 @@ public abstract class EntitySystem extends BaseSystem
 
 		flyweight = new Entity(world, -1);
 	}
-
-	/**
-	 * Process all entities this system is interested in.
-	 */
-	@Override
-	public final void process() {
-		if(enabled && checkProcessing()) {
-			begin();
-			processEntities(actives);
-			end();
-		}
-	}
-
-	/**
-	 * Any implementing entity system must implement this method and the logic
-	 * to process the given entities of the system.
-	 * 
-	 * @param entities
-	 *			the entities this system contains.
-	 */
-	protected abstract void processEntities(IntBag entities);
 
 	@Override
 	public void inserted(ImmutableBag<Entity> entities) {

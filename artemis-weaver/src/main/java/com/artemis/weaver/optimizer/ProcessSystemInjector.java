@@ -9,13 +9,13 @@ import org.objectweb.asm.Opcodes;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.OptimizationType;
 
-public final class ProcessEntitiesInjector implements Opcodes {
+public final class ProcessSystemInjector implements Opcodes {
 
 	private final ClassReader cr;
 	private final ClassMetadata meta;
 	private final ClassWriter cw;
 
-	public ProcessEntitiesInjector(ClassReader cr, ClassMetadata meta) {
+	public ProcessSystemInjector(ClassReader cr, ClassMetadata meta) {
 		this.cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		this.cr = cr;
 		this.meta = meta;
@@ -30,56 +30,57 @@ public final class ProcessEntitiesInjector implements Opcodes {
 		cr.accept(cw, 0);
 		return cw.toByteArray();
 	}
-	
+
 	private void injectProcessEntities() {
 		String owner = meta.type.getInternalName();
 
 		MethodVisitor mv = cw.visitMethod(ACC_PROTECTED | ACC_FINAL,
-				"processEntities", "(Lcom/artemis/utils/IntBag;)V", null, null);
+				"processSystem", "()V", null, null);
 		mv.visitCode();
 		Label l0 = new Label();
 		mv.visitLabel(l0);
 
-
-		mv.visitVarInsn(ALOAD, 1);
+		mv.visitLabel(l0);
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitFieldInsn(GETFIELD, owner, "actives", "Lcom/artemis/utils/IntBag;");
 		mv.visitMethodInsn(INVOKEVIRTUAL, "com/artemis/utils/IntBag", "getData", "()[I");
-		mv.visitVarInsn(ASTORE, 2);
+		mv.visitVarInsn(ASTORE, 1);
 		Label l1 = new Label();
 		mv.visitLabel(l1);
 
-
 		mv.visitVarInsn(ALOAD, 0);
-		mv.visitFieldInsn(GETFIELD, "com/artemis/EntitySystem", "flyweight", "Lcom/artemis/Entity;");
-		mv.visitVarInsn(ASTORE, 3);
+		mv.visitFieldInsn(GETFIELD, owner, "flyweight", "Lcom/artemis/Entity;");
+		mv.visitVarInsn(ASTORE, 2);
 		Label l2 = new Label();
 		mv.visitLabel(l2);
 
-
 		mv.visitInsn(ICONST_0);
-		mv.visitVarInsn(ISTORE, 4);
+		mv.visitVarInsn(ISTORE, 3);
 		Label l3 = new Label();
 		mv.visitLabel(l3);
-		mv.visitVarInsn(ALOAD, 1);
+
+		mv.visitVarInsn(ALOAD, 0);
+		mv.visitFieldInsn(GETFIELD, owner, "actives", "Lcom/artemis/utils/IntBag;");
 		mv.visitMethodInsn(INVOKEVIRTUAL, "com/artemis/utils/IntBag", "size", "()I");
-		mv.visitVarInsn(ISTORE, 5);
+		mv.visitVarInsn(ISTORE, 4);
 		Label l4 = new Label();
 		mv.visitLabel(l4);
+
+
 		Label l5 = new Label();
 		mv.visitJumpInsn(GOTO, l5);
+
 		Label l6 = new Label();
 		mv.visitLabel(l6);
 
-
-		mv.visitFrame(Opcodes.F_FULL, 6, new Object[] {
-				"com/artemis/EntitySystem",
-				"com/artemis/utils/IntBag",
+		mv.visitFrame(Opcodes.F_FULL, 5, new Object[] {
+				owner,
 				"[I", "com/artemis/Entity",
 				Opcodes.INTEGER, Opcodes.INTEGER},
 				0, new Object[] {});
-
-		mv.visitVarInsn(ALOAD, 3);
 		mv.visitVarInsn(ALOAD, 2);
-		mv.visitVarInsn(ILOAD, 4);
+		mv.visitVarInsn(ALOAD, 1);
+		mv.visitVarInsn(ILOAD, 3);
 		mv.visitInsn(IALOAD);
 		mv.visitFieldInsn(PUTFIELD, "com/artemis/Entity", "id", "I");
 		Label l7 = new Label();
@@ -87,30 +88,32 @@ public final class ProcessEntitiesInjector implements Opcodes {
 
 
 		mv.visitVarInsn(ALOAD, 0);
-		mv.visitVarInsn(ALOAD, 3);
-		mv.visitMethodInsn(invocation(meta.sysetemOptimizable), owner, "process", "(Lcom/artemis/Entity;)V");
+		mv.visitVarInsn(ALOAD, 2);
+		mv.visitMethodInsn(invocation(meta.sysetemOptimizable),
+				owner, "process", "(Lcom/artemis/Entity;)V");
 		Label l8 = new Label();
 		mv.visitLabel(l8);
 
 
-		mv.visitIincInsn(4, 1);
+		mv.visitIincInsn(3, 1);
 		mv.visitLabel(l5);
 		mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
-		mv.visitVarInsn(ILOAD, 5);
 		mv.visitVarInsn(ILOAD, 4);
+		mv.visitVarInsn(ILOAD, 3);
 		mv.visitJumpInsn(IF_ICMPGT, l6);
 		Label l9 = new Label();
 		mv.visitLabel(l9);
-		mv.visitLineNumber(50, l9);
+
+
 		mv.visitInsn(RETURN);
 		Label l10 = new Label();
 		mv.visitLabel(l10);
+
 		mv.visitLocalVariable("this", meta.type.toString(), null, l0, l10, 0);
-		mv.visitLocalVariable("entities", "Lcom/artemis/utils/IntBag;", null, l0, l10, 1);
-		mv.visitLocalVariable("array", "[I", null, l1, l10, 2);
-		mv.visitLocalVariable("e", "Lcom/artemis/Entity;", null, l2, l10, 3);
-		mv.visitLocalVariable("i", "I", null, l3, l9, 4);
-		mv.visitLocalVariable("s", "I", null, l4, l9, 5);
+		mv.visitLocalVariable("array", "[I", null, l1, l10, 1);
+		mv.visitLocalVariable("e", "Lcom/artemis/Entity;", null, l2, l10, 2);
+		mv.visitLocalVariable("i", "I", null, l3, l9, 3);
+		mv.visitLocalVariable("s", "I", null, l4, l9, 4);
 		mv.visitEnd();
 	}
 

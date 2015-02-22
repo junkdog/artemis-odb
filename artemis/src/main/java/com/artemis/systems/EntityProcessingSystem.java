@@ -35,10 +35,10 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 	protected abstract void process(Entity e);
 
 	@Override
-	protected final void processEntities(IntBag entities) {
-		int[] array = entities.getData();
+	protected final void processSystem() {
+		int[] array = actives.getData();
 		Entity e = flyweight;
-		for (int i = 0, s = entities.size(); s > i; i++) {
+		for (int i = 0, s = actives.size(); s > i; i++) {
 			e.id = array[i];
 			process(e);
 		}

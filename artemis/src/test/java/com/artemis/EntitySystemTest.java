@@ -73,8 +73,8 @@ public class EntitySystemTest {
 		}
 
 		@Override
-		protected void processEntities(IntBag entities) {
-			assertEquals(expectedSize, entities.size());
+		protected void processSystem() {
+			assertEquals(expectedSize, actives.size());
 			getActives().iterator().next();
 		}
 

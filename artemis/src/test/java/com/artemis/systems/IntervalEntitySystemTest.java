@@ -2,14 +2,11 @@ package com.artemis.systems;
 
 import static org.junit.Assert.*;
 
-import com.artemis.utils.IntBag;
 import org.junit.Test;
 
 import com.artemis.Aspect;
-import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.component.ComponentX;
-import com.artemis.utils.ImmutableBag;
 
 @SuppressWarnings("static-method")
 public class IntervalEntitySystemTest {
@@ -40,8 +37,6 @@ public class IntervalEntitySystemTest {
 		}
 
 		@Override
-		protected void processEntities(IntBag entities) {
-			
-		}
+		protected void processSystem() {}
 	}
 }

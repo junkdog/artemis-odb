@@ -24,7 +24,5 @@ public class OptimizedSystemAdditional extends EntityProcessingSystem {
 	}
 
 	@Override
-	protected void process(Entity e) {
-	}
-
+	protected void process(Entity e) {}
 }

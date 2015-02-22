@@ -45,7 +45,7 @@ public abstract class IntervalEntitySystem extends EntitySystem {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Gets the actual delta since this system was last processed.
 	 * 

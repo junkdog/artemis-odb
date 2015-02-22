@@ -54,15 +54,15 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	}
 
 	@Override
-	protected final void processEntities(IntBag entities) {
-		int processed = entities.size();
+	protected final void processSystem() {
+		int processed = actives.size();
 		if (processed == 0) {
 			stop();
 			return;
 		}
 
 		delay = Float.MAX_VALUE;
-		int[] array = entities.getData();
+		int[] array = actives.getData();
 		Entity e = flyweight;
 		for (int i = 0; processed > i; i++) {
 			e.id = array[i];
@@ -75,7 +75,6 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 			}
 		}
 		acc = 0;
-//		if (getActives(new Bag<Entity>()).size() == 0) stop();
 	}
 
 

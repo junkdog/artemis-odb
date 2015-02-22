@@ -18,11 +18,4 @@ public abstract class VoidEntitySystem extends BaseSystem {
 	 * Override to implement behavior when this system is called by the world.
 	 */
 	protected abstract void processSystem();
-
-	@Override
-	public final void process() {
-		begin();
-		processSystem();
-		end();
-	}
 }
