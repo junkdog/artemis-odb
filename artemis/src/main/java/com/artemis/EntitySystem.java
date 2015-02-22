@@ -43,12 +43,16 @@ public abstract class EntitySystem extends BaseSystem
 	protected void setWorld(World world) {
 		super.setWorld(world);
 
-		AspectSubscriptionManager sm = world.getManager(AspectSubscriptionManager.class);
-		EntitySubscription subscription = sm.get(aspectConfiguration);
+		EntitySubscription subscription = getSubscription();
 		subscription.addSubscriptionListener(this);
 		actives = subscription.getEntities();
 
 		flyweight = Entity.createFlyweight(world);
+	}
+
+	public EntitySubscription getSubscription() {
+		AspectSubscriptionManager sm = world.getManager(AspectSubscriptionManager.class);
+		return sm.get(aspectConfiguration);
 	}
 
 	@Override

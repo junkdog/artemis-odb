@@ -43,6 +43,10 @@ public class EntitySubscription {
 		return activeEntityIds;
 	}
 
+	public Aspect getAspect() {
+		return aspect;
+	}
+
 	/**
 	 * A new unique component composition detected, check if this
 	 * subscription's aspect is interested in it.
