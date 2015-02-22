@@ -48,7 +48,7 @@ public abstract class EntitySystem extends BaseSystem
 		subscription.addSubscriptionListener(this);
 		actives = subscription.getEntities();
 
-		flyweight = new Entity(world, -1);
+		flyweight = Entity.createFlyweight(world);
 	}
 
 	@Override

@@ -76,6 +76,23 @@ public final class Entity {
 	}
 
 	/**
+	 * <p>Creates a flyweight entity, not registered by the world
+	 * the way normal entities are. It is intended to be used
+	 * for cases where storing full object entity references aren't
+	 * desirable, in the interest of reducing the memory footprint
+	 * and/or maintaining a clean API.</p>
+	 *
+	 * <p>You are expected to manually set the entity id before
+	 * operating on the entity. It is created with id == -1.</p>
+	 *
+	 * @param world Spawner.
+	 * @return Unbound entity with entityId -1.
+	 */
+	public static Entity createFlyweight(World world) {
+		return new Entity(world, -1);
+	}
+
+	/**
 	 * Returns a BitSet instance containing bits of the components the entity
 	 * possesses.
 	 *
