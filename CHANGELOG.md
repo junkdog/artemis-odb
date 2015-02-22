@@ -2,6 +2,8 @@
 
 #### Version: 0.9.1-SNAPSHOT
 - **MINOR BREAKING CHANGES**
+  - BaseSystem is now the most basic system type.
+    - World#getSystems returns Bag<BaseSystem>.
   - EntitySystem constructor expects Aspect.Builder:
     - Implies existing classes have to be recompiled against this release.
 	- Existing custom entity systems need to pass Aspect.Builder to EntitySystem.
