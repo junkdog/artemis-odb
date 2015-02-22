@@ -95,6 +95,8 @@ public class World {
 	final EntityEditPool editPool = new EntityEditPool(this);
 	
 	private boolean initialized;
+
+	private SystemInvocationStrategy invocationStrategy;
 	
 	/**
 	 * Creates a new world.
@@ -162,6 +164,9 @@ public class World {
 		}
 
 		initializeSystems();
+
+		if (invocationStrategy == null)
+			setInvocationStrategy(new InvocationStrategy());
 	}
 
 	/**
@@ -542,7 +547,12 @@ public class World {
 		
 		notifyManagers(performer, entityBag);
 	}
-	
+
+	public void setInvocationStrategy(SystemInvocationStrategy invocationStrategy) {
+		this.invocationStrategy = invocationStrategy;
+		invocationStrategy.setWorld(this);
+	}
+
 	/**
 	 * Process all non-passive systems.
 	 */
@@ -554,15 +564,7 @@ public class World {
 		em.clean();
 		cm.clean();
 
-		Object[] systemsData = systemsBag.getData();
-		for (int i = 0, s = systemsBag.size(); s > i; i++) {
-			updateEntityStates();
-			
-			BaseSystem system = (BaseSystem) systemsData[i];
-			if (!system.isPassive()) {
-				system.process();
-			}
-		}
+		invocationStrategy.process(systemsBag);
 	}
 
 	void updateEntityStates() {
