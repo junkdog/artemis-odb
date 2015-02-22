@@ -10,6 +10,6 @@ public class NullProfiler implements ArtemisProfiler {
 	public void stop() {}
 
 	@Override
-	public void initialize(EntitySystem owner, World world) {}
+	public void initialize(BaseSystem owner, World world) {}
 
 }

@@ -19,7 +19,7 @@ class ProfileBeginWeaver extends AdviceAdapter implements Opcodes {
 		String systemName = info.type.getInternalName();
 		String profiler = info.profilerClass.getInternalName();
 		String profileDescriptor = info.profilerClass.getDescriptor();
-		
+
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitFieldInsn(GETFIELD, systemName, "$profiler", profileDescriptor);
 		mv.visitMethodInsn(INVOKEVIRTUAL, profiler, "start", "()V");

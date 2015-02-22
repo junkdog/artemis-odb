@@ -147,24 +147,6 @@ public class WorldTest
 		}
 	}
 	
-	@Wire
-	static class SystemSpawner extends VoidEntitySystem
-	{
-		ComponentMapper<ComponentY> ym;
-		
-		@Override
-		protected void initialize()
-		{
-			world.setSystem(new SystemY());
-		}
-		
-		@Override
-		protected void processSystem()
-		{
-			Assert.assertNotNull(ym);
-		}
-	}
-	
 	static class ExpirationSystem extends DelayedEntityProcessingSystem
 	{
 		// don't do this IRL

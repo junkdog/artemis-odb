@@ -31,6 +31,6 @@ class ProfileInitializeWeaver extends AdviceAdapter implements Opcodes {
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitFieldInsn(GETFIELD, systemName, "world", "Lcom/artemis/World;");
-		mv.visitMethodInsn(INVOKEVIRTUAL, profiler, "initialize", "(Lcom/artemis/EntitySystem;Lcom/artemis/World;)V");
+		mv.visitMethodInsn(INVOKEVIRTUAL, profiler, "initialize", "(Lcom/artemis/BaseSystem;Lcom/artemis/World;)V");
 	}
 }

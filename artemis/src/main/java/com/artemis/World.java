@@ -486,10 +486,9 @@ public class World {
 			String err = "It is forbidden to add systems after calling World#initialized.";
 			throw new RuntimeException(err);
 		}
-				
 
-		system.setWorld(this);
 		system.setPassive(passive);
+		system.setWorld(this);
 
 		systems.put(system.getClass(), system);
 		systemsBag.add(system);
@@ -592,9 +591,9 @@ public class World {
 
 	private void initializeSystems() {
 		for (int i = 0, s = systemsBag.size(); i < s; i++) {
-			BaseSystem es = systemsBag.get(i);
-			injector.inject(es);
-			es.initialize();
+			BaseSystem system = systemsBag.get(i);
+			injector.inject(system);
+			system.initialize();
 		}
 		am.processComponentIdentity(NO_COMPONENTS, new BitSet());
 	}

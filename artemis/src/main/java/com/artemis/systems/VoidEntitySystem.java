@@ -21,6 +21,8 @@ public abstract class VoidEntitySystem extends BaseSystem {
 
 	@Override
 	public final void process() {
+		begin();
 		processSystem();
+		end();
 	}
 }

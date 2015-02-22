@@ -3,9 +3,9 @@ package com.artemis.util;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.artemis.BaseSystem;
 import org.junit.Assert;
 
-import com.artemis.EntitySystem;
 import com.artemis.World;
 import com.artemis.utils.ArtemisProfiler;
 
@@ -33,7 +33,8 @@ public class SimpleProfiler implements ArtemisProfiler {
 	}
 
 	@Override
-	public void initialize(EntitySystem owner, World world) {
+	public void initialize(BaseSystem owner, World world) {
+		System.out.println("\tinitializing " + owner.getClass());
 		assertNotNull(owner);
 		assertNotNull(world);
 	}

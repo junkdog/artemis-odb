@@ -30,6 +30,13 @@ public abstract class EntitySystem extends BaseSystem
 	 */
 	public EntitySystem(Aspect.Builder aspect) {
 		super();
+		if (aspect == null) {
+			String error = "Aspect.Builder was null; to use systems which " +
+					"do not subscribe to entities, extend VoidEntitySystem or " +
+					"BaseSystem directly.";
+			throw new NullPointerException(error);
+		}
+
 		aspectConfiguration = aspect;
 	}
 

@@ -195,11 +195,6 @@ public class Weaver {
 		processed.add(meta);
 	}
 	
-//	private static void processRelatedClasses(ExecutorService threadPool, String file, List<ClassMetadata> packed) {
-//		ClassReader cr = classReaderFor(file);
-//		threadPool.submit(new ComponentAccessTransmuter(file, cr, packed));
-//	}
-	
 	private static void optimizeEntitySystem(ExecutorService threadPool, String file) {
 		ClassReader cr = classReaderFor(file);
 		ClassMetadata meta = scan(cr);
