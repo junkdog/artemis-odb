@@ -41,10 +41,27 @@ public class EntitySubscription {
 		removed = new WildBag<Entity>();
 	}
 
+	/**
+	 * Returns a reference to the bag holding all matched
+	 * entities.
+	 *
+	 * <p><b>Warning: </b> Never remove elements from the bag, as this
+	 * will lead to undefiend behavior.</p>
+	 *
+	 * @return View of all active entities.
+	 */
 	public IntBag getEntities() {
 		return entities;
 	}
 
+	/**
+	 * Returns the bitset tracking all matched entities.
+	 *
+	 * <p><b>Warning: </b> Never toggle bits in the bitset, as
+	 * this <i>may</i> lead to erroneously added or removed entities.</p>
+	 *
+	 * @return View of all active entities.
+	 */
 	public BitSet getActiveEntityIds() {
 		return activeEntityIds;
 	}
