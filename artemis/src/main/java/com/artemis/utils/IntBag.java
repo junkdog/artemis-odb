@@ -243,6 +243,25 @@ public class IntBag {
 	}
 
 	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		IntBag intBag = (IntBag) o;
+		return size == intBag.size() && Arrays.equals(data, intBag.data);
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		for (int i = 0, s = size; s > i; i++) {
+			hash = (127 * hash) + data[i];
+		}
+
+		return hash;
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Bag(");

@@ -565,7 +565,10 @@ public class World {
 		}
 	}
 
-	private void updateEntityStates() {
+	void updateEntityStates() {
+		// the first block is for entities with precalculated compositionIds,
+		// such as those affected by EntityTransmuters, Archetypes
+		// and EntityFactories.
 		while (added.size() > 0 || changed.size() > 0) {
 			check(added, addedPerformer);
 			check(changed, changedPerformer);
