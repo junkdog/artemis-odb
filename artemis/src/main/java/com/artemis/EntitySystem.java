@@ -90,7 +90,11 @@ public abstract class EntitySystem extends BaseSystem
 	 * Get all entities being processed by this system.
 	 *
 	 * @return a bag containing all active entities of the system
+	 *
+	 * @deprecated Retrieve the entities from the {@link com.artemis.EntitySubscription}
+	 * directly.
 	 */
+	@Deprecated
 	public Bag<Entity> getActives(Bag<Entity> fillBag) {
 		if (actives == null)
 			return fillBag;

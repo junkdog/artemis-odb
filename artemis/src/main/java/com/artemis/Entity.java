@@ -79,7 +79,7 @@ public final class Entity {
 	 * <p>Creates a flyweight entity, not registered by the world
 	 * the way normal entities are. It is intended to be used
 	 * for cases where storing full object entity references aren't
-	 * desirable, in the interest of reducing the memory footprint
+	 * desirable, in the interest of reducing memory footprint
 	 * and/or maintaining a clean API.</p>
 	 *
 	 * <p>You are expected to manually set the entity id before
