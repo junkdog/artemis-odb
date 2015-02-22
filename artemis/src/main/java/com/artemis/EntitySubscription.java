@@ -47,6 +47,10 @@ public class EntitySubscription {
 		return aspect;
 	}
 
+	public Aspect.Builder getAspectBuilder() {
+		return aspectReflection;
+	}
+
 	/**
 	 * A new unique component composition detected, check if this
 	 * subscription's aspect is interested in it.
