@@ -66,7 +66,6 @@ public final class ProcessSystemInjector implements Opcodes {
 		Label l4 = new Label();
 		mv.visitLabel(l4);
 
-
 		Label l5 = new Label();
 		mv.visitJumpInsn(GOTO, l5);
 
@@ -86,14 +85,12 @@ public final class ProcessSystemInjector implements Opcodes {
 		Label l7 = new Label();
 		mv.visitLabel(l7);
 
-
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitVarInsn(ALOAD, 2);
 		mv.visitMethodInsn(invocation(meta.sysetemOptimizable),
 				owner, "process", "(Lcom/artemis/Entity;)V");
 		Label l8 = new Label();
 		mv.visitLabel(l8);
-
 
 		mv.visitIincInsn(3, 1);
 		mv.visitLabel(l5);
@@ -103,7 +100,6 @@ public final class ProcessSystemInjector implements Opcodes {
 		mv.visitJumpInsn(IF_ICMPGT, l6);
 		Label l9 = new Label();
 		mv.visitLabel(l9);
-
 
 		mv.visitInsn(RETURN);
 		Label l10 = new Label();

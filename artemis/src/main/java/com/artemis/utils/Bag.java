@@ -387,6 +387,26 @@ public class Bag<E> implements ImmutableBag<E> {
 		return sb.toString();
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Bag bag = (Bag) o;
+
+		return Arrays.equals(data, bag.data);
+	}
+
+	@Override
+	public int hashCode() {
+		int hash = 0;
+		for (int i = 0, s = size; s > i; i++) {
+			hash = (127 * hash) + data[i].hashCode();
+		}
+
+		return hash;
+	}
+
 	/**
 	 * An Iterator for Bag.
 	 *

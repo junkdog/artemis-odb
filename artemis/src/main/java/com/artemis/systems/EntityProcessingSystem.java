@@ -3,8 +3,6 @@ package com.artemis.systems;
 import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
-import com.artemis.utils.IntBag;
-
 
 /**
  * A typical entity system.

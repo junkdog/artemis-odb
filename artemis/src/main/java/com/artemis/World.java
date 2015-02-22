@@ -361,7 +361,7 @@ public class World {
 	 * @param entityId the entity to delete
 	 */
 	public void deleteEntity(int entityId) {
-		em.getEntity(entityId).edit().deleteEntity();
+		deleteEntity(em.getEntity(entityId));
 	}
 	
 	/**

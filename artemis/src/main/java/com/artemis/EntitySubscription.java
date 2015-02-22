@@ -143,12 +143,13 @@ public class EntitySubscription {
 
 	public static interface SubscriptionListener {
 		/**
-		 * TODO
+		 * Called after entities have been matched and inserted into an
+		 * EntitySubscription.
 		 */
 		void inserted(ImmutableBag<Entity> entities);
 
 		/**
-		 * TODO
+		 * Called after entities have been removed from an EntitySubscription.
 		 */
 		void removed(ImmutableBag<Entity> entities);
 	}

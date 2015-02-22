@@ -15,7 +15,7 @@ public abstract class BaseSystem {
 	 * <p>
 	 * <b>Nota Bene:</b> Any entities created in this method
 	 * won't become active until the next system starts processing
-	 * or when a new processing rounds beings, whichever comes first.
+	 * or when a new processing rounds begins, whichever comes first.
 	 * </p>
 	 */
 	protected void begin() {}
@@ -34,7 +34,7 @@ public abstract class BaseSystem {
 	protected abstract void processSystem();
 
 	/**
-	 * Called after the processing of entities ends.
+	 * Called after the systems has finished processing.
 	 */
 	protected void end() {}
 
