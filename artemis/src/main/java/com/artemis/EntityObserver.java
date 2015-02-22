@@ -4,8 +4,12 @@ import com.artemis.utils.ImmutableBag;
 
 
 /**
- * Used to pass messages to objects that need to be notified about changes to
- * certain entities.
+ * EntityObservers are invoked when an entity is created, changes composition id
+ * or is deleted. At the moment, only {@Manager | Managers} implement this interface.
+ *
+ * <p>The {@link com.artemis.EntitySubscription.SubscriptionListener} while similar,
+ * should not be confused with this interface, as only report entities inserted or
+ * removed when matched against {@link com.artemis.EntitySubscription}</p>
  *
  * @author Arni Arent
  */

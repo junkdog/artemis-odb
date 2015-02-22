@@ -6,6 +6,12 @@ import com.artemis.utils.IntBag;
 
 import java.util.BitSet;
 
+/**
+ * Maintains the list of entities matched by an aspect. Entity subscriptions
+ * are automatically updated during {@link com.artemis.World#process()}.
+ * Any {@link com.artemis.EntitySubscription.SubscriptionListener | listeners}
+ * are informed when entities are added or removed.
+ */
 public class EntitySubscription {
 	final Aspect aspect;
 	private final Aspect.Builder aspectReflection;
@@ -149,6 +155,13 @@ public class EntitySubscription {
 		listeners.add(listener);
 	}
 
+	/**
+	 * <p>This interfaces reports entities inserted or
+	 * removed when matched against their {@link com.artemis.EntitySubscription}</p>
+	 *
+	 * <p>For listening in on all entity state changes, see
+	 * {@link com.artemis.EntityObserver}</p>
+	 */
 	public static interface SubscriptionListener {
 		/**
 		 * Called after entities have been matched and inserted into an
