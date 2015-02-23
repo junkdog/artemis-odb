@@ -6,11 +6,8 @@ import com.artemis.utils.IntBag;
 
 
 /**
- * The most raw entity system.
- * <p>
- * It should not typically be used, but you can create your own entity system
- * handling by extending this.
- * </p>
+ * Entity system for iterating a entities matching a single Aspect. Likely the
+ * most common type of system.
  *
  * @author Arni Arent
  */
