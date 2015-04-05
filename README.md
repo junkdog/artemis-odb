@@ -14,7 +14,7 @@ It is actively maintained, and a continuation of the popular [Artemis](http://ga
 _For more details, see [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md)_
 
 ### Benchmarks
-Artemis-ODB is one of the fastest incarnations of Artemis. 
+artemis-odb is one of the fastest incarnations of Artemis. 
 
 Operations/second. Higher is better.
 
