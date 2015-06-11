@@ -22,7 +22,6 @@ import com.artemis.cli.converter.EclipseProjectFolder;
 import com.artemis.cli.converter.FolderConverter;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.Parameters;
-import com.beust.jcommander.Strings;
 
 @Parameters(
 	commandDescription="Configures EntityFactory Annotation Processor with Eclipse project")

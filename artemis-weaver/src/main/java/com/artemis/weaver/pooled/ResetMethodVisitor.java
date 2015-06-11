@@ -7,7 +7,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 import com.artemis.meta.ClassMetadata;
-import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.meta.FieldDescriptor;
 
 public class ResetMethodVisitor extends MethodVisitor implements Opcodes {

@@ -11,7 +11,6 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.DelayedEntityProcessingSystem;
 import com.artemis.systems.EntityProcessingSystem;
-import com.artemis.systems.VoidEntitySystem;
 import com.artemis.utils.Bag;
 
 public class WorldTest

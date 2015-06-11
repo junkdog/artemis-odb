@@ -12,7 +12,6 @@ import org.objectweb.asm.tree.ClassNode;
 import com.artemis.ClassUtil;
 import com.artemis.Weaver;
 import com.artemis.meta.ClassMetadata;
-import com.artemis.meta.ClassMetadataUtil;
 import com.artemis.weaver.packed.ExternalFieldClassTransformer;
 
 /**

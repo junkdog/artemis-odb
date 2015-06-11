@@ -1,6 +1,5 @@
 package com.artemis.system;
 
-import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.annotations.PreserveProcessVisiblity;
 import com.artemis.systems.EntityProcessingSystem;

@@ -1,7 +1,6 @@
 package com.artemis.component;
 
 import static java.lang.reflect.Modifier.PRIVATE;
-import static java.lang.reflect.Modifier.STATIC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 

@@ -392,7 +392,8 @@ public class Bag<E> implements ImmutableBag<E> {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		Bag bag = (Bag) o;
+		@SuppressWarnings("unchecked")
+		Bag<E> bag = (Bag<E>) o;
 		return size == bag.size() && Arrays.equals(data, bag.data);
 	}
 

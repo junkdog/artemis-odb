@@ -9,7 +9,6 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 
 import com.artemis.meta.ClassMetadata;
-import com.artemis.meta.ClassMetadata.WeaverType;
 import com.artemis.weaver.ConstructorInvocationVisitor;
 
 public class PackedComponentWeaver extends ClassVisitor implements Opcodes{

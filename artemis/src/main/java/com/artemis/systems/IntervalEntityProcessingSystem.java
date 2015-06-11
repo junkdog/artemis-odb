@@ -2,8 +2,6 @@ package com.artemis.systems;
 
 import com.artemis.Aspect;
 import com.artemis.Entity;
-import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 
 
