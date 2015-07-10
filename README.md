@@ -1,6 +1,7 @@
 ## Artemis-odb
 
 [![Join the chat at https://gitter.im/junkdog/artemis-odb](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/junkdog/artemis-odb?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Build Status](https://travis-ci.org/junkdog/artemis-odb.svg)](https://travis-ci.org/junkdog/artemis-odb)
 
 
 [Artemis-odb](https://github.com/junkdog/artemis-odb/wiki/About) is a [high performance](https://github.com/junkdog/entity-system-benchmarks) java based [Entity-Component-System](https://github.com/junkdog/artemis-odb/wiki/Introduction-to-Entity-Systems) framework.
