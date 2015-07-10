@@ -1,7 +1,6 @@
 package com.artemis;
 
 import static com.artemis.Transformer.transform;
-import static com.artemis.Weaver.scan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

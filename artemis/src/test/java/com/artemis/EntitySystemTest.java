@@ -5,10 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.NoSuchElementException;
 
 import com.artemis.systems.EntityProcessingSystem;
-import com.artemis.utils.IntBag;
 import org.junit.Test;
-
-import com.artemis.utils.ImmutableBag;
 
 /**
  * Created by obartley on 6/9/14.
@@ -66,7 +63,6 @@ public class EntitySystemTest {
 	public static class IteratorTestSystem extends EntitySystem {
 		public int expectedSize;
 		
-		@SuppressWarnings("unchecked")
 		public IteratorTestSystem(int expectedSize) {
 			super(Aspect.all(C.class));
 			this.expectedSize = expectedSize;
@@ -95,7 +91,7 @@ public class EntitySystemTest {
 
 	public static class EmptySystem extends EntityProcessingSystem {
 		public EmptySystem() {
-			super(Aspect.all());
+			super(Aspect.empty());
 		}
 
 		@Override

@@ -80,7 +80,6 @@ public class WorldStructWeavingBase {
 		private ComponentMapper<StructComponentA> mapper;
 		int iteration = 0;
 		
-		@SuppressWarnings("unchecked")
 		public EntitySystemA() {
 			super(Aspect.all(StructComponentA.class));
 		}
@@ -114,7 +113,6 @@ public class WorldStructWeavingBase {
 		private ComponentMapper<Position> mapper;
 		int iteration = 0;
 		
-		@SuppressWarnings("unchecked")
 		public EntitySystemB() {
 			super(Aspect.all(Position.class));
 		}

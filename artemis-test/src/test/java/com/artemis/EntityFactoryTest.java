@@ -12,7 +12,6 @@ import com.artemis.component.Cullible;
 import com.artemis.component.HitPoints;
 import com.artemis.component.Position;
 import com.artemis.factory.ExhibitA;
-import com.artemis.factory.Extended;
 
 @Wire
 public class EntityFactoryTest {

@@ -54,7 +54,6 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public A get(int entityId) throws ArrayIndexOutOfBoundsException {
 		return get(world.getEntity(entityId));
 	}

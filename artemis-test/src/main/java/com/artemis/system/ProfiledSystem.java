@@ -10,7 +10,7 @@ import com.artemis.util.SimpleProfiler;
 @Profile(enabled=true, using=SimpleProfiler.class)
 public class ProfiledSystem extends EntityProcessingSystem {
 	public ProfiledSystem() {
-		super(Aspect.all());
+		super(Aspect.empty());
 	}
 
 	@Override
