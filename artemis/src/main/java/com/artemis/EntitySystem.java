@@ -29,8 +29,7 @@ public abstract class EntitySystem extends BaseSystem
 		super();
 		if (aspect == null) {
 			String error = "Aspect.Builder was null; to use systems which " +
-					"do not subscribe to entities, extend VoidEntitySystem or " +
-					"BaseSystem directly.";
+					"do not subscribe to entities, extend BaseSystem directly.";
 			throw new NullPointerException(error);
 		}
 
@@ -44,7 +43,11 @@ public abstract class EntitySystem extends BaseSystem
 		subscription.addSubscriptionListener(this);
 		actives = subscription.getEntities();
 
-		flyweight = Entity.createFlyweight(world);
+		flyweight = createFlyweightEntity();
+	}
+
+	protected final Entity createFlyweightEntity() {
+		return Entity.createFlyweight(world);
 	}
 
 	public EntitySubscription getSubscription() {
