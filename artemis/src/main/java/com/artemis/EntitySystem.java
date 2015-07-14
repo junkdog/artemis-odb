@@ -16,7 +16,6 @@ public abstract class EntitySystem extends BaseSystem
 
 	private final Aspect.Builder aspectConfiguration;
 	protected IntBag actives;
-	protected Entity flyweight;
 
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
@@ -42,10 +41,20 @@ public abstract class EntitySystem extends BaseSystem
 		EntitySubscription subscription = getSubscription();
 		subscription.addSubscriptionListener(this);
 		actives = subscription.getEntities();
-
-		flyweight = createFlyweightEntity();
 	}
 
+	/**
+	 * <p>Creates a flyweight entity, not registered by the world
+	 * the way normal entities are. It is intended to be used
+	 * for cases where storing full object entity references aren't
+	 * desirable, in the interest of reducing memory footprint
+	 * and/or maintaining a clean API.</p>
+	 *
+	 * <p>You are expected to manually set the entity id before
+	 * operating on the entity. It is created with id == -1.</p>
+	 *
+	 * @return Unbound entity with entityId -1.
+	 */
 	protected final Entity createFlyweightEntity() {
 		return Entity.createFlyweight(world);
 	}

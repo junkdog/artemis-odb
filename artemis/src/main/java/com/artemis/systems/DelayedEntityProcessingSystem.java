@@ -3,6 +3,7 @@ package com.artemis.systems;
 import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
+import com.artemis.World;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 
@@ -42,6 +43,7 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	private boolean running;
 	/** The countdown, accumulates world deltas. */
 	private float acc;
+	private Entity flyweight;
 
 	/**
 	 * Creates a new DelayedEntityProcessingSystem.
@@ -51,6 +53,12 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	 */
 	public DelayedEntityProcessingSystem(Aspect.Builder aspect) {
 		super(aspect);
+	}
+
+	@Override
+	protected void setWorld(World world) {
+		super.setWorld(world);
+		flyweight = createFlyweightEntity();
 	}
 
 	@Override

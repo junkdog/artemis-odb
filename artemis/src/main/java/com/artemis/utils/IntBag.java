@@ -264,7 +264,7 @@ public class IntBag {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Bag(");
+		sb.append("IntBag(");
 		for (int i = 0; size > i; i++) {
 			if (i > 0) sb.append(", ");
 			sb.append(data[i]);

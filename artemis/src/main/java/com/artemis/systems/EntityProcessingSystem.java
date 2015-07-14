@@ -3,6 +3,7 @@ package com.artemis.systems;
 import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
+import com.artemis.World;
 
 /**
  * A typical entity system.
@@ -14,6 +15,8 @@ import com.artemis.EntitySystem;
  * @author Arni Arent
  */
 public abstract class EntityProcessingSystem extends EntitySystem {
+	private Entity flyweight;
+
 	/**
 	 * Creates a new EntityProcessingSystem.
 	 *
@@ -22,6 +25,12 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 	 */
 	public EntityProcessingSystem(Aspect.Builder aspect) {
 		super(aspect);
+	}
+
+	@Override
+	protected void setWorld(World world) {
+		super.setWorld(world);
+		flyweight = createFlyweightEntity();
 	}
 
 	/**
