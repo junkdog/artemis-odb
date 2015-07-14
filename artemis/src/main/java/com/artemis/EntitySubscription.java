@@ -179,7 +179,7 @@ public class EntitySubscription {
 	 * <p>For listening in on all entity state changes, see
 	 * {@link com.artemis.EntityObserver}</p>
 	 */
-	public static interface SubscriptionListener {
+	public interface SubscriptionListener {
 		/**
 		 * Called after entities have been matched and inserted into an
 		 * EntitySubscription.
