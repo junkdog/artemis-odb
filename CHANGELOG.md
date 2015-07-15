@@ -19,6 +19,9 @@
   - Simplified static method names, mirroring Aspect's old instance methods.
 - **Fix**: Uninitialized worlds threw cryptic NPE when invoking #process.
 - **Fix**: `World#createFactory(Class<EntityFactory>)` was package local.
+- **Fix**: `Entity#edit` used together with EntityTransmuters or Archetypes
+  caused the wrong compositionId to be reported, if all changes took place
+  during the same frame.
 
 #### Version: 0.9.0 - 2015-02-03
 - **MINOR BREAKING CHANGES**
