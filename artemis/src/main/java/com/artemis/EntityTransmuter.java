@@ -46,6 +46,10 @@ public final class EntityTransmuter {
 	}
 
 	private TransmuteOperation getOperation(Entity e) {
+		if (world.editPool.isEdited(e)) {
+			world.editPool.processAndRemove(e);
+		}
+
 		int compositionId = e.getCompositionId();
 		TransmuteOperation operation = operations.safeGet(compositionId);
 		if (operation == null) {

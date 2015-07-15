@@ -74,7 +74,7 @@ public class EntitySystemTest {
 
 		@Override
 		protected void processSystem() {
-			assertEquals(expectedSize, actives.size());
+			assertEquals(expectedSize, subscription.getEntities().size());
 			getActives().iterator().next();
 		}
 

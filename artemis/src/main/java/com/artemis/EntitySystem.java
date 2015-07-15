@@ -15,7 +15,7 @@ public abstract class EntitySystem extends BaseSystem
 		implements EntitySubscription.SubscriptionListener {
 
 	private final Aspect.Builder aspectConfiguration;
-	protected IntBag actives;
+	protected EntitySubscription subscription;
 
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
@@ -38,9 +38,8 @@ public abstract class EntitySystem extends BaseSystem
 	protected void setWorld(World world) {
 		super.setWorld(world);
 
-		EntitySubscription subscription = getSubscription();
+		subscription = getSubscription();
 		subscription.addSubscriptionListener(this);
-		actives = subscription.getEntities();
 	}
 
 	/**
@@ -109,9 +108,7 @@ public abstract class EntitySystem extends BaseSystem
 	 */
 	@Deprecated
 	public Bag<Entity> getActives(Bag<Entity> fillBag) {
-		if (actives == null)
-			return fillBag;
-
+		IntBag actives = subscription.getEntities();
 		int[] array = actives.getData();
 		for (int i = 0, s = actives.size(); s > i; i++) {
 			fillBag.add(world.getEntity(array[i]));

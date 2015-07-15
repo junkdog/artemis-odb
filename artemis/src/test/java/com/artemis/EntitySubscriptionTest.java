@@ -2,9 +2,12 @@ package com.artemis;
 
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
+import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 import org.junit.Test;
+
+import java.util.BitSet;
 
 import static org.junit.Assert.*;
 
@@ -59,6 +62,7 @@ public class EntitySubscriptionTest {
 		assertEquals(3, sm.inserted);
 		assertEquals(3, sm.removed);
 	}
+
 
 	private static class SubscribingManager extends Manager
 			implements  EntitySubscription.SubscriptionListener {

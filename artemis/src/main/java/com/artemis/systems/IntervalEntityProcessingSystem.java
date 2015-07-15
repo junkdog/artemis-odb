@@ -50,7 +50,7 @@ public abstract class IntervalEntityProcessingSystem extends IntervalEntitySyste
 
 	@Override
 	protected void processSystem() {
-		processEntities(actives);
+		processEntities(subscription.getEntities());
 	}
 
 	protected void processEntities(IntBag entities) {

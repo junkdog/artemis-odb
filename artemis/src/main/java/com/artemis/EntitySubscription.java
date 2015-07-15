@@ -25,6 +25,7 @@ public class EntitySubscription {
 
 	private final WildBag<Entity> inserted;
 	private final WildBag<Entity> removed;
+	private boolean dirty;
 
 	EntitySubscription(World world, Aspect.Builder builder) {
 		aspect = builder.build(world);
@@ -51,6 +52,10 @@ public class EntitySubscription {
 	 * @return View of all active entities.
 	 */
 	public IntBag getEntities() {
+		if (dirty) {
+			rebuildCompressedActives();
+			dirty = false;
+		}
 		return entities;
 	}
 
@@ -120,8 +125,7 @@ public class EntitySubscription {
 		changed(changed);
 		deleted(deleted);
 
-		if (informEntityChanges())
-			rebuildCompressedActives();
+		dirty |= informEntityChanges();
 	}
 
 	private boolean informEntityChanges() {

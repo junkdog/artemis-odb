@@ -3,10 +3,15 @@ package com.artemis;
 
 import com.artemis.EntitySubscription.SubscriptionListener;
 import com.artemis.annotations.Wire;
+import com.artemis.component.ComponentX;
+import com.artemis.component.ComponentY;
+import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.ImmutableBag;
 import org.junit.Test;
 
-import static org.junit.Assert.assertFalse;
+import java.util.BitSet;
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -26,6 +31,128 @@ public class SubscriptionListenerTest {
 		world.process();
 	}
 
+	@Test
+	public void entity_components_changed_by_edit_and_transmuter_test() {
+		World w = new World();
+		LeSystemPetite lsp1 = w.setSystem(new LeSystemPetite());
+		LeSystemPetite2 lsp2 = w.setSystem(new LeSystemPetite2());
+		w.initialize();
+
+		EntityTransmuter transmuter = new EntityTransmuterFactory(w)
+				.add(ComponentX.class)
+				.build();
+
+		EntityEdit ee = w.createEntity().edit();
+		ee.create(ComponentY.class);
+
+		transmuter.transmute(ee.getEntity());
+
+		w.process();
+
+		assertEquals(1, lsp2.insertedEntities.cardinality());
+		assertEquals(1, lsp2.processedEntities.cardinality());
+		assertEquals(1, lsp1.insertedEntities.cardinality());
+		assertEquals(1, lsp1.processedEntities.cardinality());
+	}
+
+	@Test
+	public void entity_components_changed_by_archetype_and_edit_test() {
+		World w = new World();
+		LeSystemPetite lsp1 = w.setSystem(new LeSystemPetite());
+		LeSystemPetite2 lsp2 = w.setSystem(new LeSystemPetite2());
+		w.initialize();
+
+		Archetype archetype = new ArchetypeBuilder()
+				.add(ComponentY.class)
+				.build(w);
+
+		Entity e = w.createEntity(archetype);
+		e.edit().create(ComponentX.class);
+
+		w.process();
+
+		assertEquals(1, lsp2.insertedEntities.cardinality());
+		assertEquals(1, lsp2.processedEntities.cardinality());
+		assertEquals(1, lsp1.insertedEntities.cardinality());
+		assertEquals(1, lsp1.processedEntities.cardinality());
+	}
+
+	@Test
+	public void entity_components_changed_by_archetype_and_transmuter_test() {
+		World w = new World();
+		LeSystemPetite lsp1 = w.setSystem(new LeSystemPetite());
+		LeSystemPetite2 lsp2 = w.setSystem(new LeSystemPetite2());
+		w.initialize();
+
+		Archetype archetype = new ArchetypeBuilder()
+				.add(ComponentY.class)
+				.build(w);
+
+		EntityTransmuter transmuter = new EntityTransmuterFactory(w)
+				.add(ComponentX.class)
+				.build();
+
+		Entity e = w.createEntity(archetype);
+		transmuter.transmute(e);
+
+		w.process();
+
+		assertEquals(1, lsp2.insertedEntities.cardinality());
+		assertEquals(1, lsp2.processedEntities.cardinality());
+		assertEquals(1, lsp1.insertedEntities.cardinality());
+		assertEquals(1, lsp1.processedEntities.cardinality());
+	}
+
+
+	private static class LeSystemPetite extends EntityProcessingSystem {
+		private BitSet processedEntities = new BitSet();
+		private BitSet insertedEntities = new BitSet();
+
+		public LeSystemPetite() {
+			super(Aspect.all(ComponentX.class, ComponentY.class));
+		}
+
+		@Override
+		protected void inserted(Entity e) {
+			insertedEntities.set(e.id);
+		}
+
+		@Override
+		protected void removed(Entity e) {
+			insertedEntities.set(e.id, false);
+		}
+
+		@Override
+		protected void process(Entity e) {
+			processedEntities.set(e.id);
+		}
+	}
+
+	private static class LeSystemPetite2 extends EntityProcessingSystem {
+		private BitSet processedEntities = new BitSet();
+		private BitSet insertedEntities = new BitSet();
+
+		public LeSystemPetite2() {
+			super(Aspect.all(ComponentY.class));
+		}
+
+		@Override
+		protected void inserted(Entity e) {
+			insertedEntities.set(e.id);
+		}
+
+		@Override
+		protected void process(Entity e) {
+			processedEntities.set(e.id);
+		}
+
+		@Override
+		protected void removed(Entity e) {
+			insertedEntities.set(e.id, false);
+		}
+	}
+
+
 	public static class MyComponent extends Component {
 	}
 
@@ -40,6 +167,7 @@ public class SubscriptionListenerTest {
 			}
 		}
 	}
+
 
 	@Wire
 	private static class Es2 extends BaseSystem implements SubscriptionListener {
@@ -66,8 +194,6 @@ public class SubscriptionListenerTest {
 		}
 
 		@Override
-		public void removed(ImmutableBag<Entity> entities) {
-
-		}
+		public void removed(ImmutableBag<Entity> entities) {}
 	}
 }

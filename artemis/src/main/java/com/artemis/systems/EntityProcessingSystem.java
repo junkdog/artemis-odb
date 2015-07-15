@@ -4,6 +4,7 @@ import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.World;
+import com.artemis.utils.IntBag;
 
 /**
  * A typical entity system.
@@ -43,6 +44,7 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 
 	@Override
 	protected final void processSystem() {
+		IntBag actives = subscription.getEntities();
 		int[] array = actives.getData();
 		Entity e = flyweight;
 		for (int i = 0, s = actives.size(); s > i; i++) {

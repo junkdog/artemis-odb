@@ -63,6 +63,7 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 
 	@Override
 	protected final void processSystem() {
+		IntBag actives = subscription.getEntities();
 		int processed = actives.size();
 		if (processed == 0) {
 			stop();

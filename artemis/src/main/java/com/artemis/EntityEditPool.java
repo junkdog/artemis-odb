@@ -22,13 +22,19 @@ final class EntityEditPool {
 	}
 	
 	boolean isEdited(Entity e) {
-		return editedIds.get(e.getId());
+		return editedIds.get(e.id);
+	}
+
+	void processAndRemove(Entity e) {
+		editedIds.set(e.id, false);
+		EntityEdit edit = findEntityEdit(e, true);
+		world.getEntityManager().updateCompositionIdentity(edit);
 	}
 	
 
 	EntityEdit obtainEditor(Entity entity) {
 		if (editedIds.get(entity.getId()))
-			return findEntityEdit(entity);
+			return findEntityEdit(entity, false);
 		
 		EntityEdit edit = entityEdit();
 		editedIds.set(entity.getId());
@@ -57,19 +63,22 @@ final class EntityEditPool {
 		}
 	}
 	
-	private EntityEdit findEntityEdit(Entity entity) {
+	private EntityEdit findEntityEdit(Entity entity, boolean remove) {
 		// Since it's quite likely that already edited entities are called
 		// repeatedly within the same scope, we start by first checking the last
 		// element, before checking the rest.
 		int last = edited.size() - 1;
-		if (edited.get(last).entity == entity)
-			return edited.get(last);
-		
+		if (edited.get(last).entity == entity) {
+			return remove ? edited.remove(last) : edited.get(last);
+		}
+
 		Object[] data = edited.getData();
 		for (int i = 0; last > i; i++) {
 			EntityEdit edit = (EntityEdit)data[i];
-			if (edit.entity.equals(entity))
-				return edit;
+			if (!edit.entity.equals(entity))
+				continue;
+
+			return remove ? edited.remove(i) : edit;
 		}
 		
 		throw new RuntimeException();
