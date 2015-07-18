@@ -12,7 +12,7 @@ import com.artemis.EntityFactory;
  * Associates components to {@link EntityFactory EntityFactories}, either by
  * annotating at the class or method level. For all methods declared by an
  * {@link EntityFactory}, the parameters must match fields declared by the component.
- * Only primitives and strings are currently supported. The {@link UseSetter} annotation
+ * Only primitive, enum and string types are currently supported. The {@link UseSetter} annotation
  * can be employed when setter invocation is desirable. 
  * 
  * <p>Annotated methods always work with a single component type, while multiple component

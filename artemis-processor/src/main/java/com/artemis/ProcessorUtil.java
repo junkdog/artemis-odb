@@ -84,7 +84,15 @@ final class ProcessorUtil {
 		
 		return typeElement.getQualifiedName().toString().equals("java.lang.String");
 	}
-	
+
+	public static boolean isEnum(TypeMirror mirror) {
+		if (!(mirror instanceof DeclaredType))
+			return false;
+
+		DeclaredType type = (DeclaredType) mirror;
+		return ElementKind.ENUM == type.asElement().getKind();
+	}
+
 	public static DeclaredType findFactory(TypeElement klazz) {
 		
 		

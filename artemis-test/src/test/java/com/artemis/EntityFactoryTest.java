@@ -1,16 +1,15 @@
 package com.artemis;
 
+import static com.artemis.util.SomeEnum.VALUE_A;
+import static com.artemis.util.SomeEnum.VALUE_B;
 import static org.junit.Assert.*;
 
+import com.artemis.component.*;
+import com.artemis.util.SomeEnum;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.artemis.annotations.Wire;
-import com.artemis.component.Asset;
-import com.artemis.component.Complex;
-import com.artemis.component.Cullible;
-import com.artemis.component.HitPoints;
-import com.artemis.component.Position;
 import com.artemis.factory.ExhibitA;
 import com.artemis.factory.Extended;
 
@@ -26,7 +25,8 @@ public class EntityFactoryTest {
 	private ComponentMapper<Cullible> cullible;
 	private ComponentMapper<Complex> complex;
 	private ComponentMapper<HitPoints> hitpoints;
-	
+	private ComponentMapper<EnumComponent> enumComponent;
+
 	@Before
 	public void init() {
 		world = new World();
@@ -36,8 +36,8 @@ public class EntityFactoryTest {
 	
 	@Test
 	public void test_instance_methods() {
-		Entity e1 = factory.position(1, 2).asset("1").create();
-		Entity e2 = factory.position(3, 4).asset("2").create();
+		Entity e1 = factory.position(1, 2).asset("1").enumComponent(VALUE_A).create();
+		Entity e2 = factory.position(3, 4).asset("2").enumComponent(VALUE_B).create();
 		Entity e3 = factory.create();
 		
 		assertEquals(1, position.get(e1).x, ACC);
@@ -46,10 +46,14 @@ public class EntityFactoryTest {
 		assertEquals(4, position.get(e2).y, ACC);
 		assertEquals(0, position.get(e3).x, ACC);
 		assertEquals(0, position.get(e3).y, ACC);
-		
+
 		assertEquals("1", asset.get(e1).path);
 		assertEquals("2", asset.get(e2).path);
 		assertEquals(null, asset.get(e3).path);
+
+		assertEquals(VALUE_A, enumComponent.get(e1).enumValue);
+		assertEquals(VALUE_B, enumComponent.get(e2).enumValue);
+		assertEquals(null, enumComponent.get(e3).enumValue);
 	}
 	
 	@Test

@@ -16,17 +16,9 @@ import java.util.TreeSet;
 
 import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.AnnotationValue;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.Name;
-import javax.lang.model.element.TypeElement;
-import javax.lang.model.element.VariableElement;
+import javax.lang.model.element.*;
 import javax.lang.model.type.DeclaredType;
 import javax.lang.model.type.TypeMirror;
-import javax.lang.model.util.Elements;
-import javax.lang.model.util.Types;
 import javax.tools.Diagnostic.Kind;
 
 import com.artemis.annotations.Bind;
@@ -331,12 +323,11 @@ public class FactoryModel {
 				
 				return false;
 			}
-			
-			TypeMirror type = param.getValue().asType();
-			if (!(type.getKind().isPrimitive() || ProcessorUtil.isString(type))) {
+
+			if (!isParameterValid(param)) {
 				messager.printMessage(
 						ERROR,
-						"Only primitive and string types supported",
+						"Only primitive, enum and string types supported",
 						param.getValue());
 				
 				return false;
@@ -344,7 +335,16 @@ public class FactoryModel {
 			
 			return true;
 		}
-		
+
+		private boolean isParameterValid(Entry<Name, VariableElement> param) {
+			VariableElement value = param.getValue();
+			TypeMirror type = value.asType();
+
+			return type.getKind().isPrimitive()
+					|| ProcessorUtil.isEnum(type)
+					|| ProcessorUtil.isString(type);
+		}
+
 		private boolean validateSetterAccess(Messager messager,
 				Map<Name, Element> found,	Entry<Name, VariableElement> param) {
 			
