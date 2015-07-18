@@ -22,6 +22,6 @@ class ProfileBeginWeaver extends AdviceAdapter implements Opcodes {
 
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitFieldInsn(GETFIELD, systemName, "$profiler", profileDescriptor);
-		mv.visitMethodInsn(INVOKEVIRTUAL, profiler, "start", "()V");
+		mv.visitMethodInsn(INVOKEVIRTUAL, profiler, "start", "()V", false);
 	}
 }

@@ -11,7 +11,7 @@ import org.objectweb.asm.Opcodes;
 import com.artemis.ClassUtil;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.weaver.optimizer.OptimizingEntitySystemWeaver;
-import com.artemis.weaver.optimizer.ProcessSystemInjector;
+import com.artemis.weaver.optimizer.EsBytecodeInjector;
 
 public class EsOptimizationTransmuter extends CallableTransmuter<Void> implements Opcodes {
 	private ClassMetadata meta;
@@ -29,7 +29,7 @@ public class EsOptimizationTransmuter extends CallableTransmuter<Void> implement
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		ClassVisitor cv = cw;
 		
-		cr = new ProcessSystemInjector(cr, meta).transform();
+		cr = new EsBytecodeInjector(cr, meta).transform();
 		cv = new OptimizingEntitySystemWeaver(cv, meta);
 		
 		try {

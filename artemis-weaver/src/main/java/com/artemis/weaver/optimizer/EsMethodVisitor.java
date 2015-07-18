@@ -15,11 +15,11 @@ public class EsMethodVisitor extends MethodVisitor implements Opcodes {
 	}
 
 	@Override
-	public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+	public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
 		if (opcode == INVOKESPECIAL && owner.equals("com/artemis/systems/EntityProcessingSystem")) {
 			owner = "com/artemis/EntitySystem";
 		}
 		
-		mv.visitMethodInsn(opcode, owner, name, desc);
+		mv.visitMethodInsn(opcode, owner, name, desc, itf);
 	}
 }

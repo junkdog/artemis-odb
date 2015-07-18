@@ -49,7 +49,7 @@ class ExternalFieldMethodTransformer extends MethodTransformer implements Opcode
 				changed = true;
 				i = InstructionMutator.on(instructions, fn)
 					.insertAtOffset(0,
-						new MethodInsnNode(INVOKEVIRTUAL, fn.owner, fn.name, param(fn)))
+						new MethodInsnNode(INVOKEVIRTUAL, fn.owner, fn.name, param(fn), false))
 					.delete(0)
 					.transform();
 			} else if (GETFIELD == fn.getOpcode() && components.containsKey(fn.owner)) {
@@ -57,7 +57,7 @@ class ExternalFieldMethodTransformer extends MethodTransformer implements Opcode
 				
 				i = on(instructions, fn)
 					.insertAtOffset(0,
-						new MethodInsnNode(INVOKEVIRTUAL, fn.owner, fn.name, "()" + fn.desc))
+						new MethodInsnNode(INVOKEVIRTUAL, fn.owner, fn.name, "()" + fn.desc, false))
 					.delete(0)
 					.transform();
 			}

@@ -27,7 +27,7 @@ public class StaticInitializerVisitor extends MethodVisitor implements Opcodes {
 		Label l0 = new Label();
 		mv.visitLabel(l0);
 		mv.visitIntInsn(SIPUSH, ClassMetadataUtil.sizeOf(meta) * 128);
-		mv.visitMethodInsn(INVOKESTATIC, "java/nio/ByteBuffer", "allocateDirect", "(I)Ljava/nio/ByteBuffer;");
+		mv.visitMethodInsn(INVOKESTATIC, "java/nio/ByteBuffer", "allocateDirect", "(I)Ljava/nio/ByteBuffer;", false);
 		mv.visitInsn(RETURN);
 	}
 }

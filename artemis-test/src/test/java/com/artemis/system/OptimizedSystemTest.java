@@ -44,6 +44,8 @@ public class OptimizedSystemTest {
 		World world = new World();
 		world.setSystem(new OptimizedSystemAdditional());
 		world.initialize();
+
+		world.process();
 	}
 
 	private static Method processMethod(Class<?> klazz) {

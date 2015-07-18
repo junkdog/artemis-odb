@@ -23,7 +23,7 @@ class ProfileInitializeWeaver extends AdviceAdapter implements Opcodes {
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitTypeInsn(NEW, profiler);
 		mv.visitInsn(DUP);
-		mv.visitMethodInsn(INVOKESPECIAL, profiler, "<init>", "()V");
+		mv.visitMethodInsn(INVOKESPECIAL, profiler, "<init>", "()V", false);
 		mv.visitFieldInsn(PUTFIELD, systemName, "$profiler", profileDescriptor);
 		
 		mv.visitVarInsn(ALOAD, 0);
@@ -31,6 +31,6 @@ class ProfileInitializeWeaver extends AdviceAdapter implements Opcodes {
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitFieldInsn(GETFIELD, systemName, "world", "Lcom/artemis/World;");
-		mv.visitMethodInsn(INVOKEVIRTUAL, profiler, "initialize", "(Lcom/artemis/BaseSystem;Lcom/artemis/World;)V");
+		mv.visitMethodInsn(INVOKEVIRTUAL, profiler, "initialize", "(Lcom/artemis/BaseSystem;Lcom/artemis/World;)V", false);
 	}
 }

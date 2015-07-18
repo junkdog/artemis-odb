@@ -17,12 +17,12 @@ public class ConstructorInvocationVisitor extends MethodVisitor implements Opcod
 	}
 
 	@Override
-	public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+	public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
 		if (!hasCalledSuper && INVOKESPECIAL == opcode && "<init>".equals(name)) {
-			mv.visitMethodInsn(opcode, owner(meta, owner), name, desc);
+			mv.visitMethodInsn(opcode, owner(meta, owner), name, desc, itf);
 			hasCalledSuper = true;
 		} else {
-			mv.visitMethodInsn(opcode, owner, name, desc);
+			mv.visitMethodInsn(opcode, owner, name, desc, itf);
 		}
 	}
 

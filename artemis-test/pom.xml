@@ -56,7 +56,7 @@
 						</goals>
 						<configuration>
 							<ideFriendlyPacking>${artemis.ideFriendlyPacking}</ideFriendlyPacking>
-							<enableArtemisPlugin>${artemis.enabled}</enableArtemisPlugin>
+							<enableArtemisPlugin>${artemis.enableArtemisPlugin}</enableArtemisPlugin>
 						</configuration>
 					</execution>
 				</executions>

@@ -15,14 +15,14 @@ class ByteBufferHelper {
 
 	AbstractInsnNode invokeGetter(String name) {
 		FieldDescriptor fd = find(name);
-		return new MethodInsnNode(FieldToStructMethodTransformer.INVOKEVIRTUAL, "java/nio/ByteBuffer", getter(name), "(I)" + castedDesc(fd));
+		return new MethodInsnNode(FieldToStructMethodTransformer.INVOKEVIRTUAL, "java/nio/ByteBuffer", getter(name), "(I)" + castedDesc(fd), false);
 	}
 	
 	AbstractInsnNode invokePutter(String name) {
 		FieldDescriptor fd = find(name);
 		
 		String desc = "(I" + castedDesc(fd) + ")Ljava/nio/ByteBuffer;";
-		return new MethodInsnNode(FieldToStructMethodTransformer.INVOKEVIRTUAL, "java/nio/ByteBuffer", putter(name), desc);
+		return new MethodInsnNode(FieldToStructMethodTransformer.INVOKEVIRTUAL, "java/nio/ByteBuffer", putter(name), desc, false);
 	}
 
 	private static String castedDesc(FieldDescriptor fd) {
