@@ -12,7 +12,7 @@
 	<name>artemis-odb-component-weaver</name>
 	
 	<properties>
-		<asm.version>4.2</asm.version>
+		<asm.version>5.0.4</asm.version>
 		<mainClass>net.onedaybeard.agrotera.ProcessArtemis</mainClass>
 	</properties>
 
