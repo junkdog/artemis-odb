@@ -17,14 +17,8 @@ public class WorldTest extends GWTTestCase {
 
 	private World world;
 
-	@Override
-	public void gwtSetUp() {
-		world = new World();
-	}
-	
 	public void test_get_component_should_not_throw_exception() {
 		world = new World();
-		world.initialize();
 
 		for (int i = 0; i < 100; i++) {
 			Entity e = world.createEntity();
@@ -40,10 +34,10 @@ public class WorldTest extends GWTTestCase {
 	}
 
 	public void test_access_component_after_deletion_in_previous_system() {
-		world.setSystem(new SystemComponentXRemover());
-		world.setSystem(new SystemB());
-		world.initialize();
-		
+		world = new World(new WorldConfiguration()
+				.setSystem(new SystemComponentXRemover())
+				.setSystem(new SystemB()));
+
 		Entity e = world.createEntity();
 		e.edit().create(ComponentX.class);
 		
@@ -52,9 +46,9 @@ public class WorldTest extends GWTTestCase {
 	
 	public void test_delayed_entity_procesing_ensure_entities_processed() {
 		ExpirationSystem es = new ExpirationSystem();
-		world.setSystem(es);
-		world.initialize();
-		
+		world = new World(new WorldConfiguration()
+			.setSystem(es));
+
 		Entity e1 = createEntity();
 		
 		world.setDelta(0.5f);

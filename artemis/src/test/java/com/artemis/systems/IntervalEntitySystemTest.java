@@ -2,6 +2,7 @@ package com.artemis.systems;
 
 import static org.junit.Assert.*;
 
+import com.artemis.WorldConfiguration;
 import org.junit.Test;
 
 import com.artemis.Aspect;
@@ -15,11 +16,10 @@ public class IntervalEntitySystemTest {
 
 	@Test
 	public void test_interval_delta() {
-		
-		World world = new World();
-		IntervalSystem es = world.setSystem(new IntervalSystem());
-		world.initialize();
-		
+		IntervalSystem es = new IntervalSystem();
+		World world = new World(new WorldConfiguration()
+				.setSystem(es));
+
 		world.delta = 1.1f;
 		world.process();
 		assertEquals(1.1, es.getIntervalDelta(), ACC);

@@ -1,6 +1,7 @@
 package com.artemis.systems;
 
 import com.artemis.World;
+import com.artemis.WorldConfiguration;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
@@ -9,9 +10,9 @@ public class VoidEntitySystemTest {
 
 	@Test
 	public void test_system_is_initialized() {
-		World world = new World();
-		VoidSys vs = world.setSystem(new VoidSys());
-		world.initialize();
+		VoidSys vs = new VoidSys();
+		World world = new World(new WorldConfiguration()
+				.setSystem(vs));
 
 		assertTrue(vs.initialized);
 	}

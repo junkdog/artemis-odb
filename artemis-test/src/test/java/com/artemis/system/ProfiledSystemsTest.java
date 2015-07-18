@@ -1,5 +1,6 @@
 package com.artemis.system;
 
+import com.artemis.WorldConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,10 +13,9 @@ public class ProfiledSystemsTest {
 	
 	@Test
 	public void plain_profiled_system_invoked_during_process() {
-		World world = new World();
-		world.setSystem(new ProfiledSystem());
-		world.initialize();
-		
+		World world = new World(new WorldConfiguration()
+				.setSystem(new ProfiledSystem()));
+
 		Assert.assertNull(
 				ProfiledSystem.class.getAnnotation(Profile.class));
 		
@@ -37,10 +37,9 @@ public class ProfiledSystemsTest {
 	
 	@Test
 	public void multiple_exit_points_profiled_system() {
-		World world = new World();
-		world.setSystem(new ProfiledSystemB());
-		world.initialize();
-		
+		World world = new World(new WorldConfiguration()
+				.setSystem(new ProfiledSystemB()));
+
 		Assert.assertNull(
 				ProfiledSystemB.class.getAnnotation(Profile.class));
 		

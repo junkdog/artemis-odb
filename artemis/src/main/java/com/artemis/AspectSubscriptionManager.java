@@ -25,6 +25,9 @@ public class AspectSubscriptionManager extends Manager {
 		EntitySubscription entitySubscription = new EntitySubscription(world, builder);
 		subscriptionMap.put(builder, entitySubscription);
 		subscriptions.add(entitySubscription);
+
+		world.getEntityManager().synchronize(entitySubscription);
+
 		return entitySubscription;
 	}
 
@@ -39,7 +42,6 @@ public class AspectSubscriptionManager extends Manager {
 		deleted.setSize(0);
 	}
 
-	// TODO: heed later added subscriptions too
 	void processComponentIdentity(int id, BitSet componentBits) {
 		Object[] subscribers = subscriptions.getData();
 		for (int i = 0, s = subscriptions.size(); s > i; i++) {

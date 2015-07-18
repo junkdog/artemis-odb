@@ -11,6 +11,7 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 
+@Wire
 public class MapperTest {
 	
 	private World world;
@@ -20,11 +21,11 @@ public class MapperTest {
 
 	@Before
 	public void init() {
-		world = new World();
-		mappedSystem = world.setSystem(new MappedSystem());
-		mappedManager = world.setManager(new MappedManager());
+		world = new World(new WorldConfiguration()
+				.setSystem(new MappedSystem())
+				.setManager(new MappedManager()));
 		
-		world.initialize();
+		world.inject(this);
 		
 		entity = world.createEntity();
 		EntityEdit edit = entity.edit();

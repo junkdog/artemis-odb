@@ -15,10 +15,10 @@ public class FactoryWireTest {
 	
 	@Test
 	public void test_inject_entity_factories() {
-		World w = new World();
-		Man man = w.setManager(new Man());
-		w.initialize();
-		
+		Man man = new Man();
+		World w = new World(new WorldConfiguration()
+				.setManager(man));
+
 		assertNotNull(man.ship);
 		assertEquals(Ship.class.getName() + "Impl", man.ship.getClass().getName());
 		assertNotNull(man.shipNoMethods);

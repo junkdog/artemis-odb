@@ -29,18 +29,22 @@ public class WireTest {
 
 	@Before
 	public void init() {
-		world = new World();
-		mappedSystem = world.setSystem(new MappedSystem());
-		mappedSystemAll = world.setSystem(new MappedSystemAll());
-		extendedSystem = world.setSystem(new ExtendedSystem());
-		mappedManager = world.setManager(new MappedManager());
-		mappedManagerAll = world.setManager(new MappedManagerAll());
-		extendedManager = world.setManager(new ExtendedManager());
-		world.setManager(new TagManager());
-		
-		
-		world.initialize();
-		
+		mappedSystem = new MappedSystem();
+		mappedSystemAll = new MappedSystemAll();
+		extendedSystem = new ExtendedSystem();
+		mappedManager = new MappedManager();
+		mappedManagerAll = new MappedManagerAll();
+		extendedManager = new ExtendedManager();
+
+		world = new World(new WorldConfiguration()
+				.setManager(TagManager.class)
+				.setManager(mappedManager)
+				.setManager(mappedManagerAll)
+				.setManager(extendedManager)
+				.setSystem(mappedSystem)
+				.setSystem(mappedSystemAll)
+				.setSystem(extendedSystem));
+
 		entity = world.createEntity();
 		EntityEdit edit = entity.edit();
 		edit.create(ComponentX.class);
@@ -99,44 +103,41 @@ public class WireTest {
 	
 	@Test(expected=MundaneWireException.class)
 	public void ensure_inherited_systems_not_injected() {
-		World world = new World();
-		world.setSystem(new FailingSystem());
-		world.initialize();
+		World world = new World(new WorldConfiguration()
+				.setSystem(new FailingSystem()));
 	}
 	
 	@Test
 	public void ensure_inherited_managers_not_injected() {
-		World world = new World();
-		FailingSystem failingSystem = world.setSystem(new FailingSystem());
-		FailingManager failingManager = world.setManager(new FailingManager());
-		world.initialize();
-		
+		FailingSystem failingSystem = new FailingSystem();
+		FailingManager failingManager = new FailingManager();
+		World world = new World(new WorldConfiguration()
+				.setManager(failingManager)
+				.setSystem(failingSystem));
+
 		assertNull(failingManager.x);
 		assertNull(failingSystem.x);
 	}
 	
 	@Test(expected=MundaneWireException.class)
 	public void fail_on_system_not_injected() {
-		World world = new World();
-		world.setSystem(new FailingNpeSystem());
-		world.initialize();
+		World world = new World(new WorldConfiguration()
+				.setSystem(new FailingNpeSystem()));
 	}
 	
 	@Test(expected=MundaneWireException.class)
 	public void fail_on_manager_not_injected() {
-		World world = new World();
-		world.setManager(new FailingNpeManager());
-		world.initialize();
+		World world = new World(new WorldConfiguration()
+				.setManager(new FailingNpeManager()));
 	}
 	
 	@Test
 	public void inject_pojo_object() {
-		World world = new World();
-		world.setManager(new TagManager());
-		world.setSystem(new MappedSystem());
-		world.setSystem(new MappedSystemAll());
-		world.initialize();
-		
+		World world = new World(new WorldConfiguration()
+				.setManager(TagManager.class)
+				.setSystem(new MappedSystem())
+				.setSystem(new MappedSystemAll()));
+
 		PojoWireNoWorld obj = new PojoWireNoWorld();
 		world.inject(obj);
 		
@@ -145,27 +146,14 @@ public class WireTest {
 		assertNotNull(obj.mappedSystem);
 	}
 	
-	@Test(expected=MundaneWireException.class)
-	public void inject_pojo_object_fail_before_world_initialize() {
-		World world = new World();
-		world.setManager(new TagManager());
-		world.setSystem(new MappedSystem());
-		world.setSystem(new MappedSystemAll());
-		
-		PojoWireNoWorld obj = new PojoWireNoWorld();
-		world.inject(obj);
-	}
-	
 	@Test
 	public void inject_anything_into_everything() {
-		
 		World world = new World(new WorldConfiguration()
 			.register("world")
 			.register("hupp", "n1")
-			.register("blergh", "n2"));
-		world.setManager(new TagManager());
-		world.initialize();
-		
+			.register("blergh", "n2")
+			.setManager(TagManager.class));
+
 		SomeThing st = new SomeThing();
 		world.inject(st);
 
@@ -197,9 +185,8 @@ public class WireTest {
 	
 	@Test @SuppressWarnings("static-method")
 	public void inject_static_field_inherited() {
-		World w = new World();
-		w.setManager(new ManagerWithStaticField());
-		w.initialize();
+		World w = new World(new WorldConfiguration()
+				.setManager(new ManagerWithStaticField()));
 		w.process();
 		
 		assertNotNull(ManagerWithStaticField.mapper);

@@ -12,6 +12,7 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 
+@Wire
 public class ArchetypeTest {
 	private World world;
 	private Es1 es1;
@@ -22,11 +23,11 @@ public class ArchetypeTest {
 
 	@Before
 	public void init() {
-		world = new World();
-		es1 = world.setSystem(new Es1());
-		es2 = world.setSystem(new Es2());
-		world.initialize();
-		
+		world = new World(new WorldConfiguration()
+				.setSystem(new Es1())
+				.setSystem(new Es2()));
+		world.inject(this);
+
 		arch1 = new ArchetypeBuilder()
 			.build(world);
 		arch2 = new ArchetypeBuilder()

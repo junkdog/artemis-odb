@@ -1,11 +1,12 @@
 package com.artemis;
 
+import com.artemis.annotations.Wire;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 
-@SuppressWarnings("deprecation")
+@Wire @SuppressWarnings("deprecation")
 public class EntityStateTest {
 	private World world;
 	private Entity e;
@@ -13,8 +14,9 @@ public class EntityStateTest {
 
 	@Before
 	public void init() {
-		world = new World();
-		management = world.setManager(new Management());
+		world = new World(new WorldConfiguration()
+				.setManager(Management.class));
+		world.inject(this);
 		world.initialize();
 		
 		e = world.createEntity();
@@ -38,7 +40,7 @@ public class EntityStateTest {
 		Assert.assertEquals(-1, management.state);
 	}
 	
-	private static class Management extends Manager {
+	public static class Management extends Manager {
 		int state = 0;
 		
 		@Override

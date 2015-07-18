@@ -87,7 +87,7 @@ public class EntitySubscription {
 		aspectCache.set(id, aspect.isInterested(componentBits));
 	}
 
-	private void rebuildCompressedActives() {
+	void rebuildCompressedActives() {
 		BitSet bs = activeEntityIds;
 		int size = bs.cardinality();
 		entities.setSize(size);
@@ -98,7 +98,7 @@ public class EntitySubscription {
 		}
 	}
 
-	private final void check(Entity e) {
+	final void check(Entity e) {
 		int id = e.getId();
 		boolean interested = aspectCache.get(em.getIdentity(e)) && em.isActive(id) && em.isEnabled(id);
 		boolean contains = activeEntityIds.get(id);
@@ -128,7 +128,7 @@ public class EntitySubscription {
 		dirty |= informEntityChanges();
 	}
 
-	private boolean informEntityChanges() {
+	boolean informEntityChanges() {
 		if (inserted.isEmpty() && removed.isEmpty())
 			return false;
 

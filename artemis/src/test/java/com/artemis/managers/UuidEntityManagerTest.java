@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 
 import java.util.UUID;
 
+import com.artemis.WorldConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,9 +30,9 @@ public class UuidEntityManagerTest {
 	
 	@Test
 	public void uuid_assigned() {
-		World world = new World();
-		world.setManager(new UuidEntityManager());
-		world.initialize();
+		UuidEntityManager uuidManager = new UuidEntityManager();
+		World world = new World(new WorldConfiguration()
+				.setManager(uuidManager));
 		
 		Entity entity = world.createEntity();
 		
@@ -52,10 +53,10 @@ public class UuidEntityManagerTest {
 	
 	@Test
 	public void uuid_updates_work() {
-		World world = new World();
-		UuidEntityManager uuidManager = world.setManager(new UuidEntityManager());
-		world.initialize();
-		
+		UuidEntityManager uuidManager = new UuidEntityManager();
+		World world = new World(new WorldConfiguration()
+				.setManager(uuidManager));
+
 		Entity entity = world.createEntity();
 		
 		UUID uuid0 = entity.getUuid();
@@ -75,9 +76,9 @@ public class UuidEntityManagerTest {
 	
 	@Test
 	public void explicit_uuids() {
-		World world = new World();
-		world.setManager(new UuidEntityManager());
-		world.initialize();
+		UuidEntityManager uuidManager = new UuidEntityManager();
+		World world = new World(new WorldConfiguration()
+				.setManager(uuidManager));
 		
 		UUID[] uuids = new UUID[3];
 		uuids[0] = UUID.randomUUID();

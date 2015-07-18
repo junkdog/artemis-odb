@@ -264,6 +264,20 @@ public class EntityManager extends Manager {
 		return entityToIdentity.get(e.getId());
 	}
 
+	void synchronize(EntitySubscription es) {
+		for (int i = 1; highestSeenIdentity >= i; i++) {
+			BitSet componentBits = identityResolver.composition.get(i);
+			es.processComponentIdentity(i, componentBits);
+		}
+
+		for (int i = 0; i < entities.size(); i++) {
+			es.check(entities.get(i));
+		}
+
+		es.informEntityChanges();
+		es.rebuildCompressedActives();
+	}
+
 	/** Tracks all unique component compositions. */
 	private static final class ComponentIdentityResolver {
 		private final Bag<BitSet> composition;

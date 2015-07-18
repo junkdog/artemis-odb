@@ -18,10 +18,8 @@ public class EntitySystemTest {
 	@SuppressWarnings("static-method")
 	@Test(expected = NoSuchElementException.class)
 	public void test_process_one_inactive() {
-		World w = new World();
-
-		w.setSystem(new IteratorTestSystem(0));
-		w.initialize();
+		World w = new World(new WorldConfiguration()
+				.setSystem(new IteratorTestSystem(0)));
 
 		Entity e = w.createEntity();
 		e.edit().add(new C());
@@ -46,10 +44,11 @@ public class EntitySystemTest {
 
 	@Test
 	public void aspect_exclude_only() {
-		World w = new World();
-		ExcludingSystem es1 = w.setSystem(new ExcludingSystem());
-		EmptySystem es2 = w.setSystem(new EmptySystem());
-		w.initialize();
+		ExcludingSystem es1 = new ExcludingSystem();
+		EmptySystem es2 = new EmptySystem();
+		World w = new World(new WorldConfiguration()
+				.setSystem(es1)
+				.setSystem(es2));
 
 		Entity e = w.createEntity();
 		w.process();

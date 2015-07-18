@@ -7,8 +7,6 @@ import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 import org.junit.Test;
 
-import java.util.BitSet;
-
 import static org.junit.Assert.*;
 
 public class EntitySubscriptionTest {
@@ -24,7 +22,6 @@ public class EntitySubscriptionTest {
 	@Test
 	public void entity_subscriptions_are_reused_when_appropriate_test() {
 		World world = new World();
-		world.initialize();
 
 		AspectSubscriptionManager asm = world.getManager(AspectSubscriptionManager.class);
 		EntitySubscription subscription = asm.get(Aspect.all(ComponentX.class));
@@ -35,9 +32,9 @@ public class EntitySubscriptionTest {
 
 	@Test
 	public void manager_entity_subscription_test() {
-		World world = new World();
-		SubscribingManager sm = world.setManager(new SubscribingManager());
-		world.initialize();
+		SubscribingManager sm = new SubscribingManager();
+		World world = new World(new WorldConfiguration()
+				.setManager(sm));
 
 		assertEquals(0, sm.inserted);
 		assertEquals(0, sm.removed);

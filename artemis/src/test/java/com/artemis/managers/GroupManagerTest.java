@@ -3,12 +3,15 @@ package com.artemis.managers;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
+import com.artemis.WorldConfiguration;
+import com.artemis.annotations.Wire;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.artemis.Entity;
 import com.artemis.World;
 
+@Wire
 public class GroupManagerTest {
 	private static final String GROUPIE = "groupie";
 	private static final String GROUPIE2 = "groupie2";
@@ -18,9 +21,10 @@ public class GroupManagerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		world = new World();
-		gm = world.setManager(new GroupManager());
-		world.initialize();
+		gm = new GroupManager();
+		world = new World(new WorldConfiguration()
+				.setManager(gm));
+		world.inject(this);
 	}
 	
 	@Test

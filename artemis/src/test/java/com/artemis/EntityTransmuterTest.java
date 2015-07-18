@@ -1,5 +1,6 @@
 package com.artemis;
 
+import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.component.Packed;
@@ -10,6 +11,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+@Wire
 public class EntityTransmuterTest {
 
 	private World world;
@@ -19,9 +21,9 @@ public class EntityTransmuterTest {
 
 	@Before
 	public void init() {
-		world = new World();
-		es = world.setSystem(new ES1());
-		world.initialize();
+		world = new World(new WorldConfiguration()
+				.setSystem(new ES1()));
+		world.inject(this);
 
 		transmuter3 = new EntityTransmuterFactory(world)
 			.add(ComponentX.class)

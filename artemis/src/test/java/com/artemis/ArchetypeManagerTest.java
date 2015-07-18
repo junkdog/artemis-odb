@@ -10,6 +10,7 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 
+@Wire
 public class ArchetypeManagerTest {
 	private World world;
 	private Es1 es1;
@@ -21,11 +22,12 @@ public class ArchetypeManagerTest {
 
 	@Before
 	public void init() {
-		world = new World();
-		factory = world.setManager(new EntityFactory());
-		es1 = world.setSystem(new Es1());
-		es2 = world.setSystem(new Es2());
-		world.initialize();
+		world = new World(new WorldConfiguration()
+				.setManager(new EntityFactory())
+				.setSystem(new Es1())
+				.setSystem(new Es2()));
+
+		world.inject(this);
 	}
 	
 	@Test

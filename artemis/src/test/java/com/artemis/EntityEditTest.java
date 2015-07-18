@@ -13,10 +13,10 @@ public class EntityEditTest {
 	@SuppressWarnings("static-method")
 	@Test
 	public void basic_entity_edit_test() {
-		World world = new World();
-		LeManager lm = world.setManager(new LeManager());
-		world.initialize();
-		
+		LeManager lm = new LeManager();
+		World world = new World(new WorldConfiguration()
+				.setManager(lm));
+
 		Entity e = world.createEntity();
 		world.process();
 		

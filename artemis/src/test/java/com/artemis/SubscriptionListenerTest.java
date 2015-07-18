@@ -19,10 +19,11 @@ public class SubscriptionListenerTest {
 
 	@Test
 	public void subscriptionlistener_inform_about_first_entities_test() {
-		World world = new World();
-		Es1 es1 = world.setSystem(new Es1());
-		Es2 es2 = world.setSystem(new Es2());
-		world.initialize();
+		Es1 es1 = new Es1();
+		Es2 es2 = new Es2();
+		World world = new World(new WorldConfiguration()
+				.setSystem(es1)
+				.setSystem(es2));
 
 		world.process();
 
@@ -33,10 +34,11 @@ public class SubscriptionListenerTest {
 
 	@Test
 	public void entity_components_changed_by_edit_and_transmuter_test() {
-		World w = new World();
-		LeSystemPetite lsp1 = w.setSystem(new LeSystemPetite());
-		LeSystemPetite2 lsp2 = w.setSystem(new LeSystemPetite2());
-		w.initialize();
+		LeSystemPetite lsp1 = new LeSystemPetite();
+		LeSystemPetite2 lsp2 = new LeSystemPetite2();
+		World w = new World(new WorldConfiguration()
+				.setSystem(lsp1)
+				.setSystem(lsp2));
 
 		EntityTransmuter transmuter = new EntityTransmuterFactory(w)
 				.add(ComponentX.class)
@@ -57,10 +59,11 @@ public class SubscriptionListenerTest {
 
 	@Test
 	public void entity_components_changed_by_archetype_and_edit_test() {
-		World w = new World();
-		LeSystemPetite lsp1 = w.setSystem(new LeSystemPetite());
-		LeSystemPetite2 lsp2 = w.setSystem(new LeSystemPetite2());
-		w.initialize();
+		LeSystemPetite lsp1 = new LeSystemPetite();
+		LeSystemPetite2 lsp2 = new LeSystemPetite2();
+		World w = new World(new WorldConfiguration()
+				.setSystem(lsp1)
+				.setSystem(lsp2));
 
 		Archetype archetype = new ArchetypeBuilder()
 				.add(ComponentY.class)
@@ -79,10 +82,11 @@ public class SubscriptionListenerTest {
 
 	@Test
 	public void entity_components_changed_by_archetype_and_transmuter_test() {
-		World w = new World();
-		LeSystemPetite lsp1 = w.setSystem(new LeSystemPetite());
-		LeSystemPetite2 lsp2 = w.setSystem(new LeSystemPetite2());
-		w.initialize();
+		LeSystemPetite lsp1 = new LeSystemPetite();
+		LeSystemPetite2 lsp2 = new LeSystemPetite2();
+		World w = new World(new WorldConfiguration()
+				.setSystem(lsp1)
+				.setSystem(lsp2));
 
 		Archetype archetype = new ArchetypeBuilder()
 				.add(ComponentY.class)

@@ -11,6 +11,7 @@ import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.systems.VoidEntitySystem;
 
+@Wire
 public class ArchetypeSystemTest {
 	private World world;
 	private Es1 es1;
@@ -22,11 +23,11 @@ public class ArchetypeSystemTest {
 
 	@Before
 	public void init() {
-		world = new World();
-		factory = world.setSystem(new EntityFactory());
-		es1 = world.setSystem(new Es1());
-		es2 = world.setSystem(new Es2());
-		world.initialize();
+		world = new World(new WorldConfiguration()
+				.setSystem(new EntityFactory())
+				.setSystem(new Es1())
+				.setSystem(new Es2()));
+		world.inject(this);
 	}
 	
 	@Test

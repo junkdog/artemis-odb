@@ -10,6 +10,9 @@
   - EntitySystem no longer implements EntityObserver.
   - ArtemisProfiler#initialize now requires BaseSystem instead of EntitySystem.
   - VoidEntitySystem no longer subclass of EntitySystem.
+  - **`setSystem`** and **`setManager`** now under `WorldConfiguration`. This
+    effectively removes `World#initialize`, as initializations happens inside
+	World's constructor.
 
 - New internal EntitySubscription and accompanying AspectSubscriptionManager
   resulting in cleaner and more flexible EntitySystems.

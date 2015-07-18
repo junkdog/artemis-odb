@@ -3,7 +3,6 @@ package com.artemis;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import com.artemis.annotations.Wire;
@@ -11,24 +10,14 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.DelayedEntityProcessingSystem;
 import com.artemis.systems.EntityProcessingSystem;
-import com.artemis.systems.VoidEntitySystem;
 import com.artemis.utils.Bag;
 
 public class WorldTest
 {
-	private World world;
-
-	@Before
-	public void setUp() throws Exception
-	{
-		world = new World();
-	}
-	
 	@Test
 	public void get_component_should_not_throw_exception()
 	{
-		world = new World();
-		world.initialize();
+		World world = new World(new WorldConfiguration());
 
 		for (int i = 0; i < 100; i++) {
 			Entity e = world.createEntity();
@@ -46,10 +35,10 @@ public class WorldTest
 	@Test
 	public void access_component_after_deletion_in_previous_system()
 	{
-		world.setSystem(new SystemComponentXRemover());
-		world.setSystem(new SystemB());
-		world.initialize();
-		
+		World world = new World(new WorldConfiguration()
+				.setSystem(new SystemComponentXRemover())
+				.setSystem(new SystemB()));
+
 		Entity e = world.createEntity();
 		e.edit().create(ComponentX.class);
 		
@@ -60,16 +49,16 @@ public class WorldTest
 	public void delayed_entity_procesing_ensure_entities_processed()
 	{
 		ExpirationSystem es = new ExpirationSystem();
-		world.setSystem(es);
-		world.initialize();
-		
-		Entity e1 = createEntity();
+		World world = new World(new WorldConfiguration()
+				.setSystem(es));
+
+		Entity e1 = createEntity(world);
 		
 		world.setDelta(0.5f);
 		world.process();
 		assertEquals(0, es.expiredLastRound);
 		
-		Entity e2 = createEntity();
+		Entity e2 = createEntity(world);
 		
 		world.setDelta(0.75f);
 		world.process();
@@ -88,7 +77,7 @@ public class WorldTest
 		assertEquals(0, es.getActives().size());
 	}
 
-	private Entity createEntity()
+	private Entity createEntity(World world)
 	{
 		Entity e = world.createEntity();
 		e.edit().create(ComponentY.class);

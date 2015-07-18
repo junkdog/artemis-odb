@@ -10,15 +10,19 @@ import org.junit.Test;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.DelayedEntityProcessingSystem;
 
+@Wire
 public class DelayedEntityProcessingSystemTest
 {
 	protected LinkedList<Entity> entitiesOrdered;
 	private World world;
+	private ExpirationSystem es;
 
 	@Before
 	public void setUp() throws Exception
 	{
-		world = new World();
+		world = new World(new WorldConfiguration()
+				.setSystem(new ExpirationSystem()));
+		world.inject(this);
 		entitiesOrdered = new LinkedList<Entity>();
 	}
 
@@ -26,10 +30,6 @@ public class DelayedEntityProcessingSystemTest
 	public void constant_firing()
 	{
 		assertEquals(0, entitiesOrdered.size());
-
-		final ExpirationSystem es = new ExpirationSystem();
-		world.setSystem(es);
-		world.initialize();
 
 		createEntity();
 
@@ -83,10 +83,6 @@ public class DelayedEntityProcessingSystemTest
 	public void constant_firing_smaller_deltas()
 	{
 		assertEquals(0, entitiesOrdered.size());
-
-		final ExpirationSystem es = new ExpirationSystem();
-		world.setSystem(es);
-		world.initialize();
 
 		createEntity();
 

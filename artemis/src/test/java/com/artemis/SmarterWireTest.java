@@ -11,6 +11,7 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.VoidEntitySystem;
 
+@Wire
 public class SmarterWireTest {
 	
 	private World world;
@@ -20,11 +21,11 @@ public class SmarterWireTest {
 
 	@Before
 	public void init() {
-		world = new World();
-		entityFactory = world.setManager(new EntityFactory());
-		tiledMapSystem = world.setSystem(new TiledMapSystem());
+		world = new World(new WorldConfiguration()
+			.setManager(new EntityFactory())
+			.setSystem(new TiledMapSystem()));
 		
-		world.initialize();
+		world.inject(this);
 		
 		world.process();
 	}

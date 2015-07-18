@@ -15,8 +15,6 @@ import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
 
-import static com.artemis.EntityManager.NO_COMPONENTS;
-
 
 /**
  * The primary instance for the framework.
@@ -75,7 +73,7 @@ public class World {
 	/**
 	 * Contains all managers and managers classes mapped.
 	 */
-	private final Map<Class<? extends Manager>, Manager> managers;
+	final Map<Class<? extends Manager>, Manager> managers;
 	/**
 	 * Contains all managers unordered.
 	 */
@@ -83,7 +81,7 @@ public class World {
 	/**
 	 * Contains all systems and systems classes mapped.
 	 */
-	private final Map<Class<?>, BaseSystem> systems;
+	final Map<Class<?>, BaseSystem> systems;
 	/**
 	 * Contains all systems unordered.
 	 */
@@ -94,10 +92,11 @@ public class World {
 	
 	final EntityEditPool editPool = new EntityEditPool(this);
 	
-	private boolean initialized;
+//	private boolean initialized;
 
 	private SystemInvocationStrategy invocationStrategy;
-	
+	private WorldConfiguration configuration;
+
 	/**
 	 * Creates a new world.
 	 * <p>
@@ -125,11 +124,12 @@ public class World {
 	 * </p>
 	 */
 	public World(WorldConfiguration configuration) {
+		this.configuration = configuration;
 		managers = new IdentityHashMap<Class<? extends Manager>, Manager>();
-		managersBag = new Bag<Manager>();
+		managersBag = configuration.managers;
 
 		systems = new IdentityHashMap<Class<?>, BaseSystem>();
-		systemsBag = new Bag<BaseSystem>();
+		systemsBag = configuration.systems;
 
 		added = new WildBag<Entity>();
 		changed = new WildBag<Entity>();
@@ -143,30 +143,26 @@ public class World {
 		enabledPerformer = new EnabledPerformer();
 		disabledPerformer = new DisabledPerformer();
 
-		cm = setManager(new ComponentManager(configuration.expectedEntityCount()));
-		em = setManager(new EntityManager(configuration.expectedEntityCount()));
-		am = setManager(new AspectSubscriptionManager());
-
+		cm = new ComponentManager(configuration.expectedEntityCount());
+		em = new EntityManager(configuration.expectedEntityCount());
+		am = new AspectSubscriptionManager();
 		injector = new Injector(this, configuration);
+
+		configuration.initialize(this, injector, am);
+
+		registerUuids = managers.get(UuidEntityManager.class) != null;
+		if (invocationStrategy == null)
+			setInvocationStrategy(new InvocationStrategy());
 	}
 	
 	/**
 	 * Makes sure all managers systems are initialized in the order they were
 	 * added.
+	 *
+	 * @deprecated automatically covered by {@link WorldConfiguration}.
 	 */
+	@Deprecated
 	public void initialize() {
-		initialized = true;
-		injector.update();
-		for (int i = 0; i < managersBag.size(); i++) {
-			Manager manager = managersBag.get(i);
-			injector.inject(manager);
-			manager.initialize();
-		}
-
-		initializeSystems();
-
-		if (invocationStrategy == null)
-			setInvocationStrategy(new InvocationStrategy());
 	}
 
 	/**
@@ -183,16 +179,10 @@ public class World {
 	 * @param target Object to inject into.
 	 */
 	public void inject(Object target) {
-		assertInitialized();
 		if (!ClassReflection.isAnnotationPresent(target.getClass(), Wire.class))
 			throw new MundaneWireException(target.getClass().getName() + " must be annotated with @Wire");
 
 		injector.inject(target);
-	}
-
-	private void assertInitialized() {
-		if (!initialized)
-			throw new MundaneWireException("World#initialize() has not yet been called.");
 	}
 
 	/**
@@ -228,8 +218,6 @@ public class World {
 	public <T extends EntityFactory> T createFactory(Class<?> factory) {
 		if (!factory.isInterface())
 			throw new MundaneWireException("Expected interface for type: " + factory);
-		
-		assertInitialized();
 		
 		String impl = factory.getName() + "Impl";
 		try {
@@ -269,21 +257,12 @@ public class World {
 	 * @param <T>	 class type of the manager
 	 * @param manager manager to be added
 	 * @return the manager
+	 *
+	 * @deprecated {@link WorldConfiguration#setManager(Manager)}
 	 */
+	@Deprecated
 	public final <T extends Manager> T setManager(T manager) {
-		if (initialized) {
-			String err = "It is forbidden to add managers after calling World#initialized.";
-			throw new RuntimeException(err);
-		}
-
-		managers.put(manager.getClass(), manager);
-		managersBag.add(manager);
-		manager.setWorld(this);
-		
-		if (manager instanceof UuidEntityManager)
-			registerUuids = true;
-
-		return manager;
+		return null;
 	}
 
 	/**
@@ -471,9 +450,11 @@ public class World {
 	 * @param <T>	the system class type
 	 * @param system the system to add
 	 * @return the added system
+	 * * @deprecated {@link WorldConfiguration#setSystem(T)}
 	 */
+	@Deprecated
 	public <T extends BaseSystem> T setSystem(T system) {
-		return setSystem(system, false);
+		return null;
 	}
 
 	/**
@@ -484,21 +465,11 @@ public class World {
 	 * @param passive whether or not this system will be processed by
 	 *				{@link #process()}
 	 * @return the added system
+	 * @deprecated {@link WorldConfiguration#setSystem(T, boolean)}
 	 */
+	@Deprecated
 	public <T extends BaseSystem> T setSystem(T system, boolean passive) {
-
-		if (initialized) {
-			String err = "It is forbidden to add systems after calling World#initialized.";
-			throw new RuntimeException(err);
-		}
-
-		system.setPassive(passive);
-		system.setWorld(this);
-
-		systems.put(system.getClass(), system);
-		systemsBag.add(system);
-
-		return system;
+		return null;
 	}
 
 	/**
@@ -557,8 +528,6 @@ public class World {
 	 * Process all non-passive systems.
 	 */
 	public void process() {
-		assertInitialized();
-
 		updateEntityStates();
 
 		em.clean();
@@ -592,15 +561,6 @@ public class World {
 			// @deprecate
 			am.process(added, enabled, disabled);
 		}
-	}
-
-	private void initializeSystems() {
-		for (int i = 0, s = systemsBag.size(); i < s; i++) {
-			BaseSystem system = systemsBag.get(i);
-			injector.inject(system);
-			system.initialize();
-		}
-		am.processComponentIdentity(NO_COMPONENTS, new BitSet());
 	}
 
 	boolean hasUuidManager() {
