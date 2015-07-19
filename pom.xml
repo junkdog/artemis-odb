@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-parent</artifactId>
-	<version>0.9.1-SNAPSHOT</version>
+	<version>0.10.0</version>
 	<packaging>pom</packaging>
 	<name>artemis parent</name>
 	<description>Fork of Artemis Entity System Framework.</description>
@@ -21,7 +21,8 @@
 		<url>https://github.com/junkdog/artemis-odb/</url>
 		<connection>scm:git:git@github.com:junkdog/artemis-odb.git</connection>
 		<developerConnection>scm:git:git@github.com:junkdog/artemis-odb.git</developerConnection>
-	</scm>
+	  <tag>artemis-parent-0.10.0</tag>
+  </scm>
 
 	<licenses>
 		<license>
