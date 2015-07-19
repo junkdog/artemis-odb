@@ -271,7 +271,9 @@ public class EntityManager extends Manager {
 		}
 
 		for (int i = 0; i < entities.size(); i++) {
-			es.check(entities.get(i));
+			Entity e = entities.get(i);
+			if (e != null && !disabled.get(e.id))
+				es.check(e);
 		}
 
 		es.informEntityChanges();

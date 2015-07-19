@@ -1,7 +1,12 @@
 ## Change Log
 
-#### Version: 0.9.1-SNAPSHOT
-- Reduced visibility of AspectionSubscriptionManager constructor.
+#### Version: 0.10.2-SNAPSHOT
+
+
+#### Version: 0.10.1 - 2015-07-20
+- **Fix**: Reduced visibility of AspectionSubscriptionManager constructor.
+- **Fix**: NPE related to `EntitySubscription#createSubscription`.
+
 
 #### Version: 0.10.0 - 2015-07-19
 - **MINOR BREAKING CHANGES**
