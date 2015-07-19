@@ -1,6 +1,8 @@
 ## Change Log
 
 #### Version: 0.9.1-SNAPSHOT
+- Reduced visibility of AspectionSubscriptionManager constructor.
+
 #### Version: 0.10.0 - 2015-07-19
 - **MINOR BREAKING CHANGES**
   - BaseSystem is now the most basic system type.

@@ -11,7 +11,7 @@ public class AspectSubscriptionManager extends Manager {
 	private final Map<Aspect.Builder, EntitySubscription> subscriptionMap;
 	private Bag<EntitySubscription> subscriptions;
 
-	public AspectSubscriptionManager() {
+	protected AspectSubscriptionManager() {
 		subscriptionMap = new HashMap<Aspect.Builder, EntitySubscription>();
 		subscriptions = new Bag<EntitySubscription>();
 	}
