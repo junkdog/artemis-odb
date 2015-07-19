@@ -1,6 +1,7 @@
 ## Change Log
 
 #### Version: 0.9.1-SNAPSHOT
+#### Version: 0.10.0 - 2015-07-19
 - **MINOR BREAKING CHANGES**
   - BaseSystem is now the most basic system type.
     - World#getSystems returns Bag<BaseSystem>.
@@ -21,6 +22,7 @@
 - Aspect split into Aspect and Aspect.Builder.
   - Simplified static method names, mirroring Aspect's old instance methods.
 - EntityFactories support for enum values.
+- Children of EntitySystems can create flyweight entities.
 - **Fix**: Uninitialized worlds threw cryptic NPE when invoking #process.
 - **Fix**: `World#createFactory(Class<EntityFactory>)` was package local.
 - **Fix**: `Entity#edit` used together with EntityTransmuters or Archetypes
