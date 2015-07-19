@@ -2,15 +2,10 @@ package com.artemis.component;
 
 import static org.junit.Assert.assertEquals;
 
+import com.artemis.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.Aspect;
-import com.artemis.ComponentMapper;
-import com.artemis.Entity;
-import com.artemis.EntityEdit;
-import com.artemis.PackedComponent;
-import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.util.Vec2f;
@@ -25,11 +20,10 @@ public class WorldStructWeavingBase {
 
 	@Before
 	public void setup() {
-		world = new World();
-		world.setSystem(new EntitySystemA());
-		world.setSystem(new EntitySystemB());
-		world.initialize();
-		
+		world = new World(new WorldConfiguration()
+				.setSystem(new EntitySystemA())
+				.setSystem(new EntitySystemB()));
+
 		Entity e1 = world.createEntity();
 		Entity e2 = world.createEntity();
 		

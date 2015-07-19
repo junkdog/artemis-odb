@@ -11,9 +11,8 @@ public class Issue206SystemTest {
 
 	@Test
 	public void test_edited_bitset_sanity() {
-		World world = new World();
-		world.setSystem(new TestSystemAB());
-		world.initialize();
+		World world = new World(new WorldConfiguration()
+				.setSystem(new TestSystemAB()));
 
 		Entity e = world.createEntity();
 		e.edit().create(CompA.class);

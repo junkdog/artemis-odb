@@ -165,9 +165,8 @@ public class WireTest {
 	
 	@Test @SuppressWarnings("static-method")
 	public void inject_static_field() {
-		World w = new World();
-		w.setManager(new ManagerWithStaticField());
-		w.initialize();
+		World w = new World(new WorldConfiguration()
+				.setManager(new ManagerWithStaticField()));
 		w.process();
 		
 		assertNotNull(ManagerWithStaticField.mapper);
@@ -175,9 +174,8 @@ public class WireTest {
 	
 	@Test @SuppressWarnings("static-method")
 	public void inject_static_field_extended() {
-		World w = new World();
-		w.setManager(new ExtendedStaticManager());
-		w.initialize();
+		World w = new World(new WorldConfiguration()
+				.setManager(new ExtendedStaticManager()));
 		w.process();
 		
 		assertNotNull(ManagerWithStaticField.mapper);

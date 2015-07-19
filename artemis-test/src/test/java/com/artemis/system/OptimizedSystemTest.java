@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 
 import java.lang.reflect.Method;
 
+import com.artemis.WorldConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -41,9 +42,8 @@ public class OptimizedSystemTest {
 		Method m = processMethod(OptimizedSystemAdditional.class);
 		assertEquals(PRIVATE, m.getModifiers() & PRIVATE);
 
-		World world = new World();
-		world.setSystem(new OptimizedSystemAdditional());
-		world.initialize();
+		World world = new World(new WorldConfiguration()
+				.setSystem(new OptimizedSystemAdditional()));
 
 		world.process();
 	}

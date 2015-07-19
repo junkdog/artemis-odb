@@ -16,14 +16,12 @@ public class MultiWorldTest
 	@Test
 	public void uniqie_component_ids_per_world()
 	{
-		World innerWorld = new World();
-		innerWorld.setSystem(new EmptySystem());
-		innerWorld.initialize();
-		
-		world = new World();
-		world.setSystem(new InnerWorldProcessingSystem(innerWorld));
-		world.initialize();
-		
+		World innerWorld = new World(new WorldConfiguration()
+				.setSystem(new EmptySystem()));
+
+		world = new World(new WorldConfiguration()
+				.setSystem(new InnerWorldProcessingSystem(innerWorld)));
+
 		world.createEntity().edit().create(ComponentX.class);
 		innerWorld.createEntity().edit().create(ComponentY.class);
 		innerWorld.createEntity().edit().create(ComponentX.class);

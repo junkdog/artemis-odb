@@ -262,7 +262,7 @@ public class World {
 	 */
 	@Deprecated
 	public final <T extends Manager> T setManager(T manager) {
-		return null;
+		throw new MundaneWireException("use WorldConfiguration#setManager");
 	}
 
 	/**
@@ -454,7 +454,7 @@ public class World {
 	 */
 	@Deprecated
 	public <T extends BaseSystem> T setSystem(T system) {
-		return null;
+		throw new MundaneWireException("use WorldConfiguration#setSystem");
 	}
 
 	/**
@@ -469,7 +469,7 @@ public class World {
 	 */
 	@Deprecated
 	public <T extends BaseSystem> T setSystem(T system, boolean passive) {
-		return null;
+		throw new MundaneWireException("use WorldConfiguration#setSystem");
 	}
 
 	/**

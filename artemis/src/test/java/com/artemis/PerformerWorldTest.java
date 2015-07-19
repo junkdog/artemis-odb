@@ -19,9 +19,8 @@ public class PerformerWorldTest {
 
 	@Before
 	public void setUp() {
-		world = new World();
-		world.setSystem(new SystemA());
-		world.initialize();
+		world = new World(new WorldConfiguration()
+				.setSystem(new SystemA()));
 
 		for (int i = 0; i < 10; i++) {
 			world.createEntity().edit().add(new TestComponent());
