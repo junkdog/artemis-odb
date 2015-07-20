@@ -15,7 +15,7 @@ import com.artemis.EntitySystem;
  *
  *
  *
- * @deprecated Replaced by {@link VoidSystem}
+ * @deprecated Replaced by {@link com.artemis.BaseSystem}
  */
 @Deprecated
 public abstract class VoidEntitySystem extends EntitySystem {
