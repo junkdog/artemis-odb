@@ -34,7 +34,13 @@ public final class EntityTransmuter {
 	}
 
 	public void transmute(Entity e) {
-		e = world.getEntity(e.id);
+		// if entity was just created, we can resolve,
+		// but otherwise we need to make sure the instance
+		// isn't a flyweight instance escaping system processing,
+		// if so we need to resolve it to the actual entity.
+		if (e.isActive())
+			e = world.getEntity(e.id);
+
 		TransmuteOperation operation = getOperation(e);
 
 		operation.perform(e, world.getComponentManager());
@@ -118,32 +124,34 @@ public final class EntityTransmuter {
 
 		@Override
 		public String toString() {
-			StringBuilder add = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
+			sb.append("TransmuteOperation(");
+
 			if (additions.size() > 0) {
-				add.append("add={");
+				sb.append("add={");
 				String delim = "";
 				for (ComponentType ct : additions) {
-					add.append(delim).append(ct.getType().getSimpleName());
+					sb.append(delim).append(ct.getType().getSimpleName());
 					delim = ", ";
 				}
-				add.append("}");
+				sb.append("}");
 			}
 
 			if (removals.size() > 0) {
 				if (additions.size() > 0)
-					add.append(" ");
+					sb.append(" ");
 
-				add.append("remove={");
+				sb.append("remove={");
 				String delim = "";
 				for (ComponentType ct : removals) {
-					add.append(delim).append(ct.getType().getSimpleName());
+					sb.append(delim).append(ct.getType().getSimpleName());
 					delim = ", ";
 				}
-				add.append("}");
+				sb.append("}");
 			}
-			StringBuilder remove = new StringBuilder();
+			sb.append(")");
 
-			return String.format("TransmuteOperation(%s%s)", add, remove);
+			return sb.toString();
 		}
 	}
 }
