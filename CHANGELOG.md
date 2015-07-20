@@ -1,6 +1,8 @@
 ## Change Log
 
-#### Version: 0.10.2-SNAPSHOT
+#### Version: 0.10.3-SNAPSHOT
+
+#### Version: 0.10.2 - 2015-07-20
 - **Fix**: Transmuters didn't resolve flyweight instances.
 
 
