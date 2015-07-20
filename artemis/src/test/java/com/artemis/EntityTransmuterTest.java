@@ -18,6 +18,8 @@ public class EntityTransmuterTest {
 	private ES1 es;
 	private EntityTransmuter transmuter1;
 	private EntityTransmuter transmuter3;
+	private EntityTransmuter removeY;
+	private EntityTransmuter addY;
 
 	@Before
 	public void init() {
@@ -37,6 +39,8 @@ public class EntityTransmuterTest {
 			.remove(Packed.class)
 			.remove(ReusedComponent.class)
 			.build();
+
+
 	}
 	
 	@Test
@@ -95,6 +99,24 @@ public class EntityTransmuterTest {
 		assertEquals(0, es.getActives().size());
 	}
 
+	@Test
+	public void toggle_entities_single_component() {
+		ES2 es2 = new ES2();
+		World world = new World(new WorldConfiguration()
+				.setSystem(es2));
+
+		AspectSubscriptionManager asm = world.getManager(AspectSubscriptionManager.class);
+		EntitySubscription subscription = asm.get(Aspect.all(ComponentX.class));
+
+		world.createEntity().edit().create(ReusedComponent.class);
+		world.createEntity().edit().create(ReusedComponent.class);
+
+		world.process();
+		assertEquals(0, subscription.getEntities().size());
+		world.process();
+		assertEquals(2, subscription.getEntities().size());
+	}
+
 	private Entity createEntity(Class<? extends Component>... components) {
 		Entity e = world.createEntity();
 		EntityEdit edit = e.edit();
@@ -111,5 +133,38 @@ public class EntityTransmuterTest {
 
 		@Override
 		protected void process(Entity e) {}
+	}
+
+	@Wire
+	private static class ES2 extends EntityProcessingSystem {
+		ComponentMapper<ComponentX> xMapper;
+		private EntityTransmuter addX;
+		private EntityTransmuter removeX;
+
+		public ES2() {
+			super(Aspect.all(ReusedComponent.class));
+		}
+
+		@Override
+		protected void initialize() {
+			addX = new EntityTransmuterFactory(world)
+				.add(ComponentX.class)
+				.build();
+
+			removeX = new EntityTransmuterFactory(world)
+					.remove(ComponentX.class)
+					.build();
+		}
+
+		@Override
+		protected void process(Entity e) {
+			if (xMapper.has(e)) {
+				System.out.println("has " + e);
+				removeX.transmute(e);
+			} else {
+				System.out.println("has not " + e);
+				addX.transmute(e);
+			}
+		}
 	}
 }

@@ -34,6 +34,7 @@ public final class EntityTransmuter {
 	}
 
 	public void transmute(Entity e) {
+		e = world.getEntity(e.id);
 		TransmuteOperation operation = getOperation(e);
 
 		operation.perform(e, world.getComponentManager());
@@ -91,6 +92,11 @@ public final class EntityTransmuter {
 		return types;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("EntityTransmuter(add=%s remove=%s)", additions, removals);
+	}
+
 	static class TransmuteOperation {
 		private Bag<ComponentType> additions;
 		private Bag<ComponentType> removals;
@@ -108,6 +114,36 @@ public final class EntityTransmuter {
 
 			for (int i = 0, s = removals.size(); s > i; i++)
 				cm.removeComponent(e, removals.get(i));
+		}
+
+		@Override
+		public String toString() {
+			StringBuilder add = new StringBuilder();
+			if (additions.size() > 0) {
+				add.append("add={");
+				String delim = "";
+				for (ComponentType ct : additions) {
+					add.append(delim).append(ct.getType().getSimpleName());
+					delim = ", ";
+				}
+				add.append("}");
+			}
+
+			if (removals.size() > 0) {
+				if (additions.size() > 0)
+					add.append(" ");
+
+				add.append("remove={");
+				String delim = "";
+				for (ComponentType ct : removals) {
+					add.append(delim).append(ct.getType().getSimpleName());
+					delim = ", ";
+				}
+				add.append("}");
+			}
+			StringBuilder remove = new StringBuilder();
+
+			return String.format("TransmuteOperation(%s%s)", add, remove);
 		}
 	}
 }
