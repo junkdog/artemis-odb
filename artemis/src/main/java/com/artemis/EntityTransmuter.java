@@ -100,7 +100,7 @@ public final class EntityTransmuter {
 
 	@Override
 	public String toString() {
-		return String.format("EntityTransmuter(add=%s remove=%s)", additions, removals);
+		return "EntityTransmuter(add=" + additions + " remove=" + removals + ")";
 	}
 
 	static class TransmuteOperation {
