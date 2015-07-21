@@ -3,6 +3,7 @@ package com.artemis;
 import java.util.BitSet;
 
 import com.artemis.utils.Bag;
+import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
@@ -262,6 +263,10 @@ public class ComponentManager extends Manager {
 			componentsByType.set(type.getIndex(), components);
 		}
 		return components;
+	}
+
+	public ImmutableBag<ComponentType> getComponentTypes() {
+		return typeFactory.types;
 	}
 
 	/**

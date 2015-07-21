@@ -13,6 +13,14 @@
 	<description>Fork of Artemis Entity System Framework.</description>
 	<url>https://github.com/junkdog/artemis-odb</url>
 
+	<dependencies>
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<plugins>
 			<plugin>
