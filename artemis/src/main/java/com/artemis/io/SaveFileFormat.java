@@ -4,10 +4,8 @@ import com.artemis.Component;
 import com.artemis.EntitySubscription;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
-import com.sun.xml.internal.ws.api.wsdl.parser.MetaDataResolver;
 
 import java.util.IdentityHashMap;
-import java.util.Map;
 
 /**
  * <p>The default save file format. This class can be extended if additional
