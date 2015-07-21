@@ -40,13 +40,13 @@ public class Aspect {
 	private BitSet exclusionSet;
 	/** Component bits of which the entity must possess at least one. */
 	private BitSet oneSet;
-	
+
 	private Aspect() {
 		this.allSet = new BitSet();
 		this.exclusionSet = new BitSet();
 		this.oneSet = new BitSet();
 	}
-	
+
 	/**
 	 * Get a BitSet containing bits of components the entity must all possess.
 	 *
@@ -84,7 +84,7 @@ public class Aspect {
 	public boolean isInterested(Entity e){
 		return isInterested(e.getComponentBits());
 	}
-	
+
 	/**
 	 * Returns whether this Aspect would accept the given set.
 	 */
@@ -97,7 +97,7 @@ public class Aspect {
 				}
 			}
 		}
-		
+
 		// If we are STILL interested,
 		// Check if the entity possesses ANY of the exclusion components, if it does then the system is not interested.
 		if(!exclusionSet.isEmpty() && exclusionSet.intersects(componentBits)) {
@@ -109,11 +109,11 @@ public class Aspect {
 		if(!oneSet.isEmpty() && !oneSet.intersects(componentBits)) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Returns an aspect where an entity must possess all of the specified
 	 * component types.
@@ -126,8 +126,8 @@ public class Aspect {
 	public static Aspect.Builder all(Class<? extends Component>... types) {
 		return new Builder().all(types);
 	}
-	
-	
+
+
 	/**
 	 * Returns an aspect where an entity must possess all of the specified
 	 * component types.
@@ -140,7 +140,7 @@ public class Aspect {
 	public static Aspect.Builder all(Collection<Class<? extends Component>> types) {
 		return new Builder().all(types);
 	}
-	
+
 	/**
 	 * Excludes all of the specified component types from the aspect.
 	 * <p>
@@ -156,15 +156,15 @@ public class Aspect {
 	public static Aspect.Builder exclude(Class<? extends Component>... types) {
 		return new Builder().exclude(types);
 	}
-	
-	
+
+
 	/**
 	 * Excludes all of the specified component types from the aspect.
 	 * <p>
 	 * A system will not be interested in an entity that possesses one of the
 	 * specified exclusion component types.
 	 * </p>
-	 * 
+	 *
 	 * @param types
 	 *			component type to exclude
 	 *
@@ -173,7 +173,7 @@ public class Aspect {
 	public static Aspect.Builder exclude(Collection<Class<? extends Component>> types) {
 		return new Builder().exclude(types);
 	}
-	
+
 	/**
 	 * Returns an aspect where an entity must possess one of the specified
 	 * component types.
@@ -186,7 +186,7 @@ public class Aspect {
 	public static Aspect.Builder one(Class<? extends Component>... types) {
 		return new Builder().one(types);
 	}
-	
+
 	/**
 	 * Returns an aspect where an entity must possess one of the specified
 	 * component types.
@@ -199,7 +199,7 @@ public class Aspect {
 	public static Aspect.Builder one(Collection<Class<? extends Component>> types) {
 		return new Builder().one(types);
 	}
-	
+
 	/**
 	 * Creates an aspect where an entity must possess all of the specified
 	 * component types.
@@ -218,7 +218,7 @@ public class Aspect {
 	/**
 	 * Creates an aspect where an entity must possess one of the specified
 	 * component types.
-	 * 
+	 *
 	 * @param types
 	 *			one of the types the entity must possess
 	 *
@@ -229,14 +229,14 @@ public class Aspect {
 	public static Aspect.Builder getAspectForOne(Class<? extends Component>... types) {
 		return one(types);
 	}
-	
+
 	/**
+	 * Creates an aspect that matches all entities.
+	 *
 	 * Prior to version 0.9.0, this method returned an aspect which matched no entities.
-	 * This behavior is now reversed - an empty aspect matches everything. To create an
-	 * aspect matching no entities, simply pass null to the {@link com.artemis.EntitySystem}
-	 * constructor.
 	 *
 	 * @return an empty Aspect that will reject all entities
+	 * @deprecated extend {@link com.artemis.BaseSystem} instead of {@link com.artemis.EntitySystem} for entity-less systems.
 	 */
 	@Deprecated
 	public static Aspect.Builder getEmpty() {
