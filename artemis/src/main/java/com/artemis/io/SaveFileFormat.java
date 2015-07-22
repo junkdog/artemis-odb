@@ -41,6 +41,7 @@ public class SaveFileFormat {
 		this.entities = entities;
 		componentIdentifiers = new IdentityHashMap<Class<? extends Component>, String>();
 		metadata = new Metadata();
+		metadata.version = Metadata.LATEST;
 	}
 
 	public SaveFileFormat(EntitySubscription es) {
@@ -56,9 +57,5 @@ public class SaveFileFormat {
 		public static final int LATEST = VERSION_1;
 
 		public int version;
-
-		public Metadata() {
-			version = LATEST;
-		}
 	}
 }

@@ -9,6 +9,7 @@ import com.artemis.annotations.Wire;
 import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
 import com.artemis.utils.Bag;
+import com.artemis.utils.ImmutableBag;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -24,8 +25,11 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 	private final Bag<Component> components = new Bag<Component>();
 	private final ComponentNameComparator comparator = new ComponentNameComparator();
 	private final World world;
-	private TagManager tagManager;
+
 	private GroupManager groupManager;
+	private TagManager tagManager;
+	private final Collection<String> registeredTags;
+
 
 	private final ObjectMap<String, Class<? extends Component>> componentClasses;
 
@@ -34,6 +38,10 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		world.inject(this);
 
 		componentClasses = new ObjectMap<String, Class<? extends Component>>();
+
+		registeredTags = (tagManager != null)
+			? tagManager.getRegisteredTags()
+			: Collections.EMPTY_LIST;
 	}
 
 	@Override
@@ -42,38 +50,32 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 				(ComponentLookupSerializer) json.getSerializer(IdentityHashMap.class);
 		IdentityHashMap<Class<? extends Component>, String> componentMap = lookup.classToIdentifierMap();
 
-		Collection<String> registeredTags = (tagManager != null)
-			? tagManager.getRegisteredTags()
-			: Collections.EMPTY_LIST;
-
 		world.getComponentManager().getComponentsFor(e, components);
 		components.sort(comparator);
 
 		json.writeObjectStart();
-		if (registeredTags.size() > 0)
-			writeTagIfExists(json, e, registeredTags);
+		writeTag(json, e);
+		writeGroups(json, e);
 
-		json.writeArrayStart("components");
+		json.writeObjectStart("components");
 		for (int i = 0, s = components.size(); s > i; i++) {
 			Component c = components.get(i);
 			if (c.getClass().getAnnotation(Transient.class) != null)
 				continue;
 
 			String componentIdentifier = componentMap.get(c.getClass());
-			json.writeObjectStart();
 			json.writeObjectStart(componentIdentifier);
 			json.writeFields(c);
 			json.writeObjectEnd();
-			json.writeObjectEnd();
 		}
-		json.writeArrayEnd();
+		json.writeObjectEnd();
 		json.writeObjectEnd();
 
 		components.clear();
 	}
 
-	private void writeTagIfExists(Json json, Entity e, Collection<String> tags) {
-		for (String tag : tags) {
+	private void writeTag(Json json, Entity e) {
+		for (String tag : registeredTags) {
 			if (tagManager.getEntity(tag) != e)
 				continue;
 
@@ -82,44 +84,72 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		}
 	}
 
+	private void writeGroups(Json json, Entity e) {
+		if (groupManager == null)
+			return;
+
+		ImmutableBag<String> groups = groupManager.getGroups(e);
+		if (groups.size() == 0)
+			return;
+
+		json.writeArrayStart("groups");
+		for (String group : groups) {
+			json.writeValue(group);
+		}
+		json.writeArrayEnd();
+	}
+
 	@Override
 	public Entity read(Json json, JsonValue jsonData, Class type) {
 		ComponentLookupSerializer lookup =
 				(ComponentLookupSerializer) json.getSerializer(IdentityHashMap.class);
 		Map<String, Class<? extends Component>> components = lookup.identifierToClassMap();
 
-		EntityEdit ee = world.createEntity().edit();
-//		JsonValue tag = jsonData.get("tag");
-//		if (tag != null)
-//			tagManager.register(tag.asString(), ee.getEntity());
+		Entity e = world.createEntity();
+		jsonData = readTag(jsonData, e);
+		jsonData = readGroups(jsonData, e);
 
-//		JsonValue component = jsonData.getChild("components");
+		// when we deserialize a single entity
+		if (!"components".equals(jsonData.name()))
+			jsonData = jsonData.child;
+
+		assert("components".equals(jsonData.name));
 		JsonValue component = jsonData.child;
-		while (component != null) {
-			assert(component.child.name() != null);
 
-			Class<? extends Component> componentType = components.get(component.child.name);
-			Component c = ee.create(componentType);
-			json.readFields(c, component.child);
+		EntityEdit edit = e.edit();
+		while (component != null) {
+			assert(component.name() != null);
+
+			Class<? extends Component> componentType = components.get(component.name);
+			Component c = edit.create(componentType);
+			json.readFields(c, component);
 
 			component = component.next;
 		}
 
-
-		return ee.getEntity();
+		return edit.getEntity();
 	}
 
-	private Class<? extends Component> getClass(String componentClass) {
-		Class<? extends Component> c = componentClasses.get(componentClass);
-		if (c == null) {
-			try {
-				c = (Class<? extends Component>)Class.forName(componentClass);
-				componentClasses.put(componentClass, c);
-			} catch (ClassNotFoundException e) {
-				throw new RuntimeException(e);
+	private JsonValue readGroups(JsonValue jsonData, Entity e) {
+		if ("groups".equals(jsonData.name)) {
+			JsonValue group = jsonData.child;
+			while (group != null) {
+				groupManager.add(e, group.asString());
+				group = group.next;
 			}
+
+			jsonData = jsonData.next;
 		}
 
-		return c;
+		return jsonData;
+	}
+
+	private JsonValue readTag(JsonValue jsonData, Entity e) {
+		if ("tag".equals(jsonData.name)) {
+			tagManager.register(jsonData.asString(), e);
+			jsonData = jsonData.next;
+		}
+
+		return jsonData;
 	}
 }

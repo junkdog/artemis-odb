@@ -18,8 +18,6 @@ public class EntityTransmuterTest {
 	private ES1 es;
 	private EntityTransmuter transmuter1;
 	private EntityTransmuter transmuter3;
-	private EntityTransmuter removeY;
-	private EntityTransmuter addY;
 
 	@Before
 	public void init() {
@@ -39,8 +37,6 @@ public class EntityTransmuterTest {
 			.remove(Packed.class)
 			.remove(ReusedComponent.class)
 			.build();
-
-
 	}
 	
 	@Test
@@ -159,10 +155,8 @@ public class EntityTransmuterTest {
 		@Override
 		protected void process(Entity e) {
 			if (xMapper.has(e)) {
-				System.out.println("has " + e);
 				removeX.transmute(e);
 			} else {
-				System.out.println("has not " + e);
 				addX.transmute(e);
 			}
 		}

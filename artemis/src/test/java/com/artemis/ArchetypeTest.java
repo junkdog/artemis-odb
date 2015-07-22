@@ -87,7 +87,6 @@ public class ArchetypeTest {
 	@Test
 	public void testEntityCreationMod() throws Exception {
 		World world = new World();
-		world.initialize();
 
 		ComponentMapper<ComponentX> xMapper = world.getMapper(ComponentX.class);
 		ComponentMapper<ComponentY> yMapper = world.getMapper(ComponentY.class);

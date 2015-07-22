@@ -19,18 +19,16 @@ public class IntBagEntitySerializer implements Json.Serializer<IntBag> {
 
 	@Override
 	public void write(Json json, IntBag entities, Class knownType) {
-		json.writeArrayStart();
+		json.writeObjectStart();
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			Entity e = world.getEntity(entities.get(i));
-			json.writeValue(e);
+			json.writeValue(Integer.toString(e.id), e);
 		}
-		json.writeArrayEnd();
+		json.writeObjectEnd();
 	}
 
 	@Override
 	public IntBag read(Json json, JsonValue jsonData, Class type) {
-//		assert ("entities".equals(jsonData.child.name()));
-
 		IntBag bag = new IntBag();
 		JsonValue entityArray = jsonData.child;
 		JsonValue entity = entityArray;
