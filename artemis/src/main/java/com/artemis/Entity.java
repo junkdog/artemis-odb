@@ -75,7 +75,7 @@ public final class Entity {
 		return id;
 	}
 
-	static Entity createFlyweight(World world) {
+	public static Entity createFlyweight(World world) {
 		return new Entity(world, -1);
 	}
 
