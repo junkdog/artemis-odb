@@ -58,6 +58,7 @@ Don't take our word for it, run the benchmarks yourself!
 | [Naturally Selected 2D][ns2d] | [source][ns2d-src] [play][ns2d-play] | [cdm][ns2d-cdm]   | [@DaanVanYperen][dvy]          |
 | [The Underkeep][tu]           | [source][tu-src] [play][tu-play]     | [cdm][tu-cdm]     | [@DaanVanYperen][dvy]          |
 | [Tox][tox]                    | [source][tox-src] [play][tox-play]   | N/A               | [@DaanVanYperen][dvy]          |
+| [Zombie Copter][zc-src]       | [source][zc-src] (ported from Ashley)                    | N/A               | [@Deftwun][dw]                 |
 
  [ark]: http://www.ludumdare.com/compo/ludum-dare-30/?action=preview&uid=22396
  [ark-src]: https://github.com/DaanVanYperen/arktrail
@@ -87,6 +88,9 @@ Don't take our word for it, run the benchmarks yourself!
  [sw-play]: http://flet.github.io/spaceship-warrior-redux/
  [sw-cdm]: http://junkdog.github.io/matrix-sw.html
  [flet]: https://github.com/Flet/ 
+ [zc]: https://github.com/Deftwun/ZombieCopter
+ [zc-src]: https://github.com/DaanVanYperen/artemis-odb-zombie-copter
+ [dw]: https://github.com/Deftwun
 
 ### Dependency Matrix
 
