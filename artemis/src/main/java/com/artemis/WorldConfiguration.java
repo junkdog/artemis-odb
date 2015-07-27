@@ -17,6 +17,8 @@ public final class WorldConfiguration {
 	private int expectedEntityCount = 128;
 	Map<String, Object> injectables = new HashMap<String, Object>();
 
+	Inject injector;
+
 	public WorldConfiguration() {
 		// reserving space for core managers
 		managers.add(null); // ComponentManager
@@ -37,6 +39,10 @@ public final class WorldConfiguration {
 	public WorldConfiguration expectedEntityCount(int expectedEntityCount) {
 		this.expectedEntityCount = expectedEntityCount;
 		return this;
+	}
+
+	public void setInjector(Inject injector) {
+		this.injector = injector;
 	}
 
 	@Deprecated
@@ -181,7 +187,7 @@ public final class WorldConfiguration {
 		return this;
 	}
 
-	void initialize(World world, Injector injector, AspectSubscriptionManager asm) {
+	void initialize(World world, Inject injector, AspectSubscriptionManager asm) {
 		managers.set(0, world.getComponentManager());
 		managers.set(1, world.getEntityManager());
 		managers.set(2, asm);
@@ -209,7 +215,7 @@ public final class WorldConfiguration {
 		asm.processComponentIdentity(NO_COMPONENTS, new BitSet());
 	}
 
-	private void initializeSystems(Injector injector) {
+	private void initializeSystems(Inject injector) {
 		for (int i = 0, s = systems.size(); i < s; i++) {
 			BaseSystem system = systems.get(i);
 			injector.inject(system);

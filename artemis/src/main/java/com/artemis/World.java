@@ -1,13 +1,11 @@
 package com.artemis;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import com.artemis.annotations.Wire;
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
@@ -88,7 +86,7 @@ public class World {
 	private final Bag<BaseSystem> systemsBag;
 
 	private boolean registerUuids;
-	private Injector injector;
+	private Inject injector;
 	
 	final EntityEditPool editPool = new EntityEditPool(this);
 	
@@ -146,7 +144,11 @@ public class World {
 		cm = new ComponentManager(configuration.expectedEntityCount());
 		em = new EntityManager(configuration.expectedEntityCount());
 		am = new AspectSubscriptionManager();
-		injector = new Injector(this, configuration);
+		injector = configuration.injector;
+		if (injector == null) {
+			injector = new CachedInjector();
+		}
+		injector.initialize(this, configuration);
 
 		configuration.initialize(this, injector, am);
 
@@ -179,7 +181,7 @@ public class World {
 	 * @param target Object to inject into.
 	 */
 	public void inject(Object target) {
-		if (!ClassReflection.isAnnotationPresent(target.getClass(), Wire.class))
+		if (!injector.injectionSupported(target))
 			throw new MundaneWireException(target.getClass().getName() + " must be annotated with @Wire");
 
 		injector.inject(target);

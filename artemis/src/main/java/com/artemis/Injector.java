@@ -14,22 +14,28 @@ import java.util.Map;
  * Injects {@link com.artemis.ComponentMapper}, {@link com.artemis.BaseSystem} and {@link com.artemis.Manager} types into systems and
  * managers. Can also inject arbitrary types if registered through {@link com.artemis.WorldConfiguration#register}.
  */
-final class Injector {
-	private final World world;
+final class Injector implements Inject {
+	private World world;
 
-	private final Map<Class<?>, Class<?>> systems;
-	private final Map<Class<?>, Class<?>> managers;
-	private final Map<String, Object> pojos;
+	private Map<Class<?>, Class<?>> systems;
+	private Map<Class<?>, Class<?>> managers;
+	private Map<String, Object> pojos;
 
-	Injector(World world, WorldConfiguration config) {
+	@Override
+	public void initialize(World world, WorldConfiguration config) {
 		this.world = world;
-
 		systems = new IdentityHashMap<Class<?>, Class<?>>();
 		managers = new IdentityHashMap<Class<?>, Class<?>>();
 		pojos = new HashMap<String, Object>(config.injectables);
 	}
 
-	void update() {
+	@Override
+	public boolean injectionSupported(Object target) {
+		return ClassReflection.isAnnotationPresent(target.getClass(), Wire.class);
+	}
+
+	@Override
+	public void update() {
 		for (BaseSystem es : world.getSystems()) {
 			Class<?> origin = es.getClass();
 			Class<?> clazz = origin;
@@ -48,6 +54,7 @@ final class Injector {
 
 	}
 
+	@Override
 	public void inject(Object target) throws RuntimeException {
 		try {
 			Class<?> clazz = target.getClass();
