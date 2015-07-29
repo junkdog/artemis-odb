@@ -14,8 +14,8 @@ public class TransPackedFloatReference extends PackedComponent {
 	
 
 	@Override
-	protected void forEntity(Entity e) {
-		this.$stride = $_SIZE_OF * e.getId();
+	protected void forEntity(int entityId) {
+		this.$stride = $_SIZE_OF * entityId;
 	}
 
 	@Override

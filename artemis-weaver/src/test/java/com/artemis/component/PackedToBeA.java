@@ -8,7 +8,7 @@ import com.artemis.annotations.PackedWeaver;
 public class PackedToBeA extends Component {
 	private boolean hasBeenReset;
 	
-	void forEntity(Entity e) {
+	void forEntity(int entityId) {
 		
 	}
 }

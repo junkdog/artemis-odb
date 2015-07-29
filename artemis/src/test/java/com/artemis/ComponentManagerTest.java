@@ -80,9 +80,8 @@ public class ComponentManagerTest {
 		public int entityId;
 		
 		@Override
-		protected void forEntity(Entity e) {
-			entityId = e.getId();
-//			return this;
+		protected void forEntity(int entityId) {
+			this.entityId = entityId;
 		}
 		
 		@Override
@@ -103,9 +102,8 @@ public class ComponentManagerTest {
 		}
 		
 		@Override
-		protected void forEntity(Entity e) {
-			entityId = e.getId();
-//			return this;
+		protected void forEntity(int entityId) {
+			this.entityId = entityId;
 		}
 
 		@Override
