@@ -8,8 +8,8 @@ public class Packed extends PackedComponent
 	public int entityId;
 
 	@Override
-	protected void forEntity(Entity e) {
-		entityId = e.getId();
+	protected void forEntity(int entityId) {
+		this.entityId = entityId;
 //		return this;
 	}
 
