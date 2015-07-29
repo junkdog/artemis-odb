@@ -332,15 +332,14 @@ public class PackedStubs implements Opcodes {
 	private void injectForEntity() {
 		String owner = meta.type.getInternalName();
 		
-		MethodVisitor mv = cw.visitMethod(ACC_PROTECTED, "forEntity", "(Lcom/artemis/Entity;)V", null, null);
+		MethodVisitor mv = cw.visitMethod(ACC_PROTECTED, "forEntity", "(I)V", null, null);
 		mv.visitCode();
 		Label l0 = new Label();
 		mv.visitLabel(l0);
 		if (instanceFields(meta).size() > 0) {
 			mv.visitVarInsn(ALOAD, 0);
 			mv.visitFieldInsn(GETSTATIC, owner, "$_SIZE_OF", "I");
-			mv.visitVarInsn(ALOAD, 1);
-			mv.visitMethodInsn(INVOKEVIRTUAL, "com/artemis/Entity", "getId", "()I", false);
+			mv.visitVarInsn(ILOAD, 1);
 			mv.visitInsn(IMUL);
 			mv.visitFieldInsn(PUTFIELD, owner, "$stride", "I");
 			Label l1 = new Label();
@@ -350,7 +349,7 @@ public class PackedStubs implements Opcodes {
 		Label l2 = new Label();
 		mv.visitLabel(l2);
 		mv.visitLocalVariable("this", "Lcom/artemis/component/TransPackedFloatReference;", null, l0, l2, 0);
-		mv.visitLocalVariable("e", "Lcom/artemis/Entity;", null, l0, l2, 1);
+		mv.visitLocalVariable("entityId", "I", null, l0, l2, 1);
 		mv.visitEnd();
 	}
 	
