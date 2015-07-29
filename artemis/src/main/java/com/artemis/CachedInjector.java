@@ -5,6 +5,7 @@ import com.artemis.annotations.Wire;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,17 +19,17 @@ import java.util.Map;
  *
  * Caches all type-information.
  */
-final class CachedInjector implements Inject {
+public final class CachedInjector implements Inject {
     private World world;
 
     private Map<Class<?>, Class<?>> systems;
     private Map<Class<?>, Class<?>> managers;
     private Map<String, Object> pojos;
 
-    private static final Map<Class<?>, CachedClass> classCache = new IdentityHashMap<Class<?>, CachedClass>();
-    private static final Map<Class<?>, ClassType> fieldClassTypeCache = new IdentityHashMap<Class<?>, ClassType>();
-    private static final Map<Field, CachedField> namedWireCache = new IdentityHashMap<Field, CachedField>();
-    private static final Map<Field, Class<? extends Component>> mapperTypeCache = new IdentityHashMap<Field, Class<? extends Component>>();
+    private static final ObjectMap<Class<?>, CachedClass> classCache = new ObjectMap<Class<?>, CachedClass>();
+    private static final ObjectMap<Class<?>, ClassType> fieldClassTypeCache = new ObjectMap<Class<?>, ClassType>();
+    private static final ObjectMap<Field, CachedField> namedWireCache = new ObjectMap<Field, CachedField>();
+    private static final ObjectMap<Field, Class<? extends Component>> mapperTypeCache = new ObjectMap<Field, Class<? extends Component>>();
 
     @Override
     public void initialize(World world, WorldConfiguration config) {
@@ -121,7 +122,7 @@ final class CachedInjector implements Inject {
             while (cachedClass.injectInherited && (clazz = clazz.getSuperclass()) != Object.class) {
                 collectDeclaredFields(fieldList, clazz);
             }
-            declaredFields = fieldList.toArray(new Field[fieldList.size()]);
+            cachedClass.allFields = declaredFields = fieldList.toArray(new Field[fieldList.size()]);
         }
         return declaredFields;
     }
@@ -140,14 +141,12 @@ final class CachedInjector implements Inject {
 
     @SuppressWarnings("deprecation")
     private void injectClass(Object target, CachedClass cachedClass) throws ReflectionException {
-        Field[] declaredFields = cachedClass.allFields;
-        if (declaredFields == null) {
-            cachedClass.allFields = declaredFields = ClassReflection.getDeclaredFields(cachedClass.clazz);
-        }
+        Field[] declaredFields = getAllFields(cachedClass);
         for (int i = 0, s = declaredFields.length; s > i; i++) {
             Field field = declaredFields[i];
-            if (field.isAnnotationPresent(Mapper.class) || field.isAnnotationPresent(Wire.class)) {
-                injectField(target, field, field.isAnnotationPresent(Wire.class));
+            CachedField cachedField = getCachedField(field);
+            if (cachedField.wire) {
+                injectField(target, field, !cachedField.legacy);
             }
         }
     }
@@ -155,9 +154,6 @@ final class CachedInjector implements Inject {
     @SuppressWarnings("unchecked")
     private void injectField(Object target, Field field, boolean failOnNotInjected)
             throws ReflectionException {
-
-        field.setAccessible(true);
-
         Class<?> fieldType;
         try {
             fieldType = field.getType();
@@ -196,7 +192,7 @@ final class CachedInjector implements Inject {
             throw onFailedInjection("ComponentMapper", field);
         }
 
-        field.set(target, mapper);
+        setField(target, field, mapper);
     }
 
     @SuppressWarnings("unchecked")
@@ -207,7 +203,7 @@ final class CachedInjector implements Inject {
             throw onFailedInjection("BaseSystem", field);
         }
 
-        field.set(target, system);
+        setField(target, field, system);
     }
 
     @SuppressWarnings("unchecked")
@@ -218,7 +214,12 @@ final class CachedInjector implements Inject {
             throw onFailedInjection("Manager", field);
         }
 
-        field.set(target, manager);
+        setField(target, field, manager);
+    }
+
+    private void setField(Object target, Field field, Object fieldValue) throws ReflectionException {
+        field.setAccessible(true);
+        field.set(target, fieldValue);
     }
 
     private void injectFactory(Object target, Field field, boolean failOnNotInjected,
@@ -228,20 +229,11 @@ final class CachedInjector implements Inject {
             throw onFailedInjection("EntityFactory", field);
         }
 
-        field.set(target, factory);
+        setField(target, field, factory);
     }
 
     private void injectCustomType(Object target, Field field) throws ReflectionException {
-        CachedField cachedField = namedWireCache.get(field);
-        if (cachedField == null) {
-            if (field.isAnnotationPresent(Wire.class)) {
-                final Wire wire = field.getAnnotation(Wire.class);
-                cachedField = new CachedField(true, wire.name());
-            } else {
-                cachedField = new CachedField(false, null);
-            }
-            namedWireCache.put(field, cachedField);
-        }
+        CachedField cachedField = getCachedField(field);
 
         if (cachedField.wire) {
             String key = cachedField.name;
@@ -250,9 +242,27 @@ final class CachedInjector implements Inject {
             }
 
             if (pojos.containsKey(key)) {
-                field.set(target, pojos.get(key));
+                setField(target, field, pojos.get(key));
             }
         }
+    }
+
+    private CachedField getCachedField(Field field) {
+        CachedField cachedField = namedWireCache.get(field);
+        if (cachedField == null) {
+            if (field.isAnnotationPresent(Wire.class)) {
+                final Wire wire = field.getAnnotation(Wire.class);
+                cachedField = new CachedField(true, wire.name());
+            }
+            else if(field.isAnnotationPresent(Mapper.class)) {
+                cachedField = new CachedField(true, null);
+                cachedField.legacy = true;
+            }else {
+                cachedField = new CachedField(false, null);
+            }
+            namedWireCache.put(field, cachedField);
+        }
+        return cachedField;
     }
 
     private ClassType getFieldClassType(Class<?> fieldType) {
@@ -312,5 +322,6 @@ final class CachedInjector implements Inject {
 
         boolean wire;
         String name;
+        boolean legacy;
     }
 }

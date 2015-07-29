@@ -146,7 +146,7 @@ public class World {
 		am = new AspectSubscriptionManager();
 		injector = configuration.injector;
 		if (injector == null) {
-			injector = new CachedInjector();
+			injector = new Injector();
 		}
 		injector.initialize(this, configuration);
 
@@ -156,7 +156,7 @@ public class World {
 		if (invocationStrategy == null)
 			setInvocationStrategy(new InvocationStrategy());
 	}
-	
+
 	/**
 	 * Makes sure all managers systems are initialized in the order they were
 	 * added.
@@ -177,14 +177,36 @@ public class World {
 	 * If you want to specify nonstandard dependencies to inject, use
 	 * {@link com.artemis.WorldConfiguration#register(String, Object)} instead.
 	 *
+	 * If you want a non-throwing alternative, use {@link #tryInject(Object)}
+	 *
 	 * @see com.artemis.annotations.Wire for more details about dependency injection.
+	 * @see #tryInject(Object)
 	 * @param target Object to inject into.
+	 * throws MundaneWireException if {@code target} is not annotated with com.artemis.annotations.Wire
 	 */
 	public void inject(Object target) {
 		if (!injector.injectionSupported(target))
 			throw new MundaneWireException(target.getClass().getName() + " must be annotated with @Wire");
 
 		injector.inject(target);
+	}
+
+	/**
+	 * Inject dependencies on object if it is annotated with {@link com.artemis.annotations.Wire}.
+	 *
+	 * If {@link com.artemis.annotations.Wire} is missing, no action will be taken.
+	 *
+	 * If you want to specify nonstandard dependencies to inject, use
+	 * {@link com.artemis.WorldConfiguration#register(String, Object)} instead.
+	 *
+	 * @see com.artemis.annotations.Wire for more details about dependency injection.
+	 * @see #inject(Object)
+	 * @param target Object to inject into.
+	 */
+	public void tryInject(Object target) {
+		if (injector.injectionSupported(target)) {
+			injector.inject(target);
+		}
 	}
 
 	/**

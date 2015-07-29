@@ -14,7 +14,7 @@ import java.util.Map;
  * Injects {@link com.artemis.ComponentMapper}, {@link com.artemis.BaseSystem} and {@link com.artemis.Manager} types into systems and
  * managers. Can also inject arbitrary types if registered through {@link com.artemis.WorldConfiguration#register}.
  */
-final class Injector implements Inject {
+public final class Injector implements Inject {
 	private World world;
 
 	private Map<Class<?>, Class<?>> systems;
