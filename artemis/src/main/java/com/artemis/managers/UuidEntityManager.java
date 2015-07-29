@@ -46,10 +46,6 @@ public class UuidEntityManager extends Manager {
 	}
 	
 	public void setUuid(Entity e, UUID newUuid) {
-		UUID oldUuid = entityToUuid.safeGet(e.getId());
-		if (oldUuid != null)
-			uuidToEntity.remove(oldUuid);
-		
 		uuidToEntity.put(newUuid, e);
 		entityToUuid.set(e.getId(), newUuid);
 	}
