@@ -162,6 +162,21 @@ public class WireTest {
 		assertEquals("world", st.hello);
 		assertEquals("n2", st.helloN2);
 	}
+
+	@Test
+	public void try_inject_on_wired_object_mirrors_inject_behaviour() {
+		World world = new World(new WorldConfiguration().register("world").setManager(TagManager.class));
+		SomeThing st = new SomeThing();
+		world.tryInject(st);
+		assertEquals("world", st.hello);
+	}
+
+	@Test
+	public void try_inject_on_plain_object_does_nothing() {
+		World world = new World(new WorldConfiguration());
+		Object object = new Object();
+		world.tryInject(object);
+	}
 	
 	@Test @SuppressWarnings("static-method")
 	public void inject_static_field() {
