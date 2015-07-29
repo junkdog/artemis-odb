@@ -43,6 +43,8 @@ Don't take our word for it, run the benchmarks yourself!
 
 ### Made with artemis-odb
 
+Browse games in the [Game Gallery](https://github.com/junkdog/artemis-odb/wiki/Game-Gallery)!
+
 #### Commercial games
 
 - [Dog Sled Saga](http://www.dogsledsaga.com/) ([Steam page](http://store.steampowered.com/app/286240/)), "desktop and mobile racing game with a saga of rank climbing, reputation building, team management, and pet loving".
