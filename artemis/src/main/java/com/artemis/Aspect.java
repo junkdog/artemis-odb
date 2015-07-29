@@ -123,7 +123,8 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	public static Aspect.Builder all(Class<? extends Component>... types) {
+	@SafeVarargs
+	public static final Aspect.Builder all(Class<? extends Component>... types) {
 		return new Builder().all(types);
 	}
 
@@ -153,7 +154,8 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	public static Aspect.Builder exclude(Class<? extends Component>... types) {
+	@SafeVarargs
+	public static final Aspect.Builder exclude(Class<? extends Component>... types) {
 		return new Builder().exclude(types);
 	}
 
@@ -183,7 +185,8 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	public static Aspect.Builder one(Class<? extends Component>... types) {
+	@SafeVarargs
+	public static final Aspect.Builder one(Class<? extends Component>... types) {
 		return new Builder().one(types);
 	}
 
@@ -211,7 +214,8 @@ public class Aspect {
 	 * @deprecated see {@link #all(Class[])}
 	 */
 	@Deprecated
-	public static Aspect.Builder getAspectForAll(Class<? extends Component>... types) {
+	@SafeVarargs
+	public static final Aspect.Builder getAspectForAll(Class<? extends Component>... types) {
 		return all(types);
 	}
 
@@ -226,7 +230,8 @@ public class Aspect {
 	 * @deprecated see {@link #one(Class[])}
 	 */
 	@Deprecated
-	public static Aspect.Builder getAspectForOne(Class<? extends Component>... types) {
+	@SafeVarargs
+	public static final Aspect.Builder getAspectForOne(Class<? extends Component>... types) {
 		return one(types);
 	}
 
