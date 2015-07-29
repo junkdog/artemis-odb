@@ -48,27 +48,25 @@ class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public A getSafe(Entity e) {
-		if(components.isIndexWithinBounds(e.getId())) {
-			return (A) components.get(e.getId());
+	public A getSafe(int entityId) {
+		if(components.isIndexWithinBounds(entityId)) {
+			return (A) components.get(entityId);
 		}
 		return null;
 	}
-	
+
 	@Override
-	public boolean has(Entity e) {
-		return getSafe(e) != null;		
+	public boolean has(int entityId) {
+		return getSafe(entityId) != null;
 	}
 
-
 	@Override
-	public A get(Entity e, boolean forceNewInstance) throws ArrayIndexOutOfBoundsException {
-		return get(e);
+	public A get(int entityId, boolean forceNewInstance) throws ArrayIndexOutOfBoundsException {
+		return get(entityId);
 	}
 
-
 	@Override
-	public A getSafe(Entity e, boolean forceNewInstance) {
-		return getSafe(e);
+	public A getSafe(int entityId, boolean forceNewInstance) {
+		return getSafe(entityId);
 	}
 }
