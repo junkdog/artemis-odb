@@ -1,12 +1,6 @@
 package com.artemis;
 
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import com.artemis.injection.CachedInjectorOld;
+import com.artemis.injection.CachedInjector;
 import com.artemis.injection.Injector;
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
@@ -14,6 +8,12 @@ import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
+
+import java.util.ArrayList;
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 
 /**
@@ -148,7 +148,7 @@ public class World {
 		am = new AspectSubscriptionManager();
 		injector = configuration.injector;
 		if (injector == null) {
-			injector = new CachedInjectorOld();
+			injector = new CachedInjector();
 		}
 
 		configuration.initialize(this, injector, am);
