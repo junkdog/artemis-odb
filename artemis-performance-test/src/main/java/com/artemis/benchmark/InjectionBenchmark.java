@@ -1,7 +1,7 @@
 package com.artemis.benchmark;
 
-import com.artemis.CachedInjector;
-import com.artemis.Injector;
+import com.artemis.injection.CachedInjectorOld;
+import com.artemis.injection.CachedInjector;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.benchmark.domain.Domain.ComplexSystem;
@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 @Threads(1)
 @Fork(1)
 @OutputTimeUnit(TimeUnit.SECONDS)
-@Warmup(iterations = 3, time = 2, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 3, time = 10, timeUnit = TimeUnit.SECONDS)
 @Measurement(iterations = 10, time = 2, timeUnit = TimeUnit.SECONDS)
 public class InjectionBenchmark {
 
@@ -57,21 +57,20 @@ public class InjectionBenchmark {
     }
 
     @Benchmark
-    public void createWorld_without_injectionCache() {
-        configuration.setInjector(new Injector());
+    public void createWorld_with_injectionCache() {
+        configuration.setInjector(new CachedInjectorOld());
         createWorld();
     }
 
     @Benchmark
-    public void createWorld_with_injectionCache() {
+    public void createWorld_with_injectionCache2() {
         configuration.setInjector(new CachedInjector());
         createWorld();
     }
 
     private void createWorld() {
         World world = new World(configuration);
-            world.inject(new CustomWired());
-        world.process();
+        world.inject(new CustomWired());
     }
 
 

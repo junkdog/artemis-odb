@@ -167,7 +167,7 @@ public class WireTest {
 	public void try_inject_on_wired_object_mirrors_inject_behaviour() {
 		World world = new World(new WorldConfiguration().register("world").setManager(TagManager.class));
 		SomeThing st = new SomeThing();
-		world.tryInject(st);
+		world.inject(st, false);
 		assertEquals("world", st.hello);
 	}
 
@@ -175,7 +175,7 @@ public class WireTest {
 	public void try_inject_on_plain_object_does_nothing() {
 		World world = new World(new WorldConfiguration());
 		Object object = new Object();
-		world.tryInject(object);
+		world.inject(object, false);
 	}
 	
 	@Test @SuppressWarnings("static-method")

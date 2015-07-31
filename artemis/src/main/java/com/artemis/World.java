@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.artemis.injection.CachedInjectorOld;
+import com.artemis.injection.Injector;
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
@@ -86,7 +88,7 @@ public class World {
 	private final Bag<BaseSystem> systemsBag;
 
 	private boolean registerUuids;
-	private Inject injector;
+	private Injector injector;
 	
 	final EntityEditPool editPool = new EntityEditPool(this);
 	
@@ -146,9 +148,8 @@ public class World {
 		am = new AspectSubscriptionManager();
 		injector = configuration.injector;
 		if (injector == null) {
-			injector = new Injector();
+			injector = new CachedInjectorOld();
 		}
-		injector.initialize(this, configuration);
 
 		configuration.initialize(this, injector, am);
 
@@ -175,20 +176,18 @@ public class World {
 	 * or fields.
 	 *
 	 * If you want to specify nonstandard dependencies to inject, use
-	 * {@link com.artemis.WorldConfiguration#register(String, Object)} instead.
+	 * {@link com.artemis.WorldConfiguration#register(String, Object)} instead, or
+	 * configure an {@link com.artemis.injection.Injector}
 	 *
-	 * If you want a non-throwing alternative, use {@link #tryInject(Object)}
+	 * If you want a non-throwing alternative, use {@link #inject(Object, boolean)}
 	 *
 	 * @see com.artemis.annotations.Wire for more details about dependency injection.
-	 * @see #tryInject(Object)
+	 * @see #inject(Object, boolean)
 	 * @param target Object to inject into.
 	 * throws MundaneWireException if {@code target} is not annotated with com.artemis.annotations.Wire
 	 */
 	public void inject(Object target) {
-		if (!injector.injectionSupported(target))
-			throw new MundaneWireException(target.getClass().getName() + " must be annotated with @Wire");
-
-		injector.inject(target);
+		inject(target, true);
 	}
 
 	/**
@@ -197,17 +196,25 @@ public class World {
 	 * If {@link com.artemis.annotations.Wire} is missing, no action will be taken.
 	 *
 	 * If you want to specify nonstandard dependencies to inject, use
-	 * {@link com.artemis.WorldConfiguration#register(String, Object)} instead.
+	 * {@link com.artemis.WorldConfiguration#register(String, Object)} instead, or
+	 * configure an {@link com.artemis.injection.Injector}
 	 *
 	 * @see com.artemis.annotations.Wire for more details about dependency injection.
 	 * @see #inject(Object)
 	 * @param target Object to inject into.
+	 * @param failIfWireAnnotationIsMissing if true, this method will
+	 * throws MundaneWireException if {@code target} is not annotated with com.artemis.annotations.Wire and
+	 *        {@code failIfWireAnnotationIsMissing} is true
 	 */
-	public void tryInject(Object target) {
-		if (injector.injectionSupported(target)) {
+	public void inject(Object target, boolean failIfWireAnnotationIsMissing) {
+		boolean injectable = injector.isInjectable(target);
+		if (!injectable && failIfWireAnnotationIsMissing)
+			throw new MundaneWireException(target.getClass().getName() + " must be annotated with @Wire");
+
+		if(injectable)
 			injector.inject(target);
-		}
 	}
+
 
 	/**
 	 * Disposes all managers and systems. Only necessary if either need to free
