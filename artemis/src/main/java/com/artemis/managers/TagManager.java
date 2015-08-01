@@ -20,17 +20,20 @@ import com.artemis.Manager;
 public class TagManager extends Manager {
 
 	/** Tags mapped to entities. */
-	private final Map<String, Entity> entitiesByTag;
+	private final Map<String, Integer> entitiesByTag;
 	/** Tagged entities mapped to tags. */
-	private final Map<Entity, String> tagsByEntity;
+	private final Map<Integer, String> tagsByEntity;
+	
+	/** Flyweight helper for entities. */
+	private Entity flyweight;
 
 
 	/**
 	 * Creates a new TagManager.
 	 */
 	public TagManager() {
-		entitiesByTag = new HashMap<String, Entity>();
-		tagsByEntity = new HashMap<Entity, String>();
+		entitiesByTag = new HashMap<String, Integer>();
+		tagsByEntity = new HashMap<Integer, String>();
 	}
 
 
@@ -42,12 +45,28 @@ public class TagManager extends Manager {
 	 *
 	 * @param tag
 	 *			the tag
-	 * @param e
-	 *			the entity to get tagged
+	 * @param entityId
+	 *			the entity id to get tagged
 	 */
-	public void register(String tag, Entity e) {
-		entitiesByTag.put(tag, e);
-		tagsByEntity.put(e, tag);
+	public void register(String tag, int entityId) {
+		entitiesByTag.put(tag, entityId);
+		tagsByEntity.put(entityId, tag);
+	}
+	
+	/**
+	 * Tag an entity.
+	 * <p>
+	 * Each tag can only be given to one entity at a time.
+	 * </p>
+	 *
+	 * @param tag
+	 *			the tag
+	 * @param entityId
+	 *			the entity id to get tagged
+	 */
+	public void register(String tag, Entity entity) {
+		entitiesByTag.put(tag, entity.id);
+		tagsByEntity.put(entity.id, tag);
 	}
 
 	/**
@@ -71,16 +90,36 @@ public class TagManager extends Manager {
 	public boolean isRegistered(String tag) {
 		return entitiesByTag.containsKey(tag);
 	}
-
+	
 	/**
-	 * Get the entity tagged with the given tag.
+	 * Get the entity <b>flyweight</b> tagged with the given tag.
 	 *
 	 * @param tag
 	 *			the tag the entity is tagged with
 	 *
-	 * @return the tagged entity
+	 * @return the tagged entity flyweight
 	 */
 	public Entity getEntity(String tag) {
+		Integer id = entitiesByTag.get(tag);
+
+		if (id == null) {
+			return null;
+		}
+		else {
+			flyweight.id = id.intValue();
+		}
+		return flyweight;
+	}
+
+	/**
+	 * Get the entity id tagged with the given tag.
+	 *
+	 * @param tag
+	 *			the tag the entity is tagged with
+	 *
+	 * @return the tagged entity id
+	 */
+	public int getEntityId(String tag) {
 		return entitiesByTag.get(tag);
 	}
 
@@ -93,7 +132,19 @@ public class TagManager extends Manager {
 	 * @return the tag
 	 */
 	public String getTag(Entity entity) {
-		return tagsByEntity.get(entity);
+		return tagsByEntity.get(entity.id);
+	}
+	
+	/**
+	 * Get the tag the given entity is tagged with.
+	 *
+	 * @param entity
+	 *			the entity ic
+	 *
+	 * @return the tag
+	 */
+	public String getTag(int entityId) {
+		return tagsByEntity.get(entityId);
 	}
 
 	/**
@@ -113,7 +164,7 @@ public class TagManager extends Manager {
 	 */
 	@Override
 	public void deleted(Entity e) {
-		String removedTag = tagsByEntity.remove(e);
+		String removedTag = tagsByEntity.remove(e.id);
 		if(removedTag != null) {
 			entitiesByTag.remove(removedTag);
 		}
@@ -122,6 +173,7 @@ public class TagManager extends Manager {
 
 	@Override
 	protected void initialize() {
+		flyweight = Entity.createFlyweight(world);
 	}
 
 }
