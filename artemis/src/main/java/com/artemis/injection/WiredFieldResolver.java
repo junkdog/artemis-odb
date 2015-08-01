@@ -31,7 +31,7 @@ public class WiredFieldResolver implements FieldResolver, UseInjectionCache {
         CachedField cachedField = cache.getCachedField(field);
 
         if (injectionType == ClassType.CUSTOM) {
-            if (cachedField.wire) {
+            if (cachedField.wireType == WireType.WIRE) {
                 String key = cachedField.name;
                 if ("".equals(key)) {
                     key = field.getType().getName();

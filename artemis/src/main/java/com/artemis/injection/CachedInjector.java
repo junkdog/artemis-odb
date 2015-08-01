@@ -115,8 +115,8 @@ public final class CachedInjector implements Injector {
         for (int i = 0, s = declaredFields.length; s > i; i++) {
             Field field = declaredFields[i];
             CachedField cachedField = cache.getCachedField(field);
-            if (cachedField.wire) {
-                injectField(target, field, !cachedField.legacy);
+            if (cachedField.wireType != WireType.IGNORED) {
+                injectField(target, field, cachedField.wireType == WireType.WIRE);
             }
         }
     }
