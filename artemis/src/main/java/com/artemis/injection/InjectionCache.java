@@ -50,13 +50,12 @@ public class InjectionCache {
         if (cachedField == null) {
             if (field.isAnnotationPresent(Wire.class)) {
                 final Wire wire = field.getAnnotation(Wire.class);
-                cachedField = new CachedField(true, wire.name());
+                cachedField = new CachedField(field, WireType.WIRE, wire.name());
             }
             else if(field.isAnnotationPresent(Mapper.class)) {
-                cachedField = new CachedField(true, null);
-                cachedField.legacy = true;
+                cachedField = new CachedField(field, WireType.MAPPER, null);
             }else {
-                cachedField = new CachedField(false, null);
+                cachedField = new CachedField(field, WireType.IGNORED, null);
             }
             namedWireCache.put(field, cachedField);
         }

@@ -1,7 +1,5 @@
 package com.artemis.benchmark;
 
-import com.artemis.injection.CachedInjectorOld;
-import com.artemis.injection.CachedInjector;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.benchmark.domain.Domain.ComplexSystem;
@@ -9,6 +7,7 @@ import com.artemis.benchmark.domain.Domain.CustomWired;
 import com.artemis.benchmark.domain.Domain.DamageSystem;
 import com.artemis.benchmark.domain.Domain.PositionSystem;
 import com.artemis.benchmark.domain.Domain.VelocitySystem;
+import com.artemis.injection.CachedInjector;
 import com.artemis.managers.TagManager;
 import com.artemis.managers.UuidEntityManager;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -58,12 +57,6 @@ public class InjectionBenchmark {
 
     @Benchmark
     public void createWorld_with_injectionCache() {
-        configuration.setInjector(new CachedInjectorOld());
-        createWorld();
-    }
-
-    @Benchmark
-    public void createWorld_with_injectionCache2() {
         configuration.setInjector(new CachedInjector());
         createWorld();
     }

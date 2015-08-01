@@ -1,11 +1,21 @@
 package com.artemis.injection;
 
 /**
- * Date: 31/7/2015
- * Time: 17:14 PM
- *
+ * Enum used by {@link ClassType} to indicate if a class or field is annotated with {@link com.artemis.annotations.Wire}
+ * or {@link com.artemis.annotations.Mapper}.
  * @author Snorre E. Brekke
  */
-enum WireType {
-    WIRE, IGNORED
+public enum WireType {
+    /**
+     * Indicates that a class is annotated with {@link com.artemis.annotations.Wire}
+     */
+    WIRE,
+    /**
+     * Indicates that a class is annotated with {@link com.artemis.annotations.Mapper}
+     */
+    MAPPER,
+    /**
+     * Indicates that a class is not annotated with anything relevant to the artemis-world.
+     */
+    IGNORED
 }

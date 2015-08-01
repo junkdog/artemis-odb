@@ -30,8 +30,27 @@ public class FieldHandler {
     protected Bag<FieldResolver> fieldResolvers;
 
     /**
-     * Constructs a ned FieldHandler which can resolve {@link com.artemis.ComponentMapper}, {@link com.artemis.BaseSystem}
-     * and {@link com.artemis.Manager} types registerd in the {@link World}
+     * Constructs a new FieldHandler with the provided fieldResolvers. This constructor should be used when full
+     * control over the {@link FieldResolver} order is required.
+     * <p>
+     * For Artemis to function correctly, {@link ArtemisFieldResolver} should be added somewhere in the bag, or
+     * added via {@link #addFieldResolver(FieldResolver)} prior to world construction.
+     * </p>
+     * @param cache used for better reflection-speed.
+     * @param fieldResolvers bag of fieldresolver this FieldHandler should use.
+     * @see ArtemisFieldResolver
+     */
+    public FieldHandler(InjectionCache cache, Bag<FieldResolver> fieldResolvers) {
+        this.fieldResolvers = new Bag<FieldResolver>();
+        this.cache = cache;
+        addFieldResolver(new ArtemisFieldResolver());
+    }
+
+
+    /**
+     * Constructs a ned FieldHandler with an {@link ArtemisFieldResolver} already registered, which can resolve
+     * {@link com.artemis.ComponentMapper}, {@link com.artemis.BaseSystem}
+     * and {@link com.artemis.Manager} types registered in the {@link World}
      * @param cache used for better reflection-speed.
      *
      * @see ArtemisFieldResolver
@@ -43,14 +62,14 @@ public class FieldHandler {
     }
 
     /**
-     * Constructs a ned FieldHandler which can resolve {@link com.artemis.ComponentMapper}, {@link com.artemis.BaseSystem} and
-     * {@link com.artemis.Manager} types registerd in the {@link World}, and arbitrary fields annotated with
+     * Constructs a ned FieldHandler with an {@link ArtemisFieldResolver} and {@link WiredFieldResolver} already registered.
      * {@link com.artemis.annotations.Wire}.
      * @param cache used for better reflection-speed.
      * @param injectables typically registered via registered via {@link com.artemis.WorldConfiguration#register}
      *
      * @see ArtemisFieldResolver
      * @see WiredFieldResolver
+     * @see FieldHandler#FieldHandler(InjectionCache)
      */
     public FieldHandler(InjectionCache cache, Map<String, Object> injectables) {
         this(cache);

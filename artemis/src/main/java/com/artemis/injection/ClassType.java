@@ -1,8 +1,27 @@
 package com.artemis.injection;
 
 /**
+ * Enum used cache class type according to their usage in Artemis.
  * @author Snorre E. Brekke
  */
-enum ClassType {
-    MAPPER, SYSTEM, MANAGER, FACTORY, CUSTOM
+public enum ClassType {
+    /**
+     * Used for (sub)classes of {@link com.artemis.ComponentMapper}
+     */
+    MAPPER,
+    /**
+     * Used for (sub)classes of {@link com.artemis.BaseSystem}
+     */
+    SYSTEM,
+    /**
+     * Used for (sub)classes of {@link com.artemis.Manager}
+     */
+    MANAGER,
+    /**
+     * Used for (sub)classes of {@link com.artemis.EntityFactory}
+     */
+    /**
+     * Used for everything else.
+     */
+    FACTORY, CUSTOM
 }
