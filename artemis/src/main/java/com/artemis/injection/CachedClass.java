@@ -23,7 +23,7 @@ public class CachedClass {
     /**
      * All fields relevant for the class. If the {@see Wire} annotation has injectInherited
      * set to true, this array will contain ALL declared fields for this class and superclasses.
-     * If injectInherited is true, only the declared fields for {@code clazz} will be cached here.
+     * If injectInherited is false, only the declared fields for {@code clazz} will be cached here.
      */
     public Field[] allFields;
 

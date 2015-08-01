@@ -1,7 +1,7 @@
 package com.artemis.injection;
 
 /**
- * Enum used cache class type according to their usage in Artemis.
+ * Enum used to cache class type according to their usage in Artemis.
  * @author Snorre E. Brekke
  */
 public enum ClassType {
