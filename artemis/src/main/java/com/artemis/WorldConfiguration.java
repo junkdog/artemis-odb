@@ -1,5 +1,6 @@
 package com.artemis;
 
+import com.artemis.injection.Injector;
 import com.artemis.utils.Bag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.ReflectionException;
@@ -16,6 +17,8 @@ public final class WorldConfiguration {
 
 	private int expectedEntityCount = 128;
 	Map<String, Object> injectables = new HashMap<String, Object>();
+
+	Injector injector;
 
 	public WorldConfiguration() {
 		// reserving space for core managers
@@ -36,6 +39,11 @@ public final class WorldConfiguration {
 	 */
 	public WorldConfiguration expectedEntityCount(int expectedEntityCount) {
 		this.expectedEntityCount = expectedEntityCount;
+		return this;
+	}
+
+	public WorldConfiguration setInjector(Injector injector) {
+		this.injector = injector;
 		return this;
 	}
 
@@ -196,7 +204,7 @@ public final class WorldConfiguration {
 			system.setWorld(world);
 		}
 
-		injector.update();
+		injector.initialize(world, injectables);
 
 		for (int i = 0; i < managers.size(); i++) {
 			Manager manager = managers.get(i);

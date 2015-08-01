@@ -188,4 +188,23 @@ public final class Field {
 		return null;
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (!(o instanceof Field)) {
+			return false;
+		}
+
+		Field field1 = (Field) o;
+
+		return !(field != null ? !field.equals(field1.field) : field1.field != null);
+
+	}
+
+	@Override
+	public int hashCode() {
+		return field != null ? field.hashCode() : 0;
+	}
 }
