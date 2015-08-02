@@ -68,7 +68,7 @@ final class EntityEditPool {
 		// repeatedly within the same scope, we start by first checking the last
 		// element, before checking the rest.
 		int last = edited.size() - 1;
-		if (edited.get(last).entity == entity) {
+		if (edited.get(last).entity.id == entity.id) {
 			return remove ? edited.remove(last) : edited.get(last);
 		}
 
