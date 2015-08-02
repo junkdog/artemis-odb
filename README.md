@@ -43,6 +43,8 @@ Don't take our word for it, run the benchmarks yourself!
 
 ### Made with artemis-odb
 
+Browse games in the [Game Gallery](https://github.com/junkdog/artemis-odb/wiki/Game-Gallery)!
+
 #### Commercial games
 
 - [Dog Sled Saga](http://www.dogsledsaga.com/) ([Steam page](http://store.steampowered.com/app/286240/)), "desktop and mobile racing game with a saga of rank climbing, reputation building, team management, and pet loving".
@@ -100,9 +102,14 @@ Generate dependency matrix of your existing systems, managers and components.
 
 ### Getting started
 
-#### Discussion/Forum
+#### Community
 
-There's a google group at https://groups.google.com/forum/#!forum/artemis-odb - in addition to the issues, where hitherto much of the discussion has taken place. The original artemis forum is still around too, though it doesn't see much traffic, nor is it specific to artemis-odb: http://slick.ninjacave.com/forum/viewforum.php?f=28
+Share your thoughts and questions with us!
+
+- **[Gitter web chat](https://gitter.im/junkdog/artemis-odb)**
+- **[issues](https://github.com/junkdog/artemis-odb/issues)**
+- [Google groups](https://groups.google.com/forum/#!forum/artemis-odb)
+- [Slick forums](http://slick.ninjacave.com/forum/viewforum.php?f=28)
 
 #### Maven
 ```xml

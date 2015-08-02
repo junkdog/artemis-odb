@@ -84,7 +84,7 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 		if ("reset".equals(name) && "()V".equals(desc))
 			info.foundReset = true;
-		else if ("forEntity".equals(name) && desc.startsWith("(Lcom/artemis/Entity;)"))
+		else if ("forEntity".equals(name) && desc.startsWith("(I)"))
 			info.foundEntityFor = true;
 		else if ("begin".equals(name) && "()V".equals(desc))
 			info.foundBegin = true;

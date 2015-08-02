@@ -85,6 +85,18 @@ public class TagManager extends Manager {
 	}
 
 	/**
+	 * Get the tag the given entity is tagged with.
+	 *
+	 * @param entity
+	 *			the entity
+	 *
+	 * @return the tag
+	 */
+	public String getTag(Entity entity) {
+		return tagsByEntity.get(entity);
+	}
+
+	/**
 	 * Get all used tags.
 	 *
 	 * @return all used tags as collection
