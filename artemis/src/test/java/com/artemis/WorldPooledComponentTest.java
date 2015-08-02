@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.artemis.component.CountingPooledComponent;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -45,6 +46,19 @@ public class WorldPooledComponentTest
 		world.process();
 		
 		return hashes;
+	}
+
+	@Test
+	public void creating_pooled_components_returns_old_to_pool() {
+		World w = new World();
+		Entity e = w.createEntity();
+		CountingPooledComponent cpc1 = e.edit().create(CountingPooledComponent.class);
+		w.process();
+
+		e.edit().create(CountingPooledComponent.class);
+		w.process();
+
+		assertEquals(cpc1, e.edit().create(CountingPooledComponent.class));
 	}
 	
 	private int createEntity(World world)

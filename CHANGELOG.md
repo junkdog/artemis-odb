@@ -1,6 +1,7 @@
 ## Change Log
 
 #### Version: 0.10.3-SNAPSHOT
+- **Fix**: Replaced pooled components were not returned to pool.
 
 #### Version: 0.10.2 - 2015-07-20
 - **Fix**: Transmuters didn't resolve flyweight instances.

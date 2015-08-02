@@ -77,6 +77,7 @@ public class ComponentManager extends Manager {
 				break;
 			case POOLED:
 				try {
+					reclaimPooled(owner, type);
 					component = (T)pooledComponents.obtain((Class<PooledComponent>)componentClass, type);
 					break;
 				} catch (ReflectionException e) {
@@ -88,6 +89,16 @@ public class ComponentManager extends Manager {
 		
 		addComponent(owner, type, component);
 		return component;
+	}
+
+	private void reclaimPooled(Entity owner, ComponentType type) {
+		Bag<Component> components = componentsByType.safeGet(type.getIndex());
+		if (components == null)
+			return;
+
+		Component old = components.get(owner.id);
+		if (old != null)
+			pooledComponents.free((PooledComponent)old, type);
 	}
 
 	private void ensurePackedComponentCapacity(Entity owner) {
