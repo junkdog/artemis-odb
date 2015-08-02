@@ -3,6 +3,7 @@ package com.artemis.io;
 import com.artemis.*;
 import com.artemis.annotations.EntityId;
 import com.artemis.utils.Bag;
+import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 
@@ -71,7 +72,11 @@ class ReferenceTracker {
 	}
 
 	private boolean isReferencingEntity(Field f) {
-		return (Entity.class == f.getType())
-				|| (int.class == f.getType() && f.getDeclaredAnnotation(EntityId.class) != null);
+		boolean explicitEntityId = f.getDeclaredAnnotation(EntityId.class) != null;
+		Class type = f.getType();
+		return (Entity.class == type)
+				|| (Bag.class == type && explicitEntityId) // due to GWT limitations
+				|| (int.class == type && explicitEntityId)
+				|| (IntBag.class == type && explicitEntityId);
 	}
 }

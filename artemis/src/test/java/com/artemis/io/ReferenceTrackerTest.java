@@ -26,13 +26,11 @@ public class ReferenceTrackerTest {
 		EntityReference ref1 = tracker.find(EntityHolder.class, "entity");
 		assertEquals(EntityHolder.class, ref1.componentType);
 		assertEquals("entity", ref1.field.getName());
-		assertFalse(ref1.isFieldInt);
+		assertEquals(EntityReference.FieldType.ENTITY, ref1.fieldType);
 
 		EntityReference ref2 = tracker.find(EntityHolder.class, "entityId");
 		assertEquals(EntityHolder.class, ref2.componentType);
 		assertEquals("entityId", ref2.field.getName());
-		assertTrue(ref2.isFieldInt);
+		assertEquals(EntityReference.FieldType.INT, ref2.fieldType);
 	}
-
-
 }

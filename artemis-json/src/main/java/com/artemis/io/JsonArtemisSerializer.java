@@ -6,7 +6,6 @@ import com.artemis.managers.WorldSerializationManager;
 import com.artemis.utils.IntBag;
 import com.esotericsoftware.jsonbeans.Json;
 import com.esotericsoftware.jsonbeans.JsonSerializer;
-import com.esotericsoftware.jsonbeans.JsonWriter;
 import com.esotericsoftware.jsonbeans.OutputType;
 
 import java.io.IOException;
