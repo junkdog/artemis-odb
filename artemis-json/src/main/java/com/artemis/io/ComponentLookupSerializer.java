@@ -7,14 +7,15 @@ import com.artemis.annotations.Transient;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.ReflectionException;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonValue;
+import com.esotericsoftware.jsonbeans.Json;
+import com.esotericsoftware.jsonbeans.JsonSerializer;
+import com.esotericsoftware.jsonbeans.JsonValue;
 
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-public class ComponentLookupSerializer implements Json.Serializer<IdentityHashMap> {
+public class ComponentLookupSerializer implements JsonSerializer<IdentityHashMap> {
 	private World world;
 
 	public ComponentLookupSerializer(World world) {

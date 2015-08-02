@@ -11,9 +11,10 @@ import com.artemis.managers.TagManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
-import com.badlogic.gdx.utils.Json;
-import com.badlogic.gdx.utils.JsonValue;
-import com.badlogic.gdx.utils.ObjectMap;
+import com.esotericsoftware.jsonbeans.Json;
+import com.esotericsoftware.jsonbeans.JsonSerializer;
+import com.esotericsoftware.jsonbeans.JsonValue;
+import com.esotericsoftware.jsonbeans.ObjectMap;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -21,7 +22,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 @Wire(failOnNull = false)
-public class EntitySerializer implements Json.Serializer<Entity> {
+public class EntitySerializer implements JsonSerializer<Entity> {
 
 	private final Bag<Component> components = new Bag<Component>();
 	private final ComponentNameComparator comparator = new ComponentNameComparator();
