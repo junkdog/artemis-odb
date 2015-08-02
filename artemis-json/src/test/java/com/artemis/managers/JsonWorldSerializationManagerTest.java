@@ -4,6 +4,7 @@ import com.artemis.*;
 import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
+import com.artemis.component.EntityHolder;
 import com.artemis.component.ReusedComponent;
 import com.artemis.io.JsonArtemisSerializer;
 import com.artemis.io.SaveFileFormat;
@@ -134,6 +135,37 @@ public class JsonWorldSerializationManagerTest {
 
 		assertTags();
 		assertGroups();
+	}
+
+	@Test
+	public void save_load_entity_references() {
+		setTags();
+
+		EntityEdit ee1 = world.createEntity().edit();
+		EntityHolder holder = ee1.create(EntityHolder.class);
+		holder.entity = tags.getEntity("tag1");
+		holder.entityId = tags.getEntity("tag3").id;
+
+		tags.register("entity-holder", ee1.getEntity());
+		int entityHolderId = ee1.getEntity().id;
+
+		world.process();
+
+		String json = save(allEntities);
+
+		ByteArrayInputStream is = new ByteArrayInputStream(
+				json.getBytes(StandardCharsets.UTF_8));
+		manger.load(is, SaveFileFormat.class);
+
+		world.process();
+
+		Entity entityHolder = tags.getEntity("entity-holder");
+		EntityHolder holder2 = entityHolder.getComponent(EntityHolder.class);
+		assertNotEquals(entityHolder.id, entityHolderId);
+		assertNotNull(holder2.entity);
+		assertNotEquals(holder.entity, holder2.entity);
+		assertNotEquals(holder.entityId, holder2.entityId);
+
 	}
 
 

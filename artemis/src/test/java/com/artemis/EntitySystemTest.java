@@ -51,8 +51,6 @@ public class EntitySystemTest {
 		Entity e = w.createEntity();
 		w.process();
 
-		System.out.printf("%s=%d\n", e, e.getCompositionId());
-
 		assertEquals(1, es1.getActives().size());
 		assertEquals(1, es2.getActives().size());
 	}

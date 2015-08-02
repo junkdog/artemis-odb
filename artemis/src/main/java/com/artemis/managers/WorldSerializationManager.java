@@ -30,7 +30,6 @@ public class WorldSerializationManager extends Manager {
 
 	public <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
 		return backend.load(is, format);
-//		return null;
 	}
 
 	public void save(Writer writer, SaveFileFormat format) {

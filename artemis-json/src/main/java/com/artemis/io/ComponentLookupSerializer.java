@@ -26,11 +26,9 @@ public class ComponentLookupSerializer implements Json.Serializer<IdentityHashMa
 		IdentityHashMap<Class<? extends Component>, String> componentMap = classToIdentifierMap();
 
 		json.writeObjectStart();
-//		json.writeObjectStart("components");
 		for (Map.Entry<Class<? extends Component>, String> entry : componentMap.entrySet()) {
 			json.writeValue(entry.getKey().getName(), entry.getValue());
 		}
-//		json.writeObjectEnd();
 		json.writeObjectEnd();
 	}
 
@@ -39,7 +37,6 @@ public class ComponentLookupSerializer implements Json.Serializer<IdentityHashMa
 		IdentityHashMap<Class<? extends Component>, String> componentMap
 				= new IdentityHashMap<Class<? extends Component>, String>();
 
-//		JsonValue component = jsonData.getChild("components");
 		JsonValue component = jsonData.child;
 		try {
 			while (component != null) {

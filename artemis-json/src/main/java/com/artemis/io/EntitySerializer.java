@@ -10,6 +10,7 @@ import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -25,6 +26,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 	private final Bag<Component> components = new Bag<Component>();
 	private final ComponentNameComparator comparator = new ComponentNameComparator();
 	private final World world;
+	private final ReferenceTracker referenceTracker;
 
 	private GroupManager groupManager;
 	private TagManager tagManager;
@@ -33,8 +35,11 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 
 	private final ObjectMap<String, Class<? extends Component>> componentClasses;
 
-	public EntitySerializer(World world) {
+	private boolean isSerializingEntity;
+
+	public EntitySerializer(World world, ReferenceTracker referenceTracker) {
 		this.world = world;
+		this.referenceTracker = referenceTracker;
 		world.inject(this);
 
 		componentClasses = new ObjectMap<String, Class<? extends Component>>();
@@ -46,9 +51,19 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 
 	@Override
 	public void write(Json json, Entity e, Class knownType) {
-		ComponentLookupSerializer lookup =
-				(ComponentLookupSerializer) json.getSerializer(IdentityHashMap.class);
-		IdentityHashMap<Class<? extends Component>, String> componentMap = lookup.classToIdentifierMap();
+		// need to track this in case the components of an entity
+		// reference another entity - if so, we only want to record
+		// the id
+		if (isSerializingEntity) {
+			json.writeValue(e.id);
+			return;
+		} else {
+			isSerializingEntity = true;
+		}
+
+		ComponentLookupSerializer lookup = componentLookup(json);
+		IdentityHashMap<Class<? extends Component>, String> componentMap =
+				lookup.classToIdentifierMap();
 
 		world.getComponentManager().getComponentsFor(e, components);
 		components.sort(comparator);
@@ -65,6 +80,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 
 			String componentIdentifier = componentMap.get(c.getClass());
 			json.writeObjectStart(componentIdentifier);
+
 			json.writeFields(c);
 			json.writeObjectEnd();
 		}
@@ -72,6 +88,16 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		json.writeObjectEnd();
 
 		components.clear();
+
+		isSerializingEntity = false;
+	}
+
+	private ComponentLookupSerializer componentLookup(Json json) {
+		return (ComponentLookupSerializer) json.getSerializer(IdentityHashMap.class);
+	}
+
+	private IntBagEntitySerializer intBagEntity(Json json) {
+		return (IntBagEntitySerializer) json.getSerializer(IntBag.class);
 	}
 
 	private void writeTag(Json json, Entity e) {
@@ -101,11 +127,25 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 
 	@Override
 	public Entity read(Json json, JsonValue jsonData, Class type) {
-		ComponentLookupSerializer lookup =
-				(ComponentLookupSerializer) json.getSerializer(IdentityHashMap.class);
+		// need to track this in case the components of an entity
+		// reference another entity - if so, we only want to read
+		// the id
+		if (isSerializingEntity) {
+			int entityId = json.readValue(Integer.class, jsonData);
+			// creating a temporary entity; this will later be replafed
+			// with the correct entity
+			Entity entity = Entity.createFlyweight(world);
+			entity.id = entityId;
+			return world.getEntity(entityId);
+		} else {
+			isSerializingEntity = true;
+		}
+
+		ComponentLookupSerializer lookup = componentLookup(json);
 		Map<String, Class<? extends Component>> components = lookup.identifierToClassMap();
 
 		Entity e = world.createEntity();
+
 		jsonData = readTag(jsonData, e);
 		jsonData = readGroups(jsonData, e);
 
@@ -124,8 +164,14 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 			Component c = edit.create(componentType);
 			json.readFields(c, component);
 
+			// if component contains entity references, add
+			// entity reference operations
+			referenceTracker.addEntityReferencingComponent(c);
+
 			component = component.next;
 		}
+
+		isSerializingEntity = false;
 
 		return edit.getEntity();
 	}

@@ -15,17 +15,24 @@ import java.util.IdentityHashMap;
 public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSerializer<Json.Serializer> {
 	private final Json json;
 	private final ComponentLookupSerializer lookup;
+	private final IntBagEntitySerializer intBagEntitySerializer;
 	private boolean prettyPrint;
+	private ReferenceTracker referenceTracker;
 
 	public JsonArtemisSerializer(World world) {
 		super(world);
 
+		referenceTracker = new ReferenceTracker();
+
 		json = new Json(JsonWriter.OutputType.json);
 		json.setIgnoreUnknownFields(true);
+
 		lookup = new ComponentLookupSerializer(world);
+		intBagEntitySerializer = new IntBagEntitySerializer(world);
+
 		json.setSerializer(IdentityHashMap.class, lookup);
-		json.setSerializer(IntBag.class, new IntBagEntitySerializer(world));
-		json.setSerializer(Entity.class, new EntitySerializer(world));
+		json.setSerializer(IntBag.class, intBagEntitySerializer);
+		json.setSerializer(Entity.class, new EntitySerializer(world, referenceTracker));
 	}
 
 	public JsonArtemisSerializer prettyPrint(boolean prettyPrint) {
@@ -42,6 +49,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	@Override
 	protected void save(Writer writer, SaveFileFormat save) {
 		try {
+			referenceTracker.inspectTypes(world);
 			save.componentIdentifiers.putAll(lookup.classToIdentifierMap());
 			if (prettyPrint) {
 				writer.append(json.prettyPrint(save));
@@ -55,6 +63,8 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 	@Override
 	protected <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
-		return json.fromJson(format, is);
+		T t = json.fromJson(format, is);
+		referenceTracker.translate(intBagEntitySerializer.getTranslatedIds());
+		return t;
 	}
 }

@@ -37,7 +37,7 @@ public class EntitySerializerTest {
 
 		Json json = new Json(JsonWriter.OutputType.javascript);
 		json.setSerializer(IdentityHashMap.class, new ComponentLookupSerializer(world));
-		json.setSerializer(Entity.class, new EntitySerializer(world));
+		json.setSerializer(Entity.class, new EntitySerializer(world, new ReferenceTracker()));
 
 		String s = json.prettyPrint(e);
 

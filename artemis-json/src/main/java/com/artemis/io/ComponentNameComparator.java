@@ -1,6 +1,7 @@
 package com.artemis.io;
 
 import com.artemis.Component;
+
 import java.util.Comparator;
 
 public class ComponentNameComparator implements Comparator<Component> {

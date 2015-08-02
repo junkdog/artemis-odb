@@ -3,6 +3,7 @@ package com.artemis.io;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
+import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.utils.JsonValue;
 @Wire
 public class IntBagEntitySerializer implements Json.Serializer<IntBag> {
 	private final World world;
+	private final Bag<Entity> translatedIds = new Bag<Entity>();
 
 	public IntBagEntitySerializer(World world) {
 
@@ -34,10 +36,16 @@ public class IntBagEntitySerializer implements Json.Serializer<IntBag> {
 		JsonValue entity = entityArray;
 		while (entity != null) {
 			Entity e = json.readValue(Entity.class, entity.child);
-			entity = entity.next;
+			translatedIds.set(Integer.parseInt(entity.name), e);
 			bag.add(e.id);
+
+			entity = entity.next;
 		}
 
 		return bag;
+	}
+
+	public Bag<Entity> getTranslatedIds() {
+		return translatedIds;
 	}
 }
