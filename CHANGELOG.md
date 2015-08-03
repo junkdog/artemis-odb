@@ -8,7 +8,7 @@
   - Customize output by extending SaveFileFormat.
   - Uses [JsonBeans](https://github.com/EsotericSoftware/jsonbeans) behind the scenes.
 - ComponentMappers now also sport get(int)/has(int) methods.
-- Entity get/setUuid depreacted.
+- Entity get/setUuid deprecated.
 - Add getTag method to TagManager 
 - **Fix**: `@SafeVarargs` on Aspect - no more warnings.
 - **Fix**: Replaced pooled components were not returned to pool.
