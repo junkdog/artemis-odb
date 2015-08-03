@@ -38,7 +38,7 @@ public class SaveFileFormat {
 	public final IntBag entities;
 
 	public SaveFileFormat(IntBag entities) {
-		this.entities = entities;
+		this.entities = (entities != null) ? entities : new IntBag();
 		componentIdentifiers = new IdentityHashMap<Class<? extends Component>, String>();
 		metadata = new Metadata();
 		metadata.version = Metadata.LATEST;

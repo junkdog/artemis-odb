@@ -1,6 +1,5 @@
 package com.artemis.managers;
 
-import com.artemis.Entity;
 import com.artemis.Manager;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
@@ -8,7 +7,6 @@ import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
 
 import java.io.InputStream;
-import java.io.Reader;
 import java.io.Writer;
 
 @Wire
