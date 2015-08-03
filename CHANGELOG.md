@@ -1,6 +1,10 @@
 ## Change Log
 
 #### Version: 0.10.3-SNAPSHOT
+- Serialize to json.
+  - New [WorldSerializationManager](https://github.com/junkdog/artemis-odb/blob/master/artemis/src/main/java/com/artemis/managers/WorldSerializationManager.java).
+  - Customize output by extending SaveFileFormat.
+  - Uses [JsonBeans](https://github.com/EsotericSoftware/jsonbeans) behind the scenes.
 - **Fix**: Replaced pooled components were not returned to pool.
 
 #### Version: 0.10.2 - 2015-07-20
