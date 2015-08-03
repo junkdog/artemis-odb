@@ -2,10 +2,7 @@ package com.artemis.managers;
 
 import com.artemis.*;
 import com.artemis.annotations.Wire;
-import com.artemis.component.ComponentX;
-import com.artemis.component.ComponentY;
-import com.artemis.component.EntityHolder;
-import com.artemis.component.ReusedComponent;
+import com.artemis.component.*;
 import com.artemis.io.JsonArtemisSerializer;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
@@ -165,7 +162,68 @@ public class JsonWorldSerializationManagerTest {
 		assertNotNull(holder2.entity);
 		assertNotEquals(holder.entity, holder2.entity);
 		assertNotEquals(holder.entityId, holder2.entityId);
+	}
 
+	@Test
+	public void save_load_bag_entity_references() {
+		setTags();
+
+		EntityEdit ee1 = world.createEntity().edit();
+		EntityBagHolder holder = ee1.create(EntityBagHolder.class);
+		holder.entities.add(tags.getEntity("tag1"));
+		holder.entities.add(tags.getEntity("tag3"));
+
+		tags.register("entity-holder", ee1.getEntity());
+		int entityHolderId = ee1.getEntity().id;
+
+		world.process();
+
+		String json = save(allEntities);
+
+		ByteArrayInputStream is = new ByteArrayInputStream(
+				json.getBytes(StandardCharsets.UTF_8));
+		manger.load(is, SaveFileFormat.class);
+
+		world.process();
+
+		Entity entityHolder = tags.getEntity("entity-holder");
+		EntityBagHolder holder2 = entityHolder.getComponent(EntityBagHolder.class);
+		assertNotEquals(entityHolder.id, entityHolderId);
+		assertNotNull(holder2.entities);
+		assertEquals(2, holder2.entities.size());
+		assertEquals(tags.getEntity("tag1"), holder2.entities.get(0));
+		assertEquals(tags.getEntity("tag3"), holder2.entities.get(1));
+	}
+
+	@Test
+	public void save_load_intbag_entity_references() {
+		setTags();
+
+		EntityEdit ee1 = world.createEntity().edit();
+		EntityIntBagHolder holder = ee1.create(EntityIntBagHolder.class);
+		holder.entities.add(tags.getEntity("tag1").id);
+		holder.entities.add(tags.getEntity("tag3").id);
+
+		tags.register("entity-holder", ee1.getEntity());
+		int entityHolderId = ee1.getEntity().id;
+
+		world.process();
+
+		String json = save(allEntities);
+
+		ByteArrayInputStream is = new ByteArrayInputStream(
+				json.getBytes(StandardCharsets.UTF_8));
+		manger.load(is, SaveFileFormat.class);
+
+		world.process();
+
+		Entity entityHolder = tags.getEntity("entity-holder");
+		EntityIntBagHolder holder2 = entityHolder.getComponent(EntityIntBagHolder.class);
+		assertNotEquals(entityHolder.id, entityHolderId);
+		assertNotNull(holder2.entities);
+		assertEquals(2, holder2.entities.size());
+		assertEquals(tags.getEntity("tag1"), world.getEntity(holder2.entities.get(0)));
+		assertEquals(tags.getEntity("tag3"), world.getEntity(holder2.entities.get(1)));
 	}
 
 

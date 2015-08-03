@@ -3,6 +3,7 @@ package com.artemis.io;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.managers.WorldSerializationManager;
+import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.esotericsoftware.jsonbeans.Json;
 import com.esotericsoftware.jsonbeans.JsonSerializer;
@@ -32,6 +33,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		intBagEntitySerializer = new IntBagEntitySerializer(world);
 
 		json.setSerializer(IdentityHashMap.class, lookup);
+		json.setSerializer(Bag.class, new EntityBagSerializer(world));
 		json.setSerializer(IntBag.class, intBagEntitySerializer);
 		json.setSerializer(Entity.class, new EntitySerializer(world, referenceTracker));
 	}

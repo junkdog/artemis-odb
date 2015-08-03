@@ -39,7 +39,15 @@ class EntityReference {
 		},
 		INT_BAG {
 			void translate(Component c, Field field, Bag<Entity> translatedIds) {
-				throw  new RuntimeException("not impl");
+				try {
+					IntBag bag = (IntBag) field.get(c);
+					for (int i = 0, s = bag.size(); s > i; i++) {
+						int oldId = bag.get(i);
+						bag.set(i, translatedIds.get(oldId).id);
+					}
+				} catch (ReflectionException e) {
+					throw  new RuntimeException(e);
+				}
 			}
 		},
 		ENTITY {
@@ -54,7 +62,15 @@ class EntityReference {
 		},
 		ENTITY_BAG {
 			void translate(Component c, Field field, Bag<Entity> translatedIds) {
-				throw  new RuntimeException("not impl");
+				try {
+					Bag<Entity> bag = (Bag<Entity>) field.get(c);
+					for (int i = 0, s = bag.size(); s > i; i++) {
+						Entity e = bag.get(i);
+						bag.set(i, translatedIds.get(e.id));
+					}
+				} catch (ReflectionException e) {
+					throw new RuntimeException(e);
+				}
 			}
 		};
 

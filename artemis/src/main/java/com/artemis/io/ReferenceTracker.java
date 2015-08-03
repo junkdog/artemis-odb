@@ -75,7 +75,7 @@ class ReferenceTracker {
 		boolean explicitEntityId = f.getDeclaredAnnotation(EntityId.class) != null;
 		Class type = f.getType();
 		return (Entity.class == type)
-				|| (Bag.class == type && explicitEntityId) // due to GWT limitations
+				|| (Bag.class == type) // due to GWT limitations
 				|| (int.class == type && explicitEntityId)
 				|| (IntBag.class == type && explicitEntityId);
 	}

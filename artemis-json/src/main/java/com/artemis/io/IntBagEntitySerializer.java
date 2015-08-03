@@ -14,6 +14,8 @@ public class IntBagEntitySerializer implements JsonSerializer<IntBag> {
 	private final World world;
 	private final Bag<Entity> translatedIds = new Bag<Entity>();
 
+	private int recursionLevel;
+
 	public IntBagEntitySerializer(World world) {
 
 		this.world = world;
@@ -22,28 +24,51 @@ public class IntBagEntitySerializer implements JsonSerializer<IntBag> {
 
 	@Override
 	public void write(Json json, IntBag entities, Class knownType) {
-		json.writeObjectStart();
-		for (int i = 0, s = entities.size(); s > i; i++) {
-			Entity e = world.getEntity(entities.get(i));
-			json.writeValue(Integer.toString(e.id), e);
+		recursionLevel++;
+
+		if (recursionLevel == 1) {
+			json.writeObjectStart();
+			for (int i = 0, s = entities.size(); s > i; i++) {
+				Entity e = world.getEntity(entities.get(i));
+				json.writeValue(Integer.toString(e.id), e);
+			}
+			json.writeObjectEnd();
+		} else {
+			json.writeArrayStart();
+			for (int i = 0, s = entities.size(); s > i; i++) {
+				json.writeValue(entities.get(i));
+			}
+			json.writeArrayEnd();
 		}
-		json.writeObjectEnd();
+
+		recursionLevel--;
 	}
 
 	@Override
 	public IntBag read(Json json, JsonValue jsonData, Class type) {
-		IntBag bag = new IntBag();
-		JsonValue entityArray = jsonData.child;
-		JsonValue entity = entityArray;
-		while (entity != null) {
-			Entity e = json.readValue(Entity.class, entity.child);
-			translatedIds.set(Integer.parseInt(entity.name), e);
-			bag.add(e.id);
+		recursionLevel++;
 
-			entity = entity.next;
+		IntBag bag = new IntBag();
+		if (recursionLevel == 1) {
+			JsonValue entityArray = jsonData.child;
+			JsonValue entity = entityArray;
+			while (entity != null) {
+				Entity e = json.readValue(Entity.class, entity.child);
+				translatedIds.set(Integer.parseInt(entity.name), e);
+				bag.add(e.id);
+
+				entity = entity.next;
+			}
+		} else {
+			for (JsonValue child = jsonData.child; child != null; child = child.next) {
+				bag.add(json.readValue(Integer.class, child));
+			}
 		}
 
+		recursionLevel--;
+
 		return bag;
+
 	}
 
 	public Bag<Entity> getTranslatedIds() {
