@@ -287,14 +287,20 @@ public final class Entity {
 	 * </p>
 	 *
 	 * @return uuid instance for this entity
+	 * @deprecated historical left-over: use the UuidEntityManager directly, if you need it.
 	 */
+	@Deprecated
 	public UUID getUuid() {
 		if (!world.hasUuidManager())
 			throw new MundaneWireException(UuidEntityManager.class);
 		
 		return world.getManager(UuidEntityManager.class).getUuid(this);
 	}
-	
+
+	/**
+	 * @deprecated historical left-over: use the UuidEntityManager directly, if you need it.
+	 */
+	@Deprecated
 	public void setUuid(UUID uuid) {
 		if (world.hasUuidManager()) {
 			 world.getManager(UuidEntityManager.class).setUuid(this, uuid);
