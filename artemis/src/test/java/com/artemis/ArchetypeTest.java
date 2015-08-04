@@ -21,7 +21,6 @@ public class ArchetypeTest {
 	private Archetype arch1;
 	private Archetype arch2;
 	private Archetype arch3;
-	private Archetype archPooled;
 
 	@Before
 	public void init() {
@@ -38,9 +37,6 @@ public class ArchetypeTest {
 			.build(world);
 		arch3 = new ArchetypeBuilder()
 			.add(ComponentX.class)
-			.build(world);
-		archPooled = new ArchetypeBuilder()
-			.add(ReusedComponent.class)
 			.build(world);
 	}
 
@@ -91,7 +87,14 @@ public class ArchetypeTest {
 
 	@Test
 	public void create_many_entities_with_pooled_components() {
-		archetypeEntity(archPooled, 256);
+		World world = new World();
+		Archetype archPooled = new ArchetypeBuilder()
+				.add(ReusedComponent.class)
+				.build(world);
+
+		for (int i = 0; 256> i; i++) {
+			world.createEntity(archPooled);
+		}
 	}
 
 	@Test
