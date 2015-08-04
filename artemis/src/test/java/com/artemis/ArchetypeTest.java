@@ -3,6 +3,7 @@ package com.artemis;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import com.artemis.component.ReusedComponent;
 import com.artemis.utils.Bag;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +21,7 @@ public class ArchetypeTest {
 	private Archetype arch1;
 	private Archetype arch2;
 	private Archetype arch3;
+	private Archetype archPooled;
 
 	@Before
 	public void init() {
@@ -36,6 +38,9 @@ public class ArchetypeTest {
 			.build(world);
 		arch3 = new ArchetypeBuilder()
 			.add(ComponentX.class)
+			.build(world);
+		archPooled = new ArchetypeBuilder()
+			.add(ReusedComponent.class)
 			.build(world);
 	}
 
@@ -82,6 +87,11 @@ public class ArchetypeTest {
 		assertEquals(8, es2.getActives().size());
 
 		world.process();
+	}
+
+	@Test
+	public void create_many_entities_with_pooled_components() {
+		archetypeEntity(archPooled, 256);
 	}
 
 	@Test

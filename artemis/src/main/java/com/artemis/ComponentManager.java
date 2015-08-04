@@ -96,7 +96,7 @@ public class ComponentManager extends Manager {
 		if (components == null)
 			return;
 
-		Component old = components.get(owner.id);
+		Component old = components.safeGet(owner.id);
 		if (old != null)
 			pooledComponents.free((PooledComponent)old, type);
 	}
