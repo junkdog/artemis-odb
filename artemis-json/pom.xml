@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>artemis-odb-serializer-json</artifactId>
 	<packaging>jar</packaging>
-	<name>artemis-odb jsonbeans serializer</name>
+	<name>artemis-odb-jsonbeans-serializer</name>
 	
 	<description>Fork of Artemis Entity System Framework.</description>
 	<url>https://github.com/junkdog/artemis-odb</url>
