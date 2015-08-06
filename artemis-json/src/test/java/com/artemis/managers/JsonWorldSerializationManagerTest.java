@@ -26,15 +26,7 @@ public class JsonWorldSerializationManagerTest {
 
 	@Before
 	public void setup() {
-		world = new World(new WorldConfiguration()
-				.setManager(GroupManager.class)
-				.setManager(TagManager.class)
-				.setManager(WorldSerializationManager.class));
-
-		world.inject(this);
-		JsonArtemisSerializer backend = new JsonArtemisSerializer(world);
-		backend.prettyPrint(true);
-		manger.setSerializer(backend);
+		setupWorld();
 
 		allEntities = subscriptions.get(Aspect.all());
 
@@ -45,6 +37,7 @@ public class JsonWorldSerializationManagerTest {
 
 		EntityEdit ee2 = world.createEntity().edit();
 		ee2.create(ComponentX.class).text = "hello 2";
+		ee2.create(NameComponent.class).name = "do i work?";
 		ee2.create(ComponentY.class).text = "whatever 2";
 		ee2.create(ReusedComponent.class);
 
@@ -57,8 +50,20 @@ public class JsonWorldSerializationManagerTest {
 		assertEquals(3, allEntities.getEntities().size());
 	}
 
+	private void setupWorld() {
+		world = new World(new WorldConfiguration()
+				.setManager(GroupManager.class)
+				.setManager(TagManager.class)
+				.setManager(WorldSerializationManager.class));
+
+		world.inject(this);
+		JsonArtemisSerializer backend = new JsonArtemisSerializer(world);
+		backend.prettyPrint(true);
+		manger.setSerializer(backend);
+	}
+
 	@Test
-	public void serializer_save_load_std_format() {
+	public void serializer_save_load_std_format_new_world() {
 		String json = save(allEntities);
 
 		deleteAll();
@@ -66,6 +71,11 @@ public class JsonWorldSerializationManagerTest {
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
 				json.getBytes(StandardCharsets.UTF_8));
+
+		setupWorld();
+
+		allEntities = subscriptions.get(Aspect.all());
+
 		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
 
 		world.process();

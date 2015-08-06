@@ -16,10 +16,7 @@ import com.esotericsoftware.jsonbeans.JsonSerializer;
 import com.esotericsoftware.jsonbeans.JsonValue;
 import com.esotericsoftware.jsonbeans.ObjectMap;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.IdentityHashMap;
-import java.util.Map;
+import java.util.*;
 
 @Wire(failOnNull = false)
 public class EntitySerializer implements JsonSerializer<Entity> {
@@ -33,10 +30,11 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 	private TagManager tagManager;
 	private final Collection<String> registeredTags;
 
-
 	private final ObjectMap<String, Class<? extends Component>> componentClasses;
 
 	private boolean isSerializingEntity;
+
+	Map<String, Class<? extends Component>> types = new HashMap<String, Class<? extends Component>>();
 
 	public EntitySerializer(World world, ReferenceTracker referenceTracker) {
 		this.world = world;
@@ -142,8 +140,8 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 			isSerializingEntity = true;
 		}
 
-		ComponentLookupSerializer lookup = componentLookup(json);
-		Map<String, Class<? extends Component>> components = lookup.identifierToClassMap();
+//		ComponentLookupSerializer lookup = componentLookup(json);
+//		Map<String, Class<? extends Component>> components = lookup.identifierToClassMap();
 
 		Entity e = world.createEntity();
 
@@ -161,7 +159,8 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		while (component != null) {
 			assert(component.name() != null);
 
-			Class<? extends Component> componentType = components.get(component.name);
+//			Class<? extends Component> componentType = components.get(component.name);
+			Class<? extends Component> componentType = types.get(component.name);
 			Component c = edit.create(componentType);
 			json.readFields(c, component);
 

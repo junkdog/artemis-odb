@@ -1,13 +1,12 @@
 package com.artemis.io;
 
+import com.artemis.Component;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.managers.WorldSerializationManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
-import com.esotericsoftware.jsonbeans.Json;
-import com.esotericsoftware.jsonbeans.JsonSerializer;
-import com.esotericsoftware.jsonbeans.OutputType;
+import com.esotericsoftware.jsonbeans.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +17,8 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	private final Json json;
 	private final ComponentLookupSerializer lookup;
 	private final IntBagEntitySerializer intBagEntitySerializer;
+	private final EntitySerializer entitySerializer;
+
 	private boolean prettyPrint;
 	private ReferenceTracker referenceTracker;
 
@@ -35,7 +36,8 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		json.setSerializer(IdentityHashMap.class, lookup);
 		json.setSerializer(Bag.class, new EntityBagSerializer(world));
 		json.setSerializer(IntBag.class, intBagEntitySerializer);
-		json.setSerializer(Entity.class, new EntitySerializer(world, referenceTracker));
+		entitySerializer = new EntitySerializer(world, referenceTracker);
+		json.setSerializer(Entity.class, entitySerializer);
 	}
 
 	public JsonArtemisSerializer prettyPrint(boolean prettyPrint) {
@@ -66,8 +68,22 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 	@Override
 	protected <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
+		updateLookupMap(is); // this isn't the nices solution, but what the hell
 		T t = json.fromJson(format, is);
 		referenceTracker.translate(intBagEntitySerializer.getTranslatedIds());
 		return t;
+	}
+
+	private void updateLookupMap(InputStream is) {
+		try {
+			JsonValue jsonData = new JsonReader().parse(is);
+			SaveFileFormat save = new SaveFileFormat((IntBag)null);
+			json.readField(save, "componentIdentifiers", jsonData);
+
+			is.reset();
+			entitySerializer.types = save.readLookupMap();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }

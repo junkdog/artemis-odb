@@ -11,7 +11,6 @@ import com.esotericsoftware.jsonbeans.Json;
 import com.esotericsoftware.jsonbeans.JsonSerializer;
 import com.esotericsoftware.jsonbeans.JsonValue;
 
-import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
@@ -63,17 +62,6 @@ public class ComponentLookupSerializer implements JsonSerializer<IdentityHashMap
 				continue;
 
 			components.put(type, i + "_" + type.getSimpleName());
-		}
-
-		return components;
-	}
-
-	protected Map<String, Class<? extends Component>> identifierToClassMap() {
-		Map<String, Class<? extends Component>> components =
-				new HashMap<String, Class<? extends Component>>();
-
-		for (Map.Entry<Class<? extends Component>, String> entry : classToIdentifierMap().entrySet()) {
-			components.put(entry.getValue(), entry.getKey());
 		}
 
 		return components;
