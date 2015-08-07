@@ -1,6 +1,10 @@
 ## Change Log
 
 #### Version: 0.10.3-SNAPSHOT
+- **BREAKING CHANGES**
+  - EntitySubscription's inserted/removed method pass an IntBag
+    of entity ids, instead of a Bag of entities.
+
 - Optionally [customized injection](https://github.com/junkdog/artemis-odb/wiki/Customized-injection) strategies.
   - Injector caches class members per default.
 - Serialize to json.

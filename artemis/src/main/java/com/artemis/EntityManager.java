@@ -17,6 +17,7 @@ public class EntityManager extends Manager {
 	static final int NO_COMPONENTS = 1;
 	/** Contains all entities in the manager. */
 	private final Bag<Entity> entities;
+	private final BitSet newlyCreatedEntityIds;
 	/** Stores the bits of all currently disabled entities IDs. */
 	private final BitSet disabled;
 	/** Amount of currently active (added to the world) entities. */
@@ -40,6 +41,7 @@ public class EntityManager extends Manager {
 	protected EntityManager(int initialContainerSize) {
 		entities = new Bag<Entity>(initialContainerSize);
 		disabled = new BitSet();
+		newlyCreatedEntityIds = new BitSet();
 	}
 	
 	@Override
@@ -59,7 +61,8 @@ public class EntityManager extends Manager {
 		created++;
 
 		// growing backing array just in case
-		entities.set(e.getId(), null);
+		entities.set(e.getId(), e);
+		newlyCreatedEntityIds.set(e.id);
 		return e;
 	}
 	
@@ -75,10 +78,10 @@ public class EntityManager extends Manager {
 	}
 
 	/** Get component composition of entity. */
-	BitSet componentBits(Entity e) {
-		int identityIndex = entityToIdentity.get(e.getId());
+	BitSet componentBits(int entityId) {
+		int identityIndex = entityToIdentity.get(entityId);
 		if (identityIndex == 0)
-			identityIndex = forceResolveIdentity(e);
+			identityIndex = forceResolveIdentity(entityId);
 		
 		return identityResolver.composition.get(identityIndex);
 	}
@@ -89,27 +92,27 @@ public class EntityManager extends Manager {
 	 * Called by the world when an entity is added.
 	 * </p>
 	 *
-	 * @param e
+	 * @param entityId
 	 *			the entity to add
 	 */
 	@Override
-	public void added(Entity e) {
+	public void added(int entityId) {
 		active++;
 		added++;
-		entities.set(e.getId(), e);
+		// TODO: refactor - we can check the added bitset instead
+//		entities.set(entityId, e);
 	}
 
 	/**
 	 * Sets the entity (re)enabled in the manager.
 	 *
-	 * @param e
+	 * @param entityId
 	 *			the entity to (re)enable
 	 * @deprecated create your own components to track state.
 	 */
-	@Override
-	@Deprecated
-	public void enabled(Entity e) {
-		disabled.clear(e.getId());
+	@Override @Deprecated
+	public void enabled(int entityId) {
+		disabled.clear(entityId);
 	}
 
 	/** Refresh entity composition identity if it changed. */
@@ -136,29 +139,41 @@ public class EntityManager extends Manager {
 	/**
 	 * Sets the entity as disabled in the manager.
 	 *
-	 * @param e
+	 * @param entityId
 	 *			the entity to disable
 	 */
 	@Override @Deprecated
-	public void disabled(Entity e) {
-		disabled.set(e.getId());
+	public void disabled(int entityId) {
+		disabled.set(entityId);
 	}
 
 	/**
 	 * Removes the entity from the manager, freeing it's id for new entities.
 	 *
-	 * @param e
+	 * @param entityId
 	 *			the entity to remove
 	 */
 	@Override
-	public void deleted(Entity e) {
-		if (entities.get(e.getId()) != null) {
-			entities.set(e.getId(), null);
+	public void deleted(int entityId) {
+		Entity entity = entities.get(entityId);
+		if (entity == null)
+			return;
+
+		entities.set(entityId, null);
+
+		if (newlyCreatedEntityIds.get(entityId)) {
+			// this happens when an entity is deleted before
+			// it is added to the world, ie; created and deleted
+			// before World#process has been called
+			newlyCreatedEntityIds.set(entityId, false);
+		} else {
 			active--;
 		}
-		disabled.clear(e.getId());
-		
-		recyclingEntityFactory.free(e);
+
+		recyclingEntityFactory.free(entity);
+
+		disabled.clear(entityId);
+
 		deleted++;
 	}
 
@@ -174,7 +189,8 @@ public class EntityManager extends Manager {
 	 * @return true if active, false if not
 	 */
 	public boolean isActive(int entityId) {
-		return (entities.size() > entityId) ? entities.get(entityId) != null : false; 
+		return (entities.size() > entityId) && !newlyCreatedEntityIds.get(entityId);
+//		return (entities.size() > entityId) ? entities.get(entityId) != null : false;
 	}
 	
 	/**
@@ -244,13 +260,14 @@ public class EntityManager extends Manager {
 	}
 	
 	protected void clean() {
+		newlyCreatedEntityIds.clear();
 		recyclingEntityFactory.recycle();
 	}
 	
-	protected int getIdentity(Entity e) {
-		int identity = entityToIdentity.get(e.getId());
+	protected int getIdentity(int entityId) {
+		int identity = entityToIdentity.get(entityId);
 		if (identity == 0)
-			identity = forceResolveIdentity(e);
+			identity = forceResolveIdentity(entityId);
 
 		return identity;
 	}
@@ -259,9 +276,9 @@ public class EntityManager extends Manager {
 		entityToIdentity.set(e.getId(), operation.compositionId);
 	}
 
-	private int forceResolveIdentity(Entity e) {
-		updateCompositionIdentity(e.edit());
-		return entityToIdentity.get(e.getId());
+	private int forceResolveIdentity(int entityId) {
+		updateCompositionIdentity(entities.get(entityId).edit());
+		return entityToIdentity.get(entityId);
 	}
 
 	void synchronize(EntitySubscription es) {
@@ -273,7 +290,7 @@ public class EntityManager extends Manager {
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			if (e != null && !disabled.get(e.id))
-				es.check(e);
+				es.check(e.id);
 		}
 
 		es.informEntityChanges();

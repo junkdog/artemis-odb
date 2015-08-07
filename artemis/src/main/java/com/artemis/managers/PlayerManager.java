@@ -24,6 +24,7 @@ public class PlayerManager extends Manager {
 	/** All entities that are mapped to a player, with the player as key. */
 	private final Map<String, Bag<Entity>> entitiesByPlayer;
 
+	private Entity flyweight;
 
 	/**
 	 * Creates a new PlayerManager instance.
@@ -101,17 +102,19 @@ public class PlayerManager extends Manager {
 
 	@Override
 	protected void initialize() {
+		flyweight = Entity.createFlyweight(world);
 	}
 
 	/**
 	 * Deleted entities are removed from their player.
 	 *
-	 * @param e
+	 * @param entityId
 	 *			the deleted entity
 	 */
 	@Override
-	public void deleted(Entity e) {
-		removeFromPlayer(e);
+	public void deleted(int entityId) {
+		flyweight.id = entityId;
+		removeFromPlayer(flyweight);
 	}
 
 }

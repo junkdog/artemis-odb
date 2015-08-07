@@ -109,11 +109,11 @@ final class EntityEditPool {
 
 	private static void addToPerformer(World w, EntityEdit edit) {
 		if (edit.scheduledDeletion) {
-			w.deleted.add(edit.entity);
+			w.deleted.set(edit.entity.id);
 		} else if (edit.hasBeenAddedToWorld) {
-			w.changed.add(edit.entity);
+			w.changed.set(edit.entity.id);
 		} else {
-			w.added.add(edit.entity);
+			w.added.set(edit.entity.id);
 		}
 	}
 

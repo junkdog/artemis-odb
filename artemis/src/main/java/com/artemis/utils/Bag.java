@@ -106,7 +106,7 @@ public class Bag<E> implements ImmutableBag<E> {
 		for (int i = 0; i < size; i++) {
 			E e2 = data[i];
 
-			if (e == e2) {
+			if (e.equals(e2)) {
 				data[i] = data[--size]; // overwrite item to remove with last element
 				data[size] = null; // null last element, so gc can do its work
 				return true;

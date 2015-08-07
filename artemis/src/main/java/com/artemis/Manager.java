@@ -1,7 +1,6 @@
 package com.artemis;
 
-import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 
 
 /**
@@ -42,41 +41,41 @@ public abstract class Manager implements EntityObserver {
 	}
 
 	@Override
-	public void added(Entity e) {}
+	public void added(int entityId) {}
 
 	@Override
-	public void changed(Entity e) {}
+	public void changed(int entityId) {}
 
 	@Override
-	public void deleted(Entity e) {}
+	public void deleted(int entityId) {}
 	
 	@Override
-	public void disabled(Entity e) {}
+	public void disabled(int entityId) {}
 
 	@Override
-	public void enabled(Entity e) {}
+	public void enabled(int entityId) {}
 	
 	@Override
-	public final void added(ImmutableBag<Entity> entities) {
-		Object[] data = ((Bag<Entity>)entities).getData();
+	public final void added(IntBag entities) {
+		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			added((Entity)data[i]);
+			added(ids[i]);
 		}
 	}
 
 	@Override
-	public final void changed(ImmutableBag<Entity> entities) {
-		Object[] data = ((Bag<Entity>)entities).getData();
+	public final void changed(IntBag entities) {
+		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			changed((Entity)data[i]);
+			changed(ids[i]);
 		}
 	}
 
 	@Override
-	public final void deleted(ImmutableBag<Entity> entities) {
-		Object[] data = ((Bag<Entity>)entities).getData();
+	public final void deleted(IntBag entities) {
+		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			deleted((Entity)data[i]);
+			deleted(ids[i]);
 		}
 	}
 

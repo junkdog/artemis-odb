@@ -57,12 +57,12 @@ public class EntityEditTest {
 		int added, changed;
 		
 		@Override
-		public void changed(Entity e) {
+		public void changed(int e) {
 			changed++;
 		}
 		
 		@Override
-		public void added(Entity e) {
+		public void added(int e) {
 			added++;
 		}
 	}

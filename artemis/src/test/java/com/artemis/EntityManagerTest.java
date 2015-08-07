@@ -20,7 +20,6 @@ public class EntityManagerTest {
 	@Before
 	public void setup() {
 		world = new World();
-		world.initialize();
 	}
 
 	@Test

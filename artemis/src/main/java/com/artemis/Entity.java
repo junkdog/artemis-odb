@@ -86,7 +86,7 @@ public final class Entity {
 	 * @return a BitSet containing the entities component bits
 	 */
 	protected BitSet getComponentBits() {
-		return world.getEntityManager().componentBits(this);
+		return world.getEntityManager().componentBits(id);
 	}
 	
 	public EntityEdit edit() {
@@ -317,7 +317,7 @@ public final class Entity {
 	}
 
 	public int getCompositionId() {
-		return world.getEntityManager().getIdentity(this);
+		return world.getEntityManager().getIdentity(id);
 	}
 
 	@Override

@@ -4,6 +4,7 @@ import java.util.BitSet;
 
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
@@ -26,7 +27,7 @@ public class ComponentManager extends Manager {
 	private final Bag<PackedComponent> packedComponents;
 	private final Bag<BitSet> packedComponentOwners;
 	/** Collects all Entites marked for deletion from this ComponentManager. */
-	private final WildBag<Entity> deleted;
+	private final IntBag deleted;
 	private final ComponentPool pooledComponents;
 	
 	private int highestSeenEntityId;
@@ -42,7 +43,7 @@ public class ComponentManager extends Manager {
 		packedComponents = new Bag<PackedComponent>();
 		packedComponentOwners = new Bag<BitSet>();
 		pooledComponents = new ComponentPool();
-		deleted = new WildBag<Entity>();
+		deleted = new IntBag();
 		
 		typeFactory = new ComponentTypeFactory();
 	}
@@ -71,7 +72,7 @@ public class ComponentManager extends Manager {
 					packedComponents.set(type.getIndex(), packedComponent);
 				}
 				getPackedComponentOwners(type).set(owner.getId());
-				ensurePackedComponentCapacity(owner);
+				ensurePackedComponentCapacity(owner.id);
 				packedComponent.forEntity(owner.id);
 				component = (T)packedComponent;
 				break;
@@ -101,16 +102,15 @@ public class ComponentManager extends Manager {
 			pooledComponents.free((PooledComponent)old, type);
 	}
 
-	private void ensurePackedComponentCapacity(Entity owner) {
-		int id = owner.getId();
-		if ((highestSeenEntityId - 1) < id) {
-			highestSeenEntityId = id;
+	private void ensurePackedComponentCapacity(int entityId) {
+		if ((highestSeenEntityId - 1) < entityId) {
+			highestSeenEntityId = entityId;
 			for (int i = 0, s = packedComponents.size(); s > i; i++) {
 				PackedComponent component = packedComponents.get(i);
 				if (component == null)
 					continue;
 
-				component.ensureCapacity(id + 1);
+				component.ensureCapacity(entityId + 1);
 			}
 		}
 	}
@@ -142,24 +142,24 @@ public class ComponentManager extends Manager {
 	/**
 	 * Removes all components from the entity associated in this manager.
 	 *
-	 * @param e
+	 * @param entityId
 	 *			the entity to remove components from
 	 */
-	private void removeComponents(Entity e) {
-		BitSet componentBits = e.getComponentBits();
+	private void removeComponents(int entityId) {
+		BitSet componentBits = world.getEntityManager().componentBits(entityId);
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
 			switch (typeFactory.getTaxonomy(i)) {
 				case BASIC:
-					componentsByType.get(i).set(e.id, null);
+					componentsByType.get(i).set(entityId, null);
 					break;
 				case POOLED:
-					Component pooled = componentsByType.get(i).get(e.id);
+					Component pooled = componentsByType.get(i).get(entityId);
 					pooledComponents.free((PooledComponent)pooled, i);
-					componentsByType.get(i).set(e.id, null);
+					componentsByType.get(i).set(entityId, null);
 					break;
 				case PACKED:
 					PackedComponent pc = packedComponents.get(i);
-					pc.forEntity(e.id);
+					pc.forEntity(entityId);
 					pc.reset();
 					break;
 				default:
@@ -327,15 +327,14 @@ public class ComponentManager extends Manager {
 
 
 	@Override
-	public void deleted(Entity e) {
-		deleted.add(e);
+	public void deleted(int entityId) {
+		deleted.add(entityId);
 	}
 	
 	@Override
-	public void added(Entity e) {
-		int id = e.id;
-		if ((highestSeenEntityId - 1) < id) {
-			ensurePackedComponentCapacity(e);
+	public void added(int entityId) {
+		if ((highestSeenEntityId - 1) < entityId) {
+			ensurePackedComponentCapacity(entityId);
 		}
 	}
 
@@ -345,10 +344,9 @@ public class ComponentManager extends Manager {
 	protected void clean() {
 		int s = deleted.size();
 		if(s > 0) {
-			Object[] data = deleted.getData();
+			int[] ids = deleted.getData();
 			for(int i = 0; s > i; i++) {
-				removeComponents((Entity)data[i]);
-				data[i] = null;
+				removeComponents(ids[i]);
 			}
 			deleted.setSize(0);
 		}

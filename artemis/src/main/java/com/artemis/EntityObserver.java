@@ -1,6 +1,7 @@
 package com.artemis;
 
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 
 
 /**
@@ -18,49 +19,49 @@ public interface EntityObserver {
 	/**
 	 * Called when an entity the observer is interested in is added.
 	 *
-	 * @param e
-	 *			the added entity
+	 * @param entityId
+	 *			the added entities
 	 */
-	void added(Entity e);
-	void added(ImmutableBag<Entity> entities);
+	void added(int entityId);
+	void added(IntBag entities);
 
 	/**
 	 * Called when an entity the observer is interested in has changed.
 	 *
-	 * @param e
-	 *			the changed entity
+	 * @param entityId
+	 *			the changed entities
 	 */
-	void changed(Entity e);
-	void changed(ImmutableBag<Entity> entities);
+	void changed(int entityId);
+	void changed(IntBag entities);
 
 	/**
 	 * Called when an entity the observer is interested in is deleted.
 	 *
-	 * @param e
-	 *			the deleted entity
+	 * @param entityId
+	 *			the deleted entities
 	 */
-	void deleted(Entity e);
-	void deleted(ImmutableBag<Entity> entities);
+	void deleted(int entityId);
+	void deleted(IntBag entities);
 
 	/**
 	 * Called when an entity the observer is interested in has been
 	 * (re)enabled.
 	 *
-	 * @param e
+	 * @param entityId
 	 *		the (re)enabled entity
 	 * @deprecated create your own components to track state.
 	 */
 	@Deprecated
-	void enabled(Entity e);
+	void enabled(int entityId);
 
 	/**
 	 * Called when an entity the observer is interested in has been disabled.
 	 *
-	 * @param e
+	 * @param entityId
 	 *		the disabled entity
 	 * @deprecated create your own components to track state.
 	 */
 	@Deprecated
-	void disabled(Entity e);
+	void disabled(int entityId);
 
 }

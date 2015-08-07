@@ -18,7 +18,6 @@ public class PackedComponentsGrowAndAreHardResetTestBase {
 	@Before
 	public void setup() {
 		world = new World();
-		world.initialize();
 	}
 	
 	private void create() {

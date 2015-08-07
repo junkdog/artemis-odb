@@ -47,9 +47,9 @@ public final class EntityTransmuter {
 		world.getEntityManager().setIdentity(e, operation);
 
 		if (e.isActive())
-			world.changed.add(e);
+			world.changed.set(e.id);
 		else
-			world.added.add(e);
+			world.added.set(e.id);
 	}
 
 	private TransmuteOperation getOperation(Entity e) {

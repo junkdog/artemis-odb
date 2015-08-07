@@ -107,29 +107,29 @@ public class EntitySubscription {
 		}
 	}
 
-	final void check(Entity e) {
-		int id = e.getId();
-		boolean interested = aspectCache.get(em.getIdentity(e)) && em.isActive(id) && em.isEnabled(id);
+	final void check(int id) {
+//		boolean interested = aspectCache.get(em.getIdentity(id)) && em.isActive(id) && em.isEnabled(id);
+		boolean interested = aspectCache.get(em.getIdentity(id)) && em.isEnabled(id);
 		boolean contains = activeEntityIds.get(id);
 
 		if (interested && !contains) {
-			insert(e);
+			insert(id);
 		} else if (!interested && contains) {
-			remove(e);
+			remove(id);
 		}
 	}
 
-	private void remove(Entity e) {
-		activeEntityIds.clear(e.getId());
-		removedIds.set(e.id);
+	private void remove(int entityId) {
+		activeEntityIds.clear(entityId);
+		removedIds.set(entityId);
 	}
 
-	private void insert(Entity e) {
-		activeEntityIds.set(e.getId());
-		insertedIds.set(e.id);
+	private void insert(int entityId) {
+		activeEntityIds.set(entityId);
+		insertedIds.set(entityId);
 	}
 
-	void process(WildBag<Entity> added, WildBag<Entity> changed, WildBag<Entity> deleted) {
+	void process(IntBag added, IntBag changed, IntBag deleted) {
 		added(added);
 		changed(changed);
 		deleted(deleted);
@@ -141,12 +141,7 @@ public class EntitySubscription {
 		if (insertedIds.isEmpty() && removedIds.isEmpty())
 			return false;
 
-		toIntBag(insertedIds, inserted);
-		toIntBag(removedIds, removed);
-		insertedIds.clear();
-		removedIds.clear();
-
-
+		transferBitsToInts();
 		for (int i = 0, s = listeners.size(); s > i; i++) {
 			if (inserted.size() > 0)
 				listeners.get(i).inserted(inserted);
@@ -161,30 +156,37 @@ public class EntitySubscription {
 		return true;
 	}
 
-	private final void added(ImmutableBag<Entity> entities) {
-		Object[] data = ((Bag<Entity>)entities).getData();
+	private void transferBitsToInts() {
+		toIntBag(insertedIds, inserted);
+		toIntBag(removedIds, removed);
+		insertedIds.clear();
+		removedIds.clear();
+	}
+
+	private final void added(IntBag entities) {
+		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			check((Entity)data[i]);
+			check(ids[i]);
 		}
 	}
 
-	private final void changed(ImmutableBag<Entity> entities) {
-		Object[] data = ((Bag<Entity>)entities).getData();
+	private final void changed(IntBag entities) {
+		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			check((Entity)data[i]);
+			check(ids[i]);
 		}
 	}
 
-	private final void deleted(ImmutableBag<Entity> entities) {
-		Object[] data = ((Bag<Entity>)entities).getData();
+	private final void deleted(IntBag entities) {
+		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			deleted((Entity) data[i]);
+			deleted(ids[i]);
 		}
 	}
 
-	private final void deleted(Entity e) {
-		if(activeEntityIds.get(e.getId()))
-			remove(e);
+	private final void deleted(int entityId) {
+		if(activeEntityIds.get(entityId))
+			remove(entityId);
 	}
 
 	public void addSubscriptionListener(SubscriptionListener listener) {
