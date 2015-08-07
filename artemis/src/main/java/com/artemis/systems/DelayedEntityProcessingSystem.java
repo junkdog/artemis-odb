@@ -4,7 +4,6 @@ import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.World;
-import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 
 
@@ -26,7 +25,7 @@ import com.artemis.utils.IntBag;
  * </p><p>
  * Implementation notes:<br />
  * In order to start the system you need to override the
- * {@link #inserted(Entity) inserted(Entity e)} method, look up the delay time
+ * {@link #inserted(int) inserted(int entityId)} method, look up the delay time
  * from that entity and offer it to the system by using the
  * {@link #offerDelay(float) offerDelay(float delay)} method. Also, when
  * processing the entities you must also call
@@ -88,9 +87,10 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 
 
 	@Override
-	protected void inserted(Entity e) {
-		float remainingDelay = getRemainingDelay(e);
-		processDelta(e, -acc);
+	protected void inserted(int entityId) {
+		Entity entity = world.getEntity(entityId);
+		float remainingDelay = getRemainingDelay(entity);
+		processDelta(entity, -acc);
 		if(remainingDelay > 0) {
 			offerDelay(remainingDelay);
 		}

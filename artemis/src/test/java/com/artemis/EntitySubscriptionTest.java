@@ -84,12 +84,12 @@ public class EntitySubscriptionTest {
 		}
 
 		@Override
-		public void inserted(ImmutableBag<Entity> entities) {
+		public void inserted(IntBag entities) {
 			inserted += entities.size();
 		}
 
 		@Override
-		public void removed(ImmutableBag<Entity> entities) {
+		public void removed(IntBag entities) {
 			removed += entities.size();
 		}
 	}

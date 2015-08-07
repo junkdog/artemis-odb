@@ -7,6 +7,7 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 import org.junit.Test;
 
 import java.util.BitSet;
@@ -117,13 +118,13 @@ public class SubscriptionListenerTest {
 		}
 
 		@Override
-		protected void inserted(Entity e) {
-			insertedEntities.set(e.id);
+		protected void inserted(int entityId) {
+			insertedEntities.set(entityId);
 		}
 
 		@Override
-		protected void removed(Entity e) {
-			insertedEntities.set(e.id, false);
+		protected void removed(int entityId) {
+			insertedEntities.set(entityId, false);
 		}
 
 		@Override
@@ -141,8 +142,8 @@ public class SubscriptionListenerTest {
 		}
 
 		@Override
-		protected void inserted(Entity e) {
-			insertedEntities.set(e.id);
+		protected void inserted(int entityId) {
+			insertedEntities.set(entityId);
 		}
 
 		@Override
@@ -151,8 +152,8 @@ public class SubscriptionListenerTest {
 		}
 
 		@Override
-		protected void removed(Entity e) {
-			insertedEntities.set(e.id, false);
+		protected void removed(int entityId) {
+			insertedEntities.set(entityId, false);
 		}
 	}
 
@@ -190,14 +191,14 @@ public class SubscriptionListenerTest {
 		}
 
 		@Override
-		public void inserted(ImmutableBag<Entity> entities) {
-			for (Entity e : entities) {
-				assertNotNull(mapper.get(e));
+		public void inserted(IntBag entities) {
+			for (int i = 0, s = entities.size(); s > i; i++) {
+				assertNotNull(mapper.get(entities.get(i)));
 				hasInserted = true;
 			}
 		}
 
 		@Override
-		public void removed(ImmutableBag<Entity> entities) {}
+		public void removed(IntBag entities) {}
 	}
 }

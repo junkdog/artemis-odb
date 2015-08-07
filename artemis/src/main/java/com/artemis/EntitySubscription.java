@@ -1,10 +1,13 @@
 package com.artemis;
 
 import com.artemis.utils.Bag;
+import com.artemis.utils.ConverterUtil;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 
 import java.util.BitSet;
+
+import static com.artemis.utils.ConverterUtil.toIntBag;
 
 /**
  * Maintains the list of entities matched by an aspect. Entity subscriptions
@@ -23,8 +26,11 @@ public class EntitySubscription {
 
 	private final Bag<SubscriptionListener> listeners;
 
-	private final WildBag<Entity> inserted;
-	private final WildBag<Entity> removed;
+	private final BitSet insertedIds;
+	private final BitSet removedIds;
+
+	private final IntBag inserted;
+	private final IntBag removed;
 	private boolean dirty;
 
 	EntitySubscription(World world, Aspect.Builder builder) {
@@ -38,8 +44,11 @@ public class EntitySubscription {
 
 		listeners = new Bag<SubscriptionListener>();
 
-		inserted = new WildBag<Entity>();
-		removed = new WildBag<Entity>();
+		insertedIds = new BitSet();
+		removedIds = new BitSet();
+
+		inserted = new IntBag();
+		removed = new IntBag();
 	}
 
 	/**
@@ -112,12 +121,12 @@ public class EntitySubscription {
 
 	private void remove(Entity e) {
 		activeEntityIds.clear(e.getId());
-		removed.add(e);
+		removedIds.set(e.id);
 	}
 
 	private void insert(Entity e) {
 		activeEntityIds.set(e.getId());
-		inserted.add(e);
+		insertedIds.set(e.id);
 	}
 
 	void process(WildBag<Entity> added, WildBag<Entity> changed, WildBag<Entity> deleted) {
@@ -129,8 +138,14 @@ public class EntitySubscription {
 	}
 
 	boolean informEntityChanges() {
-		if (inserted.isEmpty() && removed.isEmpty())
+		if (insertedIds.isEmpty() && removedIds.isEmpty())
 			return false;
+
+		toIntBag(insertedIds, inserted);
+		toIntBag(removedIds, removed);
+		insertedIds.clear();
+		removedIds.clear();
+
 
 		for (int i = 0, s = listeners.size(); s > i; i++) {
 			if (inserted.size() > 0)
@@ -188,12 +203,12 @@ public class EntitySubscription {
 		 * Called after entities have been matched and inserted into an
 		 * EntitySubscription.
 		 */
-		void inserted(ImmutableBag<Entity> entities);
+		void inserted(IntBag entities);
 
 		/**
 		 * Called after entities have been removed from an EntitySubscription.
 		 */
-		void removed(ImmutableBag<Entity> entities);
+		void removed(IntBag entities);
 	}
 
 }

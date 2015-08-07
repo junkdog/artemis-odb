@@ -48,10 +48,10 @@ public abstract class EntitySystem extends BaseSystem
 	}
 
 	@Override
-	public void inserted(ImmutableBag<Entity> entities) {
-		Object[] data = ((Bag<Entity>)entities).getData();
+	public void inserted(IntBag entities) {
+		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			inserted((Entity) data[i]);
+			inserted(ids[i]);
 		}
 	}
 
@@ -59,16 +59,16 @@ public abstract class EntitySystem extends BaseSystem
 	 * Called if the system has received a entity it is interested in, e.g
 	 * created or a component was added to it.
 	 *
-	 * @param e
+	 * @param entityId
 	 *			the entity that was added to this system
 	 */
-	protected void inserted(Entity e) {}
+	protected void inserted(int entityId) {}
 
 	@Override
-	public void removed(ImmutableBag<Entity> entities) {
-		Object[] data = ((Bag<Entity>)entities).getData();
+	public void removed(IntBag entities) {
+		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			removed((Entity) data[i]);
+			removed(ids[i]);
 		}
 	}
 
@@ -76,10 +76,10 @@ public abstract class EntitySystem extends BaseSystem
 	 * Called if a entity was removed from this system, e.g deleted or had one
 	 * of it's components removed.
 	 *
-	 * @param e
+	 * @param entityId
 	 *			the entity that was removed from this system
 	 */
-	protected void removed(Entity e) {}
+	protected void removed(int entityId) {}
 
 
 	/**
