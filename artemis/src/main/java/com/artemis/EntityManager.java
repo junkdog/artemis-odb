@@ -99,8 +99,6 @@ public class EntityManager extends Manager {
 	public void added(int entityId) {
 		active++;
 		added++;
-		// TODO: refactor - we can check the added bitset instead
-//		entities.set(entityId, e);
 	}
 
 	/**
@@ -190,7 +188,6 @@ public class EntityManager extends Manager {
 	 */
 	public boolean isActive(int entityId) {
 		return (entities.size() > entityId) && !newlyCreatedEntityIds.get(entityId);
-//		return (entities.size() > entityId) ? entities.get(entityId) != null : false;
 	}
 	
 	/**

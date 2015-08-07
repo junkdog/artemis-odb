@@ -5,7 +5,6 @@ import com.artemis.injection.Injector;
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
-import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
@@ -112,12 +111,6 @@ public class World {
 		deleted = new BitSet();
 		enabled = new BitSet();
 		disabled = new BitSet();
-//
-//		addedPerformer = new AddedPerformer();
-//		changedPerformer = new ChangedPerformer();
-//		deletedPerformer = new DeletedPerformer();
-//		enabledPerformer = new EnabledPerformer();
-//		disabledPerformer = new DisabledPerformer();
 
 		cm = new ComponentManager(configuration.expectedEntityCount());
 		em = new EntityManager(configuration.expectedEntityCount());
@@ -537,19 +530,10 @@ public class World {
 		// such as those affected by EntityTransmuters, Archetypes
 		// and EntityFactories.
 		while (added.cardinality() > 0 || changed.cardinality() > 0) {
-//			check(added, addedPerformer);
-//			check(changed, changedPerformer);
-
 			am.process(added, changed, deleted);
 		}
 		
 		while(editPool.processEntities()) {
-//			check(added, addedPerformer);
-//			check(changed, changedPerformer);
-//			check(deleted, deletedPerformer);
-//			check(disabled, disabledPerformer);
-//			check(enabled, enabledPerformer);
-
 			am.process(added, changed, deleted);
 
 			// we're cheating here to support disabled and enabled entities with the
@@ -574,67 +558,4 @@ public class World {
 	public <T extends Component> ComponentMapper<T> getMapper(Class<T> type) {
 		return BasicComponentMapper.getFor(type, this);
 	}
-
-//
-//	/**
-//	 * Runs {@link EntityObserver#deleted}.
-//	 */
-//	private static final class DeletedPerformer implements Performer {
-//		@Override
-//		public void perform(EntityObserver observer, IntBag entities) {
-//			observer.deleted(entities);
-//		}
-//	}
-//
-//	/**
-//	 * Runs {@link EntityObserver#enabled}.
-//	 */
-//	private static final class EnabledPerformer implements Performer {
-//
-//		@Override
-//		public void perform(EntityObserver observer, IntBag entities) {
-//			int[] ids = entities.getData();
-//			for (int i = 0, s = entities.size(); s > i; i++) {
-//				observer.enabled(ids[i]);
-//			}
-//		}
-//	}
-//
-//	/**
-//	 * Runs {@link EntityObserver#disabled}.
-//	 */
-//	private static final class DisabledPerformer implements Performer {
-//
-//		@Override
-//		public void perform(EntityObserver observer, IntBag entities) {
-//			int[] ids = entities.getData();
-//			for (int i = 0, s = entities.size(); s > i; i++) {
-//				observer.disabled(ids[i]);
-//			}
-//		}
-//	}
-//
-//	/**
-//	 * Runs {@link EntityObserver#changed}.
-//	 */
-//	private static final class ChangedPerformer implements Performer {
-//
-//		@Override
-//		public void perform(EntityObserver observer, IntBag entities) {
-//			observer.changed(entities);
-//		}
-//	}
-//
-//	/**
-//	 * Runs {@link EntityObserver#added}.
-//	 */
-//	private static final class AddedPerformer implements Performer {
-//
-//		@Override
-//		public void perform(EntityObserver observer, IntBag entities) {
-//			observer.added(entities);
-//		}
-//	}
-
-
 }

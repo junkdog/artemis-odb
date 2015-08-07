@@ -108,7 +108,6 @@ public class EntitySubscription {
 	}
 
 	final void check(int id) {
-//		boolean interested = aspectCache.get(em.getIdentity(id)) && em.isActive(id) && em.isEnabled(id);
 		boolean interested = aspectCache.get(em.getIdentity(id)) && em.isEnabled(id);
 		boolean contains = activeEntityIds.get(id);
 
