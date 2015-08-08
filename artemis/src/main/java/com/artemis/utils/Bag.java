@@ -127,7 +127,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	@Override
 	public boolean contains(E e) {
 		for(int i = 0; size > i; i++) {
-			if(e == data[i]) {
+			if(e.equals(data[i])) {
 				return true;
 			}
 		}
@@ -152,7 +152,7 @@ public class Bag<E> implements ImmutableBag<E> {
 			for (int j = 0; j < size; j++) {
 				E e2 = data[j];
 
-				if (e1 == e2) {
+				if (e1.equals(e2)) {
 					remove(j);
 					j--;
 					modified = true;
