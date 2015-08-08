@@ -60,8 +60,25 @@ public class IntBag {
 	}
 
 	/**
+	 * Find index of element.
+	 *
+	 * @param e
+	 *			element to check
+	 *
+	 * @return index of element, or {@code -1} if there is no such index.
+	 */
+	public int indexOf(int e) {
+		for(int i = 0; size > i; i++) {
+			if(e == data[i]) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	/**
 	 * Check if bag contains this element.
-	 * 
+	 *
 	 * @param e
 	 *			element to check
 	 *
