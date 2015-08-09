@@ -31,9 +31,9 @@ public class WorldSerializationManager extends Manager {
 				byte[] buff = new byte[32768];
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				int read;
-				while((read = is.read(buff)) != -1) {
-                    baos.write(buff, 0, read);
-                }
+				while ((read = is.read(buff)) != -1) {
+					baos.write(buff, 0, read);
+				}
 				is = new ByteArrayInputStream(baos.toByteArray());
 				baos.close();
 			} catch (IOException e) {
