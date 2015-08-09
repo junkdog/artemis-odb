@@ -9,8 +9,7 @@ import com.artemis.utils.IntBag;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.StringWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.*;
@@ -85,6 +84,35 @@ public class JsonWorldSerializationManagerTest {
 
 		deleteAll();
 		assertEquals(0, allEntities.getEntities().size());
+	}
+
+	@Test
+	public void serializer_save_to_file_and_load_std_format_new_world() throws Exception {
+		String json = save(allEntities);
+		PrintWriter writer = new PrintWriter("save_temp.json", "UTF-8");
+		writer.append(json);
+		writer.close();
+
+		deleteAll();
+		assertEquals(0, allEntities.getEntities().size());
+
+		File file = new File("save_temp.json");
+		InputStream is = new FileInputStream(file);
+		setupWorld();
+
+		allEntities = subscriptions.get(Aspect.all());
+
+		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		file.delete();
+
+		world.process();
+		assertEquals(3, allEntities.getEntities().size());
+
+		String json2 = save(allEntities);
+
+		deleteAll();
+		assertEquals(0, allEntities.getEntities().size());
+
 	}
 
 	@Test

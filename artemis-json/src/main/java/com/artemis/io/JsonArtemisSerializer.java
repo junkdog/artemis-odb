@@ -68,7 +68,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 	@Override
 	protected <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
-		updateLookupMap(is); // this isn't the nices solution, but what the hell
+		updateLookupMap(is); // this isn't the nicest solution, but what the hell
 		T t = json.fromJson(format, is);
 		referenceTracker.translate(intBagEntitySerializer.getTranslatedIds());
 		return t;

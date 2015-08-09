@@ -6,8 +6,7 @@ import com.artemis.annotations.Wire;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
 
-import java.io.InputStream;
-import java.io.Writer;
+import java.io.*;
 
 @Wire
 public class WorldSerializationManager extends Manager {
@@ -27,6 +26,20 @@ public class WorldSerializationManager extends Manager {
 	}
 
 	public <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
+		if (!is.markSupported()) {
+			try {
+				byte[] buff = new byte[32768];
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				int read;
+				while((read = is.read(buff)) != -1) {
+                    baos.write(buff, 0, read);
+                }
+				is = new ByteArrayInputStream(baos.toByteArray());
+				baos.close();
+			} catch (IOException e) {
+				throw new RuntimeException("Error copying inputstream", e);
+			}
+		}
 		return backend.load(is, format);
 	}
 
