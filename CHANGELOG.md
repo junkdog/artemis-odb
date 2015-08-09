@@ -1,6 +1,8 @@
 ## Change Log
 
-#### Version: 0.10.3-SNAPSHOT
+#### Version: 0.11.1-SNAPSHOT
+
+#### Version: 0.11.0 - 2015-08-10
 - **BREAKING CHANGES**
   - EntitySubscription's inserted/removed method pass an IntBag
     of entity ids, instead of a Bag of entities.
