@@ -30,8 +30,11 @@ public class UuidEntityManager extends Manager {
 		UUID uuid = entityToUuid.safeGet(flyweight.getId());
 		if (uuid == null)
 			return;
-		
-		uuidToEntity.remove(uuid);
+
+		Entity oldEntity = uuidToEntity.get(uuid);
+		if (oldEntity != null && oldEntity.id == flyweight.id)
+			uuidToEntity.remove(uuid);
+
 		entityToUuid.set(flyweight.getId(), null);
 	}
 	

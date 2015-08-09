@@ -93,4 +93,23 @@ public class UuidEntityManagerTest {
 		assertEquals(uuids[1], e2.getUuid());
 		assertEquals(uuids[2], e3.getUuid());
 	}
+
+	@Test
+	public void reuser_uuids_during_same_tick() {
+		UUID uuid = UUID.randomUUID();
+
+		WorldConfiguration configuration = new WorldConfiguration();
+        configuration.setManager(UuidEntityManager.class);
+
+	    World world = new World(configuration);
+	    UuidEntityManager uuidEntityManager = world.getManager(UuidEntityManager.class);
+	    Entity entity = world.createEntity(uuid);
+	    world.process();
+	    assertEquals(0, uuidEntityManager.getEntity(uuid).id); // Entity[0]
+	    world.deleteEntity(entity);
+	    world.createEntity(uuid);
+	    assertEquals(1, uuidEntityManager.getEntity(uuid).id); // Entity[1]
+	    world.process();
+	    assertEquals(1, uuidEntityManager.getEntity(uuid).id);
+	}
 }

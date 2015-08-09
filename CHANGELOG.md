@@ -17,6 +17,8 @@
 - Add getTag method to TagManager 
 - Bag does equality comparisons, always.
 - EntityManager counters stubbed and deprecated.
+- **Fix**: UuidEntityManager deleted reused UUID's entity reference if it was created/deleted
+  during the same tick.
 - **Fix**: `@SafeVarargs` on Aspect - no more warnings.
 - **Fix**: Replaced pooled components were not returned to pool.
 
