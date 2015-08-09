@@ -20,14 +20,6 @@ public class EntityManager extends Manager {
 	private final BitSet newlyCreatedEntityIds;
 	/** Stores the bits of all currently disabled entities IDs. */
 	private final BitSet disabled;
-	/** Amount of currently active (added to the world) entities. */
-	private int active;
-	/** Amount of entities ever added to the manager. */
-	private long added;
-	/** Amount of entites ever created by the manager. */
-	private long created;
-	/** Amount of entities ever deleted from the manager. */
-	private long deleted;
 	private RecyclingEntityFactory recyclingEntityFactory;
 	
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
@@ -58,7 +50,6 @@ public class EntityManager extends Manager {
 	protected Entity createEntityInstance() {
 		Entity e = recyclingEntityFactory.obtain();
 		entityToIdentity.set(e.getId(), 0);
-		created++;
 
 		// growing backing array just in case
 		entities.set(e.getId(), e);
@@ -84,21 +75,6 @@ public class EntityManager extends Manager {
 			identityIndex = forceResolveIdentity(entityId);
 		
 		return identityResolver.composition.get(identityIndex);
-	}
-	
-	/**
-	 * Adds the entity to this manager.
-	 * <p>
-	 * Called by the world when an entity is added.
-	 * </p>
-	 *
-	 * @param entityId
-	 *			the entity to add
-	 */
-	@Override
-	public void added(int entityId) {
-		active++;
-		added++;
 	}
 
 	/**
@@ -164,15 +140,11 @@ public class EntityManager extends Manager {
 			// it is added to the world, ie; created and deleted
 			// before World#process has been called
 			newlyCreatedEntityIds.set(entityId, false);
-		} else {
-			active--;
 		}
 
 		recyclingEntityFactory.free(entity);
 
 		disabled.clear(entityId);
-
-		deleted++;
 	}
 
 	/**
@@ -220,11 +192,12 @@ public class EntityManager extends Manager {
 	 * Get how many entities are active in this world.
 	 *
 	 * @return how many entities are currently active
-	 * @deprecated Implement your own manager if you need this functionality
+	 * @deprecated Implement your own manager if you need this functionality.
+	 *             This implementation is stubbed to always return {@code 0}.
 	 */
 	@Deprecated
 	public int getActiveEntityCount() {
-		return active;
+		return 0;
 	}
 	
 	/**
@@ -235,33 +208,36 @@ public class EntityManager extends Manager {
 	 * </p>
 	 *
 	 * @return how many entities have been created since start
-	 * @deprecated Implement your own manager if you need this functionality
+	 * @deprecated Implement your own manager if you need this functionality.
+	 *             This implementation is stubbed to always return {@code 0}.
 	 */
 	@Deprecated
 	public long getTotalCreated() {
-		return created;
+		return 0L;
 	}
 	
 	/**
 	 * Get how many entities have been added to the world since start.
 	 *
 	 * @return how many entities have been added
-	 * @deprecated Implement your own manager if you need this functionality
+	 * @deprecated Implement your own manager if you need this functionality.
+	 *             This implementation is stubbed to always return {@code 0}.
 	 */
 	@Deprecated
 	public long getTotalAdded() {
-		return added;
+		return 0L;
 	}
 	
 	/**
 	 * Get how many entities have been deleted from the world since start.
 	 *
 	 * @return how many entities have been deleted since start
-	 * @deprecated Implement your own manager if you need this functionality
+	 * @deprecated Implement your own manager if you need this functionality.
+	 *             This implementation is stubbed to always return {@code 0}.
 	 */
 	@Deprecated
 	public long getTotalDeleted() {
-		return deleted;
+		return 0L;
 	}
 	
 	protected void clean() {

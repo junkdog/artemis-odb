@@ -16,7 +16,7 @@
 - Entity get/setUuid deprecated.
 - Add getTag method to TagManager 
 - Bag does equality comparisons, always.
-- EntityManager counters deprecated.
+- EntityManager counters stubbed and deprecated.
 - **Fix**: `@SafeVarargs` on Aspect - no more warnings.
 - **Fix**: Replaced pooled components were not returned to pool.
 
