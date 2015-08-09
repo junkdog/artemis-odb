@@ -220,7 +220,9 @@ public class EntityManager extends Manager {
 	 * Get how many entities are active in this world.
 	 *
 	 * @return how many entities are currently active
+	 * @deprecated Implement your own manager if you need this functionality
 	 */
+	@Deprecated
 	public int getActiveEntityCount() {
 		return active;
 	}
@@ -233,7 +235,9 @@ public class EntityManager extends Manager {
 	 * </p>
 	 *
 	 * @return how many entities have been created since start
+	 * @deprecated Implement your own manager if you need this functionality
 	 */
+	@Deprecated
 	public long getTotalCreated() {
 		return created;
 	}
@@ -242,7 +246,9 @@ public class EntityManager extends Manager {
 	 * Get how many entities have been added to the world since start.
 	 *
 	 * @return how many entities have been added
+	 * @deprecated Implement your own manager if you need this functionality
 	 */
+	@Deprecated
 	public long getTotalAdded() {
 		return added;
 	}
@@ -251,7 +257,9 @@ public class EntityManager extends Manager {
 	 * Get how many entities have been deleted from the world since start.
 	 *
 	 * @return how many entities have been deleted since start
+	 * @deprecated Implement your own manager if you need this functionality
 	 */
+	@Deprecated
 	public long getTotalDeleted() {
 		return deleted;
 	}
