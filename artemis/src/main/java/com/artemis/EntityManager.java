@@ -23,11 +23,11 @@ public class EntityManager extends Manager {
 	/** Amount of currently active (added to the world) entities. */
 	private int active;
 	/** Amount of entities ever added to the manager. */
-	private int added;
+	private long added;
 	/** Amount of entites ever created by the manager. */
-	private int created;
+	private long created;
 	/** Amount of entities ever deleted from the manager. */
-	private int deleted;
+	private long deleted;
 	private RecyclingEntityFactory recyclingEntityFactory;
 	
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
@@ -234,7 +234,7 @@ public class EntityManager extends Manager {
 	 *
 	 * @return how many entities have been created since start
 	 */
-	public int getTotalCreated() {
+	public long getTotalCreated() {
 		return created;
 	}
 	
@@ -243,7 +243,7 @@ public class EntityManager extends Manager {
 	 *
 	 * @return how many entities have been added
 	 */
-	public int getTotalAdded() {
+	public long getTotalAdded() {
 		return added;
 	}
 	
@@ -252,7 +252,7 @@ public class EntityManager extends Manager {
 	 *
 	 * @return how many entities have been deleted since start
 	 */
-	public int getTotalDeleted() {
+	public long getTotalDeleted() {
 		return deleted;
 	}
 	

@@ -15,7 +15,6 @@
 - ComponentMappers now also sport get(int)/has(int) methods.
 - Entity get/setUuid deprecated.
 - Add getTag method to TagManager 
-- EntityManager's getTotal\* methods changed to return int instead of long.
 - Bag does equality comparisons, always.
 - **Fix**: `@SafeVarargs` on Aspect - no more warnings.
 - **Fix**: Replaced pooled components were not returned to pool.
