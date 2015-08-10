@@ -34,6 +34,13 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>artemis-odb-serializer-json</artifactId>
 			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>artemis-odb-serializer-json</artifactId>
+			<version>${project.version}</version>
 			<classifier>sources</classifier>
 			<scope>test</scope>
 		</dependency>
@@ -43,6 +50,13 @@
 			<artifactId>artemis-odb-gwt</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.esotericsoftware</groupId>
+			<artifactId>jsonbeans</artifactId>
+			<version>0.7</version>
+			<classifier>sources</classifier>
 		</dependency>
 
 		<dependency>
@@ -101,7 +115,7 @@
 					<disableCastChecking>true</disableCastChecking>
 					<sourceLevel>1.6</sourceLevel>
 					<testTimeOut>1800</testTimeOut>
-					<productionMode>true</productionMode>
+					<productionMode>false</productionMode>
 					<htmlunit>IE8</htmlunit>
 					<mode>htmlunit</mode>
 					<includes>**/*TestSuite.java</includes>
