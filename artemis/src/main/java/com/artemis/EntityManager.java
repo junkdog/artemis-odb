@@ -135,16 +135,20 @@ public class EntityManager extends Manager {
 
 		entities.set(entityId, null);
 
-		if (newlyCreatedEntityIds.get(entityId)) {
-			// this happens when an entity is deleted before
-			// it is added to the world, ie; created and deleted
-			// before World#process has been called
-			newlyCreatedEntityIds.set(entityId, false);
-		}
+		// usually never happens but:
+		// this happens when an entity is deleted before
+		// it is added to the world, ie; created and deleted
+		// before World#process has been called
+		newlyCreatedEntityIds.set(entityId, false);
 
 		recyclingEntityFactory.free(entity);
 
 		disabled.clear(entityId);
+	}
+
+	@Override
+	public void added(int entityId) {
+		newlyCreatedEntityIds.set(entityId, false);
 	}
 
 	/**
@@ -241,7 +245,6 @@ public class EntityManager extends Manager {
 	}
 	
 	protected void clean() {
-		newlyCreatedEntityIds.clear();
 		recyclingEntityFactory.recycle();
 	}
 	

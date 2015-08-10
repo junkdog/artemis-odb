@@ -1,6 +1,9 @@
 ## Change Log
 
-#### Version: 0.11.1-SNAPSHOT
+#### Version: 0.11.2-SNAPSHOT
+
+#### Version: 0.11.1 - 2015-08-11
+- **Fix**: Entities not registered as added to world *during* batch entity synchronization.
 
 #### Version: 0.11.0 - 2015-08-10
 - **BREAKING CHANGES**
