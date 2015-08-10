@@ -103,6 +103,7 @@
 		<module>artemis-test</module>
 		<module>artemis-cli</module>
 		<module>artemis-gwt</module>
+		<module>artemis-gwt-test</module>
   </modules>
 	
 	<profiles>
