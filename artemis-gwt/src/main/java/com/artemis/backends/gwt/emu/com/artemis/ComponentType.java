@@ -77,7 +77,7 @@ public class ComponentType {
 		return taxonomy == Taxonomy.PACKED;
 	}
 	
-	protected Class<? extends Component> getType() {
+	public Class<? extends Component> getType() {
 		return type;
 	}
 	
