@@ -13,6 +13,8 @@
 	<properties>
 		<junit.version>3.8</junit.version>
 		<gdx.version>1.6.4</gdx.version>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
 	</properties>
 
 	<dependencies>
@@ -51,13 +53,6 @@
 			<artifactId>artemis-odb-gwt</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.esotericsoftware</groupId>
-			<artifactId>jsonbeans</artifactId>
-			<version>0.7</version>
-			<classifier>sources</classifier>
 		</dependency>
 
 		<dependency>
@@ -136,7 +131,7 @@
 					<enableClosureCompiler>true</enableClosureCompiler>
 					<disableClassMetadata>false</disableClassMetadata>
 					<disableCastChecking>true</disableCastChecking>
-					<sourceLevel>1.6</sourceLevel>
+					<sourceLevel>1.7</sourceLevel>
 					<testTimeOut>1800</testTimeOut>
 					<productionMode>false</productionMode>
 					<htmlunit>IE8</htmlunit>

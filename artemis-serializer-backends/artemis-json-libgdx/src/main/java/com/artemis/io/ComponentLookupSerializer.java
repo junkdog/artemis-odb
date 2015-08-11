@@ -5,10 +5,10 @@ import com.artemis.ComponentType;
 import com.artemis.World;
 import com.artemis.annotations.Transient;
 import com.artemis.utils.ImmutableBag;
-import com.artemis.utils.reflect.ClassReflection;
-import com.artemis.utils.reflect.ReflectionException;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
+import com.badlogic.gdx.utils.reflect.ReflectionException;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -57,7 +57,7 @@ public class ComponentLookupSerializer implements Json.Serializer<IdentityHashMa
 		ImmutableBag<ComponentType> types = world.getComponentManager().getComponentTypes();
 		for (int i = 0; i < types.size(); i++) {
 			Class<? extends Component> type = types.get(i).getType();
-			if (type.getAnnotation(Transient.class) != null)
+			if (ClassReflection.getDeclaredAnnotation(type, Transient.class) != null)
 				continue;
 
 			components.put(type, i + "_" + type.getSimpleName());
