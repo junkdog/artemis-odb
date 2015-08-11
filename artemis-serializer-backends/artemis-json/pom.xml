@@ -5,6 +5,7 @@
 		<groupId>net.onedaybeard.artemis</groupId>
 		<artifactId>artemis-parent</artifactId>
 		<version>0.11.3-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
 	</parent>
 	<artifactId>artemis-odb-serializer-json</artifactId>
 	<packaging>jar</packaging>
