@@ -1,6 +1,7 @@
 <module>
 
 	<inherits name="com.google.gwt.user.User"/>
+	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 	<inherits name='com.artemis.backends.artemis_backends_gwt'/>
 
 	<inherits name="com.artemis-json" />

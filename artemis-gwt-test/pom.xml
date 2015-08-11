@@ -12,6 +12,7 @@
 
 	<properties>
 		<junit.version>3.8</junit.version>
+		<gdx.version>1.6.4</gdx.version>
 	</properties>
 
 	<dependencies>
@@ -78,6 +79,28 @@
 			<artifactId>gwt-dev</artifactId>
 			<version>2.6.0</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx</artifactId>
+			<version>${gdx.version}</version>
+			<classifier>sources</classifier>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-backend-gwt</artifactId>
+			<version>${gdx.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-backend-gwt</artifactId>
+			<version>${gdx.version}</version>
+			<classifier>sources</classifier>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
