@@ -6,7 +6,8 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.component.ReusedComponent;
 import com.artemis.utils.IntBag;
-import com.esotericsoftware.jsonbeans.*;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -35,7 +36,7 @@ public class EntitySerializerTest {
 
 		world.process();
 
-		Json json = new Json(OutputType.javascript);
+		Json json = new Json(JsonWriter.OutputType.javascript);
 		json.setSerializer(IdentityHashMap.class, new ComponentLookupSerializer(world));
 		EntitySerializer serializer = new EntitySerializer(world, new ReferenceTracker());
 		json.setSerializer(Entity.class, serializer);

@@ -6,14 +6,17 @@ import com.artemis.World;
 import com.artemis.managers.WorldSerializationManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
-import com.esotericsoftware.jsonbeans.*;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonReader;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.JsonWriter;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
 import java.util.IdentityHashMap;
 
-public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSerializer<JsonSerializer> {
+public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSerializer<Json.Serializer> {
 	private final Json json;
 	private final ComponentLookupSerializer lookup;
 	private final IntBagEntitySerializer intBagEntitySerializer;
@@ -27,7 +30,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 		referenceTracker = new ReferenceTracker();
 
-		json = new Json(OutputType.json);
+		json = new Json(JsonWriter.OutputType.json);
 		json.setIgnoreUnknownFields(true);
 
 		lookup = new ComponentLookupSerializer(world);
@@ -46,7 +49,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	}
 
 	@Override
-	public WorldSerializationManager.ArtemisSerializer register(Class<?> type, JsonSerializer serializer) {
+	public WorldSerializationManager.ArtemisSerializer register(Class<?> type, Json.Serializer serializer) {
 		json.setSerializer(type, serializer);
 		return this;
 	}

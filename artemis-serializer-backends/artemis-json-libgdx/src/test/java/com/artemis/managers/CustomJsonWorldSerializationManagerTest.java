@@ -5,9 +5,8 @@ import com.artemis.annotations.Wire;
 import com.artemis.io.JsonArtemisSerializer;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
-import com.esotericsoftware.jsonbeans.Json;
-import com.esotericsoftware.jsonbeans.JsonSerializer;
-import com.esotericsoftware.jsonbeans.JsonValue;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -103,7 +102,7 @@ public class CustomJsonWorldSerializationManagerTest {
 	}
 
 	@Wire
-	public static class SerializedSystemSerializer implements JsonSerializer<SerializedSystem> {
+	public static class SerializedSystemSerializer implements Json.Serializer<SerializedSystem> {
 		private SerializedSystem system;
 
 		public SerializedSystemSerializer(World world) {

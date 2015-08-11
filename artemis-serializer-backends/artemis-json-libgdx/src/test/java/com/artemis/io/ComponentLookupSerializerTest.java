@@ -6,9 +6,8 @@ import com.artemis.World;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.component.ReusedComponent;
-import com.esotericsoftware.jsonbeans.Json;
-import com.esotericsoftware.jsonbeans.JsonWriter;
-import com.esotericsoftware.jsonbeans.OutputType;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonWriter;
 import org.junit.Test;
 
 import java.util.IdentityHashMap;
@@ -27,7 +26,7 @@ public class ComponentLookupSerializerTest {
 
 		world.process();
 
-		Json json = new Json(OutputType.javascript);
+		Json json = new Json(JsonWriter.OutputType.javascript);
 		ComponentLookupSerializer serializer = new ComponentLookupSerializer(world);
 		IdentityHashMap<Class<? extends Component>, String> componentMap = serializer.classToIdentifierMap();
 		json.setSerializer(IdentityHashMap.class, new ComponentLookupSerializer(world));
