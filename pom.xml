@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-parent</artifactId>
-	<version>0.11.1-SNAPSHOT</version>
+	<version>0.11.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>artemis parent</name>
 	<description>Fork of Artemis Entity System Framework.</description>
@@ -103,10 +103,15 @@
 		<module>artemis-test</module>
 		<module>artemis-cli</module>
 		<module>artemis-gwt</module>
-		<module>artemis-gwt-test</module>
   </modules>
 	
 	<profiles>
+		<profile>
+			<id>gwttest</id>
+			<modules>
+				<module>artemis-gwt-test</module>
+			</modules>
+		</profile>
 		<profile>
 			<id>release</id>
 			<build>
