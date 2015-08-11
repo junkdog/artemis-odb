@@ -11,7 +11,7 @@ import com.google.gwt.junit.client.GWTTestCase;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
 
 
 @Wire
@@ -21,6 +21,10 @@ public class CustomJsonWorldSerializationManagerTest extends GWTTestCase {
 	private SerializedSystem serializedSystem;
 	private World world;
 	private EntitySubscription allEntities;
+
+	private static class StandardCharsets {
+		public static final String UTF_8 = "UTF-8";
+	}
 
 	@Override
 	public String getModuleName() {
@@ -46,7 +50,7 @@ public class CustomJsonWorldSerializationManagerTest extends GWTTestCase {
 		assertEquals(0, allEntities.getEntities().size());
 	}
 
-	public void test_custom_save_format_save_load() {
+	public void test_custom_save_format_save_load() throws UnsupportedEncodingException {
 		serializedSystem.serializeMe = "dog";
 
 		String json = save(allEntities, "a string", 420);

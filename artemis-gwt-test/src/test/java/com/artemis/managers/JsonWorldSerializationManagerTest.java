@@ -9,10 +9,14 @@ import com.artemis.utils.IntBag;
 import com.google.gwt.junit.client.GWTTestCase;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 
 @Wire
 public class JsonWorldSerializationManagerTest extends GWTTestCase {
+
+	private static class StandardCharsets {
+		public static final String UTF_8 = "UTF-8";
+	}
+
 	private WorldSerializationManager manger;
 	private AspectSubscriptionManager subscriptions;
 	private TagManager tags;
@@ -63,7 +67,7 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 		manger.setSerializer(backend);
 	}
 
-	public void test_serializer_save_load_std_format_new_world() {
+	public void test_serializer_save_load_std_format_new_world() throws UnsupportedEncodingException {
 		String json = save(allEntities);
 
 		deleteAll();
@@ -87,6 +91,7 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 		assertEquals(0, allEntities.getEntities().size());
 	}
 
+	/*
 	public void test_serializer_save_to_file_and_load_std_format_new_world() throws Exception {
 		String json = save(allEntities);
 		PrintWriter writer = new PrintWriter("save_temp.json", "UTF-8");
@@ -113,9 +118,9 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 		deleteAll();
 		assertEquals(0, allEntities.getEntities().size());
 
-	}
+	}*/
 
-	public void test_serializer_save_load_with_tags() {
+	public void test_serializer_save_load_with_tags() throws UnsupportedEncodingException {
 		setTags();
 
 		String json = save(allEntities);
@@ -131,7 +136,7 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 		assertTags();
 	}
 
-	public void test_serializer_save_load_with_groups() {
+	public void test_serializer_save_load_with_groups() throws UnsupportedEncodingException {
 		setGroups();
 
 		String json = save(allEntities);
@@ -150,7 +155,7 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 		assertGroups();
 	}
 
-	public void test_serializer_save_load_with_groups_and_tags() {
+	public void test_serializer_save_load_with_groups_and_tags() throws UnsupportedEncodingException {
 		setTags();
 		setGroups();
 
@@ -169,7 +174,7 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 		assertGroups();
 	}
 
-	public void test_save_load_entity_references() {
+	public void test_save_load_entity_references() throws UnsupportedEncodingException {
 		setTags();
 
 		EntityEdit ee1 = world.createEntity().edit();
@@ -198,7 +203,7 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 		assertNotEquals(holder.entityId, holder2.entityId);
 	}
 
-	public void test_save_load_bag_entity_references() {
+	public void test_save_load_bag_entity_references() throws UnsupportedEncodingException {
 		setTags();
 
 		EntityEdit ee1 = world.createEntity().edit();
@@ -236,7 +241,7 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 		assertTrue((v != v2) || (!v.equals(v2)));
 	}
 
-	public void test_save_load_intbag_entity_references() {
+	public void test_save_load_intbag_entity_references() throws UnsupportedEncodingException {
 		setTags();
 
 		EntityEdit ee1 = world.createEntity().edit();
