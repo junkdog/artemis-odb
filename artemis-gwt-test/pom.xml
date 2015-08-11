@@ -131,9 +131,10 @@
 					<enableClosureCompiler>true</enableClosureCompiler>
 					<disableClassMetadata>false</disableClassMetadata>
 					<disableCastChecking>true</disableCastChecking>
+					<extraJvmArgs>-Xmx4096M</extraJvmArgs>
 					<sourceLevel>1.7</sourceLevel>
 					<testTimeOut>1800</testTimeOut>
-					<productionMode>false</productionMode>
+					<productionMode>true</productionMode>
 					<htmlunit>IE8</htmlunit>
 					<mode>htmlunit</mode>
 					<includes>**/*TestSuite.java</includes>

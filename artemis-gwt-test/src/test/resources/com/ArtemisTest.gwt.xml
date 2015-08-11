@@ -11,4 +11,23 @@
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.factory"/>
 
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.factory"/>
+
+	<extend-configuration-property name="artemis.reflect.include"
+								   value="java.util.Collection" />
+	<extend-configuration-property name="artemis.reflect.include"
+								   value="java.util.List" />
+	<extend-configuration-property name="artemis.reflect.include"
+								   value="java.util.ArrayList" />
+	<extend-configuration-property name="artemis.reflect.include"
+								   value="java.util.Map" />
+	<extend-configuration-property name="artemis.reflect.include"
+								   value="java.util.HashMap" />
+
+	<extend-configuration-property name="gdx.reflect.include"
+								   value="java.util.IdentityHashMap" />
+	<extend-configuration-property name="artemis.reflect.include"
+								   value="java.util.IdentityHashMap" />
+
 </module>
