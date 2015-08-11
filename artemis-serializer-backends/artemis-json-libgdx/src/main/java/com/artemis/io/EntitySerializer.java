@@ -14,6 +14,7 @@ import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
+import com.badlogic.gdx.utils.reflect.ClassReflection;
 
 import java.util.*;
 
@@ -73,7 +74,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		json.writeObjectStart("components");
 		for (int i = 0, s = components.size(); s > i; i++) {
 			Component c = components.get(i);
-			if (c.getClass().getAnnotation(Transient.class) != null)
+			if (ClassReflection.getDeclaredAnnotation(c.getClass(),Transient.class) != null)
 				continue;
 
 			String componentIdentifier = componentMap.get(c.getClass());
