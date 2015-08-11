@@ -4,7 +4,7 @@
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 	<inherits name='com.artemis.backends.artemis_backends_gwt'/>
 
-	<inherits name="com.artemis-json" />
+	<inherits name="com.artemis-json-libgdx" />
 
 	<source path='artemis'/>
 

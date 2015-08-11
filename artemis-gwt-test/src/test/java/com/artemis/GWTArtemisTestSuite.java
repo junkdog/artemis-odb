@@ -16,8 +16,8 @@ public class GWTArtemisTestSuite extends TestCase {
 		ExtendedEntityFactoryTest.class,
 
 		// reflection
-		ReferenceTrackerTest.class
-		//ComponentLookupSerializerTest.class - does not work at this time.
+		ReferenceTrackerTest.class,
+		ComponentLookupSerializerTest.class
 	};
 
 	public static GWTTestSuite suite() {
