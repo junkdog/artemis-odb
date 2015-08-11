@@ -495,19 +495,6 @@ public class World {
 		return (T) systems.get(type);
 	}
 
-//	/**
-//	 * Performs an action on each entity.
-//	 *
-//	 * @param entityIds contains the entities upon which the action will be performed
-//	 * @param performer the performer that carries out the action
-//	 */
-//	private void check(BitSet entityIds, Performer performer) {
-//		if (entityIds.isEmpty())
-//			return;
-//
-//		notifyManagers(performer, entityIds);
-//	}
-
 	public void setInvocationStrategy(SystemInvocationStrategy invocationStrategy) {
 		this.invocationStrategy = invocationStrategy;
 		invocationStrategy.setWorld(this);

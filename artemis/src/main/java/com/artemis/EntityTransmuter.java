@@ -38,8 +38,7 @@ public final class EntityTransmuter {
 		// but otherwise we need to make sure the instance
 		// isn't a flyweight instance escaping system processing,
 		// if so we need to resolve it to the actual entity.
-		if (e.isActive())
-			e = world.getEntity(e.id);
+		e = world.getEntity(e.id);
 
 		TransmuteOperation operation = getOperation(e);
 

@@ -1,8 +1,5 @@
 package com.artemis;
 
-import java.util.IdentityHashMap;
-import java.util.Map;
-
 import com.artemis.utils.Bag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.ReflectionException;

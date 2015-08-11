@@ -29,11 +29,11 @@ public class WorldSerializationManager extends Manager {
 	public <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
 		if (alwaysLoadStreamMemory || !is.markSupported()) {
 			try {
-				byte[] buff = new byte[32768];
+				byte[] buf = new byte[32768];
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();
 				int read;
-				while ((read = is.read(buff)) != -1) {
-					baos.write(buff, 0, read);
+				while ((read = is.read(buf)) != -1) {
+					baos.write(buf, 0, read);
 				}
 				is = new ByteArrayInputStream(baos.toByteArray());
 				baos.close();

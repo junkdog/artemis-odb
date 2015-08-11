@@ -333,7 +333,6 @@ public class ComponentManager extends Manager {
 	
 	@Override
 	public void added(int entityId) {
-
 		if ((highestSeenEntityId - 1) < entityId) {
 			ensurePackedComponentCapacity(entityId);
 		}
