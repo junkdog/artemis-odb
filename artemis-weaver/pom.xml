@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>net.onedaybeard.artemis</groupId>
 		<artifactId>artemis-parent</artifactId>
-		<version>0.11.1-SNAPSHOT</version>
+		<version>0.11.1</version>
 	</parent>
 
 	<artifactId>artemis-odb-weaver</artifactId>
