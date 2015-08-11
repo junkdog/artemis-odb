@@ -12,6 +12,7 @@ import java.io.*;
 public class WorldSerializationManager extends Manager {
 	private static final String TAG = WorldSerializationManager.class.getSimpleName();
 	private ArtemisSerializer<?> backend;
+	public boolean alwaysLoadStreamMemory = true;
 
 
 	public WorldSerializationManager() {
@@ -26,7 +27,7 @@ public class WorldSerializationManager extends Manager {
 	}
 
 	public <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
-		if (!is.markSupported()) {
+		if (alwaysLoadStreamMemory || !is.markSupported()) {
 			try {
 				byte[] buff = new byte[32768];
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();

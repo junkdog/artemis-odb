@@ -1,8 +1,12 @@
 ## Change Log
 
-#### Version: 0.11.2-SNAPSHOT
+#### Version: 0.11.3-SNAPSHOT
 
 #### Version: 0.11.2 - 2015-08-11
+- Added boolean `WorldSerializationManager#alwaysLoadStreamMemory`, forces fully loading the stream into
+  memory during loading, even if stream reports that `mark` is supported. Necessary when working
+  with libgdx's FileHandles.
+  - Enabled by default.
 - **Fix**: Duplicate ComponentNameComparator in json module, causing failing android builds..
 
 #### Version: 0.11.1 - 2015-08-11
