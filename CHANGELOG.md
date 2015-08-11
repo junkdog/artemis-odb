@@ -2,6 +2,8 @@
 
 #### Version: 0.11.2-SNAPSHOT
 
+#### Version: 0.11.2 - 2015-08-11
+- **Fix**: Duplicate ComponentNameComparator in json module, causing failing android builds..
 
 #### Version: 0.11.1 - 2015-08-11
 - **Fix**: Entities not registered as added to world *during* batch entity synchronization.
