@@ -103,6 +103,7 @@
 		<module>artemis-cli</module>
 		<module>artemis-gwt</module>
 		<module>artemis-serializer-backends/artemis-json</module>
+		<module>artemis-serializer-backends/artemis-json-libgdx</module>
   </modules>
 	
 	<profiles>
