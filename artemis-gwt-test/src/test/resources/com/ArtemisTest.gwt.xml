@@ -62,6 +62,10 @@
 								   value="java.util.IdentityHashMap" />
 	<extend-configuration-property name="gdx.reflect.include"
 								   value="java.util.IdentityHashMap" />
+	<extend-configuration-property name="gdx.reflect.include"
+								   value="com.artemis.utils.Bag" />
+	<extend-configuration-property name="gdx.reflect.include"
+								   value="com.artemis.utils.IntBag" />
 	<extend-configuration-property name="artemis.reflect.include"
 								   value="com.artemis.utils.Bag" />
 	<extend-configuration-property name="artemis.reflect.include"
