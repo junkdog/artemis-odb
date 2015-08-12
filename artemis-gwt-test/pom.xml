@@ -131,7 +131,7 @@
 					<enableClosureCompiler>true</enableClosureCompiler>
 					<disableClassMetadata>false</disableClassMetadata>
 					<disableCastChecking>true</disableCastChecking>
-					<extraJvmArgs>-Xmx4096M</extraJvmArgs>
+					<extraJvmArgs>-Xmx1096M</extraJvmArgs>
 					<sourceLevel>1.7</sourceLevel>
 					<testTimeOut>1800</testTimeOut>
 					<productionMode>true</productionMode>

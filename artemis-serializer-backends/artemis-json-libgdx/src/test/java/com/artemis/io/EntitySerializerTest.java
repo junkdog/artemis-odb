@@ -44,6 +44,8 @@ public class EntitySerializerTest {
 		String s = json.prettyPrint(e);
 		deleteAll(subscription);
 
+		System.out.println(s);
+
 		Entity entity = json.fromJson(Entity.class, s);
 		world.process();
 
