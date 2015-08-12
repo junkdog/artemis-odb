@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to="com.artemis.json">
+	<inherits name='com.google.gwt.user.User'/>
+	<source path="artemis"/>
+	<!--<source path="esotericsoftware" />-->
+
+</module>

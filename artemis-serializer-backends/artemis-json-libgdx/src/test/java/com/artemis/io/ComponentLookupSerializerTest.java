@@ -8,21 +8,16 @@ import com.artemis.component.ComponentY;
 import com.artemis.component.ReusedComponent;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonWriter;
-import com.google.gwt.junit.client.GWTTestCase;
+import org.junit.Test;
 
 import java.util.IdentityHashMap;
 
-/**
- * @author Daan van Yperen
- */
-public class ComponentLookupSerializerTest extends GWTTestCase {
+import static org.junit.Assert.*;
 
-	@Override
-	public String getModuleName() {
-		return "com.ArtemisTest";
-	}
+public class ComponentLookupSerializerTest {
 
-	public void test_read_write_read_components() {
+	@Test
+	public void read_write_read_components() {
 		World world = new World();
 		EntityEdit ee = world.createEntity().edit();
 		ee.create(ComponentX.class);
@@ -42,15 +37,4 @@ public class ComponentLookupSerializerTest extends GWTTestCase {
 		assertArrayEquals(componentMap.values().toArray(), map.values().toArray());
 		assertEquals(componentMap.keySet(), map.keySet());
 	}
-
-	/** Assert array equals for poor people. */
-	protected void assertArrayEquals(Object[] a1, Object[] a2) {
-		assertEquals(a1.length, a2.length);
-		int index=0;
-		for (Object o1 : a1) {
-			final Object o2 = a2[index++];
-			assertEquals(o1, o2);
-		}
-	}
-
 }

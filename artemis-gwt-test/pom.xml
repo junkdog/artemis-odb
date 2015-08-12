@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>net.onedaybeard.artemis</groupId>
 		<artifactId>artemis-parent</artifactId>
-		<version>0.11.1</version>
+		<version>0.11.3-SNAPSHOT</version>
 	</parent>
 	<description>Integration tests for gwt.</description>
 	<artifactId>artemis-odb-gwt-test</artifactId>
@@ -12,6 +12,9 @@
 
 	<properties>
 		<junit.version>3.8</junit.version>
+		<gdx.version>1.6.4</gdx.version>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
 	</properties>
 
 	<dependencies>
@@ -32,14 +35,14 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>artemis-odb-serializer-json</artifactId>
+			<artifactId>artemis-odb-serializer-json-libgdx</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>artemis-odb-serializer-json</artifactId>
+			<artifactId>artemis-odb-serializer-json-libgdx</artifactId>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 			<scope>test</scope>
@@ -50,13 +53,6 @@
 			<artifactId>artemis-odb-gwt</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.esotericsoftware</groupId>
-			<artifactId>jsonbeans</artifactId>
-			<version>0.7</version>
-			<classifier>sources</classifier>
 		</dependency>
 
 		<dependency>
@@ -78,6 +74,28 @@
 			<artifactId>gwt-dev</artifactId>
 			<version>2.6.0</version>
 			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx</artifactId>
+			<version>${gdx.version}</version>
+			<classifier>sources</classifier>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-backend-gwt</artifactId>
+			<version>${gdx.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.badlogicgames.gdx</groupId>
+			<artifactId>gdx-backend-gwt</artifactId>
+			<version>${gdx.version}</version>
+			<classifier>sources</classifier>
+			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
@@ -108,16 +126,20 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>gwt-maven-plugin</artifactId>
-				<version>2.6.0</version>
+				<version>2.6.1</version>
 				<configuration>
+					<strict>true</strict>
 					<enableClosureCompiler>true</enableClosureCompiler>
 					<disableClassMetadata>false</disableClassMetadata>
 					<disableCastChecking>true</disableCastChecking>
-					<sourceLevel>1.6</sourceLevel>
+					<extraJvmArgs>-Xmx1096M</extraJvmArgs>
+					<sourceLevel>1.7</sourceLevel>
 					<testTimeOut>1800</testTimeOut>
-					<productionMode>false</productionMode>
-					<htmlunit>IE8</htmlunit>
+					<productionMode>true</productionMode>
+					<style>DETAILED</style>
+					<htmlunit>Chrome</htmlunit>
 					<mode>htmlunit</mode>
+					<logLevel>INFO</logLevel>
 					<includes>**/*TestSuite.java</includes>
 				</configuration>
 				<executions>
