@@ -74,6 +74,10 @@
 								   value="com.artemis.ExtendedEntityFactoryTest" />
 	<extend-configuration-property name="artemis.reflect.include"
 								   value="com.artemis.manager.TypedEntityFactory" />
+	<extend-configuration-property name="gdx.reflect.include"
+								   value="com.artemis.managers.CustomJsonWorldSerializationManagerTest" />
+
+
 
 	<!--	<extend-configuration-property name="artemis.reflect.include" value="com.artemis"/>
         <extend-configuration-property name="artemis.reflect.include" value="com.artemis.factory"/>
