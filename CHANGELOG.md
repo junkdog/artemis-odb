@@ -1,13 +1,17 @@
 ## Change Log
 
-#### Version: 0.11.3-SNAPSHOT
+#### Version: 0.11.4-SNAPSHOT
+
+#### Version: 0.11.3 - 2015-08-14
+- **Fix**: entity reference operations could fail when loading into a fresh World instance.
+
 
 #### Version: 0.11.2 - 2015-08-11
 - Added boolean `WorldSerializationManager#alwaysLoadStreamMemory`, forces fully loading the stream into
   memory during loading, even if stream reports that `mark` is supported. Necessary when working
   with libgdx's FileHandles.
   - Enabled by default.
-- **Fix**: Duplicate ComponentNameComparator in json module, causing failing android builds..
+- **Fix**: Duplicate ComponentNameComparator in json module, causing failing android builds.
 
 #### Version: 0.11.1 - 2015-08-11
 - **Fix**: Entities not registered as added to world *during* batch entity synchronization.
