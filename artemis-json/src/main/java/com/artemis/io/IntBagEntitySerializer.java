@@ -17,7 +17,6 @@ public class IntBagEntitySerializer implements JsonSerializer<IntBag> {
 	private int recursionLevel;
 
 	public IntBagEntitySerializer(World world) {
-
 		this.world = world;
 		world.inject(this);
 	}

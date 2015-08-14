@@ -11,7 +11,9 @@ import com.esotericsoftware.jsonbeans.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
+import java.util.Collection;
 import java.util.IdentityHashMap;
+import java.util.Map;
 
 public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSerializer<JsonSerializer> {
 	private final Json json;
@@ -27,16 +29,15 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 		referenceTracker = new ReferenceTracker();
 
-		json = new Json(OutputType.json);
-		json.setIgnoreUnknownFields(true);
-
 		lookup = new ComponentLookupSerializer(world);
 		intBagEntitySerializer = new IntBagEntitySerializer(world);
+		entitySerializer = new EntitySerializer(world, referenceTracker);
 
+		json = new Json(OutputType.json);
+		json.setIgnoreUnknownFields(true);
 		json.setSerializer(IdentityHashMap.class, lookup);
 		json.setSerializer(Bag.class, new EntityBagSerializer(world));
 		json.setSerializer(IntBag.class, intBagEntitySerializer);
-		entitySerializer = new EntitySerializer(world, referenceTracker);
 		json.setSerializer(Entity.class, entitySerializer);
 	}
 
@@ -68,20 +69,23 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 	@Override
 	protected <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
-		updateLookupMap(is); // this isn't the nicest solution, but what the hell
+		referenceTracker.inspectTypes(updateLookupMap(is).values());
 		T t = json.fromJson(format, is);
 		referenceTracker.translate(intBagEntitySerializer.getTranslatedIds());
 		return t;
 	}
 
-	private void updateLookupMap(InputStream is) {
+	private Map<String, Class<? extends Component>> updateLookupMap(InputStream is) {
 		try {
 			JsonValue jsonData = new JsonReader().parse(is);
 			SaveFileFormat save = new SaveFileFormat((IntBag)null);
 			json.readField(save, "componentIdentifiers", jsonData);
 
 			is.reset();
-			entitySerializer.types = save.readLookupMap();
+			Map<String, Class<? extends Component>> lookup = save.readLookupMap();
+			entitySerializer.types = lookup;
+
+			return lookup;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

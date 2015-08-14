@@ -7,30 +7,44 @@ import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 class ReferenceTracker {
 	Bag<EntityReference> referenced = new Bag<EntityReference>();
 	private Set<Class<?>> referencingTypes = new HashSet<Class<?>>();
+	private Set<Field> referencingFields = new HashSet<Field>();
 
 	void inspectTypes(World world) {
-		referencingTypes.clear();
-		referenced.clear();
-
+		clear();
 		ComponentManager cm = world.getComponentManager();
 		for (ComponentType ct : cm.getComponentTypes()) {
-			inspectType(ct);
+			inspectType(ct.getType());
 		}
 	}
 
-	private void inspectType(ComponentType type) {
-		Field[] fields = ClassReflection.getDeclaredFields(type.getType());
+	void inspectTypes(Collection<Class<? extends Component>> types) {
+		clear();
+		for (Class<?> component : types) {
+			inspectType(component);
+		}
+	}
+
+	private void clear() {
+		referencingFields.clear();
+		referencingTypes.clear();
+		referenced.clear();
+	}
+
+	private void inspectType(Class<?> type) {
+		Field[] fields = ClassReflection.getDeclaredFields(type);
 		for (int i = 0; fields.length > i; i++) {
 			Field f = fields[i];
-			if (isReferencingEntity(f)) {
-				referencingTypes.add(type.getType());
-				referenced.add(new EntityReference(type.getType(), f));
+			if (isReferencingEntity(f) && !referencingFields.contains(type)) {
+				referencingFields.add(f);
+				referencingTypes.add(type);
+				referenced.add(new EntityReference(type, f));
 			}
 		}
 	}

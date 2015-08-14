@@ -26,6 +26,16 @@ class EntityReference {
 		operations.clear();
 	}
 
+	@Override
+	public String toString() {
+		return "EntityReference{" +
+				componentType.getSimpleName() +
+				"." + field.getName() +
+				" (" + fieldType +
+				"), operations=" + operations.size() +
+				'}';
+	}
+
 	enum FieldType {
 		INT {
 			void translate(Component c, Field field, Bag<Entity> translatedIds) {

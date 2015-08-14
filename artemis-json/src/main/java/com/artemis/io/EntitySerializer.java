@@ -131,17 +131,14 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		// the id
 		if (isSerializingEntity) {
 			int entityId = json.readValue(Integer.class, jsonData);
-			// creating a temporary entity; this will later be replafed
-			// with the correct entity
+			// creating a temporary entity; this will later be translated
+			// to the correct entity
 			Entity entity = Entity.createFlyweight(world);
 			entity.id = entityId;
-			return world.getEntity(entityId);
+			return entity;
 		} else {
 			isSerializingEntity = true;
 		}
-
-//		ComponentLookupSerializer lookup = componentLookup(json);
-//		Map<String, Class<? extends Component>> components = lookup.identifierToClassMap();
 
 		Entity e = world.createEntity();
 
@@ -158,8 +155,6 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		EntityEdit edit = e.edit();
 		while (component != null) {
 			assert(component.name() != null);
-
-//			Class<? extends Component> componentType = components.get(component.name);
 			Class<? extends Component> componentType = types.get(component.name);
 			Component c = edit.create(componentType);
 			json.readFields(c, component);

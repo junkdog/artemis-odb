@@ -43,6 +43,34 @@ public class EntityReferencesTest {
 		assertEquals(star1.id, state.starId1);
 	}
 
+		@Test
+	public void load_entity_with_references() throws Exception {
+		SaveFileFormat load = loadWorld();
+
+		Entity base = tags.getEntity("level");
+		Entity star1 = tags.getEntity("star1");
+		Entity star2 = tags.getEntity("star2");
+		Entity star3 = tags.getEntity("star3");
+		Entity shadow = tags.getEntity("shadow");
+
+		assertEquals(5, load.entities.size());
+
+		assertNotNull(base);
+		assertNotNull(star1);
+		assertNotNull(star2);
+		assertNotNull(star3);
+		assertNotNull(shadow);
+
+		assertEquals(base.id, parentedPositionMapper.get(star1).origin);
+		assertEquals(base.id, parentedPositionMapper.get(star2).origin);
+		assertEquals(base.id, parentedPositionMapper.get(star3).origin);
+
+		LevelState state = levelStateMapper.get(base);
+		assertEquals(star1.id, state.starId1);
+		assertEquals(star2.id, state.starId2);
+		assertEquals(star3.id, state.starId3);
+	}
+
 	private SaveFileFormat loadWorld() {
 		world = new World(new WorldConfiguration()
 				.setManager(TagManager.class)
