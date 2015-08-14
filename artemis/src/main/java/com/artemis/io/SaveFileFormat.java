@@ -14,10 +14,12 @@ import java.util.Map;
  * data requires persisting. All instance fields in this class - or its children -
  * are persisted.</p>
  *
- * <p>Two default de/serializer back-ends are provided: {@link KryoArtemisSerializer}
- * and {@link JsonArtemisSerializer}. These know how to serialize entities
- * and metadata, but little else. Custom serializers can be written for both
- * backends, and are required when extending the save file format.</p>
+ * <p>The default de/serializer backend provided is
+ * {@code JsonArtemisSerializer}. A kryo backend is planned for a later release.
+ * A backend knows how to serialize entities and metadata, but little else.
+ * If extending this class, custom per-type serializers can be defined - these
+ * serializers are convenient to have, but normal POJO classes with some
+ * custom logic works too.</p>
  *
  * <p>The typical custom serializer works on type, e.g. a <code>GameStateManager</code>
  * contains additional data not available to components directly. A serializer would
@@ -26,8 +28,8 @@ import java.util.Map;
  *
  * <p><b>Nota Bene:</b> PackedComponent types are not yet supported.</p>
  *
- * @See {@link JsonArtemisSerializer}
- * @See {@link KryoArtemisSerializer}
+ * @See JsonArtemisSerializer
+ * @See N/A KryoArtemisSerializer
  * @See {@link EntityReference}
  */
 @Wire
