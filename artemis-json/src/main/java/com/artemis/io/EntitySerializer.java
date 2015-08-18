@@ -10,7 +10,6 @@ import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
-import com.artemis.utils.IntBag;
 import com.esotericsoftware.jsonbeans.Json;
 import com.esotericsoftware.jsonbeans.JsonSerializer;
 import com.esotericsoftware.jsonbeans.JsonValue;
@@ -34,7 +33,9 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 
 	private boolean isSerializingEntity;
 
+
 	Map<String, Class<? extends Component>> types = new HashMap<String, Class<? extends Component>>();
+	private IdentityHashMap<Class<? extends Component>, String> lookupMap;
 
 	public EntitySerializer(World world, ReferenceTracker referenceTracker) {
 		this.world = world;
@@ -42,10 +43,13 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		world.inject(this);
 
 		componentClasses = new ObjectMap<String, Class<? extends Component>>();
-
 		registeredTags = (tagManager != null)
 			? tagManager.getRegisteredTags()
 			: Collections.EMPTY_LIST;
+	}
+
+	void preWrite(SaveFileFormat save) {
+		lookupMap =	save.componentIdentifiers;
 	}
 
 	@Override
@@ -60,10 +64,6 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 			isSerializingEntity = true;
 		}
 
-		ComponentLookupSerializer lookup = componentLookup(json);
-		IdentityHashMap<Class<? extends Component>, String> componentMap =
-				lookup.classToIdentifierMap();
-
 		world.getComponentManager().getComponentsFor(e, components);
 		components.sort(comparator);
 
@@ -77,7 +77,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 			if (c.getClass().getAnnotation(Transient.class) != null)
 				continue;
 
-			String componentIdentifier = componentMap.get(c.getClass());
+			String componentIdentifier = lookupMap.get(c.getClass());
 			json.writeObjectStart(componentIdentifier);
 
 			json.writeFields(c);
@@ -93,10 +93,6 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 
 	private ComponentLookupSerializer componentLookup(Json json) {
 		return (ComponentLookupSerializer) json.getSerializer(IdentityHashMap.class);
-	}
-
-	private IntBagEntitySerializer intBagEntity(Json json) {
-		return (IntBagEntitySerializer) json.getSerializer(IntBag.class);
 	}
 
 	private void writeTag(Json json, Entity e) {

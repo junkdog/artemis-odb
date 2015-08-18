@@ -1,6 +1,9 @@
 ## Change Log
 
 #### Version: 0.11.4-SNAPSHOT
+- **Fix**: Excessive object creation when serializing entities.
+- **Fix**: SaveFileFormat should only enumerate required components.
+
 
 #### Version: 0.11.3 - 2015-08-14
 - **Fix**: entity reference operations could fail when loading into a fresh World instance.

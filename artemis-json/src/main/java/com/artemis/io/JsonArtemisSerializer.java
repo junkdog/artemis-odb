@@ -1,6 +1,7 @@
 package com.artemis.io;
 
 import com.artemis.Component;
+import com.artemis.ComponentCollector;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.managers.WorldSerializationManager;
@@ -11,15 +12,14 @@ import com.esotericsoftware.jsonbeans.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
-import java.util.Collection;
-import java.util.IdentityHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSerializer<JsonSerializer> {
 	private final Json json;
 	private final ComponentLookupSerializer lookup;
 	private final IntBagEntitySerializer intBagEntitySerializer;
 	private final EntitySerializer entitySerializer;
+	private final ComponentCollector componentCollector;
 
 	private boolean prettyPrint;
 	private ReferenceTracker referenceTracker;
@@ -27,6 +27,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	public JsonArtemisSerializer(World world) {
 		super(world);
 
+		componentCollector = new ComponentCollector(world);
 		referenceTracker = new ReferenceTracker();
 
 		lookup = new ComponentLookupSerializer(world);
@@ -55,8 +56,10 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	@Override
 	protected void save(Writer writer, SaveFileFormat save) {
 		try {
+			componentCollector.preWrite(save);
+			entitySerializer.preWrite(save);
+			lookup.setComponentMap(save.componentIdentifiers);
 			referenceTracker.inspectTypes(world);
-			save.componentIdentifiers.putAll(lookup.classToIdentifierMap());
 			if (prettyPrint) {
 				writer.append(json.prettyPrint(save));
 			} else {
@@ -73,6 +76,16 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		T t = json.fromJson(format, is);
 		referenceTracker.translate(intBagEntitySerializer.getTranslatedIds());
 		return t;
+	}
+
+	private void inspectComponentTypes(SaveFileFormat save) {
+		BitSet compositionIds = new BitSet();
+		int[] ids = save.entities.getData();
+		for (int i = 0, s = save.entities.size(); s > i; i++) {
+			Entity e = world.getEntity(ids[i]);
+			compositionIds.set(e.getCompositionId());
+		}
+
 	}
 
 	private Map<String, Class<? extends Component>> updateLookupMap(InputStream is) {
