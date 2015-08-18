@@ -28,7 +28,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		super(world);
 
 		componentCollector = new ComponentCollector(world);
-		referenceTracker = new ReferenceTracker();
+		referenceTracker = new ReferenceTracker(world);
 
 		lookup = new ComponentLookupSerializer(world);
 		intBagEntitySerializer = new IntBagEntitySerializer(world);
@@ -56,10 +56,12 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	@Override
 	protected void save(Writer writer, SaveFileFormat save) {
 		try {
+			referenceTracker.inspectTypes(world);
+			referenceTracker.preWrite(save);
+
 			componentCollector.preWrite(save);
 			entitySerializer.preWrite(save);
 			lookup.setComponentMap(save.componentIdentifiers);
-			referenceTracker.inspectTypes(world);
 			if (prettyPrint) {
 				writer.append(json.prettyPrint(save));
 			} else {

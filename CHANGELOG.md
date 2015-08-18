@@ -2,6 +2,7 @@
 
 #### Version: 0.11.4-SNAPSHOT
 - **Fix**: Excessive object creation when serializing entities.
+- **Fix**: Components referencing other entities are implicitly included when serializing.
 - **Fix**: SaveFileFormat should only enumerate required components.
 
 
