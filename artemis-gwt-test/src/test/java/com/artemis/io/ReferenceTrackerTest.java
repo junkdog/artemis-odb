@@ -22,7 +22,7 @@ public class ReferenceTrackerTest extends GWTTestCase {
 		ee.create(EntityHolder.class);
 		ee.create(ComponentY.class); // not referenced
 
-		ReferenceTracker tracker = new ReferenceTracker();
+		ReferenceTracker tracker = new ReferenceTracker(w);
 		tracker.inspectTypes(w);
 
 		assertEquals(2, tracker.referenced.size());
