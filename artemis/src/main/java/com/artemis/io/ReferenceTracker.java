@@ -14,6 +14,9 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Maintains state of all component types which can reference other components.
+ */
 class ReferenceTracker {
 	Bag<EntityReference> referenced = new Bag<EntityReference>();
 	private Set<Class<?>> referencingTypes = new HashSet<Class<?>>();
@@ -116,7 +119,7 @@ class ReferenceTracker {
 			foundNew = false;
 			for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
 				for (Field f : referencingFields) {
-					foundNew = findReferences(i, f, bs);
+					foundNew |= findReferences(i, f, bs);
 				}
 			}
 		}
