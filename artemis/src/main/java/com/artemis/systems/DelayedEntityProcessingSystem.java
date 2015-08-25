@@ -24,12 +24,10 @@ import com.artemis.utils.IntBag;
  * This will save CPU cycles in some scenarios.
  * </p><p>
  * Implementation notes:<br />
- * In order to start the system you need to override the
- * {@link #inserted(int) inserted(int entityId)} method, look up the delay time
- * from that entity and offer it to the system by using the
- * {@link #offerDelay(float) offerDelay(float delay)} method. Also, when
- * processing the entities you must also call
- * {@link #offerDelay(float) offerDelay(float delay)} for all valid entities.
+ * Within {@link #processExpired(Entity) processExpired(Entity e)}
+ * you must call {@link #offerDelay(float) offerDelay(float delay)} if the
+ * entity's delay time is renewed. That method is also called by {@link #inserted(int) inserted(int entityId)}
+ * for each newly matched entity.
  * </p><p>
  *
  * @author Arni Arent
@@ -124,7 +122,7 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	}
 	
 	/**
-	 * Process a entity this system is interested in.
+	 * Process an entity this system is interested in.
 	 * <p>
 	 * Substract the accumulatedDelta from the entities defined delay.
 	 * </p>
