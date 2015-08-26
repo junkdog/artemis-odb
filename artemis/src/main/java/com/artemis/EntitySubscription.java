@@ -129,9 +129,9 @@ public class EntitySubscription {
 	}
 
 	void process(IntBag added, IntBag changed, IntBag deleted) {
+		deleted(deleted);
 		added(added);
 		changed(changed);
-		deleted(deleted);
 
 		dirty |= informEntityChanges();
 	}
@@ -142,11 +142,11 @@ public class EntitySubscription {
 
 		transferBitsToInts();
 		for (int i = 0, s = listeners.size(); s > i; i++) {
-			if (inserted.size() > 0)
-				listeners.get(i).inserted(inserted);
-
 			if (removed.size() > 0)
 				listeners.get(i).removed(removed);
+
+			if (inserted.size() > 0)
+				listeners.get(i).inserted(inserted);
 		}
 
 		inserted.setSize(0);
