@@ -1,5 +1,7 @@
 package com.artemis.injection;
 
+import com.artemis.annotations.SkipWire;
+
 /**
  * Enum used by {@link ClassType} to indicate if a class or field is annotated with {@link com.artemis.annotations.Wire}
  * or {@link com.artemis.annotations.Mapper}.
@@ -17,5 +19,9 @@ public enum WireType {
     /**
      * Indicates that a class is not annotated with anything relevant to the artemis-world.
      */
-    IGNORED
+    IGNORED,
+    /**
+     * Indicates that a class is annotated with {@link com.artemis.annotations.SkipWire}
+     */
+    SKIPWIRE
 }
