@@ -52,8 +52,6 @@ public class EntityManager extends Manager {
 		Entity e = recyclingEntityFactory.obtain();
 		entityToIdentity.set(e.id, 0);
 
-		// growing backing array just in case
-		entities.set(e.id, e);
 		newlyCreatedEntityIds.set(e.id);
 		return e;
 	}
@@ -322,7 +320,9 @@ public class EntityManager extends Manager {
 		
 		Entity obtain() {
 			if (limbo.isEmpty()) {
-				return new Entity(em.world, nextId++);
+				Entity e = new Entity(em.world, nextId++);
+				em.entities.set(e.id, e);
+				return e;
 			} else {
 				int id = limbo.popFirst();
 				recycled.set(id, false);
