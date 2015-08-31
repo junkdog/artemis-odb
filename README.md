@@ -24,7 +24,7 @@ _See [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG
 Artemis-odb is one of the fastest incarnations of Artemis! 
 Don't take our word for it, check out and [run the benchmarks](https://github.com/junkdog/entity-sytem-benchmarks) yourself!
 
-### Many examples!
+### Many example games!
 
 Dozens of games with source available in the [Game Gallery](https://github.com/junkdog/artemis-odb/wiki/Game-Gallery)!
 
@@ -32,7 +32,7 @@ Dozens of games with source available in the [Game Gallery](https://github.com/j
 <img src="http://tikotepadventure.com/files/tikotep/201507/monolith.gif" width="250">
 <img src="http://ludumdare.com/compo/wp-content/compo2//375043/22396-shot2.png-eq-900-500.jpg" width="250">
 
-Artemis-odb is used commercially.
+### Used commercially!
 
 [Dog Sled Saga](http://www.dogsledsaga.com/)
 
