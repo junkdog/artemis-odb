@@ -28,9 +28,9 @@ Don't take our word for it, check out and [run the benchmarks](https://github.co
 
 Dozens of games with source available in the [Game Gallery](https://github.com/junkdog/artemis-odb/wiki/Game-Gallery)!
 
-<img src="http://i.imgur.com/DHy5k6h.png" width="250">
-<img src="http://tikotepadventure.com/files/tikotep/201507/monolith.gif" width="250">
-<img src="http://ludumdare.com/compo/wp-content/compo2//375043/22396-shot2.png-eq-900-500.jpg" width="250">
+<img src="http://i.imgur.com/DHy5k6h.png" width="235">
+<img src="http://tikotepadventure.com/files/tikotep/201507/monolith.gif" width="235">
+<img src="http://ludumdare.com/compo/wp-content/compo2//375043/22396-shot2.png-eq-900-500.jpg" width="235">
 
 ### Use it commercially!
 
@@ -40,8 +40,8 @@ Dozens of games with source available in the [Game Gallery](https://github.com/j
 
  [Tools, Extensions and Frameworks](https://github.com/junkdog/artemis-odb/wiki/Extensions)
 
-[<img src="https://raw.githubusercontent.com/wiki/junkdog/artemis-odb/images/cdm.png" width="400">](http://junkdog.github.io/matrix.html)
-[<img src="https://github.com/Namek/artemis-odb-entity-tracker/raw/master/screenshot.png" width="400">](https://github.com/Namek/artemis-odb-entity-tracker)
+[<img src="https://raw.githubusercontent.com/wiki/junkdog/artemis-odb/images/cdm.png" width="350">](http://junkdog.github.io/matrix.html)
+[<img src="https://github.com/Namek/artemis-odb-entity-tracker/raw/master/screenshot.png" width="350">](https://github.com/Namek/artemis-odb-entity-tracker)
 
 ### Getting started
 
