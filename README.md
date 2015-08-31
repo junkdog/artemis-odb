@@ -22,7 +22,7 @@ _See [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG
 ### Fast!
 
 Artemis-odb is one of the fastest incarnations of Artemis! 
-Don't take our word for it, check out and [run the benchmarks](https://github.com/junkdog/entity-sytem-benchmarks) yourself!
+Don't take our word for it, check out and [run the benchmarks](https://github.com/junkdog/entity-system-benchmarks) yourself!
 
 ### Learn from others!
 
