@@ -163,7 +163,7 @@ public class JsonWorldSerializationManagerTest {
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
 				json.getBytes(StandardCharsets.UTF_8));
-		manger.load(is, SaveFileFormat.class);
+		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
 		world.process();
 
 		assertEquals(3, allEntities.getEntities().size());

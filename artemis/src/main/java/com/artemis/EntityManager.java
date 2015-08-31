@@ -3,6 +3,7 @@ package com.artemis;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.artemis.EntityTransmuter.TransmuteOperation;
+import com.artemis.utils.IntDeque;
 
 import java.util.BitSet;
 
@@ -38,7 +39,7 @@ public class EntityManager extends Manager {
 	
 	@Override
 	protected void initialize() {
-		recyclingEntityFactory = new RecyclingEntityFactory(world, entityToIdentity);
+		recyclingEntityFactory = new RecyclingEntityFactory(this);
 		subscriptionManager = world.getManager(AspectSubscriptionManager.class);
 	}
 
@@ -49,10 +50,10 @@ public class EntityManager extends Manager {
 	 */
 	protected Entity createEntityInstance() {
 		Entity e = recyclingEntityFactory.obtain();
-		entityToIdentity.set(e.getId(), 0);
+		entityToIdentity.set(e.id, 0);
 
 		// growing backing array just in case
-		entities.set(e.getId(), e);
+		entities.set(e.id, e);
 		newlyCreatedEntityIds.set(e.id);
 		return e;
 	}
@@ -129,11 +130,8 @@ public class EntityManager extends Manager {
 	 */
 	@Override
 	public void deleted(int entityId) {
-		Entity entity = entities.get(entityId);
-		if (entity == null)
+		if (recyclingEntityFactory.has(entityId))
 			return;
-
-		entities.set(entityId, null);
 
 		// usually never happens but:
 		// this happens when an entity is deleted before
@@ -141,7 +139,8 @@ public class EntityManager extends Manager {
 		// before World#process has been called
 		newlyCreatedEntityIds.set(entityId, false);
 
-		recyclingEntityFactory.free(entity);
+		recyclingEntityFactory.free(entityId);
+
 
 		disabled.clear(entityId);
 	}
@@ -154,7 +153,8 @@ public class EntityManager extends Manager {
 	/**
 	 * Check if this entity is active.
 	 * <p>
-	 * Active means the entity is being actively processed.
+	 * Active means the entity is being actively processed. A deleted entity id will
+	 * still report as active.
 	 * </p>
 	 * 
 	 * @param entityId
@@ -189,7 +189,10 @@ public class EntityManager extends Manager {
 	 * @return the entity
 	 */
 	protected Entity getEntity(int entityId) {
-		return entities.get(entityId);
+		if (recyclingEntityFactory.has(entityId))
+			return null;
+		else
+			return entities.get(entityId);
 	}
 	
 	/**
@@ -242,10 +245,6 @@ public class EntityManager extends Manager {
 	@Deprecated
 	public long getTotalDeleted() {
 		return 0L;
-	}
-	
-	protected void clean() {
-		recyclingEntityFactory.recycle();
 	}
 	
 	protected int getIdentity(int entityId) {
@@ -305,44 +304,34 @@ public class EntityManager extends Manager {
 	}
 	
 	private static final class RecyclingEntityFactory {
-		private final World world;
-		private final WildBag<Entity> limbo;
-		private final Bag<Entity> recycled;
+		private final EntityManager em;
+		private final IntDeque limbo;
+		private final BitSet recycled;
 		private int nextId;
-		private IntBag entityToIdentity;
-		
-		RecyclingEntityFactory(World world, IntBag entityToIdentity) {
-			this.world = world;
-			this.entityToIdentity = entityToIdentity;
-			recycled = new Bag<Entity>();
-			limbo = new WildBag<Entity>();
+
+		RecyclingEntityFactory(EntityManager em) {
+			this.em = em;
+			recycled = new BitSet();
+			limbo = new IntDeque();
 		}
 		
-		void free(Entity e) {
-			limbo.add(e);
-		}
-		
-		void recycle() {
-			int s = limbo.size();
-			if (s == 0) return;
-			
-			Object[] data = limbo.getData();
-			for (int i = 0; s > i; i++) {
-				Entity e = (Entity) data[i];
-				recycled.add(e);
-				data[i] = null;
-			}
-			limbo.setSize(0);
+		void free(int entityId) {
+			limbo.add(entityId);
+			recycled.set(entityId);
 		}
 		
 		Entity obtain() {
-			if (recycled.isEmpty()) {
-				return new Entity(world, nextId++);
+			if (limbo.isEmpty()) {
+				return new Entity(em.world, nextId++);
 			} else {
-				Entity e = recycled.removeLast();
-				entityToIdentity.set(e.getId(), 0);
-				return e;
+				int id = limbo.popFirst();
+				recycled.set(id, false);
+				return em.entities.get(id);
 			}
+		}
+
+		boolean has(int entityId) {
+			return recycled.get(entityId);
 		}
 	}
 }

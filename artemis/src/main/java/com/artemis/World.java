@@ -505,8 +505,6 @@ public class World {
 	 */
 	public void process() {
 		updateEntityStates();
-
-		em.clean();
 		cm.clean();
 
 		invocationStrategy.process(systemsBag);

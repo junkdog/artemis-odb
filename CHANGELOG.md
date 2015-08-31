@@ -1,8 +1,9 @@
 ## Change Log
 
 #### Version: 0.11.5-SNAPSHOT
-- Change EntitySubscription order to deleted/added/changed
-- Change AspectSubscription order to removed/inserted
+- Entities recycled in FIFO order.
+- Change EntitySubscription order to deleted/added/changed.
+- Change AspectSubscription order to removed/inserted.
 
 
 #### Version: 0.11.4 - 2015-08-18
