@@ -123,8 +123,9 @@ public class World {
 		configuration.initialize(this, injector, am);
 
 		registerUuids = managers.get(UuidEntityManager.class) != null;
-		if (invocationStrategy == null)
+		if (invocationStrategy == null) {
 			setInvocationStrategy(new InvocationStrategy());
+		}
 	}
 
 	/**
@@ -495,7 +496,10 @@ public class World {
 		return (T) systems.get(type);
 	}
 
-	public void setInvocationStrategy(SystemInvocationStrategy invocationStrategy) {
+	/**
+	 * Set strategy for invoking systems on {@see #process()}.
+	 */
+	protected void setInvocationStrategy(SystemInvocationStrategy invocationStrategy) {
 		this.invocationStrategy = invocationStrategy;
 		invocationStrategy.setWorld(this);
 	}
@@ -542,5 +546,19 @@ public class World {
 	 */
 	public <T extends Component> ComponentMapper<T> getMapper(Class<T> type) {
 		return BasicComponentMapper.getFor(type, this);
+	}
+
+	/**
+	 * @return Injector used for dependency injection.
+	 */
+	public Injector getInjector() {
+		return injector;
+	}
+
+	/**
+	 * @return Strategy used for invoking systems during {@see World#process()}.
+	 */
+	public SystemInvocationStrategy getInvocationStrategy() {
+		return invocationStrategy;
 	}
 }

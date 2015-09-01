@@ -1,6 +1,7 @@
 ## Change Log
 
 #### Version: 0.11.5-SNAPSHOT
+- InvocationStrategy configurable via WorldConfiguration. 
 - Add @SkipWire annotation to exclude injection targets.
 - Entities recycled in FIFO order.
 - Change EntitySubscription order to deleted/added/changed.
