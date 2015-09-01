@@ -24,6 +24,23 @@ _See [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG
 Artemis-odb is one of the fastest incarnations of Artemis! 
 Don't take our word for it, check out and [run the benchmarks](https://github.com/junkdog/entity-system-benchmarks) yourself!
 
+Operations/second. Higher is better.
+
+![it16k][it16k] ![ir16k][ir16k] ![arc16k][arc16k]
+
+ [it1k]: http://junkdog.github.io/images/ecs-bench/iteration__1024_entities.png
+ [it4k]: http://junkdog.github.io/images/ecs-bench/iteration__4096_entities.png
+ [it16k]: http://junkdog.github.io/images/ecs-bench/iteration__16384_entities.png
+ [it65k]: http://junkdog.github.io/images/ecs-bench/iteration__65536_entities.png
+ [ir1k]: http://junkdog.github.io/images/ecs-bench/insert_remove__1024_entities.png
+ [ir4k]: http://junkdog.github.io/images/ecs-bench/insert_remove__4096_entities.png
+ [ir16k]: http://junkdog.github.io/images/ecs-bench/insert_remove__16384_entities.png
+ [ir65k]: http://junkdog.github.io/images/ecs-bench/insert_remove__65536_entities.png 
+ [arc1k]: http://junkdog.github.io/images/ecs-bench/add_remove_components__1024_entities.png
+ [arc4k]: http://junkdog.github.io/images/ecs-bench/add_remove_components__4096_entities.png
+ [arc16k]: http://junkdog.github.io/images/ecs-bench/add_remove_components__16384_entities.png
+ [arc64k]: http://junkdog.github.io/images/ecs-bench/add_remove_components__65536_entities.png 
+
 ### Learn from others!
 
 Dozens of games with source available in the [Game Gallery](https://github.com/junkdog/artemis-odb/wiki/Game-Gallery)!
