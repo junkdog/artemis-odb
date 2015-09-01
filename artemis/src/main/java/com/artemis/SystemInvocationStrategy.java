@@ -4,7 +4,7 @@ import com.artemis.utils.Bag;
 
 public abstract class SystemInvocationStrategy {
 
-	private World world;
+	protected World world;
 
 	protected final void setWorld(World world) {
 		this.world = world;
