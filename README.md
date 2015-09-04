@@ -76,7 +76,7 @@ Share your thoughts and questions with us!
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>0.11.4</version>
+	<version>0.12.0</version>
 </dependency>
 ```
 
@@ -84,12 +84,12 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 
 #### Gradle
 ```groovy
-  dependencies { compile "net.onedaybeard.artemis:artemis-odb:0.11.4" }
+  dependencies { compile "net.onedaybeard.artemis:artemis-odb:0.12.0" }
 ```
 
 #### Manual Download
 
- - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.11.4/) 
- - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.11.4/)
- - [Entity Factory Processor](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-processor/0.11.4/)
+ - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.12.0/) 
+ - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.12.0/)
+ - [Entity Factory Processor](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-processor/0.12.0/)
 

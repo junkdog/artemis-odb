@@ -1,6 +1,8 @@
 ## Change Log
 
-#### Version: 0.11.5-SNAPSHOT
+#### Version: 0.13.0-SNAPSHOT
+
+#### Version: 0.12.0 - 2015-09-04
 - InvocationStrategy configurable via WorldConfiguration. 
 - Add @SkipWire annotation to exclude injection targets.
 - Entities recycled in FIFO order.
@@ -8,7 +10,6 @@
 - Change AspectSubscription order to removed/inserted.
 - **FIX**: Resolved potential "markSupported() is undefined for the type InputStream" message when
   compiling for GWT.
-
 
 
 #### Version: 0.11.4 - 2015-08-18
