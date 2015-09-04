@@ -1,4 +1,4 @@
-package com.artemis.backends.gwt.emu.com.artemis.managers;
+package com.artemis.managers;
 
 import com.artemis.Manager;
 import com.artemis.World;
