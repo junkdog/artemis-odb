@@ -6,6 +6,9 @@
 - Entities recycled in FIFO order.
 - Change EntitySubscription order to deleted/added/changed.
 - Change AspectSubscription order to removed/inserted.
+- **FIX**: Resolved potential "markSupported() is undefined for the type InputStream" message when
+  compiling for GWT.
+
 
 
 #### Version: 0.11.4 - 2015-08-18
