@@ -15,10 +15,11 @@ public final class WorldConfiguration {
 	final Bag<Manager> managers = new Bag<Manager>();
 	final Bag<BaseSystem> systems = new Bag<BaseSystem>();
 
-	private int expectedEntityCount = 128;
-	Map<String, Object> injectables = new HashMap<String, Object>();
+	protected int expectedEntityCount = 128;
+	protected Map<String, Object> injectables = new HashMap<String, Object>();
 
-	Injector injector;
+	protected Injector injector;
+	protected SystemInvocationStrategy invocationStrategy;
 
 	public WorldConfiguration() {
 		// reserving space for core managers
@@ -42,8 +43,26 @@ public final class WorldConfiguration {
 		return this;
 	}
 
+	/**
+	 * Set Injector to handle all dependency injections.
+	 *
+	 * @param injector Injector to handle dependency injections.
+	 * @return This instance for chaining.
+	 */
 	public WorldConfiguration setInjector(Injector injector) {
+		if ( injector == null ) throw new NullPointerException();
 		this.injector = injector;
+		return this;
+	}
+
+	/**
+	 * Set strategy for invoking systems on {@see World#process()}.
+	 * @param invocationStrategy Strategy that will invoke systems.
+	 * @return This instance for chaining.
+	 */
+	public WorldConfiguration setInvocationStrategy(SystemInvocationStrategy invocationStrategy) {
+		if ( invocationStrategy == null ) throw new NullPointerException();
+		this.invocationStrategy = invocationStrategy;
 		return this;
 	}
 
@@ -190,6 +209,11 @@ public final class WorldConfiguration {
 	}
 
 	void initialize(World world, Injector injector, AspectSubscriptionManager asm) {
+
+		if ( invocationStrategy != null ) {
+			world.setInvocationStrategy(invocationStrategy);
+		}
+
 		managers.set(0, world.getComponentManager());
 		managers.set(1, world.getEntityManager());
 		managers.set(2, asm);
