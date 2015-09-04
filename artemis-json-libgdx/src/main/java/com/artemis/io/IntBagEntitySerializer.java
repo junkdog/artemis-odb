@@ -5,12 +5,11 @@ import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
-import com.esotericsoftware.jsonbeans.Json;
-import com.esotericsoftware.jsonbeans.JsonSerializer;
-import com.esotericsoftware.jsonbeans.JsonValue;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 
 @Wire
-public class IntBagEntitySerializer implements JsonSerializer<IntBag> {
+public class IntBagEntitySerializer implements Json.Serializer<IntBag> {
 	private final World world;
 	private final Bag<Entity> translatedIds = new Bag<Entity>();
 

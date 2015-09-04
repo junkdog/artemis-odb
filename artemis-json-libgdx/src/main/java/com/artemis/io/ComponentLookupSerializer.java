@@ -4,14 +4,13 @@ import com.artemis.Component;
 import com.artemis.World;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.ReflectionException;
-import com.esotericsoftware.jsonbeans.Json;
-import com.esotericsoftware.jsonbeans.JsonSerializer;
-import com.esotericsoftware.jsonbeans.JsonValue;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-public class ComponentLookupSerializer implements JsonSerializer<IdentityHashMap> {
+public class ComponentLookupSerializer implements Json.Serializer<IdentityHashMap> {
 	private World world;
 	private IdentityHashMap<Class<? extends Component>, String> componentMap;
 

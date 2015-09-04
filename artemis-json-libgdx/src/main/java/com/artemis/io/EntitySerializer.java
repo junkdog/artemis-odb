@@ -10,15 +10,14 @@ import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
-import com.esotericsoftware.jsonbeans.Json;
-import com.esotericsoftware.jsonbeans.JsonSerializer;
-import com.esotericsoftware.jsonbeans.JsonValue;
-import com.esotericsoftware.jsonbeans.ObjectMap;
+import com.badlogic.gdx.utils.Json;
+import com.badlogic.gdx.utils.JsonValue;
+import com.badlogic.gdx.utils.ObjectMap;
 
 import java.util.*;
 
 @Wire(failOnNull = false)
-public class EntitySerializer implements JsonSerializer<Entity> {
+public class EntitySerializer implements Json.Serializer<Entity> {
 
 	private final Bag<Component> components = new Bag<Component>();
 	private final ComponentNameComparator comparator = new ComponentNameComparator();
