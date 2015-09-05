@@ -128,6 +128,7 @@
 					<enableClosureCompiler>true</enableClosureCompiler>
 					<disableClassMetadata>false</disableClassMetadata>
 					<disableCastChecking>true</disableCastChecking>
+					<extraJvmArgs>-Xmx1500M</extraJvmArgs>
 					<sourceLevel>1.7</sourceLevel>
 					<testTimeOut>1800</testTimeOut>
 					<strict>true</strict>
@@ -148,3 +149,4 @@
 	</build>
 
 </project>
+
