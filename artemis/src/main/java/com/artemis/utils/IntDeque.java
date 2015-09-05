@@ -99,7 +99,7 @@ public class IntDeque {
 	 */
 	public void add(int e) {
 		if (size == elements.length)
-			grow();
+			grow((elements.length * 7) / 4 + 1);
 
 		elements[index(size++)] = e;
 	}
@@ -126,17 +126,6 @@ public class IntDeque {
 
 	/**
 	 * Increase the capacity of the bag.
-	 * <p>
-	 * Capacity will increase by (3/2)*capacity + 1.
-	 * </p>
-	 */
-	private void grow() {
-		int newCapacity = (elements.length * 7) / 4 + 1;
-		grow(newCapacity);
-	}
-
-	/**
-	 * Increase the capacity of the bag.
 	 *
 	 * @param newCapacity
 	 *			new capacity to grow to
@@ -144,9 +133,12 @@ public class IntDeque {
 	 * @throws ArrayIndexOutOfBoundsException if new capacity is smaller than old
 	 */
 	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
-		int[] oldData = elements;
-		elements = new int[newCapacity];
-		System.arraycopy(oldData, 0, elements, 0, oldData.length);
+		int[] newElements = new int[newCapacity];
+		for (int i = 0; i < size; i++)
+			newElements[i] = get(i);
+
+		elements = newElements;
+		beginIndex = 0;
 	}
 
 	/**
@@ -173,6 +165,7 @@ public class IntDeque {
 	public void clear() {
 		Arrays.fill(elements, 0, size, 0);
 		size = 0;
+		beginIndex = 0;
 	}
 	
 	/**
