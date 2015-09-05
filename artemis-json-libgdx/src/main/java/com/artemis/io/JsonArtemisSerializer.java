@@ -100,7 +100,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 			SaveFileFormat save = new SaveFileFormat((IntBag)null);
 			json.readField(save, "componentIdentifiers", jsonData);
 
-			((ByteArrayInputStream)is).reset();
+			InputStreamHelper.reset(is);
 			Map<String, Class<? extends Component>> lookup = save.readLookupMap();
 			entitySerializer.types = lookup;
 

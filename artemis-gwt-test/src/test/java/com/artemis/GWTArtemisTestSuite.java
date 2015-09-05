@@ -1,5 +1,6 @@
 package com.artemis;
 
+import com.artemis.io.InputStreamHelperTest;
 import com.artemis.io.ReferenceTrackerTest;
 import com.artemis.managers.CustomJsonWorldSerializationManagerTest;
 import com.artemis.managers.JsonWorldSerializationManagerTest;
@@ -18,7 +19,8 @@ public class GWTArtemisTestSuite extends TestCase {
 			// reflection
 			ReferenceTrackerTest.class,
 			CustomJsonWorldSerializationManagerTest.class,
-			JsonWorldSerializationManagerTest.class
+			JsonWorldSerializationManagerTest.class,
+			InputStreamHelperTest.class
 	};
 
 	public static GWTTestSuite suite() {
