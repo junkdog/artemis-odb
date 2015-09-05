@@ -10,6 +10,7 @@ import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.ObjectMap;
@@ -73,7 +74,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		json.writeObjectStart("components");
 		for (int i = 0, s = components.size(); s > i; i++) {
 			Component c = components.get(i);
-			if (c.getClass().getAnnotation(Transient.class) != null)
+			if (ClassReflection.getDeclaredAnnotation(c.getClass(), Transient.class) != null)
 				continue;
 
 			String componentIdentifier = lookupMap.get(c.getClass());

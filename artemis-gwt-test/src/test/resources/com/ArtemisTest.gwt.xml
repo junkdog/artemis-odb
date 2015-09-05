@@ -1,13 +1,90 @@
 <module>
 
 	<inherits name="com.google.gwt.user.User"/>
+	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 	<inherits name='com.artemis.backends.artemis_backends_gwt'/>
 
-	<inherits name="com.artemis-json" />
+	<inherits name="com.artemis-json-libgdx" />
 
 	<source path='artemis'/>
 
-	<extend-configuration-property name="artemis.reflect.include" value="com.artemis"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.ComponentX"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.ComponentY"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Asset"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Complex"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Cullible"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.EntityBagHolder"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.EntityHolder"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.EntityIntBagHolder"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.HitPoints"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.NameComponent"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Packed"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Position"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.ReusedComponent"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Size"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Sprite"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Velocity"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.io"/>
+	<extend-configuration-property name="artemis.reflect.include" value="java.util.Collection" />
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.SystemComponentXRemover"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.ExpirationSystem"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.SystemB"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.SystemSpawner"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.SystemY"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.Component"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.PooledComponent"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.PackedComponent"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.Entity"/>
+
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.factory"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system"/>
+
+
+
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.ComponentX"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.ComponentY"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Asset"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Complex"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Cullible"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.EntityBagHolder"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.EntityHolder"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.EntityIntBagHolder"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.HitPoints"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.NameComponent"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Packed"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Position"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.ReusedComponent"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Size"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Sprite"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Velocity"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.io"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.Component"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.PooledComponent"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.PackedComponent"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.Entity"/>
+
+
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.io.SaveFileFormat"/>
+
+	<extend-configuration-property name="artemis.reflect.include"
+								   value="java.util.IdentityHashMap" />
+	<extend-configuration-property name="gdx.reflect.include"
+								   value="java.util.IdentityHashMap" />
+
+	<extend-configuration-property name="gdx.reflect.include"
+								   value="com.artemis.utils.Bag" />
+	<extend-configuration-property name="gdx.reflect.include"
+								   value="com.artemis.utils.IntBag" />
+	<extend-configuration-property name="artemis.reflect.include"
+								   value="com.artemis.utils.Bag" />
+	<extend-configuration-property name="artemis.reflect.include"
+								   value="com.artemis.utils.IntBag" />
+	<extend-configuration-property name="artemis.reflect.include"
+								   value="com.artemis.ExtendedEntityFactoryTest" />
+	<extend-configuration-property name="artemis.reflect.include"
+								   value="com.artemis.manager.TypedEntityFactory" />
+	<extend-configuration-property name="gdx.reflect.include"
+								   value="com.artemis.managers.CustomJsonWorldSerializationManagerTest" />
 
 </module>

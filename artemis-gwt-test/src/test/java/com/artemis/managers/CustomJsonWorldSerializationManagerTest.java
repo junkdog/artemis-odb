@@ -7,25 +7,35 @@ import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
-import org.junit.Before;
-import org.junit.Test;
+import com.google.gwt.junit.client.GWTTestCase;
 
 import java.io.ByteArrayInputStream;
 import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
+import java.io.UnsupportedEncodingException;
 
-import static org.junit.Assert.*;
 
 @Wire
-public class CustomJsonWorldSerializationManagerTest {
+public class CustomJsonWorldSerializationManagerTest extends GWTTestCase {
 	private WorldSerializationManager manger;
 	private AspectSubscriptionManager subscriptions;
 	private SerializedSystem serializedSystem;
 	private World world;
 	private EntitySubscription allEntities;
 
-	@Before
-	public void setup() {
+	public CustomJsonWorldSerializationManagerTest() {
+	}
+
+	private static class StandardCharsets {
+		public static final String UTF_8 = "UTF-8";
+	}
+
+	@Override
+	public String getModuleName() {
+		return "com.ArtemisTest";
+	}
+
+	@Override
+	public void gwtSetUp() {
 
 		world = new World(new WorldConfiguration()
 				.setSystem(SerializedSystem.class)
@@ -43,8 +53,7 @@ public class CustomJsonWorldSerializationManagerTest {
 		assertEquals(0, allEntities.getEntities().size());
 	}
 
-	@Test
-	public void custom_save_format_save_load() {
+	public void test_custom_save_format_save_load() throws UnsupportedEncodingException {
 		serializedSystem.serializeMe = "dog";
 
 		String json = save(allEntities, "a string", 420);
@@ -123,4 +132,18 @@ public class CustomJsonWorldSerializationManagerTest {
 		}
 	}
 
+	@Wire
+	public static class CustomSaveFormat extends SaveFileFormat {
+		public SerializedSystem serialized;
+		public DummySegment noSerializer;
+
+		public CustomSaveFormat(EntitySubscription es, String dummyString, int dummyNumber) {
+			super(es);
+			noSerializer = new DummySegment(dummyString, dummyNumber);
+		}
+
+		public CustomSaveFormat() {
+			super((IntBag)null);
+		}
+	}
 }

@@ -12,6 +12,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
@@ -99,12 +100,12 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 			SaveFileFormat save = new SaveFileFormat((IntBag)null);
 			json.readField(save, "componentIdentifiers", jsonData);
 
-			is.reset();
+			((ByteArrayInputStream)is).reset();
 			Map<String, Class<? extends Component>> lookup = save.readLookupMap();
 			entitySerializer.types = lookup;
 
 			return lookup;
-		} catch (IOException e) {
+		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}

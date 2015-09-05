@@ -32,8 +32,8 @@ public class EntityFactoryTest extends GWTTestCase {
 	@Override
 	public void gwtSetUp() {
 		world = new World();
-		world.initialize();
 		world.inject(this);
+		factory = world.createFactory(ExhibitA.class);
 	}
 	
 	public void test_instance_methods() {

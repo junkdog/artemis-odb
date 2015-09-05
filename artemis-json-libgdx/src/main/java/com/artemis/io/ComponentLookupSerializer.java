@@ -22,6 +22,10 @@ public class ComponentLookupSerializer implements Json.Serializer<IdentityHashMa
 		this.componentMap = componentMap;
 	}
 
+	public IdentityHashMap<Class<? extends Component>, String> getComponentMap() {
+		return componentMap;
+	}
+
 	@Override
 	public void write(Json json, IdentityHashMap object, Class knownType) {
 		json.writeObjectStart();
