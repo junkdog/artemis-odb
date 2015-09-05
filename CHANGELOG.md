@@ -2,6 +2,10 @@
 
 #### Version: 0.13.0-SNAPSHOT
 
+#### Version: 0.12.1 - 2015-09-05
+- **Fix**: IntDeque resets beginIndex when growing.
+
+
 #### Version: 0.12.0 - 2015-09-04
 - InvocationStrategy configurable via WorldConfiguration. 
 - Add @SkipWire annotation to exclude injection targets.
