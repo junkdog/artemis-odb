@@ -351,4 +351,8 @@ public class ComponentManager extends Manager {
 			deleted.setSize(0);
 		}
 	}
+
+	public ComponentTypeFactory getTypeFactory() {
+		return typeFactory;
+	}
 }
