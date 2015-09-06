@@ -37,9 +37,12 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntityManager"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntityFactory"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntitySystem"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.Entity"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.Manager"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.systems"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.managers"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.World"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.Archetype"/>
 
     <source path="">
         <exclude name="**/gen/**"/>
