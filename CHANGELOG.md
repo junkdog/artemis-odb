@@ -1,6 +1,10 @@
 ## Change Log
 
 #### Version: 0.13.0-SNAPSHOT
+- New additional serialization backend: [json via libgdx](https://github.com/junkdog/artemis-odb/wiki/libgdx-jso).
+  - **GWT support**, works with libgdx's HTML5 backend.
+  - Supports more libgdx classes out of the boxx.
+
 
 #### Version: 0.12.1 - 2015-09-05
 - **Fix**: IntDeque resets beginIndex when growing.

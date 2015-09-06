@@ -1,8 +1,6 @@
 package com.artemis;
 
 import com.artemis.utils.Bag;
-import com.artemis.utils.ConverterUtil;
-import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 
 import java.util.BitSet;
