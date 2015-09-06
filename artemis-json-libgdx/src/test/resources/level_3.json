@@ -1,0 +1,151 @@
+{
+	"entities": {
+		"68": {
+			"tag": "star1",
+			"components": {
+				"1_ParentedPosition": {
+					"xy": {
+						"x": -0.34802103,
+						"y": 0.63713646
+					},
+					"origin": 72
+				},
+				"0_Position": {
+					"xy": {
+						"x": 4.4363117,
+						"y": 6.822092
+					}
+				},
+				"5_Size": {
+					"width": 0.3025,
+					"height": 0.3025
+				},
+				"23_TextureReference": {
+					"path": "level_star",
+					"atlas": "gfx/sprites/spritesheet.atlas"
+				}
+			}
+		},
+		"69": {
+			"tag": "star2",
+			"components": {
+				"1_ParentedPosition": {
+					"xy": {
+						"x": 0.0040102005,
+						"y": 0.7810607
+					},
+					"origin": 72
+				},
+				"0_Position": {
+					"xy": {
+						"x": 4.788343,
+						"y": 6.9660163
+					}
+				},
+				"5_Size": {
+					"width": 0.3025,
+					"height": 0.3025
+				},
+				"23_TextureReference": {
+					"path": "level_star",
+					"atlas": "gfx/sprites/spritesheet.atlas"
+				}
+			}
+		},
+		"70": {
+			"tag": "star3",
+			"components": {
+				"1_ParentedPosition": {
+					"xy": {
+						"x": 0.3437028,
+						"y": 0.6060953
+					},
+					"origin": 72
+				},
+				"0_Position": {
+					"xy": {
+						"x": 5.1280355,
+						"y": 6.791051
+					}
+				},
+				"5_Size": {
+					"width": 0.3025,
+					"height": 0.3025
+				},
+				"23_TextureReference": {
+					"path": "level_star",
+					"atlas": "gfx/sprites/spritesheet.atlas"
+				}
+			}
+		},
+		"71": {
+			"tag": "shadow",
+			"components": {
+				"1_ParentedPosition": {
+					"xy": {
+						"x": 0.0074486732,
+						"y": 0.11576843
+					},
+					"origin": 72
+				},
+				"0_Position": {
+					"xy": {
+						"x": 4.7917814,
+						"y": 6.300724
+					}
+				},
+				"5_Size": {
+					"width": 0.48315307,
+					"height": 0.15497361
+				},
+				"23_TextureReference": {
+					"path": "level_shadow",
+					"atlas": "gfx/sprites/spritesheet.atlas"
+				}
+			}
+		},
+		"72": {
+			"tag": "level",
+			"components": {
+				"2_Anchor": {
+					"anchor": {
+						"x": 0.5603,
+						"y": 0.5201
+					}
+				},
+				"25_Level": {},
+				"30_LevelState": {
+					"starId1": 68,
+					"starId2": 69,
+					"starId3": 70
+				},
+				"0_Position": {
+					"xy": {
+						"x": 4.7843328,
+						"y": 6.1849556
+					}
+				},
+				"5_Size": {
+					"width": 1,
+					"height": 0.7070707
+				},
+				"23_TextureReference": {
+					"path": "level_base",
+					"atlas": "gfx/sprites/spritesheet.atlas"
+				}
+			}
+		}
+	},
+	"componentIdentifiers": {
+		"com.artemis.component.Position": "0_Position",
+		"com.artemis.component.render.TextureReference": "23_TextureReference",
+		"com.artemis.component.Level": "25_Level",
+		"com.artemis.component.LevelState": "30_LevelState",
+		"com.artemis.component.Anchor": "2_Anchor",
+		"com.artemis.component.ParentedPosition": "1_ParentedPosition",
+		"com.artemis.component.Size": "5_Size"
+	},
+	"metadata": {
+		"version": 1
+	}
+}

@@ -38,8 +38,8 @@ public class SaveFileFormat {
 	// all fields are automatically serialized
 
 	public Metadata metadata;
-	public final IdentityHashMap<Class<? extends Component>, String> componentIdentifiers;
-	public final IntBag entities;
+	public IdentityHashMap<Class<? extends Component>, String> componentIdentifiers;
+	public IntBag entities;
 
 	public SaveFileFormat(IntBag entities) {
 		this.entities = (entities != null) ? entities : new IntBag();
@@ -53,7 +53,7 @@ public class SaveFileFormat {
 		this(es.getEntities());
 	}
 
-	private SaveFileFormat() {
+	public SaveFileFormat() {
 		this((IntBag)null);
 	}
 

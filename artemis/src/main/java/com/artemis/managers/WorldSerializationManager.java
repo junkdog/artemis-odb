@@ -3,6 +3,7 @@ package com.artemis.managers;
 import com.artemis.Manager;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
+import com.artemis.io.InputStreamHelper;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
 
@@ -27,7 +28,7 @@ public class WorldSerializationManager extends Manager {
 	}
 
 	public <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
-		if (alwaysLoadStreamMemory || !is.markSupported()) {
+		if (alwaysLoadStreamMemory || !InputStreamHelper.isMarkSupported(is)) {
 			try {
 				byte[] buf = new byte[32768];
 				ByteArrayOutputStream baos = new ByteArrayOutputStream();

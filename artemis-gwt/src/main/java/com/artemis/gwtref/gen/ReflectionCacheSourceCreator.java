@@ -162,7 +162,7 @@ public class ReflectionCacheSourceCreator {
 
 		// sort the types so the generated output will be stable between runs
 		Collections.sort(types, new Comparator<JType>() {
-			public int compare (JType o1, JType o2) {
+			public int compare(JType o1, JType o2) {
 				return o1.getQualifiedSourceName().compareTo(o2.getQualifiedSourceName());
 			}
 		});
@@ -328,7 +328,7 @@ public class ReflectionCacheSourceCreator {
 			return "";
 		}
 
-		if (stub.enclosingType.startsWith("java") || stub.enclosingType.contains("google")) {
+		if ((stub.enclosingType.startsWith("java") && !stub.enclosingType.startsWith("java.util")) || stub.enclosingType.contains("google")) {
 			logger.log(Type.INFO, "not emitting code for accessing method " + stub.name + " in class '" + stub.enclosingType
 				+ ", either in java.* or GWT related class");
 			return "";
@@ -942,7 +942,7 @@ public class ReflectionCacheSourceCreator {
 		p("}");
 	}
 
-	private void forNameC () {
+	private void forNameC() {
 		p("public Type forName(String name) {");
 		p("	return types.get(name);");
 		p("}");
