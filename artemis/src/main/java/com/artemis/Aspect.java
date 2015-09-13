@@ -276,6 +276,12 @@ public class Aspect {
 			return this;
 		}
 
+		public Builder copy() {
+			Builder b = new Builder();
+			b.allTypes.addAll(allTypes);
+			b.exclusionTypes.addAll(exclusionTypes);
+			b.oneTypes.addAll(oneTypes);
+		}
 
 		/**
 		 * Returns an aspect where an entity must possess all of the specified
