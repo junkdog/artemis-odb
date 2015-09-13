@@ -281,6 +281,7 @@ public class Aspect {
 			b.allTypes.addAll(allTypes);
 			b.exclusionTypes.addAll(exclusionTypes);
 			b.oneTypes.addAll(oneTypes);
+			return b;
 		}
 
 		/**
