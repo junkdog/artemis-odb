@@ -1,9 +1,18 @@
 ## Change Log
 
-#### Version: 0.13.0-SNAPSHOT
+#### Version: 0.14.0-SNAPSHOT
+
+#### Version: 0.13.0 - 2015-09-14
+- **BREAKING CHANGES**
+  - `World#getEntity(int)` can return inactive Entities, check state using `Entity#isActive` or
+     `EntitityManager.isActive(int)`.
+  - `Entity.isActive` no longer works for checking whether an entity was just created, instead
+    use `EntityManager#isNew(int)`.
+
 - New additional serialization backend: [json via libgdx](https://github.com/junkdog/artemis-odb/wiki/libgdx-jso).
   - **GWT support**, works with libgdx's HTML5 backend.
   - Supports more libgdx classes out of the boxx.
+- **Fix**: SubscriptionListeners#removed ids resolved to a lot of nulls.
 
 
 #### Version: 0.12.1 - 2015-09-05

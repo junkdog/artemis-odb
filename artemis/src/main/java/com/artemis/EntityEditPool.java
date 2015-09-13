@@ -41,7 +41,8 @@ final class EntityEditPool {
 		edited.add(edit);
 
 		edit.entity = entity;
-		edit.hasBeenAddedToWorld = world.getEntityManager().isActive(entity.getId());
+		edit.hasBeenAddedToWorld = !world.getEntityManager().isNew(entity.id);
+
 		// since archetypes add components, we can't assume that an
 		// entity has an empty bitset.
 		// Note that editing an entity created by an archetype removes the performance

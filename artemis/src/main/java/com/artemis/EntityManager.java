@@ -151,8 +151,7 @@ public class EntityManager extends Manager {
 	/**
 	 * Check if this entity is active.
 	 * <p>
-	 * Active means the entity is being actively processed. A deleted entity id will
-	 * still report as active.
+	 * Active means the entity is being actively processed.
 	 * </p>
 	 * 
 	 * @param entityId
@@ -161,8 +160,13 @@ public class EntityManager extends Manager {
 	 * @return true if active, false if not
 	 */
 	public boolean isActive(int entityId) {
-		return (entities.size() > entityId) && !newlyCreatedEntityIds.get(entityId);
+		return (entities.size() > entityId) && !recyclingEntityFactory.has(entityId);
 	}
+
+	public boolean isNew(int entityId) {
+		return newlyCreatedEntityIds.get(entityId);
+	}
+
 	
 	/**
 	 * Check if the specified entityId is enabled.
@@ -179,7 +183,9 @@ public class EntityManager extends Manager {
 	}
 	
 	/**
-	 * Get a entity with this id.
+	 * Resolves entity id to the unique entity instance. <em>This method may
+	 * return an entity even if it isn't active in the world, </em> use
+	 * {@link #isActive(int)} if you need to check whether the entity is active or not.
 	 * 
 	 * @param entityId
 	 *			the entities id
@@ -187,12 +193,9 @@ public class EntityManager extends Manager {
 	 * @return the entity
 	 */
 	protected Entity getEntity(int entityId) {
-		if (recyclingEntityFactory.has(entityId))
-			return null;
-		else
-			return entities.get(entityId);
+		return entities.get(entityId);
 	}
-	
+
 	/**
 	 * Get how many entities are active in this world.
 	 *

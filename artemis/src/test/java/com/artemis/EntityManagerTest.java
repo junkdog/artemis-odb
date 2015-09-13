@@ -58,7 +58,7 @@ public class EntityManagerTest {
 		EntityManager em = world.getEntityManager();
 		for (int i = 0; 1024 > i; i++) {
 			Entity e = world.createEntity();
-			assertFalse(em.isActive(e.getId()));
+			assertTrue(em.isNew(e.getId()));
 		}
 	}
 	
