@@ -1,6 +1,8 @@
 ## Change Log
 
 #### Version: 0.14.0-SNAPSHOT
+- Completely stripped out Entitiy's enable()/disable()
+
 
 #### Version: 0.13.0 - 2015-09-14
 - **BREAKING CHANGES**
@@ -11,11 +13,11 @@
 
 - New additional serialization backend: [json via libgdx](https://github.com/junkdog/artemis-odb/wiki/libgdx-jso).
   - **GWT support**, works with libgdx's HTML5 backend.
-  - Supports more libgdx classes out of the boxx.
+  - Supports more libgdx classes out of the box.
 - New `artemis-odb-debug` artifact
   - Replaces normal artemis-odb with this (remove artemis-odb from pom/gradle/IDE)
   - Performs extra runtime checks; tries to catch run-away flyweights.
-  - Incurs a rather hefty perfromacene penalty.
+  - Incurs a rather hefty performance penalty.
 - **Fix**: SubscriptionListeners#removed ids resolved to a lot of nulls.
 
 

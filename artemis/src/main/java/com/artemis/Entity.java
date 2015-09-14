@@ -171,22 +171,7 @@ public final class Entity {
 	public boolean isActive() {
 		return world.getEntityManager().isActive(id);
 	}
-	
-	/**
-	 * Will check if the entity is enabled in the world.
-	 * <p>
-	 * By default all entities that are added to world are enabled, this will
-	 * only return false if an entity has been explicitly disabled.
-	 * </p>
-	 * 
-	 * @return {@code true} if it's enabled
-	 * @deprecated use components to implement state instead.
-	 */
-	@Deprecated
-	public boolean isEnabled() {
-		return world.getEntityManager().isEnabled(id);
-	}
-	
+
 	/**
 	 * Retrieves component from this entity.
 	 * <p>

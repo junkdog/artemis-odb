@@ -20,7 +20,6 @@ public class EntityManager extends Manager {
 	private final Bag<Entity> entities;
 	private final BitSet newlyCreatedEntityIds;
 	/** Stores the bits of all currently disabled entities IDs. */
-	private final BitSet disabled;
 	private RecyclingEntityFactory recyclingEntityFactory;
 	
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
@@ -33,7 +32,6 @@ public class EntityManager extends Manager {
 	 */
 	protected EntityManager(int initialContainerSize) {
 		entities = new Bag<Entity>(initialContainerSize);
-		disabled = new BitSet();
 		newlyCreatedEntityIds = new BitSet();
 	}
 	
@@ -76,18 +74,6 @@ public class EntityManager extends Manager {
 		return identityResolver.composition.get(identityIndex);
 	}
 
-	/**
-	 * Sets the entity (re)enabled in the manager.
-	 *
-	 * @param entityId
-	 *			the entity to (re)enable
-	 * @deprecated create your own components to track state.
-	 */
-	@Override @Deprecated
-	public void enabled(int entityId) {
-		disabled.clear(entityId);
-	}
-
 	/** Refresh entity composition identity if it changed. */
 	void updateCompositionIdentity(EntityEdit edit) {
 		int identity = compositionIdentity(edit.componentBits);
@@ -110,17 +96,6 @@ public class EntityManager extends Manager {
 	}
 	
 	/**
-	 * Sets the entity as disabled in the manager.
-	 *
-	 * @param entityId
-	 *			the entity to disable
-	 */
-	@Override @Deprecated
-	public void disabled(int entityId) {
-		disabled.set(entityId);
-	}
-
-	/**
 	 * Removes the entity from the manager, freeing it's id for new entities.
 	 *
 	 * @param entityId
@@ -138,9 +113,6 @@ public class EntityManager extends Manager {
 		newlyCreatedEntityIds.set(entityId, false);
 
 		recyclingEntityFactory.free(entityId);
-
-
-		disabled.clear(entityId);
 	}
 
 	@Override
@@ -167,21 +139,6 @@ public class EntityManager extends Manager {
 		return newlyCreatedEntityIds.get(entityId);
 	}
 
-	
-	/**
-	 * Check if the specified entityId is enabled.
-	 * 
-	 * @param entityId
-	 *			the entities id
-	 *
-	 * @return true if the entity is enabled, false if it is disabled
-	 * @deprecated create your own components to track state.
-	 */
-	@Deprecated
-	public boolean isEnabled(int entityId) {
-		return !disabled.get(entityId);
-	}
-	
 	/**
 	 * Resolves entity id to the unique entity instance. <em>This method may
 	 * return an entity even if it isn't active in the world, </em> use
@@ -273,7 +230,7 @@ public class EntityManager extends Manager {
 
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
-			if (e != null && !disabled.get(e.id))
+			if (e != null)
 				es.check(e.id);
 		}
 
