@@ -1,7 +1,6 @@
 package com.artemis;
 
 import com.artemis.utils.Bag;
-import com.artemis.utils.ConverterUtil;
 import com.artemis.utils.IntBag;
 
 import java.util.BitSet;
@@ -22,8 +21,6 @@ public class AspectSubscriptionManager extends Manager {
 	private final AddedPerformer addedPerformer;
 	private final ChangedPerformer changedPerformer;
 	private final DeletedPerformer deletedPerformer;
-	private final EnabledPerformer enabledPerformer;
-	private final DisabledPerformer disabledPerformer;
 
 	protected AspectSubscriptionManager() {
 		subscriptionMap = new HashMap<Aspect.Builder, EntitySubscription>();
@@ -32,8 +29,6 @@ public class AspectSubscriptionManager extends Manager {
 		addedPerformer = new AddedPerformer();
 		changedPerformer = new ChangedPerformer();
 		deletedPerformer = new DeletedPerformer();
-		enabledPerformer = new EnabledPerformer();
-		disabledPerformer = new DisabledPerformer();
 	}
 
 	public EntitySubscription get(Aspect.Builder builder) {
@@ -120,34 +115,6 @@ public class AspectSubscriptionManager extends Manager {
 		@Override
 		public void perform(EntityObserver observer, IntBag entities) {
 			observer.deleted(entities);
-		}
-	}
-
-	/**
-	 * Runs {@link EntityObserver#enabled}.
-	 */
-	private static final class EnabledPerformer implements Performer {
-
-		@Override
-		public void perform(EntityObserver observer, IntBag entities) {
-			int[] ids = entities.getData();
-			for (int i = 0, s = entities.size(); s > i; i++) {
-				observer.enabled(ids[i]);
-			}
-		}
-	}
-
-	/**
-	 * Runs {@link EntityObserver#disabled}.
-	 */
-	private static final class DisabledPerformer implements Performer {
-
-		@Override
-		public void perform(EntityObserver observer, IntBag entities) {
-			int[] ids = entities.getData();
-			for (int i = 0, s = entities.size(); s > i; i++) {
-				observer.disabled(ids[i]);
-			}
 		}
 	}
 
