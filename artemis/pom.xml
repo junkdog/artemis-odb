@@ -29,33 +29,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--
-			<plugin>
-				<groupId>com.igormaznitsa</groupId>
-				<artifactId>jcp</artifactId>
-				<version>6.0.0</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>preprocess</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<processing>java</processing>
-					<excluded>inc</excluded>
-					<keepSrcRoot>false</keepSrcRoot>
-					<removeComments>false</removeComments>
-					<globalVars>
-						<property>
-							<name>AGENT</name>
-							<value>true</value>
-						</property>
-					</globalVars>
-				</configuration>
-			</plugin>
-			-->
 		</plugins>
 	</build>
 
