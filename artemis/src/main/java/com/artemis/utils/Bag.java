@@ -1,5 +1,7 @@
 package com.artemis.utils;
 
+import com.artemis.Entity;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -103,6 +105,8 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * @return {@code true} if this list contained the specified element
 	 */
 	public boolean remove(E e) {
+		//#include "./bag_no_flyweight.inc"
+
 		for (int i = 0; i < size; i++) {
 			E e2 = data[i];
 
@@ -249,6 +253,8 @@ public class Bag<E> implements ImmutableBag<E> {
 	 *			element to be added to this list
 	 */
 	public void add(E e) {
+		//#include "./bag_no_flyweight.inc"
+
 		// is size greater than capacity increase capacity
 		if (size == data.length) {
 			grow();
@@ -266,6 +272,8 @@ public class Bag<E> implements ImmutableBag<E> {
 	 *			the element
 	 */
 	public void set(int index, E e) {
+		//#include "./bag_no_flyweight.inc"
+
 		if(index >= data.length) {
 			grow((index * 7) / 4 + 1);
 		}

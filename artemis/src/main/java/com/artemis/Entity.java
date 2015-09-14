@@ -23,6 +23,8 @@ public final class Entity {
 	/** The world this entity belongs to. */
 	private final World world;
 
+	//#include "./entity_flyweight_bool.inc"
+
 	/**
 	 * Creates a new {@link Entity} instance in the given world.
 	 * <p>
@@ -76,6 +78,7 @@ public final class Entity {
 	}
 
 	public static Entity createFlyweight(World world) {
+		//#include "./entity_set_flyweight_true.inc"
 		return new Entity(world, -1);
 	}
 

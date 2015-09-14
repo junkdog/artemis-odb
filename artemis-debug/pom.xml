@@ -7,14 +7,17 @@
 		<artifactId>artemis-parent</artifactId>
 		<version>0.13.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>artemis-odb</artifactId>
+	<artifactId>artemis-odb-debug</artifactId>
 	<packaging>jar</packaging>
-	<name>artemis-odb</name>
+	<name>artemis-odb-debug</name>
 
-	<description>Fork of Artemis Entity System Framework.</description>
+	<description>Debug agent, standard library but with more safety checks.</description>
 	<url>https://github.com/junkdog/artemis-odb</url>
 
 	<build>
+		<sourceDirectory>../artemis/src/main/java</sourceDirectory>
+		<testSourceDirectory>../artemis/src/test/java</testSourceDirectory>
+		
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -30,7 +33,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--
 			<plugin>
 				<groupId>com.igormaznitsa</groupId>
 				<artifactId>jcp</artifactId>
@@ -56,7 +58,6 @@
 					</globalVars>
 				</configuration>
 			</plugin>
-			-->
 		</plugins>
 	</build>
 
