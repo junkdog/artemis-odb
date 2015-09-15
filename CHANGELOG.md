@@ -1,7 +1,7 @@
 ## Change Log
 
-#### Version: 0.14.0-SNAPSHOT
-- Completely stripped out Entitiy's enable()/disable()
+#### Version: 1.0.0-SNAPSHOT
+- Removed deprecated methods and classes
 
 
 #### Version: 0.13.0 - 2015-09-14
