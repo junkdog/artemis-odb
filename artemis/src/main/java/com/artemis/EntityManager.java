@@ -153,58 +153,6 @@ public class EntityManager extends Manager {
 		return entities.get(entityId);
 	}
 
-	/**
-	 * Get how many entities are active in this world.
-	 *
-	 * @return how many entities are currently active
-	 * @deprecated Implement your own manager if you need this functionality.
-	 *             This implementation is stubbed to always return {@code 0}.
-	 */
-	@Deprecated
-	public int getActiveEntityCount() {
-		return 0;
-	}
-	
-	/**
-	 * Get how many entities have been created in the world since start.
-	 * <p>
-	 * Note: A created entity may not have been added to the world, thus
-	 * created count is always equal or larger than added count.
-	 * </p>
-	 *
-	 * @return how many entities have been created since start
-	 * @deprecated Implement your own manager if you need this functionality.
-	 *             This implementation is stubbed to always return {@code 0}.
-	 */
-	@Deprecated
-	public long getTotalCreated() {
-		return 0L;
-	}
-	
-	/**
-	 * Get how many entities have been added to the world since start.
-	 *
-	 * @return how many entities have been added
-	 * @deprecated Implement your own manager if you need this functionality.
-	 *             This implementation is stubbed to always return {@code 0}.
-	 */
-	@Deprecated
-	public long getTotalAdded() {
-		return 0L;
-	}
-	
-	/**
-	 * Get how many entities have been deleted from the world since start.
-	 *
-	 * @return how many entities have been deleted since start
-	 * @deprecated Implement your own manager if you need this functionality.
-	 *             This implementation is stubbed to always return {@code 0}.
-	 */
-	@Deprecated
-	public long getTotalDeleted() {
-		return 0L;
-	}
-	
 	protected int getIdentity(int entityId) {
 		int identity = entityToIdentity.get(entityId);
 		if (identity == 0)
