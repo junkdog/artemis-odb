@@ -2,6 +2,7 @@ package com.artemis;
 
 import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.utils.IntBag;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -11,9 +12,9 @@ import static org.junit.Assert.assertNotNull;
  */
 public class Issue357SystemTest {
     @Test
-    public void test_two_components_in_world_delete_during_process() throws Exception {
+    public void test_two_systems_in_world_delete_during_process() throws Exception {
         World world = new World(new WorldConfiguration().setSystem(TestSystemWithDelete.class)
-                                                        .setSystem(TestSystem2WithoutDelete.class));
+                                                        .setSystem(AnyOldeBaseSystem.class));
         world.createEntity().edit().create(TestComponent.class);
         world.process();
 
@@ -23,7 +24,7 @@ public class Issue357SystemTest {
     }
 
     @Test
-    public void test_one_components_in_world_delete_during_process() throws Exception {
+    public void test_one_system_in_world_delete_during_process() throws Exception {
         World world = new World(new WorldConfiguration().setSystem(TestSystemWithDelete.class));
         world.createEntity().edit().create(TestComponent.class);
         world.process();
@@ -34,9 +35,9 @@ public class Issue357SystemTest {
     }
 
     @Test
-    public void test_two_components_in_world_delete_after_process() throws Exception {
+    public void test_two_systems_in_world_delete_after_process() throws Exception {
         World world = new World(new WorldConfiguration().setSystem(TestSystemWithoutDelete.class)
-                                                        .setSystem(TestSystem2WithoutDelete.class));
+                                                        .setSystem(AnyOldeBaseSystem.class));
         Entity entity = world.createEntity();
         entity.edit().create(TestComponent.class);
         world.process();
@@ -51,9 +52,9 @@ public class Issue357SystemTest {
     }
 
     @Test
-    public void test_two_components_in_world_delete_before_process() throws Exception {
+    public void test_two_systems_in_world_delete_before_process() throws Exception {
         World world = new World(new WorldConfiguration().setSystem(TestSystemWithoutDelete.class)
-                                                        .setSystem(TestSystem2WithoutDelete.class));
+                                                        .setSystem(AnyOldeBaseSystem.class));
         Entity entity = world.createEntity();
         entity.edit().create(TestComponent.class);
         entity.deleteFromWorld();
@@ -70,6 +71,11 @@ public class Issue357SystemTest {
 
         public TestSystemWithDelete() {
             super(Aspect.all(TestComponent.class));
+        }
+
+        @Override
+        public void inserted(IntBag entities) {
+            super.inserted(entities);
         }
 
         @Override
@@ -95,17 +101,10 @@ public class Issue357SystemTest {
         }
     }
 
-    public static class TestSystem2WithoutDelete extends EntityProcessingSystem {
-        public TestSystem2WithoutDelete() {
-            super(Aspect.all(TestComponent2.class));
-        }
-
+    public static class AnyOldeBaseSystem extends BaseSystem {
         @Override
-        protected void process(Entity entity) {
+        protected void processSystem() {
         }
-    }
-
-    public static class TestComponent2 extends Component {
     }
 
     public static class TestComponent extends Component {
