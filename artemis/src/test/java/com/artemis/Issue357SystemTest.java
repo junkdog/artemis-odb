@@ -11,103 +11,103 @@ import static org.junit.Assert.assertNotNull;
  * @author Snorre E. Brekke
  */
 public class Issue357SystemTest {
-    @Test
-    public void test_two_systems_in_world_delete_during_process() throws Exception {
-        World world = new World(new WorldConfiguration().setSystem(TestSystemWithDelete.class)
-                                                        .setSystem(AnyOldeBaseSystem.class));
-        world.createEntity().edit().create(TestComponent.class);
-        world.process();
+	@Test
+	public void test_two_systems_in_world_delete_during_process() throws Exception {
+		World world = new World(new WorldConfiguration().setSystem(TestSystemWithDelete.class)
+				.setSystem(AnyOldeBaseSystem.class));
+		world.createEntity().edit().create(TestComponent.class);
+		world.process();
 
-        world.createEntity().edit().create(TestComponent.class);
-        world.process(); //This test fails in 0.13.0!
+		world.createEntity().edit().create(TestComponent.class);
+		world.process(); //This test fails in 0.13.0!
 
-    }
+	}
 
-    @Test
-    public void test_one_system_in_world_delete_during_process() throws Exception {
-        World world = new World(new WorldConfiguration().setSystem(TestSystemWithDelete.class));
-        world.createEntity().edit().create(TestComponent.class);
-        world.process();
+	@Test
+	public void test_one_system_in_world_delete_during_process() throws Exception {
+		World world = new World(new WorldConfiguration().setSystem(TestSystemWithDelete.class));
+		world.createEntity().edit().create(TestComponent.class);
+		world.process();
 
-        world.createEntity().edit().create(TestComponent.class);
-        world.process();
-        //This test is ok i 0.13.0
-    }
+		world.createEntity().edit().create(TestComponent.class);
+		world.process();
+		//This test is ok i 0.13.0
+	}
 
-    @Test
-    public void test_two_systems_in_world_delete_after_process() throws Exception {
-        World world = new World(new WorldConfiguration().setSystem(TestSystemWithoutDelete.class)
-                                                        .setSystem(AnyOldeBaseSystem.class));
-        Entity entity = world.createEntity();
-        entity.edit().create(TestComponent.class);
-        world.process();
-        entity.deleteFromWorld();
+	@Test
+	public void test_two_systems_in_world_delete_after_process() throws Exception {
+		World world = new World(new WorldConfiguration().setSystem(TestSystemWithoutDelete.class)
+				.setSystem(AnyOldeBaseSystem.class));
+		Entity entity = world.createEntity();
+		entity.edit().create(TestComponent.class);
+		world.process();
+		entity.deleteFromWorld();
 
-        Entity entity2 = world.createEntity();
-        entity2.edit().create(TestComponent.class);
-        world.process();
-        entity2.deleteFromWorld();
-        world.process();
-        //This test is ok i 0.13.0
-    }
+		Entity entity2 = world.createEntity();
+		entity2.edit().create(TestComponent.class);
+		world.process();
+		entity2.deleteFromWorld();
+		world.process();
+		//This test is ok i 0.13.0
+	}
 
-    @Test
-    public void test_two_systems_in_world_delete_before_process() throws Exception {
-        World world = new World(new WorldConfiguration().setSystem(TestSystemWithoutDelete.class)
-                                                        .setSystem(AnyOldeBaseSystem.class));
-        Entity entity = world.createEntity();
-        entity.edit().create(TestComponent.class);
-        entity.deleteFromWorld();
-        world.process();
-        world.createEntity().edit().create(TestComponent.class);
-        entity.deleteFromWorld();
-        world.process();
-        //This test is ok i 0.13.0
-    }
+	@Test
+	public void test_two_systems_in_world_delete_before_process() throws Exception {
+		World world = new World(new WorldConfiguration().setSystem(TestSystemWithoutDelete.class)
+				.setSystem(AnyOldeBaseSystem.class));
+		Entity entity = world.createEntity();
+		entity.edit().create(TestComponent.class);
+		entity.deleteFromWorld();
+		world.process();
+		world.createEntity().edit().create(TestComponent.class);
+		entity.deleteFromWorld();
+		world.process();
+		//This test is ok i 0.13.0
+	}
 
-    @Wire
-    public static class TestSystemWithDelete extends EntityProcessingSystem {
-        private ComponentMapper<TestComponent> mapper;
+	@Wire
+	public static class TestSystemWithDelete extends EntityProcessingSystem {
+		private ComponentMapper<TestComponent> mapper;
 
-        public TestSystemWithDelete() {
-            super(Aspect.all(TestComponent.class));
-        }
+		public TestSystemWithDelete() {
+			super(Aspect.all(TestComponent.class));
+		}
 
-        @Override
-        public void inserted(IntBag entities) {
-            super.inserted(entities);
-        }
+		@Override
+		public void inserted(IntBag entities) {
+			super.inserted(entities);
+		}
 
-        @Override
-        protected void process(Entity entity) {
-            TestComponent testComponent = mapper.get(entity);
-            assertNotNull("Entity with id <" + entity.getId() + "> has null component", testComponent);
-            entity.deleteFromWorld();
-        }
-    }
+		@Override
+		protected void process(Entity entity) {
+			TestComponent testComponent = mapper.get(entity);
+			assertNotNull("Entity with id <" + entity.getId() + "> has null component", testComponent);
+			entity.deleteFromWorld();
+		}
+	}
 
-    @Wire
-    public static class TestSystemWithoutDelete extends EntityProcessingSystem {
-        private ComponentMapper<TestComponent> mapper;
+	@Wire
+	public static class TestSystemWithoutDelete extends EntityProcessingSystem {
+		private ComponentMapper<TestComponent> mapper;
 
-        public TestSystemWithoutDelete() {
-            super(Aspect.all(TestComponent.class));
-        }
+		public TestSystemWithoutDelete() {
+			super(Aspect.all(TestComponent.class));
+		}
 
-        @Override
-        protected void process(Entity entity) {
-            TestComponent testComponent = mapper.get(entity);
-            assertNotNull("Entity with id <" + entity.getId() + "> has null component", testComponent);
-        }
-    }
+		@Override
+		protected void process(Entity entity) {
+			TestComponent testComponent = mapper.get(entity);
+			assertNotNull("Entity with id <" + entity.getId() + "> has null component", testComponent);
+		}
+	}
 
-    public static class AnyOldeBaseSystem extends BaseSystem {
-        @Override
-        protected void processSystem() {
-        }
-    }
+	public static class AnyOldeBaseSystem extends BaseSystem {
+		@Override
+		protected void processSystem() {
+		}
+	}
 
-    public static class TestComponent extends Component {
-    }
+	public static class TestComponent extends Component {
+	}
 
 }
