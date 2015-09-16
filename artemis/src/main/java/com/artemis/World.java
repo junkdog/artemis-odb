@@ -509,8 +509,6 @@ public class World {
 	 */
 	public void process() {
 		updateEntityStates();
-		cm.clean();
-
 		invocationStrategy.process(systemsBag);
 	}
 
@@ -530,6 +528,8 @@ public class World {
 			// @deprecate
 			am.process(added, enabled, disabled);
 		}
+
+		cm.clean();
 	}
 
 	boolean hasUuidManager() {
