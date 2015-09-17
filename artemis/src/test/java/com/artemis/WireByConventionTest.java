@@ -5,9 +5,35 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
+ * Wire applies by convention.
+ *
  * @author Daan van Yperen
  */
 public class WireByConventionTest {
+
+	@Test
+	public void ensure_wire_implicit_by_convention() {
+		class TestSystem extends BaseSystem {
+
+			@Override
+			protected void processSystem() {
+
+			}
+		}
+		class TestSystem2 extends BaseSystem {
+
+			TestSystem x;
+			@Override
+			protected void processSystem() {
+
+			}
+		}
+
+		TestSystem2 system2 = new TestSystem2();
+		new World(new WorldConfiguration().setSystem(new TestSystem()).setSystem(system2));
+
+		Assert.assertNotNull(system2.x);
+	}
 
 	@Test
 	public void ensure_primitives_dont_cause_wire_exceptions() {
