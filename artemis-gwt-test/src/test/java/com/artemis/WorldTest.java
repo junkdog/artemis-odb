@@ -1,6 +1,7 @@
 package com.artemis;
 
 
+import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.system.ExpirationSystem;
@@ -8,6 +9,7 @@ import com.artemis.system.SystemB;
 import com.artemis.system.SystemComponentXRemover;
 import com.google.gwt.junit.client.GWTTestCase;
 
+@Wire(injectInherited = false)
 public class WorldTest extends GWTTestCase {
 
 	@Override

@@ -1,6 +1,7 @@
 package com.artemis;
 
 
+import com.artemis.annotations.Wire;
 import com.artemis.factory.Ship;
 import com.artemis.factory.ShipNoMethods;
 import com.artemis.factory.ShipShortWire;
@@ -8,6 +9,7 @@ import com.artemis.manager.TypedEntityFactory;
 import com.google.gwt.junit.client.GWTTestCase;
 
 @SuppressWarnings("static-method")
+@Wire(injectInherited = false)
 public class FactoryWireTest extends GWTTestCase {
 	
 	@Override
