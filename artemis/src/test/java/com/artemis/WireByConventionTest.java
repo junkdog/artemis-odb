@@ -1,7 +1,7 @@
 package com.artemis;
 
+import com.artemis.annotations.Wire;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -34,6 +34,38 @@ public class WireByConventionTest {
 
 	@Test
 	public void ensure_explicit_wire_overrides_implicit_wire() {
-		Assert.fail();
+
+		class TestSystem extends BaseSystem {
+			@Override
+			protected void processSystem() {
+			}
+		}
+
+		class SuperSystem extends BaseSystem {
+
+			TestSystem x;
+
+			@Override
+			protected void processSystem() {
+			}
+		}
+
+		@Wire(injectInherited = false)
+		class ExplicitlyWired extends SuperSystem {
+
+			TestSystem y;
+
+			@Override
+			protected void processSystem() {
+			}
+		}
+
+		ExplicitlyWired explicitlyWired = new ExplicitlyWired();
+		new World(new WorldConfiguration()
+				.setSystem(explicitlyWired)
+				.setSystem(new TestSystem()));
+
+		Assert.assertNotNull(explicitlyWired.y);
+		Assert.assertNull(explicitlyWired.x);
 	}
 }
