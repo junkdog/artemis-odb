@@ -11,13 +11,11 @@ import com.artemis.utils.reflect.ReflectionException;
 
 import java.util.*;
 
-
 /**
  * The primary instance for the framework.
  * <p>
- * It contains all the managers. You must use this to create, delete and
- * retrieve entities. It is also important to set the delta each game loop
- * iteration, and initialize before game loop.
+ * It contains all the managers. You must use this to create, delete and retrieve entities. It is also important to set
+ * the delta each game loop iteration, and initialize before game loop.
  * </p>
  *
  * @author Arni Arent
@@ -45,8 +43,6 @@ public class World {
 	final BitSet enabled;
 	final BitSet deleted;
 
-
-
 	/**
 	 * Contains all managers and managers classes mapped.
 	 */
@@ -66,17 +62,16 @@ public class World {
 
 	private boolean registerUuids;
 	private Injector injector;
-	
+
 	final EntityEditPool editPool = new EntityEditPool(this);
-	
+
 	private SystemInvocationStrategy invocationStrategy;
 	private WorldConfiguration configuration;
 
 	/**
 	 * Creates a new world.
 	 * <p>
-	 * An EntityManager and ComponentManager are created and added upon
-	 * creation.
+	 * An EntityManager and ComponentManager are created and added upon creation.
 	 * </p>
 	 */
 	public World() {
@@ -90,12 +85,11 @@ public class World {
 	public World(int expectedEntityCount) {
 		this(new WorldConfiguration());
 	}
-	
+
 	/**
 	 * Creates a new world.
 	 * <p>
-	 * An EntityManager and ComponentManager are created and added upon
-	 * creation.
+	 * An EntityManager and ComponentManager are created and added upon creation.
 	 * </p>
 	 */
 	public World(WorldConfiguration configuration) {
@@ -112,9 +106,14 @@ public class World {
 		enabled = new BitSet();
 		disabled = new BitSet();
 
-		cm = new ComponentManager(configuration.expectedEntityCount());
-		em = new EntityManager(configuration.expectedEntityCount());
-		am = new AspectSubscriptionManager();
+		ComponentManager lcm = (ComponentManager) configuration.managers.safeGet(WorldConfiguration.COMPONENT_MANAGER_IDX);
+		EntityManager lem = (EntityManager) configuration.managers.safeGet(WorldConfiguration.ENTITY_MANAGER_IDX);
+		AspectSubscriptionManager lam = (AspectSubscriptionManager) configuration.managers.safeGet(WorldConfiguration.ASPECT_SUBSCRIPTION_MANAGER_IDX);
+
+		cm = lcm == null ? new ComponentManager(configuration.expectedEntityCount()) : lcm;
+		em = lem == null ? new EntityManager(configuration.expectedEntityCount()) : lem;
+		am = lam == null ? new AspectSubscriptionManager() : lam;
+
 		injector = configuration.injector;
 		if (injector == null) {
 			injector = new CachedInjector();
@@ -141,8 +140,8 @@ public class World {
 	/**
 	 * Inject dependencies on object.
 	 *
-	 * Immediately perform dependency injection on the target.
-	 * {@link com.artemis.annotations.Wire} annotation is required on the target
+	 * Immediately perform dependency injection on the target. {@link com.artemis.annotations.Wire} annotation is
+	 * required on the target
 	 * or fields.
 	 *
 	 * If you want to specify nonstandard dependencies to inject, use
@@ -153,8 +152,9 @@ public class World {
 	 *
 	 * @see com.artemis.annotations.Wire for more details about dependency injection.
 	 * @see #inject(Object, boolean)
-	 * @param target Object to inject into.
-	 * throws MundaneWireException if {@code target} is not annotated with com.artemis.annotations.Wire
+	 * @param target
+	 *            Object to inject into.
+	 *            throws MundaneWireException if {@code target} is not annotated with com.artemis.annotations.Wire
 	 */
 	public void inject(Object target) {
 		inject(target, true);
@@ -171,26 +171,29 @@ public class World {
 	 *
 	 * @see com.artemis.annotations.Wire for more details about dependency injection.
 	 * @see #inject(Object)
-	 * @param target Object to inject into.
-	 * @param failIfWireAnnotationIsMissing if true, this method will
-	 * throws MundaneWireException if {@code target} is not annotated with com.artemis.annotations.Wire and
-	 *        {@code failIfWireAnnotationIsMissing} is true
+	 * @param target
+	 *            Object to inject into.
+	 * @param failIfWireAnnotationIsMissing
+	 *            if true, this method will
+	 *            throws MundaneWireException if {@code target} is not annotated with com.artemis.annotations.Wire and
+	 *            {@code failIfWireAnnotationIsMissing} is true
 	 */
 	public void inject(Object target, boolean failIfWireAnnotationIsMissing) {
 		boolean injectable = injector.isInjectable(target);
 		if (!injectable && failIfWireAnnotationIsMissing)
-			throw new MundaneWireException(target.getClass().getName() + " must be annotated with @Wire");
+			throw new MundaneWireException(target.getClass()
+													.getName() + " must be annotated with @Wire");
 
-		if(injectable)
+		if (injectable)
 			injector.inject(target);
 	}
-
 
 	/**
 	 * Disposes all managers and systems. Only necessary if either need to free
 	 * managed resources upon bringing the world to an end.
 	 *
-	 * @throws ArtemisMultiException if any managers or systems throws an exception.
+	 * @throws ArtemisMultiException
+	 *             if any managers or systems throws an exception.
 	 */
 	public void dispose() {
 		List<Throwable> exceptions = new ArrayList<Throwable>();
@@ -214,12 +217,12 @@ public class World {
 		if (exceptions.size() > 0)
 			throw new ArtemisMultiException(exceptions);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T extends EntityFactory> T createFactory(Class<?> factory) {
 		if (!factory.isInterface())
 			throw new MundaneWireException("Expected interface for type: " + factory);
-		
+
 		String impl = factory.getName() + "Impl";
 		try {
 			Class<?> implClass = ClassReflection.forName(impl);
@@ -251,12 +254,13 @@ public class World {
 	/**
 	 * Add a manager into this world.
 	 * <p>
-	 * It can be retrieved later. World will notify this manager of changes to
-	 * entity.
+	 * It can be retrieved later. World will notify this manager of changes to entity.
 	 * </p>
 	 *
-	 * @param <T>	 class type of the manager
-	 * @param manager manager to be added
+	 * @param <T>
+	 *            class type of the manager
+	 * @param manager
+	 *            manager to be added
 	 * @return the manager
 	 *
 	 * @deprecated {@link WorldConfiguration#setManager(Manager)}
@@ -269,15 +273,17 @@ public class World {
 	/**
 	 * Returns a manager of the specified type.
 	 *
-	 * @param <T>		 class type of the manager
-	 * @param managerType class type of the manager
+	 * @param <T>
+	 *            class type of the manager
+	 * @param managerType
+	 *            class type of the manager
 	 * @return the manager
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Manager> T getManager(Class<T> managerType) {
 		return (T) managers.get(managerType);
 	}
-	
+
 	/**
 	 * @return all managers in this world
 	 */
@@ -288,7 +294,8 @@ public class World {
 	/**
 	 * Deletes the manager from this world.
 	 *
-	 * @param manager manager to delete
+	 * @param manager
+	 *            manager to delete
 	 * @deprecated A world should be static once initialized
 	 */
 	@Deprecated
@@ -309,7 +316,8 @@ public class World {
 	/**
 	 * You must specify the delta for the game here.
 	 *
-	 * @param delta time since last game loop
+	 * @param delta
+	 *            time since last game loop
 	 */
 	public void setDelta(float delta) {
 		this.delta = delta;
@@ -318,51 +326,57 @@ public class World {
 	/**
 	 * Adds a entity to this world.
 	 *
-	 * @param e the entity to add
+	 * @param e
+	 *            the entity to add
 	 * @deprecated internally managed by artemis
 	 */
 	@Deprecated
-	public void addEntity(Entity e) {}
+	public void addEntity(Entity e) {
+	}
 
 	/**
 	 * @deprecated does nothing, internally tracked by artemis now.
 	 */
 	@Deprecated
-	public void changedEntity(Entity e) {}
-
-	/**
-	 * Delete the entity from the world.
-	 *
-	 * @param e the entity to delete
-	 */
-	public void deleteEntity(Entity e) {
-		e.edit().deleteEntity();
+	public void changedEntity(Entity e) {
 	}
 
+	/**
+	 * Delete the entity from the world.
+	 *
+	 * @param e
+	 *            the entity to delete
+	 */
+	public void deleteEntity(Entity e) {
+		e.edit()
+			.deleteEntity();
+	}
 
 	/**
 	 * Delete the entity from the world.
 	 *
-	 * @param entityId the entity to delete
+	 * @param entityId
+	 *            the entity to delete
 	 */
 	public void deleteEntity(int entityId) {
 		deleteEntity(em.getEntity(entityId));
 	}
-	
+
 	/**
 	 * (Re)enable the entity in the world, after it having being disabled.
 	 * <p>
 	 * Won't do anything unless it was already disabled.
 	 * </p>
 	 *
-	 * @param e the entity to enable
+	 * @param e
+	 *            the entity to enable
 	 * @deprecated create your own components to track state.
 	 */
 	@Deprecated
 	public void enable(Entity e) {
 		if (disabled.get(e.id))
 			disabled.set(e.id, false);
-		
+
 		enabled.set(e.id, true);
 	}
 
@@ -372,19 +386,20 @@ public class World {
 	 * Won't delete it, it will continue to exist but won't get processed.
 	 * </p>
 	 *
-	 * @param e the entity to disable
+	 * @param e
+	 *            the entity to disable
 	 * @deprecated create your own components to track state.
 	 */
 	@Deprecated
 	public void disable(Entity e) {
 		if (enabled.get(e.id))
 			enabled.set(e.id, false);
-		
+
 		disabled.set(e.id);
 	}
 
 	/**
-	 * Create and return a new or reused entity instance. Entity is 
+	 * Create and return a new or reused entity instance. Entity is
 	 * automatically added to the world.
 	 *
 	 * @return entity
@@ -394,7 +409,7 @@ public class World {
 		e.edit();
 		return e;
 	}
-	
+
 	/**
 	 * Create and return an {@link Entity} wrapping a new or reused entity instance.
 	 * Entity is automatically added to the world.
@@ -407,15 +422,15 @@ public class World {
 		added.set(e.id);
 		return e;
 	}
-	
+
 	/**
 	 * Create and return a new or reused entity instance.
 	 * <p>
-	 * The uuid parameter is ignored if {@link UuidEntityManager} hasn't been added to the
-	 * world. 
+	 * The uuid parameter is ignored if {@link UuidEntityManager} hasn't been added to the world.
 	 * </p>
 	 *
-	 * @param uuid the UUID to give to the entity
+	 * @param uuid
+	 *            the UUID to give to the entity
 	 * @return entity
 	 */
 	public Entity createEntity(UUID uuid) {
@@ -428,7 +443,8 @@ public class World {
 	/**
 	 * Get a entity having the specified id.
 	 *
-	 * @param entityId the entities id
+	 * @param entityId
+	 *            the entities id
 	 * @return the specific entity
 	 */
 	public Entity getEntity(int entityId) {
@@ -443,15 +459,16 @@ public class World {
 	public ImmutableBag<BaseSystem> getSystems() {
 		return systemsBag;
 	}
-	
+
 	/**
-	 * Adds a system to this world that will be processed by
-	 * {@link #process()}.
+	 * Adds a system to this world that will be processed by {@link #process()}.
 	 *
-	 * @param <T>	the system class type
-	 * @param system the system to add
+	 * @param <T>
+	 *            the system class type
+	 * @param system
+	 *            the system to add
 	 * @return the added system
-	 * * @deprecated {@link WorldConfiguration#setSystem(T)}
+	 *         * @deprecated {@link WorldConfiguration#setSystem(T)}
 	 */
 	@Deprecated
 	public <T extends BaseSystem> T setSystem(T system) {
@@ -461,10 +478,12 @@ public class World {
 	/**
 	 * Will add a system to this world.
 	 *
-	 * @param <T>	 the system class type
-	 * @param system  the system to add
-	 * @param passive whether or not this system will be processed by
-	 *				{@link #process()}
+	 * @param <T>
+	 *            the system class type
+	 * @param system
+	 *            the system to add
+	 * @param passive
+	 *            whether or not this system will be processed by {@link #process()}
 	 * @return the added system
 	 * @deprecated {@link WorldConfiguration#setSystem(T, boolean)}
 	 */
@@ -476,19 +495,21 @@ public class World {
 	/**
 	 * Remove the specified system from the world.
 	 *
-	 * @param system the system to be deleted from world
+	 * @param system
+	 *            the system to be deleted from world
 	 * @deprecated A world should be static once initialized
 	 */
 	@Deprecated
-	public void deleteSystem(BaseSystem system) {}
-
-
+	public void deleteSystem(BaseSystem system) {
+	}
 
 	/**
 	 * Retrieve a system for specified system type.
 	 *
-	 * @param <T>  the class type of system
-	 * @param type type of system
+	 * @param <T>
+	 *            the class type of system
+	 * @param type
+	 *            type of system
 	 * @return instance of the system in this world
 	 */
 	@SuppressWarnings("unchecked")
@@ -519,8 +540,8 @@ public class World {
 		while (added.cardinality() > 0 || changed.cardinality() > 0) {
 			am.process(added, changed, deleted);
 		}
-		
-		while(editPool.processEntities()) {
+
+		while (editPool.processEntities()) {
 			am.process(added, changed, deleted);
 
 			// we're cheating here to support disabled and enabled entities with the
@@ -540,8 +561,10 @@ public class World {
 	 * Retrieves a ComponentMapper instance for fast retrieval of components
 	 * from entities.
 	 *
-	 * @param <T>  class type of the component
-	 * @param type type of component to get mapper for
+	 * @param <T>
+	 *            class type of the component
+	 * @param type
+	 *            type of component to get mapper for
 	 * @return mapper for specified component type
 	 */
 	public <T extends Component> ComponentMapper<T> getMapper(Class<T> type) {

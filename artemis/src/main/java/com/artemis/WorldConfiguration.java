@@ -12,6 +12,11 @@ import java.util.Map;
 import static com.artemis.EntityManager.NO_COMPONENTS;
 
 public final class WorldConfiguration {
+	
+	public static final int COMPONENT_MANAGER_IDX = 0;
+	public static final int ENTITY_MANAGER_IDX = 1;
+	public static final int ASPECT_SUBSCRIPTION_MANAGER_IDX = 2;
+	
 	final Bag<Manager> managers = new Bag<Manager>();
 	final Bag<BaseSystem> systems = new Bag<BaseSystem>();
 
@@ -204,7 +209,15 @@ public final class WorldConfiguration {
 	 * @return the manager
 	 */
 	public final <T extends Manager> WorldConfiguration setManager(T manager) {
-		managers.add(manager);
+
+		if(manager instanceof ComponentManager)
+			managers.set(COMPONENT_MANAGER_IDX, manager);
+		else if(manager instanceof EntityManager)
+			managers.set(ENTITY_MANAGER_IDX, manager);
+		else if(manager instanceof AspectSubscriptionManager)
+			managers.set(ASPECT_SUBSCRIPTION_MANAGER_IDX, manager);
+		else
+			managers.add(manager);
 		return this;
 	}
 
@@ -214,9 +227,9 @@ public final class WorldConfiguration {
 			world.setInvocationStrategy(invocationStrategy);
 		}
 
-		managers.set(0, world.getComponentManager());
-		managers.set(1, world.getEntityManager());
-		managers.set(2, asm);
+		managers.set(COMPONENT_MANAGER_IDX, world.getComponentManager());
+		managers.set(ENTITY_MANAGER_IDX, world.getEntityManager());
+		managers.set(ASPECT_SUBSCRIPTION_MANAGER_IDX, asm);
 
 		for (Manager manager : managers) {
 			world.managers.put(manager.getClass(), manager);
