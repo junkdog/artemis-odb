@@ -187,7 +187,15 @@ public class EntityManager extends Manager {
 		es.informEntityChanges();
 		es.rebuildCompressedActives();
 	}
-
+	
+	/**
+	 * Instantiates an Entity without registering it into the world.
+	 * @param id The ID to be set on the Entity
+	 */
+	protected Entity createEntity(int id) {
+		return new Entity(world, id);
+	}
+	
 	/** Tracks all unique component compositions. */
 	private static final class ComponentIdentityResolver {
 		private final Bag<BitSet> composition;
@@ -230,7 +238,7 @@ public class EntityManager extends Manager {
 		
 		Entity obtain() {
 			if (limbo.isEmpty()) {
-				Entity e = new Entity(em.world, nextId++);
+				Entity e = em.createEntity(nextId++);
 				em.entities.set(e.id, e);
 				return e;
 			} else {

@@ -131,6 +131,6 @@ public abstract class BaseSystem {
 	 * @return Unbound entity with entityId -1.
 	 */
 	protected final Entity createFlyweightEntity() {
-		return Entity.createFlyweight(world);
+		return world.getEntityManager().createEntity(-1);
 	}
 }
