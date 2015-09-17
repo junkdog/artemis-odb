@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import com.artemis.WorldConfiguration;
-import com.artemis.annotations.Wire;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +21,7 @@ public class GroupManagerTest {
 	public void setUp() throws Exception {
 		gm = new GroupManager();
 		world = new World(new WorldConfiguration()
-				.setManager(gm));
+				.setSystem(gm));
 		world.inject(this);
 	}
 	

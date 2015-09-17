@@ -32,7 +32,7 @@ public class UuidEntityManagerTest {
 	public void uuid_assigned() {
 		UuidEntityManager uuidManager = new UuidEntityManager();
 		World world = new World(new WorldConfiguration()
-				.setManager(uuidManager));
+				.setSystem(uuidManager));
 		
 		Entity entity = world.createEntity();
 		
@@ -55,7 +55,7 @@ public class UuidEntityManagerTest {
 	public void uuid_updates_work() {
 		UuidEntityManager uuidManager = new UuidEntityManager();
 		World world = new World(new WorldConfiguration()
-				.setManager(uuidManager));
+				.setSystem(uuidManager));
 
 		Entity entity = world.createEntity();
 		
@@ -78,7 +78,7 @@ public class UuidEntityManagerTest {
 	public void explicit_uuids() {
 		UuidEntityManager uuidManager = new UuidEntityManager();
 		World world = new World(new WorldConfiguration()
-				.setManager(uuidManager));
+				.setSystem(uuidManager));
 		
 		UUID[] uuids = new UUID[3];
 		uuids[0] = UUID.randomUUID();

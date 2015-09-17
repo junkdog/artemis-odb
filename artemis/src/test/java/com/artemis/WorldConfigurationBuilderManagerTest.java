@@ -70,8 +70,8 @@ public class WorldConfigurationBuilderManagerTest {
 		Assert.assertEquals("Expected manager to be loaded by priority.", TestEntityManagerC.class, getLastLoadedManager(world).getClass());
 	}
 
-	protected Manager getLastLoadedManager(World world) {
-		return world.getManagers().get(world.getManagers().size()-1);
+	protected BaseSystem getLastLoadedManager(World world) {
+		return world.getSystems().get(world.getSystems().size()-1);
 	}
 
 
@@ -85,8 +85,8 @@ public class WorldConfigurationBuilderManagerTest {
 
 		World world = new World(config);
 
-		Assert.assertTrue(world.getManagers().contains(manager1));
-		Assert.assertTrue(world.getManagers().contains(manager2));
+		Assert.assertTrue(world.getSystems().contains(manager1));
+		Assert.assertTrue(world.getSystems().contains(manager2));
 	}
 
 }

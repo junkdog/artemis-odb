@@ -6,7 +6,7 @@ import java.util.BitSet;
 
 /**
  * Fastest way of changing entity component compositions. Primarily useful when
- * bootstrapping entities over several different managers/systems or when
+ * bootstrapping entities over several different systems or when
  * dealing with many entities at the same time (light particle systems etc).
  * <p>
  * Given a set of component additions/removals: for each encountered

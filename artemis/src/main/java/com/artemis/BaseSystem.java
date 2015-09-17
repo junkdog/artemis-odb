@@ -87,6 +87,16 @@ public abstract class BaseSystem {
 	}
 
 	/**
+	 * Get the world associated with the manager.
+	 *
+	 * @return the associated world
+	 */
+	protected World getWorld() {
+		return world;
+	}
+
+
+	/**
 	 * Check if this system is passive.
 	 * <p>
 	 * A passive system will not process when {@link com.artemis.World#process()}

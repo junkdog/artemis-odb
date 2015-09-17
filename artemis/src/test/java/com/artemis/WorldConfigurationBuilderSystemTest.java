@@ -12,6 +12,7 @@ import org.junit.Test;
  */
 public class WorldConfigurationBuilderSystemTest {
 
+	public static final int BASE_SYSTEM_COUNT = 3;
 	private WorldConfigurationBuilder builder;
 
 	@Before
@@ -34,9 +35,9 @@ public class WorldConfigurationBuilderSystemTest {
 				.with(system1, system2)
 				.with(system3).build());
 
-		Assert.assertEquals(system1, world.getSystems().get(0));
-		Assert.assertEquals(system2, world.getSystems().get(1));
-		Assert.assertEquals(system3, world.getSystems().get(2));
+		Assert.assertEquals(system1, world.getSystems().get(BASE_SYSTEM_COUNT +0));
+		Assert.assertEquals(system2, world.getSystems().get(BASE_SYSTEM_COUNT +1));
+		Assert.assertEquals(system3, world.getSystems().get(BASE_SYSTEM_COUNT +2));
 	}
 
 	@Test
@@ -52,7 +53,7 @@ public class WorldConfigurationBuilderSystemTest {
 		World world =  new World(new WorldConfigurationBuilder()
 				.withPassive(new TestEntitySystemA()).build());
 
-		Assert.assertTrue(world.getSystems().get(0).isPassive());
+		Assert.assertTrue(world.getSystems().get(BASE_SYSTEM_COUNT).isPassive());
 	}
 
 	@Test
@@ -60,7 +61,7 @@ public class WorldConfigurationBuilderSystemTest {
 		WorldConfigurationBuilder builder = new WorldConfigurationBuilder();
 		World world1 = new World(builder.withPassive(new TestEntitySystemA()).build());
 		World world2 = new World(builder.build());
-		Assert.assertEquals(0, world2.getSystems().size());
+		Assert.assertEquals(BASE_SYSTEM_COUNT, world2.getSystems().size());
 	}
 
 	@Test

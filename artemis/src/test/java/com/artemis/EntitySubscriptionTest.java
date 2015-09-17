@@ -1,6 +1,5 @@
 package com.artemis;
 
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.utils.IntBag;
@@ -33,7 +32,7 @@ public class EntitySubscriptionTest {
 	public void manager_entity_subscription_test() {
 		SubscribingManager sm = new SubscribingManager();
 		World world = new World(new WorldConfiguration()
-				.setManager(sm));
+				.setSystem(sm));
 
 		assertEquals(0, sm.inserted);
 		assertEquals(0, sm.removed);
@@ -62,7 +61,7 @@ public class EntitySubscriptionTest {
 	@Test
 	public void subscription_remove_id_matches_entity() {
 		WorldConfiguration config = new WorldConfiguration();
-		config.setManager(new TestManager());
+		config.setSystem(new TestManager());
 		World world = new World(config);
 
 		Entity entity = world.createEntity();

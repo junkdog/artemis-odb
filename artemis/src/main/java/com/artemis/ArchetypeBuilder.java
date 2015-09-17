@@ -7,7 +7,7 @@ import com.artemis.utils.Bag;
 /**
  * Builder for basic Archetype instances. To reap the maximum benefit of Archetypes,
  * it's recommended to stash them away inside an manager or similar. Archetypes
- * main advantage come from the improved insertion into systems and managers performance.
+ * main advantage come from the improved insertion into systems performance.
  * Calling {@link Entity#edit() edit()} on the Entity returned by {@link World#createEntity(Archetype)}
  * nullifies this optimization.  
  * <p>

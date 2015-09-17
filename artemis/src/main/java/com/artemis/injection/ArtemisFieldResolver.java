@@ -22,11 +22,9 @@ public class ArtemisFieldResolver implements FieldResolver, UseInjectionCache {
     private InjectionCache cache;
 
     private Map<Class<?>, Class<?>> systems;
-    private Map<Class<?>, Class<?>> managers;
 
     public ArtemisFieldResolver() {
         systems = new IdentityHashMap<Class<?>, Class<?>>();
-        managers = new IdentityHashMap<Class<?>, Class<?>>();
     }
 
     @Override
@@ -40,14 +38,6 @@ public class ArtemisFieldResolver implements FieldResolver, UseInjectionCache {
                 systems.put(clazz, origin);
             } while ((clazz = clazz.getSuperclass()) != Object.class);
         }
-
-        for (Manager manager : world.getManagers()) {
-            Class<?> origin = manager.getClass();
-            Class<?> clazz = origin;
-            do {
-                managers.put(clazz, origin);
-            } while ((clazz = clazz.getSuperclass()) != Object.class);
-        }
     }
 
     @Override
@@ -59,8 +49,6 @@ public class ArtemisFieldResolver implements FieldResolver, UseInjectionCache {
                 return getComponentMapper(field);
             case SYSTEM:
                 return world.getSystem((Class<BaseSystem>) systems.get(fieldType));
-            case MANAGER:
-                return world.getManager((Class<Manager>) managers.get(fieldType));
             case FACTORY:
                 return world.createFactory(fieldType);
             default:

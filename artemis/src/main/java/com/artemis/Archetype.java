@@ -2,7 +2,7 @@ package com.artemis;
 
 /**
  * Provides a blueprint for new entities, offering greatly
- * improved insertion performance for systems and managers.
+ * improved insertion performance for systems.
  * </p>
  * Instance entities using {@link com.artemis.World#createEntity(com.artemis.ArchetypeBuilder.Archetype)}
  */

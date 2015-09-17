@@ -23,7 +23,7 @@ public class FieldHandlerTest {
     public void default_field_handler_injects_correct_core_fields() throws Exception {
         WorldConfiguration worldConfiguration = new WorldConfiguration()
                 .setSystem(new SomeSystem())
-                .setManager(new SomeManager())
+                .setSystem(new SomeManager())
                 .register(new Object());
         World world = new World(worldConfiguration);
 
@@ -45,7 +45,7 @@ public class FieldHandlerTest {
         WorldConfiguration worldConfiguration = new WorldConfiguration()
                 .setInjector(injector)
                 .setSystem(new SomeSystem())
-                .setManager(new SomeManager())
+                .setSystem(new SomeManager())
                 .register(new Object());
         World world = new World(worldConfiguration);
 

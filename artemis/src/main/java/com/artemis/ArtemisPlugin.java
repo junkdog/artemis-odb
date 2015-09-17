@@ -12,7 +12,6 @@ public interface ArtemisPlugin {
 	 *
 	 * Set up all your dependencies here.
 	 * - systems
-	 * - managers
 	 * - field resolvers
 	 * - other plugins
 	 *

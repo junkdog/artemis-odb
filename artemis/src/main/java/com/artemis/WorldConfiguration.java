@@ -12,7 +12,6 @@ import java.util.Map;
 import static com.artemis.EntityManager.NO_COMPONENTS;
 
 public final class WorldConfiguration {
-	final Bag<Manager> managers = new Bag<Manager>();
 	final Bag<BaseSystem> systems = new Bag<BaseSystem>();
 
 	protected int expectedEntityCount = 128;
@@ -23,9 +22,9 @@ public final class WorldConfiguration {
 
 	public WorldConfiguration() {
 		// reserving space for core managers
-		managers.add(null); // ComponentManager
-		managers.add(null); // EntityManager
-		managers.add(null); // AspectSubscriptionManager
+		systems.add(null); // ComponentManager
+		systems.add(null); // EntityManager
+		systems.add(null); // AspectSubscriptionManager
 	}
 
 	public int expectedEntityCount() {
@@ -94,7 +93,7 @@ public final class WorldConfiguration {
 	 * Since objects are injected by type, this method is limited to one object per type.
 	 * Use {@link #register(String, Object)} to register multiple objects of the same type.
 	 *
-	 * Not required for systems and managers.
+	 * Not required for systems.
 	 *
 	 * @param o object to inject.
 	 * @return This instance for chaining.
@@ -109,7 +108,7 @@ public final class WorldConfiguration {
 	 * Explicitly annotate to be injected fields with <code>@Wire(name="myName")</code>. A class
 	 * level <code>@Wire</code> annotation is not enough.
 	 *
-	 * Not required for systems and managers.
+	 * Not required for systems.
 	 *
 	 * @param name unique identifier matching injection site name.
 	 * @param o object to inject.
@@ -186,26 +185,10 @@ public final class WorldConfiguration {
 	 */
 	public final <T extends Manager> WorldConfiguration setManager(Class<T> manager) {
 		try {
-			return setManager(ClassReflection.newInstance(manager));
+			return setSystem(ClassReflection.newInstance(manager));
 		} catch (ReflectionException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	/**
-	 * Add a manager into this world.
-	 * <p>
-	 * It can be retrieved later. World will notify this manager of changes to
-	 * entity.
-	 * </p>
-	 *
-	 * @param <T>	 class type of the manager
-	 * @param manager manager to be added
-	 * @return the manager
-	 */
-	public final <T extends Manager> WorldConfiguration setManager(T manager) {
-		managers.add(manager);
-		return this;
 	}
 
 	void initialize(World world, Injector injector, AspectSubscriptionManager asm) {
@@ -214,14 +197,9 @@ public final class WorldConfiguration {
 			world.setInvocationStrategy(invocationStrategy);
 		}
 
-		managers.set(0, world.getComponentManager());
-		managers.set(1, world.getEntityManager());
-		managers.set(2, asm);
-
-		for (Manager manager : managers) {
-			world.managers.put(manager.getClass(), manager);
-			manager.setWorld(world);
-		}
+		systems.set(0, world.getComponentManager());
+		systems.set(1, world.getEntityManager());
+		systems.set(2, asm);
 
 		for (BaseSystem system : systems) {
 			world.systems.put(system.getClass(), system);
@@ -229,12 +207,6 @@ public final class WorldConfiguration {
 		}
 
 		injector.initialize(world, injectables);
-
-		for (int i = 0; i < managers.size(); i++) {
-			Manager manager = managers.get(i);
-			injector.inject(manager);
-			manager.initialize();
-		}
 
 		initializeSystems(injector);
 

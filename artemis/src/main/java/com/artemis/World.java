@@ -15,12 +15,13 @@ import java.util.*;
 /**
  * The primary instance for the framework.
  * <p>
- * It contains all the managers. You must use this to create, delete and
+ * It contains all the systems. You must use this to create, delete and
  * retrieve entities. It is also important to set the delta each game loop
  * iteration, and initialize before game loop.
  * </p>
  *
  * @author Arni Arent
+ * @author junkdog
  */
 public class World {
 
@@ -43,20 +44,16 @@ public class World {
 	final BitSet changed;
 	final BitSet deleted;
 
-
-
-	/**
-	 * Contains all managers and managers classes mapped.
-	 */
-	final Map<Class<? extends Manager>, Manager> managers;
-	/**
-	 * Contains all managers unordered.
-	 */
-	final Bag<Manager> managersBag;
 	/**
 	 * Contains all systems and systems classes mapped.
 	 */
 	final Map<Class<?>, BaseSystem> systems;
+
+	/**
+	 * Contains all entity observer implementing systems unordered.
+	 */
+	Bag<EntityObserver> entityObserversBag;
+
 	/**
 	 * Contains all systems unordered.
 	 */
@@ -98,8 +95,6 @@ public class World {
 	 */
 	public World(WorldConfiguration configuration) {
 		this.configuration = configuration;
-		managers = new IdentityHashMap<Class<? extends Manager>, Manager>();
-		managersBag = configuration.managers;
 
 		systems = new IdentityHashMap<Class<?>, BaseSystem>();
 		systemsBag = configuration.systems;
@@ -118,14 +113,27 @@ public class World {
 
 		configuration.initialize(this, injector, am);
 
-		registerUuids = managers.get(UuidEntityManager.class) != null;
+		registerUuids = systems.get(UuidEntityManager.class) != null;
 		if (invocationStrategy == null) {
 			setInvocationStrategy(new InvocationStrategy());
+		}
+
+		collectEntityObservers();
+	}
+
+	private void collectEntityObservers() {
+		entityObserversBag = new Bag<EntityObserver>();
+		Object[] systemsData = systemsBag.getData();
+		for (int i = 0, s = systemsBag.size(); s > i; i++) {
+			final BaseSystem system = (BaseSystem) systemsData[i];
+			if (ClassReflection.isAssignableFrom(EntityObserver.class, system.getClass()) ) {
+				entityObserversBag.add((EntityObserver)system);
+			}
 		}
 	}
 
 	/**
-	 * Makes sure all managers systems are initialized in the order they were
+	 * Makes sure all systems are initialized in the order they were
 	 * added.
 	 *
 	 * @deprecated automatically covered by {@link WorldConfiguration}.
@@ -183,21 +191,13 @@ public class World {
 
 
 	/**
-	 * Disposes all managers and systems. Only necessary if either need to free
+	 * Disposes all systems. Only necessary if either need to free
 	 * managed resources upon bringing the world to an end.
 	 *
-	 * @throws ArtemisMultiException if any managers or systems throws an exception.
+	 * @throws ArtemisMultiException if any systems throws an exception.
 	 */
 	public void dispose() {
 		List<Throwable> exceptions = new ArrayList<Throwable>();
-
-		for (Manager manager : managersBag) {
-			try {
-				manager.dispose();
-			} catch (Exception e) {
-				exceptions.add(e);
-			}
-		}
 
 		for (BaseSystem system : systemsBag) {
 			try {
@@ -245,24 +245,6 @@ public class World {
 	}
 
 	/**
-	 * Add a manager into this world.
-	 * <p>
-	 * It can be retrieved later. World will notify this manager of changes to
-	 * entity.
-	 * </p>
-	 *
-	 * @param <T>	 class type of the manager
-	 * @param manager manager to be added
-	 * @return the manager
-	 *
-	 * @deprecated {@link WorldConfiguration#setManager(Manager)}
-	 */
-	@Deprecated
-	public final <T extends Manager> T setManager(T manager) {
-		throw new MundaneWireException("use WorldConfiguration#setManager");
-	}
-
-	/**
 	 * Returns a manager of the specified type.
 	 *
 	 * @param <T>		 class type of the manager
@@ -270,27 +252,8 @@ public class World {
 	 * @return the manager
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Manager> T getManager(Class<T> managerType) {
-		return (T) managers.get(managerType);
-	}
-	
-	/**
-	 * @return all managers in this world
-	 */
-	public ImmutableBag<Manager> getManagers() {
-		return managersBag;
-	}
-
-	/**
-	 * Deletes the manager from this world.
-	 *
-	 * @param manager manager to delete
-	 * @deprecated A world should be static once initialized
-	 */
-	@Deprecated
-	public void deleteManager(Manager manager) {
-		managers.remove(manager.getClass());
-		managersBag.remove(manager);
+	public <T extends BaseSystem> T getManager(Class<T> managerType) {
+		return (T) systems.get(managerType);
 	}
 
 	/**

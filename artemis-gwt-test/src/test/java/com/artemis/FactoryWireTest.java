@@ -20,7 +20,7 @@ public class FactoryWireTest extends GWTTestCase {
 	public void test_inject_entity_factories() {
 		TypedEntityFactory man = new TypedEntityFactory();
 		World w = new World(new WorldConfiguration()
-				.setManager(man));
+				.setSystem(man));
 		
 		assertNotNull(man.ship);
 		assertEquals(Ship.class.getName() + "Impl", man.ship.getClass().getName());

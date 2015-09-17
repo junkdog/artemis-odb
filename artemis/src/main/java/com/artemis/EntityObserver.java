@@ -6,7 +6,7 @@ import com.artemis.utils.IntBag;
 
 /**
  * EntityObservers are invoked when an entity is created, changes composition id
- * or is deleted. At the moment, only {@Manager | Managers} implement this interface.
+ * or is deleted.
  *
  * <p>The {@link com.artemis.EntitySubscription.SubscriptionListener} while similar,
  * should not be confused with this interface, as only report entities inserted or

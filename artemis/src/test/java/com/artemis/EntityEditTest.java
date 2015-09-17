@@ -15,7 +15,7 @@ public class EntityEditTest {
 	public void basic_entity_edit_test() {
 		LeManager lm = new LeManager();
 		World world = new World(new WorldConfiguration()
-				.setManager(lm));
+				.setSystem(lm));
 
 		Entity e = world.createEntity();
 		world.process();

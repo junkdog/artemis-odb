@@ -6,7 +6,6 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.VoidEntitySystem;
@@ -21,7 +20,7 @@ public class SmarterWireTest {
 	@Before
 	public void init() {
 		world = new World(new WorldConfiguration()
-			.setManager(new EntityFactory())
+			.setSystem(new EntityFactory())
 			.setSystem(new TiledMapSystem()));
 		
 		world.inject(this);

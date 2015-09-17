@@ -38,9 +38,9 @@ public class WireTest {
 
 		world = new World(new WorldConfiguration()
 				.setManager(TagManager.class)
-				.setManager(mappedManager)
-				.setManager(mappedManagerAll)
-				.setManager(extendedManager)
+				.setSystem(mappedManager)
+				.setSystem(mappedManagerAll)
+				.setSystem(extendedManager)
 				.setSystem(mappedSystem)
 				.setSystem(mappedSystemAll)
 				.setSystem(extendedSystem));
@@ -106,7 +106,7 @@ public class WireTest {
 		FailingSystem failingSystem = new FailingSystem();
 		FailingManager failingManager = new FailingManager();
 		World world = new World(new WorldConfiguration()
-				.setManager(failingManager)
+				.setSystem(failingManager)
 				.setSystem(failingSystem));
 
 		assertNotNull(failingManager.x);
@@ -122,7 +122,7 @@ public class WireTest {
 	@Test(expected=MundaneWireException.class)
 	public void fail_on_manager_not_injected() {
 		World world = new World(new WorldConfiguration()
-				.setManager(new FailingNpeManager()));
+				.setSystem(new FailingNpeManager()));
 	}
 	
 	@Test
@@ -175,7 +175,7 @@ public class WireTest {
 	@Test @SuppressWarnings("static-method")
 	public void inject_static_field() {
 		World w = new World(new WorldConfiguration()
-				.setManager(new ManagerWithStaticField()));
+				.setSystem(new ManagerWithStaticField()));
 		w.process();
 		
 		assertNotNull(ManagerWithStaticField.mapper);
@@ -184,7 +184,7 @@ public class WireTest {
 	@Test @SuppressWarnings("static-method")
 	public void inject_static_field_extended() {
 		World w = new World(new WorldConfiguration()
-				.setManager(new ExtendedStaticManager()));
+				.setSystem(new ExtendedStaticManager()));
 		w.process();
 		
 		assertNotNull(ManagerWithStaticField.mapper);
@@ -193,7 +193,7 @@ public class WireTest {
 	@Test @SuppressWarnings("static-method")
 	public void inject_static_field_inherited() {
 		World w = new World(new WorldConfiguration()
-				.setManager(new ManagerWithStaticField()));
+				.setSystem(new ManagerWithStaticField()));
 		w.process();
 		
 		assertNotNull(ManagerWithStaticField.mapper);

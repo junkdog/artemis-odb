@@ -94,19 +94,19 @@ public class AspectSubscriptionManager extends Manager {
 		if (entityIds.isEmpty())
 			return;
 
-		notifyManagers(performer, entityIds);
+		notifyEntityObservers(performer, entityIds);
 	}
 
 	/**
-	 * Run performers on all managers.
+	 * Run performers on all entity observers.
 	 *
 	 * @param performer the performer to run
-	 * @param entities the entity to pass as argument to the managers
+	 * @param entities the entity to pass as argument to the entity observers
 	 */
-	private void notifyManagers(Performer performer, IntBag entities) {
-		Object[] data = world.managersBag.getData();
-		for (int i = 0, s = world.managersBag.size(); s > i; i++) {
-			performer.perform((Manager) data[i], entities);
+	private void notifyEntityObservers(Performer performer, IntBag entities) {
+		Object[] data = world.entityObserversBag.getData();
+		for (int i = 0, s = world.entityObserversBag.size(); s > i; i++) {
+			performer.perform((EntityObserver) data[i], entities);
 		}
 	}
 

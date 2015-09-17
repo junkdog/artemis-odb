@@ -15,7 +15,6 @@ import com.artemis.utils.reflect.ReflectionException;
  * @author Daan van Yperen
  */
 public class WorldConfigurationBuilder {
-	private Bag<ConfigurationElement<? extends Manager>> managers;
 	private Bag<ConfigurationElement<? extends BaseSystem>> systems;
 	private Bag<ConfigurationElement<? extends FieldResolver>> fieldResolvers;
 	private Bag<ConfigurationElement<? extends ArtemisPlugin>> plugins;
@@ -30,14 +29,13 @@ public class WorldConfigurationBuilder {
 	}
 
 	/**
-	 * Assemble world with managers and systems.
+	 * Assemble world with systems.
 	 * <p/>
 	 * Deprecated: World Configuration
 	 */
 	public WorldConfiguration build() {
 		appendPlugins();
 		final WorldConfiguration config = new WorldConfiguration();
-		registerManagers(config);
 		registerSystems(config);
 		registerFieldResolvers(config);
 		registerInvocationStrategies(config);
@@ -85,16 +83,6 @@ public class WorldConfigurationBuilder {
 	}
 
 	/**
-	 * add managers to config.
-	 */
-	private void registerManagers(WorldConfiguration config) {
-		Sort.instance().sort(managers);
-		for (ConfigurationElement<? extends Manager> configurationElement : managers) {
-			config.setManager(configurationElement.item);
-		}
-	}
-
-	/**
 	 * add systems to config.
 	 */
 	private void registerSystems(WorldConfiguration config) {
@@ -109,7 +97,6 @@ public class WorldConfigurationBuilder {
 	 */
 	private void reset() {
 		invocationStrategy = null;
-		managers = new Bag<ConfigurationElement<? extends Manager>>();
 		systems = new Bag<ConfigurationElement<? extends BaseSystem>>();
 		fieldResolvers = new Bag<ConfigurationElement<? extends FieldResolver>>();
 		plugins = new Bag<ConfigurationElement<? extends ArtemisPlugin>>();
@@ -140,52 +127,11 @@ public class WorldConfigurationBuilder {
 	}
 
 	/**
-	 * Add one or more managers to the world with default priority.
-	 * <p/>
-	 * Managers track priority separate from system priority, and are always added before systems.
-	 * <p/>
-	 * Only one instance of each class is allowed.
-	 * Use {@see #dependsOn} from within plugins whenever possible.
-	 *
-	 * @param managers Managers to add. Will be added in passed order.
-	 * @return this
-	 * @throws WorldConfigurationException if registering the same class twice.
-	 */
-	public WorldConfigurationBuilder with(Manager... managers) {
-		return with(Priority.NORMAL, managers);
-	}
-
-	/**
-	 * Add one or more managers to the world.
-	 * <p/>
-	 * Managers track priority separate from system priority, and are always added before systems.
-	 * <p/>
-	 * Only one instance of each class is allowed.
-	 * Use {@see #dependsOn} from within plugins whenever possible.
-	 *
-	 * @param priority Priority of managers. Higher priority managers are registered before lower priority managers.
-	 * @param managers Managers to add. Will be added in passed order.
-	 * @return this
-	 * @throws WorldConfigurationException if registering the same class twice.
-	 */
-	public WorldConfigurationBuilder with(int priority, Manager... managers) {
-		for (Manager manager : managers) {
-
-			if (containsType(this.managers, manager.getClass())) {
-				throw new WorldConfigurationException("Manager of type " + manager.getClass() + " registered twice. Only once allowed.");
-			}
-
-			this.managers.add(ConfigurationElement.of(manager, priority));
-		}
-		return this;
-	}
-
-	/**
-	 * Specify dependency on managers/systems/plugins.
+	 * Specify dependency on systems/plugins.
 	 * <p/>
 	 * Managers track priority separate from system priority, and are always added before systems.
 	 *
-	 * @param types required managers and/or systems.
+	 * @param types required systems.
 	 * @return this
 	 */
 	public final WorldConfigurationBuilder dependsOn(Class... types) {
@@ -193,12 +139,10 @@ public class WorldConfigurationBuilder {
 	}
 
 	/**
-	 * Specify dependency on managers/systems/plugins.
+	 * Specify dependency on systems/plugins.
 	 * <p/>
-	 * Managers track priority separate from system priority, and are always added before systems.
-	 * Plugins do not support priority.
 	 *
-	 * @param types    required managers and/or systems.
+	 * @param types    required systems.
 	 * @param priority Higher priority are registered first. Not supported for plugins.
 	 * @return this
 	 * @throws WorldConfigurationException if unsupported classes are passed or plugins are given a priority.
@@ -211,9 +155,6 @@ public class WorldConfigurationBuilder {
 					case SYSTEM:
 						dependsOnSystem(priority, type);
 						break;
-					case MANAGER:
-						dependsOnManager(priority, type);
-						break;
 					default:
 						if (ClassReflection.isAssignableFrom(ArtemisPlugin.class, type)) {
 							if (priority != Priority.NORMAL) {
@@ -221,7 +162,7 @@ public class WorldConfigurationBuilder {
 							}
 							dependsOnPlugin(type);
 						} else {
-							throw new WorldConfigurationException("Unsupported type. Only supports managers and systems.");
+							throw new WorldConfigurationException("Unsupported type. Only supports systems.");
 						}
 				}
 			} catch (ReflectionException e) {
@@ -229,12 +170,6 @@ public class WorldConfigurationBuilder {
 			}
 		}
 		return this;
-	}
-
-	protected void dependsOnManager(int priority, Class<? extends Manager> type) throws ReflectionException {
-		if (!containsType(managers, type)) {
-			this.managers.add(ConfigurationElement.of(ClassReflection.newInstance(type), priority));
-		}
 	}
 
 	protected void dependsOnSystem(int priority, Class<? extends BaseSystem> type) throws ReflectionException {
@@ -251,9 +186,6 @@ public class WorldConfigurationBuilder {
 
 	/**
 	 * Register active system(s).
-	 * <p/>
-	 * Systems track priority separate from manager priority, and are always added after managers.
-	 * <p/>
 	 * Only one instance of each class is allowed.
 	 * Use {@see #dependsOn} from within plugins whenever possible.
 	 *
@@ -269,9 +201,6 @@ public class WorldConfigurationBuilder {
 
 	/**
 	 * Register active system(s).
-	 * <p/>
-	 * Systems track priority separate from manager priority, and are always added after managers.
-	 * <p/>
 	 * Only one instance of each class is allowed.
 	 * Use {@see #dependsOn} from within plugins whenever possible.
 	 *
@@ -304,9 +233,6 @@ public class WorldConfigurationBuilder {
 
 	/**
 	 * Register passive systems.
-	 * <p/>
-	 * Systems track priority separate from manager priority, and are always added after managers.
-	 * <p/>
 	 * Only one instance of each class is allowed.
 	 * Use {@see #dependsOn} from within plugins.
 	 *
@@ -322,9 +248,6 @@ public class WorldConfigurationBuilder {
 
 	/**
 	 * Register passive systems with normal priority.
-	 * <p/>
-	 * Systems track priority separate from manager priority, and are always added after managers.
-	 * <p/>
 	 * Only one instance of each class is allowed.
 	 * Use {@see #dependsOn} from within plugins whenever possible.
 	 *

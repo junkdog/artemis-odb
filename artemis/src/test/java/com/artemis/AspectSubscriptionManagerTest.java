@@ -1,6 +1,5 @@
 package com.artemis;
 
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.utils.IntBag;
@@ -44,7 +43,7 @@ public class AspectSubscriptionManagerTest {
 
 	@Test
 	public void entity_change_events_cleared() {
-		world = new World(new WorldConfiguration().setManager(new BootstrappingManager()));
+		world = new World(new WorldConfiguration().setSystem(new BootstrappingManager()));
 		AspectSubscriptionManager asm = world.getManager(AspectSubscriptionManager.class);
 		EntitySubscription sub = asm.get(Aspect.all(ComponentX.class));
 		SubListener listener = new SubListener();

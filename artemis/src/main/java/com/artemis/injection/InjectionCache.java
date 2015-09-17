@@ -112,8 +112,6 @@ public class InjectionCache {
 				injectionType = ClassType.MAPPER;
 			} else if (ClassReflection.isAssignableFrom(BaseSystem.class, fieldType)) {
 				injectionType = ClassType.SYSTEM;
-			} else if (ClassReflection.isAssignableFrom(Manager.class, fieldType)) {
-				injectionType = ClassType.MANAGER;
 			} else if (ClassReflection.isAssignableFrom(EntityFactory.class, fieldType)) {
 				injectionType = ClassType.FACTORY;
 			} else {

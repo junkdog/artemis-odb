@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
@@ -22,7 +21,7 @@ public class ArchetypeManagerTest {
 	@Before
 	public void init() {
 		world = new World(new WorldConfiguration()
-				.setManager(new EntityFactory())
+				.setSystem(new EntityFactory())
 				.setSystem(new Es1())
 				.setSystem(new Es2()));
 

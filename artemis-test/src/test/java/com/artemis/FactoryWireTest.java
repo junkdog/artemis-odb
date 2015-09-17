@@ -2,10 +2,8 @@ package com.artemis;
 
 import static org.junit.Assert.*;
 
-import org.junit.Assert;
 import org.junit.Test;
 
-import com.artemis.annotations.Wire;
 import com.artemis.factory.Ship;
 import com.artemis.factory.ShipNoMethods;
 import com.artemis.factory.ShipShortWire;
@@ -17,7 +15,7 @@ public class FactoryWireTest {
 	public void test_inject_entity_factories() {
 		Man man = new Man();
 		World w = new World(new WorldConfiguration()
-				.setManager(man));
+				.setSystem(man));
 
 		assertNotNull(man.ship);
 		assertEquals(Ship.class.getName() + "Impl", man.ship.getClass().getName());

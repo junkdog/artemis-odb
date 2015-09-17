@@ -4,9 +4,6 @@ import com.artemis.annotations.SkipWire;
 import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
-import com.artemis.managers.TagManager;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -29,7 +26,7 @@ public class SkipWireTest {
 
 		TestManager manager = new TestManager();
 		new World(new WorldConfiguration()
-				.setManager(manager));
+				.setSystem(manager));
 
 		assertNotNull(manager.x);
 		assertNull(manager.y);
@@ -50,7 +47,7 @@ public class SkipWireTest {
 
 		TestManager manager = new TestManager();
 		new World(new WorldConfiguration()
-				.setManager(manager));
+				.setSystem(manager));
 
 		assertNotNull(manager.x);
 		assertNull(manager.y);
@@ -76,7 +73,7 @@ public class SkipWireTest {
 
 		TestManager manager = new TestManager();
 		new World(new WorldConfiguration()
-				.setManager(manager));
+				.setSystem(manager));
 
 		assertNotNull(manager.z);
 		assertNull(manager.y);
@@ -94,7 +91,7 @@ public class SkipWireTest {
 
 		TestManager manager = new TestManager();
 		new World(new WorldConfiguration()
-				.setManager(manager));
+				.setSystem(manager));
 
 		assertNotNull(manager.x);
 	}
@@ -111,7 +108,7 @@ public class SkipWireTest {
 
 		TestManager manager = new TestManager();
 		new World(new WorldConfiguration()
-				.setManager(manager));
+				.setSystem(manager));
 
 		assertNotNull(manager.x);
 	}

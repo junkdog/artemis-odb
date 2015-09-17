@@ -6,7 +6,6 @@ import static org.junit.Assert.assertNotNull;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
@@ -22,7 +21,7 @@ public class MapperTest {
 	public void init() {
 		world = new World(new WorldConfiguration()
 				.setSystem(new MappedSystem())
-				.setManager(new MappedManager()));
+				.setSystem(new MappedManager()));
 		
 		world.inject(this);
 		
