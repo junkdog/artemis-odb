@@ -27,7 +27,6 @@ public class CachedField {
 
     /**
      * {@link WireType#WIRE} if the field is annotated with {@link com.artemis.annotations.Wire},
-     * {@link WireType#MAPPER} if the field is annotated with {@link com.artemis.annotations.Mapper},
      * {@link WireType#SKIPWIRE} if the field is annotated with {@link com.artemis.annotations.SkipWire),
      * {@link WireType#IGNORED} otherwise.
      */

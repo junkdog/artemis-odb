@@ -4,7 +4,6 @@ import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.artemis.EntityFactory;
 import com.artemis.Manager;
-import com.artemis.annotations.Mapper;
 import com.artemis.annotations.SkipWire;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.reflect.ClassReflection;
@@ -95,8 +94,6 @@ public class InjectionCache {
 			if (field.isAnnotationPresent(Wire.class)) {
 				final Wire wire = field.getAnnotation(Wire.class);
 				cachedField = new CachedField(field, WireType.WIRE, wire.name());
-			} else if (field.isAnnotationPresent(Mapper.class)) {
-				cachedField = new CachedField(field, WireType.MAPPER, null);
 			} else if (field.isAnnotationPresent(SkipWire.class)) {
 				cachedField = new CachedField(field, WireType.SKIPWIRE, null);
 			} else {

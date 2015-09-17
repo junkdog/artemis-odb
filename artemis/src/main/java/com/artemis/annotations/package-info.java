@@ -1,7 +1,7 @@
 /**
  * Annotations used by Artemis, both runtime and during compilation,
  * 
- * <p><b>Runtime:</b> {@link com.artemis.annotations.Wire} and {@link com.artemis.annotations.Mapper}.</p>
+ * <p><b>Runtime:</b> {@link com.artemis.annotations.Wire}.</p>
  * 
  * <p><b>Annotation Processor for {@link com.artemis.EntityFactory}:</b> {@link com.artemis.annotations.Bind},
  * {@link com.artemis.annotations.Sticky}, {@link com.artemis.annotations.UseSetter}.</p>
