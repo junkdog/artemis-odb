@@ -45,8 +45,8 @@ public class InjectionBenchmark {
     @Setup(Level.Iteration)
     public void restart() {
         configuration = new WorldConfiguration();
-        configuration.setManager(new TagManager());
-        configuration.setManager(new UuidEntityManager());
+        configuration.setSystem(new TagManager());
+        configuration.setSystem(new UuidEntityManager());
         configuration.setSystem(new PositionSystem());
         configuration.setSystem(new VelocitySystem());
         configuration.setSystem(new DamageSystem());

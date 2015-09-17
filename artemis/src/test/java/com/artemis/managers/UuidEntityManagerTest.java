@@ -99,7 +99,7 @@ public class UuidEntityManagerTest {
 		UUID uuid = UUID.randomUUID();
 
 		WorldConfiguration configuration = new WorldConfiguration();
-        configuration.setManager(UuidEntityManager.class);
+        configuration.setSystem(UuidEntityManager.class);
 
 	    World world = new World(configuration);
 	    UuidEntityManager uuidEntityManager = world.getManager(UuidEntityManager.class);

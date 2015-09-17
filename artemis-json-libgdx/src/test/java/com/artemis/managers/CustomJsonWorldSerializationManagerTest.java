@@ -28,7 +28,7 @@ public class CustomJsonWorldSerializationManagerTest {
 
 		world = new World(new WorldConfiguration()
 				.setSystem(SerializedSystem.class)
-				.setManager(WorldSerializationManager.class));
+				.setSystem(WorldSerializationManager.class));
 
 		world.inject(this);
 		JsonArtemisSerializer backend = new JsonArtemisSerializer(world);

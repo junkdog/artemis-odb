@@ -37,7 +37,7 @@ public class WireTest {
 		extendedManager = new ExtendedManager();
 
 		world = new World(new WorldConfiguration()
-				.setManager(TagManager.class)
+				.setSystem(TagManager.class)
 				.setSystem(mappedManager)
 				.setSystem(mappedManagerAll)
 				.setSystem(extendedManager)
@@ -128,7 +128,7 @@ public class WireTest {
 	@Test
 	public void inject_pojo_object() {
 		World world = new World(new WorldConfiguration()
-				.setManager(TagManager.class)
+				.setSystem(TagManager.class)
 				.setSystem(new MappedSystem())
 				.setSystem(new MappedSystemAll()));
 
@@ -146,7 +146,7 @@ public class WireTest {
 			.register("world")
 			.register("hupp", "n1")
 			.register("blergh", "n2")
-			.setManager(TagManager.class));
+			.setSystem(TagManager.class));
 
 		SomeThing st = new SomeThing();
 		world.inject(st);
@@ -159,7 +159,7 @@ public class WireTest {
 
 	@Test
 	public void try_inject_on_wired_object_mirrors_inject_behaviour() {
-		World world = new World(new WorldConfiguration().register("world").setManager(TagManager.class));
+		World world = new World(new WorldConfiguration().register("world").setSystem(TagManager.class));
 		SomeThing st = new SomeThing();
 		world.inject(st, false);
 		assertEquals("world", st.hello);

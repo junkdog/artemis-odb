@@ -57,9 +57,9 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 
 	private void setupWorld() {
 		world = new World(new WorldConfiguration()
-				.setManager(GroupManager.class)
-				.setManager(TagManager.class)
-				.setManager(WorldSerializationManager.class));
+				.setSystem(GroupManager.class)
+				.setSystem(TagManager.class)
+				.setSystem(WorldSerializationManager.class));
 
 		world.inject(this);
 		JsonArtemisSerializer backend = new JsonArtemisSerializer(world);

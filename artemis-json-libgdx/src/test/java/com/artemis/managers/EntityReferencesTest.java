@@ -72,8 +72,8 @@ public class EntityReferencesTest {
 
 	private SaveFileFormat loadWorld() {
 		world = new World(new WorldConfiguration()
-				.setManager(TagManager.class)
-				.setManager(WorldSerializationManager.class));
+				.setSystem(TagManager.class)
+				.setSystem(WorldSerializationManager.class));
 
 		world.inject(this);
 		JsonArtemisSerializer backend = new JsonArtemisSerializer(world);

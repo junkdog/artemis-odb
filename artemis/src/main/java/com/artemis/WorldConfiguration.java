@@ -172,25 +172,6 @@ public final class WorldConfiguration {
 		return this;
 	}
 
-	/**
-	 * Add a manager into this world.
-	 * <p>
-	 * It can be retrieved later. World will notify this manager of changes to
-	 * entity.
-	 * </p>
-	 *
-	 * @param <T>	 class type of the manager
-	 * @param manager manager to be added
-	 * @return the manager
-	 */
-	public final <T extends Manager> WorldConfiguration setManager(Class<T> manager) {
-		try {
-			return setSystem(ClassReflection.newInstance(manager));
-		} catch (ReflectionException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
 	void initialize(World world, Injector injector, AspectSubscriptionManager asm) {
 
 		if ( invocationStrategy != null ) {
