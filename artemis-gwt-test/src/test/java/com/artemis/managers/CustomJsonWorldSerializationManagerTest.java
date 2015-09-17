@@ -14,7 +14,7 @@ import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 
 
-@Wire
+@Wire(injectInherited = false)
 public class CustomJsonWorldSerializationManagerTest extends GWTTestCase {
 	private WorldSerializationManager manger;
 	private AspectSubscriptionManager subscriptions;
@@ -110,7 +110,6 @@ public class CustomJsonWorldSerializationManagerTest extends GWTTestCase {
 		public DummySegment() {}
 	}
 
-	@Wire
 	public static class SerializedSystemSerializer implements Json.Serializer<SerializedSystem> {
 		private SerializedSystem system;
 
@@ -132,7 +131,6 @@ public class CustomJsonWorldSerializationManagerTest extends GWTTestCase {
 		}
 	}
 
-	@Wire
 	public static class CustomSaveFormat extends SaveFileFormat {
 		public SerializedSystem serialized;
 		public DummySegment noSerializer;

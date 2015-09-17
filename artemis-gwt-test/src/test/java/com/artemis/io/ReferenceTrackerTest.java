@@ -2,12 +2,14 @@ package com.artemis.io;
 
 import com.artemis.EntityEdit;
 import com.artemis.World;
+import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.component.EntityHolder;
 import com.google.gwt.junit.client.GWTTestCase;
 
 @SuppressWarnings("static-method")
+@Wire(injectInherited = false)
 public class ReferenceTrackerTest extends GWTTestCase {
 
 	@Override

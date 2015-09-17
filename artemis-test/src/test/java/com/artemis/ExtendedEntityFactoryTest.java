@@ -14,7 +14,6 @@ import com.artemis.component.Position;
 import com.artemis.component.Sprite;
 import com.artemis.factory.Extended;
 
-@Wire
 public class ExtendedEntityFactoryTest {
 	private static final double ACC = 0.001;
 	

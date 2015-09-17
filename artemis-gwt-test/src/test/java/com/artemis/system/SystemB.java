@@ -7,7 +7,6 @@ import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.systems.EntityProcessingSystem;
 
-@Wire
 public class SystemB extends EntityProcessingSystem {
 	ComponentMapper<ComponentX> xm;
 

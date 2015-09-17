@@ -10,7 +10,6 @@ import org.junit.Test;
 import com.artemis.annotations.Wire;
 import com.artemis.systems.DelayedEntityProcessingSystem;
 
-@Wire
 public class DelayedEntityProcessingSystemTest
 {
 	protected LinkedList<Entity> entitiesOrdered;
@@ -152,7 +151,6 @@ public class DelayedEntityProcessingSystemTest
 		}
 	}
 
-	@Wire
 	public class ExpirationSystem extends DelayedEntityProcessingSystem
 	{
 		public int expiredLastRound;

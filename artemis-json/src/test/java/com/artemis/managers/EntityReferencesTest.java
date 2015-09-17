@@ -16,7 +16,6 @@ import java.io.InputStream;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@Wire
 public class EntityReferencesTest {
 	private World world;
 	private WorldSerializationManager manger;

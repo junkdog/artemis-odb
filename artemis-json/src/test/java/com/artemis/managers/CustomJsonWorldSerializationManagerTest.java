@@ -17,7 +17,6 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.*;
 
-@Wire
 public class CustomJsonWorldSerializationManagerTest {
 	private WorldSerializationManager manger;
 	private AspectSubscriptionManager subscriptions;
@@ -102,7 +101,6 @@ public class CustomJsonWorldSerializationManagerTest {
 		public DummySegment() {}
 	}
 
-	@Wire
 	public static class SerializedSystemSerializer implements JsonSerializer<SerializedSystem> {
 		private SerializedSystem system;
 
@@ -124,7 +122,6 @@ public class CustomJsonWorldSerializationManagerTest {
 		}
 	}
 
-	@Wire
 	public static class CustomSaveFormat extends SaveFileFormat {
 		public SerializedSystem serialized;
 		public DummySegment noSerializer;

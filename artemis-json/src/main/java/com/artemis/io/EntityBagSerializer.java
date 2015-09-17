@@ -8,7 +8,6 @@ import com.esotericsoftware.jsonbeans.Json;
 import com.esotericsoftware.jsonbeans.JsonSerializer;
 import com.esotericsoftware.jsonbeans.JsonValue;
 
-@Wire
 public class EntityBagSerializer implements JsonSerializer<Bag> {
 	private final World world;
 

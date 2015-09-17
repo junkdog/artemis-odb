@@ -4,13 +4,13 @@ import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.artemis.EntityFactory;
 import com.artemis.Manager;
-import com.artemis.annotations.Mapper;
 import com.artemis.annotations.SkipWire;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,30 +21,71 @@ import java.util.Map;
  * @author Snorre E. Brekke
  */
 public class InjectionCache {
-    private static final Map<Class<?>, CachedClass> classCache = new HashMap<Class<?>, CachedClass>();
-    private static final Map<Class<?>, ClassType> fieldClassTypeCache = new HashMap<Class<?>, ClassType>();
-    private static final Map<Field, CachedField> namedWireCache = new HashMap<Field, CachedField>();
-    private static final Map<Field, Class<?>> genericsCache = new HashMap<Field, Class<?>>();
+	private static final Map<Class<?>, CachedClass> classCache = new HashMap<Class<?>, CachedClass>();
+	private static final Map<Class<?>, ClassType> fieldClassTypeCache = new HashMap<Class<?>, ClassType>();
+	private static final Map<Field, CachedField> namedWireCache = new HashMap<Field, CachedField>();
+	private static final Map<Field, Class<?>> genericsCache = new HashMap<Field, Class<?>>();
+
+	private static final Wire DEFAULT_WIRE = new Wire() {
+
+		@Override
+		public Class<? extends Annotation> annotationType() {
+			return Wire.class;
+		}
+
+		@Override
+		public boolean injectInherited() {
+			return true;
+		}
+
+		@Override
+		public boolean failOnNull() {
+			return true;
+		}
+
+		@Override
+		public String name() {
+			return null;
+		}
+	};
 
 	public CachedClass getCachedClass(Class<?> clazz) throws ReflectionException {
 		CachedClass cachedClass = classCache.get(clazz);
 		if (cachedClass == null) {
 			cachedClass = new CachedClass(clazz);
-			cachedClass.wireType = ClassReflection.isAnnotationPresent(clazz, Wire.class) ?
-					WireType.WIRE : (ClassReflection.isAnnotationPresent(clazz, SkipWire.class) ?
-					WireType.SKIPWIRE :
-					WireType.IGNORED);
 
-            if (cachedClass.wireType == WireType.WIRE) {
-                Wire wireAnnotation = ClassReflection.getAnnotation(clazz, Wire.class);
-                cachedClass.wireAnnotation = wireAnnotation;
-                cachedClass.failOnNull = wireAnnotation.failOnNull();
-                cachedClass.injectInherited = wireAnnotation.injectInherited();
-            }
-            classCache.put(clazz, cachedClass);
-        }
-        return cachedClass;
-    }
+			cachedClass.wireType = getWireType(clazz);
+			if (cachedClass.wireType == WireType.IGNORED && clazz != Object.class) {
+				setWireAnnotation(cachedClass, DEFAULT_WIRE);
+			} else if (cachedClass.wireType == WireType.WIRE) {
+				setWireAnnotation(cachedClass, ClassReflection.getAnnotation(clazz, Wire.class));
+			}
+
+			classCache.put(clazz, cachedClass);
+		}
+		return cachedClass;
+	}
+
+	/**
+	 * Set {@code @Wire} annotation value for cached class.
+	 */
+	private void setWireAnnotation(CachedClass cachedClass, Wire wireAnnotation) {
+		cachedClass.wireType = WireType.WIRE;
+		cachedClass.wireAnnotation = wireAnnotation;
+		cachedClass.failOnNull = wireAnnotation.failOnNull();
+		cachedClass.injectInherited = wireAnnotation.injectInherited();
+	}
+
+	/**
+	 * Determine desired wiring on class by annotation.
+	 * Convention is {@code Wire(injectInherited=true)}
+	 */
+	private WireType getWireType(Class<?> clazz) {
+		return ClassReflection.isAnnotationPresent(clazz, Wire.class) ?
+				WireType.WIRE : (ClassReflection.isAnnotationPresent(clazz, SkipWire.class) ?
+				WireType.SKIPWIRE :
+				WireType.IGNORED);
+	}
 
 
 	public CachedField getCachedField(Field field) {
@@ -53,8 +94,6 @@ public class InjectionCache {
 			if (field.isAnnotationPresent(Wire.class)) {
 				final Wire wire = field.getAnnotation(Wire.class);
 				cachedField = new CachedField(field, WireType.WIRE, wire.name());
-			} else if (field.isAnnotationPresent(Mapper.class)) {
-				cachedField = new CachedField(field, WireType.MAPPER, null);
 			} else if (field.isAnnotationPresent(SkipWire.class)) {
 				cachedField = new CachedField(field, WireType.SKIPWIRE, null);
 			} else {

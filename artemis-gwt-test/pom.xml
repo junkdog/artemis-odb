@@ -128,9 +128,11 @@
 					<enableClosureCompiler>true</enableClosureCompiler>
 					<disableClassMetadata>false</disableClassMetadata>
 					<disableCastChecking>true</disableCastChecking>
-					<extraJvmArgs>-Xmx2000M</extraJvmArgs>
+					<extraJvmArgs>-Xms64M -Xmx2500M</extraJvmArgs>
+					<compileReport>true</compileReport>
 					<localWorkers>4</localWorkers>
 					<sourceLevel>1.7</sourceLevel>
+					<draftCompile>true</draftCompile>
 					<testTimeOut>1800</testTimeOut>
 					<strict>true</strict>
 					<productionMode>true</productionMode>

@@ -20,7 +20,6 @@ public class SkipWireTest {
 	@Test
 	public void ensure_skipped_field_skipped_in_wired_class() {
 
-		@Wire
 		class TestManager extends Manager {
 			private ComponentMapper<ComponentX> x;
 			@SkipWire
@@ -45,7 +44,6 @@ public class SkipWireTest {
 			protected ComponentMapper<ComponentY> y;
 		}
 
-		@Wire(injectInherited = true)
 		class TestManager extends SuperTestManager {
 		}
 
@@ -71,7 +69,6 @@ public class SkipWireTest {
 			protected ComponentMapper<ComponentY> y;
 		}
 
-		@Wire(injectInherited = true)
 		class TestManager extends SuperTestManager {
 			protected ComponentMapper<ComponentX> x;
 		}
@@ -103,7 +100,7 @@ public class SkipWireTest {
 	}
 
 	@Test
-	public void ensure_wire_supersedes_skipwire_on_field() {
+	public void ensure_explicit_wire_supersedes_skipwire_on_field() {
 
 
 		class TestManager extends Manager {

@@ -6,7 +6,6 @@ import com.artemis.component.TransPackedInt;
 import com.artemis.managers.TagManager;
 import com.artemis.systems.VoidEntitySystem;
 
-@Wire
 @SuppressWarnings("unused")
 public class WiredBasicVoidSystem extends VoidEntitySystem {
 

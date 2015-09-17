@@ -1,5 +1,6 @@
 package com.artemis;
 
+import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import static com.artemis.utils.ConverterUtil.toIntBag;
 
+@SkipWire
 public class AspectSubscriptionManager extends Manager {
 
 	private final Map<Aspect.Builder, EntitySubscription> subscriptionMap;

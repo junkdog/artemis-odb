@@ -14,7 +14,6 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.*;
 
-@Wire
 public class JsonWorldSerializationManagerTest {
 	private WorldSerializationManager manger;
 	private AspectSubscriptionManager subscriptions;

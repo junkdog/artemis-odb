@@ -82,7 +82,6 @@ public class AspectSubscriptionManagerTest {
 		public void removed(IntBag entities) {}
 	}
 
-	@Wire
 	private static class BootstrappingManager extends Manager {
 		private ComponentMapper<ComponentX> componentXMapper;
 

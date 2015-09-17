@@ -13,7 +13,6 @@ import com.artemis.annotations.Wire;
 import com.artemis.factory.ExhibitA;
 import com.artemis.factory.Extended;
 
-@Wire
 public class EntityFactoryTest {
 	private static final double ACC = 0.001;
 	

@@ -10,7 +10,7 @@ import com.artemis.component.Position;
 import com.artemis.factory.ExhibitA;
 import com.google.gwt.junit.client.GWTTestCase;
 
-@Wire
+@Wire(injectInherited = false)
 public class EntityFactoryTest extends GWTTestCase {
 	private static final double ACC = 0.001;
 	

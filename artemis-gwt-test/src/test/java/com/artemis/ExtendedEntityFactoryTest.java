@@ -11,7 +11,7 @@ import com.artemis.component.Sprite;
 import com.artemis.factory.Extended;
 import com.google.gwt.junit.client.GWTTestCase;
 
-@Wire
+@Wire(injectInherited = false)
 public class ExtendedEntityFactoryTest extends GWTTestCase {
 	private static final double ACC = 0.001;
 	

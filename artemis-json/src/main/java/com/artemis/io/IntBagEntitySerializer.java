@@ -9,7 +9,6 @@ import com.esotericsoftware.jsonbeans.Json;
 import com.esotericsoftware.jsonbeans.JsonSerializer;
 import com.esotericsoftware.jsonbeans.JsonValue;
 
-@Wire
 public class IntBagEntitySerializer implements JsonSerializer<IntBag> {
 	private final World world;
 	private final Bag<Entity> translatedIds = new Bag<Entity>();

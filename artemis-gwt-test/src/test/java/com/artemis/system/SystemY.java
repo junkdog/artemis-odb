@@ -9,7 +9,7 @@ import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 
-@Wire class SystemY extends EntityProcessingSystem {
+class SystemY extends EntityProcessingSystem {
 	ComponentMapper<ComponentY> ym;
 	
 	@SuppressWarnings("unchecked")

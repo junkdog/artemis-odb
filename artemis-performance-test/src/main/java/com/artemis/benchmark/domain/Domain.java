@@ -42,20 +42,16 @@ public class Domain{
 
     }
 
-    @Wire
     public static class CustomWired{
         private PositionSystem positionSystem;
         private TagManager tagManager;
         private ComponentMapper<Velocity> cm;
         private String undrelated;
-        @Wire(name = "string")
-        private String injectedString;
-        @Wire
-        private Object injectedObject;
+        @Wire(name = "string") private String injectedString;
+        @Wire private Object injectedObject;
 
     }
 
-    @Wire
     public static class PositionSystem extends EntitySystem {
         protected ComponentMapper<Position> pm;
 
@@ -69,7 +65,6 @@ public class Domain{
         }
     }
 
-    @Wire
          public static class VelocitySystem extends EntitySystem{
         protected ComponentMapper<Position> pm;
         protected ComponentMapper<Velocity> vm;
@@ -101,7 +96,6 @@ public class Domain{
     }
 
 
-    @Wire
     public static class ComplexSystem extends EntitySystem{
         protected ComponentMapper<Position> pm;
         protected ComponentMapper<Color> cm;

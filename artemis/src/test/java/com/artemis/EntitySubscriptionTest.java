@@ -71,7 +71,6 @@ public class EntitySubscriptionTest {
 		world.process();
 	}
 
-	@Wire
 	static class SubscribingManager extends Manager
 			implements  EntitySubscription.SubscriptionListener {
 
@@ -105,7 +104,6 @@ public class EntitySubscriptionTest {
 		}
 	}
 
-		@Wire
 	static class TestManager extends Manager {
 			AspectSubscriptionManager subscriptionManager;
 

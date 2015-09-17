@@ -174,7 +174,6 @@ public class SubscriptionListenerTest {
 	}
 
 
-	@Wire
 	private static class Es2 extends BaseSystem implements SubscriptionListener {
 		private ComponentMapper<MyComponent> mapper;
 		private boolean hasInserted;

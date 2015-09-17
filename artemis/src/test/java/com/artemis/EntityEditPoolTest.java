@@ -13,7 +13,6 @@ public class EntityEditPoolTest {
 
 	@Test
 	public void test_flyweight_of_newly_created_entity_supported_in_transmuter() {
-		@Wire
 		class TestSystem extends BaseSystem {
 
 			private EntityTransmuter createTransmuter;

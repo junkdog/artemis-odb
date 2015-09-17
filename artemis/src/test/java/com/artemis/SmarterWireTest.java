@@ -11,7 +11,6 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.VoidEntitySystem;
 
-@Wire
 public class SmarterWireTest {
 	
 	private World world;
@@ -46,12 +45,10 @@ public class SmarterWireTest {
 		protected ComponentMapper<ComponentX> x;
 	}
 	
-	@Wire(injectInherited=true)
 	class EntityFactory extends AbstractEntityFactory {
 		private ComponentMapper<ComponentY> y;
 	}
 	
-	@Wire
 	class TiledMapSystem extends VoidEntitySystem {
 		// no concrete factory available in library, game should provide.
 		protected AbstractEntityFactory factory;
