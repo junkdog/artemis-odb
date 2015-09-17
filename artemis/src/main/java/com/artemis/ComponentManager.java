@@ -2,6 +2,7 @@ package com.artemis;
 
 import java.util.BitSet;
 
+import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
@@ -19,6 +20,7 @@ import com.artemis.utils.reflect.ReflectionException;
  *
  * @author Arni Arent
  */
+@SkipWire
 public class ComponentManager extends Manager {
 
 	/** Holds all components grouped by type. */

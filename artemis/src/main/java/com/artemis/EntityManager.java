@@ -1,5 +1,6 @@
 package com.artemis;
 
+import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.artemis.EntityTransmuter.TransmuteOperation;
@@ -13,6 +14,7 @@ import java.util.BitSet;
  *
  * @author Arni Arent
  */
+@SkipWire
 public class EntityManager extends Manager {
 
 	static final int NO_COMPONENTS = 1;
