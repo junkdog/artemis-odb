@@ -1,8 +1,14 @@
 ## Change Log
 
 #### Version: 1.0.0-SNAPSHOT
+- New `ArtemisPlugin` API
+- New `WorldConfigurationBuilder` convenience class.
+- By convention, `@Wire` is now implied on all systems and managers. Use `@SkipWire` to suppress.
+- `Manager` now treated as a system.
+  - `Manager` is now part of the `BaseSystem` hierarchy.
+  - EntityObserver supported on all systems.
 - Removed deprecated methods and classes
-
+  - Removed `@Mapper`
 
 #### Version: 0.13.0 - 2015-09-14
 - **BREAKING CHANGES**
