@@ -55,5 +55,5 @@
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.managers.CustomJsonWorldSerializationManagerTest" />
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.ExtendedEntityFactoryTest" />
 
-
+	<set-property name="user.agent" value="safari"/>
 </module>
