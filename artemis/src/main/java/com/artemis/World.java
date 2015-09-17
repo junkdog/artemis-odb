@@ -41,8 +41,6 @@ public class World {
 
 	final BitSet added;
 	final BitSet changed;
-	final BitSet disabled;
-	final BitSet enabled;
 	final BitSet deleted;
 
 
@@ -109,8 +107,6 @@ public class World {
 		added = new BitSet();
 		changed = new BitSet();
 		deleted = new BitSet();
-		enabled = new BitSet();
-		disabled = new BitSet();
 
 		cm = new ComponentManager(configuration.expectedEntityCount());
 		em = new EntityManager(configuration.expectedEntityCount());
@@ -349,39 +345,6 @@ public class World {
 		deleteEntity(em.getEntity(entityId));
 	}
 	
-	/**
-	 * (Re)enable the entity in the world, after it having being disabled.
-	 * <p>
-	 * Won't do anything unless it was already disabled.
-	 * </p>
-	 *
-	 * @param e the entity to enable
-	 * @deprecated create your own components to track state.
-	 */
-	@Deprecated
-	public void enable(Entity e) {
-		if (disabled.get(e.id))
-			disabled.set(e.id, false);
-		
-		enabled.set(e.id, true);
-	}
-
-	/**
-	 * Disable the entity from being processed.
-	 * <p>
-	 * Won't delete it, it will continue to exist but won't get processed.
-	 * </p>
-	 *
-	 * @param e the entity to disable
-	 * @deprecated create your own components to track state.
-	 */
-	@Deprecated
-	public void disable(Entity e) {
-		if (enabled.get(e.id))
-			enabled.set(e.id, false);
-		
-		disabled.set(e.id);
-	}
 
 	/**
 	 * Create and return a new or reused entity instance. Entity is 
@@ -522,11 +485,6 @@ public class World {
 		
 		while(editPool.processEntities()) {
 			am.process(added, changed, deleted);
-
-			// we're cheating here to support disabled and enabled entities with the
-			// new subscription lists
-			// @deprecate
-			am.process(added, enabled, disabled);
 		}
 
 		cm.clean();

@@ -42,26 +42,4 @@ public interface EntityObserver {
 	 */
 	void deleted(int entityId);
 	void deleted(IntBag entities);
-
-	/**
-	 * Called when an entity the observer is interested in has been
-	 * (re)enabled.
-	 *
-	 * @param entityId
-	 *		the (re)enabled entity
-	 * @deprecated create your own components to track state.
-	 */
-	@Deprecated
-	void enabled(int entityId);
-
-	/**
-	 * Called when an entity the observer is interested in has been disabled.
-	 *
-	 * @param entityId
-	 *		the disabled entity
-	 * @deprecated create your own components to track state.
-	 */
-	@Deprecated
-	void disabled(int entityId);
-
 }

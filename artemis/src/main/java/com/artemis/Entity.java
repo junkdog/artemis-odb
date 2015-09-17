@@ -243,31 +243,7 @@ public final class Entity {
 	public void deleteFromWorld() {
 		edit().deleteEntity();
 	}
-	
-	/**
-	 * (Re)enable the entity in the world, after it having being disabled.
-	 * <p>
-	 * Won't do anything unless it was already disabled.
-	 * </p>
-	 * @deprecated create your own components to track state.
-	 */
-	@Deprecated
-	public void enable() {
-		world.enable(this);
-	}
-	
-	/**
-	 * Disable the entity from being processed.
-	 * <p>
-	 * Won't delete it, it will continue to exist but won't get processed.
-	 * </p>
-	 * @deprecated create your own components to track state.
-	 */
-	@Deprecated
-	public void disable() {
-		world.disable(this);
-	}
-	
+
 	/**
 	 * Get the UUID for this entity.
 	 * <p>

@@ -16,19 +16,6 @@ import com.artemis.utils.ImmutableBag;
 public class EntitySystemTest {
 
 	@SuppressWarnings("static-method")
-	@Test(expected = NoSuchElementException.class)
-	public void test_process_one_inactive() {
-		World w = new World(new WorldConfiguration()
-				.setSystem(new IteratorTestSystem(0)));
-
-		Entity e = w.createEntity();
-		e.edit().add(new C());
-		e.disable();
-
-		w.process();
-	}
-
-	@SuppressWarnings("static-method")
 	@Test
 	public void test_process_one_active() {
 		World w = new World(new WorldConfiguration()
