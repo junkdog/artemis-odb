@@ -4,14 +4,20 @@ public abstract class ComponentMapper<A extends Component> {
 
 	private final EntityTransmuter createTransmuter;
 	private final EntityTransmuter removeTransmuter;
-	private final Entity flyweight;
+	private final Entity flyweight;	
 
-	public <A extends Component> ComponentMapper(Class<A> type, World world) {
+	/** The type of components this mapper handles. */
+	public final ComponentType type;
+	
+	public ComponentMapper(Class<A> type, World world) {
+		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+		this.type = tf.getTypeFor(type);
 		createTransmuter = new EntityTransmuterFactory(world).add(type).build();
 		removeTransmuter = new EntityTransmuterFactory(world).remove(type).build();
-		flyweight = Entity.createFlyweight(world);
+		flyweight = world.getEntityManager()
+						.createFlyweight();	
 	}
-
+	
 	/**
 	 * Fast but unsafe retrieval of a component for this entity.
 	 * <p>
@@ -246,6 +252,14 @@ public abstract class ComponentMapper<A extends Component> {
 		return getSafe(entity.getId(), fallback);
 	}
 
+	/**
+	 * Returns the ComponentType of this ComponentMapper.
+	 * see {@link ComponentMapper#type}
+	 */
+	public ComponentType getType() {
+		return type;
+	}
+	
 	/**
 	 * Returns a component mapper for this type of components.
 	 *
