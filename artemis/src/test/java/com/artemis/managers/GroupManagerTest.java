@@ -11,7 +11,6 @@ import org.junit.Test;
 import com.artemis.Entity;
 import com.artemis.World;
 
-@Wire
 public class GroupManagerTest {
 	private static final String GROUPIE = "groupie";
 	private static final String GROUPIE2 = "groupie2";

@@ -11,7 +11,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-@Wire
 public class EntityTransmuterTest {
 
 	private World world;
@@ -131,7 +130,6 @@ public class EntityTransmuterTest {
 		protected void process(Entity e) {}
 	}
 
-	@Wire
 	private static class ES2 extends EntityProcessingSystem {
 		ComponentMapper<ComponentX> xMapper;
 		private EntityTransmuter addX;

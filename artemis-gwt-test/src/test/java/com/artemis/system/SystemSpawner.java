@@ -7,7 +7,6 @@ import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.VoidEntitySystem;
 
-@Wire 
 public class SystemSpawner extends VoidEntitySystem {
 	public ComponentMapper<ComponentY> ym;
 	

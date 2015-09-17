@@ -11,7 +11,6 @@ import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.systems.VoidEntitySystem;
 
-@Wire
 public class ArchetypeSystemTest {
 	private World world;
 	private Es1 es1;
@@ -86,7 +85,6 @@ public class ArchetypeSystemTest {
 		protected void processSystem() {}
 	}
 	
-	@Wire
 	private static class Es1 extends EntityProcessingSystem {
 
 		private ComponentMapper<ComponentX> componentXMapper;
@@ -102,7 +100,6 @@ public class ArchetypeSystemTest {
 		}
 	}
 	
-	@Wire
 	private static class Es2 extends EntityProcessingSystem {
 		
 		private ComponentMapper<ComponentX> componentXMapper;

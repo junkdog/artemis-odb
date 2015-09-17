@@ -7,7 +7,6 @@ import com.artemis.utils.Bag;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 
-@Wire
 public class EntityBagSerializer implements Json.Serializer<Bag> {
 	private final World world;
 

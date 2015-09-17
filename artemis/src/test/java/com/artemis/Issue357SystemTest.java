@@ -65,7 +65,6 @@ public class Issue357SystemTest {
 		//This test is ok i 0.13.0
 	}
 
-	@Wire
 	public static class TestSystemWithDelete extends EntityProcessingSystem {
 		private ComponentMapper<TestComponent> mapper;
 
@@ -86,7 +85,6 @@ public class Issue357SystemTest {
 		}
 	}
 
-	@Wire
 	public static class TestSystemWithoutDelete extends EntityProcessingSystem {
 		private ComponentMapper<TestComponent> mapper;
 

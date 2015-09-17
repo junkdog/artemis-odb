@@ -32,7 +32,6 @@ import java.util.Map;
  * @See N/A KryoArtemisSerializer
  * @See {@link EntityReference}
  */
-@Wire
 public class SaveFileFormat {
 
 	// all fields are automatically serialized

@@ -7,7 +7,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 
-@Wire @SuppressWarnings("deprecation")
+@SuppressWarnings("deprecation")
 public class EntityStateTest {
 	private World world;
 	private Entity e;

@@ -76,19 +76,16 @@ public class FieldHandlerTest {
         assertNotNull(objectsInjected.string);
     }
 
-    @Wire
     private static class ObjectWithNoArgsConstructorFields{
         private Object object;
         private String string;
     }
 
-    @Wire
     private static class ObjectWithCoreFields{
         private ComponentMapper<SomeComponent> cm;
         private SomeSystem system;
         private SomeManager manager;
-        @Wire
-        private Object injectedObject;
+        @Wire private Object injectedObject;
         private Object notInjected;
     }
 

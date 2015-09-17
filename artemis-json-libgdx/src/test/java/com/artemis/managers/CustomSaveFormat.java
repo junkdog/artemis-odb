@@ -8,7 +8,6 @@ import com.artemis.utils.IntBag;
 /**
  * @author Daan van Yperen
  */
-@Wire
 public class CustomSaveFormat extends SaveFileFormat {
 	public CustomJsonWorldSerializationManagerTest.SerializedSystem serialized;
 	public CustomJsonWorldSerializationManagerTest.DummySegment noSerializer;

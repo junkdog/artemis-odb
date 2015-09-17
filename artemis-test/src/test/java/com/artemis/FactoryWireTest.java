@@ -29,7 +29,6 @@ public class FactoryWireTest {
 				man.shipShortWire.getClass().getName());
 	}
 	
-	@Wire
 	private static class Man extends Manager {
 		private Ship ship;
 		private ShipNoMethods shipNoMethods;

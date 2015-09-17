@@ -10,7 +10,6 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 
-@Wire
 public class ArchetypeManagerTest {
 	private World world;
 	private Es1 es1;
@@ -83,7 +82,6 @@ public class ArchetypeManagerTest {
 		}
 	}
 	
-	@Wire
 	private static class Es1 extends EntityProcessingSystem {
 
 		private ComponentMapper<ComponentX> componentXMapper;
@@ -99,7 +97,6 @@ public class ArchetypeManagerTest {
 		}
 	}
 	
-	@Wire
 	private static class Es2 extends EntityProcessingSystem {
 		
 		private ComponentMapper<ComponentX> componentXMapper;

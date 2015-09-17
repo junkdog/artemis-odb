@@ -21,7 +21,6 @@ import java.util.Map;
  *
  * @author Snorre E. Brekke
  */
-@Wire(injectInherited = true)
 public class InjectionCache {
 	private static final Map<Class<?>, CachedClass> classCache = new HashMap<Class<?>, CachedClass>();
 	private static final Map<Class<?>, ClassType> fieldClassTypeCache = new HashMap<Class<?>, ClassType>();
@@ -42,7 +41,7 @@ public class InjectionCache {
 
 		@Override
 		public boolean failOnNull() {
-			return false;
+			return true;
 		}
 
 		@Override

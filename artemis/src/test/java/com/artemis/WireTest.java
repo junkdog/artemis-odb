@@ -101,22 +101,16 @@ public class WireTest {
 		assertEquals(ComponentY.class, mappedSystem.y.get(entity).getClass());
 	}
 	
-	@Test(expected=MundaneWireException.class)
-	public void ensure_inherited_systems_not_injected() {
-		World world = new World(new WorldConfiguration()
-				.setSystem(new FailingSystem()));
-	}
-	
 	@Test
-	public void ensure_inherited_managers_not_injected() {
+	public void ensure_inherited_managers_injected_by_default() {
 		FailingSystem failingSystem = new FailingSystem();
 		FailingManager failingManager = new FailingManager();
 		World world = new World(new WorldConfiguration()
 				.setManager(failingManager)
 				.setSystem(failingSystem));
 
-		assertNull(failingManager.x);
-		assertNull(failingSystem.x);
+		assertNotNull(failingManager.x);
+		assertNotNull(failingSystem.x);
 	}
 	
 	@Test(expected=MundaneWireException.class)
@@ -205,7 +199,6 @@ public class WireTest {
 		assertNotNull(ManagerWithStaticField.mapper);
 	}
 
-	@Wire
 	private static class SomeThing {
 		@Wire(name="hupp") private String helloN1; 
 		@Wire private String hello;
@@ -214,14 +207,12 @@ public class WireTest {
 		private TagManager tagManager;
 	}
 	
-	@Wire
 	private static class PojoWireNoWorld {
 		private ComponentMapper<ComponentX> componentXMapper;
 		private TagManager tagManager;
 		private MappedSystem mappedSystem;
 	}
 	
-	@Wire
 	private static class MappedSystemAll extends EntityProcessingSystem {
 		private ComponentMapper<ComponentX> x;
 		private ComponentMapper<ComponentY> y;
@@ -252,10 +243,8 @@ public class WireTest {
 		protected void process(Entity e) {}
 	}
 	
-	@Wire(injectInherited=true)
 	private static class ExtendedStaticManager extends ManagerWithStaticField {}
 	
-	@Wire
 	private static class ManagerWithStaticField extends Manager{
 		static ComponentMapper<ComponentX> mapper;
 	}
@@ -267,7 +256,6 @@ public class WireTest {
 		@Wire private TagManager tagManager;
 	}
 	
-	@Wire
 	private static class MappedManagerAll extends Manager {
 		private ComponentMapper<ComponentX> x;
 		private ComponentMapper<ComponentY> y;
@@ -279,12 +267,10 @@ public class WireTest {
 		protected ComponentMapper<ComponentX> x;
 	}
 	
-	@Wire(injectInherited=true)
 	private static class ExtendedManager extends BaseManager {
 		private ComponentMapper<ComponentY> y;
 	}
 	
-	@Wire
 	private static class FailingManager extends BaseManager {
 		@SuppressWarnings("unused")
 		private ComponentMapper<ComponentY> y;
@@ -294,7 +280,6 @@ public class WireTest {
 		protected ComponentMapper<ComponentX> x;
 	}
 	
-	@Wire(injectInherited=true)
 	private static class ExtendedSystem extends BaseSystem {
 		private ComponentMapper<ComponentY> y;
 		
@@ -302,7 +287,6 @@ public class WireTest {
 		protected void processSystem() {}
 	}
 	
-	@Wire
 	private static class FailingSystem extends BaseSystem {
 		@SuppressWarnings("unused")
 		private FailingManager manager;
@@ -311,7 +295,6 @@ public class WireTest {
 		protected void processSystem() {}
 	}
 	
-	@Wire
 	private static class FailingNpeSystem extends VoidEntitySystem {
 		@SuppressWarnings("unused")
 		private FailingManager manager;
@@ -320,7 +303,6 @@ public class WireTest {
 		protected void processSystem() {}
 	}
 	
-	@Wire
 	private static class FailingNpeManager extends Manager {
 		@SuppressWarnings("unused")
 		private FailingSystem fail;

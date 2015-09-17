@@ -11,7 +11,6 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 
-@Wire
 public class MapperTest {
 	
 	private World world;
@@ -53,7 +52,6 @@ public class MapperTest {
 		assertEquals(ComponentY.class, mappedSystem.y.get(entity).getClass());
 	}
 	
-	@Wire
 	private static class MappedSystem extends EntityProcessingSystem {
 		private ComponentMapper<ComponentX> x;
 		private ComponentMapper<ComponentY> y;
@@ -68,7 +66,6 @@ public class MapperTest {
 		
 	}
 	
-	@Wire
 	private static class MappedManager extends Manager {
 		private ComponentMapper<ComponentX> x;
 		private ComponentMapper<ComponentY> y;

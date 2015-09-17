@@ -10,7 +10,6 @@ import com.google.gwt.junit.client.GWTTestCase;
 
 import java.io.*;
 
-@Wire
 public class JsonWorldSerializationManagerTest extends GWTTestCase {
 
 	private static class StandardCharsets {

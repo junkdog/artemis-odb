@@ -68,7 +68,6 @@ public class WorldStructWeavingBase {
 		}
 	}
 	
-	@Wire
 	public static class EntitySystemA extends EntityProcessingSystem {
 
 		private ComponentMapper<StructComponentA> mapper;
@@ -102,7 +101,6 @@ public class WorldStructWeavingBase {
 		}
 	}
 	
-	@Wire
 	public static class EntitySystemB extends EntityProcessingSystem {
 		
 		private ComponentMapper<Position> mapper;

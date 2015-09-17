@@ -100,7 +100,6 @@ public class WorldTest
 		}
 	}
 
-	@Wire
 	static class SystemB extends EntityProcessingSystem
 	{
 		ComponentMapper<ComponentX> xm;
@@ -118,7 +117,6 @@ public class WorldTest
 		}
 	}
 	
-	@Wire
 	static class SystemY extends EntityProcessingSystem
 	{
 		ComponentMapper<ComponentY> ym;

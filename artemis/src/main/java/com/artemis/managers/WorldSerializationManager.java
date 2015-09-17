@@ -9,7 +9,6 @@ import com.artemis.utils.IntBag;
 
 import java.io.*;
 
-@Wire
 public class WorldSerializationManager extends Manager {
 	private static final String TAG = WorldSerializationManager.class.getSimpleName();
 	private ArtemisSerializer<?> backend;
