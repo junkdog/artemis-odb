@@ -14,7 +14,8 @@ public abstract class ComponentMapper<A extends Component> {
 		this.type = tf.getTypeFor(type);
 		createTransmuter = new EntityTransmuterFactory(world).add(type).build();
 		removeTransmuter = new EntityTransmuterFactory(world).remove(type).build();
-		flyweight = Entity.createFlyweight(world);		
+		flyweight = world.getEntityManager()
+						.createFlyweight();	
 	}
 	
 	/**

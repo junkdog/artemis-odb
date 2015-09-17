@@ -102,7 +102,8 @@ public class PlayerManager extends Manager {
 
 	@Override
 	protected void initialize() {
-		flyweight = Entity.createFlyweight(world);
+		flyweight = world.getEntityManager()
+				.createFlyweight();
 	}
 
 	/**
