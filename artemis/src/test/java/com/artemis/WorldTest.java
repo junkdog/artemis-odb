@@ -67,7 +67,7 @@ public class WorldTest
 		assertEquals(0.25f, es.deltas.get(e2.getId()), 0.01f);
 		world.delta = 0;
 		world.process();
-		assertEquals(1, es.getActives().size());
+		assertEquals(1, es.getSubscription().getEntities().size());
 		
 		world.setDelta(0.5f);
 		world.process();
@@ -75,7 +75,7 @@ public class WorldTest
 		assertEquals(1, es.expiredLastRound);
 		
 		world.process();
-		assertEquals(0, es.getActives().size());
+		assertEquals(0, es.getSubscription().getEntities().size());
 	}
 
 	private Entity createEntity(World world)

@@ -38,8 +38,8 @@ public class EntitySystemTest {
 		Entity e = w.createEntity();
 		w.process();
 
-		assertEquals(1, es1.getActives().size());
-		assertEquals(1, es2.getActives().size());
+		assertEquals(1, es1.getSubscription().getEntities().size());
+		assertEquals(1, es2.getSubscription().getEntities().size());
 	}
 
 	public static class C extends Component {}
@@ -57,7 +57,7 @@ public class EntitySystemTest {
 		@Override
 		protected void processSystem() {
 			assertEquals(expectedSize, subscription.getEntities().size());
-			getActives().iterator().next();
+			//getSubscription().getEntities();
 		}
 
 		@Override

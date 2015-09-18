@@ -53,8 +53,8 @@ public class ArchetypeManagerTest {
 		
 		world.process();
 		
-		assertEquals(12, es1.getActives().size());
-		assertEquals(8, es2.getActives().size());
+		assertEquals(12, es1.getSubscription().getEntities().size());
+		assertEquals(8, es2.getSubscription().getEntities().size());
 		
 		world.process();
 	}

@@ -80,35 +80,4 @@ public abstract class EntitySystem extends BaseSystem
 	 *			the entity that was removed from this system
 	 */
 	protected void removed(int entityId) {}
-
-
-	/**
-	 * Get all entities being processed by this system.
-	 *
-	 * @return a bag containing all active entities of the system
-	 *
-	 * @deprecated Retrieve the entities from the {@link com.artemis.EntitySubscription}
-	 * directly.
-	 */
-	@Deprecated
-	public Bag<Entity> getActives(Bag<Entity> fillBag) {
-		IntBag actives = subscription.getEntities();
-		int[] array = actives.getData();
-		for (int i = 0, s = actives.size(); s > i; i++) {
-			fillBag.add(world.getEntity(array[i]));
-		}
-
-		return fillBag;
-	}
-
-	/**
-	 * Get all entities being processed by this system.
-	 *
-	 * @return a bag containing all active entities of the system
-	 * @deprecated This method allocates a new Bag each time, refer to {@link #getActives(com.artemis.utils.Bag)}
-	 */
-	@Deprecated
-	public ImmutableBag<Entity> getActives() {
-		return getActives(new Bag<Entity>());
-	}
 }
