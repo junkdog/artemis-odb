@@ -100,59 +100,6 @@ public final class Entity {
 	public String toString() {
 		return "Entity[" + id + "]";
 	}
-	
-	/**
-	 * @deprecated See {@link Entity#edit()}
-	 */
-	@Deprecated
-	public <T extends Component> T createComponent(Class<T> componentKlazz) {
-		return edit().create(componentKlazz);
-	}
-
-	/**
-	 * @deprecated See {@link Entity#edit()}
-	 */
-	@Deprecated
-	public Entity addComponent(Component component) {
-		edit().add(component);
-		return this;
-	}
-	
-	/**
-	 * @deprecated See {@link Entity#edit()}
-	 */
-	@Deprecated
-	public Entity addComponent(Component component, ComponentType type) {
-		edit().add(component, type);
-		return this;
-	}
-
-	/**
-	 * @deprecated See {@link Entity#edit()}
-	 */
-	@Deprecated
-	public Entity removeComponent(Component component) {
-		edit().remove(component);
-		return this;
-	}
-
-	/**
-	 * @deprecated See {@link Entity#edit()}
-	 */
-	@Deprecated
-	public Entity removeComponent(ComponentType type) {
-		edit().remove(type);
-		return this;
-	}
-	
-	/**
-	 * @deprecated See {@link Entity#edit()}
-	 */
-	@Deprecated
-	public Entity removeComponent(Class<? extends Component> type) {
-		edit().remove(type);
-		return this;
-	}
 
 	/**
 	 * Checks if the entity has been added to the world and has not been
@@ -225,35 +172,12 @@ public final class Entity {
 	 */
 	@Deprecated
 	public void addToWorld() {}
-	
-	/**
-	 * @deprecated Automatically managed.
-	 */
-	@Deprecated
-	public void changedInWorld() {}
 
 	/**
 	 * Delete this entity from the world.
 	 */
 	public void deleteFromWorld() {
 		edit().deleteEntity();
-	}
-
-	/**
-	 * Get the UUID for this entity.
-	 * <p>
-	 * This UUID is unique per entity (re-used entities get a new UUID).
-	 * </p>
-	 *
-	 * @return uuid instance for this entity
-	 * @deprecated historical left-over: use the UuidEntityManager directly, if you need it.
-	 */
-	@Deprecated
-	public UUID getUuid() {
-		if (!world.hasUuidManager())
-			throw new MundaneWireException(UuidEntityManager.class);
-		
-		return world.getManager(UuidEntityManager.class).getUuid(this);
 	}
 
 	/**

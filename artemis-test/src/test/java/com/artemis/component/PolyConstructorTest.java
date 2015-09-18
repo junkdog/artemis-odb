@@ -16,7 +16,7 @@ public class PolyConstructorTest {
 		world.initialize();
 		
 		Entity e1 = world.createEntity();
-		PolyConstructor pooled1 = e1.createComponent(PolyConstructor.class);
+		PolyConstructor pooled1 = e1.edit().create(PolyConstructor.class);
 		assertEquals(PooledComponent.class, pooled1.getClass().getSuperclass());
 
 		PolyConstructor pooled2 = new PolyConstructor(420);

@@ -16,17 +16,15 @@ public class MultiWorldPackedTest {
 		World outer = new World();
 		outer.initialize();
 		Entity o = outer.createEntity();
-		o.createComponent(TransPackedInt.class).x(1);
-		o.createComponent(TransPackedFloat.class).x(2);
-		o.addToWorld();
-		
+		o.edit().create(TransPackedInt.class).x(1);
+		o.edit().create(TransPackedFloat.class).x(2);
+
 		World inner = new World();
 		inner.initialize();
 		Entity i = inner.createEntity();
-		i.createComponent(TransPackedFloat.class).x(3);
-		i.createComponent(TransPackedInt.class).x(4);
-		i.addToWorld();
-		
+		i.edit().create(TransPackedFloat.class).x(3);
+		i.edit().create(TransPackedInt.class).x(4);
+
 		assertEquals(o.getId(), i.getId());
 		
 		assertEquals(1, o.getComponent(TransPackedInt.class).x());

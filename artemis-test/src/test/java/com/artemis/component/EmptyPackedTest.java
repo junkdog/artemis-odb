@@ -16,7 +16,7 @@ public class EmptyPackedTest {
 		world.initialize();
 		
 		Entity e1 = world.createEntity();
-		EmptyPacked empty = e1.createComponent(EmptyPacked.class);
+		EmptyPacked empty = e1.edit().create(EmptyPacked.class);
 		assertEquals(PackedComponent.class, empty.getClass().getSuperclass());
 	}
 }

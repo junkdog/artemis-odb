@@ -20,7 +20,7 @@ public class PooledAllFieldsTest {
 		world.initialize();
 		
 		Entity e = world.createEntity();
-		PooledAllFields pooled = e.createComponent(PooledAllFields.class);
+		PooledAllFields pooled = e.edit().create(PooledAllFields.class);
 		assertEquals(PooledComponent.class, pooled.getClass().getSuperclass());
 		
 		Method reset = pooled.getClass().getMethod("reset");

@@ -23,7 +23,7 @@ public class PackedWeaverGrowTest {
 			createEntity(world);
 		
 		Entity last = createEntity(world);
-		last.createComponent(SimpleComponent.class).set(420);
+		last.edit().create(SimpleComponent.class).set(420);
 		
 		world.process();
 		
