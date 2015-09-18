@@ -56,16 +56,19 @@ public interface EntityFactory<T> {
 	
 	/**
 	 * Assigns entity to supplied group(s) upon creation.
-	 * 
-	 * @param group Adds entity to this group.
+	 *
+	 * @param groupA Adds entity to this group.
+	 * @param groups Adds entity to this group.
 	 * @return This factory for chaining
 	 */
 	T group(String groupA, String... groups);
 	
 	/**
 	 * Assigns entity to supplied group(s) upon creation.
-	 * 
-	 * @param group Adds entity to this group.
+	 *
+	 * @param groupA Adds entity to this group.
+	 * @param groupB Adds entity to this group.
+	 * @param groups Adds entity to this group.
 	 * @return This factory for chaining
 	 */
 	T group(String groupA, String groupB, String... groups);
