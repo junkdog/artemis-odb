@@ -22,19 +22,6 @@ public abstract class PackedComponent extends Component {
 	 * Sets the currently processed entity. Automatically
 	 * called by {@link PackedComponentMapper}.
 	 *
-	 * @param e entity to process.
-	 * @deprecated use #forEntity(int) instead.
-	 */
-	@Deprecated
-	protected void forEntity(Entity e)
-	{
-		forEntity(e.getId());
-	}
-
-	/**
-	 * Sets the currently processed entity. Automatically
-	 * called by {@link PackedComponentMapper}.
-	 *
 	 * @param entityId id of entity to process.
 	 */
 	protected abstract void forEntity(int entityId);
