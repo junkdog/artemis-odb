@@ -3,7 +3,6 @@ package com.artemis.system;
 import com.artemis.ComponentMapper;
 import com.artemis.component.TransPackedInt;
 import com.artemis.managers.TagManager;
-import com.artemis.systems.VoidEntitySystem;
 
 @SuppressWarnings("unused")
 public class BasicVoidSystem extends VoidEntitySystem {

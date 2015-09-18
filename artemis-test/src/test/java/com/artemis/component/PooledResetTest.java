@@ -19,7 +19,6 @@ public class PooledResetTest {
 	@Before
 	public void setup() {
 		world = new World();
-		world.initialize();
 	}
 	
 	@Test

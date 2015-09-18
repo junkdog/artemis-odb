@@ -36,8 +36,7 @@ public class EntityFactoryTest {
 	@Test
 	public void test_sticky_and_per_instance() {
 		World w = new World();
-		w.initialize();
-		
+
 		Ship shipFactory = w.createFactory(Ship.class);
 		assertNotNull(shipFactory);
 		assertEquals(ShipImpl.class, shipFactory.getClass());
@@ -58,8 +57,7 @@ public class EntityFactoryTest {
 	@Test
 	public void test_update_sticky() {
 		World w = new World();
-		w.initialize();
-		
+
 		Ship shipFactory = w.createFactory(Ship.class);
 		Entity e1 = shipFactory.hitPoints(100).create();
 		Entity e2 = shipFactory.copy().hitPoints(200).create();
@@ -71,8 +69,7 @@ public class EntityFactoryTest {
 	@Test(expected=RuntimeException.class)
 	public void test_fail_on_sticky_update_after_creation() {
 		World w = new World();
-		w.initialize();
-		
+
 		Ship shipFactory = w.createFactory(Ship.class);
 		assertNotNull(shipFactory);
 		assertEquals(ShipImpl.class, shipFactory.getClass());
@@ -84,8 +81,7 @@ public class EntityFactoryTest {
 	@Test
 	public void test_fluent_api_test() {
 		World w = new World();
-		w.initialize();
-		
+
 		Ship fac = w.createFactory(Ship.class);
 		fac.hitPoints(20).tag("hello").size(20, 10);
 		fac.hitPoints(20).group("hello").size(20, 10).tag("hello");

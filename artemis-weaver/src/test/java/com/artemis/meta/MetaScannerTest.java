@@ -32,7 +32,6 @@ public class MetaScannerTest {
 	@Before
 	public void setup() {
 		world = new World();
-		world.initialize();
 	}
 	
 	@Test @SuppressWarnings("unused")

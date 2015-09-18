@@ -25,8 +25,7 @@ public class PackedComponentTest
 	
 	@Test
 	public void packed_components_are_known_to_mapper() {
-		world.initialize();
-		
+
 		List<Entity> packed = new ArrayList<Entity>();
 		packed.add(createEntity(Packed.class));
 		packed.add(createEntity(Packed.class));
@@ -49,8 +48,7 @@ public class PackedComponentTest
 	
 	@Test
 	public void packed_component_mappers_return_new_instance_on_request() {
-		world.initialize();
-		
+
 		Entity e1 = createEntity(Packed.class);
 		Entity e2 = createEntity(Packed.class);
 		Packed packed1 = packedMapper.get(e1, true);

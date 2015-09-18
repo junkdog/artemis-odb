@@ -33,7 +33,6 @@ public class ExtendedEntityFactoryTest extends GWTTestCase {
 	@Override
 	public void gwtSetUp() {
 		world = new World();
-		world.initialize();
 		world.inject(this);
 	}
 	

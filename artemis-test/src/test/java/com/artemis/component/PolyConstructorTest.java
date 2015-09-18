@@ -13,8 +13,7 @@ public class PolyConstructorTest {
 	@Test @SuppressWarnings("static-method")
 	public void pooled_class_with_many_constructors() throws Exception {
 		World world = new World();
-		world.initialize();
-		
+
 		Entity e1 = world.createEntity();
 		PolyConstructor pooled1 = e1.edit().create(PolyConstructor.class);
 		assertEquals(PooledComponent.class, pooled1.getClass().getSuperclass());

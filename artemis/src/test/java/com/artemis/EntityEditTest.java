@@ -36,8 +36,7 @@ public class EntityEditTest {
 	@Test
 	public void test_composition_identity_simple_case() {
 		World world = new World();
-		world.initialize();
-		
+
 		Entity e = world.createEntity();
 		world.process();
 		assertEquals(1, e.getCompositionId());
@@ -46,7 +45,6 @@ public class EntityEditTest {
 	@Test
 	public void test_composition_identity() {
 		World world = new World();
-		world.initialize();
 
 		Entity e = world.createEntity();
 		assertEquals(1, e.getCompositionId());

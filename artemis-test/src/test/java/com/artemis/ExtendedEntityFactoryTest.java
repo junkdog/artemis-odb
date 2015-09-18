@@ -30,7 +30,6 @@ public class ExtendedEntityFactoryTest {
 	@Before
 	public void init() {
 		world = new World();
-		world.initialize();
 		world.inject(this);
 	}
 	

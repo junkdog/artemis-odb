@@ -17,8 +17,7 @@ public class PackedWeaverGrowTest {
 	@Test @SuppressWarnings("static-method")
 	public void packed_weaver_components_grow_correctly() throws Exception {
 		World world = new World();
-		world.initialize();
-		
+
 		for (int i = 0; 2048 > i; i++)
 			createEntity(world);
 		

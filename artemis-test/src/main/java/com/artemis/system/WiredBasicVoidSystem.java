@@ -4,7 +4,6 @@ import com.artemis.ComponentMapper;
 import com.artemis.annotations.Wire;
 import com.artemis.component.TransPackedInt;
 import com.artemis.managers.TagManager;
-import com.artemis.systems.VoidEntitySystem;
 
 @SuppressWarnings("unused")
 public class WiredBasicVoidSystem extends VoidEntitySystem {

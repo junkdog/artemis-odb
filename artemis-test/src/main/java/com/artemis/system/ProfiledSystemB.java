@@ -4,7 +4,6 @@ package com.artemis.system;
 import static org.junit.Assert.fail;
 
 import com.artemis.annotations.Profile;
-import com.artemis.systems.VoidEntitySystem;
 import com.artemis.util.SimpleProfiler;
 
 @Profile(enabled=true, using=SimpleProfiler.class)

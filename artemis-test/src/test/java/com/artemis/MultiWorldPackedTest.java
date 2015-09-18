@@ -14,13 +14,11 @@ public class MultiWorldPackedTest {
 	@Test
 	public void packed_components_dont_overwrite_in_multiworld() {
 		World outer = new World();
-		outer.initialize();
 		Entity o = outer.createEntity();
 		o.edit().create(TransPackedInt.class).x(1);
 		o.edit().create(TransPackedFloat.class).x(2);
 
 		World inner = new World();
-		inner.initialize();
 		Entity i = inner.createEntity();
 		i.edit().create(TransPackedFloat.class).x(3);
 		i.edit().create(TransPackedInt.class).x(4);
