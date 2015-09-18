@@ -1,5 +1,6 @@
 package com.artemis.weaver.packed;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -65,7 +66,7 @@ class InstructionMutator {
 		return originalIndex + indexChange;
 	}
 	
-	private static final class ReversedComparator implements Comparator<Integer> {
+	private static final class ReversedComparator implements Comparator<Integer>, Serializable {
 		@Override
 		public int compare(Integer o1, Integer o2) {
 			return o2.compareTo(o1);

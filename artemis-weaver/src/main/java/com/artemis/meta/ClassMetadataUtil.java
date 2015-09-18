@@ -4,6 +4,7 @@ import static com.artemis.meta.ClassMetadata.WeaverType.PACKED;
 import static org.objectweb.asm.Opcodes.ACC_FINAL;
 import static org.objectweb.asm.Opcodes.ACC_STATIC;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -116,7 +117,7 @@ public final class ClassMetadataUtil {
 	}
 	
 	
-	private static final class PrimitiveSizeComparator implements Comparator<FieldDescriptor> {
+	private static final class PrimitiveSizeComparator implements Comparator<FieldDescriptor>, Serializable {
 		
 		@Override
 		public int compare(FieldDescriptor o1, FieldDescriptor o2) {
