@@ -31,7 +31,7 @@ import com.google.gwt.core.client.JsArrayInteger;
  * one, or zero if there are aren't any. This may cause the size() method to
  * return a different size than in a true Java VM.
  */
-public class BitSet {
+public class BitSet implements Cloneable {
 	// To speed up certain operations this class also uses the index properties
 	// of arrays as described in section 15.4 of "Standard ECMA-262" (June
 	// 1997),
