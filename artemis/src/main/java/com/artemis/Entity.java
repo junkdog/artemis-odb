@@ -257,16 +257,6 @@ public final class Entity {
 	}
 
 	/**
-	 * @deprecated historical left-over: use the UuidEntityManager directly, if you need it.
-	 */
-	@Deprecated
-	public void setUuid(UUID uuid) {
-		if (world.hasUuidManager()) {
-			 world.getManager(UuidEntityManager.class).setUuid(this, uuid);
-		}
-	}
-
-	/**
 	 * Returns the world this entity belongs to.
 	 *
 	 * @return world of entity

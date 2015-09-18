@@ -357,23 +357,6 @@ public class World {
 	}
 
 	/**
-	 * Create and return a new or reused entity instance.
-	 * <p>
-	 * The uuid parameter is ignored if {@link UuidEntityManager} hasn't been added to the world.
-	 * </p>
-	 *
-	 * @param uuid
-	 *            the UUID to give to the entity
-	 * @return entity
-	 */
-	public Entity createEntity(UUID uuid) {
-		Entity entity = em.createEntityInstance();
-		entity.setUuid(uuid);
-		entity.edit();
-		return entity;
-	}
-
-	/**
 	 * Get a entity having the specified id.
 	 *
 	 * @param entityId
