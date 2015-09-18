@@ -1,10 +1,10 @@
 package com.artemis;
 
-import java.util.BitSet;
-import java.util.UUID;
-
 import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
+
+import java.util.BitSet;
+import java.util.UUID;
 
 
 /**
@@ -13,7 +13,6 @@ import com.artemis.utils.Bag;
  * Cannot be instantiated outside the framework, you must create new entities
  * using World. The world creates entities via it's entity manager.
  * </p>
- * 
  * @author Arni Arent
  */
 public final class Entity {
@@ -31,11 +30,10 @@ public final class Entity {
 	 * This will only be called by the world via it's entity manager,
 	 * and not directly by the user, as the world handles creation of entities.
 	 * </p>
-	 *
 	 * @param world
-	 *			the world to create the entity in
+	 * 		the world to create the entity in
 	 * @param id
-	 *			the id to set
+	 * 		the id to set
 	 */
 	protected Entity(World world, int id) {
 		this(world, id, null);
@@ -47,30 +45,28 @@ public final class Entity {
 	 * This will only be called by the world via it's entity manager,
 	 * and not directly by the user, as the world handles creation of entities.
 	 * </p>
-	 *
 	 * @param world
-	 *			the world to create the entity in
+	 * 		the world to create the entity in
 	 * @param id
-	 *			the id to set
+	 * 		the id to set
 	 * @param uuid
-	 *			the UUID to set
+	 * 		the UUID to set
 	 */
 	protected Entity(World world, int id, UUID uuid) {
 		this.world = world;
 		this.id = id;
-		
+
 		if (uuid != null && world.hasUuidManager())
 			world.getManager(UuidEntityManager.class).setUuid(this, uuid);
 	}
 
-	
+
 	/**
 	 * The internal id for this entity within the framework.
 	 * <p>
 	 * No other entity will have the same ID, but ID's are however reused so
 	 * another entity may acquire this ID if the previous entity was deleted.
 	 * </p>
-	 * 
 	 * @return id of the entity
 	 */
 	public int getId() {
@@ -80,13 +76,12 @@ public final class Entity {
 	/**
 	 * Returns a BitSet instance containing bits of the components the entity
 	 * possesses.
-	 *
 	 * @return a BitSet containing the entities component bits
 	 */
 	protected BitSet getComponentBits() {
 		return world.getEntityManager().componentBits(id);
 	}
-	
+
 	public EntityEdit edit() {
 		Entity entity = world.getEntity(id);
 		if (entity == null)
@@ -94,7 +89,7 @@ public final class Entity {
 
 		return world.editPool.obtainEditor(entity);
 	}
-	
+
 
 	@Override
 	public String toString() {
@@ -107,7 +102,6 @@ public final class Entity {
 	 * <p>
 	 * If the entity has been disabled this will still return true.
 	 * </p>
-	 *
 	 * @return {@code true} if it's active
 	 */
 	public boolean isActive() {
@@ -120,11 +114,9 @@ public final class Entity {
 	 * It will provide good performance. But the recommended way to retrieve
 	 * components from an entity is using the ComponentMapper.
 	 * </p>
-	 * 
 	 * @param type
-	 *			in order to retrieve the component fast you must provide a
-	 *			ComponentType instance for the expected component
-	 *
+	 * 		in order to retrieve the component fast you must provide a
+	 * 		ComponentType instance for the expected component
 	 * @return
 	 */
 	public Component getComponent(ComponentType type) {
@@ -137,18 +129,16 @@ public final class Entity {
 	 * Minimize usage of this, but is fine to use e.g. when creating new
 	 * entities and setting data in components.
 	 * </p>
-	 *
 	 * @param <T>
-	 *			the expected return component class type
+	 * 		the expected return component class type
 	 * @param type
-	 *			the expected return component class type
-	 *
+	 * 		the expected return component class type
 	 * @return component that matches, or null if none is found
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Component> T getComponent(Class<T> type) {
 		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-		return (T)getComponent(tf.getTypeFor(type));
+		return (T) getComponent(tf.getTypeFor(type));
 	}
 
 	/**
@@ -157,21 +147,13 @@ public final class Entity {
 	 * You need to reset the bag yourself if you intend to fill it more than
 	 * once.
 	 * </p>
-	 * 
 	 * @param fillBag
-	 *			the bag to put the components into
-	 *
+	 * 		the bag to put the components into
 	 * @return the fillBag containing the components
 	 */
 	public Bag<Component> getComponents(Bag<Component> fillBag) {
 		return world.getComponentManager().getComponentsFor(this, fillBag);
 	}
-
-	/**
-	 * @deprecated Automatically managed.
-	 */
-	@Deprecated
-	public void addToWorld() {}
 
 	/**
 	 * Delete this entity from the world.
@@ -182,13 +164,15 @@ public final class Entity {
 
 	/**
 	 * Returns the world this entity belongs to.
-	 *
 	 * @return world of entity
 	 */
 	public World getWorld() {
 		return world;
 	}
 
+	/**
+	 * @return unique identifier for entities with this specific component configuration.
+	 */
 	public int getCompositionId() {
 		return world.getEntityManager().getIdentity(id);
 	}

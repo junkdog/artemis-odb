@@ -34,9 +34,7 @@ public class PackedWeaverGrowTest {
 	}
 
 	private static Entity createEntity(World w) {
-		Entity e = w.createEntity();
-		e.addToWorld();
-		return e;
+		return w.createEntity();
 	}
 	
 	private static void assertCapacity(int minCapacity, SimpleComponent c) throws Exception {
