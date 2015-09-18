@@ -121,14 +121,7 @@ public final class Method {
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
-	@Deprecated
-	public boolean hasAnnotation(Class annotationClass) {
-		return isAnnotationPresent(annotationClass);
-	}
-
 	/** Returns this element's annotation for the specified type if such an annotation is present, else null. */
-	@Deprecated
 	public <T extends java.lang.annotation.Annotation>T getAnnotation(Class<T> annotationClass) {
 		final Annotation declaredAnnotation = getDeclaredAnnotation(annotationClass);
 		return declaredAnnotation != null ? declaredAnnotation.getAnnotation(annotationClass) : null;

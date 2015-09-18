@@ -174,18 +174,8 @@ public final class ClassReflection {
 		return result;
 	}
 
-	/** Returns true if the class or interface represented by the supplied Class is annotated by annotationClass
-	 * Deprecated: use isAnnotationPresent instead.
-	 */
-	@Deprecated
-	static public boolean hasAnnotation(Class c, Class annotationClass) {
-		return  isAnnotationPresent(c,annotationClass);
-	}
-
 	/** Creates a new instance of the annotation represented by the supplied annotationClass.
-	 * Deprecated: use getDeclaredAnnotation instead.
 	 */
-	@Deprecated
 	static public <T extends java.lang.annotation.Annotation> T getAnnotation(Class c, Class<T> annotationClass) throws ReflectionException {
 		final Annotation declaredAnnotation = getDeclaredAnnotation(c,annotationClass);
 		return declaredAnnotation != null ? declaredAnnotation.getAnnotation(annotationClass) : null;
