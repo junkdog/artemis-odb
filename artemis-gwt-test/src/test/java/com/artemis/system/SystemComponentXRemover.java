@@ -9,7 +9,7 @@ public class SystemComponentXRemover extends EntityProcessingSystem {
 	@SuppressWarnings("unchecked")
 	public SystemComponentXRemover()
 	{
-		super(Aspect.getAspectForAll(ComponentX.class));
+		super(Aspect.all(ComponentX.class));
 	}
 
 	@Override

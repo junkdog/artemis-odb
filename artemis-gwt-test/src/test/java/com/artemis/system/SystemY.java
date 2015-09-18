@@ -15,7 +15,7 @@ class SystemY extends EntityProcessingSystem {
 	@SuppressWarnings("unchecked")
 	public SystemY()
 	{
-		super(Aspect.getAspectForAll(ComponentY.class));
+		super(Aspect.all(ComponentY.class));
 	}
 	
 	@Override
