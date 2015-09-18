@@ -82,14 +82,6 @@ public class World {
 	}
 
 	/**
-	 * @deprecated {@link World#World(WorldConfiguration)} provides more fine-grained control.
-	 */
-	@Deprecated
-	public World(int expectedEntityCount) {
-		this(new WorldConfiguration());
-	}
-
-	/**
 	 * Creates a new world.
 	 * <p>
 	 * An EntityManager and ComponentManager are created and added upon creation.
@@ -137,16 +129,6 @@ public class World {
 				entityObserversBag.add((EntityObserver)system);
 			}
 		}
-	}
-
-	/**
-	 * Makes sure all systems are initialized in the order they were
-	 * added.
-	 *
-	 * @deprecated automatically covered by {@link WorldConfiguration}.
-	 */
-	@Deprecated
-	public void initialize() {
 	}
 
 	/**
@@ -293,24 +275,6 @@ public class World {
 	}
 
 	/**
-	 * Adds a entity to this world.
-	 *
-	 * @param e
-	 *            the entity to add
-	 * @deprecated internally managed by artemis
-	 */
-	@Deprecated
-	public void addEntity(Entity e) {
-	}
-
-	/**
-	 * @deprecated does nothing, internally tracked by artemis now.
-	 */
-	@Deprecated
-	public void changedEntity(Entity e) {
-	}
-
-	/**
 	 * Delete the entity from the world.
 	 *
 	 * @param e
@@ -374,49 +338,6 @@ public class World {
 	 */
 	public ImmutableBag<BaseSystem> getSystems() {
 		return systemsBag;
-	}
-
-	/**
-	 * Adds a system to this world that will be processed by {@link #process()}.
-	 *
-	 * @param <T>
-	 *            the system class type
-	 * @param system
-	 *            the system to add
-	 * @return the added system
-	 *         * @deprecated {@link WorldConfiguration#setSystem(T)}
-	 */
-	@Deprecated
-	public <T extends BaseSystem> T setSystem(T system) {
-		throw new MundaneWireException("use WorldConfiguration#setSystem");
-	}
-
-	/**
-	 * Will add a system to this world.
-	 *
-	 * @param <T>
-	 *            the system class type
-	 * @param system
-	 *            the system to add
-	 * @param passive
-	 *            whether or not this system will be processed by {@link #process()}
-	 * @return the added system
-	 * @deprecated {@link WorldConfiguration#setSystem(T, boolean)}
-	 */
-	@Deprecated
-	public <T extends BaseSystem> T setSystem(T system, boolean passive) {
-		throw new MundaneWireException("use WorldConfiguration#setSystem");
-	}
-
-	/**
-	 * Remove the specified system from the world.
-	 *
-	 * @param system
-	 *            the system to be deleted from world
-	 * @deprecated A world should be static once initialized
-	 */
-	@Deprecated
-	public void deleteSystem(BaseSystem system) {
 	}
 
 	/**
