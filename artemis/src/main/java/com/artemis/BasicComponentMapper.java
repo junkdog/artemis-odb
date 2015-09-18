@@ -18,12 +18,9 @@ import com.artemis.utils.Bag;
  */
 class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 
-	/** The type of components this mapper handles. */
-	private final ComponentType type;
 	/** Holds all components of given type in the world. */
 	private final Bag<Component> components;
 
-	
 	/**
 	 * Creates a new {@code ComponentMapper} instance handling the given type
 	 * of component for the given world.
@@ -35,8 +32,6 @@ class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 	 */
 	BasicComponentMapper(Class<A> type, World world) {
 		super(type, world);
-		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-		this.type = tf.getTypeFor(type);
 		components = world.getComponentManager().getComponentsByType(this.type);
 	}
 

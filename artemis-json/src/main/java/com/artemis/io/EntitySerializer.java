@@ -129,7 +129,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 			int entityId = json.readValue(Integer.class, jsonData);
 			// creating a temporary entity; this will later be translated
 			// to the correct entity
-			Entity entity = Entity.createFlyweight(world);
+			Entity entity = world.getEntityManager().createFlyweight();
 			entity.id = entityId;
 			return entity;
 		} else {

@@ -77,11 +77,6 @@ public final class Entity {
 		return id;
 	}
 
-	public static Entity createFlyweight(World world) {
-		//#include "./entity_set_flyweight_true.inc"
-		return new Entity(world, -1);
-	}
-
 	/**
 	 * Returns a BitSet instance containing bits of the components the entity
 	 * possesses.

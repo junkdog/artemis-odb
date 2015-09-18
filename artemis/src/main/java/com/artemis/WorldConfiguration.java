@@ -12,6 +12,10 @@ import java.util.Map;
 import static com.artemis.EntityManager.NO_COMPONENTS;
 
 public final class WorldConfiguration {
+	public static final int COMPONENT_MANAGER_IDX = 0;
+	public static final int ENTITY_MANAGER_IDX = 1;
+	public static final int ASPECT_SUBSCRIPTION_MANAGER_IDX = 2;
+	
 	final Bag<BaseSystem> systems = new Bag<BaseSystem>();
 
 	protected int expectedEntityCount = 128;
@@ -178,9 +182,9 @@ public final class WorldConfiguration {
 			world.setInvocationStrategy(invocationStrategy);
 		}
 
-		systems.set(0, world.getComponentManager());
-		systems.set(1, world.getEntityManager());
-		systems.set(2, asm);
+		systems.set(COMPONENT_MANAGER_IDX, world.getComponentManager());
+		systems.set(ENTITY_MANAGER_IDX, world.getEntityManager());
+		systems.set(ASPECT_SUBSCRIPTION_MANAGER_IDX, asm);
 
 		for (BaseSystem system : systems) {
 			world.systems.put(system.getClass(), system);
