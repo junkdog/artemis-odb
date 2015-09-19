@@ -75,7 +75,7 @@ public class DelayedEntityProcessingSystemTest
 		world.process();
 		// assertEquals(0, es.expiredLastRound); // begin() isn't run unless the system is processed
 		assertEquals(0, entitiesOrdered.size());
-		assertEquals(0, es.getActives().size());
+		assertEquals(0, es.getSubscription().getEntities().size());
 	}
 
 	@Test
@@ -118,7 +118,7 @@ public class DelayedEntityProcessingSystemTest
 		world.setDelta(0.75f);
 		world.process();
 //		assertEquals(0, es.expiredLastRound); // begin() isn't run unless the system is processed
-		assertEquals(0, es.getActives().size());
+		assertEquals(0, es.getSubscription().getEntities().size());
 		assertEquals(0, entitiesOrdered.size());
 	}
 

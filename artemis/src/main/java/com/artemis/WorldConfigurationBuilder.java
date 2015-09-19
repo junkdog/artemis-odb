@@ -187,7 +187,7 @@ public class WorldConfigurationBuilder {
 	/**
 	 * Register active system(s).
 	 * Only one instance of each class is allowed.
-	 * Use {@see #dependsOn} from within plugins whenever possible.
+	 * Use {@link #dependsOn} from within plugins whenever possible.
 	 *
 	 * @param systems  systems to add, order is preserved.
 	 * @param priority priority of added systems, higher priority are added before lower priority.
@@ -202,7 +202,7 @@ public class WorldConfigurationBuilder {
 	/**
 	 * Register active system(s).
 	 * Only one instance of each class is allowed.
-	 * Use {@see #dependsOn} from within plugins whenever possible.
+	 * Use {@link #dependsOn} from within plugins whenever possible.
 	 *
 	 * @param systems systems to add, order is preserved.
 	 * @return this
@@ -220,7 +220,7 @@ public class WorldConfigurationBuilder {
 	 * Upon build plugins will be called to register dependencies.
 	 * <p/>
 	 * Only one instance of each class is allowed.
-	 * Use {@see #dependsOn} from within plugins whenever possible.
+	 * Use {@link #dependsOn} from within plugins whenever possible.
 	 *
 	 * @param plugins Plugins to add.
 	 * @return this
@@ -234,7 +234,7 @@ public class WorldConfigurationBuilder {
 	/**
 	 * Register passive systems.
 	 * Only one instance of each class is allowed.
-	 * Use {@see #dependsOn} from within plugins.
+	 * Use {@link #dependsOn} from within plugins.
 	 *
 	 * @param systems  systems to add, order is preserved.
 	 * @param priority priority of added systems, higher priority are added before lower priority.
@@ -249,7 +249,7 @@ public class WorldConfigurationBuilder {
 	/**
 	 * Register passive systems with normal priority.
 	 * Only one instance of each class is allowed.
-	 * Use {@see #dependsOn} from within plugins whenever possible.
+	 * Use {@link #dependsOn} from within plugins whenever possible.
 	 *
 	 * @param systems systems to add, order is preserved.
 	 * @return this

@@ -2,7 +2,6 @@ package com.artemis;
 
 import com.artemis.injection.CachedInjector;
 import com.artemis.injection.Injector;
-import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.reflect.ClassReflection;
@@ -14,89 +13,71 @@ import java.util.*;
 /**
  * The primary instance for the framework.
  * <p>
-<<<<<<< HEAD
  * It contains all the systems. You must use this to create, delete and
  * retrieve entities. It is also important to set the delta each game loop
  * iteration, and initialize before game loop.
-=======
- * It contains all the managers. You must use this to create, delete and retrieve entities. It is also important to set
- * the delta each game loop iteration, and initialize before game loop.
->>>>>>> master
  * </p>
- *
  * @author Arni Arent
  * @author junkdog
  */
 public class World {
 
-	/**
-	 * Manages all entities for the world.
-	 */
+	/** Manages all entities for the world. */
 	private final EntityManager em;
-	/**
-	 * Manages all component-entity associations for the world.
-	 */
+
+	/** Manages all component-entity associations for the world. */
 	private final ComponentManager cm;
+
+	/** Manages all aspect based entity subscriptions for the world. */
 	private final AspectSubscriptionManager am;
 
-	/**
-	 * The time passed since the last update.
-	 */
+	/** The time passed since the last update. */
 	public float delta;
 
 	final BitSet added;
 	final BitSet changed;
 	final BitSet deleted;
 
-	/**
-	 * Contains all systems and systems classes mapped.
-	 */
+	/** Contains all systems and systems classes mapped. */
 	final Map<Class<?>, BaseSystem> systems;
 
-	/**
-	 * Contains all entity observer implementing systems unordered.
-	 */
+	/** Contains all entity observer implementing systems unordered. */
 	Bag<EntityObserver> entityObserversBag;
 
-	/**
-	 * Contains all systems unordered.
-	 */
+	/** Contains all systems unordered. */
 	private final Bag<BaseSystem> systemsBag;
 
-	private boolean registerUuids;
+	/** Responsible for dependency injection. */
 	private Injector injector;
 
+	/** Pool of entity edits. */
 	final EntityEditPool editPool = new EntityEditPool(this);
 
+	/** Contains strategy for invoking systems upon process. */
 	private SystemInvocationStrategy invocationStrategy;
-	private WorldConfiguration configuration;
 
 	/**
-	 * Creates a new world.
+	 * Creates a world without custom systems.
 	 * <p>
-	 * An EntityManager and ComponentManager are created and added upon creation.
+	 * {@link com.artemis.EntityManager}, {@link ComponentManager} and {@link AspectSubscriptionManager} are
+	 * available by default.
 	 * </p>
+	 * Use {@link #World(WorldConfiguration)} to create a world with your own systems.
 	 */
 	public World() {
 		this(new WorldConfiguration());
 	}
 
 	/**
-	 * @deprecated {@link World#World(WorldConfiguration)} provides more fine-grained control.
-	 */
-	@Deprecated
-	public World(int expectedEntityCount) {
-		this(new WorldConfiguration());
-	}
-
-	/**
 	 * Creates a new world.
 	 * <p>
-	 * An EntityManager and ComponentManager are created and added upon creation.
+	 * {@link com.artemis.EntityManager}, {@link ComponentManager} and {@link AspectSubscriptionManager} are
+	 * available by default, on top of your own systems.
 	 * </p>
+	 * @see WorldConfiguration
+	 * @see WorldConfigurationBuilder
 	 */
 	public World(WorldConfiguration configuration) {
-		this.configuration = configuration;
 
 		systems = new IdentityHashMap<Class<?>, BaseSystem>();
 		systemsBag = configuration.systems;
@@ -105,9 +86,9 @@ public class World {
 		changed = new BitSet();
 		deleted = new BitSet();
 
-		ComponentManager lcm = (ComponentManager) configuration.systems.get(WorldConfiguration.COMPONENT_MANAGER_IDX);
-		EntityManager lem = (EntityManager) configuration.systems.get(WorldConfiguration.ENTITY_MANAGER_IDX);
-		AspectSubscriptionManager lam = (AspectSubscriptionManager) configuration.systems.get(WorldConfiguration.ASPECT_SUBSCRIPTION_MANAGER_IDX);
+		final ComponentManager lcm = (ComponentManager) configuration.systems.get(WorldConfiguration.COMPONENT_MANAGER_IDX);
+		final EntityManager lem = (EntityManager) configuration.systems.get(WorldConfiguration.ENTITY_MANAGER_IDX);
+		final AspectSubscriptionManager lam = (AspectSubscriptionManager) configuration.systems.get(WorldConfiguration.ASPECT_SUBSCRIPTION_MANAGER_IDX);
 
 		cm = lcm == null ? new ComponentManager(configuration.expectedEntityCount()) : lcm;
 		em = lem == null ? new EntityManager(configuration.expectedEntityCount()) : lem;
@@ -120,7 +101,6 @@ public class World {
 
 		configuration.initialize(this, injector, am);
 
-		registerUuids = systems.get(UuidEntityManager.class) != null;
 		if (invocationStrategy == null) {
 			setInvocationStrategy(new InvocationStrategy());
 		}
@@ -128,73 +108,60 @@ public class World {
 		collectEntityObservers();
 	}
 
+	/** Create a bag of systems that implement {@link EntityObserver}. */
 	private void collectEntityObservers() {
 		entityObserversBag = new Bag<EntityObserver>();
 		Object[] systemsData = systemsBag.getData();
 		for (int i = 0, s = systemsBag.size(); s > i; i++) {
 			final BaseSystem system = (BaseSystem) systemsData[i];
-			if (ClassReflection.isAssignableFrom(EntityObserver.class, system.getClass()) ) {
-				entityObserversBag.add((EntityObserver)system);
+			if (ClassReflection.isAssignableFrom(EntityObserver.class, system.getClass())) {
+				entityObserversBag.add((EntityObserver) system);
 			}
 		}
 	}
 
 	/**
-	 * Makes sure all systems are initialized in the order they were
-	 * added.
-	 *
-	 * @deprecated automatically covered by {@link WorldConfiguration}.
-	 */
-	@Deprecated
-	public void initialize() {
-	}
-
-	/**
 	 * Inject dependencies on object.
-	 *
-	 * Immediately perform dependency injection on the target. {@link com.artemis.annotations.Wire} annotation is
-	 * required on the target
-	 * or fields.
-	 *
+	 * <p/>
+	 * Immediately perform dependency injection on the target.
+	 * <p/>
 	 * If you want to specify nonstandard dependencies to inject, use
 	 * {@link com.artemis.WorldConfiguration#register(String, Object)} instead, or
 	 * configure an {@link com.artemis.injection.Injector}
-	 *
+	 * <p/>
 	 * If you want a non-throwing alternative, use {@link #inject(Object, boolean)}
-	 *
+	 * @param target
+	 * 		Object to inject into.
+	 * 		throws {@link MundaneWireException} if {@code target} is annotated with {@link com.artemis.annotations.SkipWire}
 	 * @see com.artemis.annotations.Wire for more details about dependency injection.
 	 * @see #inject(Object, boolean)
-	 * @param target
-	 *            Object to inject into.
-	 *            throws MundaneWireException if {@code target} is not annotated with com.artemis.annotations.Wire
 	 */
 	public void inject(Object target) {
 		inject(target, true);
 	}
 
 	/**
-	 * Inject dependencies on object if it is annotated with {@link com.artemis.annotations.Wire}.
-	 *
-	 * If {@link com.artemis.annotations.Wire} is missing, no action will be taken.
-	 *
+	 * Inject dependencies on object.
+	 * <p/>
+	 * Will not if it is annotated with {@link com.artemis.annotations.Wire}.
+	 * <p/>
 	 * If you want to specify nonstandard dependencies to inject, use
 	 * {@link com.artemis.WorldConfiguration#register(String, Object)} instead, or
-	 * configure an {@link com.artemis.injection.Injector}
-	 *
+	 * configure an {@link com.artemis.injection.Injector}.
+	 * @param target
+	 * 		Object to inject into.
+	 * @param failIfNotInjectable
+	 * 		if true, this method will
+	 * 		throws {@link MundaneWireException} if {@code target} is annotated with
+	 * 		{@link com.artemis.annotations.SkipWire} and {@code failIfNotInjectable} is true
 	 * @see com.artemis.annotations.Wire for more details about dependency injection.
 	 * @see #inject(Object)
-	 * @param target
-	 *            Object to inject into.
-	 * @param failIfWireAnnotationIsMissing
-	 *            if true, this method will
-	 *            throws MundaneWireException if {@code target} is not annotated with com.artemis.annotations.Wire and
-	 *            {@code failIfWireAnnotationIsMissing} is true
 	 */
-	public void inject(Object target, boolean failIfWireAnnotationIsMissing) {
+	public void inject(Object target, boolean failIfNotInjectable) {
 		boolean injectable = injector.isInjectable(target);
-		if (!injectable && failIfWireAnnotationIsMissing)
-			throw new MundaneWireException(target.getClass()
-													.getName() + " must be annotated with @Wire");
+		if (!injectable && failIfNotInjectable)
+			throw new MundaneWireException("Attempted injection on " + target.getClass()
+					.getName() + ", which is annotated with @SkipWire");
 
 		if (injectable)
 			injector.inject(target);
@@ -203,13 +170,8 @@ public class World {
 	/**
 	 * Disposes all systems. Only necessary if either need to free
 	 * managed resources upon bringing the world to an end.
-	 *
-<<<<<<< HEAD
-	 * @throws ArtemisMultiException if any systems throws an exception.
-=======
 	 * @throws ArtemisMultiException
-	 *             if any managers or systems throws an exception.
->>>>>>> master
+	 * 		if any system throws an exception.
 	 */
 	public void dispose() {
 		List<Throwable> exceptions = new ArrayList<Throwable>();
@@ -226,6 +188,14 @@ public class World {
 			throw new ArtemisMultiException(exceptions);
 	}
 
+	/**
+	 * Create entity factory for entities with a predefined component composition.
+	 *
+	 * @param factory type to create.
+	 * @param <T> type to create. Should implement {@link EntityFactory}.
+	 * @return Implementation of EntityFactory.
+	 * @see EntityFactory for instructions about configuration.
+	 */
 	@SuppressWarnings("unchecked")
 	public <T extends EntityFactory> T createFactory(Class<?> factory) {
 		if (!factory.isInterface())
@@ -243,7 +213,6 @@ public class World {
 
 	/**
 	 * Returns a manager that takes care of all the entities in the world.
-	 *
 	 * @return entity manager
 	 */
 	public EntityManager getEntityManager() {
@@ -252,7 +221,6 @@ public class World {
 
 	/**
 	 * Returns a manager that takes care of all the components in the world.
-	 *
 	 * @return component manager
 	 */
 	public ComponentManager getComponentManager() {
@@ -260,22 +228,30 @@ public class World {
 	}
 
 	/**
+	 * Return a manager that takes care of all subscriptions in the world.
+	 * @return aspect subscription manager
+	 */
+	public AspectSubscriptionManager getAspectSubscriptionManager() {
+		return am;
+	}
+
+	/**
 	 * Returns a manager of the specified type.
-	 *
 	 * @param <T>
-	 *            class type of the manager
+	 * 		class type of the manager
 	 * @param managerType
-	 *            class type of the manager
+	 * 		class type of the manager
 	 * @return the manager
+	 * @deprecated managers and systems are treated equally. use {@link #getSystem(Class)} instead.
 	 */
 	@SuppressWarnings("unchecked")
+	@Deprecated
 	public <T extends BaseSystem> T getManager(Class<T> managerType) {
 		return (T) systems.get(managerType);
 	}
 
 	/**
 	 * Time since last game loop.
-	 *
 	 * @return delta time since last game loop
 	 */
 	public float getDelta() {
@@ -284,48 +260,27 @@ public class World {
 
 	/**
 	 * You must specify the delta for the game here.
-	 *
 	 * @param delta
-	 *            time since last game loop
+	 * 		time since last game loop
 	 */
 	public void setDelta(float delta) {
 		this.delta = delta;
 	}
 
 	/**
-	 * Adds a entity to this world.
-	 *
-	 * @param e
-	 *            the entity to add
-	 * @deprecated internally managed by artemis
-	 */
-	@Deprecated
-	public void addEntity(Entity e) {
-	}
-
-	/**
-	 * @deprecated does nothing, internally tracked by artemis now.
-	 */
-	@Deprecated
-	public void changedEntity(Entity e) {
-	}
-
-	/**
 	 * Delete the entity from the world.
-	 *
 	 * @param e
-	 *            the entity to delete
+	 * 		the entity to delete
 	 */
 	public void deleteEntity(Entity e) {
 		e.edit()
-			.deleteEntity();
+				.deleteEntity();
 	}
 
 	/**
 	 * Delete the entity from the world.
-	 *
 	 * @param entityId
-	 *            the entity to delete
+	 * 		the entity to delete
 	 */
 	public void deleteEntity(int entityId) {
 		deleteEntity(em.getEntity(entityId));
@@ -334,7 +289,6 @@ public class World {
 	/**
 	 * Create and return a new or reused entity instance. Entity is
 	 * automatically added to the world.
-	 *
 	 * @return entity
 	 */
 	public Entity createEntity() {
@@ -347,6 +301,14 @@ public class World {
 	 * Create and return an {@link Entity} wrapping a new or reused entity instance.
 	 * Entity is automatically added to the world.
 	 *
+	 * Use {@link Entity#edit()} to set up your newly created entity.
+	 *
+	 * You can also create entities using:
+	 * - {@link com.artemis.utils.EntityBuilder} Convenient entity creation. Not useful when pooling.
+	 * - {@link com.artemis.Archetype} Fastest, low level, no parameterized components.
+	 * - {@link com.artemis.EntityFactory} Fast, clean and convenient. For fixed composition entities. Requires some setup.
+	 * Best choice for parameterizing pooled components.
+	 *
 	 * @return entity
 	 */
 	public Entity createEntity(Archetype archetype) {
@@ -357,27 +319,9 @@ public class World {
 	}
 
 	/**
-	 * Create and return a new or reused entity instance.
-	 * <p>
-	 * The uuid parameter is ignored if {@link UuidEntityManager} hasn't been added to the world.
-	 * </p>
-	 *
-	 * @param uuid
-	 *            the UUID to give to the entity
-	 * @return entity
-	 */
-	public Entity createEntity(UUID uuid) {
-		Entity entity = em.createEntityInstance();
-		entity.setUuid(uuid);
-		entity.edit();
-		return entity;
-	}
-
-	/**
 	 * Get a entity having the specified id.
-	 *
 	 * @param entityId
-	 *            the entities id
+	 * 		the entities id
 	 * @return the specific entity
 	 */
 	public Entity getEntity(int entityId) {
@@ -386,7 +330,6 @@ public class World {
 
 	/**
 	 * Gives you all the systems in this world for possible iteration.
-	 *
 	 * @return all entity systems in world
 	 */
 	public ImmutableBag<BaseSystem> getSystems() {
@@ -394,55 +337,11 @@ public class World {
 	}
 
 	/**
-	 * Adds a system to this world that will be processed by {@link #process()}.
-	 *
-	 * @param <T>
-	 *            the system class type
-	 * @param system
-	 *            the system to add
-	 * @return the added system
-	 *         * @deprecated {@link WorldConfiguration#setSystem(T)}
-	 */
-	@Deprecated
-	public <T extends BaseSystem> T setSystem(T system) {
-		throw new MundaneWireException("use WorldConfiguration#setSystem");
-	}
-
-	/**
-	 * Will add a system to this world.
-	 *
-	 * @param <T>
-	 *            the system class type
-	 * @param system
-	 *            the system to add
-	 * @param passive
-	 *            whether or not this system will be processed by {@link #process()}
-	 * @return the added system
-	 * @deprecated {@link WorldConfiguration#setSystem(T, boolean)}
-	 */
-	@Deprecated
-	public <T extends BaseSystem> T setSystem(T system, boolean passive) {
-		throw new MundaneWireException("use WorldConfiguration#setSystem");
-	}
-
-	/**
-	 * Remove the specified system from the world.
-	 *
-	 * @param system
-	 *            the system to be deleted from world
-	 * @deprecated A world should be static once initialized
-	 */
-	@Deprecated
-	public void deleteSystem(BaseSystem system) {
-	}
-
-	/**
 	 * Retrieve a system for specified system type.
-	 *
 	 * @param <T>
-	 *            the class type of system
+	 * 		the class type of system
 	 * @param type
-	 *            type of system
+	 * 		type of system
 	 * @return instance of the system in this world
 	 */
 	@SuppressWarnings("unchecked")
@@ -450,22 +349,28 @@ public class World {
 		return (T) systems.get(type);
 	}
 
-	/**
-	 * Set strategy for invoking systems on {@see #process()}.
-	 */
+	/** Set strategy for invoking systems on {@link #process()}. */
 	protected void setInvocationStrategy(SystemInvocationStrategy invocationStrategy) {
 		this.invocationStrategy = invocationStrategy;
 		invocationStrategy.setWorld(this);
 	}
 
-	/**
-	 * Process all non-passive systems.
+	/** Process all non-passive systems.
+	 * @see InvocationStrategy to control and extend how systems are invoked.
 	 */
 	public void process() {
 		updateEntityStates();
 		invocationStrategy.process(systemsBag);
 	}
 
+	/**
+	 * Inform subscribers of state changes.
+	 *
+	 * Performs callbacks on systems implementing {@link EntityObserver} and afterwards any
+	 * registered instances of {@link com.artemis.EntitySubscription.SubscriptionListener}.
+	 *
+	 * Will run repeatedly until any state changes caused by subscribers have been handled.
+	 */
 	void updateEntityStates() {
 		// the first block is for entities with precalculated compositionIds,
 		// such as those affected by EntityTransmuters, Archetypes
@@ -481,18 +386,13 @@ public class World {
 		cm.clean();
 	}
 
-	boolean hasUuidManager() {
-		return registerUuids;
-	}
-
 	/**
 	 * Retrieves a ComponentMapper instance for fast retrieval of components
 	 * from entities.
-	 *
 	 * @param <T>
-	 *            class type of the component
+	 * 		class type of the component
 	 * @param type
-	 *            type of component to get mapper for
+	 * 		type of component to get mapper for
 	 * @return mapper for specified component type
 	 */
 	public <T extends Component> ComponentMapper<T> getMapper(Class<T> type) {
@@ -500,14 +400,14 @@ public class World {
 	}
 
 	/**
-	 * @return Injector used for dependency injection.
+	 * @return Injector responsible for dependency injection.
 	 */
 	public Injector getInjector() {
 		return injector;
 	}
 
 	/**
-	 * @return Strategy used for invoking systems during {@see World#process()}.
+	 * @return Strategy used for invoking systems during {@link World#process()}.
 	 */
 	public SystemInvocationStrategy getInvocationStrategy() {
 		return invocationStrategy;

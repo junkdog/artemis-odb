@@ -204,38 +204,6 @@ public class Aspect {
 	}
 
 	/**
-	 * Creates an aspect where an entity must possess all of the specified
-	 * component types.
-	 *
-	 * @param types
-	 *			a required component type
-	 *
-	 * @return an aspect that can be matched against entities
-	 * @deprecated see {@link #all(Class[])}
-	 */
-	@Deprecated
-	@SafeVarargs
-	public static final Aspect.Builder getAspectForAll(Class<? extends Component>... types) {
-		return all(types);
-	}
-
-	/**
-	 * Creates an aspect where an entity must possess one of the specified
-	 * component types.
-	 *
-	 * @param types
-	 *			one of the types the entity must possess
-	 *
-	 * @return an aspect that can be matched against entities
-	 * @deprecated see {@link #one(Class[])}
-	 */
-	@Deprecated
-	@SafeVarargs
-	public static final Aspect.Builder getAspectForOne(Class<? extends Component>... types) {
-		return one(types);
-	}
-
-	/**
 	 * Creates an aspect that matches all entities.
 	 *
 	 * Prior to version 0.9.0, this method returned an aspect which matched no entities.

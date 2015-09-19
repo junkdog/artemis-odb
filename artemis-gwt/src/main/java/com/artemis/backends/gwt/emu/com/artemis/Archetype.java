@@ -4,7 +4,7 @@ package com.artemis;
  * Provides a blueprint for new entities, offering greatly
  * improved insertion performance for systems and managers.
  * </p>
- * Instance entities using {@link com.artemis.World#createEntity(com.artemis.ArchetypeBuilder.Archetype)}
+ * Instance entities using {@link com.artemis.World#createEntity(Archetype)}
  */
 public final class Archetype {
 	final ComponentType[] types;

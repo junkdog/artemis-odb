@@ -32,7 +32,7 @@ public class ComponentType {
 	 * <b>Do not call this constructor!</b> This method is only public so that
 	 * we play nice with GWT.
 	 * 
-	 *  @@see {@link ComponentType#getTypeFor(Class)}
+	 *  @@see {@link ComponentTypeFactory#getTypeFor(Class)}
 	 */
 	public ComponentType(Class<? extends Component> type, int index) {
 		

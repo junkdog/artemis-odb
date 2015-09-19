@@ -27,7 +27,6 @@
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.SystemComponentXRemover"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.ExpirationSystem"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.SystemB"/>
-	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.SystemSpawner"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.SystemY"/>
 
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.factory"/>

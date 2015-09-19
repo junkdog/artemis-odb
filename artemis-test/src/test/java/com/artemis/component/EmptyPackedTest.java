@@ -13,10 +13,9 @@ public class EmptyPackedTest {
 	@Test @SuppressWarnings("static-method")
 	public void empty_packed_shouldnt_reference_bytbuffer() throws Exception {
 		World world = new World();
-		world.initialize();
-		
+
 		Entity e1 = world.createEntity();
-		EmptyPacked empty = e1.createComponent(EmptyPacked.class);
+		EmptyPacked empty = e1.edit().create(EmptyPacked.class);
 		assertEquals(PackedComponent.class, empty.getClass().getSuperclass());
 	}
 }

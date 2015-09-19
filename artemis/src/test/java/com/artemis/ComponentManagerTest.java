@@ -18,7 +18,6 @@ public class ComponentManagerTest {
 	public void init() {
 		
 		world = new World();
-		world.initialize();
 
 		try {
 			Field field = field("componentTypeCount");

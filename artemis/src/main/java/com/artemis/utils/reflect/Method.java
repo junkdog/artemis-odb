@@ -116,14 +116,6 @@ public final class Method {
 		}
 	}
 
-	/** Deprecated: Use isAnnotationPresent instead. */
-	@Deprecated
-	public boolean hasAnnotation(Class annotationClass) {
-		return isAnnotationPresent(annotationClass);
-	}
-
-	/** Deprecated: Use getDeclaredAnnotation instead. */
-	@Deprecated
 	public <T extends java.lang.annotation.Annotation> T getAnnotation(Class<T> annotationClass) {
 		final Annotation declaredAnnotation = getDeclaredAnnotation(annotationClass);
 		return declaredAnnotation != null ? declaredAnnotation.getAnnotation(annotationClass) : null;

@@ -25,8 +25,7 @@ public abstract class PackedWeavingTest {
 	@Before
 	public void setup() {
 		world = new World();
-		world.initialize();
-		
+
 		e1 = world.createEntity();
 		
 		e2 = world.createEntity();

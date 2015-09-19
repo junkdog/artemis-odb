@@ -22,7 +22,7 @@ public abstract class ComponentMapper<A extends Component> {
 	 * Fast but unsafe retrieval of a component for this entity.
 	 * <p>
 	 * No bounding checks, so this could throw an
-	 * {@link ArrayIndexOutOfBoundsExeption}, however in most scenarios you
+	 * {@link ArrayIndexOutOfBoundsException}, however in most scenarios you
 	 * already know the entity possesses this component.
 	 * </p>
 	 *
@@ -40,7 +40,7 @@ public abstract class ComponentMapper<A extends Component> {
 	 * Fast but unsafe retrieval of a component for this entity.
 	 * <p>
 	 * No bounding checks, so this could throw an
-	 * {@link ArrayIndexOutOfBoundsExeption}, however in most scenarios you
+	 * {@link ArrayIndexOutOfBoundsException}, however in most scenarios you
 	 * already know the entity possesses this component.
 	 * </p>
 	 *
@@ -57,7 +57,7 @@ public abstract class ComponentMapper<A extends Component> {
 	 * Fast but unsafe retrieval of a component for this entity, by id.
 	 * <p>
 	 * No bounding checks, so this could throw an
-	 * {@link ArrayIndexOutOfBoundsExeption}, however in most scenarios you
+	 * {@link ArrayIndexOutOfBoundsException}, however in most scenarios you
 	 * already know the entity possesses this component.
 	 * </p>
 	 *

@@ -138,22 +138,6 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	protected abstract void processExpired(Entity e);
 
 	/**
-	 * Start processing of entities after a certain amount of delta time.
-	 * <p>
-	 * Cancels current delayed run and starts a new one.
-	 * </p>
-	 * 
-	 * @param delay
-	 *			time delay until processing starts
-	 * @deprecated bugged and unnecessary. don't use.
-	 */ @Deprecated
-	public void restart(float delay) {
-		this.delay = delay;
-		this.acc = 0;
-		running = true;
-	}
-	
-	/**
 	 * Restarts the system only if the delay offered is shorter than the time
 	 * that the system is currently scheduled to execute at.
 	 * <p>

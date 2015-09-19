@@ -14,8 +14,8 @@ import com.artemis.utils.reflect.Constructor;
  * @author Arni Arent
  */
 public class ComponentType {
-	static enum Taxonomy {
-		BASIC, POOLED, PACKED;
+	enum Taxonomy {
+		BASIC, POOLED, PACKED
 	}
 
 	

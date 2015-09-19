@@ -13,7 +13,7 @@ public class SystemB extends EntityProcessingSystem {
 	@SuppressWarnings("unchecked")
 	public SystemB()
 	{
-		super(Aspect.getAspectForAll(ComponentX.class));
+		super(Aspect.all(ComponentX.class));
 	}
 
 	@Override

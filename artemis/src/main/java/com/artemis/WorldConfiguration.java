@@ -59,32 +59,13 @@ public final class WorldConfiguration {
 	}
 
 	/**
-	 * Set strategy for invoking systems on {@see World#process()}.
+	 * Set strategy for invoking systems on {@link World#process()}.
 	 * @param invocationStrategy Strategy that will invoke systems.
 	 * @return This instance for chaining.
 	 */
 	public WorldConfiguration setInvocationStrategy(SystemInvocationStrategy invocationStrategy) {
 		if ( invocationStrategy == null ) throw new NullPointerException();
 		this.invocationStrategy = invocationStrategy;
-		return this;
-	}
-
-	@Deprecated
-	public int maxRebuiltIndicesPerTick() {
-		return -1;
-	}
-	
-	/**
-	 * Maximum limit on how many active entity indices are rebuilt each time
-	 * {@link World#process()} is invoked. An index is flagged as dirty whenever
-	 * an {@link Entity} is removed or added to a system.
-	 * 
-	 * @param maxRebuiltIndicesPerTick 0 or more.
-	 * @return This instance for chaining.
-	 * @deprecated All indices are always rebuilt now. This method has no effect.
-	 */
-	@Deprecated
-	public WorldConfiguration maxRebuiltIndicesPerTick(int maxRebuiltIndicesPerTick) {
 		return this;
 	}
 

@@ -24,8 +24,8 @@ public class PackedFieldComponentTest extends PackedWeavingTest {
 	public void setup() {
 		super.setup();
 		
-		packed = e1.createComponent(PackedFieldComponent.class);
-		packed = e2.createComponent(PackedFieldComponent.class);
+		packed = e1.edit().create(PackedFieldComponent.class);
+		packed = e2.edit().create(PackedFieldComponent.class);
 		
 		mapper = world.getMapper(PackedFieldComponent.class);
 		position = mapper.get(e1);

@@ -30,7 +30,7 @@ public class ComponentAccessTransmuter extends CallableTransmuter<ClassMetadata>
 	}
 	
 	@Override
-	protected ClassMetadata process(String file) throws FileNotFoundException, IOException {
+	protected ClassMetadata process(String file) throws IOException {
 		boolean changed = compileClass(file);
 		return changed ? Weaver.scan(cr) : null;
 	}

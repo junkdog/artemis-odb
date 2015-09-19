@@ -32,17 +32,15 @@ public class MetaScannerTest {
 	@Before
 	public void setup() {
 		world = new World();
-		world.initialize();
 	}
 	
 	@Test @SuppressWarnings("unused")
 	public void pooled_component_scanning() throws Exception {
 		Entity e1 = world.createEntity();
-		ComponentToWeave c1a = e1.createComponent(ComponentToWeave.class);
-		PooledComponentWithReset c1b = e1.createComponent(PooledComponentWithReset.class);
-		PooledComponentNotScanned c1c = e1.createComponent(PooledComponentNotScanned.class);
-		e1.addToWorld();
-		
+		ComponentToWeave c1a = e1.edit().create(ComponentToWeave.class);
+		PooledComponentWithReset c1b = e1.edit().create(PooledComponentWithReset.class);
+		PooledComponentNotScanned c1c = e1.edit().create(PooledComponentNotScanned.class);
+
 		ClassMetadata scan1 = scan(ComponentToWeave.class);
 		ClassMetadata scan2 = scan(PooledComponentWithReset.class);
 		ClassMetadata scan3 = scan(PooledComponentNotScanned.class);

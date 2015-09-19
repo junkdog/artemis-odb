@@ -17,10 +17,9 @@ public class PooledAllFieldsTest {
 	@Test @SuppressWarnings("static-method")
 	public void pooled_class_transformation() throws Exception {
 		World world = new World();
-		world.initialize();
-		
+
 		Entity e = world.createEntity();
-		PooledAllFields pooled = e.createComponent(PooledAllFields.class);
+		PooledAllFields pooled = e.edit().create(PooledAllFields.class);
 		assertEquals(PooledComponent.class, pooled.getClass().getSuperclass());
 		
 		Method reset = pooled.getClass().getMethod("reset");

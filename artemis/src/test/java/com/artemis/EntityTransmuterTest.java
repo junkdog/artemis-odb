@@ -86,12 +86,12 @@ public class EntityTransmuterTest {
 		transmuter3.transmute(e);
 		world.process();
 
-		assertEquals(1, es.getActives().size());
+		assertEquals(1, es.getSubscription().getEntities().size());
 
 		transmuter1.transmute(e);
 		world.process();
 
-		assertEquals(0, es.getActives().size());
+		assertEquals(0, es.getSubscription().getEntities().size());
 	}
 
 	@Test
@@ -100,7 +100,7 @@ public class EntityTransmuterTest {
 		World world = new World(new WorldConfiguration()
 				.setSystem(es2));
 
-		AspectSubscriptionManager asm = world.getManager(AspectSubscriptionManager.class);
+		AspectSubscriptionManager asm = world.getSystem(AspectSubscriptionManager.class);
 		EntitySubscription subscription = asm.get(Aspect.all(ComponentX.class));
 
 		world.createEntity().edit().create(ReusedComponent.class);

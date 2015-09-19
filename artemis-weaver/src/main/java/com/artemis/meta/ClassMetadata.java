@@ -39,9 +39,10 @@ public final class ClassMetadata {
 	public boolean directFieldAccess;
 
 
-	public static enum WeaverType { NONE, POOLED, PACKED };
-	public static enum OptimizationType { NOT_OPTIMIZABLE, SAFE, FULL };
-	
+	public enum WeaverType { NONE, POOLED, PACKED }
+
+	public enum OptimizationType { NOT_OPTIMIZABLE, SAFE, FULL }
+
 	public Future<?> weaverTask;
 
 	public static class GlobalConfiguration {

@@ -48,6 +48,26 @@ public class AspectSubscriptionManager extends Manager {
 		return entitySubscription;
 	}
 
+	/**
+	 * Informs all listeners of added, changed and deleted changes.
+	 *
+	 * Two types of listeners:
+	 * {@see EntityObserver} implementations are guaranteed to be called back in order of system registration.
+	 * {@see com.artemis.EntitySubscription.SubscriptionListener}, where order can vary (typically ordinal, except
+	 * for subscriptions created in process, initialize instead of setWorld).
+     *
+	 * {@link EntityObserver#added(IntBag)}
+	 * {@link EntityObserver#changed(IntBag)}
+	 * {@link EntityObserver#deleted(IntBag)}
+	 * {@link com.artemis.EntitySubscription.SubscriptionListener#inserted(IntBag)}
+	 * {@link com.artemis.EntitySubscription.SubscriptionListener#removed(IntBag)}
+	 *
+	 * Observers are called before Subscriptions, which means managerial tasks get artificial priority.
+	 *
+	 * @param added Entities added to world
+	 * @param changed Entities with changed composition (not state).
+	 * @param deleted Entities removed from world.
+	 */
 	void process(BitSet added, BitSet changed, BitSet deleted) {
 		toEntityIntBags(added, changed, deleted);
 

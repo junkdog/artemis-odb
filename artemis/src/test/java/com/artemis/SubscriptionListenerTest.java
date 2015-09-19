@@ -185,7 +185,7 @@ public class SubscriptionListenerTest {
 
 		@Override
 		protected void initialize() {
-			AspectSubscriptionManager am = world.getManager(AspectSubscriptionManager.class);
+			AspectSubscriptionManager am = world.getSystem(AspectSubscriptionManager.class);
 			am.get(Aspect.all(MyComponent.class)).addSubscriptionListener(this);
 		}
 

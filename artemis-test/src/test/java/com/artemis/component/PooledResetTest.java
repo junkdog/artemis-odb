@@ -19,7 +19,6 @@ public class PooledResetTest {
 	@Before
 	public void setup() {
 		world = new World();
-		world.initialize();
 	}
 	
 	@Test
@@ -44,7 +43,7 @@ public class PooledResetTest {
 		Assert.assertEquals(PooledComponent.class, PooledObjectPosition.class.getSuperclass());
 		
 		Entity e = world.createEntity();
-		PooledObjectPosition c = e.createComponent(PooledObjectPosition.class);
+		PooledObjectPosition c = e.edit().create(PooledObjectPosition.class);
 		assertEquals(0, c.vec2.x, 0.0001f);
 		assertEquals(0, c.vec2.x, 0.0001f);
 		
@@ -56,7 +55,7 @@ public class PooledResetTest {
 		world.process();
 		
 		Entity e2 = world.createEntity();
-		PooledObjectPosition c2 = e2.createComponent(PooledObjectPosition.class);
+		PooledObjectPosition c2 = e2.edit().create(PooledObjectPosition.class);
 		assertEquals(2, c.vec2.x, 0.0001f);
 		assertEquals(3, c.vec2.y, 0.0001f);
 		
@@ -64,14 +63,13 @@ public class PooledResetTest {
 	}
 	
 	private static PooledPosition createPosition(Entity e) {
-		PooledPosition c = e.createComponent(PooledPosition.class);
+		PooledPosition c = e.edit().create(PooledPosition.class);
 		assertEquals(0, c.x, 0.0001f);
 		assertEquals(0, c.y, 0.0001f);
 		c.x = 2;
 		c.y = 2;
 		
-		e.addToWorld();
-		
+
 		return c;
 	}
 }

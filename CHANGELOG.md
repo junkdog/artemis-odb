@@ -9,6 +9,7 @@
   - EntityObserver supported on all systems.
 - Removed deprecated methods and classes
   - Removed `@Mapper`
+  - Removed UUID related accessors on Entity and World.
 
 #### Version: 0.13.0 - 2015-09-14
 - **BREAKING CHANGES**

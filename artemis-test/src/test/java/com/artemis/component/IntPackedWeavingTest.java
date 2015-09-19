@@ -22,8 +22,8 @@ public class IntPackedWeavingTest extends PackedWeavingTest {
 	public void setup() {
 		super.setup();
 		
-		packed = e1.createComponent(TransPackedInt.class);
-		packed = e2.createComponent(TransPackedInt.class);
+		packed = e1.edit().create(TransPackedInt.class);
+		packed = e2.edit().create(TransPackedInt.class);
 	}
 
 	@Override

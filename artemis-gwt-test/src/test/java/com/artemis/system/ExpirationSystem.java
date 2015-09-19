@@ -13,7 +13,7 @@ public class ExpirationSystem extends DelayedEntityProcessingSystem {
 
 	@SuppressWarnings("unchecked")
 	public ExpirationSystem() {
-		super(Aspect.getAspectForAll(ComponentY.class));
+		super(Aspect.all(ComponentY.class));
 	}
 	
 	@Override

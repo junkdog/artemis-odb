@@ -24,8 +24,8 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 	public void setup() {
 		super.setup();
 		
-		packed = e1.createComponent(TransPackedFloat.class);
-		packed = e2.createComponent(TransPackedFloat.class);
+		packed = e1.edit().create(TransPackedFloat.class);
+		packed = e2.edit().create(TransPackedFloat.class);
 	}
 	
 	@Override
