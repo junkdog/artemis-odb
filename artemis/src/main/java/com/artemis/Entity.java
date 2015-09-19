@@ -36,30 +36,9 @@ public final class Entity {
 	 * 		the id to set
 	 */
 	protected Entity(World world, int id) {
-		this(world, id, null);
-	}
-
-	/**
-	 * Creates a new {@link Entity} instance in the given world.
-	 * <p>
-	 * This will only be called by the world via it's entity manager,
-	 * and not directly by the user, as the world handles creation of entities.
-	 * </p>
-	 * @param world
-	 * 		the world to create the entity in
-	 * @param id
-	 * 		the id to set
-	 * @param uuid
-	 * 		the UUID to set
-	 */
-	protected Entity(World world, int id, UUID uuid) {
 		this.world = world;
 		this.id = id;
-
-		if (uuid != null && world.hasUuidManager())
-			world.getManager(UuidEntityManager.class).setUuid(this, uuid);
 	}
-
 
 	/**
 	 * The internal id for this entity within the framework.

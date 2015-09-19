@@ -2,7 +2,6 @@ package com.artemis;
 
 import com.artemis.injection.CachedInjector;
 import com.artemis.injection.Injector;
-import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.reflect.ClassReflection;
@@ -112,7 +111,6 @@ public class World {
 
 		configuration.initialize(this, injector, am);
 
-		registerUuids = systems.get(UuidEntityManager.class) != null;
 		if (invocationStrategy == null) {
 			setInvocationStrategy(new InvocationStrategy());
 		}
@@ -383,10 +381,6 @@ public class World {
 		}
 
 		cm.clean();
-	}
-
-	boolean hasUuidManager() {
-		return registerUuids;
 	}
 
 	/**
