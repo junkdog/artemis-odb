@@ -29,7 +29,7 @@ public class ProfilerTransmuter extends CallableTransmuter<Void> implements Opco
 	}
 	
 	@Override
-	protected Void process(String file) throws FileNotFoundException, IOException {
+	protected Void process(String file) throws IOException {
 		injectProfilerStubs(meta);
 		
 		ClassVisitor cv = new ProfileVisitor(cw, meta);

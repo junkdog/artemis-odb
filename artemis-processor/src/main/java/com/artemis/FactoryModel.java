@@ -34,10 +34,9 @@ public class FactoryModel {
 	private Messager messager;
 	boolean success = true;
 	
-	private static final List<String> IGNORED_METHODS = Arrays.asList(new String[] {
-			"getClass", "wait", "notify", "notifyAll", "equals",
+	private static final List<String> IGNORED_METHODS = Arrays.asList("getClass", "wait", "notify", "notifyAll", "equals",
 			"hashCode", "equals", "toString", "copy",
-			"create", "tag", "group"}); 
+			"create", "tag", "group");
 	
 	FactoryModel(TypeElement declaration, ProcessingEnvironment env) {
 		this.declaration = declaration;

@@ -46,10 +46,10 @@ public class PackedStubs implements Opcodes {
 			injectConstructor();
 		
 			cw.visitField(ACC_PRIVATE | ACC_FINAL | ACC_STATIC, "$_SIZE_OF", "I", null,
-				Integer.valueOf(ClassMetadataUtil.sizeOf(meta))).visitEnd();;
+				Integer.valueOf(ClassMetadataUtil.sizeOf(meta))).visitEnd();
 			cw.visitField(ACC_PRIVATE, "$stride", "I", null, Integer.valueOf(0)).visitEnd();
 			cw.visitField(ACC_PRIVATE + ACC_STATIC, "$store", "Ljava/util/Map;",
-					mapSignature(), null).visitEnd();;
+					mapSignature(), null).visitEnd();
 		}
 		
 		// Reason for recreating teh ClassReader/Writer combo:

@@ -25,7 +25,7 @@ public class EsOptimizationTransmuter extends CallableTransmuter<Void> implement
 	}
 	
 	@Override
-	protected Void process(String file) throws FileNotFoundException, IOException {
+	protected Void process(String file) throws IOException {
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		ClassVisitor cv = cw;
 		

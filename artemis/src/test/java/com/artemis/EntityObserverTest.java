@@ -46,7 +46,7 @@ public class EntityObserverTest {
 			@Override
 			public void deleted(IntBag entities) {
 			}
-		};
+		}
 
 		TestSystem system = new TestSystem();
 		World world = new World(new WorldConfiguration()

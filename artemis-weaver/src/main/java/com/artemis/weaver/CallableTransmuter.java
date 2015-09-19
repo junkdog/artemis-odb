@@ -11,7 +11,7 @@ abstract class CallableTransmuter<T> implements Callable<T> {
 		this.file = file;
 	}
 
-	protected abstract T process(String file) throws FileNotFoundException, IOException;
+	protected abstract T process(String file) throws IOException;
 
 	@Override
 	public final T call() throws Exception {

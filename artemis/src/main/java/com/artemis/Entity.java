@@ -184,9 +184,8 @@ public final class Entity {
 
 		Entity entity = (Entity) o;
 
-		if (id != entity.id) return false;
+		return id == entity.id;
 
-		return true;
 	}
 
 	public boolean equals(Entity o) {
