@@ -47,7 +47,7 @@ public class UuidEntityManagerTest {
         configuration.setSystem(UuidEntityManager.class);
 
 	    World world = new World(configuration);
-	    UuidEntityManager uuidEntityManager = world.getManager(UuidEntityManager.class);
+	    UuidEntityManager uuidEntityManager = world.getSystem(UuidEntityManager.class);
 	    Entity entity = world.createEntity();
 		uuidEntityManager.setUuid(entity, uuid);
 	    world.process();

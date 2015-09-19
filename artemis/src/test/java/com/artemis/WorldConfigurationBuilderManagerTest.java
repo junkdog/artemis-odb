@@ -35,7 +35,7 @@ public class WorldConfigurationBuilderManagerTest {
 		class SharedDependencyPluginB extends SharedDependencyPlugin {}
 
 		final World world = new World(builder.with(new SharedDependencyPlugin(), new SharedDependencyPluginB()).build());
-		Assert.assertNotNull(world.getManager(TestEntityManagerA.class));
+		Assert.assertNotNull(world.getSystem(TestEntityManagerA.class));
 	}
 
 	@Test

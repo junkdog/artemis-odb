@@ -40,7 +40,7 @@ public class EntityManager extends Manager {
 	@Override
 	protected void initialize() {
 		recyclingEntityFactory = new RecyclingEntityFactory(this);
-		subscriptionManager = world.getManager(AspectSubscriptionManager.class);
+		subscriptionManager = world.getSystem(AspectSubscriptionManager.class);
 	}
 
 	/**

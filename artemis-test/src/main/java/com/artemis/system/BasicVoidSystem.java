@@ -13,7 +13,7 @@ public class BasicVoidSystem extends VoidEntitySystem {
 
 	@Override
 	protected void initialize() {
-		manager = world.getManager(TagManager.class);
+		manager = world.getSystem(TagManager.class);
 		system = world.getSystem(WiredBasicVoidSystem.class);
 		mapper1 = world.getMapper(TransPackedInt.class);
 	}
