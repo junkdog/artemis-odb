@@ -21,7 +21,7 @@ public class CachedClass {
     public Class<?> clazz;
 
     /**
-     * All fields relevant for the class. If the {@see Wire} annotation has injectInherited
+     * All fields relevant for the class. If the {@link Wire} annotation has injectInherited
      * set to true, this array will contain ALL declared fields for this class and superclasses.
      * If injectInherited is false, only the declared fields for {@code clazz} will be cached here.
      */

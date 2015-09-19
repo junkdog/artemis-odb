@@ -9,20 +9,20 @@ import java.util.BitSet;
  * <p/>
  * Provides a fast albeit verbose way to perform batch changes to entities.
  * <p/>
- * {@see com.artemis.BaseSystem}, {@see com.artemis.EntitySubscription.SubscriptionListener}
- * and {@see com.artemis.EntityObserver} are informed of changes only after the current
+ * {@link com.artemis.BaseSystem}, {@link com.artemis.EntitySubscription.SubscriptionListener}
+ * and {@link com.artemis.EntityObserver} are informed of changes only after the current
  * system has done processing and the next system is about to be invoked. This removes the
  * need for systems to defend their subscription lists and allows for cleaner code and better
  * performance.
  * <p/>
  * Alternatives to edit entities.
  * <p/>
- * - {@see com.artemis.utils.EntityBuilder} Convenient entity creation. Not useful when pooling.
- * - {@see com.artemis.EntityTransmuterFactory} Fastest but rigid way of changing entity component compositions.
- * - {@see com.artemis.Archetype} Fastest, low level, no parameterized components.
- * - {@see com.artemis.EntityFactory} Fast, clean and convenient. For fixed composition entities. Requires some setup.
+ * - {@link com.artemis.utils.EntityBuilder} Convenient entity creation. Not useful when pooling.
+ * - {@link com.artemis.EntityTransmuterFactory} Fastest but rigid way of changing entity component compositions.
+ * - {@link com.artemis.Archetype} Fastest, low level, no parameterized components.
+ * - {@link com.artemis.EntityFactory} Fast, clean and convenient. For fixed composition entities. Requires some setup.
  * Best choice for parameterizing pooled components.
- * - {@see com.artemis.ComponentMapper} For discrete operations.
+ * - {@link com.artemis.ComponentMapper} For discrete operations.
  */
 public final class EntityEdit {
 

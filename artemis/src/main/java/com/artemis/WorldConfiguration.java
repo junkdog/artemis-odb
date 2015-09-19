@@ -59,7 +59,7 @@ public final class WorldConfiguration {
 	}
 
 	/**
-	 * Set strategy for invoking systems on {@see World#process()}.
+	 * Set strategy for invoking systems on {@link World#process()}.
 	 * @param invocationStrategy Strategy that will invoke systems.
 	 * @return This instance for chaining.
 	 */

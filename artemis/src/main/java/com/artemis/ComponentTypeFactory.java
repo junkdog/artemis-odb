@@ -48,7 +48,7 @@ public class ComponentTypeFactory {
 	/**
 	 * Gets component type by index.
 	 * <p>
-	 * @param {@see ComponentType}
+	 * @param {@link ComponentType}
 	 * @return the component's {@link ComponentType}
 	 */
 	public ComponentType getTypeFor(int index) {
