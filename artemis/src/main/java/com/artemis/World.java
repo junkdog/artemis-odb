@@ -228,6 +228,14 @@ public class World {
 	}
 
 	/**
+	 * Return a manager that takes care of all subscriptions in the world.
+	 * @return aspect subscription manager
+	 */
+	public AspectSubscriptionManager getAspectSubscriptionManager() {
+		return am;
+	}
+
+	/**
 	 * Returns a manager of the specified type.
 	 * @param <T>
 	 * 		class type of the manager
