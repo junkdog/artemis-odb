@@ -51,10 +51,13 @@ class ReferenceTracker {
 	}
 
 	private void inspectType(Class<?> type) {
+		if (referencingTypes.contains(type))
+			return;
+
 		Field[] fields = ClassReflection.getDeclaredFields(type);
 		for (int i = 0; fields.length > i; i++) {
 			Field f = fields[i];
-			if (isReferencingEntity(f) && !referencingFields.contains(type)) {
+			if (isReferencingEntity(f)) {
 				referencingFields.add(f);
 				referencingTypes.add(type);
 				referenced.add(new EntityReference(type, f));
