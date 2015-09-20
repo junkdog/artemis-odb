@@ -372,16 +372,12 @@ public class World {
 	 * Will run repeatedly until any state changes caused by subscribers have been handled.
 	 */
 	void updateEntityStates() {
-		// the first block is for entities with precalculated compositionIds,
+		// the first execution is for entities with precalculated compositionIds,
 		// such as those affected by EntityTransmuters, Archetypes
 		// and EntityFactories.
-		while (added.cardinality() > 0 || changed.cardinality() > 0) {
+		do {
 			am.process(added, changed, deleted);
-		}
-
-		while (editPool.processEntities()) {
-			am.process(added, changed, deleted);
-		}
+		} while (editPool.processEntities());
 
 		cm.clean();
 	}

@@ -6,6 +6,11 @@ public final class ConverterUtil {
 	private ConverterUtil() {}
 
 	public static IntBag toIntBag(BitSet bs, IntBag out) {
+		if (bs.isEmpty()) {
+			out.setSize(0);
+			return out;
+		}
+
 		int size = bs.cardinality();
 		out.setSize(size);
 		out.ensureCapacity(size);
