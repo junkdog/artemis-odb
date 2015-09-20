@@ -97,6 +97,8 @@
 	
 	<modules>
 		<module>artemis</module>
+<!--		<module>artemis-json</module>-->
+		<module>artemis-json-libgdx</module>
 		<module>artemis-weaver</module>
 		<module>artemis-maven</module>
 		<module>artemis-gradle</module>
@@ -107,18 +109,6 @@
 	</modules>
 
 	<profiles>
-		<profile>
-			<id>serialization</id>
-			<modules>
-				<module>artemis-json</module>
-			</modules>
-		</profile>
-		<profile>
-			<id>serialization-libgdx</id>
-			<modules>
-				<module>artemis-json-libgdx</module>
-			</modules>
-		</profile>
 		<profile>
 			<id>gwttest</id>
 			<modules>

@@ -5,14 +5,12 @@ import com.artemis.ComponentCollector;
 import com.artemis.EntityHelper;
 import com.artemis.World;
 import com.artemis.managers.WorldSerializationManager;
-import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
@@ -42,7 +40,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		json.setIgnoreUnknownFields(true);
 		json.setSerializer(IdentityHashMap.class, lookup);
 		json.setSerializer(IntBag.class, intBagEntitySerializer);
-		json.setSerializer(int.class, entitySerializer);
+		json.setSerializer(TemporaryEntity.class, entitySerializer);
 	}
 
 	public JsonArtemisSerializer prettyPrint(boolean prettyPrint) {

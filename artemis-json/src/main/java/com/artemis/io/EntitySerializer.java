@@ -18,7 +18,7 @@ import com.esotericsoftware.jsonbeans.ObjectMap;
 import java.util.*;
 
 @Wire(failOnNull = false)
-public class EntitySerializer implements JsonSerializer<Integer> {
+public class EntitySerializer implements JsonSerializer<TemporaryEntity> {
 
 	private final Bag<Component> components = new Bag<Component>();
 	private final ComponentNameComparator comparator = new ComponentNameComparator();
@@ -53,23 +53,23 @@ public class EntitySerializer implements JsonSerializer<Integer> {
 	}
 
 	@Override
-	public void write(Json json, Integer e, Class knownType) {
+	public void write(Json json, TemporaryEntity e, Class knownType) {
 		// need to track this in case the components of an entity
 		// reference another entity - if so, we only want to record
 		// the id
 		if (isSerializingEntity) {
-			json.writeValue(e);
+			json.writeValue(e.id);
 			return;
 		} else {
 			isSerializingEntity = true;
 		}
 
-		world.getComponentManager().getComponentsFor(e, components);
+		world.getComponentManager().getComponentsFor(e.id, components);
 		components.sort(comparator);
 
 		json.writeObjectStart();
-		writeTag(json, e);
-		writeGroups(json, e);
+		writeTag(json, e.id);
+		writeGroups(json, e.id);
 
 		json.writeObjectStart("components");
 		for (int i = 0, s = components.size(); s > i; i++) {
@@ -121,7 +121,7 @@ public class EntitySerializer implements JsonSerializer<Integer> {
 	}
 
 	@Override
-	public Integer read(Json json, JsonValue jsonData, Class type) {
+	public TemporaryEntity read(Json json, JsonValue jsonData, Class type) {
 		// need to track this in case the components of an entity
 		// reference another entity - if so, we only want to read
 		// the id
@@ -129,7 +129,7 @@ public class EntitySerializer implements JsonSerializer<Integer> {
 			int entityId = json.readValue(Integer.class, jsonData);
 			// creating a temporary entity; this will later be translated
 			// to the correct entity
-			return entityId;
+			return new TemporaryEntity(entityId);
 		} else {
 			isSerializingEntity = true;
 		}
@@ -162,7 +162,7 @@ public class EntitySerializer implements JsonSerializer<Integer> {
 
 		isSerializingEntity = false;
 
-		return edit.getEntity();
+		return new TemporaryEntity(edit.getEntity());
 	}
 
 	private JsonValue readGroups(JsonValue jsonData, int e) {

@@ -1,9 +1,6 @@
 package com.artemis.io;
 
-import com.artemis.EntityHelper;
 import com.artemis.World;
-import com.artemis.annotations.Wire;
-import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
@@ -27,7 +24,7 @@ public class IntBagEntitySerializer implements Json.Serializer<IntBag> {
 			json.writeObjectStart();
 			for (int i = 0, s = entities.size(); s > i; i++) {
 				int e = world.getEntity(entities.get(i));
-				json.writeValue(Integer.toString(e), e);
+				json.writeValue(Integer.toString(e), new TemporaryEntity(e));
 			}
 			json.writeObjectEnd();
 		} else {
@@ -47,10 +44,9 @@ public class IntBagEntitySerializer implements Json.Serializer<IntBag> {
 
 		IntBag bag = new IntBag();
 		if (recursionLevel == 1) {
-			JsonValue entityArray = jsonData.child;
-			JsonValue entity = entityArray;
+			JsonValue entity = jsonData.child;
 			while (entity != null) {
-				int e = json.readValue(int.class, entity.child);
+				int e = json.readValue(TemporaryEntity.class, entity.child).id;
 				translatedIds.set(Integer.parseInt(entity.name), e);
 				bag.add(e);
 

@@ -89,8 +89,6 @@ class EntityReference {
 			Class type = f.getType();
 			if (int.class == type)
 				return INT;
-			else if (int.class == type)
-				return ENTITY;
 			else if (IntBag.class == type)
 				return INT_BAG;
 			else if (Bag.class == type)

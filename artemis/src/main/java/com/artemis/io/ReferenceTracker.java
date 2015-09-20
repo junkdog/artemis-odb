@@ -104,8 +104,7 @@ class ReferenceTracker {
 	private boolean isReferencingEntity(Field f) {
 		boolean explicitEntityId = f.getDeclaredAnnotation(EntityId.class) != null;
 		Class type = f.getType();
-		return (int.class == type)
-				|| (Bag.class == type) // due to GWT limitations
+		return (Bag.class == type) // due to GWT limitations
 				|| (int.class == type && explicitEntityId)
 				|| (IntBag.class == type && explicitEntityId);
 	}

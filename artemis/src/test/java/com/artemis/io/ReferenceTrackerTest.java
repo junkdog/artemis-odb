@@ -22,7 +22,7 @@ public class ReferenceTrackerTest {
 		ReferenceTracker tracker = new ReferenceTracker(world);
 		tracker.inspectTypes(world);
 
-		assertEquals(2, tracker.referenced.size());
+		assertEquals(1, tracker.referenced.size());
 
 		// @todo int
 //		EntityReference ref1 = tracker.find(EntityHolder.class, "entity");
