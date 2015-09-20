@@ -6,13 +6,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
 
+import com.artemis.EntityHelper;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-import com.artemis.Entity;
 import com.artemis.NullProfiler;
 import com.artemis.World;
 import com.artemis.component.ComponentToWeave;
@@ -36,10 +36,10 @@ public class MetaScannerTest {
 	
 	@Test @SuppressWarnings("unused")
 	public void pooled_component_scanning() throws Exception {
-		Entity e1 = world.createEntity();
-		ComponentToWeave c1a = e1.edit().create(ComponentToWeave.class);
-		PooledComponentWithReset c1b = e1.edit().create(PooledComponentWithReset.class);
-		PooledComponentNotScanned c1c = e1.edit().create(PooledComponentNotScanned.class);
+		int e1 = world.createEntity();
+		ComponentToWeave c1a = EntityHelper.edit(world, e1).create(ComponentToWeave.class);
+		PooledComponentWithReset c1b = EntityHelper.edit(world, e1).create(PooledComponentWithReset.class);
+		PooledComponentNotScanned c1c = EntityHelper.edit(world, e1).create(PooledComponentNotScanned.class);
 
 		ClassMetadata scan1 = scan(ComponentToWeave.class);
 		ClassMetadata scan2 = scan(PooledComponentWithReset.class);

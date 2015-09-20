@@ -1,7 +1,6 @@
 package com.artemis.io;
 
 import com.artemis.Component;
-import com.artemis.Entity;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.Field;
@@ -19,7 +18,7 @@ class EntityReference {
 		this.fieldType = FieldType.resolve(field);
 	}
 
-	void translate(Bag<Entity> translatedIds) {
+	void translate(IntBag translatedIds) {
 		for (Component c : operations)
 			fieldType.translate(c, field, translatedIds);
 
@@ -38,22 +37,22 @@ class EntityReference {
 
 	enum FieldType {
 		INT {
-			void translate(Component c, Field field, Bag<Entity> translatedIds) {
+			void translate(Component c, Field field, IntBag translatedIds) {
 				try {
 					int oldId = ((Integer)field.get(c)).intValue();
-					field.set(c, translatedIds.get(oldId).id);
+					field.set(c, translatedIds.get(oldId));
 				} catch (ReflectionException e) {
 					throw  new RuntimeException(e);
 				}
 			}
 		},
 		INT_BAG {
-			void translate(Component c, Field field, Bag<Entity> translatedIds) {
+			void translate(Component c, Field field, IntBag translatedIds) {
 				try {
 					IntBag bag = (IntBag) field.get(c);
 					for (int i = 0, s = bag.size(); s > i; i++) {
 						int oldId = bag.get(i);
-						bag.set(i, translatedIds.get(oldId).id);
+						bag.set(i, translatedIds.get(oldId));
 					}
 				} catch (ReflectionException e) {
 					throw  new RuntimeException(e);
@@ -61,9 +60,9 @@ class EntityReference {
 			}
 		},
 		ENTITY {
-			void translate(Component c, Field field, Bag<Entity> translatedIds) {
+			void translate(Component c, Field field, IntBag translatedIds) {
 				try {
-					int oldId = ((Entity) field.get(c)).id;
+					int oldId = field.getInt(c);
 					field.set(c, translatedIds.get(oldId));
 				} catch (ReflectionException e) {
 					throw new RuntimeException(e);
@@ -71,12 +70,12 @@ class EntityReference {
 			}
 		},
 		ENTITY_BAG {
-			void translate(Component c, Field field, Bag<Entity> translatedIds) {
+			void translate(Component c, Field field, IntBag translatedIds) {
 				try {
-					Bag<Entity> bag = (Bag<Entity>) field.get(c);
+					IntBag bag = (IntBag) field.get(c);
 					for (int i = 0, s = bag.size(); s > i; i++) {
-						Entity e = bag.get(i);
-						bag.set(i, translatedIds.get(e.id));
+						int e = bag.get(i);
+						bag.set(i, translatedIds.get(e));
 					}
 				} catch (ReflectionException e) {
 					throw new RuntimeException(e);
@@ -84,13 +83,13 @@ class EntityReference {
 			}
 		};
 
-		abstract void translate(Component c, Field field, Bag<Entity> translatedIds);
+		abstract void translate(Component c, Field field, IntBag translatedIds);
 
 		static FieldType resolve(Field f) {
 			Class type = f.getType();
 			if (int.class == type)
 				return INT;
-			else if (Entity.class == type)
+			else if (int.class == type)
 				return ENTITY;
 			else if (IntBag.class == type)
 				return INT_BAG;

@@ -3,7 +3,6 @@ package com.artemis.factory;
 import com.artemis.Archetype;
 import com.artemis.ArchetypeBuilder;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.GroupManager;
@@ -122,10 +121,10 @@ public class ExhibitAImpl implements ExhibitA {
 	}
 	
 	@Override
-	public Entity create() {
+	public int create() {
 		_sealed = true;
 		
-		Entity e = world.createEntity(archetype);
+		int e = world.createEntity(archetype);
 
 		if (_id_position_x_y_) {
 			Position c = positionMapper.get(e);

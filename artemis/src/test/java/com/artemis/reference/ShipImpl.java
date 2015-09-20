@@ -3,7 +3,6 @@ package com.artemis.reference;
 import com.artemis.Archetype;
 import com.artemis.ArchetypeBuilder;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.artemis.ParamArchTest.Asset;
 import com.artemis.ParamArchTest.HitPoints;
 import com.artemis.ParamArchTest.Position;
@@ -125,10 +124,10 @@ public class ShipImpl implements Ship {
 	}
 
 	@Override
-	public Entity create() {
+	public int create() {
 		_sealed = true;
 		
-		Entity e = world.createEntity(archetype);
+		int e = world.createEntity(archetype);
 		if (_position) {
 			Position c = positionMapper.get(e);
 			c.x = _position_x;

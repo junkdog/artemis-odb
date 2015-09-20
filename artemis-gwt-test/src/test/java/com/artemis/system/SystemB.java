@@ -2,8 +2,6 @@ package com.artemis.system;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.systems.EntityProcessingSystem;
 
@@ -17,7 +15,7 @@ public class SystemB extends EntityProcessingSystem {
 	}
 
 	@Override
-	protected void process(Entity e)
+	protected void process(int e)
 	{
 		xm.get(e);
 	}

@@ -2,8 +2,6 @@ package com.artemis.factory;
 
 import com.artemis.Archetype;
 import com.artemis.ArchetypeBuilder;
-import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.GroupManager;
@@ -89,10 +87,10 @@ public class ShipNoMethodsImpl implements ShipNoMethods {
 	}
 	
 	@Override
-	public Entity create() {
+	public int create() {
 		_sealed = true;
 		
-		Entity e = world.createEntity(archetype);
+		int e = world.createEntity(archetype);
 
 		if (_tag) {
 			tagManager.register(_tag_tag, e);

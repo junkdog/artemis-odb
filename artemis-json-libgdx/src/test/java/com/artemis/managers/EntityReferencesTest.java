@@ -28,8 +28,8 @@ public class EntityReferencesTest {
 	public void load_before_save() throws Exception {
 		SaveFileFormat load = loadWorld();
 
-		Entity base = tags.getEntity("level");
-		Entity star1 = tags.getEntity("star1");
+		int base = tags.getEntity("level");
+		int star1 = tags.getEntity("star1");
 
 		assertEquals(5, load.entities.size());
 
@@ -46,11 +46,11 @@ public class EntityReferencesTest {
 	public void load_entity_with_references() throws Exception {
 		SaveFileFormat load = loadWorld();
 
-		Entity base = tags.getEntity("level");
-		Entity star1 = tags.getEntity("star1");
-		Entity star2 = tags.getEntity("star2");
-		Entity star3 = tags.getEntity("star3");
-		Entity shadow = tags.getEntity("shadow");
+		int base = tags.getEntity("level");
+		int star1 = tags.getEntity("star1");
+		int star2 = tags.getEntity("star2");
+		int star3 = tags.getEntity("star3");
+		int shadow = tags.getEntity("shadow");
 
 		assertEquals(5, load.entities.size());
 

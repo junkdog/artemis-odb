@@ -36,7 +36,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntityManager"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntityFactory"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntitySystem"/>
-    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.Entity"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntityHelper"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.Manager"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.systems"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.managers"/>

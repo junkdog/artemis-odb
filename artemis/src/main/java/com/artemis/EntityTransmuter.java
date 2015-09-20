@@ -33,30 +33,24 @@ public final class EntityTransmuter {
 		bs = new BitSet();
 	}
 
-	public void transmute(Entity e) {
-		// if entity was just created, we can resolve,
-		// but otherwise we need to make sure the instance
-		// isn't a flyweight instance escaping system processing,
-		// if so we need to resolve it to the actual entity.
-		e = world.getEntity(e.id);
-
+	public void transmute(int e) {
 		TransmuteOperation operation = getOperation(e);
 
 		operation.perform(e, world.getComponentManager());
 		world.getEntityManager().setIdentity(e, operation);
 
-		if (e.isActive())
-			world.changed.set(e.id);
+		if (EntityHelper.isActive(world, e))
+			world.changed.set(e);
 		else
-			world.added.set(e.id);
+			world.added.set(e);
 	}
 
-	private TransmuteOperation getOperation(Entity e) {
+	private TransmuteOperation getOperation(int e) {
 		if (world.editPool.isEdited(e)) {
 			world.editPool.processAndRemove(e);
 		}
 
-		int compositionId = e.getCompositionId();
+		int compositionId = EntityHelper.getCompositionId(world, e);
 		TransmuteOperation operation = operations.safeGet(compositionId);
 		if (operation == null) {
 			operation = createOperation(e);
@@ -65,8 +59,8 @@ public final class EntityTransmuter {
 		return operation;
 	}
 
-	private TransmuteOperation createOperation(Entity e) {
-		BitSet origin = e.getComponentBits();
+	private TransmuteOperation createOperation(int e) {
+		BitSet origin = EntityHelper.getComponentBits(world, e);
 		bs.clear();
 		bs.or(origin);
 		bs.or(additions);
@@ -113,7 +107,7 @@ public final class EntityTransmuter {
 			this.removals = removals;
 		}
 
-		public void perform(Entity e, ComponentManager cm) {
+		public void perform(int e, ComponentManager cm) {
 			for (int i = 0, s = additions.size(); s > i; i++)
 				cm.create(e, additions.get(i));
 

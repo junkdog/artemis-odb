@@ -16,19 +16,16 @@ public class EntityEditPoolTest {
 		class TestSystem extends BaseSystem {
 
 			private EntityTransmuter createTransmuter;
-			private Entity flyweightEntity;
 
 			@Override
 			protected void initialize() {
 				createTransmuter = new EntityTransmuterFactory(world).add(ComponentX.class).build();
-				flyweightEntity = createFlyweightEntity();
 			}
 
 			@Override
 			protected void processSystem() {
-				final Entity entity = world.createEntity();
-				flyweightEntity.id = entity.getId();
-				createTransmuter.transmute(flyweightEntity);
+				final int entity = world.createEntity();
+				createTransmuter.transmute(entity);
 			}
 		}
 		new World(new WorldConfiguration().setSystem(new TestSystem())).process();

@@ -2,11 +2,9 @@ package com.artemis;
 
 import static org.junit.Assert.assertEquals;
 
-import com.artemis.utils.IntBag;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.DelayedEntityProcessingSystem;
@@ -21,15 +19,15 @@ public class WorldTest
 		World world = new World(new WorldConfiguration());
 
 		for (int i = 0; i < 100; i++) {
-			Entity e = world.createEntity();
-			if (i == 0) e.edit().add(new ComponentX());
+			int e = world.createEntity();
+			if (i == 0) EntityHelper.edit(world, e).add(new ComponentX());
 		}
 
 		world.process();
 
 		for (int i = 0; i < 100; i++) {
-			Entity e = world.getEntity(i);
-			e.getComponent(ComponentX.class);
+			int e = world.getEntity(i);
+			EntityHelper.getComponent(ComponentX.class, world, e);
 		}
 	}
 
@@ -40,8 +38,8 @@ public class WorldTest
 				.setSystem(new SystemComponentXRemover())
 				.setSystem(new SystemB()));
 
-		Entity e = world.createEntity();
-		e.edit().create(ComponentX.class);
+		int e = world.createEntity();
+		EntityHelper.edit(world, e).create(ComponentX.class);
 		
 		world.process();
 	}
@@ -53,18 +51,18 @@ public class WorldTest
 		World world = new World(new WorldConfiguration()
 				.setSystem(es));
 
-		Entity e1 = createEntity(world);
+		int e1 = createEntity(world);
 		
 		world.setDelta(0.5f);
 		world.process();
 		assertEquals(0, es.expiredLastRound);
 		
-		Entity e2 = createEntity(world);
+		int e2 = createEntity(world);
 		
 		world.setDelta(0.75f);
 		world.process();
 		assertEquals(1, es.expiredLastRound);
-		assertEquals(0.25f, es.deltas.get(e2.getId()), 0.01f);
+		assertEquals(0.25f, es.deltas.get(e2), 0.01f);
 		world.delta = 0;
 		world.process();
 		assertEquals(1, es.getSubscription().getEntities().size());
@@ -78,10 +76,10 @@ public class WorldTest
 		assertEquals(0, es.getSubscription().getEntities().size());
 	}
 
-	private Entity createEntity(World world)
+	private int createEntity(World world)
 	{
-		Entity e = world.createEntity();
-		e.edit().create(ComponentY.class);
+		int e = world.createEntity();
+		EntityHelper.edit(world, e).create(ComponentY.class);
 		return e;
 	}
 
@@ -94,9 +92,9 @@ public class WorldTest
 		}
 
 		@Override
-		protected void process(Entity e)
+		protected void process(int e)
 		{
-			e.edit().remove(ComponentX.class);
+			EntityHelper.edit(world, e).remove(ComponentX.class);
 		}
 	}
 
@@ -111,7 +109,7 @@ public class WorldTest
 		}
 
 		@Override
-		protected void process(Entity e)
+		protected void process(int e)
 		{
 			xm.get(e);
 		}
@@ -128,7 +126,7 @@ public class WorldTest
 		}
 		
 		@Override
-		protected void process(Entity e)
+		protected void process(int e)
 		{
 			Assert.assertNotNull(ym);
 			ym.get(e);
@@ -153,23 +151,23 @@ public class WorldTest
 		}
 		
 		@Override
-		protected float getRemainingDelay(Entity e) {
-			return deltas.get(e.getId());
+		protected float getRemainingDelay(int e) {
+			return deltas.get(e);
 		}
 
 		@Override
-		protected void processDelta(Entity e, float accumulatedDelta) {
-			float remaining = deltas.get(e.getId());
+		protected void processDelta(int e, float accumulatedDelta) {
+			float remaining = deltas.get(e);
 			remaining -=  accumulatedDelta;
 			offerDelay(remaining);
-			deltas.set(e.getId(), remaining);
+			deltas.set(e, remaining);
 		}
 
 		@Override
-		protected void processExpired(Entity e) {
+		protected void processExpired(int e) {
 			expiredLastRound++;
-			deltas.set(e.getId(), null);
-			e.deleteFromWorld();
+			deltas.set(e, null);
+			world.deleteEntity(e);
 		}
 		
 		@Override

@@ -129,6 +129,16 @@ public abstract class BaseSystem {
 	protected void dispose() {}
 
 	/**
+	 * Edit entity.
+	 *
+	 * @param id
+	 * @return EntityHelper Editor for id.
+	 */
+	public EntityEdit edit( int id ) {
+		return world.editPool.obtainEditor(id);
+	}
+
+	/**
 	 * <p>Creates a flyweight entity, not registered by the world
 	 * the way normal entities are. It is intended to be used
 	 * for cases where storing full object entity references aren't
@@ -140,7 +150,7 @@ public abstract class BaseSystem {
 	 *
 	 * @return Unbound entity with entityId -1.
 	 */
-	protected final Entity createFlyweightEntity() {
+	protected final int createFlyweightEntity() {
 		return world.getEntityManager().createEntity(-1);
 	}
 }

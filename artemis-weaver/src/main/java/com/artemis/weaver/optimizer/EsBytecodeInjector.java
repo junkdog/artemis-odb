@@ -27,7 +27,7 @@ public final class EsBytecodeInjector implements Opcodes {
 	}
 
 	private byte[] injectMethods() {
-		cw.visitField(ACC_PRIVATE, "flyweight", "Lcom/artemis/Entity;", null, null).visitEnd();
+		cw.visitField(ACC_PRIVATE, "flyweight", "Lcom/artemis/EntityHelper;", null, null).visitEnd();
 
 		injectSetWorld();
 		injectProcessEntities();
@@ -54,8 +54,8 @@ public final class EsBytecodeInjector implements Opcodes {
 		mv.visitLineNumber(34, l1);
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitVarInsn(ALOAD, 0);
-		mv.visitMethodInsn(INVOKEVIRTUAL, owner, "createFlyweightEntity", "()Lcom/artemis/Entity;", false);
-		mv.visitFieldInsn(PUTFIELD, owner, "flyweight", "Lcom/artemis/Entity;");
+		mv.visitMethodInsn(INVOKEVIRTUAL, owner, "createFlyweightEntity", "()Lcom/artemis/EntityHelper;", false);
+		mv.visitFieldInsn(PUTFIELD, owner, "flyweight", "Lcom/artemis/EntityHelper;");
 
 		Label l2 = new Label();
 		mv.visitLabel(l2);
@@ -96,7 +96,7 @@ public final class EsBytecodeInjector implements Opcodes {
 		mv.visitLabel(l2);
 		mv.visitLineNumber(49, l2);
 		mv.visitVarInsn(ALOAD, 0);
-		mv.visitFieldInsn(GETFIELD, owner, "flyweight", "Lcom/artemis/Entity;");
+		mv.visitFieldInsn(GETFIELD, owner, "flyweight", "Lcom/artemis/EntityHelper;");
 		mv.visitVarInsn(ASTORE, 3);
 
 		Label l3 = new Label();
@@ -114,7 +114,7 @@ public final class EsBytecodeInjector implements Opcodes {
 		Label l5 = new Label();
 		mv.visitLabel(l5);
 		mv.visitFrame(F_FULL, 6, new Object[]{
-				owner, "com/artemis/utils/IntBag", "[I", "com/artemis/Entity",
+				owner, "com/artemis/utils/IntBag", "[I", "com/artemis/EntityHelper",
 				INTEGER, INTEGER}, 0, new Object[]{});
 		mv.visitVarInsn(ILOAD, 5);
 		mv.visitVarInsn(ILOAD, 4);
@@ -129,7 +129,7 @@ public final class EsBytecodeInjector implements Opcodes {
 		mv.visitVarInsn(ALOAD, 2);
 		mv.visitVarInsn(ILOAD, 4);
 		mv.visitInsn(IALOAD);
-		mv.visitFieldInsn(PUTFIELD, "com/artemis/Entity", "id", "I");
+		mv.visitFieldInsn(PUTFIELD, "com/artemis/EntityHelper", "id", "I");
 
 		Label l8 = new Label();
 		mv.visitLabel(l8);
@@ -137,7 +137,7 @@ public final class EsBytecodeInjector implements Opcodes {
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitVarInsn(ALOAD, 3);
 		mv.visitMethodInsn(invocation(meta.sysetemOptimizable),
-				owner, "process", "(Lcom/artemis/Entity;)V", false);
+				owner, "process", "(Lcom/artemis/EntityHelper;)V", false);
 
 		Label l9 = new Label();
 		mv.visitLabel(l9);
@@ -156,7 +156,7 @@ public final class EsBytecodeInjector implements Opcodes {
 		mv.visitLocalVariable("this", meta.type.toString(), null, l0, l10, 0);
 		mv.visitLocalVariable("actives", "Lcom/artemis/utils/IntBag;", null, l1, l10, 1);
 		mv.visitLocalVariable("array", "[I", null, l2, l10, 2);
-		mv.visitLocalVariable("e", "Lcom/artemis/Entity;", null, l3, l10, 3);
+		mv.visitLocalVariable("e", "Lcom/artemis/EntityHelper;", null, l3, l10, 3);
 		mv.visitEnd();
 	}
 

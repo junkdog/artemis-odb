@@ -7,7 +7,6 @@ import com.artemis.WorldConfiguration;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.Entity;
 import com.artemis.World;
 
 public class GroupManagerTest {
@@ -27,7 +26,7 @@ public class GroupManagerTest {
 	
 	@Test
 	public void added_entities_should_only_occur_once() {
-		Entity entity = world.createEntity();
+		int entity = world.createEntity();
 		gm.add(entity, GROUPIE);
 		gm.add(entity, GROUPIE);
 
@@ -36,12 +35,12 @@ public class GroupManagerTest {
 	
 	@Test
 	public void deleted_entities_should_be_removed() {
-		Entity entity = world.createEntity();
+		int entity = world.createEntity();
 		gm.add(entity, GROUPIE);
 
 		assertEquals(1, gm.getEntities(GROUPIE).size());
 
-		entity.deleteFromWorld();
+		world.deleteEntity(entity);
 		world.process();
 		assertEquals(0, gm.getEntities(GROUPIE).size());
 		assertFalse(gm.isInAnyGroup(entity));
@@ -49,14 +48,14 @@ public class GroupManagerTest {
 	
 	@Test
 	public void deleted_entities_should_be_removed_from_all_groups() {
-		Entity entity = world.createEntity();
+		int entity = world.createEntity();
 		gm.add(entity, GROUPIE);
 		gm.add(entity, GROUPIE2);
 		
 		assertEquals(1, gm.getEntities(GROUPIE).size());
 		assertEquals(1, gm.getEntities(GROUPIE2).size());
 		
-		entity.deleteFromWorld();
+		world.deleteEntity(entity);
 		world.process();
 		
 		assertEquals(0, gm.getEntities(GROUPIE).size());

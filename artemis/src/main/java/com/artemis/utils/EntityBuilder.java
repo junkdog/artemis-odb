@@ -27,13 +27,13 @@ public class EntityBuilder {
 	/** Begin building new entity.*/
 	public EntityBuilder(World world) {
 		this.world = world;
-		edit = world.createEntity().edit();
+		edit = EntityHelper.edit(world, world.createEntity());
 	}
 
 	/** Begin building new entity based on archetype.*/
 	public EntityBuilder(World world, Archetype archetype) {
 		this.world = world;
-		edit = world.createEntity(archetype).edit();
+		edit = EntityHelper.edit(world, world.createEntity(archetype));
 	}
 
 	/** Add component to entity. */
@@ -170,7 +170,7 @@ public class EntityBuilder {
 	}
 
 	/** Assemble, add to world */
-	public Entity build() {
+	public int build() {
 		return edit.getEntity();
 	}
 

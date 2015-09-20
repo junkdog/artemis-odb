@@ -11,7 +11,6 @@ import com.artemis.WorldConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.World;
 
@@ -50,7 +49,7 @@ public class OptimizedSystemTest {
 
 	private static Method processMethod(Class<?> klazz) {
 		try {
-			return klazz.getDeclaredMethod("process", Entity.class);
+			return klazz.getDeclaredMethod("process", int.class);
 		} catch (SecurityException e) {
 			fail(e.getMessage());
 		} catch (NoSuchMethodException e) {

@@ -2,7 +2,6 @@ package com.artemis.system;
 
 
 import com.artemis.Aspect;
-import com.artemis.Entity;
 import com.artemis.annotations.Profile;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.util.SimpleProfiler;
@@ -14,7 +13,7 @@ public class ProfiledSystem extends EntityProcessingSystem {
 	}
 
 	@Override
-	protected void process(Entity e) {
+	protected void process(int e) {
 
 	}
 }

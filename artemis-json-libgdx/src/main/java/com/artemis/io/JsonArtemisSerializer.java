@@ -43,7 +43,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		json.setSerializer(IdentityHashMap.class, lookup);
 		json.setSerializer(Bag.class, new EntityBagSerializer(world));
 		json.setSerializer(IntBag.class, intBagEntitySerializer);
-		json.setSerializer(Entity.class, entitySerializer);
+		json.setSerializer(int.class, entitySerializer);
 	}
 
 	public JsonArtemisSerializer prettyPrint(boolean prettyPrint) {
@@ -88,8 +88,8 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		BitSet compositionIds = new BitSet();
 		int[] ids = save.entities.getData();
 		for (int i = 0, s = save.entities.size(); s > i; i++) {
-			Entity e = world.getEntity(ids[i]);
-			compositionIds.set(e.getCompositionId());
+			int e = world.getEntity(ids[i]);
+			compositionIds.set(Entity.getCompositionId(world,e));
 		}
 
 	}

@@ -5,5 +5,5 @@ import com.artemis.Entity;
 import com.artemis.utils.Bag;
 
 public class EntityBagHolder extends Component {
-	public Bag<Entity> entities = new Bag<Entity>();
+	public IntBag entities = new IntBag();
 }

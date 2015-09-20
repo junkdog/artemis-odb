@@ -1,7 +1,6 @@
 package com.artemis.system;
 
 import com.artemis.Aspect;
-import com.artemis.Entity;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.DelayedEntityProcessingSystem;
 import com.artemis.utils.Bag;
@@ -23,23 +22,23 @@ public class ExpirationSystem extends DelayedEntityProcessingSystem {
 	}
 	
 	@Override
-	protected float getRemainingDelay(Entity e) {
-		return deltas.get(e.getId());
+	protected float getRemainingDelay(int e) {
+		return deltas.get(e);
 	}
 
 	@Override
-	protected void processDelta(Entity e, float accumulatedDelta) {
-		float remaining = deltas.get(e.getId());
+	protected void processDelta(int e, float accumulatedDelta) {
+		float remaining = deltas.get(e);
 		remaining -=  accumulatedDelta;
 		offerDelay(remaining);
-		deltas.set(e.getId(), remaining);
+		deltas.set(e, remaining);
 	}
 
 	@Override
-	protected void processExpired(Entity e) {
+	protected void processExpired(int e) {
 		expiredLastRound++;
-		deltas.set(e.getId(), null);
-		e.deleteFromWorld();
+		deltas.set(e, null);
+		world.deleteEntity(e);
 	}
 	
 	@Override

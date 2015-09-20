@@ -6,9 +6,9 @@ import static org.junit.Assert.assertTrue;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import com.artemis.EntityHelper;
 import org.junit.Test;
 
-import com.artemis.Entity;
 import com.artemis.PooledComponent;
 import com.artemis.World;
 
@@ -18,8 +18,8 @@ public class PooledAllFieldsTest {
 	public void pooled_class_transformation() throws Exception {
 		World world = new World();
 
-		Entity e = world.createEntity();
-		PooledAllFields pooled = e.edit().create(PooledAllFields.class);
+		int e = world.createEntity();
+		PooledAllFields pooled = EntityHelper.edit(world, e).create(PooledAllFields.class);
 		assertEquals(PooledComponent.class, pooled.getClass().getSuperclass());
 		
 		Method reset = pooled.getClass().getMethod("reset");

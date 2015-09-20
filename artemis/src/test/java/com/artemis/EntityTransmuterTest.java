@@ -1,6 +1,5 @@
 package com.artemis;
 
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.component.Packed;
@@ -40,48 +39,48 @@ public class EntityTransmuterTest {
 	
 	@Test
 	public void transmuting_entities() {
-		Entity e1 = createEntity(ComponentY.class, ReusedComponent.class);
-		Entity e2 = createEntity(ComponentY.class, ReusedComponent.class);
+		int e1 = createEntity(ComponentY.class, ReusedComponent.class);
+		int e2 = createEntity(ComponentY.class, ReusedComponent.class);
 		world.process();
-		assertEquals(2, e1.getCompositionId());
+		assertEquals(2, EntityHelper.getCompositionId(world, e1));
 
 		transmuter3.transmute(e1);
 
 		// manually applying transmuter to e2
-		EntityEdit edit = e2.edit();
+		EntityEdit edit = EntityHelper.edit(world, e2);
 		edit.create(ComponentX.class);
 		edit.create(Packed.class);
 		edit.remove(ComponentY.class);
 
 		world.process();
 
-		assertTrue("compositionId=" + e2.getCompositionId(), 2 != e2.getCompositionId());
-		assertEquals(e1.getCompositionId(), e2.getCompositionId());
+		assertTrue("compositionId=" + EntityHelper.getCompositionId(world, e2), 2 != EntityHelper.getCompositionId(world, e2));
+		assertEquals(EntityHelper.getCompositionId(world, e1), EntityHelper.getCompositionId(world, e2));
 
-		assertNotNull(e1.getComponent(ComponentX.class));
-		assertNotNull(e1.getComponent(Packed.class));
-		assertNotNull(e1.getComponent(ReusedComponent.class));
-		assertNull(e1.getComponent(ComponentY.class));
+		assertNotNull(EntityHelper.getComponent(ComponentX.class, world, e1));
+		assertNotNull(EntityHelper.getComponent(Packed.class, world, e1));
+		assertNotNull(EntityHelper.getComponent(ReusedComponent.class, world, e1));
+		assertNull(EntityHelper.getComponent(ComponentY.class, world, e1));
 	}
 
 	@Test
 	public void transmute_twice() {
-		Entity e = createEntity(ComponentY.class, ReusedComponent.class);
+		int e = createEntity(ComponentY.class, ReusedComponent.class);
 		world.process();
 
-		assertEquals(2, e.getCompositionId());
+		assertEquals(2, EntityHelper.getCompositionId(world, e));
 
 		transmuter1.transmute(e);
-		assertEquals(1, e.getCompositionId());
+		assertEquals(1, EntityHelper.getCompositionId(world, e));
 
 		transmuter3.transmute(e);
-		assertEquals(3, e.getCompositionId());
+		assertEquals(3, EntityHelper.getCompositionId(world, e));
 	}
 
 
 	@Test
 	public void entity_insertion_removal() {
-		Entity e = world.createEntity();
+		int e = world.createEntity();
 		world.process();
 		transmuter3.transmute(e);
 		world.process();
@@ -103,8 +102,8 @@ public class EntityTransmuterTest {
 		AspectSubscriptionManager asm = world.getSystem(AspectSubscriptionManager.class);
 		EntitySubscription subscription = asm.get(Aspect.all(ComponentX.class));
 
-		world.createEntity().edit().create(ReusedComponent.class);
-		world.createEntity().edit().create(ReusedComponent.class);
+		EntityHelper.edit(world, world.createEntity()).create(ReusedComponent.class);
+		EntityHelper.edit(world, world.createEntity()).create(ReusedComponent.class);
 
 		world.process();
 		assertEquals(0, subscription.getEntities().size());
@@ -112,9 +111,9 @@ public class EntityTransmuterTest {
 		assertEquals(2, subscription.getEntities().size());
 	}
 
-	private Entity createEntity(Class<? extends Component>... components) {
-		Entity e = world.createEntity();
-		EntityEdit edit = e.edit();
+	private int createEntity(Class<? extends Component>... components) {
+		int e = world.createEntity();
+		EntityEdit edit = EntityHelper.edit(world, e);
 		for (Class<? extends Component> c : components)
 			edit.create(c);
 
@@ -127,7 +126,7 @@ public class EntityTransmuterTest {
 		}
 
 		@Override
-		protected void process(Entity e) {}
+		protected void process(int e) {}
 	}
 
 	private static class ES2 extends EntityProcessingSystem {
@@ -151,7 +150,7 @@ public class EntityTransmuterTest {
 		}
 
 		@Override
-		protected void process(Entity e) {
+		protected void process(int e) {
 			if (xMapper.has(e)) {
 				removeX.transmute(e);
 			} else {

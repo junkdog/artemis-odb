@@ -6,7 +6,7 @@ import com.artemis.utils.IntBag;
 
 
 /**
- * Entity system for iterating a entities matching a single Aspect. Likely the
+ * EntityHelper system for iterating a entities matching a single Aspect. Likely the
  * most common type of system.
  *
  * @author Arni Arent

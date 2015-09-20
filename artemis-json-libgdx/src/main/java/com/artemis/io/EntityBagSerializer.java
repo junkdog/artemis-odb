@@ -25,9 +25,9 @@ public class EntityBagSerializer implements Json.Serializer<Bag> {
 
 	@Override
 	public Bag read(Json json, JsonValue jsonData, Class type) {
-		Bag<Entity> result = new Bag<Entity>();
+		IntBag result = new IntBag();
 		for (JsonValue child = jsonData.child; child != null; child = child.next)
-			result.add(json.readValue(Entity.class, child));
+			result.add(json.readValue(int.class, child));
 
 		return result;
 	}

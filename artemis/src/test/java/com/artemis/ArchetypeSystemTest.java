@@ -95,7 +95,7 @@ public class ArchetypeSystemTest {
 		}
 
 		@Override
-		protected void process(Entity e) {
+		protected void process(int e) {
 			assertNotNull(componentXMapper.get(e));
 		}
 	}
@@ -110,7 +110,7 @@ public class ArchetypeSystemTest {
 		}
 		
 		@Override
-		protected void process(Entity e) {
+		protected void process(int e) {
 			assertNotNull(componentXMapper.get(e));
 		}
 	}

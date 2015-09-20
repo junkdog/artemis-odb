@@ -1,11 +1,12 @@
 package com.artemis.managers;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.artemis.Entity;
+import com.artemis.EntityHelper;
 import com.artemis.Manager;
+import com.badlogic.gdx.utils.IntMap;
+import com.badlogic.gdx.utils.ObjectIntMap;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 
 /**
@@ -20,19 +21,19 @@ import com.artemis.Manager;
 public class TagManager extends Manager {
 
 	/** Tags mapped to entities. */
-	private final Map<String, Entity> entitiesByTag;
+	private final ObjectIntMap<String> entitiesByTag;
 	/** Tagged entities mapped to tags. */
-	private final Map<Entity, String> tagsByEntity;
+	private final IntMap< String> tagsByEntity;
 
 
-	private Entity flyweight;
+	private int flyweight;
 
 	/**
 	 * Creates a new TagManager.
 	 */
 	public TagManager() {
-		entitiesByTag = new HashMap<String, Entity>();
-		tagsByEntity = new HashMap<Entity, String>();
+		entitiesByTag = new ObjectIntMap<String>();
+		tagsByEntity = new IntMap< String>();
 	}
 
 
@@ -47,7 +48,7 @@ public class TagManager extends Manager {
 	 * @param e
 	 *			the entity to get tagged
 	 */
-	public void register(String tag, Entity e) {
+	public void register(String tag, int e) {
 		entitiesByTag.put(tag, e);
 		tagsByEntity.put(e, tag);
 	}
@@ -59,7 +60,7 @@ public class TagManager extends Manager {
 	 *			the tag to remove
 	 */
 	public void unregister(String tag) {
-		tagsByEntity.remove(entitiesByTag.remove(tag));
+		tagsByEntity.remove(entitiesByTag.remove(tag, EntityHelper.NO_ENTITY));
 	}
 
 	/**
@@ -82,8 +83,8 @@ public class TagManager extends Manager {
 	 *
 	 * @return the tagged entity
 	 */
-	public Entity getEntity(String tag) {
-		return entitiesByTag.get(tag);
+	public int getEntity(String tag) {
+		return entitiesByTag.get(tag, EntityHelper.NO_ENTITY);
 	}
 
 	/**
@@ -94,7 +95,7 @@ public class TagManager extends Manager {
 	 *
 	 * @return the tag
 	 */
-	public String getTag(Entity entity) {
+	public String getTag(int entity) {
 		return tagsByEntity.get(entity);
 	}
 
@@ -103,8 +104,9 @@ public class TagManager extends Manager {
 	 *
 	 * @return all used tags as collection
 	 */
+	@Deprecated
 	public Collection<String> getRegisteredTags() {
-		return tagsByEntity.values();
+		throw new NotImplementedException();
 	}
 
 	/**
@@ -115,10 +117,9 @@ public class TagManager extends Manager {
 	 */
 	@Override
 	public void deleted(int entityId) {
-		flyweight.id = entityId;
 		String removedTag = tagsByEntity.remove(flyweight);
 		if(removedTag != null) {
-			entitiesByTag.remove(removedTag);
+			entitiesByTag.remove(removedTag, EntityHelper.NO_ENTITY);
 		}
 	}
 

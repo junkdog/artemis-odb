@@ -9,6 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 
+import com.artemis.EntityHelper;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,8 +25,8 @@ public class PackedFieldComponentTest extends PackedWeavingTest {
 	public void setup() {
 		super.setup();
 		
-		packed = e1.edit().create(PackedFieldComponent.class);
-		packed = e2.edit().create(PackedFieldComponent.class);
+		packed = EntityHelper.edit(world, e1).create(PackedFieldComponent.class);
+		packed = EntityHelper.edit(world, e2).create(PackedFieldComponent.class);
 		
 		mapper = world.getMapper(PackedFieldComponent.class);
 		position = mapper.get(e1);

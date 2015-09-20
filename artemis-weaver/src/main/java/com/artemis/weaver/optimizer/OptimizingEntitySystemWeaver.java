@@ -28,7 +28,7 @@ public class OptimizingEntitySystemWeaver extends ClassVisitor implements Opcode
 	public MethodVisitor visitMethod(int access, String name, String desc,
 			String signature, String[] exceptions) {
 		
-		if ("process".equals(name) && "(Lcom/artemis/Entity;)V".equals(desc)) {
+		if ("process".equals(name) && "(Lcom/artemis/EntityHelper;)V".equals(desc)) {
 			access = meta.sysetemOptimizable == OptimizationType.FULL ? ACC_PRIVATE : access;
 		}
 		

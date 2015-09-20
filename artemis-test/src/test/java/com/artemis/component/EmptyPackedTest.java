@@ -2,9 +2,9 @@ package com.artemis.component;
 
 import static org.junit.Assert.assertEquals;
 
+import com.artemis.EntityHelper;
 import org.junit.Test;
 
-import com.artemis.Entity;
 import com.artemis.PackedComponent;
 import com.artemis.World;
 
@@ -14,8 +14,8 @@ public class EmptyPackedTest {
 	public void empty_packed_shouldnt_reference_bytbuffer() throws Exception {
 		World world = new World();
 
-		Entity e1 = world.createEntity();
-		EmptyPacked empty = e1.edit().create(EmptyPacked.class);
+		int e1 = world.createEntity();
+		EmptyPacked empty = EntityHelper.edit(world, e1).create(EmptyPacked.class);
 		assertEquals(PackedComponent.class, empty.getClass().getSuperclass());
 	}
 }

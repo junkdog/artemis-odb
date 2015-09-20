@@ -1,15 +1,14 @@
 package com.artemis.component;
 
 import static java.lang.reflect.Modifier.PRIVATE;
-import static java.lang.reflect.Modifier.STATIC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
-import java.nio.LongBuffer;
 
+import com.artemis.EntityHelper;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,8 +22,8 @@ public class LongPackedWeavingTest extends PackedWeavingTest {
 	public void setup() {
 		super.setup();
 		
-		packed = e1.edit().create(TransPackedLong.class);
-		packed = e2.edit().create(TransPackedLong.class);
+		packed = EntityHelper.edit(world, e1).create(TransPackedLong.class);
+		packed = EntityHelper.edit(world, e2).create(TransPackedLong.class);
 	}
 
 	@Override

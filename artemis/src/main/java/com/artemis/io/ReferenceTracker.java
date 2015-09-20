@@ -82,7 +82,7 @@ class ReferenceTracker {
 	}
 
 
-	void translate(Bag<Entity> translations) {
+	void translate(IntBag translations) {
 		for (EntityReference ref : referenced) {
 			ref.translate(translations);
 		}
@@ -104,7 +104,7 @@ class ReferenceTracker {
 	private boolean isReferencingEntity(Field f) {
 		boolean explicitEntityId = f.getDeclaredAnnotation(EntityId.class) != null;
 		Class type = f.getType();
-		return (Entity.class == type)
+		return (int.class == type)
 				|| (Bag.class == type) // due to GWT limitations
 				|| (int.class == type && explicitEntityId)
 				|| (IntBag.class == type && explicitEntityId);
@@ -131,7 +131,7 @@ class ReferenceTracker {
 	}
 
 	private boolean findReferences(int entityId, Field f, BitSet referencedIds) {
-		Component c = world.getEntity(entityId).getComponent(f.getDeclaringClass());
+		Component c = EntityHelper.getComponent(f.getDeclaringClass(), world, entityId);
 		if (c == null)
 			return false;
 
@@ -139,12 +139,8 @@ class ReferenceTracker {
 		try {
 			if (type.equals(int.class)) {
 				return updateReferenced((Integer)f.get(c), referencedIds);
-			} else if (type.equals(Entity.class)) {
-				return updateReferenced((Entity)f.get(c), referencedIds);
 			} else if (type.equals(IntBag.class)) {
 				return updateReferenced((IntBag)f.get(c), referencedIds);
-			} else if (type.equals(Bag.class)) {
-				return updateReferenced((Bag<Entity>)f.get(c), referencedIds);
 			} else {
 				throw new RuntimeException("unknown type: " + type);
 			}
@@ -153,13 +149,6 @@ class ReferenceTracker {
 		}
 	}
 
-	private boolean updateReferenced(Bag<Entity> entities, BitSet referencedIds) {
-		boolean updated = false;
-		for (int i = 0; i < entities.size(); i++)
-			updated |= updateReferenced(entities.get(i), referencedIds);
-
-		return updated;
-	}
 
 	private boolean updateReferenced(IntBag ids, BitSet referencedIds) {
 		boolean updated = false;
@@ -167,11 +156,6 @@ class ReferenceTracker {
 			updated |= updateReferenced(ids.get(i), referencedIds);
 
 		return updated;
-	}
-
-
-	private boolean updateReferenced(Entity e, BitSet referencedIds) {
-		return updateReferenced(e.id, referencedIds);
 	}
 
 	private boolean updateReferenced(int entityId, BitSet referencedIds) {

@@ -1,7 +1,5 @@
 package com.artemis.utils;
 
-import com.artemis.Entity;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;

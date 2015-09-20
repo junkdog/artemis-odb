@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.JsonValue;
 
 public class IntBagEntitySerializer implements Json.Serializer<IntBag> {
 	private final World world;
-	private final Bag<Entity> translatedIds = new Bag<Entity>();
+	private final IntBag translatedIds = new IntBag();
 
 	private int recursionLevel;
 
@@ -26,8 +26,8 @@ public class IntBagEntitySerializer implements Json.Serializer<IntBag> {
 		if (recursionLevel == 1) {
 			json.writeObjectStart();
 			for (int i = 0, s = entities.size(); s > i; i++) {
-				Entity e = world.getEntity(entities.get(i));
-				json.writeValue(Integer.toString(e.id), e);
+				int e = world.getEntity(entities.get(i));
+				json.writeValue(Integer.toString(e), e);
 			}
 			json.writeObjectEnd();
 		} else {
@@ -50,9 +50,9 @@ public class IntBagEntitySerializer implements Json.Serializer<IntBag> {
 			JsonValue entityArray = jsonData.child;
 			JsonValue entity = entityArray;
 			while (entity != null) {
-				Entity e = json.readValue(Entity.class, entity.child);
+				int e = json.readValue(int.class, entity.child);
 				translatedIds.set(Integer.parseInt(entity.name), e);
-				bag.add(e.id);
+				bag.add(e);
 
 				entity = entity.next;
 			}
@@ -68,7 +68,7 @@ public class IntBagEntitySerializer implements Json.Serializer<IntBag> {
 
 	}
 
-	public Bag<Entity> getTranslatedIds() {
+	public IntBag getTranslatedIds() {
 		return translatedIds;
 	}
 }

@@ -1,9 +1,7 @@
 package com.artemis;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.artemis.systems.EntityProcessingSystem;
@@ -23,7 +21,7 @@ public class PerformerWorldTest {
 				.setSystem(new SystemA()));
 
 		for (int i = 0; i < 10; i++) {
-			world.createEntity().edit().add(new TestComponent());
+			EntityHelper.edit(world, world.createEntity()).add(new TestComponent());
 		}
 	}
 
@@ -54,9 +52,9 @@ public class PerformerWorldTest {
 		}
 
 		@Override
-		protected void process(Entity e) {
+		protected void process(int e) {
 			try {
-				e.deleteFromWorld();
+				world.deleteEntity(e);
 			} catch (NullPointerException ex) {
 				throw new NullPointerException(""+step);
 			}

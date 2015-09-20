@@ -18,7 +18,7 @@ import com.badlogic.gdx.utils.ObjectMap;
 import java.util.*;
 
 @Wire(failOnNull = false)
-public class EntitySerializer implements Json.Serializer<Entity> {
+public class EntitySerializer implements Json.Serializer<int> {
 
 	private final Bag<Component> components = new Bag<Component>();
 	private final ComponentNameComparator comparator = new ComponentNameComparator();
@@ -53,12 +53,12 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 	}
 
 	@Override
-	public void write(Json json, Entity e, Class knownType) {
+	public void write(Json json, int e, Class knownType) {
 		// need to track this in case the components of an entity
 		// reference another entity - if so, we only want to record
 		// the id
 		if (isSerializingEntity) {
-			json.writeValue(e.id);
+			json.writeValue(e);
 			return;
 		} else {
 			isSerializingEntity = true;
@@ -95,7 +95,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		return (ComponentLookupSerializer) json.getSerializer(IdentityHashMap.class);
 	}
 
-	private void writeTag(Json json, Entity e) {
+	private void writeTag(Json json, int e) {
 		for (String tag : registeredTags) {
 			if (tagManager.getEntity(tag) != e)
 				continue;
@@ -105,7 +105,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		}
 	}
 
-	private void writeGroups(Json json, Entity e) {
+	private void writeGroups(Json json, int e) {
 		if (groupManager == null)
 			return;
 
@@ -121,7 +121,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 	}
 
 	@Override
-	public Entity read(Json json, JsonValue jsonData, Class type) {
+	public int read(Json json, JsonValue jsonData, Class type) {
 		// need to track this in case the components of an entity
 		// reference another entity - if so, we only want to read
 		// the id
@@ -129,14 +129,12 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 			int entityId = json.readValue(Integer.class, jsonData);
 			// creating a temporary entity; this will later be translated
 			// to the correct entity
-			Entity entity = world.getEntityManager().createFlyweight();
-			entity.id = entityId;
-			return entity;
+			return entityId;
 		} else {
 			isSerializingEntity = true;
 		}
 
-		Entity e = world.createEntity();
+		int e = world.createEntity();
 
 		jsonData = readTag(jsonData, e);
 		jsonData = readGroups(jsonData, e);
@@ -167,7 +165,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		return edit.getEntity();
 	}
 
-	private JsonValue readGroups(JsonValue jsonData, Entity e) {
+	private JsonValue readGroups(JsonValue jsonData, int e) {
 		if ("groups".equals(jsonData.name)) {
 			JsonValue group = jsonData.child;
 			while (group != null) {
@@ -181,7 +179,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		return jsonData;
 	}
 
-	private JsonValue readTag(JsonValue jsonData, Entity e) {
+	private JsonValue readTag(JsonValue jsonData, int e) {
 		if ("tag".equals(jsonData.name)) {
 			tagManager.register(jsonData.asString(), e);
 			jsonData = jsonData.next;

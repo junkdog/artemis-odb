@@ -272,36 +272,27 @@ public class World {
 	 * @param e
 	 * 		the entity to delete
 	 */
-	public void deleteEntity(Entity e) {
-		e.edit()
+	public void deleteEntity(int e) {
+		EntityHelper.edit(this, e)
 				.deleteEntity();
 	}
 
 	/**
-	 * Delete the entity from the world.
-	 * @param entityId
-	 * 		the entity to delete
-	 */
-	public void deleteEntity(int entityId) {
-		deleteEntity(em.getEntity(entityId));
-	}
-
-	/**
-	 * Create and return a new or reused entity instance. Entity is
+	 * Create and return a new or reused entity instance. EntityHelper is
 	 * automatically added to the world.
 	 * @return entity
 	 */
-	public Entity createEntity() {
-		Entity e = em.createEntityInstance();
-		e.edit();
+	public int createEntity() {
+		int e = em.createEntityInstance();
+		EntityHelper.edit(this, e);
 		return e;
 	}
 
 	/**
-	 * Create and return an {@link Entity} wrapping a new or reused entity instance.
-	 * Entity is automatically added to the world.
+	 * Create and return an {@link EntityHelper} wrapping a new or reused entity instance.
+	 * EntityHelper is automatically added to the world.
 	 *
-	 * Use {@link Entity#edit()} to set up your newly created entity.
+	 * Use {@link EntityHelper#edit(World, int)} to set up your newly created entity.
 	 *
 	 * You can also create entities using:
 	 * - {@link com.artemis.utils.EntityBuilder} Convenient entity creation. Not useful when pooling.
@@ -309,12 +300,12 @@ public class World {
 	 * - {@link com.artemis.EntityFactory} Fast, clean and convenient. For fixed composition entities. Requires some setup.
 	 * Best choice for parameterizing pooled components.
 	 *
-	 * @return entity
+	 * @return entity id
 	 */
-	public Entity createEntity(Archetype archetype) {
-		Entity e = em.createEntityInstance(archetype);
+	public int createEntity(Archetype archetype) {
+		int e = em.createEntityInstance(archetype);
 		cm.addComponents(e, archetype);
-		added.set(e.id);
+		added.set(e);
 		return e;
 	}
 
@@ -324,7 +315,7 @@ public class World {
 	 * 		the entities id
 	 * @return the specific entity
 	 */
-	public Entity getEntity(int entityId) {
+	public int getEntity(int entityId) {
 		return em.getEntity(entityId);
 	}
 

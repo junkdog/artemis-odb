@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
+import com.artemis.EntityHelper;
 import com.artemis.World;
 
 public class PackedComponentsGrowAndAreHardResetTestBase {
@@ -21,8 +21,8 @@ public class PackedComponentsGrowAndAreHardResetTestBase {
 	}
 	
 	private void create() {
-		Entity e = world.createEntity();
-		e.edit().create(SimpleComponent.class).value = e.getId();
+		int e = world.createEntity();
+		EntityHelper.edit(world, e).create(SimpleComponent.class).value = e;
 	}
 	
 	@Test
@@ -52,7 +52,7 @@ public class PackedComponentsGrowAndAreHardResetTestBase {
 		ComponentMapper<SimpleComponent> mapper = world.getMapper(SimpleComponent.class);
 		assertNotNull(mapper);
 		for (int i = 0; total > i; i++) {
-			Entity e = world.getEntity(i);
+			int e = world.getEntity(i);
 			assertEquals(i, mapper.get(e).value);
 		}
 		

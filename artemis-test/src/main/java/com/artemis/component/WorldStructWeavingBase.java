@@ -6,7 +6,6 @@ import com.artemis.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.util.Vec2f;
 
@@ -24,11 +23,11 @@ public class WorldStructWeavingBase {
 				.setSystem(new EntitySystemA())
 				.setSystem(new EntitySystemB()));
 
-		Entity e1 = world.createEntity();
-		Entity e2 = world.createEntity();
+		int e1 = world.createEntity();
+		int e2 = world.createEntity();
 		
-		EntityEdit edit1 = e1.edit();
-		EntityEdit edit2 = e2.edit();
+		EntityEdit edit1 = EntityHelper.edit(world, e1);
+		EntityEdit edit2 = EntityHelper.edit(world, e2);
 		initComponent(edit1.create(StructComponentA.class));
 		initComponent(edit1.create(Position.class));
 		initComponent(edit2.create(StructComponentA.class));
@@ -84,20 +83,20 @@ public class WorldStructWeavingBase {
 		}
 
 		@Override
-		protected void process(Entity e) {
-			int mod = (e.getId() % 2 == 0) ? 1 : 2;
+		protected void process(int e) {
+			int mod = (e % 2 == 0) ? 1 : 2;
 			
 			StructComponentA component = mapper.get(e);
 			component.x += 10 * mod;
 			component.y *= -10 * mod;
 			component.z *= 20 * mod;
-			component.something += ((e.getId() + 1) * mod);
+			component.something += ((e + 1) * mod);
 			
 			component = mapper.get(e);
 			assertEquals(1 + iteration * 10f * mod, component.x, 0.1);
 			assertEquals(2 * Math.pow(-10f * mod, iteration), component.y, 0.1);
 			assertEquals(3 * Math.pow(20f * mod, iteration), component.z, 0.1);
-			assertEquals(4 + ((e.getId() + 1) * iteration * mod), component.something);
+			assertEquals(4 + ((e + 1) * iteration * mod), component.something);
 		}
 	}
 	
@@ -117,8 +116,8 @@ public class WorldStructWeavingBase {
 		}
 		
 		@Override
-		protected void process(Entity e) {
-			int mod = (e.getId() % 2 == 0) ? 1 : 2;
+		protected void process(int e) {
+			int mod = (e % 2 == 0) ? 1 : 2;
 			
 			Position pos = mapper.get(e);
 			pos.add(new Vec2f(10 * mod, 0));

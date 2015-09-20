@@ -23,15 +23,15 @@ public class WorldTest extends GWTTestCase {
 		world = new World();
 
 		for (int i = 0; i < 100; i++) {
-			Entity e = world.createEntity();
-			if (i == 0) e.edit().add(new ComponentX());
+			int e = world.createEntity();
+			if (i == 0) EntityHelper.edit(world, e).add(new ComponentX());
 		}
 
 		world.process();
 
 		for (int i = 0; i < 100; i++) {
-			Entity e = world.getEntity(i);
-			e.getComponent(ComponentX.class);
+			int e = world.getEntity(i);
+			EntityHelper.getComponent(ComponentX.class);
 		}
 	}
 
@@ -40,8 +40,8 @@ public class WorldTest extends GWTTestCase {
 				.setSystem(new SystemComponentXRemover())
 				.setSystem(new SystemB()));
 
-		Entity e = world.createEntity();
-		e.edit().create(ComponentX.class);
+		int e = world.createEntity();
+		EntityHelper.edit(world, e).create(ComponentX.class);
 		
 		world.process();
 	}
@@ -51,18 +51,18 @@ public class WorldTest extends GWTTestCase {
 		world = new World(new WorldConfiguration()
 			.setSystem(es));
 
-		Entity e1 = createEntity();
+		int e1 = createEntity();
 		
 		world.setDelta(0.5f);
 		world.process();
 		assertEquals(0, es.expiredLastRound);
 		
-		Entity e2 = createEntity();
+		int e2 = createEntity();
 		
 		world.setDelta(0.75f);
 		world.process();
 		assertEquals(1, es.expiredLastRound);
-		assertEquals(0.25f, es.deltas.get(e2.getId()), 0.01f);
+		assertEquals(0.25f, es.deltas.get(e2), 0.01f);
 		world.delta = 0;
 		world.process();
 		assertEquals(1, es.getSubscription().getEntities().size());
@@ -76,9 +76,9 @@ public class WorldTest extends GWTTestCase {
 		assertEquals(0, es.getSubscription().getEntities().size());
 	}
 
-	private Entity createEntity() {
-		Entity e = world.createEntity();
-		e.edit().create(ComponentY.class);
+	private int createEntity() {
+		int e = world.createEntity();
+		EntityHelper.edit(world, e).create(ComponentY.class);
 		return e;
 	}
 }

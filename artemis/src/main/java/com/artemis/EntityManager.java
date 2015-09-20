@@ -19,7 +19,7 @@ public class EntityManager extends Manager {
 
 	static final int NO_COMPONENTS = 1;
 	/** Contains all entities in the manager. */
-	private final Bag<Entity> entities;
+	private final BitSet entities;
 	private final BitSet newlyCreatedEntityIds;
 	/** Stores the bits of all currently disabled entities IDs. */
 	private RecyclingEntityFactory recyclingEntityFactory;
@@ -33,7 +33,7 @@ public class EntityManager extends Manager {
 	 * Creates a new EntityManager Instance.
 	 */
 	protected EntityManager(int initialContainerSize) {
-		entities = new Bag<Entity>(initialContainerSize);
+		entities = new BitSet(initialContainerSize);
 		newlyCreatedEntityIds = new BitSet();
 	}
 	
@@ -48,11 +48,11 @@ public class EntityManager extends Manager {
 	 *
 	 * @return a new entity
 	 */
-	protected Entity createEntityInstance() {
-		Entity e = recyclingEntityFactory.obtain();
-		entityToIdentity.set(e.id, 0);
+	protected int createEntityInstance() {
+		int e = recyclingEntityFactory.obtain();
+		entityToIdentity.set(e, 0);
 
-		newlyCreatedEntityIds.set(e.id);
+		newlyCreatedEntityIds.set(e);
 		return e;
 	}
 	
@@ -61,9 +61,9 @@ public class EntityManager extends Manager {
 	 *
 	 * @return a new entity
 	 */
-	protected Entity createEntityInstance(Archetype archetype) {
-		Entity e = createEntityInstance();
-		entityToIdentity.set(e.getId(), archetype.compositionId);
+	protected int createEntityInstance(Archetype archetype) {
+		int e = createEntityInstance();
+		entityToIdentity.set(e, archetype.compositionId);
 		return e;
 	}
 
@@ -79,7 +79,7 @@ public class EntityManager extends Manager {
 	/** Refresh entity composition identity if it changed. */
 	void updateCompositionIdentity(EntityEdit edit) {
 		int identity = compositionIdentity(edit.componentBits);
-		entityToIdentity.set(edit.entity.getId(), identity);
+		entityToIdentity.set(edit.entity, identity);
 	}
 
 	/**
@@ -151,8 +151,9 @@ public class EntityManager extends Manager {
 	 *
 	 * @return the entity
 	 */
-	protected Entity getEntity(int entityId) {
-		return entities.get(entityId);
+	@Deprecated
+	protected int getEntity(int entityId) {
+		return entityId;
 	}
 
 	protected int getIdentity(int entityId) {
@@ -163,12 +164,12 @@ public class EntityManager extends Manager {
 		return identity;
 	}
 
-	void setIdentity(Entity e, TransmuteOperation operation) {
-		entityToIdentity.set(e.getId(), operation.compositionId);
+	void setIdentity(int e, TransmuteOperation operation) {
+		entityToIdentity.set(e, operation.compositionId);
 	}
 
 	private int forceResolveIdentity(int entityId) {
-		updateCompositionIdentity(entities.get(entityId).edit());
+		updateCompositionIdentity(EntityHelper.edit(world, entityId));
 		return entityToIdentity.get(entityId);
 	}
 
@@ -178,27 +179,27 @@ public class EntityManager extends Manager {
 			es.processComponentIdentity(i, componentBits);
 		}
 
+		// @todo int bitset iteration.
 		for (int i = 0; i < entities.size(); i++) {
-			Entity e = entities.get(i);
-			if (e != null)
-				es.check(e.id);
+			if (entities.get(i)) es.check(i);
 		}
 
 		es.informEntityChanges();
 		es.rebuildCompressedActives();
 	}
 	
-	public Entity createFlyweight() {
+	public int createFlyweight() {
 		//#include "./entity_set_flyweight_true.inc"
 		return createEntity(-1);
 	}
 	
 	/**
-	 * Instantiates an Entity without registering it into the world.
-	 * @param id The ID to be set on the Entity
+	 * Instantiates an EntityHelper without registering it into the world.
+	 * @param id The ID to be set on the EntityHelper
 	 */
-	protected Entity createEntity(int id) {
-		return new Entity(world, id);
+	@Deprecated
+	protected int createEntity(int id) {
+		return id;
 	}
 	
 	/** Tracks all unique component compositions. */
@@ -241,15 +242,15 @@ public class EntityManager extends Manager {
 			recycled.set(entityId);
 		}
 		
-		Entity obtain() {
+		int obtain() {
 			if (limbo.isEmpty()) {
-				Entity e = em.createEntity(nextId++);
-				em.entities.set(e.id, e);
+				int e = em.createEntity(nextId++);
+				em.entities.set(e);
 				return e;
 			} else {
 				int id = limbo.popFirst();
 				recycled.set(id, false);
-				return em.entities.get(id);
+				return id;
 			}
 		}
 

@@ -9,7 +9,7 @@ import java.nio.ByteBuffer;
 
 import org.junit.Test;
 
-import com.artemis.Entity;
+import com.artemis.EntityHelper;
 import com.artemis.World;
 
 public class PackedWeaverGrowTest {
@@ -21,18 +21,18 @@ public class PackedWeaverGrowTest {
 		for (int i = 0; 2048 > i; i++)
 			createEntity(world);
 		
-		Entity last = createEntity(world);
-		last.edit().create(SimpleComponent.class).set(420);
+		int last = createEntity(world);
+		EntityHelper.edit(world, last).create(SimpleComponent.class).set(420);
 		
 		world.process();
 		
-		SimpleComponent component = last.getComponent(SimpleComponent.class);
+		SimpleComponent component = EntityHelper.getComponent(SimpleComponent.class, world, last);
 		assertNotNull(component);
 		assertEquals(420, component.get());
 		assertCapacity(128 * 8, component);
 	}
 
-	private static Entity createEntity(World w) {
+	private static int createEntity(World w) {
 		return w.createEntity();
 	}
 	

@@ -26,20 +26,20 @@ public class PackedComponentTest
 	@Test
 	public void packed_components_are_known_to_mapper() {
 
-		List<Entity> packed = new ArrayList<Entity>();
+		List<Integer> packed = new ArrayList<Integer>();
 		packed.add(createEntity(Packed.class));
 		packed.add(createEntity(Packed.class));
 		packed.add(createEntity(Packed.class));
-		Entity notPresent = createEntity();
+		int notPresent = createEntity();
 		packed.add(createEntity(Packed.class));
 		packed.add(createEntity(Packed.class));
 		
-		for (Entity e : packed) {
+		for (int e : packed) {
 			 assertTrue(packedMapper.has(e));
 		}
 		 assertFalse(packedMapper.has(notPresent));
 		 
-		 packed.get(1).edit().remove(Packed.class);
+		 EntityHelper.edit(world, packed.get(1)).remove(Packed.class);
 		 for (int i = 0; packed.size() > i; i++) {
 			 if (i != 1) assertTrue(packedMapper.has(packed.get(i)));
 		 }
@@ -49,8 +49,8 @@ public class PackedComponentTest
 	@Test
 	public void packed_component_mappers_return_new_instance_on_request() {
 
-		Entity e1 = createEntity(Packed.class);
-		Entity e2 = createEntity(Packed.class);
+		int e1 = createEntity(Packed.class);
+		int e2 = createEntity(Packed.class);
 		Packed packed1 = packedMapper.get(e1, true);
 		Packed packed2 = packedMapper.get(e2, true);
 
@@ -58,10 +58,10 @@ public class PackedComponentTest
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Entity createEntity(Class<?>... components) {
-		Entity e = world.createEntity();
+	private int createEntity(Class<?>... components) {
+		int e = world.createEntity();
 		for (Class<?> c : components) {
-			e.edit().create((Class<Component>)c);
+			EntityHelper.edit(world, e).create((Class<Component>)c);
 		}
 		
 		return e;

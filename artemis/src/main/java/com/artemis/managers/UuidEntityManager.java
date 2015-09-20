@@ -1,21 +1,20 @@
 package com.artemis.managers;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
-import com.artemis.Entity;
+import com.artemis.EntityHelper;
 import com.artemis.Manager;
 import com.artemis.utils.Bag;
+import com.badlogic.gdx.utils.ObjectIntMap;
 
 public class UuidEntityManager extends Manager {
-	private final Map<UUID, Entity> uuidToEntity;
+	private final ObjectIntMap<UUID> uuidToEntity;
 	private final Bag<UUID> entityToUuid;
 
-	private Entity flyweight;
+	private int flyweight;
 
 	public UuidEntityManager() {
-		this.uuidToEntity = new HashMap<UUID, Entity>();
+		this.uuidToEntity = new ObjectIntMap<UUID>();
 		this.entityToUuid = new Bag<UUID>();
 	}
 
@@ -27,28 +26,28 @@ public class UuidEntityManager extends Manager {
 
 	@Override
 	public void deleted(int entityId) {
-		flyweight.id = entityId;
-		UUID uuid = entityToUuid.safeGet(flyweight.getId());
+		UUID uuid = entityToUuid.safeGet(entityId);
 		if (uuid == null)
 			return;
 
-		Entity oldEntity = uuidToEntity.get(uuid);
-		if (oldEntity != null && oldEntity.id == flyweight.id)
-			uuidToEntity.remove(uuid);
+		int oldEntity = uuidToEntity.get(uuid, EntityHelper.NO_ENTITY);
+		if (oldEntity != EntityHelper.NO_ENTITY && oldEntity == entityId) {
+			uuidToEntity.remove(uuid, EntityHelper.NO_ENTITY);
+		}
 
-		entityToUuid.set(flyweight.getId(), null);
+		entityToUuid.set(entityId, null);
 	}
 	
-	public void updatedUuid(Entity e, UUID newUuid) {
+	public void updatedUuid(int e, UUID newUuid) {
 		setUuid(e, newUuid);
 	}
 	
-	public Entity getEntity(UUID uuid) {
-		return uuidToEntity.get(uuid);
+	public int getEntity(UUID uuid) {
+		return uuidToEntity.get(uuid, EntityHelper.NO_ENTITY);
 	}
 
-	public UUID getUuid(Entity e) {
-		UUID uuid = entityToUuid.safeGet(e.getId());
+	public UUID getUuid(int e) {
+		UUID uuid = entityToUuid.safeGet(e);
 		if (uuid == null) {
 			uuid = UUID.randomUUID();
 			setUuid(e, uuid);
@@ -57,12 +56,12 @@ public class UuidEntityManager extends Manager {
 		return uuid;
 	}
 	
-	public void setUuid(Entity e, UUID newUuid) {
-		UUID oldUuid = entityToUuid.safeGet(e.getId());
+	public void setUuid(int e, UUID newUuid) {
+		UUID oldUuid = entityToUuid.safeGet(e);
 		if (oldUuid != null)
-			uuidToEntity.remove(oldUuid);
+			uuidToEntity.remove(oldUuid, EntityHelper.NO_ENTITY);
 		
 		uuidToEntity.put(newUuid, e);
-		entityToUuid.set(e.getId(), newUuid);
+		entityToUuid.set(e, newUuid);
 	}
 }
