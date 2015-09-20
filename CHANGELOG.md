@@ -10,6 +10,7 @@
 - Removed deprecated methods and classes
   - Removed `@Mapper`
   - Removed UUID related accessors on Entity and World.
+- `@PackedWeaver` marked as deprecated until performance issues have been resolved.
 
 
 #### Version: 0.13.1 - 2015-09-20
