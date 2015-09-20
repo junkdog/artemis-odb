@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>net.onedaybeard.artemis</groupId>
 		<artifactId>artemis-parent</artifactId>
-		<version>0.13.1-SNAPSHOT</version>
+		<version>0.13.1</version>
 	</parent>
 
 	<artifactId>artemis-odb-test</artifactId>
