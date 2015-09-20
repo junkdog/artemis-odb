@@ -14,18 +14,18 @@ public class Issue206SystemTest {
 		World world = new World(new WorldConfiguration()
 				.setSystem(new TestSystemAB()));
 
-		Entity e = world.createEntity();
-		e.edit().create(CompA.class);
-		e.edit().create(CompB.class);
-		e.edit().create(TestComponentC.class);
+		int e = world.createEntity();
+		EntityHelper.edit(world, e).create(CompA.class);
+		EntityHelper.edit(world, e).create(CompB.class);
+		EntityHelper.edit(world, e).create(TestComponentC.class);
 
 		world.process();
 		
-		assertSame(e.edit(), e.edit());
-		e.edit().remove(CompB.class);
+		assertSame(EntityHelper.edit(world, e), EntityHelper.edit(world, e));
+		EntityHelper.edit(world, e).remove(CompB.class);
 		// nota bene: in 0.7.0 and 0.7.1, chaining edit() caused
 		// the componentBits to reset
-		e.edit().remove(TestComponentC.class);
+		EntityHelper.edit(world, e).remove(TestComponentC.class);
 
 		world.process();
 		world.process();
@@ -42,8 +42,8 @@ public class Issue206SystemTest {
 		}
 
 		@Override
-		protected void process(Entity e) {
-			assertNotNull(e.getComponent(CompB.class));
+		protected void process(int e) {
+			assertNotNull(EntityHelper.getComponent(CompB.class, world, e));
 		}
 	}
 }

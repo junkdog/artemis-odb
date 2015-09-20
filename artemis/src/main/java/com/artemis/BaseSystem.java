@@ -129,18 +129,13 @@ public abstract class BaseSystem {
 	protected void dispose() {}
 
 	/**
-	 * <p>Creates a flyweight entity, not registered by the world
-	 * the way normal entities are. It is intended to be used
-	 * for cases where storing full object entity references aren't
-	 * desirable, in the interest of reducing memory footprint
-	 * and/or maintaining a clean API.</p>
+	 * Edit entity.
 	 *
-	 * <p>You are expected to manually set the entity id before
-	 * operating on the entity. It is created with id == -1.</p>
-	 *
-	 * @return Unbound entity with entityId -1.
+	 * @param id
+	 * @return EntityHelper Editor for id.
 	 */
-	protected final Entity createFlyweightEntity() {
-		return world.getEntityManager().createEntity(-1);
+	public EntityEdit edit( int id ) {
+		return world.editPool.obtainEditor(id);
 	}
+
 }

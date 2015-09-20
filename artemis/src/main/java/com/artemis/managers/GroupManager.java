@@ -3,10 +3,11 @@ package com.artemis.managers;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.artemis.Entity;
 import com.artemis.Manager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
+import com.badlogic.gdx.utils.IntMap;
 
 
 /**
@@ -24,26 +25,22 @@ public class GroupManager extends Manager {
 	private static final ImmutableBag<String> EMPTY_BAG = new Bag<String>();
 	
 	/** All entities and groups mapped with group names as key. */
-	private final Map<String, Bag<Entity>> entitiesByGroup;
+	private final Map<String, IntBag> entitiesByGroup;
 	/** All entities and groups mapped with entities as key. */
-	private final Map<Entity, Bag<String>> groupsByEntity;
-
-	private Entity flyweight;
+	private final IntMap<Bag<String>> groupsByEntity;
 
 	/**
 	 * Creates a new GroupManager instance.
 	 */
 	public GroupManager() {
-		entitiesByGroup = new HashMap<String, Bag<Entity>>();
-		groupsByEntity = new HashMap<Entity, Bag<String>>();
+		entitiesByGroup = new HashMap<String, IntBag>();
+		groupsByEntity = new IntMap< Bag<String>>();
 	}
 
 
 
 	@Override
 	protected void initialize() {
-		flyweight = world.getEntityManager()
-						.createFlyweight();
 	}
 	
 	/**
@@ -54,10 +51,10 @@ public class GroupManager extends Manager {
 	 * @param e
 	 *			entity to add into the group
 	 */
-	public void add(Entity e, String group) {
-		Bag<Entity> entities = entitiesByGroup.get(group);
+	public void add(int e, String group) {
+		IntBag entities = entitiesByGroup.get(group);
 		if(entities == null) {
-			entities = new Bag<Entity>();
+			entities = new IntBag();
 			entitiesByGroup.put(group, entities);
 		}
 		if (!entities.contains(e)) entities.add(e);
@@ -78,8 +75,8 @@ public class GroupManager extends Manager {
 	 * @param group
 	 *			group to remove the entity from
 	 */
-	public void remove(Entity e, String group) {
-		Bag<Entity> entities = entitiesByGroup.get(group);
+	public void remove(int e, String group) {
+		IntBag entities = entitiesByGroup.get(group);
 		if(entities != null) {
 			entities.remove(e);
 		}
@@ -97,13 +94,13 @@ public class GroupManager extends Manager {
 	 * @param e
 	 *			the entity to remove
 	 */
-	public void removeFromAllGroups(Entity e) {
+	public void removeFromAllGroups(int e) {
 		Bag<String> groups = groupsByEntity.get(e);
 		if(groups == null) return;
 		for(int i = 0, s = groups.size(); s > i; i++) {
-			Bag<Entity> entities = entitiesByGroup.get(groups.get(i));
+			IntBag entities = entitiesByGroup.get(groups.get(i));
 			if(entities != null) {
-				entities.remove(world.getEntity(e.id));
+				entities.remove(e);
 			}
 		}
 		groupsByEntity.remove(e);
@@ -117,10 +114,10 @@ public class GroupManager extends Manager {
 	 *
 	 * @return read-only bag of entities belonging to the group
 	 */
-	public ImmutableBag<Entity> getEntities(String group) {
-		Bag<Entity> entities = entitiesByGroup.get(group);
+	public IntBag getEntities(String group) {
+		IntBag entities = entitiesByGroup.get(group);
 		if(entities == null) {
-			entities = new Bag<Entity>();
+			entities = new IntBag();
 			entitiesByGroup.put(group, entities);
 		}
 		return entities;
@@ -135,7 +132,7 @@ public class GroupManager extends Manager {
 	 *
 	 * @return the groups the entity belongs to.
 	 */
-	public ImmutableBag<String> getGroups(Entity e) {
+	public ImmutableBag<String> getGroups(int e) {
 		Bag<String> groups = groupsByEntity.get(e);
 		return groups != null ? groups : EMPTY_BAG;
 	}
@@ -148,7 +145,7 @@ public class GroupManager extends Manager {
 	 *
 	 * @return true. if it is in any group, false if none
 	 */
-	public boolean isInAnyGroup(Entity e) {
+	public boolean isInAnyGroup(int e) {
 		return getGroups(e).size() > 0;
 	}
 	
@@ -162,7 +159,7 @@ public class GroupManager extends Manager {
 	 *
 	 * @return true if the entity is in the supplied group, false if not
 	 */
-	public boolean isInGroup(Entity e, String group) {
+	public boolean isInGroup(int e, String group) {
 		if(group != null) {
 			Bag<String> bag = groupsByEntity.get(e);
 			if (bag != null) {
@@ -186,8 +183,7 @@ public class GroupManager extends Manager {
 	 */
 	@Override
 	public void deleted(int entityId) {
-		flyweight.id = entityId;
-		removeFromAllGroups(flyweight);
+		removeFromAllGroups(entityId);
 	}
 	
 }

@@ -20,7 +20,7 @@ public class AspectSubscriptionManagerTest {
 	}
 
 	private void entity(Class<? extends Component>... components) {
-		EntityEdit ee = world.createEntity().edit();
+		EntityEdit ee = EntityHelper.edit(world, world.createEntity());
 		for (Class<? extends Component> c : components) {
 			ee.create(c);
 		}
@@ -89,7 +89,7 @@ public class AspectSubscriptionManagerTest {
 			if (!componentXMapper.has(entityId))
 				return;
 
-			world.getEntity(entityId).edit().create(ComponentY.class);
+			EntityHelper.edit(world, entityId).create(ComponentY.class);
 		}
 	}
 }

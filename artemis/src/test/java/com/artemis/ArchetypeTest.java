@@ -8,7 +8,6 @@ import com.artemis.utils.Bag;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
@@ -105,16 +104,16 @@ public class ArchetypeTest {
 
 		ArchetypeBuilder builder = new ArchetypeBuilder().add(ComponentX.class);
 		Archetype archetype = builder.build(world);
-		Entity entity = world.createEntity(archetype);
-		entity.edit().create(ComponentY.class);
+		int entity = world.createEntity(archetype);
+		EntityHelper.edit(world, entity).create(ComponentY.class);
 		world.process();
 
-		assertNotNull(entity.getComponent(ComponentX.class));
-		assertNotNull(entity.getComponent(ComponentY.class));
+		assertNotNull(EntityHelper.getComponent(ComponentX.class, world, entity));
+		assertNotNull(EntityHelper.getComponent(ComponentY.class, world, entity));
 		assertNotNull(xMapper.get(entity));
 		assertNotNull(yMapper.get(entity));
 		//This is false, the bag only contains SpatialModifierComponent
-		assertEquals(2, entity.getComponents(new Bag<Component>()).size());
+		assertEquals(2, EntityHelper.getComponents(new Bag<Component>(), world, entity).size());
 	}
 
 	private void archetypeEntity(Archetype arch, int s) {
@@ -133,7 +132,7 @@ public class ArchetypeTest {
 		}
 
 		@Override
-		protected void process(Entity e) {
+		protected void process(int e) {
 			assertNotNull(componentXMapper.get(e));
 		}
 	}
@@ -148,7 +147,7 @@ public class ArchetypeTest {
 		}
 
 		@Override
-		protected void process(Entity e) {
+		protected void process(int e) {
 			assertNotNull(componentXMapper.get(e));
 		}
 	}

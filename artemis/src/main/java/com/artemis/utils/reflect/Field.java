@@ -121,6 +121,16 @@ public final class Field {
 		return null;
 	}
 
+	public int getInt(Object obj) throws ReflectionException {
+		try {
+			return field.getInt(obj);
+		} catch (IllegalArgumentException e) {
+			throw new ReflectionException("Object is not an instance of " + getDeclaringClass(), e);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException("Illegal access to field: " + getName(), e);
+		}
+	}
+
 	/** Returns the value of the field on the supplied object. */
 	public Object get (Object obj) throws ReflectionException {
 		try {

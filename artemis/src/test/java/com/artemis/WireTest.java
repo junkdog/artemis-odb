@@ -25,7 +25,7 @@ public class WireTest {
 	private MappedManagerAll mappedManagerAll;
 	private ExtendedManager extendedManager;
 	
-	private Entity entity;
+	private int entity;
 
 	@Before
 	public void init() {
@@ -46,7 +46,7 @@ public class WireTest {
 				.setSystem(extendedSystem));
 
 		entity = world.createEntity();
-		EntityEdit edit = entity.edit();
+		EntityEdit edit = EntityHelper.edit(world, entity);
 		edit.create(ComponentX.class);
 		edit.create(ComponentY.class);
 		
@@ -225,7 +225,7 @@ public class WireTest {
 		}
 		
 		@Override
-		protected void process(Entity e) {}
+		protected void process(int e) {}
 	}
 	
 	private static class MappedSystem extends EntityProcessingSystem {
@@ -240,7 +240,7 @@ public class WireTest {
 		}
 
 		@Override
-		protected void process(Entity e) {}
+		protected void process(int e) {}
 	}
 	
 	private static class ExtendedStaticManager extends ManagerWithStaticField {}

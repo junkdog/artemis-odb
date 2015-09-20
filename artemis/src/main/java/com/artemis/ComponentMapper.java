@@ -4,7 +4,6 @@ public abstract class ComponentMapper<A extends Component> {
 
 	private final EntityTransmuter createTransmuter;
 	private final EntityTransmuter removeTransmuter;
-	private final Entity flyweight;	
 
 	/** The type of components this mapper handles. */
 	public final ComponentType type;
@@ -14,44 +13,9 @@ public abstract class ComponentMapper<A extends Component> {
 		this.type = tf.getTypeFor(type);
 		createTransmuter = new EntityTransmuterFactory(world).add(type).build();
 		removeTransmuter = new EntityTransmuterFactory(world).remove(type).build();
-		flyweight = world.getEntityManager()
-						.createFlyweight();	
 	}
 	
-	/**
-	 * Fast but unsafe retrieval of a component for this entity.
-	 * <p>
-	 * No bounding checks, so this could throw an
-	 * {@link ArrayIndexOutOfBoundsException}, however in most scenarios you
-	 * already know the entity possesses this component.
-	 * </p>
-	 *
-	 * @param e the entity that should possess the component
-	 * @return the instance of the component
-	 * @throws ArrayIndexOutOfBoundsException
-	 */
-	public A get(Entity e) throws ArrayIndexOutOfBoundsException {
-		return get(e.getId());
-	}
-
 	public abstract A get(int entityId) throws ArrayIndexOutOfBoundsException;
-
-	/**
-	 * Fast but unsafe retrieval of a component for this entity.
-	 * <p>
-	 * No bounding checks, so this could throw an
-	 * {@link ArrayIndexOutOfBoundsException}, however in most scenarios you
-	 * already know the entity possesses this component.
-	 * </p>
-	 *
-	 * @param e                the entity that should possess the component
-	 * @param forceNewInstance Returns a new instance of the component (only applies to {@link PackedComponent}s)
-	 * @return the instance of the component
-	 * @throws ArrayIndexOutOfBoundsException
-	 */
-	public A get(Entity e, boolean forceNewInstance) throws ArrayIndexOutOfBoundsException {
-		return get(e.getId(), forceNewInstance);
-	}
 
 	/**
 	 * Fast but unsafe retrieval of a component for this entity, by id.
@@ -69,19 +33,6 @@ public abstract class ComponentMapper<A extends Component> {
 	public abstract A get(int entityId, boolean forceNewInstance) throws ArrayIndexOutOfBoundsException;
 
 	/**
-	 * Fast and safe retrieval of a component for this entity.
-	 * <p>
-	 * If the entity does not have this component then null is returned.
-	 * </p>
-	 *
-	 * @param e the entity that should possess the component
-	 * @return the instance of the component
-	 */
-	public A getSafe(Entity e) {
-		return getSafe(e.getId());
-	}
-
-	/**
 	 * Fast and safe retrieval of a component for this entity by id.
 	 * <p>
 	 * If the entity does not have this component then null is returned.
@@ -91,20 +42,6 @@ public abstract class ComponentMapper<A extends Component> {
 	 * @return the instance of the component
 	 */
 	public abstract A getSafe(int entityId);
-
-	/**
-	 * Fast and safe retrieval of a component for this entity.
-	 * <p>
-	 * If the entity does not have this component then null is returned.
-	 * </p>
-	 *
-	 * @param e                the entity that should possess the component
-	 * @param forceNewInstance If true, returns a new instance of the component (only applies to {@link PackedComponent}s)
-	 * @return the instance of the component
-	 */
-	public A getSafe(Entity e, boolean forceNewInstance) {
-		return getSafe(e.getId(), forceNewInstance);
-	}
 
 	/**
 	 * Fast and safe retrieval of a component for this entity, by id.
@@ -121,32 +58,11 @@ public abstract class ComponentMapper<A extends Component> {
 	/**
 	 * Checks if the entity has this type of component.
 	 *
-	 * @param e the entity to check
-	 * @return true if the entity has this component type, false if it doesn't
-	 */
-	public boolean has(Entity e) throws ArrayIndexOutOfBoundsException {
-		return has(e.getId());
-	}
-
-	/**
-	 * Checks if the entity has this type of component.
-	 *
 	 * @param entityId the id of entity to check
 	 * @return true if the entity has this component type, false if it doesn't
 	 */
 	public abstract boolean has(int entityId);
 
-
-	/**
-	 * Create component for this entity.
-	 * Will avoid creation if component preexists.
-	 *
-	 * @param entity the entity that should possess the component
-	 * @return the instance of the component.
-	 */
-	public A create(Entity entity) {
-		return create(entity.getId());
-	}
 
 	/**
 	 * Remove component from entity.
@@ -156,18 +72,8 @@ public abstract class ComponentMapper<A extends Component> {
 	 */
 	public void remove(int entityId) {
 		if (has(entityId)) {
-			removeTransmuter.transmute(asFlyweight(entityId));
+			removeTransmuter.transmute(entityId);
 		}
-	}
-
-	/**
-	 * Remove component from entity.
-	 * Does nothing if already removed.
-	 *
-	 * @param entity entity to remove.
-	 */
-	public void remove(Entity entity) {
-		remove(entity.getId());
 	}
 
 	/**
@@ -180,27 +86,17 @@ public abstract class ComponentMapper<A extends Component> {
 	public A create(int entityId) {
 		A component = getSafe(entityId);
 		if (component == null) {
-			createTransmuter.transmute(asFlyweight(entityId));
+			createTransmuter.transmute(entityId);
 			component = get(entityId);
 		}
 		return component;
 	}
 
 	/**
-	 * Setup flyweight with ID and return.
-	 * Cannot count on just created entities being resolvable
-	 * in world, which can break transmuters.
-	 */
-	private Entity asFlyweight(int entityId) {
-		flyweight.id = entityId;
-		return flyweight;
-	}
-
-	/**
 	 * Fast and safe retrieval of a component for this entity.
 	 * If the entity does not have this component then fallback is returned.
 	 *
-	 * @param entityId Entity that should possess the component
+	 * @param entityId EntityHelper that should possess the component
 	 * @param fallback fallback component to return, or {@code null} to return null.
 	 * @return the instance of the component
 	 */
@@ -214,7 +110,7 @@ public abstract class ComponentMapper<A extends Component> {
 	 *
 	 * Does nothing if already removed or created respectively.
 	 *
-	 * @param entityId Entity id to change.
+	 * @param entityId EntityHelper id to change.
 	 * @param value {@code true} to create component (if missing), {@code false} to remove (if exists).
 	 * @return the instance of the component, or {@code null} if removed.
 	 */
@@ -225,31 +121,6 @@ public abstract class ComponentMapper<A extends Component> {
 			remove(entityId);
 			return null;
 		}
-	}
-
-	/**
-	 * Create or remove a component from an entity.
-	 *
-	 * Does nothing if already removed or created respectively.
-	 *
-	 * @param entity Entity to change.
-	 * @param value {@code true} to create component (if missing), {@code false} to remove (if exists).
-	 * @return the instance of the component, or {@code null} if removed.
-	 */
-	public A set(Entity entity, boolean value) {
-		return set(entity.getId(), value);
-	}
-
-	/**
-	 * Fast and safe retrieval of a component for this entity.
-	 * If the entity does not have this component then fallback is returned.
-	 *
-	 * @param entity   Entity that should possess the component
-	 * @param fallback fallback component to return, or {@code null} to return null.
-	 * @return the instance of the component
-	 */
-	public A getSafe(Entity entity, A fallback) {
-		return getSafe(entity.getId(), fallback);
 	}
 
 	/**

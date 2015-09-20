@@ -14,13 +14,12 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.artemis.World;
 
 public abstract class PackedWeavingTest {
 	
 	World world;
-	Entity e1, e2;
+	int e1, e2;
 
 	@Before
 	public void setup() {
@@ -56,7 +55,7 @@ public abstract class PackedWeavingTest {
 		assertNotEquals(getOffset(e1), getOffset(e2));
 	}
 	
-	private int getOffset(Entity e) throws Exception {
+	private int getOffset(int e) throws Exception {
 		ComponentMapper<?> mapper = getMapper();
 		return field("$stride").getInt(mapper.get(e));
 	}

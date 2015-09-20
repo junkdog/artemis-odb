@@ -26,25 +26,25 @@ public class EntityManagerTest {
 	public void old_entities_are_recycled() {
 		Set<Integer> ids = new HashSet<Integer>();
 		
-		Entity e1 = world.createEntity();
-		Entity e2 = world.createEntity();
-		Entity e3 = world.createEntity();
+		int e1 = world.createEntity();
+		int e2 = world.createEntity();
+		int e3 = world.createEntity();
 		
 		ids.add(System.identityHashCode(e1));
 		ids.add(System.identityHashCode(e2));
 		ids.add(System.identityHashCode(e3));
 		
 		assertEquals(3, ids.size());
-		
-		e1.deleteFromWorld();
-		e2.deleteFromWorld();
-		e3.deleteFromWorld();
+
+		world.deleteEntity(e1);
+		world.deleteEntity(e2);
+		world.deleteEntity(e3);
 		
 		world.process();
 		
-		Entity e1b = world.createEntity();
-		Entity e2b = world.createEntity();
-		Entity e3b = world.createEntity();
+		int e1b = world.createEntity();
+		int e2b = world.createEntity();
+		int e3b = world.createEntity();
 
 		ids.add(System.identityHashCode(e1b));
 		ids.add(System.identityHashCode(e2b));
@@ -57,8 +57,8 @@ public class EntityManagerTest {
 	public void is_active_check_never_throws() {
 		EntityManager em = world.getEntityManager();
 		for (int i = 0; 1024 > i; i++) {
-			Entity e = world.createEntity();
-			assertTrue(em.isNew(e.getId()));
+			int e = world.createEntity();
+			assertTrue(em.isNew(e));
 		}
 	}
 	
@@ -66,16 +66,16 @@ public class EntityManagerTest {
 	public void recycled_entities_behave_nicely_with_components() {
 		ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
 		
-		Entity e1 = world.createEntity();
-		e1.edit().add(new ComponentX());
+		int e1 = world.createEntity();
+		EntityHelper.edit(world, e1).add(new ComponentX());
 		assertTrue(mapper.has(e1));
 		
-		int id1 = e1.getId();
-		e1.deleteFromWorld();
+		int id1 = e1;
+		world.deleteEntity(e1);
 		
-		Entity e2 = world.createEntity();
+		int e2 = world.createEntity();
 		
-		assertNotEquals(id1, e2.getId());
+		assertNotEquals(id1, e2);
 		assertFalse("Error:" + mapper.getSafe(e2), mapper.has(e2));
 	}
 	
@@ -83,16 +83,16 @@ public class EntityManagerTest {
 	public void should_recycle_entities_after_one_round() {
 		ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
 		
-		Entity e1 = world.createEntity();
-		e1.edit().add(new ComponentX());
+		int e1 = world.createEntity();
+		EntityHelper.edit(world, e1).add(new ComponentX());
 		assertTrue(mapper.has(e1));
 		
-		int id1 = e1.getId();
-		e1.deleteFromWorld();
+		int id1 = e1;
+		world.deleteEntity(e1);
 		world.process();
-		Entity e2 = world.createEntity();
+		int e2 = world.createEntity();
 		
-		assertEquals(id1, e2.getId());
+		assertEquals(id1, e2);
 		assertFalse("Error:" + mapper.getSafe(e2), mapper.has(e2));
 	}
 }

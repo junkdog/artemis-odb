@@ -37,9 +37,9 @@ public class EntitySubscriptionTest {
 		assertEquals(0, sm.inserted);
 		assertEquals(0, sm.removed);
 
-		world.createEntity().edit().create(ComponentX.class);
-		world.createEntity().edit().create(ComponentX.class);
-		world.createEntity().edit().create(ComponentX.class);
+		EntityHelper.edit(world, world.createEntity()).create(ComponentX.class);
+		EntityHelper.edit(world, world.createEntity()).create(ComponentX.class);
+		EntityHelper.edit(world, world.createEntity()).create(ComponentX.class);
 		world.process();
 
 		assertEquals(3, sm.inserted);
@@ -64,9 +64,9 @@ public class EntitySubscriptionTest {
 		config.setSystem(new TestManager());
 		World world = new World(config);
 
-		Entity entity = world.createEntity();
+		int entity = world.createEntity();
 		world.process();
-		entity.deleteFromWorld();
+		world.deleteEntity(entity);
 		world.process();
 	}
 

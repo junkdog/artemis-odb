@@ -3,7 +3,7 @@ package ${model.packageName};
 import com.artemis.Archetype;
 import com.artemis.ArchetypeBuilder;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
+import com.artemis.EntityHelper;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.GroupManager;
@@ -102,10 +102,10 @@ public class ${model.factoryName}Impl implements ${model.factoryName} {
 	}
 	
 	@Override
-	public Entity create() {
+	public int create() {
 		_sealed = true;
 		
-		Entity e = world.createEntity(archetype);
+		int e = world.createEntity(archetype);
 
 <#list model.instanceMethods as m>
 		if (${m.flagName}) {

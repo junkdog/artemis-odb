@@ -17,13 +17,13 @@ public class EntityEditTest {
 		World world = new World(new WorldConfiguration()
 				.setSystem(lm));
 
-		Entity e = world.createEntity();
+		int e = world.createEntity();
 		world.process();
 		
 		assertEquals(1, lm.added);
 		assertEquals(0, lm.changed);
 		
-		EntityEdit edit = e.edit();
+		EntityEdit edit = EntityHelper.edit(world, e);
 		edit.create(ComponentX.class);
 		edit.create(ComponentY.class);
 		
@@ -37,17 +37,17 @@ public class EntityEditTest {
 	public void test_composition_identity_simple_case() {
 		World world = new World();
 
-		Entity e = world.createEntity();
+		int e = world.createEntity();
 		world.process();
-		assertEquals(1, e.getCompositionId());
+		assertEquals(1, EntityHelper.getCompositionId(world, e));
 	}
 	
 	@Test
 	public void test_composition_identity() {
 		World world = new World();
 
-		Entity e = world.createEntity();
-		assertEquals(1, e.getCompositionId());
+		int e = world.createEntity();
+		assertEquals(1, EntityHelper.getCompositionId(world, e));
 	}
 	
 	private static class LeManager extends Manager {

@@ -6,7 +6,7 @@
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>artemis parent</name>
-	<description>Fork of Artemis Entity System Framework.</description>
+	<description>Fork of Artemis int System Framework.</description>
 	<url>https://github.com/junkdog/artemis-odb</url>
 
 	<properties>
@@ -97,7 +97,7 @@
 	
 	<modules>
 		<module>artemis</module>
-		<module>artemis-json</module>
+<!--		<module>artemis-json</module>-->
 		<module>artemis-json-libgdx</module>
 		<module>artemis-weaver</module>
 		<module>artemis-maven</module>

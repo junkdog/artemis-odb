@@ -1,5 +1,5 @@
 /**
- * Entity systems.
+ * EntityHelper systems.
  * <p>
  * Extend these classes to create your own systems.
  * </p>

@@ -2,11 +2,9 @@ package com.artemis;
 
 
 import com.artemis.EntitySubscription.SubscriptionListener;
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
-import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 import org.junit.Test;
 
@@ -45,7 +43,7 @@ public class SubscriptionListenerTest {
 				.add(ComponentX.class)
 				.build();
 
-		EntityEdit ee = w.createEntity().edit();
+		EntityEdit ee = EntityHelper.edit(w, w.createEntity());
 		ee.create(ComponentY.class);
 
 		transmuter.transmute(ee.getEntity());
@@ -70,8 +68,8 @@ public class SubscriptionListenerTest {
 				.add(ComponentY.class)
 				.build(w);
 
-		Entity e = w.createEntity(archetype);
-		e.edit().create(ComponentX.class);
+		int e = w.createEntity(archetype);
+		EntityHelper.edit(w, e).create(ComponentX.class);
 
 		w.process();
 
@@ -97,7 +95,7 @@ public class SubscriptionListenerTest {
 				.add(ComponentX.class)
 				.build();
 
-		Entity e = w.createEntity(archetype);
+		int e = w.createEntity(archetype);
 		transmuter.transmute(e);
 
 		w.process();
@@ -128,8 +126,8 @@ public class SubscriptionListenerTest {
 		}
 
 		@Override
-		protected void process(Entity e) {
-			processedEntities.set(e.id);
+		protected void process(int e) {
+			processedEntities.set(e);
 		}
 	}
 
@@ -147,8 +145,8 @@ public class SubscriptionListenerTest {
 		}
 
 		@Override
-		protected void process(Entity e) {
-			processedEntities.set(e.id);
+		protected void process(int e) {
+			processedEntities.set(e);
 		}
 
 		@Override
@@ -167,7 +165,7 @@ public class SubscriptionListenerTest {
 		@Override
 		protected void processSystem() {
 			if (!isInitialized) {
-				world.createEntity().edit().create(MyComponent.class);
+				EntityHelper.edit(world, world.createEntity()).create(MyComponent.class);
 				isInitialized = true;
 			}
 		}

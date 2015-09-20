@@ -1,6 +1,6 @@
 package com.artemis.io;
 
-import com.artemis.Entity;
+import com.artemis.EntityHelper;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;
@@ -11,7 +11,7 @@ import com.esotericsoftware.jsonbeans.JsonValue;
 
 public class IntBagEntitySerializer implements JsonSerializer<IntBag> {
 	private final World world;
-	private final Bag<Entity> translatedIds = new Bag<Entity>();
+	private final IntBag translatedIds = new IntBag();
 
 	private int recursionLevel;
 
@@ -27,8 +27,8 @@ public class IntBagEntitySerializer implements JsonSerializer<IntBag> {
 		if (recursionLevel == 1) {
 			json.writeObjectStart();
 			for (int i = 0, s = entities.size(); s > i; i++) {
-				Entity e = world.getEntity(entities.get(i));
-				json.writeValue(Integer.toString(e.id), e);
+				int e = world.getEntity(entities.get(i));
+				json.writeValue(Integer.toString(e), new TemporaryEntity(e));
 			}
 			json.writeObjectEnd();
 		} else {
@@ -51,8 +51,8 @@ public class IntBagEntitySerializer implements JsonSerializer<IntBag> {
 			JsonValue entityArray = jsonData.child;
 			JsonValue entity = entityArray;
 			while (entity != null) {
-				Entity e = json.readValue(Entity.class, entity.child);
-				translatedIds.set(Integer.parseInt(entity.name), e);
+				TemporaryEntity e = json.readValue(TemporaryEntity.class, entity.child);
+				translatedIds.set(Integer.parseInt(entity.name), e.id);
 				bag.add(e.id);
 
 				entity = entity.next;
@@ -69,7 +69,7 @@ public class IntBagEntitySerializer implements JsonSerializer<IntBag> {
 
 	}
 
-	public Bag<Entity> getTranslatedIds() {
+	public IntBag getTranslatedIds() {
 		return translatedIds;
 	}
 }

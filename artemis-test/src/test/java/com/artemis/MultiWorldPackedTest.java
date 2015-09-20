@@ -14,20 +14,20 @@ public class MultiWorldPackedTest {
 	@Test
 	public void packed_components_dont_overwrite_in_multiworld() {
 		World outer = new World();
-		Entity o = outer.createEntity();
-		o.edit().create(TransPackedInt.class).x(1);
-		o.edit().create(TransPackedFloat.class).x(2);
+		int o = outer.createEntity();
+		EntityHelper.edit(outer, o).create(TransPackedInt.class).x(1);
+		EntityHelper.edit(outer, o).create(TransPackedFloat.class).x(2);
 
 		World inner = new World();
-		Entity i = inner.createEntity();
-		i.edit().create(TransPackedFloat.class).x(3);
-		i.edit().create(TransPackedInt.class).x(4);
+		int i = inner.createEntity();
+		EntityHelper.edit(inner, i).create(TransPackedFloat.class).x(3);
+		EntityHelper.edit(inner, i).create(TransPackedInt.class).x(4);
 
-		assertEquals(o.getId(), i.getId());
+		assertEquals(o, i);
 		
-		assertEquals(1, o.getComponent(TransPackedInt.class).x());
-		assertEquals(2, o.getComponent(TransPackedFloat.class).x(), 0.001);
-		assertEquals(3, i.getComponent(TransPackedFloat.class).x(), 0.001);
-		assertEquals(4, i.getComponent(TransPackedInt.class).x());
+		assertEquals(1, EntityHelper.getComponent(TransPackedInt.class, outer, o).x());
+		assertEquals(2, EntityHelper.getComponent(TransPackedFloat.class, outer, o).x(), 0.001);
+		assertEquals(3, EntityHelper.getComponent(TransPackedFloat.class, inner, i).x(), 0.001);
+		assertEquals(4, EntityHelper.getComponent(TransPackedInt.class, inner, i).x());
 	}
 }

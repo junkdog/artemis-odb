@@ -3,10 +3,9 @@ package com.artemis.managers;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.artemis.Entity;
 import com.artemis.Manager;
-import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
+import com.badlogic.gdx.utils.IntMap;
 
 
 /**
@@ -20,18 +19,16 @@ import com.artemis.utils.ImmutableBag;
 public class PlayerManager extends Manager {
 
 	/** All players mapped to entities as key. */
-	private final Map<Entity, String> playerByEntity;
+	private final IntMap<String> playerByEntity;
 	/** All entities that are mapped to a player, with the player as key. */
-	private final Map<String, Bag<Entity>> entitiesByPlayer;
-
-	private Entity flyweight;
+	private final Map<String, IntBag> entitiesByPlayer;
 
 	/**
 	 * Creates a new PlayerManager instance.
 	 */
 	public PlayerManager() {
-		playerByEntity = new HashMap<Entity, String>();
-		entitiesByPlayer = new HashMap<String, Bag<Entity>>();
+		playerByEntity = new IntMap<String>();
+		entitiesByPlayer = new HashMap<String, IntBag>();
 	}
 
 
@@ -46,11 +43,11 @@ public class PlayerManager extends Manager {
 	 * @param player
 	 *			the player to associtate to the entity with
 	 */
-	public void setPlayer(Entity e, String player) {
+	public void setPlayer(int e, String player) {
 		playerByEntity.put(e, player);
-		Bag<Entity> entities = entitiesByPlayer.get(player);
+		IntBag entities = entitiesByPlayer.get(player);
 		if(entities == null) {
-			entities = new Bag<Entity>();
+			entities = new IntBag();
 			entitiesByPlayer.put(player, entities);
 		}
 		entities.add(e);
@@ -64,10 +61,10 @@ public class PlayerManager extends Manager {
 	 *
 	 * @return a bag containing all entities belonging to the player
 	 */
-	public ImmutableBag<Entity> getEntitiesOfPlayer(String player) {
-		Bag<Entity> entities = entitiesByPlayer.get(player);
+	public IntBag getEntitiesOfPlayer(String player) {
+		IntBag entities = entitiesByPlayer.get(player);
 		if(entities == null) {
-			entities = new Bag<Entity>();
+			entities = new IntBag();
 		}
 		return entities;
 	}
@@ -78,10 +75,10 @@ public class PlayerManager extends Manager {
 	 * @param e
 	 *			the entity to remove
 	 */
-	public void removeFromPlayer(Entity e) {
+	public void removeFromPlayer(int e) {
 		String player = playerByEntity.get(e);
 		if(player != null) {
-			Bag<Entity> entities = entitiesByPlayer.get(player);
+			IntBag entities = entitiesByPlayer.get(player);
 			if(entities != null) {
 				entities.remove(e);
 			}
@@ -96,14 +93,8 @@ public class PlayerManager extends Manager {
 	 *
 	 * @return the player
 	 */
-	public String getPlayer(Entity e) {
+	public String getPlayer(int e) {
 		return playerByEntity.get(e);
-	}
-
-	@Override
-	protected void initialize() {
-		flyweight = world.getEntityManager()
-				.createFlyweight();
 	}
 
 	/**
@@ -114,8 +105,7 @@ public class PlayerManager extends Manager {
 	 */
 	@Override
 	public void deleted(int entityId) {
-		flyweight.id = entityId;
-		removeFromPlayer(flyweight);
+		removeFromPlayer(entityId);
 	}
 
 }

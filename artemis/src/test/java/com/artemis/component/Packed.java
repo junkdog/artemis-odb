@@ -1,6 +1,5 @@
 package com.artemis.component;
 
-import com.artemis.Entity;
 import com.artemis.PackedComponent;
 
 public class Packed extends PackedComponent

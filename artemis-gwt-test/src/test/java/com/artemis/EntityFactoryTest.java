@@ -37,9 +37,9 @@ public class EntityFactoryTest extends GWTTestCase {
 	}
 	
 	public void test_instance_methods() {
-		Entity e1 = factory.position(1, 2).asset("1").create();
-		Entity e2 = factory.position(3, 4).asset("2").create();
-		Entity e3 = factory.create();
+		int e1 = factory.position(1, 2).asset("1").create();
+		int e2 = factory.position(3, 4).asset("2").create();
+		int e3 = factory.create();
 		
 		assertEquals(1, position.get(e1).x, ACC);
 		assertEquals(2, position.get(e1).y, ACC);
@@ -54,16 +54,16 @@ public class EntityFactoryTest extends GWTTestCase {
 	}
 	
 	public void test_aliased_instance_method() {
-		Entity e1 = factory.culled(true).create();
-		Entity e2 = factory.culled(false).create();
+		int e1 = factory.culled(true).create();
+		int e2 = factory.culled(false).create();
 		
 		assertEquals(true, cullible.get(e1).culled);
 		assertEquals(false, cullible.get(e2).culled);
 	}
 	
 	public void test_sticky_method() {
-		Entity e1 = factory.hitPoints(100).create();
-		Entity e2 = factory.create();
+		int e1 = factory.hitPoints(100).create();
+		int e2 = factory.create();
 		
 		assertEquals(100, hitpoints.get(e1).current);
 		assertEquals(100, hitpoints.get(e2).current);
@@ -84,8 +84,8 @@ public class EntityFactoryTest extends GWTTestCase {
 	}
 	
 	public void test_setter() {
-		Entity e1 = factory.pos(1, 2).create();
-		Entity e2 = factory.pos(3, 4).create();
+		int e1 = factory.pos(1, 2).create();
+		int e2 = factory.pos(3, 4).create();
 		
 		assertEquals(1, complex.get(e1).pos.x, ACC);
 		assertEquals(2, complex.get(e1).pos.y, ACC);
@@ -94,8 +94,8 @@ public class EntityFactoryTest extends GWTTestCase {
 	}
 	
 	public void test_aliased_setter() {
-		Entity e1 = factory.hoho(1, 2).create();
-		Entity e2 = factory.hoho(3, 4).create();
+		int e1 = factory.hoho(1, 2).create();
+		int e2 = factory.hoho(3, 4).create();
 		
 		assertEquals(1, complex.get(e1).vel.x, ACC);
 		assertEquals(2, complex.get(e1).vel.y, ACC);

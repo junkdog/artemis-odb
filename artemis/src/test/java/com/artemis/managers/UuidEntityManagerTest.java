@@ -6,11 +6,11 @@ import static org.junit.Assert.assertNull;
 
 import java.util.UUID;
 
+import com.artemis.EntityHelper;
 import com.artemis.WorldConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.artemis.Entity;
 import com.artemis.World;
 
 @SuppressWarnings("static-method")
@@ -22,7 +22,7 @@ public class UuidEntityManagerTest {
 		World world = new World(new WorldConfiguration()
 				.setSystem(uuidManager));
 
-		Entity entity = world.createEntity();
+		int entity = world.createEntity();
 		
 		UUID uuid0 = uuidManager.getUuid(entity);
 		Assert.assertNotNull(uuid0);
@@ -30,12 +30,12 @@ public class UuidEntityManagerTest {
 		UUID uuid1 = UUID.randomUUID();
 		
 		assertEquals(uuid0, uuidManager.getUuid(entity));
-		uuidManager.setUuid(entity,uuid1);
+		uuidManager.setUuid(entity, uuid1);
 		assertEquals(uuid1, uuidManager.getUuid(entity));
 		
 		
 		assertNotEquals(uuid0, uuid1);
-		assertNull(uuidManager.getEntity(uuid0));
+		assertEquals(EntityHelper.NO_ENTITY, uuidManager.getEntity(uuid0));
 		assertEquals(entity, uuidManager.getEntity(uuid1));
 	}
 
@@ -48,15 +48,15 @@ public class UuidEntityManagerTest {
 
 	    World world = new World(configuration);
 	    UuidEntityManager uuidEntityManager = world.getSystem(UuidEntityManager.class);
-	    Entity entity = world.createEntity();
+	    int entity = world.createEntity();
 		uuidEntityManager.setUuid(entity, uuid);
 	    world.process();
-		assertEquals(0, uuidEntityManager.getEntity(uuid).id); // Entity[0]
+		assertEquals(0, uuidEntityManager.getEntity(uuid)); // int[0]
 		world.deleteEntity(entity);
 		entity = world.createEntity();
 		uuidEntityManager.setUuid(entity, uuid);
-	    assertEquals(1, uuidEntityManager.getEntity(uuid).id); // Entity[1]
+	    assertEquals(1, uuidEntityManager.getEntity(uuid)); // int[1]
 	    world.process();
-	    assertEquals(1, uuidEntityManager.getEntity(uuid).id);
+	    assertEquals(1, uuidEntityManager.getEntity(uuid));
 	}
 }

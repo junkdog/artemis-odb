@@ -15,7 +15,7 @@ public class MapperTest {
 	private World world;
 	private MappedSystem mappedSystem;
 	private MappedManager mappedManager;
-	private Entity entity;
+	private int entity;
 
 	@Before
 	public void init() {
@@ -26,7 +26,7 @@ public class MapperTest {
 		world.inject(this);
 		
 		entity = world.createEntity();
-		EntityEdit edit = entity.edit();
+		EntityEdit edit = EntityHelper.edit(world, entity);
 		edit.create(ComponentX.class);
 		edit.create(ComponentY.class);
 		
@@ -61,7 +61,7 @@ public class MapperTest {
 		}
 
 		@Override
-		protected void process(Entity e) {}
+		protected void process(int e) {}
 		
 	}
 	

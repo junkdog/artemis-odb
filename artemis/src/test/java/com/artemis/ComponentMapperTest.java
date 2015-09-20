@@ -1,13 +1,9 @@
 package com.artemis;
 
 import com.artemis.annotations.Wire;
-import com.artemis.component.ComponentX;
-import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Daan van Yperen
@@ -30,7 +26,7 @@ public class ComponentMapperTest {
 		protected ComponentMapper<Pos> mPos;
 
 		@Override
-		protected void process(Entity e) {
+		protected void process(int e) {
 		}
 	}
 
@@ -40,7 +36,7 @@ public class ComponentMapperTest {
 		@Wire(injectInherited = true)
 		class TestSystemA extends BasicSystem {
 			@Override
-			protected void process(Entity e) {
+			protected void process(int e) {
 				Pos c = mPos.create(e);
 				Assert.assertNotNull(c);
 			}
@@ -55,7 +51,7 @@ public class ComponentMapperTest {
 		@Wire(injectInherited = true)
 		class TestSystem extends BasicSystem {
 			@Override
-			protected void process(Entity e) {
+			protected void process(int e) {
 				Pos c1 = mPos.create(e);
 				Pos c2 = mPos.create(e);
 				Assert.assertEquals(c1, c2);
@@ -70,7 +66,7 @@ public class ComponentMapperTest {
 		@Wire(injectInherited = true)
 		class TestSystem extends BasicSystem {
 			@Override
-			protected void process(Entity e) {
+			protected void process(int e) {
 				Pos c1 = mPos.create(e);
 				Pos c2 = mPos.set(e, true);
 				Assert.assertEquals(c1, c2);
@@ -85,7 +81,7 @@ public class ComponentMapperTest {
 		@Wire(injectInherited = true)
 		class TestSystem extends BasicSystem {
 			@Override
-			protected void process(Entity e) {
+			protected void process(int e) {
 				mPos.create(e);
 				mPos.set(e,false);
 				Assert.assertFalse(mPos.has(e));
@@ -100,7 +96,7 @@ public class ComponentMapperTest {
 		@Wire(injectInherited = true)
 		class TestSystem extends BasicSystem {
 			@Override
-			protected void process(Entity e) {
+			protected void process(int e) {
 				mPos.create(e);
 				mPos.remove(e);
 				Assert.assertFalse(mPos.has(e));
@@ -115,7 +111,7 @@ public class ComponentMapperTest {
 		@Wire(injectInherited = true)
 		class TestSystem extends BasicSystem {
 			@Override
-			protected void process(Entity e) {
+			protected void process(int e) {
 				mPos.remove(e);
 				Assert.assertFalse(mPos.has(e));
 			}
@@ -129,7 +125,7 @@ public class ComponentMapperTest {
 		@Wire(injectInherited = true)
 		class TestSystem extends BasicSystem {
 			@Override
-			protected void process(Entity e) {
+			protected void process(int e) {
 				mPos.set(e, false);
 				Assert.assertFalse(mPos.has(e));
 			}
@@ -146,7 +142,7 @@ public class ComponentMapperTest {
 			private Pos fallbackPos = new Pos(10,10);
 
 			@Override
-			protected void process(Entity e) {
+			protected void process(int e) {
 				Assert.assertEquals("expected to return fallback.", fallbackPos, mPos.getSafe(e, fallbackPos));
 			}
 		}
@@ -162,7 +158,7 @@ public class ComponentMapperTest {
 			private Pos fallbackPos = new Pos(10,10);
 
 			@Override
-			protected void process(Entity e) {
+			protected void process(int e) {
 				final Pos pos = mPos.create(e);
 				Assert.assertEquals("expected to return component.", pos, mPos.getSafe(e, fallbackPos));
 			}
@@ -179,7 +175,7 @@ public class ComponentMapperTest {
 			private Pos fallbackPos = new Pos(10,10);
 
 			@Override
-			protected void process(Entity e) {
+			protected void process(int e) {
 				Assert.assertNull(mPos.getSafe(e, null));
 			}
 		}
@@ -188,7 +184,7 @@ public class ComponentMapperTest {
 
 	protected void createAndProcessWorld(BaseSystem system) {
 		final World world = new World(new WorldConfiguration().setSystem(system));
-		world.createEntity().edit().create(TestMarker.class);
+		EntityHelper.edit(world, world.createEntity()).create(TestMarker.class);
 		world.process();
 	}
 
@@ -197,8 +193,8 @@ public class ComponentMapperTest {
 		@Wire(injectInherited = true)
 		class TestSystem extends BasicSystem {
 			@Override
-			protected void process(Entity e) {
-				final Entity t1 = world.createEntity();
+			protected void process(int e) {
+				final int t1 = world.createEntity();
 				Pos c1 = mPos.create(t1);
 				Assert.assertNotNull(c1);
 			}
@@ -212,8 +208,8 @@ public class ComponentMapperTest {
 		@Wire(injectInherited = true)
 		class TestSystem extends BasicSystem {
 			@Override
-			protected void process(Entity e) {
-				final Entity t1 = world.createEntity();
+			protected void process(int e) {
+				final int t1 = world.createEntity();
 				mPos.remove(t1);
 			}
 		}
@@ -225,9 +221,9 @@ public class ComponentMapperTest {
 		@Wire(injectInherited = true)
 		class TestSystem extends BasicSystem {
 			@Override
-			protected void process(Entity e) {
-				final Entity t1 = world.createEntity();
-				Pos c1 = mPos.create(t1.id);
+			protected void process(int e) {
+				final int t1 = world.createEntity();
+				Pos c1 = mPos.create(t1);
 				Assert.assertNotNull(c1);
 			}
 		}
@@ -240,9 +236,9 @@ public class ComponentMapperTest {
 		@Wire(injectInherited = true)
 		class TestSystem extends BasicSystem {
 			@Override
-			protected void process(Entity e) {
-				final Entity t1 = world.createEntity();
-				mPos.remove(t1.id);
+			protected void process(int e) {
+				final int t1 = world.createEntity();
+				mPos.remove(t1);
 			}
 		}
 		createAndProcessWorld(new TestSystem());

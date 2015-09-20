@@ -28,7 +28,7 @@ public abstract class PackedComponent extends Component {
 
 	/**
 	 * Internal method, used by the {@link ComponentManager},
-	 * will always send the highest seen {@link Entity#getId()}.
+	 * will always send the highest seen {@link EntityHelper#getId()}.
 	 * <p/>
 	 * Ensures that the backing data storage can accomodate
 	 * all entities.

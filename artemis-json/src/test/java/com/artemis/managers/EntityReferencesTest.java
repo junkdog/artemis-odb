@@ -1,7 +1,6 @@
 package com.artemis.managers;
 
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.annotations.Wire;
@@ -28,29 +27,29 @@ public class EntityReferencesTest {
 	public void load_before_save() throws Exception {
 		SaveFileFormat load = loadWorld();
 
-		Entity base = tags.getEntity("level");
-		Entity star1 = tags.getEntity("star1");
+		int base = tags.getEntity("level");
+		int star1 = tags.getEntity("star1");
 
 		assertEquals(5, load.entities.size());
 
 		assertNotNull(base);
 		assertNotNull(star1);
 
-		assertEquals(base.id, parentedPositionMapper.get(star1).origin);
+		assertEquals(base, parentedPositionMapper.get(star1).origin);
 
 		LevelState state = levelStateMapper.get(base);
-		assertEquals(star1.id, state.starId1);
+		assertEquals(star1, state.starId1);
 	}
 
 		@Test
 	public void load_entity_with_references() throws Exception {
 		SaveFileFormat load = loadWorld();
 
-		Entity base = tags.getEntity("level");
-		Entity star1 = tags.getEntity("star1");
-		Entity star2 = tags.getEntity("star2");
-		Entity star3 = tags.getEntity("star3");
-		Entity shadow = tags.getEntity("shadow");
+		int base = tags.getEntity("level");
+		int star1 = tags.getEntity("star1");
+		int star2 = tags.getEntity("star2");
+		int star3 = tags.getEntity("star3");
+		int shadow = tags.getEntity("shadow");
 
 		assertEquals(5, load.entities.size());
 
@@ -60,14 +59,14 @@ public class EntityReferencesTest {
 		assertNotNull(star3);
 		assertNotNull(shadow);
 
-		assertEquals(base.id, parentedPositionMapper.get(star1).origin);
-		assertEquals(base.id, parentedPositionMapper.get(star2).origin);
-		assertEquals(base.id, parentedPositionMapper.get(star3).origin);
+		assertEquals(base, parentedPositionMapper.get(star1).origin);
+		assertEquals(base, parentedPositionMapper.get(star2).origin);
+		assertEquals(base, parentedPositionMapper.get(star3).origin);
 
 		LevelState state = levelStateMapper.get(base);
-		assertEquals(star1.id, state.starId1);
-		assertEquals(star2.id, state.starId2);
-		assertEquals(star3.id, state.starId3);
+		assertEquals(star1, state.starId1);
+		assertEquals(star2, state.starId2);
+		assertEquals(star3, state.starId3);
 	}
 
 	private SaveFileFormat loadWorld() {

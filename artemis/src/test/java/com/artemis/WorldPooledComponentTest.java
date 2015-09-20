@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.artemis.component.CountingPooledComponent;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.artemis.component.ReusedComponent;
@@ -50,22 +49,22 @@ public class WorldPooledComponentTest
 
 	@Test
 	public void creating_pooled_components_returns_old_to_pool() {
-		World w = new World();
-		Entity e = w.createEntity();
-		CountingPooledComponent cpc1 = e.edit().create(CountingPooledComponent.class);
-		w.process();
+		World world = new World();
+		int e = world.createEntity();
+		CountingPooledComponent cpc1 = EntityHelper.edit(world, e).create(CountingPooledComponent.class);
+		world.process();
 
-		e.edit().create(CountingPooledComponent.class);
-		w.process();
+		EntityHelper.edit(world, e).create(CountingPooledComponent.class);
+		world.process();
 
-		assertEquals(cpc1, e.edit().create(CountingPooledComponent.class));
+		assertEquals(cpc1, EntityHelper.edit(world, e).create(CountingPooledComponent.class));
 	}
 	
 	private int createEntity(World world)
 	{
-		Entity e = world.createEntity();
-		ReusedComponent component = e.edit().create(ReusedComponent.class);
-		return e.hashCode();
+		int e = world.createEntity();
+		ReusedComponent component = EntityHelper.edit(world, e).create(ReusedComponent.class);
+		return e;
 	}
 	
 	static class SystemComponentEntityRemover extends EntityProcessingSystem
@@ -77,9 +76,9 @@ public class WorldPooledComponentTest
 		}
 
 		@Override
-		protected void process(Entity e)
+		protected void process(int e)
 		{
-			e.deleteFromWorld();
+			world.deleteEntity(e);
 		}
 	}
 	
@@ -92,9 +91,9 @@ public class WorldPooledComponentTest
 		}
 		
 		@Override
-		protected void process(Entity e)
+		protected void process(int e)
 		{
-			e.edit().remove(ReusedComponent.class);
+			EntityHelper.edit(world, e).remove(ReusedComponent.class);
 		}
 	}
 }

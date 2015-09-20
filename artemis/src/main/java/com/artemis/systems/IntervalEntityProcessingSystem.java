@@ -1,10 +1,7 @@
 package com.artemis.systems;
 
 import com.artemis.Aspect;
-import com.artemis.Entity;
 import com.artemis.World;
-import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 
 
@@ -19,7 +16,6 @@ import com.artemis.utils.IntBag;
  * @author Arni Arent
  */
 public abstract class IntervalEntityProcessingSystem extends IntervalEntitySystem {
-	private Entity flyweight;
 
 	/**
 	 * Creates a new IntervalEntityProcessingSystem.
@@ -36,7 +32,6 @@ public abstract class IntervalEntityProcessingSystem extends IntervalEntitySyste
 	@Override
 	protected void setWorld(World world) {
 		super.setWorld(world);
-		flyweight = createFlyweightEntity();
 	}
 
 
@@ -46,7 +41,7 @@ public abstract class IntervalEntityProcessingSystem extends IntervalEntitySyste
 	 * @param e
 	 *			the entity to process
 	 */
-	protected abstract void process(Entity e);
+	protected abstract void process(int e);
 
 	@Override
 	protected void processSystem() {
@@ -55,10 +50,8 @@ public abstract class IntervalEntityProcessingSystem extends IntervalEntitySyste
 
 	protected void processEntities(IntBag entities) {
 		int[] ids = entities.getData();
-		Entity e = flyweight;
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			e.id = ids[i];
-			process(e);
+			process(ids[i]);
 		}
 	}
 

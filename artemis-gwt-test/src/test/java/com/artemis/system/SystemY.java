@@ -4,8 +4,6 @@ import junit.framework.Assert;
 
 import com.artemis.Aspect;
 import com.artemis.ComponentMapper;
-import com.artemis.Entity;
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 
@@ -19,7 +17,7 @@ class SystemY extends EntityProcessingSystem {
 	}
 	
 	@Override
-	protected void process(Entity e)
+	protected void process(int e)
 	{
 		Assert.assertNotNull(ym);
 		ym.get(e);

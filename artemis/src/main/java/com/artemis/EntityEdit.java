@@ -5,7 +5,7 @@ import com.artemis.ComponentType.Taxonomy;
 import java.util.BitSet;
 
 /**
- * Entity mutator.
+ * EntityHelper mutator.
  * <p/>
  * Provides a fast albeit verbose way to perform batch changes to entities.
  * <p/>
@@ -26,7 +26,7 @@ import java.util.BitSet;
  */
 public final class EntityEdit {
 
-    Entity entity;
+    int entity;
     private World world;
     boolean hasBeenAddedToWorld;
     final BitSet componentBits;
@@ -93,7 +93,7 @@ public final class EntityEdit {
         return this;
     }
 
-    public Entity getEntity() {
+    public int getEntity() {
         return entity;
     }
 
@@ -134,6 +134,6 @@ public final class EntityEdit {
 
     @Override
     public String toString() {
-        return "EntityEdit[" + entity.getId() + "]";
+        return "EntityEdit[" + entity + "]";
     }
 }

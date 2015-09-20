@@ -10,7 +10,7 @@
 	<packaging>jar</packaging>
 	<name>artemis-odb-jsonbeans-serializer</name>
 	
-	<description>Fork of Artemis Entity System Framework.</description>
+	<description>Fork of Artemis int System Framework.</description>
 	<url>https://github.com/junkdog/artemis-odb</url>
 
 	<dependencies>

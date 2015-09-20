@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
     <name>artemis-odb</name>
 
-    <description>Fork of Artemis Entity System Framework.</description>
+    <description>Fork of Artemis int System Framework.</description>
     <url>https://github.com/junkdog/artemis-odb</url>
 
     <dependencies>
@@ -20,6 +20,12 @@
             <artifactId>mockito-all</artifactId>
             <version>1.9.5</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.badlogicgames.gdx</groupId>
+            <artifactId>gdx</artifactId>
+            <version>1.6.5</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

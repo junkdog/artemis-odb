@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 import java.util.IdentityHashMap;
 import java.util.Map;
 
-import com.artemis.Entity;
 import com.artemis.PackedComponent;
 import com.artemis.PackedComponent.DisposedWithWorld;
 import com.artemis.World;

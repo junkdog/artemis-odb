@@ -1,7 +1,7 @@
 package com.artemis.systems;
 
 import com.artemis.Aspect;
-import com.artemis.Entity;
+import com.artemis.EntityHelper;
 import com.artemis.EntitySystem;
 import com.artemis.World;
 import com.artemis.utils.IntBag;
@@ -24,7 +24,7 @@ import com.artemis.utils.IntBag;
  * This will save CPU cycles in some scenarios.
  * </p><p>
  * Implementation notes:<br />
- * Within {@link #processExpired(Entity) processExpired(Entity e)}
+ * Within {@link #processExpired(EntityHelper) processExpired(EntityHelper e)}
  * you must call {@link #offerDelay(float) offerDelay(float delay)} if the
  * entity's delay time is renewed. That method is also called by {@link #inserted(int) inserted(int entityId)}
  * for each newly matched entity.
@@ -40,7 +40,6 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	private boolean running;
 	/** The countdown, accumulates world deltas. */
 	private float acc;
-	private Entity flyweight;
 
 	/**
 	 * Creates a new DelayedEntityProcessingSystem.
@@ -55,7 +54,6 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	@Override
 	protected void setWorld(World world) {
 		super.setWorld(world);
-		flyweight = createFlyweightEntity();
 	}
 
 	@Override
@@ -69,9 +67,9 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 
 		delay = Float.MAX_VALUE;
 		int[] array = actives.getData();
-		Entity e = flyweight;
+		int e;
 		for (int i = 0; processed > i; i++) {
-			e.id = array[i];
+			e = array[i];
 			processDelta(e, acc);
 			float remaining = getRemainingDelay(e);
 			if(remaining <= 0) {
@@ -86,7 +84,7 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 
 	@Override
 	protected void inserted(int entityId) {
-		Entity entity = world.getEntity(entityId);
+		int entity = world.getEntity(entityId);
 		float remainingDelay = getRemainingDelay(entity);
 		processDelta(entity, -acc);
 		if(remainingDelay > 0) {
@@ -102,7 +100,7 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	 *
 	 * @return delay
 	 */
-	protected abstract float getRemainingDelay(Entity e);
+	protected abstract float getRemainingDelay(int e);
 
 
 	@Override
@@ -132,10 +130,10 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	 * @param accumulatedDelta
 	 *			the delta time since this system was last executed
 	 */
-	protected abstract void processDelta(Entity e, float accumulatedDelta);
+	protected abstract void processDelta(int e, float accumulatedDelta);
 
 
-	protected abstract void processExpired(Entity e);
+	protected abstract void processExpired(int e);
 
 	/**
 	 * Restarts the system only if the delay offered is shorter than the time

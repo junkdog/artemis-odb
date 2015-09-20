@@ -9,7 +9,7 @@
   - EntityObserver supported on all systems.
 - Removed deprecated methods and classes
   - Removed `@Mapper`
-  - Removed UUID related accessors on Entity and World.
+  - Removed UUID related accessors on int and World.
 - `@PackedWeaver` marked as deprecated until performance issues have been resolved.
 
 
@@ -20,9 +20,9 @@
 
 #### Version: 0.13.0 - 2015-09-14
 - **BREAKING CHANGES**
-  - `World#getEntity(int)` can return inactive Entities, check state using `Entity#isActive` or
+  - `World#getEntity(int)` can return inactive Entities, check state using `int#isActive` or
      `EntitityManager.isActive(int)`.
-  - `Entity.isActive` no longer works for checking whether an entity was just created, instead
+  - `int.isActive` no longer works for checking whether an entity was just created, instead
     use `EntityManager#isNew(int)`.
 
 - New additional serialization backend: [json via libgdx](https://github.com/junkdog/artemis-odb/wiki/libgdx-jso).
@@ -83,7 +83,7 @@
   - Customize output by extending SaveFileFormat.
   - Uses [JsonBeans](https://github.com/EsotericSoftware/jsonbeans) behind the scenes.
 - ComponentMappers now also sport get(int)/has(int) methods.
-- Entity get/setUuid deprecated.
+- int get/setUuid deprecated.
 - Add getTag method to TagManager 
 - Bag does equality comparisons, always.
 - EntityManager counters stubbed and deprecated.
@@ -125,13 +125,13 @@
 - Children of EntitySystems can create flyweight entities.
 - **Fix**: Uninitialized worlds threw cryptic NPE when invoking #process.
 - **Fix**: `World#createFactory(Class<EntityFactory>)` was package local.
-- **Fix**: `Entity#edit` used together with EntityTransmuters or Archetypes
+- **Fix**: `int#edit` used together with EntityTransmuters or Archetypes
   caused the wrong compositionId to be reported, if all changes took place
   during the same processing round..
 
 #### Version: 0.9.0 - 2015-02-03
 - **MINOR BREAKING CHANGES**
-  - Entity instances should never be compared by reference equality; always do
+  - int instances should never be compared by reference equality; always do
     `entity1.equals(entity2)`.
   - It is no longer valid to add additional managers or systems to initialized worlds.
 
@@ -144,7 +144,7 @@
 - Adding and removing existing entities from systems is now considerably faster.
 - Add enablePackedWeaving to maven, gradle and CLI tool.
 - Reduced EntitySystem memory footprint by 2/3.
-- **Fix**: Entity systems can now subscribe to all entities when aspect is empty.
+- **Fix**: int systems can now subscribe to all entities when aspect is empty.
 - **Fix**: EntityFactory annotation processor sometimes failed generating the
   factory implementation when running from within Eclipse.
 
@@ -162,7 +162,7 @@
 - ArchetypeBuilder constructor accepts null passed as parent.
 
 #### Version: 0.7.2 - 2014-10-08
-- **Fix**: Chaining Entity#edit caused the internal bitset to reset
+- **Fix**: Chaining int#edit caused the internal bitset to reset
   between component removals.
 
 #### Version: 0.7.1 - 2014-09-24
@@ -172,20 +172,20 @@
 #### Version: 0.7.0 - 2014-09-21
 
 - **MINOR BREAKING CHANGES**
-  - Entity state changes aren't reflected until the next system starts processing
+  - int state changes aren't reflected until the next system starts processing
     or a new `World#process` round begins, whichever comes first. 
   - Removed initial parameter (type) from Aspect methods; this changes the method
     descriptor, requiring any project to be recompiled.
 
 - The GWT backend can now read values off annotations.
 - **Bytecode optimizations:** (invoked via maven plugin or the CLI tool)
-  - [Automatically optimize entity processing systems](https://github.com/junkdog/artemis-odb/wiki/Optimizing-Entity-Systems).
+  - [Automatically optimize entity processing systems](https://github.com/junkdog/artemis-odb/wiki/Optimizing-int-Systems).
   - `@PackedWeaver` components no longer overwrite data in multi-World scenarios.
 - Removed `artemis-benchmark`, refer to [entity-system-benchmarks](https://github.com/junkdog/entity-system-benchmarks) instead.
-- It's no longer necessary to call `Entity#changedInWorld` and `Entity#addToWorld`
-  - Use `Entity#edit` when adding or removing components.
+- It's no longer necessary to call `int#changedInWorld` and `int#addToWorld`
+  - Use `int#edit` when adding or removing components.
 - **Adding and removing entities to systems is now approximately 150% faster**.
-  - Entity compositions are no longer primarily identified by BitSets, but instead
+  - int compositions are no longer primarily identified by BitSets, but instead
     have a compositionId - EntitySystems track which composition ids are of interest.
   - `ArchetypeBuilder` and `Archetype` precalculates compositionId, allowing for greatly increased
     insertion performance.
@@ -234,7 +234,7 @@
   - Handles weaving (new in 0.6.1) and matrix generation.
   - Replaces `artemis-odb-matrix-X.Y.Z-cli.jar`.
 - **Fix**: OOB Exception in ComponentManager with componentsByType when component types > 64.
-- **Fix**: Calling `Entity#changedInWorld` before an entity is added to the world yields null.
+- **Fix**: Calling `int#changedInWorld` before an entity is added to the world yields null.
 
 #### Version: 0.6.0 - 2014-06-01
 - **GWT support** ([demo](http://flet.github.io/spaceship-warrior-redux/)) sporting
@@ -248,7 +248,7 @@
   - Direct field access works - no need to generate getters and setters - i.e. `position.x += 0.24f` is valid.
   - Contiguously stored in memory, internally backed by a shared `ByteBuffer.allocateDirect()`.
   - Works for all components composed of primitive types.
-- Entity systems and managers can `@Wire` (inject) anything from the world: will eventually
+- int systems and managers can `@Wire` (inject) anything from the world: will eventually
   replace `@Mapper`. No need to annotate each field - just annotate the class and artemis
   will take care of injecting applicable fields.
   - `@Wire` can inject parent classes too.
@@ -267,15 +267,15 @@
 - `-DenableArtemisPlugin`: If set to false, no weaving will take place (useful
   for debugging).
 - **Fix**: Possible NPE when removing recently created entities.
-- **Fix**: `Entity#getComponent` would sometimes throw an `ArrayIndexOutOfBoundsException`.
+- **Fix**: `int#getComponent` would sometimes throw an `ArrayIndexOutOfBoundsException`.
 
 #### Version: 0.5.0 - 2013-11-24
  - Changed artemis to a multi-module project (the `artemis` folder is the old root).
- - Entity instances are recycled.
+ - int instances are recycled.
  - New component types, `PooledComponent` and `PackedComponent`.
    - Optionally transform components with `@PackedWeaver` and `@PooledWeaver` by
      configuring the `artemis-odb-maven-plugin`.
- - New method `Entity#createComponent(Class<Component>)`.
+ - New method `int#createComponent(Class<Component>)`.
  - Annotation processor validates pooled and packed component types.
  - Managers support `@Mapper` annotation.
  - No longer necessary to stub `Manager#initialize()`.

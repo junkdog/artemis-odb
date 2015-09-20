@@ -1,7 +1,6 @@
 package com.artemis.systems;
 
 import com.artemis.Aspect;
-import com.artemis.Entity;
 import com.artemis.EntitySystem;
 import com.artemis.World;
 import com.artemis.utils.IntBag;
@@ -16,7 +15,6 @@ import com.artemis.utils.IntBag;
  * @author Arni Arent
  */
 public abstract class EntityProcessingSystem extends EntitySystem {
-	private Entity flyweight;
 
 	/**
 	 * Creates a new EntityProcessingSystem.
@@ -31,7 +29,6 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 	@Override
 	protected void setWorld(World world) {
 		super.setWorld(world);
-		flyweight = createFlyweightEntity();
 	}
 
 	/**
@@ -40,16 +37,14 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 	 * @param e
 	 *			the entity to process
 	 */
-	protected abstract void process(Entity e);
+	protected abstract void process(int e);
 
 	@Override
 	protected final void processSystem() {
 		IntBag actives = subscription.getEntities();
 		int[] array = actives.getData();
-		Entity e = flyweight;
 		for (int i = 0, s = actives.size(); s > i; i++) {
-			e.id = array[i];
-			process(e);
+			process(array[i]);
 		}
 	}
 }

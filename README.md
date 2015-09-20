@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/junkdog/artemis-odb.svg)](https://travis-ci.org/junkdog/artemis-odb)
 
 
-[Artemis-odb](https://github.com/junkdog/artemis-odb/wiki/About) is a [high performance](https://github.com/junkdog/entity-system-benchmarks) java based [Entity-Component-System](https://github.com/junkdog/artemis-odb/wiki/Introduction-to-Entity-Systems) framework.
+[Artemis-odb](https://github.com/junkdog/artemis-odb/wiki/About) is a [high performance](https://github.com/junkdog/entity-system-benchmarks) java based [int-Component-System](https://github.com/junkdog/artemis-odb/wiki/Introduction-to-int-Systems) framework.
 
 It is mature, actively maintained, and a continuation of the popular [Artemis](http://gamadu.com/artemis/).
 
@@ -91,5 +91,5 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 
  - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/0.13.1/) 
  - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/0.13.1/)
- - [Entity Factory Processor](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-processor/0.13.1/)
+ - [int Factory Processor](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-processor/0.13.1/)
 

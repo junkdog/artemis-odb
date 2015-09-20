@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import com.artemis.Entity;
+import com.artemis.EntityHelper;
 import com.artemis.PooledComponent;
 import com.artemis.World;
 
@@ -14,8 +14,8 @@ public class PolyConstructorTest {
 	public void pooled_class_with_many_constructors() throws Exception {
 		World world = new World();
 
-		Entity e1 = world.createEntity();
-		PolyConstructor pooled1 = e1.edit().create(PolyConstructor.class);
+		int e1 = world.createEntity();
+		PolyConstructor pooled1 = EntityHelper.edit(world, e1).create(PolyConstructor.class);
 		assertEquals(PooledComponent.class, pooled1.getClass().getSuperclass());
 
 		PolyConstructor pooled2 = new PolyConstructor(420);

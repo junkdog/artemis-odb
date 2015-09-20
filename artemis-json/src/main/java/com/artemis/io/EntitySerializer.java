@@ -1,7 +1,7 @@
 package com.artemis.io;
 
 import com.artemis.Component;
-import com.artemis.Entity;
+import com.artemis.EntityHelper;
 import com.artemis.EntityEdit;
 import com.artemis.World;
 import com.artemis.annotations.Transient;
@@ -18,7 +18,7 @@ import com.esotericsoftware.jsonbeans.ObjectMap;
 import java.util.*;
 
 @Wire(failOnNull = false)
-public class EntitySerializer implements JsonSerializer<Entity> {
+public class EntitySerializer implements JsonSerializer<TemporaryEntity> {
 
 	private final Bag<Component> components = new Bag<Component>();
 	private final ComponentNameComparator comparator = new ComponentNameComparator();
@@ -53,7 +53,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 	}
 
 	@Override
-	public void write(Json json, Entity e, Class knownType) {
+	public void write(Json json, TemporaryEntity e, Class knownType) {
 		// need to track this in case the components of an entity
 		// reference another entity - if so, we only want to record
 		// the id
@@ -64,12 +64,12 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 			isSerializingEntity = true;
 		}
 
-		world.getComponentManager().getComponentsFor(e, components);
+		world.getComponentManager().getComponentsFor(e.id, components);
 		components.sort(comparator);
 
 		json.writeObjectStart();
-		writeTag(json, e);
-		writeGroups(json, e);
+		writeTag(json, e.id);
+		writeGroups(json, e.id);
 
 		json.writeObjectStart("components");
 		for (int i = 0, s = components.size(); s > i; i++) {
@@ -95,7 +95,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		return (ComponentLookupSerializer) json.getSerializer(IdentityHashMap.class);
 	}
 
-	private void writeTag(Json json, Entity e) {
+	private void writeTag(Json json, int e) {
 		for (String tag : registeredTags) {
 			if (tagManager.getEntity(tag) != e)
 				continue;
@@ -105,7 +105,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		}
 	}
 
-	private void writeGroups(Json json, Entity e) {
+	private void writeGroups(Json json, int e) {
 		if (groupManager == null)
 			return;
 
@@ -121,7 +121,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 	}
 
 	@Override
-	public Entity read(Json json, JsonValue jsonData, Class type) {
+	public TemporaryEntity read(Json json, JsonValue jsonData, Class type) {
 		// need to track this in case the components of an entity
 		// reference another entity - if so, we only want to read
 		// the id
@@ -129,14 +129,12 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 			int entityId = json.readValue(Integer.class, jsonData);
 			// creating a temporary entity; this will later be translated
 			// to the correct entity
-			Entity entity = world.getEntityManager().createFlyweight();
-			entity.id = entityId;
-			return entity;
+			return new TemporaryEntity(entityId);
 		} else {
 			isSerializingEntity = true;
 		}
 
-		Entity e = world.createEntity();
+		int e = world.createEntity();
 
 		jsonData = readTag(jsonData, e);
 		jsonData = readGroups(jsonData, e);
@@ -148,7 +146,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		assert("components".equals(jsonData.name));
 		JsonValue component = jsonData.child;
 
-		EntityEdit edit = e.edit();
+		EntityEdit edit = EntityHelper.edit(world, e);
 		while (component != null) {
 			assert(component.name() != null);
 			Class<? extends Component> componentType = types.get(component.name);
@@ -164,10 +162,10 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 
 		isSerializingEntity = false;
 
-		return edit.getEntity();
+		return new TemporaryEntity(edit.getEntity());
 	}
 
-	private JsonValue readGroups(JsonValue jsonData, Entity e) {
+	private JsonValue readGroups(JsonValue jsonData, int e) {
 		if ("groups".equals(jsonData.name)) {
 			JsonValue group = jsonData.child;
 			while (group != null) {
@@ -181,7 +179,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		return jsonData;
 	}
 
-	private JsonValue readTag(JsonValue jsonData, Entity e) {
+	private JsonValue readTag(JsonValue jsonData, int e) {
 		if ("tag".equals(jsonData.name)) {
 			tagManager.register(jsonData.asString(), e);
 			jsonData = jsonData.next;

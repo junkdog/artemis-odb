@@ -1,7 +1,5 @@
 package com.artemis.system;
 
-import com.artemis.Aspect;
-import com.artemis.Entity;
 import com.artemis.annotations.PreserveProcessVisiblity;
 import com.artemis.systems.EntityProcessingSystem;
 
@@ -13,6 +11,6 @@ public class OptimizedSystemSafe extends EntityProcessingSystem {
 	}
 
 	@Override
-	protected void process(Entity e) {}
+	protected void process(int e) {}
 
 }

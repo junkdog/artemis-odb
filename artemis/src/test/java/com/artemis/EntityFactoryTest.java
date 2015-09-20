@@ -23,35 +23,35 @@ public class EntityFactoryTest {
 		assertNotNull(shipFactory);
 		assertEquals(ShipImpl.class, shipFactory.getClass());
 		
-		Entity e = shipFactory.create();
-		Entity e2 = shipFactory.create();
+		int e = shipFactory.create();
+		int e2 = shipFactory.create();
 		
 		// 1 is an entity with zero components.
-		assertEquals(2, e.getCompositionId());
-		assertEquals(2, e2.getCompositionId());
+		assertEquals(2, EntityHelper.getCompositionId(w, e));
+		assertEquals(2, EntityHelper.getCompositionId(w, e2));
 		
-		assertNotEquals(e.getId(), e2.getId());
+		assertNotEquals(e, e2);
 	}
 	
 	@Test
 	public void test_sticky_and_per_instance() {
-		World w = new World();
+		World world = new World();
 
-		Ship shipFactory = w.createFactory(Ship.class);
+		Ship shipFactory = world.createFactory(Ship.class);
 		assertNotNull(shipFactory);
 		assertEquals(ShipImpl.class, shipFactory.getClass());
 		
 		shipFactory.hitPoints(100);
 		
-		Entity e1 = shipFactory.size(10, 20).create();
-		Entity e2 = shipFactory.create();
+		int e1 = shipFactory.size(10, 20).create();
+		int e2 = shipFactory.create();
 		
-		assertEquals(10, e1.getComponent(Size.class).width, 0.001f);
-		assertEquals(20, e1.getComponent(Size.class).height, 0.001f);
-		assertEquals(100, e1.getComponent(HitPoints.class).hitpoints);
-		assertEquals(0, e2.getComponent(Size.class).width, 0.001f);
-		assertEquals(0, e2.getComponent(Size.class).height, 0.001f);
-		assertEquals(100, e2.getComponent(HitPoints.class).hitpoints);
+		assertEquals(10, EntityHelper.getComponent(Size.class, world, e1).width, 0.001f);
+		assertEquals(20, EntityHelper.getComponent(Size.class, world, e1).height, 0.001f);
+		assertEquals(100, EntityHelper.getComponent(HitPoints.class, world, e1).hitpoints);
+		assertEquals(0, EntityHelper.getComponent(Size.class, world, e2).width, 0.001f);
+		assertEquals(0, EntityHelper.getComponent(Size.class, world, e2).height, 0.001f);
+		assertEquals(100, EntityHelper.getComponent(HitPoints.class, world, e2).hitpoints);
 	}
 	
 	@Test
@@ -59,11 +59,11 @@ public class EntityFactoryTest {
 		World w = new World();
 
 		Ship shipFactory = w.createFactory(Ship.class);
-		Entity e1 = shipFactory.hitPoints(100).create();
-		Entity e2 = shipFactory.copy().hitPoints(200).create();
+		int e1 = shipFactory.hitPoints(100).create();
+		int e2 = shipFactory.copy().hitPoints(200).create();
 		
-		assertEquals(100, e1.getComponent(HitPoints.class).hitpoints);
-		assertEquals(200, e2.getComponent(HitPoints.class).hitpoints);
+		assertEquals(100, EntityHelper.getComponent(HitPoints.class, w, e1).hitpoints);
+		assertEquals(200, EntityHelper.getComponent(HitPoints.class, w, e2).hitpoints);
 	}
 	
 	@Test(expected=RuntimeException.class)

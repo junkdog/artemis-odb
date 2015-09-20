@@ -79,10 +79,10 @@ public class Aspect {
 	}
 
 	/**
-	 * Returns whether this Aspect would accept the given Entity.
+	 * Returns whether this Aspect would accept the given EntityHelper.
 	 */
-	public boolean isInterested(Entity e){
-		return isInterested(e.getComponentBits());
+	public boolean isInterested(World w, int e){
+		return isInterested(EntityHelper.getComponentBits(w, e));
 	}
 
 	/**

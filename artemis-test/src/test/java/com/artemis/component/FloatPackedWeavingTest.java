@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 
+import com.artemis.EntityHelper;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,8 +25,8 @@ public class FloatPackedWeavingTest extends PackedWeavingTest {
 	public void setup() {
 		super.setup();
 		
-		packed = e1.edit().create(TransPackedFloat.class);
-		packed = e2.edit().create(TransPackedFloat.class);
+		packed = EntityHelper.edit(world, e1).create(TransPackedFloat.class);
+		packed = EntityHelper.edit(world, e2).create(TransPackedFloat.class);
 	}
 	
 	@Override

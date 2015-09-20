@@ -6,9 +6,9 @@ import com.artemis.annotations.UnstableApi;
 import com.artemis.annotations.UseSetter;
 
 /**
- * Entity factories offer a simple, but efficient method for creating entities with
+ * EntityHelper factories offer a simple, but efficient method for creating entities with
  * a predefined component composition. Each factory is backed by an Archetype instance,
- * ensuring fast insertion into Entity Systems.
+ * ensuring fast insertion into EntityHelper Systems.
  *
  * Artemis-odb implements your factory interface automatically after configuring the
  * annotation processor. For more details, see:
@@ -83,8 +83,8 @@ public interface EntityFactory<T> {
 	T group(String groupA, String groupB, String... groups);
 
 	/**
-	 * Creates a new Entity.
+	 * Creates a new EntityHelper.
 	 * @return created entity.
 	 */
-	Entity create();
+	int create();
 }

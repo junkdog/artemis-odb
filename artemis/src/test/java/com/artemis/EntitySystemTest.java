@@ -2,13 +2,8 @@ package com.artemis;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.NoSuchElementException;
-
 import com.artemis.systems.EntityProcessingSystem;
-import com.artemis.utils.IntBag;
 import org.junit.Test;
-
-import com.artemis.utils.ImmutableBag;
 
 /**
  * Created by obartley on 6/9/14.
@@ -21,8 +16,8 @@ public class EntitySystemTest {
 		World w = new World(new WorldConfiguration()
 			.setSystem(new IteratorTestSystem(1)));
 
-		Entity e = w.createEntity();
-		e.edit().add(new C());
+		int e = w.createEntity();
+		EntityHelper.edit(w, e).add(new C());
 
 		w.process();
 	}
@@ -35,7 +30,7 @@ public class EntitySystemTest {
 				.setSystem(es1)
 				.setSystem(es2));
 
-		Entity e = w.createEntity();
+		int e = w.createEntity();
 		w.process();
 
 		assertEquals(1, es1.getSubscription().getEntities().size());
@@ -72,7 +67,7 @@ public class EntitySystemTest {
 		}
 
 		@Override
-		protected void process(Entity e) {}
+		protected void process(int e) {}
 	}
 
 	public static class EmptySystem extends EntityProcessingSystem {
@@ -81,6 +76,6 @@ public class EntitySystemTest {
 		}
 
 		@Override
-		protected void process(Entity e) {}
+		protected void process(int e) {}
 	}
 }

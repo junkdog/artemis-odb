@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.ByteBuffer;
 
+import com.artemis.EntityHelper;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,8 +27,8 @@ public class StructTestBase extends PackedWeavingTest {
 	public void setup() {
 		super.setup();
 		
-		packed = e1.edit().create(StructComponentA.class);
-		packed = e2.edit().create(StructComponentA.class);
+		packed = EntityHelper.edit(world, e1).create(StructComponentA.class);
+		packed = EntityHelper.edit(world, e2).create(StructComponentA.class);
 	}
 	
 	@Override

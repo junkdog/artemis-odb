@@ -2,17 +2,15 @@ package com.artemis.io;
 
 import com.artemis.Component;
 import com.artemis.ComponentCollector;
-import com.artemis.Entity;
+import com.artemis.EntityHelper;
 import com.artemis.World;
 import com.artemis.managers.WorldSerializationManager;
-import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
@@ -41,9 +39,8 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		json = new Json(JsonWriter.OutputType.json);
 		json.setIgnoreUnknownFields(true);
 		json.setSerializer(IdentityHashMap.class, lookup);
-		json.setSerializer(Bag.class, new EntityBagSerializer(world));
 		json.setSerializer(IntBag.class, intBagEntitySerializer);
-		json.setSerializer(Entity.class, entitySerializer);
+		json.setSerializer(TemporaryEntity.class, entitySerializer);
 	}
 
 	public JsonArtemisSerializer prettyPrint(boolean prettyPrint) {
@@ -88,8 +85,8 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		BitSet compositionIds = new BitSet();
 		int[] ids = save.entities.getData();
 		for (int i = 0, s = save.entities.size(); s > i; i++) {
-			Entity e = world.getEntity(ids[i]);
-			compositionIds.set(e.getCompositionId());
+			int e = world.getEntity(ids[i]);
+			compositionIds.set(EntityHelper.getCompositionId(world,e));
 		}
 
 	}

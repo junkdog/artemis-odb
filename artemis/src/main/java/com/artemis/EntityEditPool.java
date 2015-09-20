@@ -21,36 +21,36 @@ final class EntityEditPool {
 		editedIds = new BitSet();
 	}
 	
-	boolean isEdited(Entity e) {
-		return editedIds.get(e.id);
+	boolean isEdited(int e) {
+		return editedIds.get(e);
 	}
 
-	void processAndRemove(Entity e) {
-		editedIds.set(e.id, false);
+	void processAndRemove(int e) {
+		editedIds.set(e, false);
 		EntityEdit edit = findEntityEdit(e, true);
 		world.getEntityManager().updateCompositionIdentity(edit);
 	}
 	
 
-	EntityEdit obtainEditor(Entity entity) {
-		if (editedIds.get(entity.getId()))
-			return findEntityEdit(entity, false);
+	EntityEdit obtainEditor(int e) {
+		if (editedIds.get(e))
+			return findEntityEdit(e, false);
 		
 		EntityEdit edit = entityEdit();
-		editedIds.set(entity.getId());
+		editedIds.set(e);
 		edited.add(edit);
 
-		edit.entity = entity;
-		edit.hasBeenAddedToWorld = !world.getEntityManager().isNew(entity.id);
+		edit.entity = e;
+		edit.hasBeenAddedToWorld = !world.getEntityManager().isNew(e);
 
-		if (!entity.isActive())
-			throw new RuntimeException("Issued edit on deleted " + entity);
+		if (!world.getEntityManager().isActive(e))
+			throw new RuntimeException("Issued edit on deleted " + e);
 
 		// since archetypes add components, we can't assume that an
 		// entity has an empty bitset.
 		// Note that editing an entity created by an archetype removes the performance
 		// benefit of archetyped entity creation.
-		BitSet bits = entity.getComponentBits();
+		BitSet bits = world.getEntityManager().componentBits(e);
 		edit.componentBits.or(bits);
 
 		return edit;
@@ -67,19 +67,19 @@ final class EntityEditPool {
 		}
 	}
 	
-	private EntityEdit findEntityEdit(Entity entity, boolean remove) {
+	private EntityEdit findEntityEdit(int entity, boolean remove) {
 		// Since it's quite likely that already edited entities are called
 		// repeatedly within the same scope, we start by first checking the last
 		// element, before checking the rest.
 		int last = edited.size() - 1;
-		if (edited.get(last).entity.id == entity.id) {
+		if (edited.get(last).entity == entity) {
 			return remove ? edited.remove(last) : edited.get(last);
 		}
 
 		Object[] data = edited.getData();
 		for (int i = 0; last > i; i++) {
 			EntityEdit edit = (EntityEdit)data[i];
-			if (!edit.entity.equals(entity))
+			if (edit.entity != entity)
 				continue;
 
 			return remove ? edited.remove(i) : edit;
@@ -113,11 +113,11 @@ final class EntityEditPool {
 
 	private static void addToPerformer(World w, EntityEdit edit) {
 		if (edit.scheduledDeletion) {
-			w.deleted.set(edit.entity.id);
+			w.deleted.set(edit.entity);
 		} else if (edit.hasBeenAddedToWorld) {
-			w.changed.set(edit.entity.id);
+			w.changed.set(edit.entity);
 		} else {
-			w.added.set(edit.entity.id);
+			w.added.set(edit.entity);
 		}
 	}
 

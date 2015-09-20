@@ -2,7 +2,6 @@ package com.artemis.component;
 
 import java.nio.ByteBuffer;
 
-import com.artemis.Entity;
 import com.artemis.PackedComponent;
 import com.artemis.util.Vec2f;
 
