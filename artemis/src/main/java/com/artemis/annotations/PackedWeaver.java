@@ -9,6 +9,9 @@ import java.lang.annotation.Target;
 import com.artemis.Component;
 
 /**
+ * <p><em></em>packed components are deprecated until we've solved the performance overhead
+ * in the current design</em>.</p>
+ *
  * Transforms a {@link Component} into a {@link com.artemis.PackedComponent}. Component transformation
  * takes place during the <code>artemis</code> goal defined in <code>artemis-odb-maven-plugin</code>
  * or the <code>weave</code> task in <code>artemis-odb-gradle-plugin</code>.
@@ -18,7 +21,7 @@ import com.artemis.Component;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.TYPE)
-@Documented
+@Documented @Deprecated
 public @interface PackedWeaver {
 	
 	// Note: these will be activate when weaving with sun.misc.Unsafe becomes an option.
