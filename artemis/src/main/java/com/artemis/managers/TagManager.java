@@ -1,6 +1,8 @@
 package com.artemis.managers;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import com.artemis.EntityHelper;
 import com.artemis.Manager;
@@ -103,7 +105,8 @@ public class TagManager extends Manager {
 	 */
 	@Deprecated
 	public Collection<String> getRegisteredTags() {
-		throw new NotImplementedException();
+		// @todo int fix performance!
+		return Arrays.asList(entitiesByTag.keys().toArray().toArray());
 	}
 
 	/**

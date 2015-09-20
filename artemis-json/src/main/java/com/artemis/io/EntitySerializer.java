@@ -1,7 +1,7 @@
 package com.artemis.io;
 
 import com.artemis.Component;
-import com.artemis.Entity;
+import com.artemis.EntityHelper;
 import com.artemis.EntityEdit;
 import com.artemis.World;
 import com.artemis.annotations.Transient;
@@ -18,7 +18,7 @@ import com.esotericsoftware.jsonbeans.ObjectMap;
 import java.util.*;
 
 @Wire(failOnNull = false)
-public class EntitySerializer implements JsonSerializer<int> {
+public class EntitySerializer implements JsonSerializer<Integer> {
 
 	private final Bag<Component> components = new Bag<Component>();
 	private final ComponentNameComparator comparator = new ComponentNameComparator();
@@ -53,7 +53,7 @@ public class EntitySerializer implements JsonSerializer<int> {
 	}
 
 	@Override
-	public void write(Json json, int e, Class knownType) {
+	public void write(Json json, Integer e, Class knownType) {
 		// need to track this in case the components of an entity
 		// reference another entity - if so, we only want to record
 		// the id
@@ -121,7 +121,7 @@ public class EntitySerializer implements JsonSerializer<int> {
 	}
 
 	@Override
-	public int read(Json json, JsonValue jsonData, Class type) {
+	public Integer read(Json json, JsonValue jsonData, Class type) {
 		// need to track this in case the components of an entity
 		// reference another entity - if so, we only want to read
 		// the id
@@ -146,7 +146,7 @@ public class EntitySerializer implements JsonSerializer<int> {
 		assert("components".equals(jsonData.name));
 		JsonValue component = jsonData.child;
 
-		EntityEdit edit = Entity.edit(world, e);
+		EntityEdit edit = EntityHelper.edit(world, e);
 		while (component != null) {
 			assert(component.name() != null);
 			Class<? extends Component> componentType = types.get(component.name);

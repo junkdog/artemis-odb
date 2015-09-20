@@ -31,7 +31,7 @@ public class WorldTest extends GWTTestCase {
 
 		for (int i = 0; i < 100; i++) {
 			int e = world.getEntity(i);
-			EntityHelper.getComponent(ComponentX.class);
+			EntityHelper.getComponent(ComponentX.class, world, e);
 		}
 	}
 

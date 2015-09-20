@@ -108,9 +108,14 @@
 
 	<profiles>
 		<profile>
-				<id>serialization</id>
+			<id>serialization</id>
 			<modules>
 				<module>artemis-json</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>serialization-libgdx</id>
+			<modules>
 				<module>artemis-json-libgdx</module>
 			</modules>
 		</profile>

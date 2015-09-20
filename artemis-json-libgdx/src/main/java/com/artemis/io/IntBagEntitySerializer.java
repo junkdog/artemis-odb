@@ -1,6 +1,6 @@
 package com.artemis.io;
 
-import com.artemis.Entity;
+import com.artemis.EntityHelper;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;

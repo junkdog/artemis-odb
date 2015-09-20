@@ -28,18 +28,18 @@ public class JsonWorldSerializationManagerTest {
 
 		allEntities = subscriptions.get(Aspect.all());
 
-		EntityEdit ee = Entity.edit(world,world.createEntity());
+		EntityEdit ee = EntityHelper.edit(world,world.createEntity());
 		ee.create(ComponentX.class).text = "hello";
 		ee.create(ComponentY.class).text = "whatever";
 		ee.create(ReusedComponent.class);
 
-		EntityEdit ee2 = Entity.edit(world,world.createEntity());
+		EntityEdit ee2 = EntityHelper.edit(world,world.createEntity());
 		ee2.create(ComponentX.class).text = "hello 2";
 		ee2.create(NameComponent.class).name = "do i work?";
 		ee2.create(ComponentY.class).text = "whatever 2";
 		ee2.create(ReusedComponent.class);
 
-		EntityEdit ee3 = Entity.edit(world,world.createEntity());
+		EntityEdit ee3 = EntityHelper.edit(world,world.createEntity());
 		ee3.create(ComponentX.class).text = "hello 3";
 		ee3.create(ComponentY.class).text = "whatever 3";
 		ee3.create(ReusedComponent.class);
@@ -175,13 +175,13 @@ public class JsonWorldSerializationManagerTest {
 	public void save_load_entity_references() {
 		setTags();
 
-		EntityEdit ee1 = Entity.edit(world,world.createEntity());
+		EntityEdit ee1 = EntityHelper.edit(world,world.createEntity());
 		EntityHolder holder = ee1.create(EntityHolder.class);
 		holder.entity = tags.getEntity("tag1");
-		holder.entityId = tags.getEntity("tag3").id;
+		holder.entityId = tags.getEntity("tag3");
 
 		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().id;
+		int entityHolderId = ee1.getEntity();
 
 		world.process();
 
@@ -194,8 +194,8 @@ public class JsonWorldSerializationManagerTest {
 		world.process();
 
 		int entityHolder = tags.getEntity("entity-holder");
-		EntityHolder holder2 = entityHolder.getComponent(EntityHolder.class);
-		assertNotEquals(entityHolder.id, entityHolderId);
+		EntityHolder holder2 =  EntityHelper.getComponent(EntityHolder.class, world, entityHolder);
+		assertNotEquals(entityHolder, entityHolderId);
 		assertNotNull(holder2.entity);
 		assertNotEquals(holder.entity, holder2.entity);
 		assertNotEquals(holder.entityId, holder2.entityId);
@@ -205,13 +205,13 @@ public class JsonWorldSerializationManagerTest {
 	public void save_load_bag_entity_references() {
 		setTags();
 
-		EntityEdit ee1 = Entity.edit(world,world.createEntity());
+		EntityEdit ee1 = EntityHelper.edit(world,world.createEntity());
 		EntityBagHolder holder = ee1.create(EntityBagHolder.class);
 		holder.entities.add(tags.getEntity("tag1"));
 		holder.entities.add(tags.getEntity("tag3"));
 
 		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().id;
+		int entityHolderId = ee1.getEntity();
 
 		world.process();
 
@@ -224,8 +224,8 @@ public class JsonWorldSerializationManagerTest {
 		world.process();
 
 		int entityHolder = tags.getEntity("entity-holder");
-		EntityBagHolder holder2 = entityHolder.getComponent(EntityBagHolder.class);
-		assertNotEquals(entityHolder.id, entityHolderId);
+		EntityBagHolder holder2 =  EntityHelper.getComponent(EntityBagHolder.class, world, entityHolder);
+		assertNotEquals(entityHolder, entityHolderId);
 		assertNotNull(holder2.entities);
 		assertEquals(2, holder2.entities.size());
 		assertEquals(tags.getEntity("tag1"), holder2.entities.get(0));
@@ -236,13 +236,13 @@ public class JsonWorldSerializationManagerTest {
 	public void save_load_intbag_entity_references() {
 		setTags();
 
-		EntityEdit ee1 = Entity.edit(world,world.createEntity());
+		EntityEdit ee1 = EntityHelper.edit(world,world.createEntity());
 		EntityIntBagHolder holder = ee1.create(EntityIntBagHolder.class);
-		holder.entities.add(tags.getEntity("tag1").id);
-		holder.entities.add(tags.getEntity("tag3").id);
+		holder.entities.add(tags.getEntity("tag1"));
+		holder.entities.add(tags.getEntity("tag3"));
 
 		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().id;
+		int entityHolderId = ee1.getEntity();
 
 		world.process();
 
@@ -255,8 +255,8 @@ public class JsonWorldSerializationManagerTest {
 		world.process();
 
 		int entityHolder = tags.getEntity("entity-holder");
-		EntityIntBagHolder holder2 = entityHolder.getComponent(EntityIntBagHolder.class);
-		assertNotEquals(entityHolder.id, entityHolderId);
+		EntityIntBagHolder holder2 = EntityHelper.getComponent(EntityIntBagHolder.class, world, entityHolder);
+		assertNotEquals(entityHolder, entityHolderId);
 		assertNotNull(holder2.entities);
 		assertEquals(2, holder2.entities.size());
 		assertEquals(tags.getEntity("tag1"), world.getEntity(holder2.entities.get(0)));

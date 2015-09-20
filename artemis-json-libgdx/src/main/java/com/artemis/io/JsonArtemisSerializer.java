@@ -2,7 +2,7 @@ package com.artemis.io;
 
 import com.artemis.Component;
 import com.artemis.ComponentCollector;
-import com.artemis.Entity;
+import com.artemis.EntityHelper;
 import com.artemis.World;
 import com.artemis.managers.WorldSerializationManager;
 import com.artemis.utils.Bag;
@@ -41,7 +41,6 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		json = new Json(JsonWriter.OutputType.json);
 		json.setIgnoreUnknownFields(true);
 		json.setSerializer(IdentityHashMap.class, lookup);
-		json.setSerializer(Bag.class, new EntityBagSerializer(world));
 		json.setSerializer(IntBag.class, intBagEntitySerializer);
 		json.setSerializer(int.class, entitySerializer);
 	}
@@ -89,7 +88,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		int[] ids = save.entities.getData();
 		for (int i = 0, s = save.entities.size(); s > i; i++) {
 			int e = world.getEntity(ids[i]);
-			compositionIds.set(Entity.getCompositionId(world,e));
+			compositionIds.set(EntityHelper.getCompositionId(world,e));
 		}
 
 	}
