@@ -15,7 +15,6 @@ import com.artemis.utils.IntBag;
  * @author Arni Arent
  */
 public abstract class EntityProcessingSystem extends EntitySystem {
-	private int flyweight;
 
 	/**
 	 * Creates a new EntityProcessingSystem.
@@ -30,7 +29,6 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 	@Override
 	protected void setWorld(World world) {
 		super.setWorld(world);
-		flyweight = createFlyweightEntity();
 	}
 
 	/**
@@ -45,7 +43,6 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 	protected final void processSystem() {
 		IntBag actives = subscription.getEntities();
 		int[] array = actives.getData();
-		int e = flyweight;
 		for (int i = 0, s = actives.size(); s > i; i++) {
 			process(array[i]);
 		}

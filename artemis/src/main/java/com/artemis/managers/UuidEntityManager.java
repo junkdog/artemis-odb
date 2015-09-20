@@ -11,17 +11,9 @@ public class UuidEntityManager extends Manager {
 	private final ObjectIntMap<UUID> uuidToEntity;
 	private final Bag<UUID> entityToUuid;
 
-	private int flyweight;
-
 	public UuidEntityManager() {
 		this.uuidToEntity = new ObjectIntMap<UUID>();
 		this.entityToUuid = new Bag<UUID>();
-	}
-
-	@Override
-	protected void initialize() {
-		flyweight = world.getEntityManager()
-				.createFlyweight();
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import org.objectweb.asm.Opcodes;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.OptimizationType;
 
+// @todo int (needs a rewrite)
 public final class EsBytecodeInjector implements Opcodes {
 
 	private final ClassReader cr;

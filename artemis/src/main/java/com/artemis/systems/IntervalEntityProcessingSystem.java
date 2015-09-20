@@ -16,7 +16,6 @@ import com.artemis.utils.IntBag;
  * @author Arni Arent
  */
 public abstract class IntervalEntityProcessingSystem extends IntervalEntitySystem {
-	private int flyweight;
 
 	/**
 	 * Creates a new IntervalEntityProcessingSystem.
@@ -33,7 +32,6 @@ public abstract class IntervalEntityProcessingSystem extends IntervalEntitySyste
 	@Override
 	protected void setWorld(World world) {
 		super.setWorld(world);
-		flyweight = createFlyweightEntity();
 	}
 
 

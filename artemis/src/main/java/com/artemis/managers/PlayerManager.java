@@ -23,8 +23,6 @@ public class PlayerManager extends Manager {
 	/** All entities that are mapped to a player, with the player as key. */
 	private final Map<String, IntBag> entitiesByPlayer;
 
-	private int flyweight;
-
 	/**
 	 * Creates a new PlayerManager instance.
 	 */
@@ -97,12 +95,6 @@ public class PlayerManager extends Manager {
 	 */
 	public String getPlayer(int e) {
 		return playerByEntity.get(e);
-	}
-
-	@Override
-	protected void initialize() {
-		flyweight = world.getEntityManager()
-				.createFlyweight();
 	}
 
 	/**

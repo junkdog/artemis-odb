@@ -54,9 +54,10 @@ public class Weaver {
 		rewriteComponents(classes, log);
 		rewriteFieldAccess(classes, packedFieldAccess(log.components), log);
 		rewriteProfilers(classes);
-		
-		if (ClassMetadata.GlobalConfiguration.optimizeEntitySystems)
-			rewriteEntitySystems(classes, log);
+
+		// @todo int
+//		if (ClassMetadata.GlobalConfiguration.optimizeEntitySystems)
+//			rewriteEntitySystems(classes, log);
 		
 		sort(log);
 		

@@ -29,8 +29,6 @@ public class GroupManager extends Manager {
 	/** All entities and groups mapped with entities as key. */
 	private final IntMap<Bag<String>> groupsByEntity;
 
-	private int flyweight;
-
 	/**
 	 * Creates a new GroupManager instance.
 	 */
@@ -43,8 +41,6 @@ public class GroupManager extends Manager {
 
 	@Override
 	protected void initialize() {
-		flyweight = world.getEntityManager()
-						.createFlyweight();
 	}
 	
 	/**

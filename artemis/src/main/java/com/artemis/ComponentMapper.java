@@ -4,7 +4,6 @@ public abstract class ComponentMapper<A extends Component> {
 
 	private final EntityTransmuter createTransmuter;
 	private final EntityTransmuter removeTransmuter;
-	private final int flyweight;
 
 	/** The type of components this mapper handles. */
 	public final ComponentType type;
@@ -14,8 +13,6 @@ public abstract class ComponentMapper<A extends Component> {
 		this.type = tf.getTypeFor(type);
 		createTransmuter = new EntityTransmuterFactory(world).add(type).build();
 		removeTransmuter = new EntityTransmuterFactory(world).remove(type).build();
-		flyweight = world.getEntityManager()
-						.createFlyweight();	
 	}
 	
 	public abstract A get(int entityId) throws ArrayIndexOutOfBoundsException;
