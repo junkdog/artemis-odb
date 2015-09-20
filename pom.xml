@@ -97,7 +97,6 @@
 	
 	<modules>
 		<module>artemis</module>
-		<module>artemis-debug</module>
 		<module>artemis-json</module>
 		<module>artemis-json-libgdx</module>
 		<module>artemis-weaver</module>
@@ -117,7 +116,16 @@
 			</modules>
 		</profile>
 		<profile>
+			<id>debug</id>
+			<modules>
+				<module>artemis-debug</module>
+			</modules>
+		</profile>
+		<profile>
 			<id>release</id>
+			<modules>
+				<module>artemis-debug</module>
+			</modules>
 			<build>
 				<plugins>
 					<plugin>
