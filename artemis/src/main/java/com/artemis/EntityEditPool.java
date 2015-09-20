@@ -43,6 +43,9 @@ final class EntityEditPool {
 		edit.entity = entity;
 		edit.hasBeenAddedToWorld = !world.getEntityManager().isNew(entity.id);
 
+		if (!entity.isActive())
+			throw new RuntimeException("Issued edit on deleted " + entity);
+
 		// since archetypes add components, we can't assume that an
 		// entity has an empty bitset.
 		// Note that editing an entity created by an archetype removes the performance

@@ -11,9 +11,11 @@
   - Removed `@Mapper`
   - Removed UUID related accessors on Entity and World.
 
+
 #### Version: 0.13.1 - 2015-09-20
 - **Fix:**: Deleted entities no longer mess up subscriptions when edited in `SubscriptionListener#removed`.
 - **Fix:**: Deleted entities retain components.
+
 
 #### Version: 0.13.0 - 2015-09-14
 - **BREAKING CHANGES**
