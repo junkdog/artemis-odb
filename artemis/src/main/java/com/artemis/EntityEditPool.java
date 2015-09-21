@@ -21,36 +21,36 @@ final class EntityEditPool {
 		editedIds = new BitSet();
 	}
 	
-	boolean isEdited(Entity e) {
-		return editedIds.get(e.id);
+	boolean isEdited(int entityId) {
+		return editedIds.get(entityId);
 	}
 
-	void processAndRemove(Entity e) {
-		editedIds.set(e.id, false);
-		EntityEdit edit = findEntityEdit(e, true);
+	void processAndRemove(int entityId) {
+		editedIds.set(entityId, false);
+		EntityEdit edit = findEntityEdit(entityId, true);
 		world.getEntityManager().updateCompositionIdentity(edit);
 	}
 	
 
-	EntityEdit obtainEditor(Entity entity) {
-		if (editedIds.get(entity.getId()))
-			return findEntityEdit(entity, false);
+	EntityEdit obtainEditor(int entityId) {
+		if (editedIds.get(entityId))
+			return findEntityEdit(entityId, false);
 		
 		EntityEdit edit = entityEdit();
-		editedIds.set(entity.getId());
+		editedIds.set(entityId);
 		edited.add(edit);
 
-		edit.entity = entity;
-		edit.hasBeenAddedToWorld = !world.getEntityManager().isNew(entity.id);
+		edit.entity = world.getEntityManager().getEntity(entityId);
+		edit.hasBeenAddedToWorld = !world.getEntityManager().isNew(entityId);
 
-		if (!entity.isActive())
-			throw new RuntimeException("Issued edit on deleted " + entity);
+		if (!edit.entity.isActive())
+			throw new RuntimeException("Issued edit on deleted " + edit.entity);
 
 		// since archetypes add components, we can't assume that an
 		// entity has an empty bitset.
 		// Note that editing an entity created by an archetype removes the performance
 		// benefit of archetyped entity creation.
-		BitSet bits = entity.getComponentBits();
+		BitSet bits = edit.entity.getComponentBits();
 		edit.componentBits.or(bits);
 
 		return edit;
@@ -67,19 +67,19 @@ final class EntityEditPool {
 		}
 	}
 	
-	private EntityEdit findEntityEdit(Entity entity, boolean remove) {
+	private EntityEdit findEntityEdit(int entityId, boolean remove) {
 		// Since it's quite likely that already edited entities are called
 		// repeatedly within the same scope, we start by first checking the last
 		// element, before checking the rest.
 		int last = edited.size() - 1;
-		if (edited.get(last).entity.id == entity.id) {
+		if (edited.get(last).entity.id == entityId) {
 			return remove ? edited.remove(last) : edited.get(last);
 		}
 
 		Object[] data = edited.getData();
 		for (int i = 0; last > i; i++) {
 			EntityEdit edit = (EntityEdit)data[i];
-			if (!edit.entity.equals(entity))
+			if (edit.entity.id != entityId)
 				continue;
 
 			return remove ? edited.remove(i) : edit;

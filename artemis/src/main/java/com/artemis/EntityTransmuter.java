@@ -33,46 +33,45 @@ public final class EntityTransmuter {
 		bs = new BitSet();
 	}
 
-	public void transmute(Entity e) {
-		// if entity was just created, we can resolve,
-		// but otherwise we need to make sure the instance
-		// isn't a flyweight instance escaping system processing,
-		// if so we need to resolve it to the actual entity.
-		e = world.getEntity(e.id);
+	public void transmute(int entityId) {
+		TransmuteOperation operation = getOperation(entityId);
 
-		TransmuteOperation operation = getOperation(e);
+		operation.perform(entityId, world.getComponentManager());
+		world.getEntityManager().setIdentity(entityId, operation);
 
-		operation.perform(e, world.getComponentManager());
-		world.getEntityManager().setIdentity(e, operation);
-
-		if (e.isActive())
-			world.changed.set(e.id);
+		if (world.getEntityManager().isActive(entityId))
+			world.changed.set(entityId);
 		else
-			world.added.set(e.id);
+			world.added.set(entityId);
 	}
 
-	private TransmuteOperation getOperation(Entity e) {
-		if (world.editPool.isEdited(e)) {
-			world.editPool.processAndRemove(e);
+	public void transmute(Entity e) {
+		transmute(e.id);
+	}
+
+	private TransmuteOperation getOperation(int entityId) {
+		if (world.editPool.isEdited(entityId)) {
+			world.editPool.processAndRemove(entityId);
 		}
 
-		int compositionId = e.getCompositionId();
+		EntityManager em = world.getEntityManager();
+		int compositionId = em.getIdentity(entityId);
 		TransmuteOperation operation = operations.safeGet(compositionId);
 		if (operation == null) {
-			operation = createOperation(e);
+			operation = createOperation(em.componentBits(entityId));
 			operations.set(compositionId, operation);
 		}
 		return operation;
 	}
 
-	private TransmuteOperation createOperation(Entity e) {
-		BitSet origin = e.getComponentBits();
+	private TransmuteOperation createOperation(BitSet componentBits) {
 		bs.clear();
-		bs.or(origin);
+		bs.or(componentBits);
 		bs.or(additions);
 		bs.andNot(removals);
 		int compositionId = world.getEntityManager().compositionIdentity(bs);
-		return new TransmuteOperation(compositionId, getAdditions(origin), getRemovals(origin));
+		return new TransmuteOperation(
+				compositionId, getAdditions(componentBits), getRemovals(componentBits));
 	}
 
 	private Bag<ComponentType> getAdditions(BitSet origin) {
@@ -113,12 +112,12 @@ public final class EntityTransmuter {
 			this.removals = removals;
 		}
 
-		public void perform(Entity e, ComponentManager cm) {
+		public void perform(int entityId, ComponentManager cm) {
 			for (int i = 0, s = additions.size(); s > i; i++)
-				cm.create(e, additions.get(i));
+				cm.create(entityId, additions.get(i));
 
 			for (int i = 0, s = removals.size(); s > i; i++)
-				cm.removeComponent(e, removals.get(i));
+				cm.removeComponent(entityId, removals.get(i));
 		}
 
 		@Override

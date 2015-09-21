@@ -211,6 +211,10 @@ public class World {
 		}
 	}
 
+	public EntityEdit edit(int entityId) {
+		return editPool.obtainEditor(entityId);
+	}
+
 	/**
 	 * Returns a manager that takes care of all the entities in the world.
 	 * @return entity manager

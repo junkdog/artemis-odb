@@ -163,8 +163,8 @@ public class EntityManager extends Manager {
 		return identity;
 	}
 
-	void setIdentity(Entity e, TransmuteOperation operation) {
-		entityToIdentity.set(e.getId(), operation.compositionId);
+	void setIdentity(int entityId, TransmuteOperation operation) {
+		entityToIdentity.set(entityId, operation.compositionId);
 	}
 
 	private int forceResolveIdentity(int entityId) {

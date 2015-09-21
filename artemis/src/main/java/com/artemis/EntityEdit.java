@@ -86,8 +86,8 @@ public final class EntityEdit {
             throw new InvalidComponentException(component.getClass(),
                     "Use EntityEdit#create(Class<Component>) for adding non-basic component types");
         }
-        world.getComponentManager().addComponent(entity, type, component);
 
+        world.getComponentManager().addComponent(entity.id, type, component);
         componentBits.set(type.getIndex());
 
         return this;
@@ -115,7 +115,7 @@ public final class EntityEdit {
      */
     public EntityEdit remove(ComponentType type) {
         if (componentBits.get(type.getIndex())) {
-            world.getComponentManager().removeComponent(entity, type);
+            world.getComponentManager().removeComponent(entity.id, type);
             componentBits.clear(type.getIndex());
         }
         return this;

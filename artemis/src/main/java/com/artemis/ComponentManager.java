@@ -57,7 +57,7 @@ public class ComponentManager extends Manager {
 	}
 
 	@SuppressWarnings("unchecked")
-	<T extends Component> T create(Entity owner, ComponentType type) {
+	<T extends Component> T create(int owner, ComponentType type) {
 		Class<T> componentClass = (Class<T>)type.getType();
 		T component = null;
 		
@@ -73,9 +73,9 @@ public class ComponentManager extends Manager {
 							componentClass, type.packedHasWorldConstructor);
 					packedComponents.set(type.getIndex(), packedComponent);
 				}
-				getPackedComponentOwners(type).set(owner.getId());
-				ensurePackedComponentCapacity(owner.id);
-				packedComponent.forEntity(owner.id);
+				getPackedComponentOwners(type).set(owner);
+				ensurePackedComponentCapacity(owner);
+				packedComponent.forEntity(owner);
 				component = (T)packedComponent;
 				break;
 			case POOLED:
@@ -94,12 +94,17 @@ public class ComponentManager extends Manager {
 		return component;
 	}
 
-	private void reclaimPooled(Entity owner, ComponentType type) {
+	@SuppressWarnings("unchecked")
+	<T extends Component> T create(Entity owner, ComponentType type) {
+		return create(owner.id, type);
+	}
+
+	private void reclaimPooled(int owner, ComponentType type) {
 		Bag<Component> components = componentsByType.safeGet(type.getIndex());
 		if (components == null)
 			return;
 
-		Component old = components.safeGet(owner.id);
+		Component old = components.safeGet(owner);
 		if (old != null)
 			pooledComponents.free((PooledComponent)old, type);
 	}
@@ -190,20 +195,20 @@ public class ComponentManager extends Manager {
 	 * same time.
 	 * </p>
 	 *
-	 * @param e
+	 * @param entityId
 	 *			the entity to add to
 	 * @param type
 	 *			the type of component being added
 	 * @param component
 	 *			the component to add
 	 */
-	protected void addComponent(Entity e, ComponentType type, Component component) {
+	protected void addComponent(int entityId, ComponentType type, Component component) {
 		if (type.isPackedComponent())
 			addPackedComponent(type, (PackedComponent)component);
 		else
-			addBasicComponent(e, type, component); // pooled components are handled the same
+			addBasicComponent(entityId, type, component); // pooled components are handled the same
 	}
-	
+
 	protected void addComponents(Entity e, Archetype archetype) {
 		ComponentType[] types = archetype.types;
 		for (int i = 0, s = types.length; s > i; i++) {
@@ -218,7 +223,7 @@ public class ComponentManager extends Manager {
 		}
 	}
 	
-	private void addBasicComponent(Entity e, ComponentType type, Component component)
+	private void addBasicComponent(int entityId, ComponentType type, Component component)
 	{
 		Bag<Component> components = componentsByType.safeGet(type.getIndex());
 		if (components == null) {
@@ -226,33 +231,33 @@ public class ComponentManager extends Manager {
 			componentsByType.set(type.getIndex(), components);
 		}
 		
-		components.set(e.id, component);
+		components.set(entityId, component);
 	}
 
 	/**
 	 * Removes the component of given type from the entity.
 	 *
-	 * @param e
+	 * @param entityId
 	 *			the entity to remove from
 	 * @param type
 	 *			the type of component being removed
 	 */
-	protected void removeComponent(Entity e, ComponentType type) {
+	protected void removeComponent(int entityId, ComponentType type) {
 		int index = type.getIndex();
 		switch (type.getTaxonomy()) {
 			case BASIC:
-				componentsByType.get(index).set(e.id, null);
+				componentsByType.get(index).set(entityId, null);
 				break;
 			case POOLED:
-				Component pooled = componentsByType.get(index).get(e.id);
+				Component pooled = componentsByType.get(index).get(entityId);
 				pooledComponents.free((PooledComponent)pooled, type);
-				componentsByType.get(index).set(e.id, null);
+				componentsByType.get(index).set(entityId, null);
 				break;
 			case PACKED:
 				PackedComponent pc = packedComponents.get(index);
-				pc.forEntity(e.id);
+				pc.forEntity(entityId);
 				pc.reset();
-				getPackedComponentOwners(type).clear(e.id);
+				getPackedComponentOwners(type).clear(entityId);
 				break;
 			default:
 				throw new InvalidComponentException(type.getType(), " unknown component type: " + type.getTaxonomy());

@@ -62,11 +62,7 @@ public final class Entity {
 	}
 
 	public EntityEdit edit() {
-		Entity entity = world.getEntity(id);
-		if (entity == null)
-			entity = this;
-
-		return world.editPool.obtainEditor(entity);
+		return world.editPool.obtainEditor(id);
 	}
 
 
