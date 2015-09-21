@@ -3,6 +3,8 @@
 #### Version: 1.0.0-SNAPSHOT
 - New `ArtemisPlugin` API
 - New `WorldConfigurationBuilder` convenience class.
+- Added `World.edit(int entityId)`
+- New IteratingSystem, like EntityProcessingSystem, but works on entityIds directly.
 - By convention, `@Wire` is now implied on all systems and managers. Use `@SkipWire` to suppress.
 - `Manager` now treated as a system.
   - `Manager` is now part of the `BaseSystem` hierarchy.
