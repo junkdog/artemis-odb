@@ -48,7 +48,7 @@ public class SubscriptionListenerTest {
 		EntityEdit ee = w.createEntity().edit();
 		ee.create(ComponentY.class);
 
-		transmuter.transmute(ee.getEntity());
+		transmuter.transmute(ee.getEntityId());
 
 		w.process();
 

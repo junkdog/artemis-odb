@@ -40,17 +40,18 @@ final class EntityEditPool {
 		editedIds.set(entityId);
 		edited.add(edit);
 
-		edit.entity = world.getEntityManager().getEntity(entityId);
-		edit.hasBeenAddedToWorld = !world.getEntityManager().isNew(entityId);
+		edit.entityId = entityId;
+		EntityManager em = world.getEntityManager();
+		edit.hasBeenAddedToWorld = !em.isNew(entityId);
 
-		if (!edit.entity.isActive())
-			throw new RuntimeException("Issued edit on deleted " + edit.entity);
+		if (!em.isActive(entityId))
+			throw new RuntimeException("Issued edit on deleted " + edit.entityId);
 
 		// since archetypes add components, we can't assume that an
 		// entity has an empty bitset.
 		// Note that editing an entity created by an archetype removes the performance
 		// benefit of archetyped entity creation.
-		BitSet bits = edit.entity.getComponentBits();
+		BitSet bits = em.componentBits(entityId);
 		edit.componentBits.or(bits);
 
 		return edit;
@@ -72,14 +73,14 @@ final class EntityEditPool {
 		// repeatedly within the same scope, we start by first checking the last
 		// element, before checking the rest.
 		int last = edited.size() - 1;
-		if (edited.get(last).entity.id == entityId) {
+		if (edited.get(last).entityId == entityId) {
 			return remove ? edited.remove(last) : edited.get(last);
 		}
 
 		Object[] data = edited.getData();
 		for (int i = 0; last > i; i++) {
 			EntityEdit edit = (EntityEdit)data[i];
-			if (edit.entity.id != entityId)
+			if (edit.entityId != entityId)
 				continue;
 
 			return remove ? edited.remove(i) : edit;
@@ -113,11 +114,11 @@ final class EntityEditPool {
 
 	private static void addToPerformer(World w, EntityEdit edit) {
 		if (edit.scheduledDeletion) {
-			w.deleted.set(edit.entity.id);
+			w.deleted.set(edit.entityId);
 		} else if (edit.hasBeenAddedToWorld) {
-			w.changed.set(edit.entity.id);
+			w.changed.set(edit.entityId);
 		} else {
-			w.added.set(edit.entity.id);
+			w.added.set(edit.entityId);
 		}
 	}
 

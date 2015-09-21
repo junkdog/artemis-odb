@@ -79,7 +79,7 @@ public class EntityManager extends Manager {
 	/** Refresh entity composition identity if it changed. */
 	void updateCompositionIdentity(EntityEdit edit) {
 		int identity = compositionIdentity(edit.componentBits);
-		entityToIdentity.set(edit.entity.getId(), identity);
+		entityToIdentity.set(edit.entityId, identity);
 	}
 
 	/**

@@ -26,7 +26,7 @@ import java.util.BitSet;
  */
 public final class EntityEdit {
 
-    Entity entity;
+    int entityId;
     private World world;
     boolean hasBeenAddedToWorld;
     final BitSet componentBits;
@@ -48,7 +48,7 @@ public final class EntityEdit {
 
     public <T extends Component> T create(Class<T> componentKlazz) {
         ComponentManager componentManager = world.getComponentManager();
-        T component = componentManager.create(entity, componentKlazz);
+        T component = componentManager.create(entityId, componentKlazz);
 
         ComponentTypeFactory tf = world.getComponentManager().typeFactory;
         ComponentType componentType = tf.getTypeFor(componentKlazz);
@@ -87,14 +87,18 @@ public final class EntityEdit {
                     "Use EntityEdit#create(Class<Component>) for adding non-basic component types");
         }
 
-        world.getComponentManager().addComponent(entity.id, type, component);
+        world.getComponentManager().addComponent(entityId, type, component);
         componentBits.set(type.getIndex());
 
         return this;
     }
 
     public Entity getEntity() {
-        return entity;
+        return world.getEntity(entityId);
+    }
+
+    public int getEntityId() {
+        return entityId;
     }
 
     /**
@@ -115,7 +119,7 @@ public final class EntityEdit {
      */
     public EntityEdit remove(ComponentType type) {
         if (componentBits.get(type.getIndex())) {
-            world.getComponentManager().removeComponent(entity.id, type);
+            world.getComponentManager().removeComponent(entityId, type);
             componentBits.clear(type.getIndex());
         }
         return this;
@@ -134,6 +138,6 @@ public final class EntityEdit {
 
     @Override
     public String toString() {
-        return "EntityEdit[" + entity.getId() + "]";
+        return "EntityEdit[" + entityId + "]";
     }
 }

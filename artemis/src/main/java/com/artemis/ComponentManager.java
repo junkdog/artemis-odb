@@ -51,6 +51,10 @@ public class ComponentManager extends Manager {
 	}
 
 	protected <T extends Component> T create(Entity owner, Class<T> componentClass) {
+		return create(owner.id, componentClass);
+	}
+
+	protected <T extends Component> T create(int owner, Class<T> componentClass) {
 		ComponentType type = typeFactory.getTypeFor(componentClass);
 		T component = create(owner, type);
 		return component;
