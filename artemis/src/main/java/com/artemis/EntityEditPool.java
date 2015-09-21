@@ -7,14 +7,14 @@ import com.artemis.utils.Bag;
 final class EntityEditPool {
 	
 	private final Bag<EntityEdit> pool = new Bag<EntityEdit>();
-	private final World world;
+	private final EntityManager em;
 	
 	private WildBag<EntityEdit> edited;
 	private WildBag<EntityEdit> alternateEdited;
 	private final BitSet editedIds;
 	
-	EntityEditPool(World world) {
-		this.world = world;
+	EntityEditPool(EntityManager entityManager) {
+		em = entityManager;
 		
 		edited = new WildBag<EntityEdit>();
 		alternateEdited = new WildBag<EntityEdit>();
@@ -28,7 +28,7 @@ final class EntityEditPool {
 	void processAndRemove(int entityId) {
 		editedIds.set(entityId, false);
 		EntityEdit edit = findEntityEdit(entityId, true);
-		world.getEntityManager().updateCompositionIdentity(edit);
+		em.updateCompositionIdentity(edit);
 	}
 	
 
@@ -41,8 +41,6 @@ final class EntityEditPool {
 		edited.add(edit);
 
 		edit.entityId = entityId;
-		EntityManager em = world.getEntityManager();
-		edit.hasBeenAddedToWorld = !em.isNew(entityId);
 
 		if (!em.isActive(entityId))
 			throw new RuntimeException("Issued edit on deleted " + edit.entityId);
@@ -59,7 +57,7 @@ final class EntityEditPool {
 
 	private EntityEdit entityEdit() {
 		if (pool.isEmpty()) {
-			return new EntityEdit(world);
+			return new EntityEdit(em.world);
 		} else {
 			EntityEdit edit = pool.removeLast();
 			edit.componentBits.clear();
@@ -99,8 +97,7 @@ final class EntityEditPool {
 		edited.setSize(0);
 		swapEditBags();
 		
-		World w = world;
-		EntityManager em = w.getEntityManager();
+		World w = em.world;
 		for (int i = 0; size > i; i++) {
 			EntityEdit edit = (EntityEdit)data[i];
 			em.updateCompositionIdentity(edit);
@@ -112,13 +109,14 @@ final class EntityEditPool {
 		return true;
 	}
 
-	private static void addToPerformer(World w, EntityEdit edit) {
+	private void addToPerformer(World w, EntityEdit edit) {
+		int id = edit.entityId;
 		if (edit.scheduledDeletion) {
-			w.deleted.set(edit.entityId);
-		} else if (edit.hasBeenAddedToWorld) {
-			w.changed.set(edit.entityId);
+			w.deleted.set(id);
+		} else if (!em.isNew(id)) {
+			w.changed.set(id);
 		} else {
-			w.added.set(edit.entityId);
+			w.added.set(id);
 		}
 	}
 

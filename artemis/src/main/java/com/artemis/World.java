@@ -51,7 +51,7 @@ public class World {
 	private Injector injector;
 
 	/** Pool of entity edits. */
-	final EntityEditPool editPool = new EntityEditPool(this);
+	final EntityEditPool editPool;
 
 	/** Contains strategy for invoking systems upon process. */
 	private SystemInvocationStrategy invocationStrategy;
@@ -93,6 +93,7 @@ public class World {
 		cm = lcm == null ? new ComponentManager(configuration.expectedEntityCount()) : lcm;
 		em = lem == null ? new EntityManager(configuration.expectedEntityCount()) : lem;
 		am = lam == null ? new AspectSubscriptionManager() : lam;
+		editPool = new EntityEditPool(em);
 
 		injector = configuration.injector;
 		if (injector == null) {
@@ -106,6 +107,7 @@ public class World {
 		}
 
 		collectEntityObservers();
+
 	}
 
 	/** Create a bag of systems that implement {@link EntityObserver}. */

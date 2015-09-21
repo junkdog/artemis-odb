@@ -27,13 +27,12 @@ import java.util.BitSet;
 public final class EntityEdit {
 
     int entityId;
-    private World world;
-    boolean hasBeenAddedToWorld;
+    private ComponentManager cm;
     final BitSet componentBits;
     boolean scheduledDeletion;
 
     EntityEdit(World world) {
-        this.world = world;
+        cm = world.getComponentManager();
         componentBits = new BitSet();
     }
 
@@ -47,11 +46,9 @@ public final class EntityEdit {
     }
 
     public <T extends Component> T create(Class<T> componentKlazz) {
-        ComponentManager componentManager = world.getComponentManager();
-        T component = componentManager.create(entityId, componentKlazz);
+        T component = cm.create(entityId, componentKlazz);
 
-        ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-        ComponentType componentType = tf.getTypeFor(componentKlazz);
+        ComponentType componentType = cm.typeFactory.getTypeFor(componentKlazz);
         componentBits.set(componentType.getIndex());
 
         return component;
@@ -65,8 +62,7 @@ public final class EntityEdit {
      * @see {@link #create(Class)}
      */
     public EntityEdit add(Component component) {
-        ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-        return add(component, tf.getTypeFor(component.getClass()));
+	    return add(component, cm.typeFactory.getTypeFor(component.getClass()));
     }
 
     /**
@@ -87,14 +83,14 @@ public final class EntityEdit {
                     "Use EntityEdit#create(Class<Component>) for adding non-basic component types");
         }
 
-        world.getComponentManager().addComponent(entityId, type, component);
+        cm.addComponent(entityId, type, component);
         componentBits.set(type.getIndex());
 
         return this;
     }
 
     public Entity getEntity() {
-        return world.getEntity(entityId);
+        return cm.world.getEntity(entityId);
     }
 
     public int getEntityId() {
@@ -119,7 +115,7 @@ public final class EntityEdit {
      */
     public EntityEdit remove(ComponentType type) {
         if (componentBits.get(type.getIndex())) {
-            world.getComponentManager().removeComponent(entityId, type);
+            cm.removeComponent(entityId, type);
             componentBits.clear(type.getIndex());
         }
         return this;
@@ -132,8 +128,7 @@ public final class EntityEdit {
      * @return this EntityEdit for chaining
      */
     public EntityEdit remove(Class<? extends Component> type) {
-        ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-        return remove(tf.getTypeFor(type));
+	    return remove(cm.typeFactory.getTypeFor(type));
     }
 
     @Override
