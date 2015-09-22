@@ -332,20 +332,6 @@ public class Bag<E> implements ImmutableBag<E> {
 		Arrays.fill(data, 0, size, null);
 		size = 0;
 	}
-	
-	/**
-	 * Removes all of the elements from this by re-allocating the backing
-	 * array.
-	 * <p>
-	 * The bag will be empty after this call returns.
-	 * </p>
-	 */
-	@SuppressWarnings("unchecked")
-	public void fastClear() {
-		// new null array so gc can clean up old one
-		data = (E[])new Object[data.length];
-		size = 0;
-	}
 
 	/**
 	 * Add all items into this bag.
