@@ -55,6 +55,8 @@ public class ComponentCollector {
 				name = t.getSimpleName() + "_" + name;
 			} while (existing.contains(name));
 		}
+		
+		existing.add(name);
 		return name;
 	}
 
