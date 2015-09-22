@@ -165,6 +165,21 @@ public class IntBag {
 	}
 
 	/**
+	 * Adds the specified elements to the end of this bag.
+	 * <p>
+	 * If required, it also increases the capacity of the bag.
+	 * </p>
+	 *
+	 * @param e
+	 *			element to be added to this list
+	 */
+	public void addAll(IntBag other) {
+		for (int i = 0; i < other.size(); i++) {
+			add(other.get(i));
+		}
+	}
+
+	/**
 	 * Set element at specified index in the bag.
 	 * 
 	 * @param index
