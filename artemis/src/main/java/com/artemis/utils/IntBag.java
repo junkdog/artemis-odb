@@ -1,7 +1,5 @@
 package com.artemis.utils;
 
-import com.artemis.annotations.UnstableApi;
-
 import java.util.Arrays;
 
 
@@ -12,7 +10,6 @@ import java.util.Arrays;
  *
  * @author original Bag by Arni Arent
  */
-@UnstableApi
 public class IntBag {
 
 	/** The backing array. */
@@ -39,12 +36,29 @@ public class IntBag {
 
 
 	/**
+	 * Removes the first occurrence of the value from this IntBag, if
+	 * it is present.
+	 *
+	 * @param value
+	 *			the value to be removed
+	 *
+	 * @return true, if value was removed
+	 */
+	public boolean removeValue(int value) throws ArrayIndexOutOfBoundsException {
+		int index = indexOf(value);
+		if (index > -1)
+			remove(index);
+
+		return index > -1;
+	}
+
+	/**
 	 * Removes the element at the specified position in this Bag.
 	 * <p>
 	 * It does this by overwriting it was last element then removing last
 	 * element
 	 * </p>
-	 * 
+	 *
 	 * @param index
 	 *			the index of element to be removed
 	 *

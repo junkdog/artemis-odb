@@ -8,7 +8,7 @@
 - Added `World.edit(int entityId)`
 - New IteratingSystem, like EntityProcessingSystem, but works on entityIds directly.
 - By convention, `@Wire` is now implied on all systems and managers. Use `@SkipWire` to suppress.
-- `IntBag#addAll` added.
+- new `IntBag` methods: addAll, removeValue.
 - `Manager` now treated as a system.
   - `Manager` is now part of the `BaseSystem` hierarchy.
   - EntityObserver supported on all systems.
