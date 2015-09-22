@@ -49,13 +49,9 @@ public class ComponentCollector {
 	private String resolveNameId(Set<String> existing, Class<? extends Component> type) {
 		String name = type.getSimpleName();
 		if (existing.contains(name)) {
-			Class<?> t = type;
-			do {
-				t = t.getSuperclass();
-				name = t.getSimpleName() + "_" + name;
-			} while (existing.contains(name));
+			name = type.getName();
 		}
-		
+
 		existing.add(name);
 		return name;
 	}
