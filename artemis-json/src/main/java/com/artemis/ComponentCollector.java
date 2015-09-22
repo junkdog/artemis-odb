@@ -35,14 +35,27 @@ public class ComponentCollector {
 		ComponentManager cm = world.getComponentManager();
 		IdentityHashMap<Class<? extends Component>, String> lookup = save.componentIdentifiers;
 
+		Set<String> names = new HashSet<String>();
 		BitSet bs = componentIds;
-		for (int i = bs.nextSetBit(0), index = 0; i >= 0; i = bs.nextSetBit(i + 1)) {
+		for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
 			Class<? extends Component> type = cm.typeFactory.getTypeFor(i).getType();
 			if (ClassReflection.getDeclaredAnnotation(type, Transient.class) != null)
 				continue;
 
-			lookup.put(type, (index++) + "_" + type.getSimpleName());
+			lookup.put(type, resolveNameId(names, type));
 		}
+	}
+
+	private String resolveNameId(Set<String> existing, Class<? extends Component> type) {
+		String name = type.getSimpleName();
+		if (existing.contains(name)) {
+			Class<?> t = type;
+			do {
+				t = t.getSuperclass();
+				name = t.getSimpleName() + "_" + name;
+			} while (existing.contains(name));
+		}
+		return name;
 	}
 
 	protected void inspectComponentTypes(SaveFileFormat save) {

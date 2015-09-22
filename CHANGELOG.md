@@ -1,6 +1,9 @@
 ## Change Log
 
 #### Version: 1.0.0-SNAPSHOT
+- Serialization: Removed component name integer prefix in json.
+  - Defaults to class' getSimpleName, but prepends package name(s) in case 
+    of collisions.
 - New `ArtemisPlugin` API
 - New `WorldConfigurationBuilder` convenience class.
 - Added `World.edit(int entityId)`
