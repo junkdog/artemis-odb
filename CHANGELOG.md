@@ -9,6 +9,9 @@
 - New IteratingSystem, like EntityProcessingSystem, but works on entityIds directly.
 - By convention, `@Wire` is now implied on all systems and managers. Use `@SkipWire` to suppress.
 - new `IntBag` methods: addAll, removeValue.
+- Removed flyweight entities
+  - No more bugs due to escaping flyweights.
+  - Removed artemis-odb-debug, as it's no longer needed.
 - `Manager` now treated as a system.
   - `Manager` is now part of the `BaseSystem` hierarchy.
   - EntityObserver supported on all systems.
