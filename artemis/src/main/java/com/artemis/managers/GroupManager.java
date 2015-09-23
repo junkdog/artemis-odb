@@ -28,8 +28,6 @@ public class GroupManager extends Manager {
 	/** All entities and groups mapped with entities as key. */
 	private final Map<Entity, Bag<String>> groupsByEntity;
 
-	private Entity flyweight;
-
 	/**
 	 * Creates a new GroupManager instance.
 	 */
@@ -38,14 +36,6 @@ public class GroupManager extends Manager {
 		groupsByEntity = new HashMap<Entity, Bag<String>>();
 	}
 
-
-
-	@Override
-	protected void initialize() {
-		flyweight = world.getEntityManager()
-						.createFlyweight();
-	}
-	
 	/**
 	 * Set the group of the entity.
 	 * 
@@ -186,8 +176,6 @@ public class GroupManager extends Manager {
 	 */
 	@Override
 	public void deleted(int entityId) {
-		flyweight.id = entityId;
-		removeFromAllGroups(flyweight);
+		removeFromAllGroups(world.getEntity(entityId));
 	}
-	
 }

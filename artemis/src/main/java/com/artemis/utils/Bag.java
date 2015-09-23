@@ -105,8 +105,6 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * @return {@code true} if this list contained the specified element
 	 */
 	public boolean remove(E e) {
-		//#include "./bag_no_flyweight.inc"
-
 		for (int i = 0; i < size; i++) {
 			E e2 = data[i];
 
@@ -272,8 +270,6 @@ public class Bag<E> implements ImmutableBag<E> {
 	 *			the element
 	 */
 	public void set(int index, E e) {
-		//#include "./bag_no_flyweight.inc"
-
 		if(index >= data.length) {
 			grow((index * 7) / 4 + 1);
 		}

@@ -12,31 +12,22 @@ public class UuidEntityManager extends Manager {
 	private final Map<UUID, Entity> uuidToEntity;
 	private final Bag<UUID> entityToUuid;
 
-	private Entity flyweight;
-
 	public UuidEntityManager() {
 		this.uuidToEntity = new HashMap<UUID, Entity>();
 		this.entityToUuid = new Bag<UUID>();
 	}
 
 	@Override
-	protected void initialize() {
-		flyweight = world.getEntityManager()
-				.createFlyweight();
-	}
-
-	@Override
 	public void deleted(int entityId) {
-		flyweight.id = entityId;
-		UUID uuid = entityToUuid.safeGet(flyweight.getId());
+		UUID uuid = entityToUuid.safeGet(entityId);
 		if (uuid == null)
 			return;
 
 		Entity oldEntity = uuidToEntity.get(uuid);
-		if (oldEntity != null && oldEntity.id == flyweight.id)
+		if (oldEntity != null && oldEntity.id == entityId)
 			uuidToEntity.remove(uuid);
 
-		entityToUuid.set(flyweight.getId(), null);
+		entityToUuid.set(entityId, null);
 	}
 	
 	public void updatedUuid(Entity e, UUID newUuid) {

@@ -24,9 +24,6 @@ public class TagManager extends Manager {
 	/** Tagged entities mapped to tags. */
 	private final Map<Entity, String> tagsByEntity;
 
-
-	private Entity flyweight;
-
 	/**
 	 * Creates a new TagManager.
 	 */
@@ -115,18 +112,10 @@ public class TagManager extends Manager {
 	 */
 	@Override
 	public void deleted(int entityId) {
-		flyweight.id = entityId;
-		String removedTag = tagsByEntity.remove(flyweight);
+		String removedTag = tagsByEntity.remove(world.getEntity(entityId));
 		if(removedTag != null) {
 			entitiesByTag.remove(removedTag);
 		}
-	}
-
-
-	@Override
-	protected void initialize() {
-		flyweight = world.getEntityManager()
-				.createFlyweight();
 	}
 
 }

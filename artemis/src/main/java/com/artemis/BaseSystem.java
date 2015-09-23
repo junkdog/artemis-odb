@@ -127,20 +127,4 @@ public abstract class BaseSystem {
 	 * see {@link World#dispose()}
 	 */
 	protected void dispose() {}
-
-	/**
-	 * <p>Creates a flyweight entity, not registered by the world
-	 * the way normal entities are. It is intended to be used
-	 * for cases where storing full object entity references aren't
-	 * desirable, in the interest of reducing memory footprint
-	 * and/or maintaining a clean API.</p>
-	 *
-	 * <p>You are expected to manually set the entity id before
-	 * operating on the entity. It is created with id == -1.</p>
-	 *
-	 * @return Unbound entity with entityId -1.
-	 */
-	protected final Entity createFlyweightEntity() {
-		return world.getEntityManager().createEntity(-1);
-	}
 }

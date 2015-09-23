@@ -116,16 +116,7 @@
 			</modules>
 		</profile>
 		<profile>
-			<id>debug</id>
-			<modules>
-				<module>artemis-debug</module>
-			</modules>
-		</profile>
-		<profile>
 			<id>release</id>
-			<modules>
-				<module>artemis-debug</module>
-			</modules>
 			<build>
 				<plugins>
 					<plugin>

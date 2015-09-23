@@ -188,11 +188,6 @@ public class EntityManager extends Manager {
 		es.rebuildCompressedActives();
 	}
 	
-	public Entity createFlyweight() {
-		//#include "./entity_set_flyweight_true.inc"
-		return createEntity(-1);
-	}
-	
 	/**
 	 * Instantiates an Entity without registering it into the world.
 	 * @param id The ID to be set on the Entity

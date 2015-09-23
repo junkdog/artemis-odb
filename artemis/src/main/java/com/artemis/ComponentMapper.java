@@ -4,7 +4,6 @@ public abstract class ComponentMapper<A extends Component> {
 
 	private final EntityTransmuter createTransmuter;
 	private final EntityTransmuter removeTransmuter;
-	private final Entity flyweight;	
 
 	/** The type of components this mapper handles. */
 	public final ComponentType type;
@@ -14,8 +13,6 @@ public abstract class ComponentMapper<A extends Component> {
 		this.type = tf.getTypeFor(type);
 		createTransmuter = new EntityTransmuterFactory(world).add(type).build();
 		removeTransmuter = new EntityTransmuterFactory(world).remove(type).build();
-		flyweight = world.getEntityManager()
-						.createFlyweight();	
 	}
 	
 	/**
@@ -156,7 +153,7 @@ public abstract class ComponentMapper<A extends Component> {
 	 */
 	public void remove(int entityId) {
 		if (has(entityId)) {
-			removeTransmuter.transmute(asFlyweight(entityId));
+			removeTransmuter.transmute(entityId);
 		}
 	}
 
@@ -180,20 +177,10 @@ public abstract class ComponentMapper<A extends Component> {
 	public A create(int entityId) {
 		A component = getSafe(entityId);
 		if (component == null) {
-			createTransmuter.transmute(asFlyweight(entityId));
+			createTransmuter.transmute(entityId);
 			component = get(entityId);
 		}
 		return component;
-	}
-
-	/**
-	 * Setup flyweight with ID and return.
-	 * Cannot count on just created entities being resolvable
-	 * in world, which can break transmuters.
-	 */
-	private Entity asFlyweight(int entityId) {
-		flyweight.id = entityId;
-		return flyweight;
 	}
 
 	/**

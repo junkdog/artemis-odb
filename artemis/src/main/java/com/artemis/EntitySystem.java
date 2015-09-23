@@ -1,6 +1,9 @@
 package com.artemis;
 
+import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
+
+import java.util.Arrays;
 
 
 /**
@@ -14,6 +17,8 @@ public abstract class EntitySystem extends BaseSystem
 
 	private final Aspect.Builder aspectConfiguration;
 	protected EntitySubscription subscription;
+	private boolean shouldSyncEntities;
+	private WildBag<Entity> entities = new WildBag<Entity>();
 
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
@@ -51,6 +56,8 @@ public abstract class EntitySystem extends BaseSystem
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			inserted(ids[i]);
 		}
+
+		shouldSyncEntities = true;
 	}
 
 	/**
@@ -68,6 +75,26 @@ public abstract class EntitySystem extends BaseSystem
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			removed(ids[i]);
 		}
+
+		shouldSyncEntities = true;
+	}
+
+	protected Bag<Entity> getEntities() {
+		if (shouldSyncEntities) {
+			int oldSize = entities.size();
+			entities.setSize(0);
+			IntBag entityIds = subscription.getEntities();
+			int[] ids = entityIds.getData();
+			for (int i = 0; i < entityIds.size(); i++) {
+				entities.add(world.getEntity(ids[i]));
+			}
+
+			if (oldSize > entities.size()) {
+				Arrays.fill(entities.getData(), entities.size(), oldSize, null);
+			}
+		}
+
+		return entities;
 	}
 
 	/**

@@ -1,11 +1,7 @@
 package com.artemis.systems;
 
-import com.artemis.Aspect;
-import com.artemis.Entity;
-import com.artemis.EntitySystem;
-import com.artemis.World;
-import com.artemis.utils.IntBag;
-
+import com.artemis.*;
+import com.artemis.utils.Bag;
 
 /**
  * The purpose of this class is to allow systems to execute at varying
@@ -40,7 +36,6 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	private boolean running;
 	/** The countdown, accumulates world deltas. */
 	private float acc;
-	private Entity flyweight;
 
 	/**
 	 * Creates a new DelayedEntityProcessingSystem.
@@ -55,23 +50,21 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	@Override
 	protected void setWorld(World world) {
 		super.setWorld(world);
-		flyweight = createFlyweightEntity();
 	}
 
 	@Override
 	protected final void processSystem() {
-		IntBag actives = subscription.getEntities();
-		int processed = actives.size();
+		Bag<Entity> entities = getEntities();
+		int processed = entities.size();
 		if (processed == 0) {
 			stop();
 			return;
 		}
 
 		delay = Float.MAX_VALUE;
-		int[] array = actives.getData();
-		Entity e = flyweight;
+		Object[] array = entities.getData();
 		for (int i = 0; processed > i; i++) {
-			e.id = array[i];
+			Entity e = (Entity) array[i];
 			processDelta(e, acc);
 			float remaining = getRemainingDelay(e);
 			if(remaining <= 0) {
