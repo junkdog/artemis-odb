@@ -1,9 +1,6 @@
 package com.artemis.systems;
 
-import com.artemis.Aspect;
-import com.artemis.Entity;
-import com.artemis.EntitySystem;
-import com.artemis.World;
+import com.artemis.*;
 import com.artemis.utils.IntBag;
 
 /**
@@ -15,7 +12,7 @@ import com.artemis.utils.IntBag;
  * 
  * @author Arni Arent
  */
-public abstract class IteratingSystem extends EntitySystem {
+public abstract class IteratingSystem extends BaseEntitySystem {
 
 	/**
 	 * Creates a new EntityProcessingSystem.
@@ -25,11 +22,6 @@ public abstract class IteratingSystem extends EntitySystem {
 	 */
 	public IteratingSystem(Aspect.Builder aspect) {
 		super(aspect);
-	}
-
-	@Override
-	protected void setWorld(World world) {
-		super.setWorld(world);
 	}
 
 	/**

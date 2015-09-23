@@ -34,8 +34,6 @@ public final class EsBytecodeInjector implements Opcodes {
 	private void injectProcessEntities() {
 		String owner = meta.type.getInternalName();
 
-
-
 		MethodVisitor mv = cw.visitMethod(ACC_PROTECTED | ACC_FINAL,
 				"processSystem", "()V", null, null);
 		mv.visitCode();
@@ -69,7 +67,6 @@ public final class EsBytecodeInjector implements Opcodes {
 
 		Label l4 = new Label();
 		mv.visitLabel(l4);
-//		mv.visitFrame(Opcodes.F_FULL, 5, new Object[]{"com/artemis/systems/EntityProcessingSystem",
 		mv.visitFrame(Opcodes.F_FULL, 5, new Object[]{owner,
 				"com/artemis/utils/Bag", "[Ljava/lang/Object;", Opcodes.INTEGER, Opcodes.INTEGER},
 				0, new Object[]{});

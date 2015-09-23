@@ -12,11 +12,9 @@ import java.util.Arrays;
  *
  * @author Arni Arent
  */
-public abstract class EntitySystem extends BaseSystem
+public abstract class EntitySystem extends BaseEntitySystem
 		implements EntitySubscription.SubscriptionListener {
 
-	private final Aspect.Builder aspectConfiguration;
-	protected EntitySubscription subscription;
 	private boolean shouldSyncEntities;
 	private WildBag<Entity> entities = new WildBag<Entity>();
 
@@ -28,54 +26,18 @@ public abstract class EntitySystem extends BaseSystem
 	 *			to match against entities
 	 */
 	public EntitySystem(Aspect.Builder aspect) {
-		super();
-		if (aspect == null) {
-			String error = "Aspect.Builder was null; to use systems which " +
-					"do not subscribe to entities, extend BaseSystem directly.";
-			throw new NullPointerException(error);
-		}
-
-		aspectConfiguration = aspect;
-	}
-
-	protected void setWorld(World world) {
-		super.setWorld(world);
-
-		subscription = getSubscription();
-		subscription.addSubscriptionListener(this);
-	}
-
-	public EntitySubscription getSubscription() {
-		AspectSubscriptionManager sm = world.getSystem(AspectSubscriptionManager.class);
-		return sm.get(aspectConfiguration);
+		super(aspect);
 	}
 
 	@Override
 	public void inserted(IntBag entities) {
-		int[] ids = entities.getData();
-		for (int i = 0, s = entities.size(); s > i; i++) {
-			inserted(ids[i]);
-		}
-
+		super.inserted(entities);
 		shouldSyncEntities = true;
 	}
 
-	/**
-	 * Called if the system has received a entity it is interested in, e.g
-	 * created or a component was added to it.
-	 *
-	 * @param entityId
-	 *			the entity that was added to this system
-	 */
-	protected void inserted(int entityId) {}
-
 	@Override
 	public void removed(IntBag entities) {
-		int[] ids = entities.getData();
-		for (int i = 0, s = entities.size(); s > i; i++) {
-			removed(ids[i]);
-		}
-
+		super.removed(entities);
 		shouldSyncEntities = true;
 	}
 
@@ -92,17 +54,10 @@ public abstract class EntitySystem extends BaseSystem
 			if (oldSize > entities.size()) {
 				Arrays.fill(entities.getData(), entities.size(), oldSize, null);
 			}
+
+			shouldSyncEntities = false;
 		}
 
 		return entities;
 	}
-
-	/**
-	 * Called if a entity was removed from this system, e.g deleted or had one
-	 * of it's components removed.
-	 *
-	 * @param entityId
-	 *			the entity that was removed from this system
-	 */
-	protected void removed(int entityId) {}
 }

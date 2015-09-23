@@ -6,7 +6,8 @@
 - New `ArtemisPlugin` API
 - New `WorldConfigurationBuilder` convenience class.
 - Added `World.edit(int entityId)`
-- New IteratingSystem, like EntityProcessingSystem, but works on entityIds directly.
+- EntitySystem extends BaseEntitySystem, new BaseEntitySystems:
+  - IteratingSystem, like EntityProcessingSystem, but works on entityIds directly.
 - By convention, `@Wire` is now implied on all systems and managers. Use `@SkipWire` to suppress.
 - new `IntBag` methods: addAll, removeValue.
 - Removed flyweight entities
