@@ -1,7 +1,7 @@
 package com.artemis.systems;
 
 import com.artemis.*;
-import com.artemis.utils.Bag;
+import com.artemis.utils.IntBag;
 
 /**
  * The purpose of this class is to allow systems to execute at varying
@@ -20,7 +20,7 @@ import com.artemis.utils.Bag;
  * This will save CPU cycles in some scenarios.
  * </p><p>
  * Implementation notes:<br />
- * Within {@link #processExpired(Entity) processExpired(Entity e)}
+ * Within {@link #processExpired(int) processExpired(Entity e)}
  * you must call {@link #offerDelay(float) offerDelay(float delay)} if the
  * entity's delay time is renewed. That method is also called by {@link #inserted(int) inserted(int entityId)}
  * for each newly matched entity.
@@ -28,7 +28,7 @@ import com.artemis.utils.Bag;
  *
  * @author Arni Arent
  */
-public abstract class DelayedEntityProcessingSystem extends EntitySystem {
+public abstract class DelayedIteratingSystem extends BaseEntitySystem {
 
 	/** The time until an entity should be processed. */
 	private float delay;
@@ -43,13 +43,13 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	 * @param aspect
 	 *			the aspect to match against entities
 	 */
-	public DelayedEntityProcessingSystem(Aspect.Builder aspect) {
+	public DelayedIteratingSystem(Aspect.Builder aspect) {
 		super(aspect);
 	}
 
 	@Override
 	protected final void processSystem() {
-		Bag<Entity> entities = getEntities();
+		IntBag entities = subscription.getEntities();
 		int processed = entities.size();
 		if (processed == 0) {
 			stop();
@@ -57,9 +57,9 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 		}
 
 		delay = Float.MAX_VALUE;
-		Object[] array = entities.getData();
+		int[] ids = entities.getData();
 		for (int i = 0; processed > i; i++) {
-			Entity e = (Entity) array[i];
+			int e = ids[i];
 			processDelta(e, acc);
 			float remaining = getRemainingDelay(e);
 			if(remaining <= 0) {
@@ -74,9 +74,8 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 
 	@Override
 	protected void inserted(int entityId) {
-		Entity entity = world.getEntity(entityId);
-		float remainingDelay = getRemainingDelay(entity);
-		processDelta(entity, -acc);
+		float remainingDelay = getRemainingDelay(entityId);
+		processDelta(entityId, -acc);
 		if(remainingDelay > 0) {
 			offerDelay(remainingDelay);
 		}
@@ -85,12 +84,12 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	/**
 	 * Return the delay until this entity should be processed.
 	 * 
-	 * @param e
+	 * @param entityId
 	 *			entity
 	 *
 	 * @return delay
 	 */
-	protected abstract float getRemainingDelay(Entity e);
+	protected abstract float getRemainingDelay(int entityId);
 
 
 	@Override
@@ -115,15 +114,15 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	 * Substract the accumulatedDelta from the entities defined delay.
 	 * </p>
 	 * 
-	 * @param e
+	 * @param entityId
 	 *			the entity to process
 	 * @param accumulatedDelta
 	 *			the delta time since this system was last executed
 	 */
-	protected abstract void processDelta(Entity e, float accumulatedDelta);
+	protected abstract void processDelta(int entityId, float accumulatedDelta);
 
 
-	protected abstract void processExpired(Entity e);
+	protected abstract void processExpired(int entityId);
 
 	/**
 	 * Restarts the system only if the delay offered is shorter than the time
@@ -195,5 +194,4 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 		this.running = false;
 		this.acc = 0;
 	}
-
 }

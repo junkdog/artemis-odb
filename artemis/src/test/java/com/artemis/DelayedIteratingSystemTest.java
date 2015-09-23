@@ -1,15 +1,14 @@
 package com.artemis;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.LinkedList;
-
+import com.artemis.systems.DelayedIteratingSystem;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.systems.DelayedEntityProcessingSystem;
+import java.util.LinkedList;
 
-public class DelayedEntityProcessingSystemTest
+import static org.junit.Assert.assertEquals;
+
+public class DelayedIteratingSystemTest
 {
 	protected LinkedList<Entity> entitiesOrdered;
 	private World world;
@@ -150,7 +149,7 @@ public class DelayedEntityProcessingSystemTest
 		}
 	}
 
-	public class ExpirationSystem extends DelayedEntityProcessingSystem
+	public class ExpirationSystem extends DelayedIteratingSystem
 	{
 		public int expiredLastRound;
 
@@ -162,21 +161,21 @@ public class DelayedEntityProcessingSystemTest
 		}
 
 		@Override
-		protected float getRemainingDelay(final Entity e) {
+		protected float getRemainingDelay(final int e) {
 			return em.get(e).delay;
 		}
 
 		@Override
-		protected void processDelta(final Entity e, final float accumulatedDelta) {
+		protected void processDelta(final int e, final float accumulatedDelta) {
 			final Expiration expires = em.get(e);
 			expires.delay -= accumulatedDelta;
 		}
 
 		@Override
-		protected void processExpired(final Entity e) {
+		protected void processExpired(final int e) {
 			expiredLastRound++;
-			assertEquals(e, entitiesOrdered.removeFirst());
-			e.deleteFromWorld();
+			assertEquals(e, entitiesOrdered.removeFirst().id);
+			world.deleteEntity(e);
 		}
 
 		@Override
