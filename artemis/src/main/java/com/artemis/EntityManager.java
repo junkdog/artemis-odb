@@ -187,7 +187,7 @@ public class EntityManager extends Manager {
 		es.informEntityChanges();
 		es.rebuildCompressedActives();
 	}
-	
+
 	/**
 	 * Instantiates an Entity without registering it into the world.
 	 * @param id The ID to be set on the Entity

@@ -23,11 +23,6 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 		super(aspect);
 	}
 
-	@Override
-	protected void setWorld(World world) {
-		super.setWorld(world);
-	}
-
 	/**
 	 * Process a entity this system is interested in.
 	 *

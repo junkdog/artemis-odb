@@ -1,9 +1,6 @@
 package com.artemis.io;
 
-import com.artemis.Component;
-import com.artemis.Entity;
-import com.artemis.EntityEdit;
-import com.artemis.World;
+import com.artemis.*;
 import com.artemis.annotations.Transient;
 import com.artemis.annotations.Wire;
 import com.artemis.managers.GroupManager;
@@ -129,9 +126,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 			int entityId = json.readValue(Integer.class, jsonData);
 			// creating a temporary entity; this will later be translated
 			// to the correct entity
-			Entity entity = world.getEntityManager().createFlyweight();
-			entity.id = entityId;
-			return entity;
+			return FakeEntityFactory.create(world, entityId);
 		} else {
 			isSerializingEntity = true;
 		}
