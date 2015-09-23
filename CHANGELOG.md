@@ -7,9 +7,9 @@
 - New `WorldConfigurationBuilder` convenience class.
 - Added `World.edit(int entityId)`
 - EntitySystem extends BaseEntitySystem, new BaseEntitySystems work directly on entityId:
-  - `IteratingSystem`, like `EntityProcessingSystem``, but works on entityIds directly.
-  - `IntervalSystem` and `IntervalIteratingSystem` maps to `IntervalEntity*System`
-  - `DelayedIteratingSystem` is the new `DelayedEntityProcessingSystem`
+  - `IteratingSystem`: `EntityProcessingSystem`.
+  - `IntervalSystem` and `IntervalIteratingSystem`: `IntervalEntity*System`
+  - `DelayedIteratingSystem`: `DelayedEntityProcessingSystem`
 - By convention, `@Wire` is now implied on all systems and managers. Use `@SkipWire` to suppress.
 - new `IntBag` methods: addAll, removeValue.
 - Removed flyweight entities
