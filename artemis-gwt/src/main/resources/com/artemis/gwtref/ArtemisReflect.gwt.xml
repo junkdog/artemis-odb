@@ -26,6 +26,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="java.lang.Object"/>
     
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.AspectSubscriptionManager"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.BaseEntitySystem"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.BaseSystem"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.PackedComponent"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.PooledComponent"/>
