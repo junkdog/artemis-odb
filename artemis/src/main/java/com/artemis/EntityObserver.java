@@ -1,6 +1,5 @@
 package com.artemis;
 
-import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 
 
@@ -19,27 +18,24 @@ public interface EntityObserver {
 	/**
 	 * Called when an entity the observer is interested in is added.
 	 *
-	 * @param entityId
+	 * @param entities
 	 *			the added entities
 	 */
-	void added(int entityId);
 	void added(IntBag entities);
 
 	/**
 	 * Called when an entity the observer is interested in has changed.
 	 *
-	 * @param entityId
+	 * @param entities
 	 *			the changed entities
 	 */
-	void changed(int entityId);
 	void changed(IntBag entities);
 
 	/**
 	 * Called when an entity the observer is interested in is deleted.
 	 *
-	 * @param entityId
+	 * @param entities
 	 *			the deleted entities
 	 */
-	void deleted(int entityId);
 	void deleted(IntBag entities);
 }

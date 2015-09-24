@@ -11,13 +11,8 @@ import com.artemis.utils.IntBag;
  */
 public abstract class Manager extends BaseSystem implements EntityObserver {
 
-	@Override
 	public void added(int entityId) {}
-
-	@Override
 	public void changed(int entityId) {}
-
-	@Override
 	public void deleted(int entityId) {}
 
 	@Override

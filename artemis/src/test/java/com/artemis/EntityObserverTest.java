@@ -23,24 +23,12 @@ public class EntityObserverTest {
 			}
 
 			@Override
-			public void added(int entityId) {
-			}
-
-			@Override
 			public void added(IntBag entities) {
 				added++;
 			}
 
 			@Override
-			public void changed(int entityId) {
-			}
-
-			@Override
 			public void changed(IntBag entities) {
-			}
-
-			@Override
-			public void deleted(int entityId) {
 			}
 
 			@Override

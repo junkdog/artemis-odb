@@ -12,6 +12,7 @@
   - `DelayedIteratingSystem`: `DelayedEntityProcessingSystem`
 - By convention, `@Wire` is now implied on all systems and managers. Use `@SkipWire` to suppress.
 - new `IntBag` methods: addAll, removeValue.
+- Dropped EntityObserver methods taking single entityId.
 - Removed flyweight entities
   - No more bugs due to escaping flyweights.
   - Removed artemis-odb-debug, as it's no longer needed.
