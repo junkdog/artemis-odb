@@ -40,7 +40,7 @@ public abstract class Manager extends BaseSystem implements EntityObserver {
 	}
 
 	@Override
-	protected void processSystem() {
+	protected final void processSystem() {
 		// empty on purpose.
 	}
 }
