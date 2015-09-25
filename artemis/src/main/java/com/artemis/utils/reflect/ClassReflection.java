@@ -63,9 +63,11 @@ public final class ClassReflection {
 		try {
 			return c.newInstance();
 		} catch (InstantiationException e) {
-			throw new ReflectionException("Could not instantiate instance of class: " + c.getName(), e);
+			String help = ". Make sure class has a public no-arg constructor.";
+			throw new ReflectionException("Could not instantiate instance of class: " + c.getName() + help, e);
 		} catch (IllegalAccessException e) {
-			throw new ReflectionException("Could not instantiate instance of class: " + c.getName(), e);
+			String help = ". Make sure class has a public no-arg constructor.";
+			throw new ReflectionException("Could not instantiate instance of class: " + c.getName() + help, e);
 		}
 	}
 
