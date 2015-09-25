@@ -1,11 +1,12 @@
 package com.artemis.system;
 
+import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.artemis.component.TransPackedInt;
 import com.artemis.managers.TagManager;
 
 @SuppressWarnings("unused")
-public class BasicVoidSystem extends VoidEntitySystem {
+public class BasicVoidSystem extends BaseSystem {
 
 	private TagManager manager;
 	private WiredBasicVoidSystem system;

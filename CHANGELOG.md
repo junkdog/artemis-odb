@@ -10,6 +10,7 @@
   - `IteratingSystem`: `EntityProcessingSystem`.
   - `IntervalSystem` and `IntervalIteratingSystem`: `IntervalEntity*System`
   - `DelayedIteratingSystem`: `DelayedEntityProcessingSystem`
+- `IteratingSystem` eligible for compile-time optimizations, like EntityProcessingSystem.
 - By convention, `@Wire` is now implied on all systems and managers. Use `@SkipWire` to suppress.
 - new `IntBag` methods: addAll, removeValue.
 - Dropped EntityObserver methods taking single entityId.
