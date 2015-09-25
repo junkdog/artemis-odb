@@ -5,9 +5,7 @@ import com.artemis.utils.Bag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.ReflectionException;
 
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.artemis.EntityManager.NO_COMPONENTS;
 
@@ -23,6 +21,8 @@ public final class WorldConfiguration {
 
 	protected Injector injector;
 	protected SystemInvocationStrategy invocationStrategy;
+
+	private Set<Class<? extends BaseSystem>> registered = new HashSet<Class<? extends BaseSystem>>();
 
 	public WorldConfiguration() {
 		// reserving space for core managers
@@ -154,11 +154,15 @@ public final class WorldConfiguration {
 		system.setPassive(passive);
 		systems.add(system);
 
+		if (!registered.add(system.getClass())) {
+			String name = system.getClass().getSimpleName();
+			throw new RuntimeException(name + " already added to " + getClass().getSimpleName());
+		}
+
 		return this;
 	}
 
 	void initialize(World world, Injector injector, AspectSubscriptionManager asm) {
-
 		if ( invocationStrategy != null ) {
 			world.setInvocationStrategy(invocationStrategy);
 		}

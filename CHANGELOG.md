@@ -23,11 +23,12 @@
   - Removed `@Mapper`
   - Removed UUID related accessors on Entity and World.
 - `@PackedWeaver` marked as deprecated until performance issues have been resolved.
+- **Fix**: No longer possible to accidentally add multiple systems of the same type.
 
 
 #### Version: 0.13.1 - 2015-09-20
-- **Fix:**: Deleted entities no longer mess up subscriptions when edited in `SubscriptionListener#removed`.
-- **Fix:**: Deleted entities retain components.
+- **Fix**: Deleted entities no longer mess up subscriptions when edited in `SubscriptionListener#removed`.
+- **Fix**: Deleted entities retain components.
 
 
 #### Version: 0.13.0 - 2015-09-14
