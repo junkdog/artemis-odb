@@ -16,11 +16,10 @@ public class SystemMethodVisitor extends MethodVisitor implements Opcodes {
 	@Override
 	public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
 		if (opcode == INVOKESPECIAL) {
-			EntitySystemType resolved = EntitySystemType.resolve(meta);
-			if (resolved == null) {
-				throw new RuntimeException("missing case: " + resolved);
+			EntitySystemType resolved = EntitySystemType.resolve(owner);
+			if (resolved != null) {
+				owner = resolved.replacedSuperName;
 			}
-			owner = resolved.replacedSuperName;
 		}
 		
 		mv.visitMethodInsn(opcode, owner, name, desc, itf);

@@ -22,7 +22,7 @@ public class OptimizingSystemWeaver extends ClassVisitor implements Opcodes {
 
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-		String systemSuperName = EntitySystemType.resolve(meta).superName;
+		String systemSuperName = EntitySystemType.resolve(meta).replacedSuperName;
 		cv.visit(version, access, name, signature, systemSuperName, interfaces);
 	}
 	

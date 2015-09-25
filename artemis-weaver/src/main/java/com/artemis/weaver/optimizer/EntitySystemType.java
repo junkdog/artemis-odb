@@ -19,9 +19,12 @@ public enum EntitySystemType {
 	}
 
 	public static EntitySystemType resolve(ClassMetadata meta) {
-		String name = meta.superClass;
+		return resolve(meta.superClass);
+	}
+
+	public static EntitySystemType resolve(String owner) {
 		for (EntitySystemType type : EntitySystemType.values()) {
-			if (name.equals(type.superName))
+			if (owner.equals(type.superName))
 				return type;
 		}
 
