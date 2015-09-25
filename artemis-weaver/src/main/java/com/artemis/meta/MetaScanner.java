@@ -6,6 +6,7 @@ import static com.artemis.Weaver.POOLED_ANNOTATION;
 import static com.artemis.Weaver.PROFILER_ANNOTATION;
 import static com.artemis.Weaver.WOVEN_ANNOTATION;
 
+import com.artemis.weaver.optimizer.EntitySystemType;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
@@ -46,8 +47,8 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 	@Override
 	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
 		info.superClass = superName;
-		if (superName.equals("com/artemis/systems/EntityProcessingSystem"))
-			info.sysetemOptimizable =  OptimizationType.FULL;
+		if (EntitySystemType.resolve(info) != null)
+			info.sysetemOptimizable = OptimizationType.FULL;
 		
 		super.visit(version, access, name, signature, superName, interfaces);
 	}

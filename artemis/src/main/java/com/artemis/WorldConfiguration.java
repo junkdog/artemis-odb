@@ -141,7 +141,7 @@ public final class WorldConfiguration {
 		return setSystem(system, false);
 	}
 
-		/**
+	/**
 	 * Will add a system to this world.
 	 *
 	 * @param <T>	 the system class type
@@ -163,7 +163,7 @@ public final class WorldConfiguration {
 	}
 
 	void initialize(World world, Injector injector, AspectSubscriptionManager asm) {
-		if ( invocationStrategy != null ) {
+		if (invocationStrategy != null) {
 			world.setInvocationStrategy(invocationStrategy);
 		}
 

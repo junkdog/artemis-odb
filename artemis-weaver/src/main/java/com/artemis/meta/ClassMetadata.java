@@ -11,7 +11,8 @@ public final class ClassMetadata {
 	
 	public boolean isPreviouslyProcessed;
 	
-	//  ie superclass is com/artemis/systems/EntityProcessingSystem
+	//  ie superclass is com/artemis/systems/EntityProcessingSystem or
+	// com/artemis/systems/IteratingSystem
 	public OptimizationType sysetemOptimizable = OptimizationType.NOT_OPTIMIZABLE;
 		
 	// methods

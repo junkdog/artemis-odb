@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
+import com.artemis.weaver.*;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
 
@@ -29,10 +30,6 @@ import com.artemis.meta.ClassMetadata.OptimizationType;
 import com.artemis.meta.ClassMetadata.WeaverType;
 import com.artemis.meta.FieldDescriptor;
 import com.artemis.meta.MetaScanner;
-import com.artemis.weaver.ComponentAccessTransmuter;
-import com.artemis.weaver.ComponentTypeTransmuter;
-import com.artemis.weaver.EsOptimizationTransmuter;
-import com.artemis.weaver.ProfilerTransmuter;
 
 public class Weaver {
 	public static final String PACKED_ANNOTATION = "Lcom/artemis/annotations/PackedWeaver;";
@@ -200,7 +197,7 @@ public class Weaver {
 		ClassMetadata meta = scan(cr);
 		
 		if (meta.sysetemOptimizable != OptimizationType.NOT_OPTIMIZABLE)
-			threadPool.submit(new EsOptimizationTransmuter(file, cr, meta));
+			threadPool.submit(new OptimizationTransmuter(file, cr, meta));
 	}
 
 	private static void processProfilers(ExecutorService threadPool, String file) {

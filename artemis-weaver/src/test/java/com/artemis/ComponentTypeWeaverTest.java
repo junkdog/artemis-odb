@@ -66,15 +66,6 @@ public class ComponentTypeWeaverTest {
 		transform(IllegalComponent.class);
 	}
 	
-	@Test @Ignore // rewrite to match actual waeving
-	public void pooled_disbled_weaving_test() throws Exception {
-		GlobalConfiguration.enabledPooledWeaving = false;
-		
-		ClassMetadata meta = Weaver.scan(transform(PooledNotForced.class));
-		assertFalse(meta.foundReset); 
-		assertEquals("com/artemis/Component", meta.superClass); 
-	}
-	
 	@Test
 	public void pooled_forced_weaving_test() throws Exception {
 		GlobalConfiguration.enabledPooledWeaving = false;

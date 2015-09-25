@@ -1,27 +1,21 @@
 package com.artemis;
 
-import static com.artemis.Transformer.transform;
-import static com.artemis.meta.ClassMetadata.OptimizationType.FULL;
-import static com.artemis.meta.ClassMetadata.OptimizationType.NOT_OPTIMIZABLE;
-import static com.artemis.meta.ClassMetadata.OptimizationType.SAFE;
-import static org.junit.Assert.assertEquals;
-
-import java.io.InputStream;
-
+import com.artemis.meta.ClassMetadata;
+import com.artemis.meta.ClassMetadata.GlobalConfiguration;
+import com.artemis.system.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
 
-import com.artemis.meta.ClassMetadata;
-import com.artemis.meta.ClassMetadata.GlobalConfiguration;
-import com.artemis.system.BeginEndSystem;
-import com.artemis.system.NoBeginEndSystem;
-import com.artemis.system.PoorFellowSystem;
-import com.artemis.system.SafeOptimizeSystem;
+import java.io.InputStream;
+
+import static com.artemis.Transformer.transform;
+import static com.artemis.meta.ClassMetadata.OptimizationType.*;
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings("static-method")
-public class EntitySystemOptimizerTest {
+public class SystemOptimizerTest {
 
 	@Before
 	public void init() {
@@ -32,20 +26,20 @@ public class EntitySystemOptimizerTest {
 	public void only_valid_entity_systems_test() {
 		assertEquals(NOT_OPTIMIZABLE, scan(BeginEndSystem.class).sysetemOptimizable);
 		assertEquals(NOT_OPTIMIZABLE, scan(NoBeginEndSystem.class).sysetemOptimizable);
-		assertEquals(FULL, scan(PoorFellowSystem.class).sysetemOptimizable);
+		assertEquals(FULL, scan(IteratingPoorFellowSystem.class).sysetemOptimizable);
 	}
 	
 	@Test
 	public void validate_optimized_system_test() throws Exception {
-		ClassMetadata meta = Weaver.scan(transform(PoorFellowSystem.class));
+		ClassMetadata meta = Weaver.scan(transform(IteratingPoorFellowSystem.class));
 		
-		assertEquals("com/artemis/EntitySystem", meta.superClass);
+		assertEquals("com/artemis/BaseEntitySystem", meta.superClass);
 		assertEquals(NOT_OPTIMIZABLE, meta.sysetemOptimizable); 
 	}
 	
 	@Test
 	public void detect_preserve_process_visibility_test() throws Exception {
-		ClassMetadata meta = scan(SafeOptimizeSystem.class);
+		ClassMetadata meta = scan(IteratingSafeOptimizeSystem.class);
 		assertEquals(SAFE, meta.sysetemOptimizable); 
 	}
 	
