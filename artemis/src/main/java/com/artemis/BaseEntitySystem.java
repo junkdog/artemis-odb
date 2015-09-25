@@ -12,7 +12,6 @@ public abstract class BaseEntitySystem extends BaseSystem
 
 	private final Aspect.Builder aspectConfiguration;
 	protected EntitySubscription subscription;
-	private WildBag<Entity> entities = new WildBag<Entity>();
 
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
@@ -50,6 +49,16 @@ public abstract class BaseEntitySystem extends BaseSystem
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			inserted(ids[i]);
 		}
+	}
+
+	/**
+	 * Gets the entities processed by this system. Do not delete entities from
+	 * this bag - it is the live thing.
+	 *
+	 * @return System's entity ids, as matched by aspect.
+	 */
+	public IntBag getEntityIds() {
+		return subscription.getEntities();
 	}
 
 	/**

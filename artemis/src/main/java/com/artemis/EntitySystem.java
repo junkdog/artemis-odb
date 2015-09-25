@@ -41,7 +41,13 @@ public abstract class EntitySystem extends BaseEntitySystem
 		shouldSyncEntities = true;
 	}
 
-	protected Bag<Entity> getEntities() {
+	/**
+	 * Gets the entities processed by this system. Do not delete entities from
+	 * this bag - it is the live thing.
+	 *
+	 * @return System's entity bag, as matched by aspect.
+	 */
+	public Bag<Entity> getEntities() {
 		if (shouldSyncEntities) {
 			int oldSize = entities.size();
 			entities.setSize(0);
