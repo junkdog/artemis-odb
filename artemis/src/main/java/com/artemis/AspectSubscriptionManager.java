@@ -72,9 +72,7 @@ public class AspectSubscriptionManager extends Manager {
 		toEntityIntBags(added, changed, deleted);
 
 		Object[] subscribers = subscriptions.getData();
-		((EntitySubscription)subscribers[0]).process(addedIds, changedIds, deletedIds);
-
-		world.getComponentManager().deletedIds.addAll(deletedIds);
+		((EntitySubscription)subscribers[0]).processAll(addedIds, changedIds, deletedIds);
 
 		check(addedIds, addedPerformer);
 		check(changedIds, changedPerformer);

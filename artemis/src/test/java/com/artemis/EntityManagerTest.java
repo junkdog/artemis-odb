@@ -50,7 +50,7 @@ public class EntityManagerTest {
 		ids.add(System.identityHashCode(e2b));
 		ids.add(System.identityHashCode(e3b));
 		
-		assertEquals(3, ids.size());
+		assertEquals(ids.toString(), 3, ids.size());
 	}
 	
 	@Test

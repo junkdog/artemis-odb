@@ -8,6 +8,8 @@ import com.artemis.utils.IntDeque;
 
 import java.util.BitSet;
 
+import static com.artemis.Aspect.all;
+
 
 /**
  * EntityManager.
@@ -15,7 +17,7 @@ import java.util.BitSet;
  * @author Arni Arent
  */
 @SkipWire
-public class EntityManager extends Manager {
+public class EntityManager extends BaseSystem {
 
 	static final int NO_COMPONENTS = 1;
 	/** Contains all entities in the manager. */
@@ -27,7 +29,7 @@ public class EntityManager extends Manager {
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
 	private IntBag entityToIdentity = new IntBag();
 	private int highestSeenIdentity;
-	private AspectSubscriptionManager subscriptionManager;
+	private AspectSubscriptionManager subscriptions;
 
 	/**
 	 * Creates a new EntityManager Instance.
@@ -36,11 +38,26 @@ public class EntityManager extends Manager {
 		entities = new Bag<Entity>(initialContainerSize);
 		newlyCreatedEntityIds = new BitSet();
 	}
-	
+
+	@Override
+	protected void processSystem() {}
+
 	@Override
 	protected void initialize() {
 		recyclingEntityFactory = new RecyclingEntityFactory(this);
-		subscriptionManager = world.getSystem(AspectSubscriptionManager.class);
+		subscriptions = world.getSystem(AspectSubscriptionManager.class);
+		subscriptions.get(all()).addSubscriptionListener(
+				new EntitySubscription.SubscriptionListener() {
+					@Override
+					public void inserted(IntBag entities) {
+						added(entities);
+					}
+
+					@Override
+					public void removed(IntBag entities) {
+						deleted(entities);
+					}
+				});
 	}
 
 	/**
@@ -91,35 +108,32 @@ public class EntityManager extends Manager {
 	int compositionIdentity(BitSet componentBits) {
 		int identity = identityResolver.getIdentity(componentBits);
 		if (identity > highestSeenIdentity) {
-			subscriptionManager.processComponentIdentity(identity, componentBits);
+			subscriptions.processComponentIdentity(identity, componentBits);
 			highestSeenIdentity = identity;
 		}
 		return identity;
 	}
 	
-	/**
-	 * Removes the entity from the manager, freeing it's id for new entities.
-	 *
-	 * @param entityId
-	 *			the entity to remove
-	 */
-	@Override
-	public void deleted(int entityId) {
-		if (recyclingEntityFactory.has(entityId))
-			return;
-
-		// usually never happens but:
-		// this happens when an entity is deleted before
-		// it is added to the world, ie; created and deleted
-		// before World#process has been called
-		newlyCreatedEntityIds.set(entityId, false);
-
-		recyclingEntityFactory.free(entityId);
+	private void deleted(IntBag entities) {
+		int[] ids = entities.getData();
+		for(int i = 0, s = entities.size(); s > i; i++) {
+			int entityId = ids[i];
+			// usually never happens but:
+			// this happens when an entity is deleted before
+			// it is added to the world, ie; created and deleted
+			// before World#process has been called
+			if (!recyclingEntityFactory.has(entityId)) {
+				newlyCreatedEntityIds.set(entityId, false);
+				recyclingEntityFactory.free(entityId);
+			}
+		}
 	}
 
-	@Override
-	public void added(int entityId) {
-		newlyCreatedEntityIds.set(entityId, false);
+	private void added(IntBag entities) {
+		int[] ids = entities.getData();
+		for(int i = 0, s = entities.size(); s > i; i++) {
+			newlyCreatedEntityIds.set(ids[i], false);
+		}
 	}
 
 	/**

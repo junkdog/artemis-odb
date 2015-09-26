@@ -134,6 +134,14 @@ public class EntitySubscription {
 		dirty |= informEntityChanges();
 	}
 
+	void processAll(IntBag added, IntBag changed, IntBag deleted) {
+		deletedAll(deleted);
+		added(added);
+		changed(changed);
+
+		dirty |= informEntityChanges();
+	}
+
 	boolean informEntityChanges() {
 		if (insertedIds.isEmpty() && removedIds.isEmpty())
 			return false;
@@ -178,6 +186,15 @@ public class EntitySubscription {
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			deleted(ids[i]);
+		}
+	}
+
+	private final void deletedAll(IntBag entities) {
+		int[] ids = entities.getData();
+		for (int i = 0, s = entities.size(); s > i; i++) {
+			int id = ids[i];
+			activeEntityIds.clear(id);
+			removedIds.set(id);
 		}
 	}
 

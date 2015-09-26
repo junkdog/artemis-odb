@@ -66,11 +66,7 @@ public class ComponentManager extends BaseSystem {
 
 					@Override
 					public void removed(IntBag entities) {
-						// this won't necessarily be called - as in, an entity
-						// which is created/deleted during the same tick, will not
-						// cause the Entity to be inserted/removed from the list
-						//
-						// deleted entities manually sert during AspectSubscriptionManager#process
+						deletedIds.addAll(entities);
 					}
 				});
 	}
