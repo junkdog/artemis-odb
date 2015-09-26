@@ -34,7 +34,6 @@ public class World {
 	/** The time passed since the last update. */
 	public float delta;
 
-	final BitSet added;
 	final BitSet changed;
 	final BitSet deleted;
 
@@ -79,7 +78,6 @@ public class World {
 		systems = new IdentityHashMap<Class<?>, BaseSystem>();
 		systemsBag = configuration.systems;
 
-		added = new BitSet();
 		changed = new BitSet();
 		deleted = new BitSet();
 
@@ -301,7 +299,7 @@ public class World {
 	public Entity createEntity(Archetype archetype) {
 		Entity e = em.createEntityInstance(archetype);
 		cm.addComponents(e, archetype);
-		added.set(e.id);
+		changed.set(e.id);
 		return e;
 	}
 
@@ -363,7 +361,7 @@ public class World {
 		// such as those affected by EntityTransmuters, Archetypes
 		// and EntityFactories.
 		do {
-			am.process(added, changed, deleted);
+			am.process(changed, deleted);
 		} while (editPool.processEntities());
 
 		cm.clean();

@@ -16,7 +16,6 @@ public class AspectSubscriptionManager extends Manager {
 	private final Map<Aspect.Builder, EntitySubscription> subscriptionMap;
 	private Bag<EntitySubscription> subscriptions;
 
-	private final IntBag addedIds = new IntBag();
 	private final IntBag changedIds = new IntBag();
 	private final IntBag deletedIds = new IntBag();
 
@@ -53,33 +52,29 @@ public class AspectSubscriptionManager extends Manager {
 	 *
 	 * Observers are called before Subscriptions, which means managerial tasks get artificial priority.
 	 *
-	 * @param added Entities added to world
-	 * @param changed Entities with changed composition (not state).
+	 * @param changed Entities with changed composition or state.
 	 * @param deleted Entities removed from world.
 	 */
-	void process(BitSet added, BitSet changed, BitSet deleted) {
-		toEntityIntBags(added, changed, deleted);
+	void process(BitSet changed, BitSet deleted) {
+		toEntityIntBags(changed, deleted);
 
 		Object[] subscribers = subscriptions.getData();
-		((EntitySubscription)subscribers[0]).processAll(addedIds, changedIds, deletedIds);
+		((EntitySubscription)subscribers[0]).processAll(changedIds, deletedIds);
 
 		for (int i = 1, s = subscriptions.size(); s > i; i++) {
 			EntitySubscription subscriber = (EntitySubscription)subscribers[i];
-			subscriber.process(addedIds, changedIds, deletedIds);
+			subscriber.process(changedIds, deletedIds);
 		}
 
 
-		addedIds.setSize(0);
 		changedIds.setSize(0);
 		deletedIds.setSize(0);
 	}
 
-	private void toEntityIntBags(BitSet added, BitSet changed, BitSet deleted) {
-		toIntBag(added, addedIds);
+	private void toEntityIntBags(BitSet changed, BitSet deleted) {
 		toIntBag(changed, changedIds);
 		toIntBag(deleted, deletedIds);
 
-		added.clear();
 		changed.clear();
 		deleted.clear();
 	}

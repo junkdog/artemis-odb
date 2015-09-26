@@ -113,10 +113,8 @@ final class EntityEditPool {
 		int id = edit.entityId;
 		if (edit.scheduledDeletion) {
 			w.deleted.set(id);
-		} else if (!em.isNew(id)) {
-			w.changed.set(id);
 		} else {
-			w.added.set(id);
+			w.changed.set(id);
 		}
 	}
 
