@@ -4,13 +4,17 @@ import com.artemis.*;
 import com.artemis.utils.IntBag;
 
 /**
- * A typical entity system.
- * <p>
- * Use this when you need to process entities possessing the provided component
- * types.
- * </p>
- * 
+ * Entity identity iterating system.
+ * <p/>
+ * System that iterates over {@link EntitySubscription} member entities by
+ * entity identity.
+ *
+ * Use this when you need to process entities matching an {@link Aspect},
+ * and you want maximum performance.
+ *
  * @author Arni Arent
+ * @author Adrian Papari
+ * @see EntityProcessingSystem Entity iteration by entity reference.
  */
 public abstract class IteratingSystem extends BaseEntitySystem {
 
@@ -32,6 +36,7 @@ public abstract class IteratingSystem extends BaseEntitySystem {
 	 */
 	protected abstract void process(int entityId);
 
+	/** @inheritDoc */
 	@Override
 	protected final void processSystem() {
 		IntBag actives = subscription.getEntities();
