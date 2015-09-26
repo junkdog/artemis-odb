@@ -73,8 +73,7 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 
 
 	@Override
-	protected void inserted(int entityId) {
-		Entity entity = world.getEntity(entityId);
+	protected void inserted(Entity entity) {
 		float remainingDelay = getRemainingDelay(entity);
 		processDelta(entity, -acc);
 		if(remainingDelay > 0) {

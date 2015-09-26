@@ -147,9 +147,9 @@ public class WorldTest
 		}
 		
 		@Override
-		protected void inserted(int entityId) {
-			deltas.set(entityId, 1f);
-			super.inserted(entityId);
+		protected void inserted(Entity e) {
+			deltas.set(e.getId(), 1f);
+			super.inserted(e);
 		}
 		
 		@Override
