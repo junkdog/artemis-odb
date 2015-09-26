@@ -58,17 +58,14 @@ public class AspectSubscriptionManager extends Manager {
 	void process(BitSet changed, BitSet deleted) {
 		toEntityIntBags(changed, deleted);
 
-		Object[] subscribers = subscriptions.getData();
-		((EntitySubscription)subscribers[0]).processAll(changedIds, deletedIds);
+		// note: processAll != process
+		subscriptions.get(0).processAll(changedIds, deletedIds);
 
+		Object[] subscribers = subscriptions.getData();
 		for (int i = 1, s = subscriptions.size(); s > i; i++) {
 			EntitySubscription subscriber = (EntitySubscription)subscribers[i];
 			subscriber.process(changedIds, deletedIds);
 		}
-
-
-		changedIds.setSize(0);
-		deletedIds.setSize(0);
 	}
 
 	private void toEntityIntBags(BitSet changed, BitSet deleted) {
