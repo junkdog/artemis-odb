@@ -175,7 +175,7 @@ public class EntityBuilder {
 	}
 
 	/** Fetch manager or throw RuntimeException if not registered. */
-	protected <T extends Manager> T resolveManager(Class<T> type) {
+	protected <T extends BaseSystem> T resolveManager(Class<T> type) {
 		final T teamManager = world.getSystem(type);
 		if ( teamManager == null ) {
 			throw new RuntimeException("Register " + ClassReflection.getSimpleName(type) + " with your artemis world.");

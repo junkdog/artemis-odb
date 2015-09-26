@@ -1,11 +1,14 @@
 package com.artemis.managers;
 
+import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.artemis.Entity;
-import com.artemis.Manager;
+import com.artemis.*;
+import com.artemis.utils.IntBag;
+
+import static com.artemis.Aspect.all;
 
 
 /**
@@ -17,12 +20,14 @@ import com.artemis.Manager;
  * 
  * @author Arni Arent
  */
-public class TagManager extends Manager {
+public class TagManager extends BaseSystem {
 
 	/** Tags mapped to entities. */
 	private final Map<String, Entity> entitiesByTag;
 	/** Tagged entities mapped to tags. */
 	private final Map<Entity, String> tagsByEntity;
+
+	private final BitSet registered;
 
 	/**
 	 * Creates a new TagManager.
@@ -30,8 +35,34 @@ public class TagManager extends Manager {
 	public TagManager() {
 		entitiesByTag = new HashMap<String, Entity>();
 		tagsByEntity = new HashMap<Entity, String>();
+		registered = new BitSet();
 	}
 
+	@Override
+	protected void processSystem() {}
+
+	@Override
+	protected void initialize() {
+		world.getSystem(AspectSubscriptionManager.class)
+				.get(all())
+				.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+					@Override
+					public void inserted(IntBag entities) {}
+
+					@Override
+					public void removed(IntBag entities) {
+						int[] ids = entities.getData();
+						for (int i = 0, s = entities.size(); s > i; i++) {
+							int id = ids[i];
+							if (registered.get(id)) {
+								String removedTag = tagsByEntity.remove(world.getEntity(id));
+								entitiesByTag.remove(removedTag);
+								registered.clear(id);
+							}
+						}
+					}
+				});
+	}
 
 	/**
 	 * Tag an entity.
@@ -47,6 +78,7 @@ public class TagManager extends Manager {
 	public void register(String tag, Entity e) {
 		entitiesByTag.put(tag, e);
 		tagsByEntity.put(e, tag);
+		registered.set(e.id);
 	}
 
 	/**
@@ -56,7 +88,11 @@ public class TagManager extends Manager {
 	 *			the tag to remove
 	 */
 	public void unregister(String tag) {
-		tagsByEntity.remove(entitiesByTag.remove(tag));
+		Entity removed = entitiesByTag.remove(tag);
+		if (removed != null) {
+			tagsByEntity.remove(removed);
+			registered.clear(removed.id);
+		}
 	}
 
 	/**
@@ -103,19 +139,4 @@ public class TagManager extends Manager {
 	public Collection<String> getRegisteredTags() {
 		return tagsByEntity.values();
 	}
-
-	/**
-	 * If the entity gets deleted, remove the tag used by it.
-	 *
-	 * @param entityId
-	 *			the deleted entity
-	 */
-	@Override
-	public void deleted(int entityId) {
-		String removedTag = tagsByEntity.remove(world.getEntity(entityId));
-		if(removedTag != null) {
-			entitiesByTag.remove(removedTag);
-		}
-	}
-
 }
