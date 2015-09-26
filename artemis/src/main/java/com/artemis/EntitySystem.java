@@ -17,7 +17,6 @@ public abstract class EntitySystem extends BaseEntitySystem
 
 	private boolean shouldSyncEntities;
 	private WildBag<Entity> entities = new WildBag<Entity>();
-	private WildBag<Entity> bag = new WildBag<Entity>();
 
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
