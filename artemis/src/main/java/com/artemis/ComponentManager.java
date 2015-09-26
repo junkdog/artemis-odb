@@ -71,10 +71,6 @@ public class ComponentManager extends BaseSystem {
 				});
 	}
 
-	protected <T extends Component> T create(Entity owner, Class<T> componentClass) {
-		return create(owner.id, componentClass);
-	}
-
 	protected <T extends Component> T create(int owner, Class<T> componentClass) {
 		ComponentType type = typeFactory.getTypeFor(componentClass);
 		T component = create(owner, type);
@@ -117,11 +113,6 @@ public class ComponentManager extends BaseSystem {
 		
 		addComponent(owner, type, component);
 		return component;
-	}
-
-	@SuppressWarnings("unchecked")
-	<T extends Component> T create(Entity owner, ComponentType type) {
-		return create(owner.id, type);
 	}
 
 	private void reclaimPooled(int owner, ComponentType type) {
@@ -234,10 +225,10 @@ public class ComponentManager extends BaseSystem {
 			addBasicComponent(entityId, type, component); // pooled components are handled the same
 	}
 
-	protected void addComponents(Entity e, Archetype archetype) {
+	protected void addComponents(int entityId, Archetype archetype) {
 		ComponentType[] types = archetype.types;
 		for (int i = 0, s = types.length; s > i; i++) {
-			create(e, types[i]);
+			create(entityId, types[i]);
 		}
 	}
 	
@@ -314,21 +305,21 @@ public class ComponentManager extends BaseSystem {
 	/**
 	 * Get a component of an entity.
 	 *
-	 * @param e
+	 * @param entityId
 	 *			the entity associated with the component
 	 * @param type
 	 *			the type of component to get
 	 * @return the component of given type
 	 */
-	protected Component getComponent(Entity e, ComponentType type) {
+	protected Component getComponent(int entityId, ComponentType type) {
 		if (type.isPackedComponent()) {
 			PackedComponent component = packedComponents.safeGet(type.getIndex());
-			if (component != null) component.forEntity(e.id);
+			if (component != null) component.forEntity(entityId);
 			return component;
 		} else {
 			Bag<Component> components = componentsByType.safeGet(type.getIndex());
-			if (components != null && components.isIndexWithinBounds(e.id)) {
-				return components.get(e.id);
+			if (components != null && components.isIndexWithinBounds(entityId)) {
+				return components.get(entityId);
 			}
 		}
 		return null;
@@ -337,19 +328,19 @@ public class ComponentManager extends BaseSystem {
 	/**
 	 * Get all component associated with an entity.
 	 *
-	 * @param e
+	 * @param entityId
 	 *			the entity to get components from
 	 * @param fillBag
 	 *			a bag to be filled with components
 	 * @return the {@code fillBag}, filled with the entities components
 	 */
-	public Bag<Component> getComponentsFor(Entity e, Bag<Component> fillBag) {
-		BitSet componentBits = e.getComponentBits();
+	public Bag<Component> getComponentsFor(int entityId, Bag<Component> fillBag) {
+		BitSet componentBits = world.getEntityManager().componentBits(entityId);
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
 			if (typeFactory.isPackedComponent(i)) {
 				fillBag.add(packedComponents.get(i));
 			} else {
-				fillBag.add(componentsByType.get(i).get(e.id));
+				fillBag.add(componentsByType.get(i).get(entityId));
 			}
 		}
 		
@@ -375,7 +366,7 @@ public class ComponentManager extends BaseSystem {
 		for(int i = 0, s = deletedIds.size(); s > i; i++) {
 			removeComponents(ids[i]);
 		}
-		deletedIds.clear();
+		deletedIds.setSize(0);
 	}
 
 	public ComponentTypeFactory getTypeFactory() {

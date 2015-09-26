@@ -51,12 +51,12 @@ public class UuidEntityManagerTest {
 	    Entity entity = world.createEntity();
 		uuidEntityManager.setUuid(entity, uuid);
 	    world.process();
-		assertEquals(0, uuidEntityManager.getEntity(uuid).id); // Entity[0]
+		assertEquals(0, uuidEntityManager.getEntity(uuid).getId()); // Entity[0]
 		world.deleteEntity(entity);
 		entity = world.createEntity();
 		uuidEntityManager.setUuid(entity, uuid);
-	    assertEquals(1, uuidEntityManager.getEntity(uuid).id); // Entity[1]
+	    assertEquals(1, uuidEntityManager.getEntity(uuid).getId()); // Entity[1]
 	    world.process();
-	    assertEquals(1, uuidEntityManager.getEntity(uuid).id);
+	    assertEquals(1, uuidEntityManager.getEntity(uuid).getId());
 	}
 }

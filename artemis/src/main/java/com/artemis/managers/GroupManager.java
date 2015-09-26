@@ -113,7 +113,7 @@ public class GroupManager extends BaseSystem {
 		for(int i = 0, s = groups.size(); s > i; i++) {
 			Bag<Entity> entities = entitiesByGroup.get(groups.get(i));
 			if(entities != null) {
-				entities.remove(world.getEntity(e.id));
+				entities.remove(e);
 			}
 		}
 		groupsByEntity.remove(e);

@@ -78,7 +78,11 @@ public class TagManager extends BaseSystem {
 	public void register(String tag, Entity e) {
 		entitiesByTag.put(tag, e);
 		tagsByEntity.put(e, tag);
-		registered.set(e.id);
+		registered.set(e.getId());
+	}
+
+	public void register(String tag, int entityId) {
+		register(tag, world.getEntity(entityId));
 	}
 
 	/**
@@ -91,7 +95,7 @@ public class TagManager extends BaseSystem {
 		Entity removed = entitiesByTag.remove(tag);
 		if (removed != null) {
 			tagsByEntity.remove(removed);
-			registered.clear(removed.id);
+			registered.clear(removed.getId());
 		}
 	}
 

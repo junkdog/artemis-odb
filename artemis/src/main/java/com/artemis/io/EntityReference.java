@@ -41,7 +41,7 @@ class EntityReference {
 			void translate(Component c, Field field, Bag<Entity> translatedIds) {
 				try {
 					int oldId = ((Integer)field.get(c)).intValue();
-					field.set(c, translatedIds.get(oldId).id);
+					field.set(c, translatedIds.get(oldId).getId());
 				} catch (ReflectionException e) {
 					throw  new RuntimeException(e);
 				}
@@ -53,7 +53,7 @@ class EntityReference {
 					IntBag bag = (IntBag) field.get(c);
 					for (int i = 0, s = bag.size(); s > i; i++) {
 						int oldId = bag.get(i);
-						bag.set(i, translatedIds.get(oldId).id);
+						bag.set(i, translatedIds.get(oldId).getId());
 					}
 				} catch (ReflectionException e) {
 					throw  new RuntimeException(e);
@@ -63,7 +63,7 @@ class EntityReference {
 		ENTITY {
 			void translate(Component c, Field field, Bag<Entity> translatedIds) {
 				try {
-					int oldId = ((Entity) field.get(c)).id;
+					int oldId = ((Entity) field.get(c)).getId();
 					field.set(c, translatedIds.get(oldId));
 				} catch (ReflectionException e) {
 					throw new RuntimeException(e);
@@ -76,7 +76,7 @@ class EntityReference {
 					Bag<Entity> bag = (Bag<Entity>) field.get(c);
 					for (int i = 0, s = bag.size(); s > i; i++) {
 						Entity e = bag.get(i);
-						bag.set(i, translatedIds.get(e.id));
+						bag.set(i, translatedIds.get(e.getId()));
 					}
 				} catch (ReflectionException e) {
 					throw new RuntimeException(e);

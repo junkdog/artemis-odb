@@ -67,9 +67,9 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected Entity createEntityInstance() {
 		Entity e = recyclingEntityFactory.obtain();
-		entityToIdentity.set(e.id, 0);
+		entityToIdentity.set(e.getId(), 0);
 
-		newlyCreatedEntityIds.set(e.id);
+		newlyCreatedEntityIds.set(e.getId());
 		return e;
 	}
 	
@@ -195,7 +195,7 @@ public class EntityManager extends BaseSystem {
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			if (e != null)
-				es.check(e.id);
+				es.check(e.getId());
 		}
 
 		es.informEntityChanges();
@@ -253,7 +253,7 @@ public class EntityManager extends BaseSystem {
 		Entity obtain() {
 			if (limbo.isEmpty()) {
 				Entity e = em.createEntity(nextId++);
-				em.entities.set(e.id, e);
+				em.entities.set(e.getId(), e);
 				return e;
 			} else {
 				int id = limbo.popFirst();

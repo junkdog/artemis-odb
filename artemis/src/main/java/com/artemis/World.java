@@ -298,8 +298,8 @@ public class World {
 	 */
 	public Entity createEntity(Archetype archetype) {
 		Entity e = em.createEntityInstance(archetype);
-		cm.addComponents(e, archetype);
-		changed.set(e.id);
+		cm.addComponents(e.getId(), archetype);
+		changed.set(e.getId());
 		return e;
 	}
 
