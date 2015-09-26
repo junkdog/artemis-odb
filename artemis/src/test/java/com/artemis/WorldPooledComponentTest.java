@@ -22,7 +22,7 @@ public class WorldPooledComponentTest
 				.setSystem(new SystemComponentEntityRemover()));
 
 		Set<Integer> hashes = runWorld(world);
-		assertEquals("Contents: " + hashes, 3 + 1, hashes.size());
+		assertEquals("Contents: " + hashes, 3, hashes.size());
 	}
 
 	private Set<Integer> runWorld(World world)

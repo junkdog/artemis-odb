@@ -10,6 +10,8 @@ import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
 
+import static com.artemis.Aspect.all;
+
 
 /**
  * Handles the association between entities and their components.
@@ -21,7 +23,7 @@ import com.artemis.utils.reflect.ReflectionException;
  * @author Arni Arent
  */
 @SkipWire
-public class ComponentManager extends Manager {
+public class ComponentManager extends BaseSystem {
 
 	/** Holds all components grouped by type. */
 	private final Bag<Bag<Component>> componentsByType;
@@ -29,7 +31,7 @@ public class ComponentManager extends Manager {
 	private final Bag<PackedComponent> packedComponents;
 	private final Bag<BitSet> packedComponentOwners;
 	/** Collects all Entites marked for deletion from this ComponentManager. */
-	private final IntBag deleted;
+	final IntBag deletedIds = new IntBag();
 	private final ComponentPool pooledComponents;
 	
 	private int highestSeenEntityId;
@@ -45,9 +47,32 @@ public class ComponentManager extends Manager {
 		packedComponents = new Bag<PackedComponent>();
 		packedComponentOwners = new Bag<BitSet>();
 		pooledComponents = new ComponentPool();
-		deleted = new IntBag();
-		
+
 		typeFactory = new ComponentTypeFactory();
+	}
+
+	@Override
+	protected void processSystem() {}
+
+	@Override
+	protected void initialize() {
+		world.getSystem(AspectSubscriptionManager.class)
+				.get(all())
+				.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+					@Override
+					public void inserted(IntBag entities) {
+						added(entities);
+					}
+
+					@Override
+					public void removed(IntBag entities) {
+						// this won't necessarily be called - as in, an entity
+						// which is created/deleted during the same tick, will not
+						// cause the Entity to be inserted/removed from the list
+						//
+						// deleted entities manually sert during AspectSubscriptionManager#process
+					}
+				});
 	}
 
 	protected <T extends Component> T create(Entity owner, Class<T> componentClass) {
@@ -178,7 +203,7 @@ public class ComponentManager extends Manager {
 			}
 		}
 	}
-	
+
 	@Override
 	protected void dispose() {
 		for (int i = 0, s = packedComponents.size(); s > i; i++) {
@@ -227,8 +252,7 @@ public class ComponentManager extends Manager {
 		}
 	}
 	
-	private void addBasicComponent(int entityId, ComponentType type, Component component)
-	{
+	private void addBasicComponent(int entityId, ComponentType type, Component component) {
 		Bag<Component> components = componentsByType.safeGet(type.getIndex());
 		if (components == null) {
 			components = new Bag<Component>(highestSeenEntityId);
@@ -336,14 +360,9 @@ public class ComponentManager extends Manager {
 		return fillBag;
 	}
 
-
-	@Override
-	public void deleted(int entityId) {
-		deleted.add(entityId);
-	}
-	
-	@Override
-	public void added(int entityId) {
+	private void added(IntBag entities) {
+		// entities is sorted, so enough to just grab the last entity
+		int entityId = entities.get(entities.size() - 1);
 		if ((highestSeenEntityId - 1) < entityId) {
 			ensurePackedComponentCapacity(entityId);
 		}
@@ -353,14 +372,14 @@ public class ComponentManager extends Manager {
 	 * Removes all components from entities marked for deletion.
 	 */
 	protected void clean() {
-		int s = deleted.size();
-		if(s > 0) {
-			int[] ids = deleted.getData();
-			for(int i = 0; s > i; i++) {
-				removeComponents(ids[i]);
-			}
-			deleted.setSize(0);
+		if (deletedIds.isEmpty())
+			return;
+
+		int[] ids = deletedIds.getData();
+		for(int i = 0, s = deletedIds.size(); s > i; i++) {
+			removeComponents(ids[i]);
 		}
+		deletedIds.clear();
 	}
 
 	public ComponentTypeFactory getTypeFactory() {

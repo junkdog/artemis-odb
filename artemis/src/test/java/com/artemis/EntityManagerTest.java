@@ -72,7 +72,7 @@ public class EntityManagerTest {
 		
 		int id1 = e1.getId();
 		e1.deleteFromWorld();
-		
+
 		Entity e2 = world.createEntity();
 		
 		assertNotEquals(id1, e2.getId());
@@ -91,7 +91,7 @@ public class EntityManagerTest {
 		e1.deleteFromWorld();
 		world.process();
 		Entity e2 = world.createEntity();
-		
+
 		assertEquals(id1, e2.getId());
 		assertFalse("Error:" + mapper.getSafe(e2), mapper.has(e2));
 	}

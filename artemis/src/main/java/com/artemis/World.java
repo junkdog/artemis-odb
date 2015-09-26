@@ -279,8 +279,7 @@ public class World {
 	 * 		the entity to delete
 	 */
 	public void deleteEntity(Entity e) {
-		e.edit()
-				.deleteEntity();
+		e.edit().deleteEntity();
 	}
 
 	/**

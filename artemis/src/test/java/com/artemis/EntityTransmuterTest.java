@@ -107,9 +107,9 @@ public class EntityTransmuterTest {
 		world.createEntity().edit().create(ReusedComponent.class);
 
 		world.process();
-		assertEquals(0, subscription.getEntities().size());
-		world.process();
 		assertEquals(2, subscription.getEntities().size());
+		world.process();
+		assertEquals(0, subscription.getEntities().size());
 	}
 
 	private Entity createEntity(Class<? extends Component>... components) {
