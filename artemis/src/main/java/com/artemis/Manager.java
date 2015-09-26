@@ -2,6 +2,8 @@ package com.artemis;
 
 import com.artemis.utils.IntBag;
 
+import static com.artemis.Aspect.all;
+
 
 /**
  * A manager for handling entities in the world.
@@ -9,38 +11,41 @@ import com.artemis.utils.IntBag;
  * @author Arni Arent
  * @author Daan van Yperen
  */
-public abstract class Manager extends BaseSystem implements EntityObserver {
+public abstract class Manager extends BaseSystem {
 
-	public void added(int entityId) {}
-	public void changed(int entityId) {}
-	public void deleted(int entityId) {}
+	public void added(Entity e) {}
+	public void deleted(Entity e) {}
 
-	@Override
-	public final void added(IntBag entities) {
+	protected void registerManager() {
+		world.getSystem(AspectSubscriptionManager.class)
+				.get(all())
+				.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+					@Override
+					public void inserted(IntBag entities) {
+						added(entities);
+					}
+
+					@Override
+					public void removed(IntBag entities) {
+						deleted(entities);
+					}
+				});
+	}
+
+	private void added(IntBag entities) {
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			added(ids[i]);
+			added(world.getEntity(ids[i]));
+		}
+	}
+
+	private void deleted(IntBag entities) {
+		int[] ids = entities.getData();
+		for (int i = 0, s = entities.size(); s > i; i++) {
+			deleted(world.getEntity(ids[i]));
 		}
 	}
 
 	@Override
-	public final void changed(IntBag entities) {
-		int[] ids = entities.getData();
-		for (int i = 0, s = entities.size(); s > i; i++) {
-			changed(ids[i]);
-		}
-	}
-
-	@Override
-	public final void deleted(IntBag entities) {
-		int[] ids = entities.getData();
-		for (int i = 0, s = entities.size(); s > i; i++) {
-			deleted(ids[i]);
-		}
-	}
-
-	@Override
-	protected final void processSystem() {
-		// empty on purpose.
-	}
+	protected final void processSystem() {}
 }

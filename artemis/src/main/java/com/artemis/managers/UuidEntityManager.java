@@ -18,16 +18,16 @@ public class UuidEntityManager extends Manager {
 	}
 
 	@Override
-	public void deleted(int entityId) {
-		UUID uuid = entityToUuid.safeGet(entityId);
+	public void deleted(Entity e) {
+		UUID uuid = entityToUuid.safeGet(e.id);
 		if (uuid == null)
 			return;
 
 		Entity oldEntity = uuidToEntity.get(uuid);
-		if (oldEntity != null && oldEntity.id == entityId)
+		if (oldEntity != null && oldEntity.id == e.id)
 			uuidToEntity.remove(uuid);
 
-		entityToUuid.set(entityId, null);
+		entityToUuid.set(e.id, null);
 	}
 	
 	public void updatedUuid(Entity e, UUID newUuid) {

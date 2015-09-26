@@ -41,9 +41,6 @@ public class World {
 	/** Contains all systems and systems classes mapped. */
 	final Map<Class<?>, BaseSystem> systems;
 
-	/** Contains all entity observer implementing systems unordered. */
-	Bag<EntityObserver> entityObserversBag;
-
 	/** Contains all systems unordered. */
 	private final Bag<BaseSystem> systemsBag;
 
@@ -104,21 +101,6 @@ public class World {
 
 		if (invocationStrategy == null) {
 			setInvocationStrategy(new InvocationStrategy());
-		}
-
-		collectEntityObservers();
-
-	}
-
-	/** Create a bag of systems that implement {@link EntityObserver}. */
-	private void collectEntityObservers() {
-		entityObserversBag = new Bag<EntityObserver>();
-		Object[] systemsData = systemsBag.getData();
-		for (int i = 0, s = systemsBag.size(); s > i; i++) {
-			final BaseSystem system = (BaseSystem) systemsData[i];
-			if (ClassReflection.isAssignableFrom(EntityObserver.class, system.getClass())) {
-				entityObserversBag.add((EntityObserver) system);
-			}
 		}
 	}
 
@@ -371,8 +353,8 @@ public class World {
 	/**
 	 * Inform subscribers of state changes.
 	 *
-	 * Performs callbacks on systems implementing {@link EntityObserver} and afterwards any
-	 * registered instances of {@link com.artemis.EntitySubscription.SubscriptionListener}.
+	 * Performs callbacks on registered instances of
+	 * {@link com.artemis.EntitySubscription.SubscriptionListener}.
 	 *
 	 * Will run repeatedly until any state changes caused by subscribers have been handled.
 	 */

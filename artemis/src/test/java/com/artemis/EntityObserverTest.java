@@ -1,10 +1,7 @@
 package com.artemis;
 
-import com.artemis.utils.IntBag;
 import org.junit.Assert;
 import org.junit.Test;
-
-import static org.junit.Assert.*;
 
 /**
  * @author Daan van Yperen
@@ -14,25 +11,13 @@ public class EntityObserverTest {
 	@Test
 	public void ensure_systems_with_entityobserver_receive_events() {
 
-		class TestSystem extends BaseSystem implements EntityObserver {
+		class TestSystem extends Manager {
 
 			public int added=0;
 
 			@Override
-			protected void processSystem() {
-			}
-
-			@Override
-			public void added(IntBag entities) {
+			public void added(Entity e) {
 				added++;
-			}
-
-			@Override
-			public void changed(IntBag entities) {
-			}
-
-			@Override
-			public void deleted(IntBag entities) {
 			}
 		}
 

@@ -7,8 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class AspectSubscriptionManagerTest {
 	
@@ -85,11 +83,11 @@ public class AspectSubscriptionManagerTest {
 		private ComponentMapper<ComponentX> componentXMapper;
 
 		@Override
-		public void added(int entityId) {
+		public void added(Entity entityId) {
 			if (!componentXMapper.has(entityId))
 				return;
 
-			world.getEntity(entityId).edit().create(ComponentY.class);
+			entityId.edit().create(ComponentY.class);
 		}
 	}
 }

@@ -101,12 +101,11 @@ public class PlayerManager extends Manager {
 	/**
 	 * Deleted entities are removed from their player.
 	 *
-	 * @param entityId
+	 * @param e
 	 *			the deleted entity
 	 */
 	@Override
-	public void deleted(int entityId) {
-		removeFromPlayer(world.getEntity(entityId));
+	public void deleted(Entity e) {
+		removeFromPlayer(e);
 	}
-
 }

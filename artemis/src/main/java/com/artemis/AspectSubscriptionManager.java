@@ -20,17 +20,9 @@ public class AspectSubscriptionManager extends Manager {
 	private final IntBag changedIds = new IntBag();
 	private final IntBag deletedIds = new IntBag();
 
-	private final AddedPerformer addedPerformer;
-	private final ChangedPerformer changedPerformer;
-	private final DeletedPerformer deletedPerformer;
-
 	protected AspectSubscriptionManager() {
 		subscriptionMap = new HashMap<Aspect.Builder, EntitySubscription>();
 		subscriptions = new Bag<EntitySubscription>();
-
-		addedPerformer = new AddedPerformer();
-		changedPerformer = new ChangedPerformer();
-		deletedPerformer = new DeletedPerformer();
 	}
 
 	public EntitySubscription get(Aspect.Builder builder) {
@@ -56,9 +48,6 @@ public class AspectSubscriptionManager extends Manager {
 	 * {@see com.artemis.EntitySubscription.SubscriptionListener}, where order can vary (typically ordinal, except
 	 * for subscriptions created in process, initialize instead of setWorld).
      *
-	 * {@link EntityObserver#added(IntBag)}
-	 * {@link EntityObserver#changed(IntBag)}
-	 * {@link EntityObserver#deleted(IntBag)}
 	 * {@link com.artemis.EntitySubscription.SubscriptionListener#inserted(IntBag)}
 	 * {@link com.artemis.EntitySubscription.SubscriptionListener#removed(IntBag)}
 	 *
@@ -73,10 +62,6 @@ public class AspectSubscriptionManager extends Manager {
 
 		Object[] subscribers = subscriptions.getData();
 		((EntitySubscription)subscribers[0]).processAll(addedIds, changedIds, deletedIds);
-
-		check(addedIds, addedPerformer);
-		check(changedIds, changedPerformer);
-		check(deletedIds, deletedPerformer);
 
 		for (int i = 1, s = subscriptions.size(); s > i; i++) {
 			EntitySubscription subscriber = (EntitySubscription)subscribers[i];
@@ -105,80 +90,5 @@ public class AspectSubscriptionManager extends Manager {
 			EntitySubscription subscriber = (EntitySubscription)subscribers[i];
 			subscriber.processComponentIdentity(id, componentBits);
 		}
-	}
-
-	/**
-	 * Performs an action on each entity.
-	 *
-	 * @param entityIds contains the entities upon which the action will be performed
-	 * @param performer the performer that carries out the action
-	 */
-	private void check(IntBag entityIds, Performer performer) {
-		if (entityIds.isEmpty())
-			return;
-
-		notifyEntityObservers(performer, entityIds);
-	}
-
-	/**
-	 * Run performers on all entity observers.
-	 *
-	 * @param performer the performer to run
-	 * @param entities the entity to pass as argument to the entity observers
-	 */
-	private void notifyEntityObservers(Performer performer, IntBag entities) {
-		Object[] data = world.entityObserversBag.getData();
-		for (int i = 0, s = world.entityObserversBag.size(); s > i; i++) {
-			performer.perform((EntityObserver) data[i], entities);
-		}
-	}
-
-	/**
-	 * Runs {@link EntityObserver#deleted}.
-	 */
-	private static final class DeletedPerformer implements Performer {
-		@Override
-		public void perform(EntityObserver observer, IntBag entities) {
-			observer.deleted(entities);
-		}
-	}
-
-	/**
-	 * Runs {@link EntityObserver#changed}.
-	 */
-	private static final class ChangedPerformer implements Performer {
-
-		@Override
-		public void perform(EntityObserver observer, IntBag entities) {
-			observer.changed(entities);
-		}
-	}
-
-	/**
-	 * Runs {@link EntityObserver#added}.
-	 */
-	private static final class AddedPerformer implements Performer {
-
-		@Override
-		public void perform(EntityObserver observer, IntBag entities) {
-			observer.added(entities);
-		}
-	}
-
-	/**
-	 * Calls methods on observers.
-	 * <p>
-	 * Only used internally to maintain clean code.
-	 * </p>
-	 */
-	private interface Performer {
-
-		/**
-		 * Call a method on the observer with the entity as argument.
-		 *
-		 * @param observer the observer with the method to calll
-		 * @param entities	the entities to pass as argument
-		 */
-		void perform(EntityObserver observer, IntBag entities);
 	}
 }
