@@ -267,7 +267,7 @@ public class World {
 	 * @param entityId
 	 * 		the entity to delete
 	 */
-	public void deleteEntity(int entityId) {
+	public void delete(int entityId) {
 		deleteEntity(em.getEntity(entityId));
 	}
 
@@ -280,6 +280,17 @@ public class World {
 		Entity e = em.createEntityInstance();
 		e.edit();
 		return e;
+	}
+
+	/**
+	 * Create and return a new or reused entity id. Entity is
+	 * automatically added to the world.
+	 * @return assigned entity id
+	 */
+	public int create() {
+		int entityId = em.create();
+		edit(entityId);
+		return entityId;
 	}
 
 	/**

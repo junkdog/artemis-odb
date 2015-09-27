@@ -67,7 +67,19 @@ public class EntityManager extends BaseSystem {
 
 		return e;
 	}
-	
+
+	/**
+	 * Create a new entity.
+	 *
+	 * @return a new entity id
+	 */
+	protected int create() {
+		int id = recyclingEntityFactory.obtain().id;
+		entityToIdentity.set(id, 0);
+
+		return id;
+	}
+
 	/**
 	 * Create a new entity based on the supplied archetype.
 	 *

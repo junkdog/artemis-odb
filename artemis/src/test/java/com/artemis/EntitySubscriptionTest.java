@@ -51,7 +51,7 @@ public class EntitySubscriptionTest {
 		assertEquals(3, sm.inserted);
 		assertEquals(2, sm.removed);
 
-		world.deleteEntity(0);
+		world.delete(0);
 		world.process();
 
 		assertEquals(3, sm.inserted);
@@ -88,7 +88,7 @@ public class EntitySubscriptionTest {
 			IntBag entities = subscription.getEntities();
 			for (int i = 0, s = entities.size(); s > i; i++) {
 				if (entities.get(i) > 0)
-					world.deleteEntity(entities.get(i));
+					world.delete(entities.get(i));
 			}
 		}
 
