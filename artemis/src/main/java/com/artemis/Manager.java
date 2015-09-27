@@ -51,7 +51,7 @@ public abstract class Manager extends BaseSystem {
 	}
 
 	private void added(IntBag entities) {
-		if ((methodFlags & INSERTED) == 0)
+		if ((methodFlags & FLAG_INSERTED) == 0)
 			return;
 
 		int[] ids = entities.getData();
@@ -61,7 +61,7 @@ public abstract class Manager extends BaseSystem {
 	}
 
 	private void deleted(IntBag entities) {
-		if ((methodFlags & REMOVED) == 0)
+		if ((methodFlags & FLAG_REMOVED) == 0)
 			return;
 
 		int[] ids = entities.getData();
