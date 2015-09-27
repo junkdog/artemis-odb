@@ -2,7 +2,6 @@ package com.artemis.io;
 
 import com.artemis.Entity;
 import com.artemis.World;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.esotericsoftware.jsonbeans.Json;
@@ -28,7 +27,7 @@ public class IntBagEntitySerializer implements JsonSerializer<IntBag> {
 			json.writeObjectStart();
 			for (int i = 0, s = entities.size(); s > i; i++) {
 				Entity e = world.getEntity(entities.get(i));
-				json.writeValue(Integer.toString(e.id), e);
+				json.writeValue(Integer.toString(e.getId()), e);
 			}
 			json.writeObjectEnd();
 		} else {
@@ -53,7 +52,7 @@ public class IntBagEntitySerializer implements JsonSerializer<IntBag> {
 			while (entity != null) {
 				Entity e = json.readValue(Entity.class, entity.child);
 				translatedIds.set(Integer.parseInt(entity.name), e);
-				bag.add(e.id);
+				bag.add(e.getId());
 
 				entity = entity.next;
 			}

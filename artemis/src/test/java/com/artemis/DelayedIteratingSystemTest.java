@@ -175,7 +175,7 @@ public class DelayedIteratingSystemTest
 		protected void processExpired(final int e) {
 			expiredLastRound++;
 			assertEquals(e, entitiesOrdered.removeFirst().id);
-			world.deleteEntity(e);
+			world.delete(e);
 		}
 
 		@Override

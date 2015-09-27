@@ -27,7 +27,7 @@ public class IntBagEntitySerializer implements Json.Serializer<IntBag> {
 			json.writeObjectStart();
 			for (int i = 0, s = entities.size(); s > i; i++) {
 				Entity e = world.getEntity(entities.get(i));
-				json.writeValue(Integer.toString(e.id), e);
+				json.writeValue(Integer.toString(e.getId()), e);
 			}
 			json.writeObjectEnd();
 		} else {
@@ -52,7 +52,7 @@ public class IntBagEntitySerializer implements Json.Serializer<IntBag> {
 			while (entity != null) {
 				Entity e = json.readValue(Entity.class, entity.child);
 				translatedIds.set(Integer.parseInt(entity.name), e);
-				bag.add(e.id);
+				bag.add(e.getId());
 
 				entity = entity.next;
 			}

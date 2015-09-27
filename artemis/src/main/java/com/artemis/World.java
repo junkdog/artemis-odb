@@ -34,15 +34,11 @@ public class World {
 	/** The time passed since the last update. */
 	public float delta;
 
-	final BitSet added;
 	final BitSet changed;
 	final BitSet deleted;
 
 	/** Contains all systems and systems classes mapped. */
 	final Map<Class<?>, BaseSystem> systems;
-
-	/** Contains all entity observer implementing systems unordered. */
-	Bag<EntityObserver> entityObserversBag;
 
 	/** Contains all systems unordered. */
 	private final Bag<BaseSystem> systemsBag;
@@ -82,7 +78,6 @@ public class World {
 		systems = new IdentityHashMap<Class<?>, BaseSystem>();
 		systemsBag = configuration.systems;
 
-		added = new BitSet();
 		changed = new BitSet();
 		deleted = new BitSet();
 
@@ -104,21 +99,6 @@ public class World {
 
 		if (invocationStrategy == null) {
 			setInvocationStrategy(new InvocationStrategy());
-		}
-
-		collectEntityObservers();
-
-	}
-
-	/** Create a bag of systems that implement {@link EntityObserver}. */
-	private void collectEntityObservers() {
-		entityObserversBag = new Bag<EntityObserver>();
-		Object[] systemsData = systemsBag.getData();
-		for (int i = 0, s = systemsBag.size(); s > i; i++) {
-			final BaseSystem system = (BaseSystem) systemsData[i];
-			if (ClassReflection.isAssignableFrom(EntityObserver.class, system.getClass())) {
-				entityObserversBag.add((EntityObserver) system);
-			}
 		}
 	}
 
@@ -279,8 +259,7 @@ public class World {
 	 * 		the entity to delete
 	 */
 	public void deleteEntity(Entity e) {
-		e.edit()
-				.deleteEntity();
+		e.edit().deleteEntity();
 	}
 
 	/**
@@ -288,7 +267,7 @@ public class World {
 	 * @param entityId
 	 * 		the entity to delete
 	 */
-	public void deleteEntity(int entityId) {
+	public void delete(int entityId) {
 		deleteEntity(em.getEntity(entityId));
 	}
 
@@ -301,6 +280,17 @@ public class World {
 		Entity e = em.createEntityInstance();
 		e.edit();
 		return e;
+	}
+
+	/**
+	 * Create and return a new or reused entity id. Entity is
+	 * automatically added to the world.
+	 * @return assigned entity id
+	 */
+	public int create() {
+		int entityId = em.create();
+		edit(entityId);
+		return entityId;
 	}
 
 	/**
@@ -319,8 +309,8 @@ public class World {
 	 */
 	public Entity createEntity(Archetype archetype) {
 		Entity e = em.createEntityInstance(archetype);
-		cm.addComponents(e, archetype);
-		added.set(e.id);
+		cm.addComponents(e.getId(), archetype);
+		changed.set(e.getId());
 		return e;
 	}
 
@@ -372,18 +362,16 @@ public class World {
 	/**
 	 * Inform subscribers of state changes.
 	 *
-	 * Performs callbacks on systems implementing {@link EntityObserver} and afterwards any
-	 * registered instances of {@link com.artemis.EntitySubscription.SubscriptionListener}.
+	 * Performs callbacks on registered instances of
+	 * {@link com.artemis.EntitySubscription.SubscriptionListener}.
 	 *
 	 * Will run repeatedly until any state changes caused by subscribers have been handled.
 	 */
 	void updateEntityStates() {
-		// the first execution is for entities with precalculated compositionIds,
-		// such as those affected by EntityTransmuters, Archetypes
-		// and EntityFactories.
-		do {
-			am.process(added, changed, deleted);
-		} while (editPool.processEntities());
+		// changed can be populated by EntityTransmuters and Archetypes,
+		// bypassing the editPool.
+		while (!changed.isEmpty() || editPool.processEntities())
+				am.process(changed, deleted);
 
 		cm.clean();
 	}

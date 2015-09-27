@@ -6,6 +6,8 @@
 - New `ArtemisPlugin` API
 - New `WorldConfigurationBuilder` convenience class.
 - Added `World.edit(int entityId)`
+- Added `World.create()`, returns int entityId
+- Managers' inserted/removed passes Entity, again.
 - EntitySystem extends BaseEntitySystem, new BaseEntitySystems work directly on entityId:
   - `IteratingSystem`: `EntityProcessingSystem`.
   - `IntervalSystem` and `IntervalIteratingSystem`: `IntervalEntity*System`
@@ -24,6 +26,7 @@
   - Removed `@Mapper`
   - Removed UUID related accessors on Entity and World.
 - `@PackedWeaver` marked as deprecated until performance issues have been resolved.
+- `EntityManager#isNew` removed.
 - **Fix**: No longer possible to accidentally add multiple systems of the same type.
 
 

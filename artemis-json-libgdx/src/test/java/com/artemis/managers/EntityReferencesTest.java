@@ -36,10 +36,10 @@ public class EntityReferencesTest {
 		assertNotNull(base);
 		assertNotNull(star1);
 
-		assertEquals(base.id, parentedPositionMapper.get(star1).origin);
+		assertEquals(base.getId(), parentedPositionMapper.get(star1).origin);
 
 		LevelState state = levelStateMapper.get(base);
-		assertEquals(star1.id, state.starId1);
+		assertEquals(star1.getId(), state.starId1);
 	}
 
 		@Test
@@ -60,14 +60,14 @@ public class EntityReferencesTest {
 		assertNotNull(star3);
 		assertNotNull(shadow);
 
-		assertEquals(base.id, parentedPositionMapper.get(star1).origin);
-		assertEquals(base.id, parentedPositionMapper.get(star2).origin);
-		assertEquals(base.id, parentedPositionMapper.get(star3).origin);
+		assertEquals(base.getId(), parentedPositionMapper.get(star1).origin);
+		assertEquals(base.getId(), parentedPositionMapper.get(star2).origin);
+		assertEquals(base.getId(), parentedPositionMapper.get(star3).origin);
 
 		LevelState state = levelStateMapper.get(base);
-		assertEquals(star1.id, state.starId1);
-		assertEquals(star2.id, state.starId2);
-		assertEquals(star3.id, state.starId3);
+		assertEquals(star1.getId(), state.starId1);
+		assertEquals(star2.getId(), state.starId2);
+		assertEquals(star3.getId(), state.starId3);
 	}
 
 	private SaveFileFormat loadWorld() {

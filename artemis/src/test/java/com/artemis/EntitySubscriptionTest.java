@@ -21,7 +21,7 @@ public class EntitySubscriptionTest {
 	public void entity_subscriptions_are_reused_when_appropriate_test() {
 		World world = new World();
 
-		AspectSubscriptionManager asm = world.getSystem(AspectSubscriptionManager.class);
+		AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
 		EntitySubscription subscription = asm.get(Aspect.all(ComponentX.class));
 
 		assertSame(subscription, asm.get(Aspect.all(ComponentX.class)));
@@ -51,7 +51,7 @@ public class EntitySubscriptionTest {
 		assertEquals(3, sm.inserted);
 		assertEquals(2, sm.removed);
 
-		world.deleteEntity(0);
+		world.delete(0);
 		world.process();
 
 		assertEquals(3, sm.inserted);
@@ -77,18 +77,18 @@ public class EntitySubscriptionTest {
 
 		@Override
 		protected void initialize() {
-			AspectSubscriptionManager asm = world.getSystem(AspectSubscriptionManager.class);
+			AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
 			EntitySubscription subscription = asm.get(Aspect.all(ComponentX.class));
 			subscription.addSubscriptionListener(this);
 		}
 
 		public void killAlmostAll() {
-			AspectSubscriptionManager asm = world.getSystem(AspectSubscriptionManager.class);
+			AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
 			EntitySubscription subscription = asm.get(Aspect.all(ComponentX.class));
 			IntBag entities = subscription.getEntities();
 			for (int i = 0, s = entities.size(); s > i; i++) {
 				if (entities.get(i) > 0)
-					world.deleteEntity(entities.get(i));
+					world.delete(entities.get(i));
 			}
 		}
 

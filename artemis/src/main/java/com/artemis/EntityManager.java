@@ -8,6 +8,8 @@ import com.artemis.utils.IntDeque;
 
 import java.util.BitSet;
 
+import static com.artemis.Aspect.all;
+
 
 /**
  * EntityManager.
@@ -15,32 +17,43 @@ import java.util.BitSet;
  * @author Arni Arent
  */
 @SkipWire
-public class EntityManager extends Manager {
+public class EntityManager extends BaseSystem {
 
 	static final int NO_COMPONENTS = 1;
 	/** Contains all entities in the manager. */
 	private final Bag<Entity> entities;
-	private final BitSet newlyCreatedEntityIds;
 	/** Stores the bits of all currently disabled entities IDs. */
 	private RecyclingEntityFactory recyclingEntityFactory;
 	
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
 	private IntBag entityToIdentity = new IntBag();
 	private int highestSeenIdentity;
-	private AspectSubscriptionManager subscriptionManager;
 
 	/**
 	 * Creates a new EntityManager Instance.
 	 */
 	protected EntityManager(int initialContainerSize) {
 		entities = new Bag<Entity>(initialContainerSize);
-		newlyCreatedEntityIds = new BitSet();
 	}
-	
+
+	@Override
+	protected void processSystem() {}
+
 	@Override
 	protected void initialize() {
 		recyclingEntityFactory = new RecyclingEntityFactory(this);
-		subscriptionManager = world.getSystem(AspectSubscriptionManager.class);
+		world.getAspectSubscriptionManager()
+				.get(all())
+				.addSubscriptionListener(
+						new EntitySubscription.SubscriptionListener() {
+							@Override
+							public void inserted(IntBag entities) {}
+
+							@Override
+							public void removed(IntBag entities) {
+								deleted(entities);
+							}
+						});
 	}
 
 	/**
@@ -50,12 +63,23 @@ public class EntityManager extends Manager {
 	 */
 	protected Entity createEntityInstance() {
 		Entity e = recyclingEntityFactory.obtain();
-		entityToIdentity.set(e.id, 0);
+		entityToIdentity.set(e.getId(), 0);
 
-		newlyCreatedEntityIds.set(e.id);
 		return e;
 	}
-	
+
+	/**
+	 * Create a new entity.
+	 *
+	 * @return a new entity id
+	 */
+	protected int create() {
+		int id = recyclingEntityFactory.obtain().id;
+		entityToIdentity.set(id, 0);
+
+		return id;
+	}
+
 	/**
 	 * Create a new entity based on the supplied archetype.
 	 *
@@ -63,7 +87,7 @@ public class EntityManager extends Manager {
 	 */
 	protected Entity createEntityInstance(Archetype archetype) {
 		Entity e = createEntityInstance();
-		entityToIdentity.set(e.getId(), archetype.compositionId);
+		entityToIdentity.set(e.id, archetype.compositionId);
 		return e;
 	}
 
@@ -91,35 +115,25 @@ public class EntityManager extends Manager {
 	int compositionIdentity(BitSet componentBits) {
 		int identity = identityResolver.getIdentity(componentBits);
 		if (identity > highestSeenIdentity) {
-			subscriptionManager.processComponentIdentity(identity, componentBits);
+			world.getAspectSubscriptionManager()
+					.processComponentIdentity(identity, componentBits);
 			highestSeenIdentity = identity;
 		}
 		return identity;
 	}
 	
-	/**
-	 * Removes the entity from the manager, freeing it's id for new entities.
-	 *
-	 * @param entityId
-	 *			the entity to remove
-	 */
-	@Override
-	public void deleted(int entityId) {
-		if (recyclingEntityFactory.has(entityId))
-			return;
-
-		// usually never happens but:
-		// this happens when an entity is deleted before
-		// it is added to the world, ie; created and deleted
-		// before World#process has been called
-		newlyCreatedEntityIds.set(entityId, false);
-
-		recyclingEntityFactory.free(entityId);
-	}
-
-	@Override
-	public void added(int entityId) {
-		newlyCreatedEntityIds.set(entityId, false);
+	void deleted(IntBag entities) {
+		int[] ids = entities.getData();
+		for(int i = 0, s = entities.size(); s > i; i++) {
+			int entityId = ids[i];
+			// usually never happens but:
+			// this happens when an entity is deleted before
+			// it is added to the world, ie; created and deleted
+			// before World#process has been called
+			if (!recyclingEntityFactory.has(entityId)) {
+				recyclingEntityFactory.free(entityId);
+			}
+		}
 	}
 
 	/**
@@ -134,11 +148,7 @@ public class EntityManager extends Manager {
 	 * @return true if active, false if not
 	 */
 	public boolean isActive(int entityId) {
-		return (entities.size() > entityId) && !recyclingEntityFactory.has(entityId);
-	}
-
-	public boolean isNew(int entityId) {
-		return newlyCreatedEntityIds.get(entityId);
+		return !recyclingEntityFactory.has(entityId);
 	}
 
 	/**
@@ -181,7 +191,7 @@ public class EntityManager extends Manager {
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
 			if (e != null)
-				es.check(e.id);
+				es.check(e.getId());
 		}
 
 		es.informEntityChanges();

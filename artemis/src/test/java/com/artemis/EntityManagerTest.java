@@ -50,7 +50,7 @@ public class EntityManagerTest {
 		ids.add(System.identityHashCode(e2b));
 		ids.add(System.identityHashCode(e3b));
 		
-		assertEquals(3, ids.size());
+		assertEquals(ids.toString(), 3, ids.size());
 	}
 	
 	@Test
@@ -58,7 +58,7 @@ public class EntityManagerTest {
 		EntityManager em = world.getEntityManager();
 		for (int i = 0; 1024 > i; i++) {
 			Entity e = world.createEntity();
-			assertTrue(em.isNew(e.getId()));
+			assertTrue(em.isActive(e.getId()));
 		}
 	}
 	
@@ -72,7 +72,7 @@ public class EntityManagerTest {
 		
 		int id1 = e1.getId();
 		e1.deleteFromWorld();
-		
+
 		Entity e2 = world.createEntity();
 		
 		assertNotEquals(id1, e2.getId());
@@ -91,7 +91,7 @@ public class EntityManagerTest {
 		e1.deleteFromWorld();
 		world.process();
 		Entity e2 = world.createEntity();
-		
+
 		assertEquals(id1, e2.getId());
 		assertFalse("Error:" + mapper.getSafe(e2), mapper.has(e2));
 	}

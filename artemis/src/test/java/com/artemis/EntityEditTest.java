@@ -21,8 +21,7 @@ public class EntityEditTest {
 		world.process();
 		
 		assertEquals(1, lm.added);
-		assertEquals(0, lm.changed);
-		
+
 		EntityEdit edit = e.edit();
 		edit.create(ComponentX.class);
 		edit.create(ComponentY.class);
@@ -30,7 +29,6 @@ public class EntityEditTest {
 		world.process();
 		
 		assertEquals(1, lm.added);
-		assertEquals(1, lm.changed);
 	}
 	
 	@Test
@@ -52,15 +50,10 @@ public class EntityEditTest {
 	
 	private static class LeManager extends Manager {
 		
-		int added, changed;
-		
+		int added;
+
 		@Override
-		public void changed(int e) {
-			changed++;
-		}
-		
-		@Override
-		public void added(int e) {
+		public void added(Entity e) {
 			added++;
 		}
 	}

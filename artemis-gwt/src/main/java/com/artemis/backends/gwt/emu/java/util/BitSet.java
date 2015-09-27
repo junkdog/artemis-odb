@@ -16,6 +16,7 @@
 
 package java.util;
 
+import com.artemis.utils.reflect.ClassReflection;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayInteger;
 
@@ -517,7 +518,7 @@ public class BitSet implements Cloneable {
 	public boolean equals(Object obj) {
 		if (this != obj) {
 
-			if (!(obj instanceof BitSet)) {
+			if (!ClassReflection.isInstance(BitSet.class, obj)) {
 				return false;
 			}
 

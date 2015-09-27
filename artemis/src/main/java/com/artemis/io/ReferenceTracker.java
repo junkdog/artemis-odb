@@ -171,7 +171,7 @@ class ReferenceTracker {
 
 
 	private boolean updateReferenced(Entity e, BitSet referencedIds) {
-		return updateReferenced(e.id, referencedIds);
+		return updateReferenced(e.getId(), referencedIds);
 	}
 
 	private boolean updateReferenced(int entityId, BitSet referencedIds) {

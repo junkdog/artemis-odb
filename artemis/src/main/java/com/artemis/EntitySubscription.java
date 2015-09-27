@@ -126,9 +126,15 @@ public class EntitySubscription {
 		insertedIds.set(entityId);
 	}
 
-	void process(IntBag added, IntBag changed, IntBag deleted) {
+	void process(IntBag changed, IntBag deleted) {
 		deleted(deleted);
-		added(added);
+		changed(changed);
+
+		dirty |= informEntityChanges();
+	}
+
+	void processAll(IntBag changed, IntBag deleted) {
+		deletedAll(deleted);
 		changed(changed);
 
 		dirty |= informEntityChanges();
@@ -160,13 +166,6 @@ public class EntitySubscription {
 		removedIds.clear();
 	}
 
-	private final void added(IntBag entities) {
-		int[] ids = entities.getData();
-		for (int i = 0, s = entities.size(); s > i; i++) {
-			check(ids[i]);
-		}
-	}
-
 	private final void changed(IntBag entities) {
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
@@ -178,6 +177,15 @@ public class EntitySubscription {
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			deleted(ids[i]);
+		}
+	}
+
+	private final void deletedAll(IntBag entities) {
+		int[] ids = entities.getData();
+		for (int i = 0, s = entities.size(); s > i; i++) {
+			int id = ids[i];
+			activeEntityIds.clear(id);
+			removedIds.set(id);
 		}
 	}
 
@@ -193,9 +201,6 @@ public class EntitySubscription {
 	/**
 	 * <p>This interfaces reports entities inserted or
 	 * removed when matched against their {@link com.artemis.EntitySubscription}</p>
-	 *
-	 * <p>For listening in on all entity state changes, see
-	 * {@link com.artemis.EntityObserver}</p>
 	 */
 	public interface SubscriptionListener {
 		/**

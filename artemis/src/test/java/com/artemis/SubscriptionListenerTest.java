@@ -6,6 +6,7 @@ import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.systems.IteratingSystem;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 import org.junit.Test;
@@ -109,7 +110,7 @@ public class SubscriptionListenerTest {
 	}
 
 
-	private static class LeSystemPetite extends EntityProcessingSystem {
+	private static class LeSystemPetite extends IteratingSystem {
 		private BitSet processedEntities = new BitSet();
 		private BitSet insertedEntities = new BitSet();
 
@@ -128,8 +129,8 @@ public class SubscriptionListenerTest {
 		}
 
 		@Override
-		protected void process(Entity e) {
-			processedEntities.set(e.id);
+		protected void process(int e) {
+			processedEntities.set(e);
 		}
 	}
 
@@ -142,8 +143,8 @@ public class SubscriptionListenerTest {
 		}
 
 		@Override
-		protected void inserted(int entityId) {
-			insertedEntities.set(entityId);
+		protected void inserted(Entity e) {
+			insertedEntities.set(e.getId());
 		}
 
 		@Override
@@ -152,8 +153,8 @@ public class SubscriptionListenerTest {
 		}
 
 		@Override
-		protected void removed(int entityId) {
-			insertedEntities.set(entityId, false);
+		protected void removed(Entity e) {
+			insertedEntities.set(e.getId(), false);
 		}
 	}
 
@@ -185,7 +186,7 @@ public class SubscriptionListenerTest {
 
 		@Override
 		protected void initialize() {
-			AspectSubscriptionManager am = world.getSystem(AspectSubscriptionManager.class);
+			AspectSubscriptionManager am = world.getAspectSubscriptionManager();
 			am.get(Aspect.all(MyComponent.class)).addSubscriptionListener(this);
 		}
 

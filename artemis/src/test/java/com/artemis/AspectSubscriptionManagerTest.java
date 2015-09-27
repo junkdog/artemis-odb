@@ -7,8 +7,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 public class AspectSubscriptionManagerTest {
 	
@@ -28,7 +26,7 @@ public class AspectSubscriptionManagerTest {
 
 	@Test
 	public void creating_subscriptions_at_any_time() {
-		AspectSubscriptionManager asm = world.getSystem(AspectSubscriptionManager.class);
+		AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
 		EntitySubscription subscription1 = asm.get(Aspect.all(ComponentY.class));
 
 		entity(ComponentX.class, ComponentY.class);
@@ -44,7 +42,7 @@ public class AspectSubscriptionManagerTest {
 	@Test
 	public void entity_change_events_cleared() {
 		world = new World(new WorldConfiguration().setSystem(new BootstrappingManager()));
-		AspectSubscriptionManager asm = world.getSystem(AspectSubscriptionManager.class);
+		AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
 		EntitySubscription sub = asm.get(Aspect.all(ComponentX.class));
 		SubListener listener = new SubListener();
 		sub.addSubscriptionListener(listener);
@@ -85,11 +83,11 @@ public class AspectSubscriptionManagerTest {
 		private ComponentMapper<ComponentX> componentXMapper;
 
 		@Override
-		public void added(int entityId) {
+		public void added(Entity entityId) {
 			if (!componentXMapper.has(entityId))
 				return;
 
-			world.getEntity(entityId).edit().create(ComponentY.class);
+			entityId.edit().create(ComponentY.class);
 		}
 	}
 }

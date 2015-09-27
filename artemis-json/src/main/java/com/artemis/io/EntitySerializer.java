@@ -55,13 +55,13 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		// reference another entity - if so, we only want to record
 		// the id
 		if (isSerializingEntity) {
-			json.writeValue(e.id);
+			json.writeValue(e.getId());
 			return;
 		} else {
 			isSerializingEntity = true;
 		}
 
-		world.getComponentManager().getComponentsFor(e, components);
+		world.getComponentManager().getComponentsFor(e.getId(), components);
 		components.sort(comparator);
 
 		json.writeObjectStart();

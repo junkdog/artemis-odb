@@ -30,16 +30,30 @@ public abstract class EntitySystem extends BaseEntitySystem
 	}
 
 	@Override
-	public void inserted(IntBag entities) {
+	public final void inserted(IntBag entities) {
 		super.inserted(entities);
 		shouldSyncEntities = true;
 	}
 
 	@Override
-	public void removed(IntBag entities) {
+	protected final void inserted(int entityId) {
+		inserted(world.getEntity(entityId));
+	}
+
+	protected void inserted(Entity e) {}
+
+	@Override
+	public final void removed(IntBag entities) {
 		super.removed(entities);
 		shouldSyncEntities = true;
 	}
+
+	@Override
+	protected final void removed(int entityId) {
+		removed(world.getEntity(entityId));
+	}
+
+	protected void removed(Entity e) {}
 
 	/**
 	 * Gets the entities processed by this system. Do not delete entities from

@@ -73,11 +73,6 @@ public class Issue357SystemTest {
 		}
 
 		@Override
-		public void inserted(IntBag entities) {
-			super.inserted(entities);
-		}
-
-		@Override
 		protected void process(Entity entity) {
 			TestComponent testComponent = mapper.get(entity);
 			assertNotNull("Entity with id <" + entity.getId() + "> has null component", testComponent);

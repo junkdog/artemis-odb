@@ -1,6 +1,5 @@
 package com.artemis;
 
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.component.Packed;
@@ -100,16 +99,16 @@ public class EntityTransmuterTest {
 		World world = new World(new WorldConfiguration()
 				.setSystem(es2));
 
-		AspectSubscriptionManager asm = world.getSystem(AspectSubscriptionManager.class);
+		AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
 		EntitySubscription subscription = asm.get(Aspect.all(ComponentX.class));
 
 		world.createEntity().edit().create(ReusedComponent.class);
 		world.createEntity().edit().create(ReusedComponent.class);
 
 		world.process();
-		assertEquals(0, subscription.getEntities().size());
-		world.process();
 		assertEquals(2, subscription.getEntities().size());
+		world.process();
+		assertEquals(0, subscription.getEntities().size());
 	}
 
 	private Entity createEntity(Class<? extends Component>... components) {

@@ -3,10 +3,12 @@ package com.artemis.managers;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.artemis.Entity;
-import com.artemis.Manager;
+import com.artemis.*;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
+
+import static com.artemis.Aspect.all;
 
 
 /**
@@ -20,7 +22,7 @@ import com.artemis.utils.ImmutableBag;
  * 
  * @author Arni Arent
  */
-public class GroupManager extends Manager {
+public class GroupManager extends BaseSystem {
 	private static final ImmutableBag<String> EMPTY_BAG = new Bag<String>();
 	
 	/** All entities and groups mapped with group names as key. */
@@ -34,6 +36,24 @@ public class GroupManager extends Manager {
 	public GroupManager() {
 		entitiesByGroup = new HashMap<String, Bag<Entity>>();
 		groupsByEntity = new HashMap<Entity, Bag<String>>();
+	}
+
+	@Override
+	protected void processSystem() {}
+
+	@Override
+	protected void initialize() {
+		world.getAspectSubscriptionManager()
+				.get(all())
+				.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+					@Override
+					public void inserted(IntBag entities) {}
+
+					@Override
+					public void removed(IntBag entities) {
+						deleted(entities);
+					}
+				});
 	}
 
 	/**
@@ -93,7 +113,7 @@ public class GroupManager extends Manager {
 		for(int i = 0, s = groups.size(); s > i; i++) {
 			Bag<Entity> entities = entitiesByGroup.get(groups.get(i));
 			if(entities != null) {
-				entities.remove(world.getEntity(e.id));
+				entities.remove(e);
 			}
 		}
 		groupsByEntity.remove(e);
@@ -168,14 +188,10 @@ public class GroupManager extends Manager {
 		return false;
 	}
 
-	/**
-	 * Removes the entity from all groups.
-	 *
-	 * @param entityId
-	 *			the deleted entity
-	 */
-	@Override
-	public void deleted(int entityId) {
-		removeFromAllGroups(world.getEntity(entityId));
+	void deleted(IntBag entities) {
+		int[] ids = entities.getData();
+		for (int i = 0, s = entities.size(); s > i ; i++) {
+			removeFromAllGroups(world.getEntity(ids[i]));
+		}
 	}
 }

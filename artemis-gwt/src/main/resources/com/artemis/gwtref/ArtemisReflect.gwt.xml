@@ -13,6 +13,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="java.util.ArrayList"/>
     <extend-configuration-property name="artemis.reflect.include" value="java.util.Map"/>
     <extend-configuration-property name="artemis.reflect.include" value="java.util.HashMap"/>
+    <extend-configuration-property name="artemis.reflect.include" value="java.util.BitSet"/>
     <extend-configuration-property name="artemis.reflect.include" value="java.lang.String"/>
     <extend-configuration-property name="artemis.reflect.include" value="java.lang.Boolean"/>
     <extend-configuration-property name="artemis.reflect.include" value="java.lang.Byte"/>
@@ -24,7 +25,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="java.lang.CharSequence"/>
     <extend-configuration-property name="artemis.reflect.include" value="java.lang.Enum"/>
     <extend-configuration-property name="artemis.reflect.include" value="java.lang.Object"/>
-    
+
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.AspectSubscriptionManager"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.BaseEntitySystem"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.BaseSystem"/>
@@ -43,6 +44,9 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.managers"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.World"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.Archetype"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.UseInjectionCache"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.ArtemisFieldResolver"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.WiredFieldResolver"/>
 
     <source path="">
         <exclude name="**/gen/**"/>

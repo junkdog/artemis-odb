@@ -1,10 +1,8 @@
 package com.artemis;
 
-import com.artemis.managers.UuidEntityManager;
 import com.artemis.utils.Bag;
 
 import java.util.BitSet;
-import java.util.UUID;
 
 
 /**
@@ -18,11 +16,9 @@ import java.util.UUID;
 public final class Entity {
 
 	/** The entities identifier in the world. */
-	public int id;
+	int id;
 	/** The world this entity belongs to. */
 	private final World world;
-
-	//#include "./entity_flyweight_bool.inc"
 
 	/**
 	 * Creates a new {@link Entity} instance in the given world.
@@ -95,7 +91,7 @@ public final class Entity {
 	 * @return
 	 */
 	public Component getComponent(ComponentType type) {
-		return world.getComponentManager().getComponent(this, type);
+		return world.getComponentManager().getComponent(id, type);
 	}
 
 	/**
@@ -127,7 +123,7 @@ public final class Entity {
 	 * @return the fillBag containing the components
 	 */
 	public Bag<Component> getComponents(Bag<Component> fillBag) {
-		return world.getComponentManager().getComponentsFor(this, fillBag);
+		return world.getComponentManager().getComponentsFor(id, fillBag);
 	}
 
 	/**
