@@ -24,6 +24,7 @@
   - Removed `@Mapper`
   - Removed UUID related accessors on Entity and World.
 - `@PackedWeaver` marked as deprecated until performance issues have been resolved.
+- `EntityManager#isNew` removed.
 - **Fix**: No longer possible to accidentally add multiple systems of the same type.
 
 

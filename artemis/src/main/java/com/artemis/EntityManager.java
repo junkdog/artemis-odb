@@ -22,7 +22,6 @@ public class EntityManager extends BaseSystem {
 	static final int NO_COMPONENTS = 1;
 	/** Contains all entities in the manager. */
 	private final Bag<Entity> entities;
-	private final BitSet newlyCreatedEntityIds;
 	/** Stores the bits of all currently disabled entities IDs. */
 	private RecyclingEntityFactory recyclingEntityFactory;
 	
@@ -36,7 +35,6 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected EntityManager(int initialContainerSize) {
 		entities = new Bag<Entity>(initialContainerSize);
-		newlyCreatedEntityIds = new BitSet();
 	}
 
 	@Override
@@ -49,9 +47,7 @@ public class EntityManager extends BaseSystem {
 		subscriptions.get(all()).addSubscriptionListener(
 				new EntitySubscription.SubscriptionListener() {
 					@Override
-					public void inserted(IntBag entities) {
-						added(entities);
-					}
+					public void inserted(IntBag entities) {}
 
 					@Override
 					public void removed(IntBag entities) {
@@ -69,7 +65,6 @@ public class EntityManager extends BaseSystem {
 		Entity e = recyclingEntityFactory.obtain();
 		entityToIdentity.set(e.getId(), 0);
 
-		newlyCreatedEntityIds.set(e.getId());
 		return e;
 	}
 	
@@ -123,16 +118,8 @@ public class EntityManager extends BaseSystem {
 			// it is added to the world, ie; created and deleted
 			// before World#process has been called
 			if (!recyclingEntityFactory.has(entityId)) {
-				newlyCreatedEntityIds.set(entityId, false);
 				recyclingEntityFactory.free(entityId);
 			}
-		}
-	}
-
-	private void added(IntBag entities) {
-		int[] ids = entities.getData();
-		for(int i = 0, s = entities.size(); s > i; i++) {
-			newlyCreatedEntityIds.set(ids[i], false);
 		}
 	}
 
@@ -149,10 +136,6 @@ public class EntityManager extends BaseSystem {
 	 */
 	public boolean isActive(int entityId) {
 		return (entities.size() > entityId) && !recyclingEntityFactory.has(entityId);
-	}
-
-	public boolean isNew(int entityId) {
-		return newlyCreatedEntityIds.get(entityId);
 	}
 
 	/**
