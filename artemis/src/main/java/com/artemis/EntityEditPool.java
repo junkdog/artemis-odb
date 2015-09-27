@@ -110,11 +110,10 @@ final class EntityEditPool {
 	}
 
 	private void addToPerformer(World w, EntityEdit edit) {
-		int id = edit.entityId;
 		if (edit.scheduledDeletion) {
-			w.deleted.set(id);
+			w.deleted.set(edit.entityId);
 		} else {
-			w.changed.set(id);
+			w.changed.set(edit.entityId);
 		}
 	}
 

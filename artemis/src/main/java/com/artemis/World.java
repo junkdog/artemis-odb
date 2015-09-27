@@ -357,13 +357,10 @@ public class World {
 	 * Will run repeatedly until any state changes caused by subscribers have been handled.
 	 */
 	void updateEntityStates() {
-		// the first execution is for entities with precalculated compositionIds,
-		// such as those affected by EntityTransmuters, Archetypes
-		// and EntityFactories.
-		do {
-			if (!(changed.isEmpty() && deleted.isEmpty()))
+		// changed can be populated by EntityTransmuters and Archetypes,
+		// bypassing the editPool.
+		while (!changed.isEmpty() || editPool.processEntities())
 				am.process(changed, deleted);
-		} while (editPool.processEntities());
 
 		cm.clean();
 	}
