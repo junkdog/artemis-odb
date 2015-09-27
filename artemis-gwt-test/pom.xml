@@ -65,14 +65,7 @@
 		<dependency>
 			<groupId>com.google.gwt</groupId>
 			<artifactId>gwt-user</artifactId>
-			<version>2.6.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.gwt</groupId>
-			<artifactId>gwt-dev</artifactId>
-			<version>2.6.0</version>
-			<scope>provided</scope>
+			<version>${gwt.version}</version>
 		</dependency>
 
 		<dependency>
@@ -128,8 +121,8 @@
 					<enableClosureCompiler>true</enableClosureCompiler>
 					<disableClassMetadata>false</disableClassMetadata>
 					<disableCastChecking>true</disableCastChecking>
-					<extraJvmArgs>-Xms64M -Xmx2500M</extraJvmArgs>
 					<compileReport>true</compileReport>
+					<extraJvmArgs>-Xms64M -Xmx2500M</extraJvmArgs>
 					<localWorkers>4</localWorkers>
 					<sourceLevel>1.7</sourceLevel>
 					<draftCompile>true</draftCompile>
