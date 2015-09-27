@@ -2,6 +2,7 @@ package com.artemis.injection;
 
 import com.artemis.World;
 import com.artemis.utils.Bag;
+import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 
 import java.util.Map;
@@ -89,7 +90,7 @@ public class FieldHandler {
     public void initialize(World world) {
         for (int i = 0, s = fieldResolvers.size(); i < s; i++) {
             FieldResolver fieldResolver = fieldResolvers.get(i);
-            if (fieldResolver instanceof UseInjectionCache) {
+            if (ClassReflection.isInstance(UseInjectionCache.class, fieldResolver)) {
                 ((UseInjectionCache) fieldResolver).setCache(cache);
             }
             fieldResolver.initialize(world);

@@ -198,7 +198,7 @@ public class ComponentManager extends BaseSystem {
 			if (component == null)
 				continue;
 			
-			if (component instanceof PackedComponent.DisposedWithWorld) {
+			if (ClassReflection.isInstance(PackedComponent.DisposedWithWorld.class, component) ) {
 				((PackedComponent.DisposedWithWorld)component).free(world);
 			}
 		}

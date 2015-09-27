@@ -174,7 +174,7 @@ public final class WorldConfiguration {
 		for (BaseSystem system : systems) {
 			world.systems.put(system.getClass(), system);
 			system.setWorld(world);
-			if (ClassReflection.isAssignableFrom(Manager.class, system.getClass())) {
+			if (ClassReflection.isInstance(Manager.class, system)) {
 				((Manager) system).registerManager();
 			}
 		}
