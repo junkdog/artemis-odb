@@ -28,7 +28,6 @@ public class EntityManager extends BaseSystem {
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
 	private IntBag entityToIdentity = new IntBag();
 	private int highestSeenIdentity;
-	private AspectSubscriptionManager subscriptions;
 
 	/**
 	 * Creates a new EntityManager Instance.
@@ -43,17 +42,18 @@ public class EntityManager extends BaseSystem {
 	@Override
 	protected void initialize() {
 		recyclingEntityFactory = new RecyclingEntityFactory(this);
-		subscriptions = world.getSystem(AspectSubscriptionManager.class);
-		subscriptions.get(all()).addSubscriptionListener(
-				new EntitySubscription.SubscriptionListener() {
-					@Override
-					public void inserted(IntBag entities) {}
+		world.getSystem(AspectSubscriptionManager.class)
+				.get(all())
+				.addSubscriptionListener(
+						new EntitySubscription.SubscriptionListener() {
+							@Override
+							public void inserted(IntBag entities) {}
 
-					@Override
-					public void removed(IntBag entities) {
-						deleted(entities);
-					}
-				});
+							@Override
+							public void removed(IntBag entities) {
+								deleted(entities);
+							}
+						});
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected Entity createEntityInstance(Archetype archetype) {
 		Entity e = createEntityInstance();
-		entityToIdentity.set(e.getId(), archetype.compositionId);
+		entityToIdentity.set(e.id, archetype.compositionId);
 		return e;
 	}
 
@@ -103,7 +103,8 @@ public class EntityManager extends BaseSystem {
 	int compositionIdentity(BitSet componentBits) {
 		int identity = identityResolver.getIdentity(componentBits);
 		if (identity > highestSeenIdentity) {
-			subscriptions.processComponentIdentity(identity, componentBits);
+			world.getSystem(AspectSubscriptionManager.class)
+					.processComponentIdentity(identity, componentBits);
 			highestSeenIdentity = identity;
 		}
 		return identity;
@@ -135,7 +136,7 @@ public class EntityManager extends BaseSystem {
 	 * @return true if active, false if not
 	 */
 	public boolean isActive(int entityId) {
-		return (entities.size() > entityId) && !recyclingEntityFactory.has(entityId);
+		return !recyclingEntityFactory.has(entityId);
 	}
 
 	/**
@@ -236,7 +237,7 @@ public class EntityManager extends BaseSystem {
 		Entity obtain() {
 			if (limbo.isEmpty()) {
 				Entity e = em.createEntity(nextId++);
-				em.entities.set(e.getId(), e);
+				em.entities.set(e.id, e);
 				return e;
 			} else {
 				int id = limbo.popFirst();
