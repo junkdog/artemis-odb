@@ -5,6 +5,8 @@ import com.artemis.utils.IntBag;
 
 import java.util.Arrays;
 
+import static com.artemis.utils.reflect.ReflectionUtil.implementsObserver;
+
 
 /**
  * Entity system for iterating a entities matching a single Aspect. Likely the
@@ -18,6 +20,11 @@ public abstract class EntitySystem extends BaseEntitySystem
 	private boolean shouldSyncEntities;
 	private WildBag<Entity> entities = new WildBag<Entity>();
 
+	private int methodFlags;
+
+	private static final int INSERTED = 1;
+	private static final int REMOVED = 1 << 1;
+
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
 	 * against entities.
@@ -30,9 +37,19 @@ public abstract class EntitySystem extends BaseEntitySystem
 	}
 
 	@Override
+	protected void setWorld(World world) {
+		super.setWorld(world);
+		if(implementsObserver(this, "inserted"))
+			methodFlags |= INSERTED;
+		if(implementsObserver(this, "removed"))
+			methodFlags |= REMOVED;
+	}
+
+	@Override
 	public final void inserted(IntBag entities) {
-		super.inserted(entities);
 		shouldSyncEntities = true;
+		if ((methodFlags & INSERTED) > 0)
+			super.inserted(entities);
 	}
 
 	@Override
@@ -40,12 +57,15 @@ public abstract class EntitySystem extends BaseEntitySystem
 		inserted(world.getEntity(entityId));
 	}
 
-	protected void inserted(Entity e) {}
+	public void inserted(Entity e) {
+		throw new RuntimeException("no, no, no");
+	}
 
 	@Override
 	public final void removed(IntBag entities) {
-		super.removed(entities);
 		shouldSyncEntities = true;
+		if ((methodFlags & REMOVED) > 0)
+			super.removed(entities);
 	}
 
 	@Override
@@ -53,7 +73,9 @@ public abstract class EntitySystem extends BaseEntitySystem
 		removed(world.getEntity(entityId));
 	}
 
-	protected void removed(Entity e) {}
+	public void removed(Entity e) {
+		throw new RuntimeException("no, no, no");
+	}
 
 	/**
 	 * Gets the entities processed by this system. Do not delete entities from

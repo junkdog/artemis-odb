@@ -81,7 +81,7 @@ public class ArchetypeManagerTest {
 		}
 	}
 	
-	private static class Es1 extends EntityProcessingSystem {
+	public static class Es1 extends EntityProcessingSystem {
 
 		private ComponentMapper<ComponentX> componentXMapper;
 		
@@ -96,7 +96,7 @@ public class ArchetypeManagerTest {
 		}
 	}
 	
-	private static class Es2 extends EntityProcessingSystem {
+	public static class Es2 extends EntityProcessingSystem {
 		
 		private ComponentMapper<ComponentX> componentXMapper;
 		

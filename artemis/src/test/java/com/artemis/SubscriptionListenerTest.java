@@ -143,7 +143,7 @@ public class SubscriptionListenerTest {
 		}
 
 		@Override
-		protected void inserted(Entity e) {
+		public void inserted(Entity e) {
 			insertedEntities.set(e.getId());
 		}
 
@@ -153,7 +153,7 @@ public class SubscriptionListenerTest {
 		}
 
 		@Override
-		protected void removed(Entity e) {
+		public void removed(Entity e) {
 			insertedEntities.set(e.getId(), false);
 		}
 	}
