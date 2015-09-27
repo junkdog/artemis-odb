@@ -13,10 +13,6 @@
 	
 	<url>https://github.com/junkdog/artemis-odb</url>
 
-	<properties>
-		<gdx.version>1.7.0</gdx.version>
-	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>net.onedaybeard.artemis</groupId>
@@ -27,7 +23,7 @@
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
-			<version>${gdx.version}</version>
+			<version>[1.6.0, 2.0.0)</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
