@@ -114,7 +114,7 @@ public class EntityManager extends BaseSystem {
 		return identity;
 	}
 	
-	private void deleted(IntBag entities) {
+	void deleted(IntBag entities) {
 		int[] ids = entities.getData();
 		for(int i = 0, s = entities.size(); s > i; i++) {
 			int entityId = ids[i];

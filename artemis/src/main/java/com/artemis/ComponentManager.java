@@ -347,7 +347,7 @@ public class ComponentManager extends BaseSystem {
 		return fillBag;
 	}
 
-	private void added(IntBag entities) {
+	void added(IntBag entities) {
 		// entities is sorted, so enough to just grab the last entity
 		int entityId = entities.get(entities.size() - 1);
 		if ((highestSeenEntityId - 1) < entityId) {

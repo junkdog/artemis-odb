@@ -51,17 +51,21 @@ public class TagManager extends BaseSystem {
 
 					@Override
 					public void removed(IntBag entities) {
-						int[] ids = entities.getData();
-						for (int i = 0, s = entities.size(); s > i; i++) {
-							int id = ids[i];
-							if (registered.get(id)) {
-								String removedTag = tagsByEntity.remove(world.getEntity(id));
-								entitiesByTag.remove(removedTag);
-								registered.clear(id);
-							}
-						}
+						deleted(entities);
 					}
 				});
+	}
+
+	void deleted(IntBag entities) {
+		int[] ids = entities.getData();
+		for (int i = 0, s = entities.size(); s > i; i++) {
+			int id = ids[i];
+			if (registered.get(id)) {
+				String removedTag = tagsByEntity.remove(world.getEntity(id));
+				entitiesByTag.remove(removedTag);
+				registered.clear(id);
+			}
+		}
 	}
 
 	/**

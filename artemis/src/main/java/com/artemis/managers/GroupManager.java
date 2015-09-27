@@ -188,7 +188,7 @@ public class GroupManager extends BaseSystem {
 		return false;
 	}
 
-	private void deleted(IntBag entities) {
+	void deleted(IntBag entities) {
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i ; i++) {
 			removeFromAllGroups(world.getEntity(ids[i]));
