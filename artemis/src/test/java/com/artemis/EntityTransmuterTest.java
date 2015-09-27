@@ -100,7 +100,7 @@ public class EntityTransmuterTest {
 		World world = new World(new WorldConfiguration()
 				.setSystem(es2));
 
-		AspectSubscriptionManager asm = world.getSystem(AspectSubscriptionManager.class);
+		AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
 		EntitySubscription subscription = asm.get(Aspect.all(ComponentX.class));
 
 		world.createEntity().edit().create(ReusedComponent.class);

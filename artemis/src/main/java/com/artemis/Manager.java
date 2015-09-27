@@ -17,7 +17,7 @@ public abstract class Manager extends BaseSystem {
 	public void deleted(Entity e) {}
 
 	protected void registerManager() {
-		world.getSystem(AspectSubscriptionManager.class)
+		world.getAspectSubscriptionManager()
 				.get(all())
 				.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
 					@Override

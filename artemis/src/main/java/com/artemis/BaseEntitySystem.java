@@ -39,7 +39,7 @@ public abstract class BaseEntitySystem extends BaseSystem
 	}
 
 	public EntitySubscription getSubscription() {
-		AspectSubscriptionManager sm = world.getSystem(AspectSubscriptionManager.class);
+		AspectSubscriptionManager sm = world.getAspectSubscriptionManager();
 		return sm.get(aspectConfiguration);
 	}
 

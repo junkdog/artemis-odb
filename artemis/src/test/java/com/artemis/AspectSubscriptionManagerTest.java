@@ -26,7 +26,7 @@ public class AspectSubscriptionManagerTest {
 
 	@Test
 	public void creating_subscriptions_at_any_time() {
-		AspectSubscriptionManager asm = world.getSystem(AspectSubscriptionManager.class);
+		AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
 		EntitySubscription subscription1 = asm.get(Aspect.all(ComponentY.class));
 
 		entity(ComponentX.class, ComponentY.class);
@@ -42,7 +42,7 @@ public class AspectSubscriptionManagerTest {
 	@Test
 	public void entity_change_events_cleared() {
 		world = new World(new WorldConfiguration().setSystem(new BootstrappingManager()));
-		AspectSubscriptionManager asm = world.getSystem(AspectSubscriptionManager.class);
+		AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
 		EntitySubscription sub = asm.get(Aspect.all(ComponentX.class));
 		SubListener listener = new SubListener();
 		sub.addSubscriptionListener(listener);

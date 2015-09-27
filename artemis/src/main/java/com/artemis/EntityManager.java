@@ -42,7 +42,7 @@ public class EntityManager extends BaseSystem {
 	@Override
 	protected void initialize() {
 		recyclingEntityFactory = new RecyclingEntityFactory(this);
-		world.getSystem(AspectSubscriptionManager.class)
+		world.getAspectSubscriptionManager()
 				.get(all())
 				.addSubscriptionListener(
 						new EntitySubscription.SubscriptionListener() {
@@ -103,7 +103,7 @@ public class EntityManager extends BaseSystem {
 	int compositionIdentity(BitSet componentBits) {
 		int identity = identityResolver.getIdentity(componentBits);
 		if (identity > highestSeenIdentity) {
-			world.getSystem(AspectSubscriptionManager.class)
+			world.getAspectSubscriptionManager()
 					.processComponentIdentity(identity, componentBits);
 			highestSeenIdentity = identity;
 		}

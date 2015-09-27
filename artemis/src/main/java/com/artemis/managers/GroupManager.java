@@ -43,7 +43,7 @@ public class GroupManager extends BaseSystem {
 
 	@Override
 	protected void initialize() {
-		world.getSystem(AspectSubscriptionManager.class)
+		world.getAspectSubscriptionManager()
 				.get(all())
 				.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
 					@Override
