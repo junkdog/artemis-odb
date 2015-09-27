@@ -84,7 +84,7 @@ public class CustomJsonWorldSerializationManagerTest extends GWTTestCase {
 		IntBag entities = allEntities.getEntities();
 		int size = entities.size();
 		for (int i = 0; size > i; i++) {
-			world.deleteEntity(entities.get(i));
+			world.delete(entities.get(i));
 		}
 
 		world.process();
