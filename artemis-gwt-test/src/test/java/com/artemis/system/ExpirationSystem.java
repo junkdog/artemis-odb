@@ -17,7 +17,7 @@ public class ExpirationSystem extends DelayedEntityProcessingSystem {
 	}
 	
 	@Override
-	protected void inserted(Entity e) {
+	public void inserted(Entity e) {
 		deltas.set(e.getId(), 1f);
 		super.inserted(e);
 	}
