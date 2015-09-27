@@ -44,6 +44,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.managers"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.World"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.Archetype"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.ArtemisPlugin"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.UseInjectionCache"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.ArtemisFieldResolver"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.WiredFieldResolver"/>
