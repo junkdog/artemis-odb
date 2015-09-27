@@ -361,7 +361,8 @@ public class World {
 		// such as those affected by EntityTransmuters, Archetypes
 		// and EntityFactories.
 		do {
-			am.process(changed, deleted);
+			if (!(changed.isEmpty() && deleted.isEmpty()))
+				am.process(changed, deleted);
 		} while (editPool.processEntities());
 
 		cm.clean();
