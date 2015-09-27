@@ -1,14 +1,10 @@
 package com.artemis;
 
 import com.artemis.utils.IntBag;
-import com.artemis.utils.reflect.ClassReflection;
-import com.artemis.utils.reflect.Method;
-import com.artemis.utils.reflect.ReflectionException;
-import com.artemis.utils.reflect.ReflectionUtil;
-
-import java.security.acl.Owner;
 
 import static com.artemis.Aspect.all;
+import static com.artemis.EntitySystem.FLAG_INSERTED;
+import static com.artemis.EntitySystem.FLAG_REMOVED;
 import static com.artemis.utils.reflect.ReflectionUtil.implementsObserver;
 
 
@@ -21,24 +17,21 @@ import static com.artemis.utils.reflect.ReflectionUtil.implementsObserver;
 public abstract class Manager extends BaseSystem {
 	private int methodFlags;
 
-	private static final int INSERTED = 1;
-	private static final int REMOVED = 1 << 1;
-
 	public void added(Entity e) {
-		throw new RuntimeException("no,no,no");
+		throw new RuntimeException("I shouldn't be here...");
 	}
 
 	public void deleted(Entity e) {
-		throw new RuntimeException("no,no,no");
+		throw new RuntimeException("... if it weren't for the tests.");
 	}
 
 	@Override
 	protected void setWorld(World world) {
 		super.setWorld(world);
 		if(implementsObserver(this, "added"))
-			methodFlags |= INSERTED;
+			methodFlags |= FLAG_INSERTED;
 		if(implementsObserver(this, "deleted"))
-			methodFlags |= REMOVED;
+			methodFlags |= FLAG_REMOVED;
 	}
 
 	protected void registerManager() {

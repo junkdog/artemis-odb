@@ -17,13 +17,13 @@ import static com.artemis.utils.reflect.ReflectionUtil.implementsObserver;
 public abstract class EntitySystem extends BaseEntitySystem
 		implements EntitySubscription.SubscriptionListener {
 
+	static final int FLAG_INSERTED = 1;
+	static final int FLAG_REMOVED = 1 << 1;
+
 	private boolean shouldSyncEntities;
 	private WildBag<Entity> entities = new WildBag<Entity>();
 
 	private int methodFlags;
-
-	private static final int INSERTED = 1;
-	private static final int REMOVED = 1 << 1;
 
 	/**
 	 * Creates an entity system that uses the specified aspect as a matcher
@@ -40,15 +40,15 @@ public abstract class EntitySystem extends BaseEntitySystem
 	protected void setWorld(World world) {
 		super.setWorld(world);
 		if(implementsObserver(this, "inserted"))
-			methodFlags |= INSERTED;
+			methodFlags |= FLAG_INSERTED;
 		if(implementsObserver(this, "removed"))
-			methodFlags |= REMOVED;
+			methodFlags |= FLAG_REMOVED;
 	}
 
 	@Override
 	public final void inserted(IntBag entities) {
 		shouldSyncEntities = true;
-		if ((methodFlags & INSERTED) > 0)
+		if ((methodFlags & FLAG_INSERTED) > 0)
 			super.inserted(entities);
 	}
 
@@ -57,14 +57,10 @@ public abstract class EntitySystem extends BaseEntitySystem
 		inserted(world.getEntity(entityId));
 	}
 
-	public void inserted(Entity e) {
-		throw new RuntimeException("no, no, no");
-	}
-
 	@Override
 	public final void removed(IntBag entities) {
 		shouldSyncEntities = true;
-		if ((methodFlags & REMOVED) > 0)
+		if ((methodFlags & FLAG_REMOVED) > 0)
 			super.removed(entities);
 	}
 
@@ -73,8 +69,12 @@ public abstract class EntitySystem extends BaseEntitySystem
 		removed(world.getEntity(entityId));
 	}
 
+	public void inserted(Entity e) {
+		throw new RuntimeException("everything changes");
+	}
+
 	public void removed(Entity e) {
-		throw new RuntimeException("no, no, no");
+		throw new RuntimeException("everything breaks");
 	}
 
 	/**
