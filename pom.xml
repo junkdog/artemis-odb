@@ -14,7 +14,7 @@
 		<asm.version>4.1</asm.version>
 		<junit.version>4.11</junit.version>
 		<gwt.version>2.6.1</gwt.version>
-		<matrix.artemis.version>0.1.1</matrix.artemis.version>
+		<matrix.artemis.version>0.1.2</matrix.artemis.version>
 		<assembly.plugin.version>2.5.5</assembly.plugin.version>
 		<jar.plugin.version>2.6</jar.plugin.version>
 	</properties>
