@@ -6,7 +6,7 @@ import com.artemis.utils.IntBag;
 
 
 /**
- * If you need to process entities at a certain interval then use this.
+ * Process a subset of entities every x ticks.
  * <p>
  * A typical usage would be to regenerate ammo or health at certain intervals,
  * no need to do that every game loop, but perhaps every 100 ms. or every
@@ -14,6 +14,7 @@ import com.artemis.utils.IntBag;
  * </p>
  * 
  * @author Arni Arent
+ * @author Adrian Papari
  */
 public abstract class IntervalIteratingSystem extends IntervalSystem {
 	/**

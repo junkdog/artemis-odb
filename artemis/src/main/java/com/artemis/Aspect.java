@@ -216,6 +216,9 @@ public class Aspect {
 		return new Aspect.Builder();
 	}
 
+	/**
+	 * Constructs instances of {@link Aspect}.
+	 */
 	public static class Builder {
 		private final Bag<Class<? extends Component>> allTypes;
 		private final Bag<Class<? extends Component>> exclusionTypes;

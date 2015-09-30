@@ -10,6 +10,15 @@ import java.util.Map;
 
 import static com.artemis.utils.ConverterUtil.toIntBag;
 
+/**
+ * Manages all instances of {@link EntitySubscription}.
+ *
+ * Entity subscriptions are automatically updated during {@link com.artemis.World#process()}.
+ * Any {@link com.artemis.EntitySubscription.SubscriptionListener | listeners}
+ * are informed when entities are added or removed.
+ *
+ * @see EntitySubscription
+ */
 @SkipWire
 public class AspectSubscriptionManager extends Manager {
 
@@ -24,6 +33,15 @@ public class AspectSubscriptionManager extends Manager {
 		subscriptions = new Bag<EntitySubscription>();
 	}
 
+	/**
+	 * Get subscription to all entities matching {@link Aspect}.
+	 *
+	 * Will create a new subscription if not yet available for
+	 * given {@link Aspect} match.
+	 *
+	 * @param builder Aspect to match.
+	 * @return {@link EntitySubscription} for aspect.
+	 */
 	public EntitySubscription get(Aspect.Builder builder) {
 		EntitySubscription subscription = subscriptionMap.get(builder);
 		return (subscription != null) ? subscription : createSubscription(builder);
