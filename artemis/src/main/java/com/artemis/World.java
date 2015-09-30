@@ -400,7 +400,7 @@ public class World {
 	/**
 	 * @return Strategy used for invoking systems during {@link World#process()}.
 	 */
-	public SystemInvocationStrategy getInvocationStrategy() {
-		return invocationStrategy;
+	public <T extends SystemInvocationStrategy> T getInvocationStrategy() {
+		return (T) invocationStrategy;
 	}
 }
