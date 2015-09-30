@@ -54,7 +54,7 @@ public class EntitySubscription {
 	 * entities.
 	 *
 	 * <p><b>Warning: </b> Never remove elements from the bag, as this
-	 * will lead to undefiend behavior.</p>
+	 * will lead to undefined behavior.</p>
 	 *
 	 * @return View of all active entities.
 	 */
@@ -78,10 +78,16 @@ public class EntitySubscription {
 		return activeEntityIds;
 	}
 
+	/**
+	 * @return aspect used for matching entities to subscription.
+	 */
 	public Aspect getAspect() {
 		return aspect;
 	}
 
+	/**
+	 * @return aspect builder used for matching entities to subscription.
+	 */
 	public Aspect.Builder getAspectBuilder() {
 		return aspectReflection;
 	}
@@ -194,6 +200,11 @@ public class EntitySubscription {
 			remove(entityId);
 	}
 
+	/**
+	 * Add listener interested in changes to the subscription.
+	 *
+	 * @param listener listener to add.
+	 */
 	public void addSubscriptionListener(SubscriptionListener listener) {
 		listeners.add(listener);
 	}
