@@ -33,6 +33,11 @@ public final class EntityTransmuter {
 		bs = new BitSet();
 	}
 
+	/**
+	 * Apply on target entity.
+	 *
+	 * @param entityId target entity id
+	 */
 	public void transmute(int entityId) {
 		TransmuteOperation operation = getOperation(entityId);
 
@@ -42,6 +47,11 @@ public final class EntityTransmuter {
 		world.changed.set(entityId);
 	}
 
+	/**
+	 * Apply on target entity.
+	 *
+	 * @param e target entity.
+	 */
 	public void transmute(Entity e) {
 		transmute(e.id);
 	}
