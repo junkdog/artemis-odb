@@ -39,8 +39,11 @@ public abstract class BaseEntitySystem extends BaseSystem
 		subscription.addSubscriptionListener(this);
 	}
 
+	/**
+	 * @return entity subscription backing this system.
+	 */
 	public EntitySubscription getSubscription() {
-		AspectSubscriptionManager sm = world.getAspectSubscriptionManager();
+		final AspectSubscriptionManager sm = world.getAspectSubscriptionManager();
 		return sm.get(aspectConfiguration);
 	}
 
@@ -63,7 +66,7 @@ public abstract class BaseEntitySystem extends BaseSystem
 	}
 
 	/**
-	 * Called if the system has received an entity it is interested in, e.g
+	 * Called if entity has come into scope for this system, e.g
 	 * created or a component was added to it.
 	 *
 	 * @param entityId
@@ -80,8 +83,8 @@ public abstract class BaseEntitySystem extends BaseSystem
 	}
 
 	/**
-	 * Called if a entity was removed from this system, e.g deleted or had one
-	 * of it's components removed.
+	 * Called if entity has gone out of scope of this system, e.g deleted
+	 * or had one of it's components removed.
 	 *
 	 * @param entityId
 	 *			the entity that was removed from this system
