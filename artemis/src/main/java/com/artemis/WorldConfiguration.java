@@ -9,6 +9,17 @@ import java.util.*;
 
 import static com.artemis.EntityManager.NO_COMPONENTS;
 
+/**
+ * Contains configuration for your world.
+ *
+ * Can be used for:
+ * - Adding Systems.
+ * - Adding Managers.
+ * - Registering Pojo to inject.
+ * - Registering custom dependency injector.
+ *
+ * @see WorldConfigurationBuilder allows convenient creation.
+ */
 public final class WorldConfiguration {
 	public static final int COMPONENT_MANAGER_IDX = 0;
 	public static final int ENTITY_MANAGER_IDX = 1;

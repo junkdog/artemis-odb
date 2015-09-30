@@ -1,5 +1,6 @@
 package com.artemis;
 
+import com.artemis.annotations.UnstableApi;
 import com.artemis.injection.CachedInjector;
 import com.artemis.injection.FieldHandler;
 import com.artemis.injection.FieldResolver;
@@ -12,7 +13,10 @@ import com.artemis.utils.reflect.ReflectionException;
 /**
  * World builder.
  *
+ * Allows convenient var-arg addition of systems, managers. Supports plugins.
+ *
  * @author Daan van Yperen
+ * @see WorldConfiguration
  */
 public class WorldConfigurationBuilder {
 	private Bag<ConfigurationElement<? extends BaseSystem>> systems;
@@ -291,6 +295,8 @@ public class WorldConfigurationBuilder {
 		}
 	}
 
+	/** Guideline constants for priority, higher values has more priority. Will probably change. */
+	@UnstableApi
 	public static abstract class Priority {
 		public static final int LOWEST = Integer.MIN_VALUE;
 		public static final int LOW = -10000;
