@@ -34,6 +34,7 @@ import com.artemis.annotations.UseSetter;
  * @see Bind
  * @see Sticky
  * @see UseSetter
+ * @see EntityEdit for a list of alternate ways to alter composition and access components.
  */
 @UnstableApi
 public interface EntityFactory<T> {

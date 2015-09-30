@@ -5,6 +5,7 @@ package com.artemis;
  * improved insertion performance for systems.
  * </p>
  * Instance entities using {@link com.artemis.World#create(Archetype)}
+ * @see EntityEdit for a list of alternate ways to alter composition and access components.
  */
 public final class Archetype {
 	final ComponentType[] types;

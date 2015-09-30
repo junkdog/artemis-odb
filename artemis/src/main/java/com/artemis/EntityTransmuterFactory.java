@@ -4,6 +4,7 @@ import java.util.BitSet;
 
 /**
  * Builder for {@link EntityTransmuter}.
+ * @see EntityEdit for a list of alternate ways to alter composition and access components.
  */
 public final class EntityTransmuterFactory {
 	private final ComponentTypeFactory types;

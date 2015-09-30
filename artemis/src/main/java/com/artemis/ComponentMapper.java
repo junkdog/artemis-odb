@@ -1,5 +1,14 @@
 package com.artemis;
 
+/**
+ * Provide high performance component access and mutation from within a System.
+ *
+ * This is the recommended way to mutate composition and access components.
+ * Component Mappers are as fast as Transmuters.
+ *
+ * @param <A> Component type to map.
+ * @see EntityEdit for a list of alternate ways to alter composition and access components.
+ */
 public abstract class ComponentMapper<A extends Component> {
 
 	private final EntityTransmuter createTransmuter;
@@ -7,7 +16,7 @@ public abstract class ComponentMapper<A extends Component> {
 
 	/** The type of components this mapper handles. */
 	public final ComponentType type;
-	
+
 	public ComponentMapper(Class<A> type, World world) {
 		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
 		this.type = tf.getTypeFor(type);
@@ -169,7 +178,7 @@ public abstract class ComponentMapper<A extends Component> {
 
 	/**
 	 * Create component for this entity.
-	 * Will avoid creation if component preexists.
+	 * Will avoid creation if component exists.
 	 *
 	 * @param entityId the entity that should possess the component
 	 * @return the instance of the component.

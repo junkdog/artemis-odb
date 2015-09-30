@@ -9,6 +9,9 @@ import java.util.UUID;
 /**
  * Non-reusable entity creation helper for rapid prototyping.
  *
+ * Discouraged for use other than rapid prototyping and simple games.
+ * Use {@link ComponentMapper} instead.
+ *
  * Example: new Builder(world)
  * .with(Pos.class, Anim.class)
  * .tag("boss")
@@ -17,7 +20,8 @@ import java.util.UUID;
  * .build();
  *
  * @author Daan van Yperen
- * @author Junkdog 
+ * @author Junkdog
+ * @see EntityEdit for a list of alternate ways to alter composition and access components.
  */
 public class EntityBuilder {
 
