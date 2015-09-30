@@ -8,10 +8,8 @@ public class InvocationStrategy extends SystemInvocationStrategy {
 		Object[] systemsData = systems.getData();
 		for (int i = 0, s = systems.size(); s > i; i++) {
 			BaseSystem system = (BaseSystem) systemsData[i];
-			if (!system.isPassive()) {
-				system.process();
-				updateEntityStates();
-			}
+			system.process();
+			updateEntityStates();
 		}
 	}
 }

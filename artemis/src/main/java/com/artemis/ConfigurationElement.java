@@ -10,16 +10,14 @@ import java.lang.Class;import java.lang.Comparable;import java.lang.Object;impor
  * @see WorldConfigurationBuilder
  */
 class ConfigurationElement<T> implements Comparable<ConfigurationElement<T>> {
-	public final boolean passive;
 	public final int priority;
 	public final Class<?> itemType;
 	public T item;
 
-	public ConfigurationElement(T item, int priority, boolean passive) {
+	public ConfigurationElement(T item, int priority) {
 		this.item = item;
 		itemType = item.getClass();
 		this.priority = priority;
-		this.passive = passive;
 	}
 
 	@Override
@@ -42,16 +40,11 @@ class ConfigurationElement<T> implements Comparable<ConfigurationElement<T>> {
 
 	/** create instance of Registerable. */
 	public static <T> ConfigurationElement<T> of(T item) {
-		return of(item, WorldConfigurationBuilder.Priority.NORMAL, false);
-	}
-
-	/** create instance of Registerable. */
-	public static <T> ConfigurationElement<T> of(T item, int priority, boolean passive) {
-		return new ConfigurationElement<T>(item, priority, passive);
+		return of(item, WorldConfigurationBuilder.Priority.NORMAL);
 	}
 
 	/** create instance of Registerable. */
 	public static <T> ConfigurationElement<T> of(T item, int priority) {
-		return of(item, priority, false);
+		return new ConfigurationElement<T>(item, priority);
 	}
 }
