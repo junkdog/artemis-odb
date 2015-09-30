@@ -138,7 +138,9 @@ public final class Entity {
 	}
 
 	/**
-	 * Delete this entity from the world.
+	 * Delete the entity from the world. The entity is considered to be
+	 * in a final state once invoked; adding or removing components from an
+	 * entity scheduled for deletion will likely throw exceptions.
 	 */
 	public void deleteFromWorld() {
 		edit().deleteEntity();

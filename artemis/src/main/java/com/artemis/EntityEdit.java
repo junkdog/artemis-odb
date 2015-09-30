@@ -10,19 +10,18 @@ import java.util.BitSet;
  * Provides a fast albeit verbose way to perform batch changes to entities.
  * <p/>
  * {@link com.artemis.BaseSystem}, {@link com.artemis.EntitySubscription.SubscriptionListener}
- * and {@link com.artemis.EntityObserver} are informed of changes only after the current
- * system has done processing and the next system is about to be invoked. This removes the
- * need for systems to defend their subscription lists and allows for cleaner code and better
- * performance.
- * <p/>
+ * are informed of changes only after the current system has done processing and the next system
+ * is about to be invoked. This removes the need for systems to defend their subscription lists
+ * and allows for cleaner code and better performance.
+ *
  * Alternatives to edit entities.
  * <p/>
+ * - {@link com.artemis.ComponentMapper} is great for concrete changes {@link ComponentMapper#create(Entity)}.
+ *   Best choice for parameterizing pooled components.
  * - {@link com.artemis.utils.EntityBuilder} Convenient entity creation. Not useful when pooling.
  * - {@link com.artemis.EntityTransmuterFactory} Fastest but rigid way of changing entity component compositions.
  * - {@link com.artemis.Archetype} Fastest, low level, no parameterized components.
  * - {@link com.artemis.EntityFactory} Fast, clean and convenient. For fixed composition entities. Requires some setup.
- * Best choice for parameterizing pooled components.
- * - {@link com.artemis.ComponentMapper} For discrete operations.
  */
 public final class EntityEdit {
 
@@ -45,6 +44,14 @@ public final class EntityEdit {
         scheduledDeletion = true;
     }
 
+    /**
+     * Create new instance of component.
+     *
+     * if exists, replaces and retires old component!
+     *
+     * @param componentKlazz Class to create.
+     * @return Newly instanced component.
+     */
     public <T extends Component> T create(Class<T> componentKlazz) {
         T component = cm.create(entityId, componentKlazz);
 
@@ -57,7 +64,7 @@ public final class EntityEdit {
     /**
      * Add a component to this entity.
      *
-     * @param component the component to add to this entity
+     * @param component the component to add to this entity. Does not support packed or pooled.
      * @return this EntityEdit for chaining
      * @see {@link #create(Class)}
      */
@@ -72,7 +79,7 @@ public final class EntityEdit {
      * performance.
      * </p>
      *
-     * @param component the component to add
+     * @param component the component to add.  Does not support packed or pooled.
      * @param type      the type of the component
      * @return this EntityEdit for chaining
      * @see #create(Class)
@@ -89,10 +96,20 @@ public final class EntityEdit {
         return this;
     }
 
+    /**
+     * Get target entity of entity edits.
+     *
+     * @return Entity this EntityEdit operates on.
+     */
     public Entity getEntity() {
         return cm.world.getEntity(entityId);
     }
 
+    /**
+     * Get target entity id of entity edits.
+     *
+     * @return Entity id this EntityEdit operates on.
+     */
     public int getEntityId() {
         return entityId;
     }
@@ -108,7 +125,9 @@ public final class EntityEdit {
     }
 
     /**
-     * Faster removal of components from a entity.
+     * Removal of components from a entity.
+     *
+     * Faster than {@link #remove(Class)}.
      *
      * @param type the type of component to remove from this entity
      * @return this EntityEdit for chaining

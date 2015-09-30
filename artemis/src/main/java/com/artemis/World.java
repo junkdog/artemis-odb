@@ -264,6 +264,11 @@ public class World {
 
 	/**
 	 * Delete the entity from the world.
+	 *
+	 * The entity is considered to be in a final state once invoked;
+	 * adding or removing components from an entity scheduled for
+	 * deletion will likely throw exceptions.
+	 *
 	 * @param entityId
 	 * 		the entity to delete
 	 */
