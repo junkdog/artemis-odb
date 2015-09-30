@@ -56,6 +56,9 @@ public class ComponentType {
 	/**
 	 * Get the component type's index.
 	 *
+	 * Index is distinct for each {@link World} instance,
+	 * allowing for fast lookups.
+	 *
 	 * @return the component types index
 	 */
 	public int getIndex() {
