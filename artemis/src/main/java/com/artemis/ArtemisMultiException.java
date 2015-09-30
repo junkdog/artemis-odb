@@ -9,7 +9,7 @@ public class ArtemisMultiException extends RuntimeException {
 	
 	public ArtemisMultiException(List<Throwable> exceptions) {
 		super();
-		exceptions.addAll(exceptions);
+		this.exceptions.addAll(exceptions);
 	}
 
 	public List<Throwable> getExceptions() {

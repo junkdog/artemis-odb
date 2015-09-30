@@ -184,8 +184,8 @@ public class IntBag {
 	 * If required, it also increases the capacity of the bag.
 	 * </p>
 	 *
-	 * @param e
-	 *			element to be added to this list
+	 * @param other
+	 *			elements to be added to this list
 	 */
 	public void addAll(IntBag other) {
 		for (int i = 0; i < other.size(); i++) {

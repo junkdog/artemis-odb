@@ -11,7 +11,7 @@ package com.artemis;
  * {@link #processSystem()} - Called once per cycle.
  * {@link #end()} - Called after the entities have been processed.
  * 
- * @see @Wire
+ * @see com.artemis.annotations.Wire
  */
 public abstract class BaseSystem {
 	/** The world this system belongs to. */

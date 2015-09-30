@@ -28,9 +28,8 @@ import java.util.Map;
  *
  * <p><b>Nota Bene:</b> PackedComponent types are not yet supported.</p>
  *
- * @See JsonArtemisSerializer
- * @See N/A KryoArtemisSerializer
- * @See {@link EntityReference}
+ * @see JsonArtemisSerializer
+ * @see EntityReference
  */
 public class SaveFileFormat {
 

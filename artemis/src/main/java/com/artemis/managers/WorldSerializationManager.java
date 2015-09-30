@@ -1,5 +1,6 @@
 package com.artemis.managers;
 
+import com.artemis.BaseSystem;
 import com.artemis.Manager;
 import com.artemis.World;
 import com.artemis.annotations.Wire;
@@ -9,17 +10,14 @@ import com.artemis.utils.IntBag;
 
 import java.io.*;
 
-public class WorldSerializationManager extends Manager {
+public class WorldSerializationManager extends BaseSystem {
 	private static final String TAG = WorldSerializationManager.class.getSimpleName();
 	private ArtemisSerializer<?> backend;
 	public boolean alwaysLoadStreamMemory = true;
 
 
-	public WorldSerializationManager() {
-	}
-
 	@Override
-	protected void initialize() {
+	protected void processSystem() {
 	}
 
 	public void setSerializer(ArtemisSerializer<?> backend) {

@@ -67,7 +67,6 @@ public final class Entity {
 	/**
 	 * Get entity editor.
 	 * @return a fast albeit verbose editor to perform batch changes to entities.
-	 * @param entityId entity to fetch editor for.
 	 */
 	public EntityEdit edit() {
 		return world.editPool.obtainEditor(id);

@@ -66,7 +66,7 @@ public final class EntityEdit {
      *
      * @param component the component to add to this entity. Does not support packed or pooled.
      * @return this EntityEdit for chaining
-     * @see {@link #create(Class)}
+     * @see #create(Class)
      */
     public EntityEdit add(Component component) {
 	    return add(component, cm.typeFactory.getTypeFor(component.getClass()));
