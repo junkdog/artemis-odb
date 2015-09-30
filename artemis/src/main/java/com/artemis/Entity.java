@@ -66,9 +66,8 @@ public final class Entity {
 
 	/**
 	 * Get entity editor.
-	 *
-	 * You can also create/remove components via {@link ComponentMapper}.
-	 * @return Provides a fast albeit verbose way to perform batch changes to entities.
+	 * @return a fast albeit verbose editor to perform batch changes to entities.
+	 * @param entityId entity to fetch editor for.
 	 */
 	public EntityEdit edit() {
 		return world.editPool.obtainEditor(id);

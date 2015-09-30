@@ -58,7 +58,7 @@ public class World {
 	 * {@link com.artemis.EntityManager}, {@link ComponentManager} and {@link AspectSubscriptionManager} are
 	 * available by default.
 	 * </p>
-	 * Use {@link #World(WorldConfiguration)} to create a world with your own systems.
+	 * Why are you using this? Use {@link #World(WorldConfiguration)} to create a world with your own systems.
 	 */
 	public World() {
 		this(new WorldConfiguration());
@@ -70,8 +70,8 @@ public class World {
 	 * {@link com.artemis.EntityManager}, {@link ComponentManager} and {@link AspectSubscriptionManager} are
 	 * available by default, on top of your own systems.
 	 * </p>
-	 * @see WorldConfiguration
 	 * @see WorldConfigurationBuilder
+	 * @see WorldConfiguration
 	 */
 	public World(WorldConfiguration configuration) {
 
@@ -193,6 +193,11 @@ public class World {
 		}
 	}
 
+	/**
+	 * Get entity editor for entity.
+	 * @return a fast albeit verbose editor to perform batch changes to entities.
+	 * @param entityId entity to fetch editor for.
+	 */
 	public EntityEdit edit(int entityId) {
 		return editPool.obtainEditor(entityId);
 	}
@@ -257,6 +262,7 @@ public class World {
 	 * Delete the entity from the world.
 	 * @param e
 	 * 		the entity to delete
+	 * @see #delete(int) recommended alternative.
 	 */
 	public void deleteEntity(Entity e) {
 		e.edit().deleteEntity();
@@ -279,7 +285,9 @@ public class World {
 	/**
 	 * Create and return a new or reused entity instance. Entity is
 	 * automatically added to the world.
+	 *
 	 * @return entity
+	 * @see #create() recommended alternative.
 	 */
 	public Entity createEntity() {
 		Entity e = em.createEntityInstance();
@@ -310,6 +318,7 @@ public class World {
 	 * - {@link com.artemis.EntityFactory} Fast, clean and convenient. For fixed composition entities. Requires some setup.
 	 * Best choice for parameterizing pooled components.
 	 *
+	 * @see #create(int) recommended alternative.
 	 * @return entity
 	 */
 	public Entity createEntity(Archetype archetype) {
@@ -341,7 +350,12 @@ public class World {
 	}
 
 	/**
-	 * Get a entity having the specified id.
+	 * Get entity with the specified id.
+	 *
+	 * Resolves entity id to the unique entity instance. <em>This method may
+	 * return an entity even if it isn't active in the world. Make sure you
+	 * do not retain id's of deleted entities.
+	 *
 	 * @param entityId
 	 * 		the entities id
 	 * @return the specific entity
@@ -378,7 +392,8 @@ public class World {
 		invocationStrategy.initialize();
 	}
 
-	/** Process all non-passive systems.
+	/**
+	 * Process all non-passive systems.
 	 * @see InvocationStrategy to control and extend how systems are invoked.
 	 */
 	public void process() {
@@ -406,6 +421,10 @@ public class World {
 	/**
 	 * Retrieves a ComponentMapper instance for fast retrieval of components
 	 * from entities.
+	 *
+	 * Odb automatically injects component mappers into systems, calling this
+	 * method is usually not required.,
+	 *
 	 * @param <T>
 	 * 		class type of the component
 	 * @param type

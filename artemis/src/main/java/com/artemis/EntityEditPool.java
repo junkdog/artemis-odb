@@ -30,8 +30,13 @@ final class EntityEditPool {
 		EntityEdit edit = findEntityEdit(entityId, true);
 		em.updateCompositionIdentity(edit);
 	}
-	
 
+
+	/**
+	 * Get entity editor.
+	 * @return a fast albeit verbose editor to perform batch changes to entities.
+	 * @param entityId entity to fetch editor for.
+	 */
 	EntityEdit obtainEditor(int entityId) {
 		if (editedIds.get(entityId))
 			return findEntityEdit(entityId, false);
