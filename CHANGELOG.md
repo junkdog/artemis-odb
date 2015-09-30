@@ -28,6 +28,7 @@
 - `@PackedWeaver` marked as deprecated until performance issues have been resolved.
 - `EntityManager#isNew` removed.
 - Passive flag on systems removed.
+- SystemInvocationStrategy#initialize added.
 - **Fix**: No longer possible to accidentally add multiple systems of the same type.
 
 
