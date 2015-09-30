@@ -3,7 +3,6 @@ package com.artemis;
 import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
-import com.artemis.EntityTransmuter.TransmuteOperation;
 import com.artemis.utils.IntDeque;
 
 import java.util.BitSet;
@@ -12,13 +11,15 @@ import static com.artemis.Aspect.all;
 
 
 /**
- * EntityManager.
+ * Manages entity instances.
  *
  * @author Arni Arent
+ * @author Adrian Papari
  */
 @SkipWire
 public class EntityManager extends BaseSystem {
 
+	/** Adrian's secret rebellion. */
 	static final int NO_COMPONENTS = 1;
 	/** Contains all entities in the manager. */
 	private final Bag<Entity> entities;
@@ -175,6 +176,15 @@ public class EntityManager extends BaseSystem {
 		return entities.get(entityId);
 	}
 
+	/**
+	 * Fetch composition id for entity.
+	 *
+	 * A composition id is uniquely identified by a single Aspect. For performance reasons, each entity is
+	 * identified by its composition id. Adding or removing components from an entity will change its compositionId.
+	 *
+	 * @param entityId
+	 * @return composition identity.
+	 */
 	protected int getIdentity(int entityId) {
 		int identity = entityToIdentity.get(entityId);
 		if (identity == 0)
@@ -183,15 +193,32 @@ public class EntityManager extends BaseSystem {
 		return identity;
 	}
 
-	void setIdentity(int entityId, TransmuteOperation operation) {
-		entityToIdentity.set(entityId, operation.compositionId);
+	/**
+	 * Set composition id of entity.
+	 *
+	 * @param entityId entity id
+	 * @param compositionId composition id
+	 */
+	void setIdentity(int entityId, int compositionId) {
+		entityToIdentity.set(entityId, compositionId);
 	}
 
+	/**
+	 * Force creation of entity composition id.
+	 *
+	 * @param entityId entity
+	 * @return composition id.
+	 */
 	private int forceResolveIdentity(int entityId) {
 		updateCompositionIdentity(entities.get(entityId).edit());
 		return entityToIdentity.get(entityId);
 	}
 
+	/**
+	 * Synchronizes subscription with {@link World} state.
+	 *
+	 * @param es entity subscription to update.
+	 */
 	void synchronize(EntitySubscription es) {
 		for (int i = 1; highestSeenIdentity >= i; i++) {
 			BitSet componentBits = identityResolver.composition.get(i);
@@ -238,7 +265,8 @@ public class EntityManager extends BaseSystem {
 			return size;
 		}
 	}
-	
+
+	/** Track retired entities for recycling. */
 	private static final class RecyclingEntityFactory {
 		private final EntityManager em;
 		private final IntDeque limbo;

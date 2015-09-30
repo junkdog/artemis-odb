@@ -37,7 +37,7 @@ public final class EntityTransmuter {
 		TransmuteOperation operation = getOperation(entityId);
 
 		operation.perform(entityId, world.getComponentManager());
-		world.getEntityManager().setIdentity(entityId, operation);
+		world.getEntityManager().setIdentity(entityId, operation.compositionId);
 
 		world.changed.set(entityId);
 	}
