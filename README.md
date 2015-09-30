@@ -15,7 +15,7 @@ It is mature, actively maintained, and a continuation of the popular [Artemis](h
 - Optional [struct emulation](https://github.com/junkdog/artemis-odb/wiki/Packed-Weaver) and [pooled](https://github.com/junkdog/artemis-odb/wiki/@PooledWeaver) components, [hotspot optimization](https://github.com/junkdog/artemis-odb/wiki/Hotspot-Optimization), leveraged by [bytecode injection](https://github.com/junkdog/artemis-odb/wiki/Bytecode weaving).
 - [Json Serialization](https://github.com/junkdog/artemis-odb/wiki/Json Serialization) `0.11+`.
 - Convenient [dependency matrices](https://github.com/junkdog/artemis-odb/wiki/Component Dependency Matrix) for your components and systems.
-- Mostly backwards compatible with vanilla artemis.
+- Easy migration from Artemis clones.
 
 _See [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md) for more details_
 
