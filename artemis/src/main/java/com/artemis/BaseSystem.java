@@ -3,8 +3,6 @@ package com.artemis;
 public abstract class BaseSystem {
 	/** The world this system belongs to. */
 	protected World world;
-	/** If the system is passive or not. */
-	boolean passive;
 	/** If the system is enabled or not. */
 	boolean enabled = true;
 
@@ -93,34 +91,6 @@ public abstract class BaseSystem {
 	 */
 	protected World getWorld() {
 		return world;
-	}
-
-
-	/**
-	 * Check if this system is passive.
-	 * <p>
-	 * A passive system will not process when {@link com.artemis.World#process()}
-	 * is called.
-	 * </p>
-	 *
-	 * @return {@code true} if the system is passive
-	 */
-	public boolean isPassive() {
-		return passive;
-	}
-
-	/**
-	 * Set if the system is passive or not.
-	 * <p>
-	 * A passive system will not process when {@link com.artemis.World#process()}
-	 * is called.
-	 * </p>
-	 *
-	 * @param passive
-	 *			{@code true} if passive, {@code false} if not
-	 */
-	protected void setPassive(boolean passive) {
-		this.passive = passive;
 	}
 
 	/**

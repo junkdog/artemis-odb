@@ -88,7 +88,7 @@ public class WorldConfigurationBuilder {
 	private void registerSystems(WorldConfiguration config) {
 		Sort.instance().sort(systems);
 		for (ConfigurationElement<? extends BaseSystem> configurationElement : systems) {
-			config.setSystem(configurationElement.item, configurationElement.passive);
+			config.setSystem(configurationElement.item);
 		}
 	}
 
@@ -195,7 +195,7 @@ public class WorldConfigurationBuilder {
 	 * @throws WorldConfigurationException if registering the same class twice.
 	 */
 	public WorldConfigurationBuilder with(int priority, BaseSystem... systems) {
-		addSystems(priority, systems, false);
+		addSystems(priority, systems);
 		return this;
 	}
 
@@ -209,7 +209,7 @@ public class WorldConfigurationBuilder {
 	 * @throws WorldConfigurationException if registering the same class twice.
 	 */
 	public WorldConfigurationBuilder with(BaseSystem... systems) {
-		addSystems(Priority.NORMAL, systems, false);
+		addSystems(Priority.NORMAL, systems);
 		return this;
 	}
 
@@ -242,35 +242,21 @@ public class WorldConfigurationBuilder {
 	 * @throws WorldConfigurationException if type is added more than once.
 	 */
 	public WorldConfigurationBuilder withPassive(int priority, BaseSystem... systems) {
-		addSystems(priority, systems, true);
-		return this;
-	}
-
-	/**
-	 * Register passive systems with normal priority.
-	 * Only one instance of each class is allowed.
-	 * Use {@link #dependsOn} from within plugins whenever possible.
-	 *
-	 * @param systems systems to add, order is preserved.
-	 * @return this
-	 * @throws WorldConfigurationException if type is added more than once.
-	 */
-	public WorldConfigurationBuilder withPassive(BaseSystem... systems) {
-		addSystems(Priority.NORMAL, systems, true);
+		addSystems(priority, systems);
 		return this;
 	}
 
 	/**
 	 * helper to queue systems for registration.
 	 */
-	private void addSystems(int priority, BaseSystem[] systems, boolean passive) {
+	private void addSystems(int priority, BaseSystem[] systems) {
 		for (BaseSystem system : systems) {
 
 			if (containsType(this.systems, system.getClass())) {
 				throw new WorldConfigurationException("System of type " + system.getClass() + " registered twice. Only once allowed.");
 			}
 
-			this.systems.add(new ConfigurationElement<BaseSystem>(system, priority, passive));
+			this.systems.add(new ConfigurationElement<BaseSystem>(system, priority));
 		}
 	}
 

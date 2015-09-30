@@ -109,36 +109,14 @@ public final class WorldConfiguration {
 	 * {@link World#process()}.
 	 *
 	 * @param system the system to add
-	 */
-	public WorldConfiguration setSystem(Class<? extends BaseSystem> system) {
-		return setSystem(system, false);
-	}
-
-	/**
-	 * Adds a system to this world that will be processed by
-	 * {@link World#process()}.
-	 *
-	 * @param system the system to add
 	 * @return the added system
 	 */
-	public WorldConfiguration setSystem(Class<? extends BaseSystem> system, boolean passive) {
+	public WorldConfiguration setSystem(Class<? extends BaseSystem> system) {
 		try {
-			return setSystem(ClassReflection.newInstance(system), passive);
+			return setSystem(ClassReflection.newInstance(system));
 		} catch (ReflectionException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	/**
-	 * Adds a system to this world that will be processed by
-	 * {@link World#process()}.
-	 *
-	 * @param <T>	the system class type
-	 * @param system the system to add
-	 * @return the added system
-	 */
-	public <T extends BaseSystem> WorldConfiguration setSystem(T system) {
-		return setSystem(system, false);
 	}
 
 	/**
@@ -146,12 +124,9 @@ public final class WorldConfiguration {
 	 *
 	 * @param <T>	 the system class type
 	 * @param system  the system to add
-	 * @param passive whether or not this system will be processed by
-	 *				{@link World#process()}
 	 * @return the added system
 	 */
-	public <T extends BaseSystem> WorldConfiguration setSystem(T system, boolean passive) {
-		system.setPassive(passive);
+	public <T extends BaseSystem> WorldConfiguration setSystem(T system) {
 		systems.add(system);
 
 		if (!registered.add(system.getClass())) {

@@ -41,25 +41,9 @@ public class WorldConfigurationBuilderSystemTest {
 	}
 
 	@Test
-	public void should_add_systems_as_active_by_default() {
-		World world = new World(new WorldConfigurationBuilder()
-				.with(new TestEntitySystemA()).build());
-
-		Assert.assertFalse(world.getSystems().get(0).isPassive());
-	}
-
-	@Test
-	public void should_add_passive_systems_as_passive() {
-		World world =  new World(new WorldConfigurationBuilder()
-				.withPassive(new TestEntitySystemA()).build());
-
-		Assert.assertTrue(world.getSystems().get(BASE_SYSTEM_COUNT).isPassive());
-	}
-
-	@Test
 	public void should_not_carry_over_old_systems_to_new_world() {
 		WorldConfigurationBuilder builder = new WorldConfigurationBuilder();
-		World world1 = new World(builder.withPassive(new TestEntitySystemA()).build());
+		World world1 = new World(builder.with(new TestEntitySystemA()).build());
 		World world2 = new World(builder.build());
 		Assert.assertEquals(BASE_SYSTEM_COUNT, world2.getSystems().size());
 	}
