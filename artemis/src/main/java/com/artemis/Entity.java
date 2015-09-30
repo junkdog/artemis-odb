@@ -6,12 +6,19 @@ import java.util.BitSet;
 
 
 /**
- * The entity class.
+ * The entity convenience class.
  * <p>
+ * In artemis-odb, entities are represented by an int for performance reasons.
+ * For convenience, Entity class is also supported.
+ *
+ * Entity instances and ids get recycled. It is not safe to retain a reference
+ * to an Entity after it has been deleted from the world.
+ *
  * Cannot be instantiated outside the framework, you must create new entities
  * using World. The world creates entities via it's entity manager.
  * </p>
  * @author Arni Arent
+ * @author Adrian Papari
  */
 public final class Entity {
 
@@ -57,6 +64,12 @@ public final class Entity {
 		return world.getEntityManager().componentBits(id);
 	}
 
+	/**
+	 * Get entity editor.
+	 *
+	 * You can also create/remove components via {@link ComponentMapper}.
+	 * @return Provides a fast albeit verbose way to perform batch changes to entities.
+	 */
 	public EntityEdit edit() {
 		return world.editPool.obtainEditor(id);
 	}
@@ -82,13 +95,12 @@ public final class Entity {
 	/**
 	 * Retrieves component from this entity.
 	 * <p>
-	 * It will provide good performance. But the recommended way to retrieve
-	 * components from an entity is using the ComponentMapper.
+	 * Minimize usage of this. Use {@link ComponentMapper} instead.
 	 * </p>
 	 * @param type
 	 * 		in order to retrieve the component fast you must provide a
 	 * 		ComponentType instance for the expected component
-	 * @return
+	 * @return component that matches, or {@code null} if none is found
 	 */
 	public Component getComponent(ComponentType type) {
 		return world.getComponentManager().getComponent(id, type);
@@ -97,14 +109,13 @@ public final class Entity {
 	/**
 	 * Slower retrieval of components from this entity.
 	 * <p>
-	 * Minimize usage of this, but is fine to use e.g. when creating new
-	 * entities and setting data in components.
+	 * Minimize usage of this. Use {@link ComponentMapper} instead.
 	 * </p>
 	 * @param <T>
 	 * 		the expected return component class type
 	 * @param type
 	 * 		the expected return component class type
-	 * @return component that matches, or null if none is found
+	 * @return component that matches, or {@code null} if none is found
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends Component> T getComponent(Class<T> type) {
@@ -135,7 +146,7 @@ public final class Entity {
 
 	/**
 	 * Returns the world this entity belongs to.
-	 * @return world of entity
+	 * @return world of entity.
 	 */
 	public World getWorld() {
 		return world;
@@ -148,6 +159,7 @@ public final class Entity {
 		return world.getEntityManager().getIdentity(id);
 	}
 
+	/** id equality */
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
@@ -159,6 +171,7 @@ public final class Entity {
 
 	}
 
+	/** id equality */
 	public boolean equals(Entity o) {
 		return o != null && o.id == id;
 	}
