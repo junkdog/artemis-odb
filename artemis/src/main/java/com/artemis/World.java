@@ -315,6 +315,27 @@ public class World {
 	}
 
 	/**
+	 * Create and return an {@link Entity} wrapping a new or reused entity instance.
+	 * Entity is automatically added to the world.
+	 *
+	 * Use {@link Entity#edit()} to set up your newly created entity.
+	 *
+	 * You can also create entities using:
+	 * - {@link com.artemis.utils.EntityBuilder} Convenient entity creation. Not useful when pooling.
+	 * - {@link com.artemis.Archetype} Fastest, low level, no parameterized components.
+	 * - {@link com.artemis.EntityFactory} Fast, clean and convenient. For fixed composition entities. Requires some setup.
+	 * Best choice for parameterizing pooled components.
+	 *
+	 * @return assigned entity id
+	 */
+	public int create(Archetype archetype) {
+		int entityId = em.create(archetype);
+		cm.addComponents(entityId, archetype);
+		changed.set(entityId);
+		return entityId;
+	}
+
+	/**
 	 * Get a entity having the specified id.
 	 * @param entityId
 	 * 		the entities id

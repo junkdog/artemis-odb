@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import com.artemis.component.ReusedComponent;
 import com.artemis.utils.Bag;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -97,6 +98,18 @@ public class ArchetypeTest {
 	}
 
 	@Test
+	public void create_with_int_id() {
+		World world = new World();
+		Archetype archPooled = new ArchetypeBuilder()
+				.add(ReusedComponent.class)
+				.build(world);
+
+		Assert.assertEquals(0, world.create(archPooled));
+		Assert.assertEquals(1, world.create(archPooled));
+		Assert.assertEquals(2, world.create(archPooled));
+	}
+
+	@Test
 	public void testEntityCreationMod() throws Exception {
 		World world = new World();
 
@@ -119,7 +132,7 @@ public class ArchetypeTest {
 
 	private void archetypeEntity(Archetype arch, int s) {
 		for (int i = 0; s > i; i++) {
-			world.createEntity(arch);
+			world.create(arch);
 		}
 	}
 
