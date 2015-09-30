@@ -349,6 +349,7 @@ public class World {
 	protected void setInvocationStrategy(SystemInvocationStrategy invocationStrategy) {
 		this.invocationStrategy = invocationStrategy;
 		invocationStrategy.setWorld(this);
+		invocationStrategy.initialize();
 	}
 
 	/** Process all non-passive systems.

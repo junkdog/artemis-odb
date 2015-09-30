@@ -10,6 +10,8 @@ public abstract class SystemInvocationStrategy {
 		this.world = world;
 	}
 
+	protected void initialize() {}
+
 	protected final void updateEntityStates() {
 		world.updateEntityStates();
 	}
