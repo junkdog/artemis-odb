@@ -71,12 +71,24 @@ public class ComponentManager extends BaseSystem {
 				});
 	}
 
+	/**
+	 * Create a component of given type by class.
+	 * @param owner entity id
+	 * @param componentClass class of component to instance.
+	 * @return Newly created packed, pooled or basic component.
+	 */
 	protected <T extends Component> T create(int owner, Class<T> componentClass) {
 		ComponentType type = typeFactory.getTypeFor(componentClass);
 		T component = create(owner, type);
 		return component;
 	}
 
+	/**
+	 * Create a component of given type.
+	 * @param owner entity id
+	 * @param type component to create
+	 * @return Newly created packed, pooled or basic component.
+	 */
 	@SuppressWarnings("unchecked")
 	<T extends Component> T create(int owner, ComponentType type) {
 		Class<T> componentClass = (Class<T>)type.getType();
@@ -298,6 +310,9 @@ public class ComponentManager extends BaseSystem {
 		return components;
 	}
 
+   /**
+	 * @return Bag of all generated component types, which identify components without having to use classes.
+	 */
 	public ImmutableBag<ComponentType> getComponentTypes() {
 		return typeFactory.types;
 	}
@@ -369,6 +384,9 @@ public class ComponentManager extends BaseSystem {
 		deletedIds.setSize(0);
 	}
 
+	/**
+	 * @return Factory responsible for tracking all component types.
+	 */
 	public ComponentTypeFactory getTypeFactory() {
 		return typeFactory;
 	}

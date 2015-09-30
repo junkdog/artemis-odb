@@ -7,25 +7,24 @@ import com.artemis.utils.reflect.Constructor;
 /**
  * Identifies components in artemis without having to use classes.
  * <p>
- * This class keeps a list of all generated component types for fast
- * retrieval.
- * </p>
+ * Contains ordinal for a component type, which allows for fast
+ * retrieval of components.
  *
  * @author Arni Arent
+ * @author Adrian Papari
  */
 public class ComponentType {
 	enum Taxonomy {
 		BASIC, POOLED, PACKED
 	}
 
-	
 	/** The class type of the component type. */
 	private final Class<? extends Component> type;
-	/** True if component type is a {@link PackedComponent} */
 	private final Taxonomy taxonomy;
 	
 	boolean packedHasWorldConstructor = false;
-	
+
+	/** Ordinal for fast lookups. */
 	private final int index;
 
 	ComponentType(Class<? extends Component> type, int index) {
@@ -66,11 +65,17 @@ public class ComponentType {
 	protected Taxonomy getTaxonomy() {
 		return taxonomy;
 	}
-	
+
+	/**
+	 * @return {@code true} if of taxonomy packed.
+	 */
 	public boolean isPackedComponent() {
 		return taxonomy == Taxonomy.PACKED;
 	}
-	
+
+	/**
+	 * @return {@code Class} that this type represents.
+	 */
 	public Class<? extends Component> getType() {
 		return type;
 	}

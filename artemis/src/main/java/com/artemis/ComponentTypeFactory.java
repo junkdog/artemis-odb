@@ -5,6 +5,10 @@ import java.util.IdentityHashMap;
 import com.artemis.ComponentType.Taxonomy;
 import com.artemis.utils.Bag;
 
+/**
+ * Tracks all component types in a single world.
+ * @see ComponentType
+ */
 public class ComponentTypeFactory {
 	/**
 	 * Contains all generated component types, newly generated component types
