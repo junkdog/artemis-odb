@@ -9,10 +9,16 @@ import static com.artemis.utils.reflect.ReflectionUtil.implementsObserver;
 
 
 /**
- * Entity system for iterating a entities matching a single Aspect. Likely the
- * most common type of system.
+ * Tracks a subset of entities, but does not implement any sorting or iteration.
+ *
+ * Like {@link BaseEntitySystem}, but uses Entity references instead of int.
+ *
+ * This system exists as a convenience for users migrating from other Artemis
+ * clones or older versions of odb. We recommend using the int systems over
+ * the Entity variants.
  *
  * @author Arni Arent
+ * @author Adrian Papari
  */
 public abstract class EntitySystem extends BaseEntitySystem
 		implements EntitySubscription.SubscriptionListener {
