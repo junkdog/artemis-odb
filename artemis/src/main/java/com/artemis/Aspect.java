@@ -113,6 +113,16 @@ public class Aspect {
 		return true;
 	}
 
+	/**
+	 * Returns an aspect that matches all entities.
+	 *
+	 * @return an aspect that can be matched against entities
+	 */
+	@SuppressWarnings("unchecked")
+	public static final Aspect.Builder all() {
+		return new Builder().all();
+	}
+
 
 	/**
 	 * Returns an aspect where an entity must possess all of the specified
@@ -243,7 +253,6 @@ public class Aspect {
 			for (Class<? extends Component> t : types) {
 				allTypes.add(t);
 			}
-
 			return this;
 		}
 
