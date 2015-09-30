@@ -13,9 +13,10 @@ import java.nio.ByteBuffer;
  * it's the equivalent of a {@link #clone()}.
  * <p>
  *
- * <b>UnsatbleApi:</b> Pending optimization work might result in changes to this interface.
+ * <b>UnstableApi:</b> Pending optimization work might result in changes to this interface.
  */
 @UnstableApi
+@Deprecated
 public abstract class PackedComponent extends Component {
 
 	/**

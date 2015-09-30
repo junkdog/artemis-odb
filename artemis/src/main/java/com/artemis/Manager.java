@@ -10,21 +10,34 @@ import static com.artemis.utils.reflect.ReflectionUtil.implementsObserver;
 
 /**
  * A manager for handling entities in the world.
- * 
+ *
+ * In odb Manager has been absorbed into the {@link BaseSystem} hierarchy.
+ * While Manager is still available we recommend implementing new
+ * managers using IteratingSystem, {@link BaseEntitySystem} with
+ * {@link Aspect#all()}, or {@link BaseSystem} depending on your needs.
+ *
  * @author Arni Arent
- * @author Daan van Yperen
+ * @author Adrian Papari
  */
 public abstract class Manager extends BaseSystem {
 	private int methodFlags;
 
+	/** Called when entity gets added to world. */
 	public void added(Entity e) {
 		throw new RuntimeException("I shouldn't be here...");
 	}
 
+	/** Called when entity gets deleted from world. */
 	public void deleted(Entity e) {
 		throw new RuntimeException("... if it weren't for the tests.");
 	}
 
+	/**
+	 * Set the world this system works on.
+	 *
+	 * @param world
+	 *			the world to set
+	 */
 	@Override
 	protected void setWorld(World world) {
 		super.setWorld(world);
@@ -34,6 +47,7 @@ public abstract class Manager extends BaseSystem {
 			methodFlags |= FLAG_REMOVED;
 	}
 
+	/** Hack to register manager to right subscription */
 	protected void registerManager() {
 		world.getAspectSubscriptionManager()
 				.get(all())
@@ -51,6 +65,7 @@ public abstract class Manager extends BaseSystem {
 	}
 
 	private void added(IntBag entities) {
+		// performance hack, skip if manager lacks implementation of inserted.
 		if ((methodFlags & FLAG_INSERTED) == 0)
 			return;
 
@@ -61,6 +76,7 @@ public abstract class Manager extends BaseSystem {
 	}
 
 	private void deleted(IntBag entities) {
+		// performance hack, skip if manager lacks implementation of removed.
 		if ((methodFlags & FLAG_REMOVED) == 0)
 			return;
 
@@ -70,6 +86,7 @@ public abstract class Manager extends BaseSystem {
 		}
 	}
 
+	/** Managers are not interested in processing. */
 	@Override
 	protected final void processSystem() {}
 }

@@ -42,6 +42,12 @@ public abstract class EntitySystem extends BaseEntitySystem
 		super(aspect);
 	}
 
+	/**
+	 * Set the world this system works on.
+	 *
+	 * @param world
+	 *			the world to set
+	 */
 	@Override
 	protected void setWorld(World world) {
 		super.setWorld(world);
@@ -54,6 +60,7 @@ public abstract class EntitySystem extends BaseEntitySystem
 	@Override
 	public final void inserted(IntBag entities) {
 		shouldSyncEntities = true;
+		// performance hack, skip calls to entities if system lacks implementation of added.
 		if ((methodFlags & FLAG_INSERTED) > 0)
 			super.inserted(entities);
 	}
@@ -66,6 +73,7 @@ public abstract class EntitySystem extends BaseEntitySystem
 	@Override
 	public final void removed(IntBag entities) {
 		shouldSyncEntities = true;
+		// performance hack, skip calls to entities if system lacks implementation of deleted.
 		if ((methodFlags & FLAG_REMOVED) > 0)
 			super.removed(entities);
 	}
