@@ -256,6 +256,9 @@ public class Aspect {
 			return this;
 		}
 
+		/**
+		 * @return new instance of this builder.
+		 */
 		public Builder copy() {
 			Builder b = new Builder();
 			b.allTypes.addAll(allTypes);
@@ -352,6 +355,11 @@ public class Aspect {
 			return this;
 		}
 
+		/**
+		 * Bake an aspect.
+		 * @param world
+		 * @return Instance of Aspect.
+		 */
 		public Aspect build(World world) {
 			ComponentTypeFactory tf = world.getComponentManager().typeFactory;
 			Aspect aspect = new Aspect();
