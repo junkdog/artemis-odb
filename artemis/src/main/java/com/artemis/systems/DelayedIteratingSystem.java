@@ -4,7 +4,7 @@ import com.artemis.*;
 import com.artemis.utils.IntBag;
 
 /**
- * Track cooldown per entity, processing entity when its timer runs out.
+ * Tracks cooldown per entity, processing entity when its timer runs out.
  * <p>
  * An example system would be an ExpirationSystem, that deletes entities after
  * a certain lifetime. Instead of running a system that decrements a timeLeft

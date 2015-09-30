@@ -4,9 +4,7 @@ import com.artemis.*;
 import com.artemis.utils.IntBag;
 
 /**
- * Entity identity iterating system.
- * <p/>
- * System that iterates over {@link EntitySubscription} member entities by
+ * Iterates over {@link EntitySubscription} member entities by
  * entity identity.
  *
  * Use this when you need to process entities matching an {@link Aspect},
