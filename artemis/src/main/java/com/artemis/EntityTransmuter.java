@@ -36,6 +36,8 @@ public final class EntityTransmuter {
 	/**
 	 * Apply on target entity.
 	 *
+	 * Transmuter will add components by replacing and retire pre-existing components.
+	 *
 	 * @param entityId target entity id
 	 */
 	public void transmute(int entityId) {
@@ -49,6 +51,8 @@ public final class EntityTransmuter {
 
 	/**
 	 * Apply on target entity.
+	 *
+	 * Transmuter will add components by replacing and retire pre-existing components.
 	 *
 	 * @param e target entity.
 	 */

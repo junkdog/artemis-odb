@@ -84,7 +84,7 @@ public class ComponentManager extends BaseSystem {
 	}
 
 	/**
-	 * Create a component of given type.
+	 * Create a component of given type. Will replace and retire pre-existing components.
 	 * @param owner entity id
 	 * @param type component to create
 	 * @return Newly created packed, pooled or basic component.
