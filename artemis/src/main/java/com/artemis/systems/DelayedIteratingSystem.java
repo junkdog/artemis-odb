@@ -4,8 +4,7 @@ import com.artemis.*;
 import com.artemis.utils.IntBag;
 
 /**
- * The purpose of this class is to allow systems to execute at varying
- * intervals.
+ * Track cooldown per entity, processing entity when its timer runs out.
  * <p>
  * An example system would be an ExpirationSystem, that deletes entities after
  * a certain lifetime. Instead of running a system that decrements a timeLeft

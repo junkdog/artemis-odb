@@ -3,6 +3,7 @@ package com.artemis.systems;
 import com.artemis.Aspect;
 import com.artemis.BaseEntitySystem;
 
+/** Entity system processed at a certain interval, without iteration implementation. */
 public abstract class IntervalSystem extends BaseEntitySystem {
 	/** Accumulated delta to keep track of interval. */
 	protected float acc;
