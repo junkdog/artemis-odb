@@ -3,9 +3,10 @@ package com.artemis;
 import com.artemis.utils.IntBag;
 
 /**
- * Base entity system for iterating a entities matching a single Aspect.
+ * Tracks a subset of entities, but does not implement any sorting or iteration.
  *
  * @author Arni Arent
+ * @author Adrian Papari
  */
 public abstract class BaseEntitySystem extends BaseSystem
 		implements EntitySubscription.SubscriptionListener {

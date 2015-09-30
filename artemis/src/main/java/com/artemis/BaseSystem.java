@@ -1,5 +1,18 @@
 package com.artemis;
 
+/**
+ * Most basic system.
+ *
+ * Upon calling world.process(), your systems are processed in sequence.
+ *
+ * Flow:
+ * {@link #initialize()} - Initialize your system, on top of the dependency injection.
+ * {@link #begin()} - Called before the entities are processed.
+ * {@link #processSystem()} - Called once per cycle.
+ * {@link #end()} - Called after the entities have been processed.
+ * 
+ * @see @Wire
+ */
 public abstract class BaseSystem {
 	/** The world this system belongs to. */
 	protected World world;
@@ -18,6 +31,14 @@ public abstract class BaseSystem {
 	 */
 	protected void begin() {}
 
+	/**
+	 * Process system.
+	 *
+	 * Does nothing if {@link #checkProcessing()} is false or the system
+	 * is disabled.
+	 *
+	 * @see InvocationStrategy
+	 */
 	public final void process() {
 		if(enabled && checkProcessing()) {
 			begin();
@@ -27,7 +48,7 @@ public abstract class BaseSystem {
 	}
 
 	/**
-	 * Any implementing entity system must implement this method.
+	 * Process the system.
 	 */
 	protected abstract void processSystem();
 
@@ -37,9 +58,16 @@ public abstract class BaseSystem {
 	protected void end() {}
 
 	/**
-	 * Check if the system should be processed.
+	 * Does the system desire processing.
+	 *
+	 * Useful when the system is enabled, but only occasionally
+	 * needs to process.
+	 *
+	 * This only affects processing, and does not affect events
+	 * or subscription lists.
 	 *
 	 * @return true if the system should be processed, false if not.
+	 * @see #isEnabled() both must be true before the system will process.
 	 */
 	@SuppressWarnings("static-method")
 	protected boolean checkProcessing() {
@@ -49,11 +77,14 @@ public abstract class BaseSystem {
 	/**
 	 * Override to implement code that gets executed when systems are
 	 * initialized.
+	 *
+	 * Note that artemis native types like systems, factories and
+	 * component mappers are automatically injected by artemis.
 	 */
 	protected void initialize() {}
 
 	/**
-	 * Returns true if the system is enabled.
+	 * Check if the system is enabled.
 	 *
 	 * @return {@code true} if enabled, otherwise false
 	 */
@@ -62,20 +93,23 @@ public abstract class BaseSystem {
 	}
 
 	/**
-	 * Enabled systems are run during {@link #process()}.
-	 * <p>
+	 * Enabled systems run during {@link #process()}.
+	 *
+	 * This only affects processing, and does not affect events
+	 * or subscription lists.
+	 *
 	 * Systems are enabled by default.
-	 * </p>
 	 *
 	 * @param enabled
 	 *			system will not run when set to false
+	 * @see #checkProcessing() both must be true before the system will process.
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
 
 	/**
-	 * Set the world this manager works on.
+	 * Set the world this system works on.
 	 *
 	 * @param world
 	 *			the world to set
