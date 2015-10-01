@@ -1,6 +1,9 @@
 ## Change Log
 
-#### Version: 1.0.0-SNAPSHOT
+#### Version: 1.1.0-SNAPSHOT
+
+
+#### Version: 1.0.0 - 2015-10-01
 - Serialization: Removed component key integer prefix in json.
   - In case of collisions, adds an integer suffix to the key name.
 - New `ArtemisPlugin` API
