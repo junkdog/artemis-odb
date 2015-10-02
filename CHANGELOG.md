@@ -24,7 +24,7 @@
   - Removed artemis-odb-debug, as it's no longer needed.
 - `Manager` now treated as a system.
   - `Manager` is now part of the `BaseSystem` hierarchy.
-  - EntityObserver supported on all systems.
+  - EntityObserver removed, covered by EntitySubscriptions.
 - Removed deprecated methods and classes
   - Removed `@Mapper`
   - Removed UUID related accessors on Entity and World.
