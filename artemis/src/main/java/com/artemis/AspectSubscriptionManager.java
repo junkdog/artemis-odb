@@ -63,7 +63,7 @@ public class AspectSubscriptionManager extends Manager {
 	 * Two types of listeners:
 	 * {@see EntityObserver} implementations are guaranteed to be called back in order of system registration.
 	 * {@see com.artemis.EntitySubscription.SubscriptionListener}, where order can vary (typically ordinal, except
-	 * for subscriptions created in process, initialize instead of setWorld).
+	 * for subscrip1tions created in process, initialize instead of setWorld).
      *
 	 * {@link com.artemis.EntitySubscription.SubscriptionListener#inserted(IntBag)}
 	 * {@link com.artemis.EntitySubscription.SubscriptionListener#removed(IntBag)}

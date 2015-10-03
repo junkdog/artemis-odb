@@ -3,8 +3,9 @@ package com.artemis.system.iterating;
 import com.artemis.Aspect;
 import com.artemis.Entity;
 import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.systems.IteratingSystem;
 
-public class IntOptimizedSystemAdditional extends EntityProcessingSystem {
+public class IntOptimizedSystemAdditional extends IteratingSystem {
 
 	public IntOptimizedSystemAdditional() {
 		super(Aspect.all());
@@ -24,5 +25,5 @@ public class IntOptimizedSystemAdditional extends EntityProcessingSystem {
 	}
 
 	@Override
-	protected void process(Entity e) {}
+	protected void process(int e) {}
 }

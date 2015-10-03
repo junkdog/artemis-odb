@@ -1,9 +1,6 @@
 package com.artemis.system.iterating;
 
-import com.artemis.Entity;
-import com.artemis.EntitySystem;
-import com.artemis.World;
-import com.artemis.WorldConfiguration;
+import com.artemis.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -19,16 +16,16 @@ public class IntOptimizedSystemTest {
 	
 	@Test
 	public void fully_optimized_entity_system() {
-		Assert.assertEquals(EntitySystem.class, IntOptimizedSystem.class.getSuperclass());
+		Assert.assertEquals(BaseEntitySystem.class, IntOptimizedSystem.class.getSuperclass());
 		
 		Method m = processMethod(IntOptimizedSystem.class);
-		assertEquals(PRIVATE, m.getModifiers() & PRIVATE);
+		assertEquals(m.toString(), PRIVATE, m.getModifiers() & PRIVATE);
 	}
 	
 
 	@Test
 	public void safely_optimized_entity_system() {
-		assertEquals(EntitySystem.class, IntOptimizedSystemSafe.class.getSuperclass());
+		assertEquals(BaseEntitySystem.class, IntOptimizedSystemSafe.class.getSuperclass());
 		
 		Method m = processMethod(IntOptimizedSystemSafe.class);
 		assertEquals(PROTECTED, m.getModifiers() & PROTECTED);
@@ -36,7 +33,7 @@ public class IntOptimizedSystemTest {
 	
 	@Test
 	public void fully_optimized_entity_system_with_additional_references() {
-		Assert.assertEquals(EntitySystem.class, IntOptimizedSystemAdditional.class.getSuperclass());
+		Assert.assertEquals(BaseEntitySystem.class, IntOptimizedSystemAdditional.class.getSuperclass());
 
 		Method m = processMethod(IntOptimizedSystemAdditional.class);
 		assertEquals(PRIVATE, m.getModifiers() & PRIVATE);
@@ -49,7 +46,7 @@ public class IntOptimizedSystemTest {
 
 	private static Method processMethod(Class<?> klazz) {
 		try {
-			return klazz.getDeclaredMethod("process", Entity.class);
+			return klazz.getDeclaredMethod("process", int.class);
 		} catch (SecurityException e) {
 			fail(e.getMessage());
 		} catch (NoSuchMethodException e) {

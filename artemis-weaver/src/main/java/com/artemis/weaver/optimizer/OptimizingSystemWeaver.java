@@ -43,7 +43,7 @@ public class OptimizingSystemWeaver extends ClassVisitor implements Opcodes {
 
 	private boolean isProcessMethod(String name, String desc) {
 		return "process".equals(name) &&
-			("(I;)V".equals(desc) || "(Lcom/artemis/Entity;)V".equals(desc));
+			("(I)V".equals(desc) || "(Lcom/artemis/Entity;)V".equals(desc));
 	}
 
 	@Override

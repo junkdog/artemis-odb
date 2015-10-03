@@ -1,15 +1,14 @@
 package com.artemis.system.iterating;
 
-import com.artemis.Entity;
-import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.systems.IteratingSystem;
 
-public class IntOptimizedSystem extends EntityProcessingSystem {
+public class IntOptimizedSystem extends IteratingSystem {
 
 	public IntOptimizedSystem() {
 		super(null);
 	}
 
 	@Override
-	protected void process(Entity e) {}
+	protected void process(int e) {}
 
 }

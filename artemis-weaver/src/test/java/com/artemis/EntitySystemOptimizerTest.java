@@ -8,6 +8,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.InputStream;
 
+import com.artemis.system.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
@@ -15,10 +16,6 @@ import org.objectweb.asm.Type;
 
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.GlobalConfiguration;
-import com.artemis.system.BeginEndSystem;
-import com.artemis.system.NoBeginEndSystem;
-import com.artemis.system.PoorFellowSystem;
-import com.artemis.system.SafeOptimizeSystem;
 
 @SuppressWarnings("static-method")
 public class EntitySystemOptimizerTest {
@@ -42,13 +39,21 @@ public class EntitySystemOptimizerTest {
 		assertEquals("com/artemis/EntitySystem", meta.superClass);
 		assertEquals(NOT_OPTIMIZABLE, meta.sysetemOptimizable); 
 	}
-	
+
+	@Test
+	public void validate_optimized_iterating_system_test() throws Exception {
+		ClassMetadata meta = Weaver.scan(transform(IteratingPoorFellowSystem.class));
+
+		assertEquals("com/artemis/BaseEntitySystem", meta.superClass);
+		assertEquals(NOT_OPTIMIZABLE, meta.sysetemOptimizable);
+	}
+
 	@Test
 	public void detect_preserve_process_visibility_test() throws Exception {
-		ClassMetadata meta = scan(SafeOptimizeSystem.class);
-		assertEquals(SAFE, meta.sysetemOptimizable); 
+		assertEquals(SAFE, scan(SafeOptimizeSystem.class).sysetemOptimizable);
+		assertEquals(SAFE, scan(IteratingSafeOptimizeSystem.class).sysetemOptimizable);
 	}
-	
+
 	private static ClassMetadata scan(Class<?> klazz) {
 		InputStream classStream = klazz.getResourceAsStream("/" + klazz.getName().replace('.', '/') + ".class");
 		ClassReader cr = Weaver.classReaderFor(classStream);
