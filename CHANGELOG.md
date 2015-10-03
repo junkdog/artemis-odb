@@ -3,6 +3,10 @@
 #### Version: 1.1.0-SNAPSHOT
 
 
+#### Version: 1.0.1 - 2015-10-03
+- **Fix**: Optimized IteratingSystems were only partially rewritten. Crash on ART.
+
+
 #### Version: 1.0.0 - 2015-10-01
 - Serialization: Removed component key integer prefix in json.
   - In case of collisions, adds an integer suffix to the key name.
