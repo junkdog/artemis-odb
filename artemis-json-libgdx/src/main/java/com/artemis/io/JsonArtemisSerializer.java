@@ -50,6 +50,11 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		this.prettyPrint = prettyPrint;
 		return this;
 	}
+	
+	public JsonArtemisSerializer setUsePrototypes(boolean usePrototypes) {
+		json.setUsePrototypes(usePrototypes);
+		return this;
+	}
 
 	@Override
 	public WorldSerializationManager.ArtemisSerializer register(Class<?> type, Json.Serializer serializer) {
