@@ -1,6 +1,7 @@
 ## Change Log
 
 #### Version: 1.1.0-SNAPSHOT
+- Serialization: new setUsePrototypes method, writes default values too.
 
 
 #### Version: 1.0.1 - 2015-10-03
