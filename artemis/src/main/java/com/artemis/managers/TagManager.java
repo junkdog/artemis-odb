@@ -80,6 +80,8 @@ public class TagManager extends BaseSystem {
 	 *			the entity to get tagged
 	 */
 	public void register(String tag, Entity e) {
+		unregister(tag);
+
 		entitiesByTag.put(tag, e);
 		tagsByEntity.put(e, tag);
 		registered.set(e.getId());

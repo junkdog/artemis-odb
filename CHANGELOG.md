@@ -2,6 +2,7 @@
 
 #### Version: 1.1.0-SNAPSHOT
 - Serialization: new setUsePrototypes method, writes default values too.
+- **Fix**: Deleted entities could still linger in the TagManager.
 
 
 #### Version: 1.0.1 - 2015-10-03
