@@ -1,9 +1,9 @@
-## Change Log
+## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 #### Version: 1.1.0-SNAPSHOT
 - `@PooledWeaver` clears Bag, IntBag, all Lists, Sets, Maps in java.util, all
   Arrays and Maps in libgdx. 
-  - Serialization: named entities; like tags, but local to the SaveFileFormat instance.
+- Serialization: named entities; like tags, but local to the SaveFileFormat instance.
   - Register entities using `com.artemis.components.SerializationTag`.
 - Serialization: new setUsePrototypes method, writes default values.
 - **Fix**: Deleted entities could still linger in the TagManager.
