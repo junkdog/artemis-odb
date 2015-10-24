@@ -171,11 +171,13 @@ class ReferenceTracker {
 
 
 	private boolean updateReferenced(Entity e, BitSet referencedIds) {
-		return updateReferenced(e.getId(), referencedIds);
+		return (e != null)
+			? updateReferenced(e.getId(), referencedIds)
+			: false;
 	}
 
 	private boolean updateReferenced(int entityId, BitSet referencedIds) {
-		if (!referencedIds.get(entityId)) {
+		if (entityId > -1 && !referencedIds.get(entityId)) {
 			referencedIds.set(entityId);
 			return true;
 		} else {

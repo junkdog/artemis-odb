@@ -201,6 +201,49 @@ public class JsonWorldSerializationManagerTest {
 		assertNotEquals(holder.entityId, holder2.entityId);
 	}
 
+
+	@Test
+	public void save_load_entity_reference_with_null() {
+		EntityEdit ee1 = world.createEntity().edit();
+		EntityHolder holder = ee1.create(EntityHolder.class);
+		holder.entity = null;
+		holder.entityId = -1;
+
+		EntityEdit ee2 = world.createEntity().edit();
+		EntityHolder holder2 = ee2.create(EntityHolder.class);
+		holder2.entity = ee2.getEntity();
+		holder2.entityId = ee2.getEntityId();
+
+		tags.register("ee1", ee1.getEntity());
+		int entityHolderId = ee1.getEntity().getId();
+
+		tags.register("ee2", ee2.getEntity());
+		int entityHolderId2 = ee2.getEntity().getId();
+
+		world.process();
+
+		String json = save(allEntities);
+
+		ByteArrayInputStream is = new ByteArrayInputStream(
+				json.getBytes(StandardCharsets.UTF_8));
+		manger.load(is, SaveFileFormat.class);
+
+		world.process();
+
+		Entity entityHolder1 = tags.getEntity("ee1");
+		EntityHolder holder1b = entityHolder1.getComponent(EntityHolder.class);
+		assertNotEquals(entityHolder1.getId(), entityHolderId);
+		assertNull(holder1b.entity);
+		assertEquals(-1, holder1b.entityId);
+
+		Entity entityHolder2 = tags.getEntity("ee2");
+		EntityHolder holder2b = entityHolder2.getComponent(EntityHolder.class);
+		assertNotEquals(entityHolder1.getId(), entityHolderId2);
+		assertNotNull(holder2b.entity);
+		assertNotEquals(holder.entity, holder2b.entity);
+		assertNotEquals(holder.entityId, holder2b.entityId);
+	}
+
 	@Test
 	public void save_load_bag_entity_references() {
 		setTags();

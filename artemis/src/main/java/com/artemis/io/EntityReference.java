@@ -41,7 +41,8 @@ class EntityReference {
 			void translate(Component c, Field field, Bag<Entity> translatedIds) {
 				try {
 					int oldId = ((Integer)field.get(c)).intValue();
-					field.set(c, translatedIds.get(oldId).getId());
+					if (oldId != -1)
+						field.set(c, translatedIds.get(oldId).getId());
 				} catch (ReflectionException e) {
 					throw  new RuntimeException(e);
 				}
@@ -63,8 +64,11 @@ class EntityReference {
 		ENTITY {
 			void translate(Component c, Field field, Bag<Entity> translatedIds) {
 				try {
-					int oldId = ((Entity) field.get(c)).getId();
-					field.set(c, translatedIds.get(oldId));
+					Entity e = (Entity) field.get(c);
+					if (e != null) {
+						int oldId = e.getId();
+						field.set(c, translatedIds.get(oldId));
+					}
 				} catch (ReflectionException e) {
 					throw new RuntimeException(e);
 				}
