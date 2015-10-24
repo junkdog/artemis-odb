@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.artemis.Entity;
@@ -22,19 +21,46 @@ public class PooledResetTest {
 	}
 	
 	@Test
-	public void test_primitive_fields_are_reset() {
+	public void test_common_collection_fields_are_reset() {
 		assertEquals(PooledComponent.class, PooledPosition.class.getSuperclass());
 		
 		Entity e = world.createEntity();
-		PooledPosition c = createPosition(e);
-		
+		PooledCollections pc = e.edit().create(PooledCollections.class);
+		pc.setAll();
+
 		world.process();
 		e.deleteFromWorld();
 		world.process();
 		
 		Entity e2 = world.createEntity();
-		PooledPosition c2 = createPosition(e);
+		PooledCollections pc2 = e2.edit().create(PooledCollections.class);
 		
+		assertTrue(pc == pc2);
+		assertEquals(0, pc2.array.size);
+		assertEquals(0, pc2.arrayList.size());
+		assertEquals(0, pc2.bag.size());
+		assertEquals(0, pc2.hashMap.size());
+		assertEquals(0, pc2.hashSet.size());
+		assertEquals(0, pc2.intBag.size());
+		assertEquals(0, pc2.list.size());
+		assertEquals(0, pc2.map.size());
+		assertEquals(0, pc2.objectMap.size);
+	}
+
+	@Test
+	public void test_primitive_fields_are_reset() {
+		assertEquals(PooledComponent.class, PooledCollections.class.getSuperclass());
+
+		Entity e = world.createEntity();
+		PooledPosition c = createPosition(e);
+
+		world.process();
+		e.deleteFromWorld();
+		world.process();
+
+		Entity e2 = world.createEntity();
+		PooledPosition c2 = createPosition(e);
+
 		assertTrue(c == c2);
 	}
 

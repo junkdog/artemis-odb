@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.artemis.component.CountingPooledComponent;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.artemis.component.ReusedComponent;
@@ -14,8 +13,7 @@ import com.artemis.systems.EntityProcessingSystem;
 
 public class WorldPooledComponentTest
 {
-
-	@Test // FIXME, the +1 shouldn't be necessary but there is some delay or something when deleting.
+	@Test
 	public void pooled_component_reuse_with_deleted_entities()
 	{
 		World world = new World(new WorldConfiguration()

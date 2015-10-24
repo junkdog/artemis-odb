@@ -1,9 +1,11 @@
 ## Change Log
 
 #### Version: 1.1.0-SNAPSHOT
-- Serialization: named entities; like tags, but local to the SaveFileFormat instance.
+- `@PooledWeaver` clears Bag, IntBag, all Lists, Sets, Maps in java.util, all
+  Arrays and Maps in libgdx. 
+  - Serialization: named entities; like tags, but local to the SaveFileFormat instance.
   - Register entities using `com.artemis.components.SerializationTag`.
-- Serialization: new setUsePrototypes method, writes default values too.
+- Serialization: new setUsePrototypes method, writes default values.
 - **Fix**: Deleted entities could still linger in the TagManager.
 - **Fix**: Serializing an entity field having a value of `null` or `-1` no longer throws an exception.
 
