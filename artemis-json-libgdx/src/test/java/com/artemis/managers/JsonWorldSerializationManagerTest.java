@@ -3,6 +3,7 @@ package com.artemis.managers;
 import com.artemis.*;
 import com.artemis.annotations.Wire;
 import com.artemis.component.*;
+import com.artemis.components.SerializationTag;
 import com.artemis.io.JsonArtemisSerializer;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
@@ -14,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.*;
 
+@Wire(failOnNull = false)
 public class JsonWorldSerializationManagerTest {
 	private WorldSerializationManager manger;
 	private AspectSubscriptionManager subscriptions;
@@ -21,6 +23,8 @@ public class JsonWorldSerializationManagerTest {
 	private GroupManager groups;
 	private World world;
 	private EntitySubscription allEntities;
+
+	private ComponentMapper<SerializationTag> serializationTagMapper;
 
 	@Before
 	public void setup() {
@@ -115,6 +119,24 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
+	public void serializer_save_load_with_keys() {
+		setKeys();
+
+		String json = save(allEntities);
+
+		deleteAll();
+
+		ByteArrayInputStream is = new ByteArrayInputStream(
+				json.getBytes(StandardCharsets.UTF_8));
+		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		world.process();
+
+		assertEquals(3, allEntities.getEntities().size());
+		assertEquals(2, load.keys().size());
+		assertKeys(load);
+	}
+
+	@Test
 	public void serializer_save_load_with_tags() {
 		setTags();
 
@@ -172,6 +194,28 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
+	public void serializer_save_load_with_groups_and_tags_and_keys() {
+		setKeys();
+		setTags();
+		setGroups();
+
+		String json = save(allEntities);
+
+		deleteAll();
+
+		ByteArrayInputStream is = new ByteArrayInputStream(
+				json.getBytes(StandardCharsets.UTF_8));
+		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		world.process();
+
+		assertEquals(3, allEntities.getEntities().size());
+
+		assertTags();
+		assertGroups();
+		assertKeys(load);
+	}
+
+	@Test
 	public void save_load_entity_references() {
 		setTags();
 
@@ -200,7 +244,6 @@ public class JsonWorldSerializationManagerTest {
 		assertNotEquals(holder.entity, holder2.entity);
 		assertNotEquals(holder.entityId, holder2.entityId);
 	}
-
 
 	@Test
 	public void save_load_entity_reference_with_null() {
@@ -313,10 +356,22 @@ public class JsonWorldSerializationManagerTest {
 		tags.register("tag3", world.getEntity(entities.get(2)));
 	}
 
+	private void setKeys() {
+		IntBag entities = allEntities.getEntities();
+		serializationTagMapper.create(entities.get(0)).tag = "key1";
+		serializationTagMapper.create(entities.get(2)).tag = "key3";
+	}
+
 	private void assertTags() {
 		IntBag entities = allEntities.getEntities();
 		assertNotNull(entities.toString(), tags.getEntity("tag1"));
 		assertNotNull(entities.toString(), tags.getEntity("tag3"));
+	}
+
+	private void assertKeys(SaveFileFormat loaded) {
+		IntBag entities = allEntities.getEntities();
+		assertNotNull(entities.toString(), loaded.get("key1"));
+		assertNotNull(entities.toString(), loaded.get("key3"));
 	}
 
 	private void assertGroups() {

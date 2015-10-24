@@ -1,6 +1,8 @@
 ## Change Log
 
 #### Version: 1.1.0-SNAPSHOT
+- Serialization: named entities; like tags, but local to the SaveFileFormat instance.
+  - Register entities using `com.artemis.components.SerializationTag`.
 - Serialization: new setUsePrototypes method, writes default values too.
 - **Fix**: Deleted entities could still linger in the TagManager.
 - **Fix**: Serializing a component referencing an entityId of -1 or a null Entity fixed.

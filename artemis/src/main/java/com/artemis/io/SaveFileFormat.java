@@ -1,6 +1,7 @@
 package com.artemis.io;
 
 import com.artemis.Component;
+import com.artemis.Entity;
 import com.artemis.EntitySubscription;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
@@ -8,6 +9,7 @@ import com.artemis.utils.IntBag;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>The default save file format. This class can be extended if additional
@@ -33,11 +35,12 @@ import java.util.Map;
  */
 public class SaveFileFormat {
 
-	// all fields are automatically serialized
-
+	// all non-transient fields are automatically serialized
 	public Metadata metadata;
 	public IdentityHashMap<Class<? extends Component>, String> componentIdentifiers;
 	public IntBag entities;
+
+	SerializationKeyTracker tracker;
 
 	public SaveFileFormat(IntBag entities) {
 		this.entities = (entities != null) ? entities : new IntBag();
@@ -64,6 +67,18 @@ public class SaveFileFormat {
 		}
 
 		return lookup;
+	}
+
+	public final Entity get(String key) {
+		return tracker.get(key);
+	}
+
+	public final boolean has(String key) {
+		return tracker.get(key) != null;
+	}
+
+	public final Set<String> keys() {
+		return tracker.keys();
 	}
 
 	public static class Metadata {

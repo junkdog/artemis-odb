@@ -79,8 +79,11 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 	@Override
 	protected <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
+		entitySerializer.preLoad();
 		referenceTracker.inspectTypes(updateLookupMap(is).values());
+
 		T t = json.fromJson(format, is);
+		t.tracker = entitySerializer.keyTracker;
 		referenceTracker.translate(intBagEntitySerializer.getTranslatedIds());
 		return t;
 	}

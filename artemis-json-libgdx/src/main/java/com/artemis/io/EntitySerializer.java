@@ -3,6 +3,7 @@ package com.artemis.io;
 import com.artemis.*;
 import com.artemis.annotations.Transient;
 import com.artemis.annotations.Wire;
+import com.artemis.components.SerializationTag;
 import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
 import com.artemis.utils.Bag;
@@ -30,6 +31,8 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 
 	private boolean isSerializingEntity;
 
+	private ComponentMapper<SerializationTag> saveTagMapper;
+	SerializationKeyTracker keyTracker;
 
 	Map<String, Class<? extends Component>> types = new HashMap<String, Class<? extends Component>>();
 	private IdentityHashMap<Class<? extends Component>, String> lookupMap;
@@ -43,6 +46,10 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		registeredTags = (tagManager != null)
 			? tagManager.getRegisteredTags()
 			: Collections.EMPTY_LIST;
+	}
+
+	void preLoad() {
+		keyTracker = new SerializationKeyTracker();
 	}
 
 	void preWrite(SaveFileFormat save) {
@@ -66,6 +73,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 
 		json.writeObjectStart();
 		writeTag(json, e);
+		writeKeyTag(json, e);
 		writeGroups(json, e);
 
 		json.writeObjectStart("components");
@@ -102,6 +110,14 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		}
 	}
 
+	private void writeKeyTag(Json json, Entity e) {
+		if (saveTagMapper.has(e)) {
+			String key = saveTagMapper.get(e).tag;
+			if (key != null)
+				json.writeValue("key", key);
+		}
+	}
+
 	private void writeGroups(Json json, Entity e) {
 		if (groupManager == null)
 			return;
@@ -134,6 +150,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		Entity e = world.createEntity();
 
 		jsonData = readTag(jsonData, e);
+		jsonData = readKeyTag(jsonData, e);
 		jsonData = readGroups(jsonData, e);
 
 		// when we deserialize a single entity
@@ -179,6 +196,18 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 	private JsonValue readTag(JsonValue jsonData, Entity e) {
 		if ("tag".equals(jsonData.name)) {
 			tagManager.register(jsonData.asString(), e);
+			jsonData = jsonData.next;
+		}
+
+		return jsonData;
+	}
+
+
+	private JsonValue readKeyTag(JsonValue jsonData, Entity e) {
+		if ("key".equals(jsonData.name)) {
+			String key = jsonData.asString();
+			keyTracker.register(key, e);
+			saveTagMapper.create(e).tag = key;
 			jsonData = jsonData.next;
 		}
 

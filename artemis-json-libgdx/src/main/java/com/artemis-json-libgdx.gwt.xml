@@ -3,6 +3,7 @@
 	<inherits name='com.google.gwt.user.User'/>
 	<source path="artemis"/>
 
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.components.SerializationTag"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.Component"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.PooledComponent"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.PackedComponent"/>
