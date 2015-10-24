@@ -3,7 +3,6 @@
 	<inherits name='com.google.gwt.user.User'/>
 	<source path="artemis"/>
 
-	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.components.SerializationTag"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.Component"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.PooledComponent"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.PackedComponent"/>
@@ -15,7 +14,6 @@
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.utils.Bag"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.utils.IntBag"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.manager.TypedEntityFactory"/>
-	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.io.SaveFileFormat"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.io"/>
 
 	<extend-configuration-property name="artemis.reflect.include" value="com.badlogic.gdx.scenes.scene2d" />
@@ -51,7 +49,6 @@
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.utils.Bag"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.utils.IntBag"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.manager.TypedEntityFactory"/>
-	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.io.SaveFileFormat"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.io"/>
 
 </module>

@@ -29,7 +29,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.AspectSubscriptionManager"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.BaseEntitySystem"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.BaseSystem"/>
-    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.components.SerializationTag"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.components"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.PackedComponent"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.PooledComponent"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.annotations.Wire"/>
@@ -44,6 +44,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.systems"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.managers"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.World"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.io"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.Archetype"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.ArtemisPlugin"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.UseInjectionCache"/>

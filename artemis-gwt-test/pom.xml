@@ -125,6 +125,7 @@
 					<extraJvmArgs>-Xms64M -Xmx2500M</extraJvmArgs>
 					<localWorkers>4</localWorkers>
 					<sourceLevel>1.7</sourceLevel>
+					<logLevel>TRACE</logLevel>
 					<draftCompile>true</draftCompile>
 					<testTimeOut>1800</testTimeOut>
 					<strict>true</strict>
