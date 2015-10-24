@@ -1,6 +1,9 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
-#### Version: 1.1.0-SNAPSHOT
+#### Version: 1.2.0-SNAPSHOT
+
+
+#### Version: 1.1.0 - 2015-10-24
 - `@PooledWeaver` clears Bag, IntBag, all Lists, Sets, Maps in java.util, all
   Arrays and Maps in libgdx. 
 - Serialization: named entities; like tags, but local to the SaveFileFormat instance.
