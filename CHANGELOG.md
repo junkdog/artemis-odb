@@ -5,7 +5,7 @@
   - Register entities using `com.artemis.components.SerializationTag`.
 - Serialization: new setUsePrototypes method, writes default values too.
 - **Fix**: Deleted entities could still linger in the TagManager.
-- **Fix**: Serializing a component referencing an entityId of -1 or a null Entity fixed.
+- **Fix**: Serializing an entity field having a value of `null` or `-1` no longer throws.
 
 
 #### Version: 1.0.1 - 2015-10-03
