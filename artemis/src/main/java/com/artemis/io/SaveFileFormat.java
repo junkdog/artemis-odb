@@ -40,7 +40,7 @@ public class SaveFileFormat {
 	public IdentityHashMap<Class<? extends Component>, String> componentIdentifiers;
 	public IntBag entities;
 
-	transient SerializationKeyTracker tracker;
+	transient SerializationKeyTracker tracker = new SerializationKeyTracker();
 
 	public SaveFileFormat(IntBag entities) {
 		this.entities = (entities != null) ? entities : new IntBag();

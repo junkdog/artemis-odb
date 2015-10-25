@@ -6,6 +6,7 @@ import com.artemis.utils.IntBag;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.artemis.Aspect.all;
 import static org.junit.Assert.assertEquals;
 
 public class AspectSubscriptionManagerTest {
@@ -25,15 +26,49 @@ public class AspectSubscriptionManagerTest {
 	}
 
 	@Test
+	public void deleted_entities_not_in_new_subscriptions() {
+		world = new World(new WorldConfiguration()
+			.setSystem(new BaseSystem() {
+				boolean hasRun;
+				@Override
+				protected void processSystem() {
+					if (hasRun)
+						return;
+
+					IntBag original = world.getAspectSubscriptionManager()
+						.get(all())
+						.getEntities();
+
+					assertEquals(1, original.size());
+
+					for (int i = 0; i < original.size(); i++) {
+						world.delete(original.get(i));
+					}
+
+					hasRun = true;
+				}
+
+
+			}));
+
+		entity(ComponentX.class);
+		world.process();
+
+		AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
+		IntBag empty = asm.get(all(ComponentX.class)).getEntities();
+		assertEquals(0, empty.size());
+	}
+
+	@Test
 	public void creating_subscriptions_at_any_time() {
 		AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
-		EntitySubscription subscription1 = asm.get(Aspect.all(ComponentY.class));
+		EntitySubscription subscription1 = asm.get(all(ComponentY.class));
 
 		entity(ComponentX.class, ComponentY.class);
 
 		world.process();
 
-		EntitySubscription subscription2 = asm.get(Aspect.all(ComponentX.class));
+		EntitySubscription subscription2 = asm.get(all(ComponentX.class));
 
 		assertEquals(1, subscription1.getEntities().size());
 		assertEquals(1, subscription2.getEntities().size());
@@ -43,7 +78,7 @@ public class AspectSubscriptionManagerTest {
 	public void entity_change_events_cleared() {
 		world = new World(new WorldConfiguration().setSystem(new BootstrappingManager()));
 		AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
-		EntitySubscription sub = asm.get(Aspect.all(ComponentX.class));
+		EntitySubscription sub = asm.get(all(ComponentX.class));
 		SubListener listener = new SubListener();
 		sub.addSubscriptionListener(listener);
 

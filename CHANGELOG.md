@@ -2,6 +2,8 @@
 
 #### Version: 1.2.0-SNAPSHOT
 
+#### Version: 1.1.1 - 2015-10-25
+- **Fix**: New entity subscriptions could end up with an initial batch of dead entities.
 
 #### Version: 1.1.0 - 2015-10-24
 - `@PooledWeaver` clears Bag, IntBag, all Lists, Sets, Maps in java.util, all

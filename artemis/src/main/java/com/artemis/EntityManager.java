@@ -215,7 +215,7 @@ public class EntityManager extends BaseSystem {
 	}
 
 	/**
-	 * Synchronizes subscription with {@link World} state.
+	 * Synchronizes new subscriptions with {@link World} state.
 	 *
 	 * @param es entity subscription to update.
 	 */
@@ -227,7 +227,7 @@ public class EntityManager extends BaseSystem {
 
 		for (int i = 0; i < entities.size(); i++) {
 			Entity e = entities.get(i);
-			if (e != null)
+			if (e != null && isActive(i))
 				es.check(e.getId());
 		}
 
