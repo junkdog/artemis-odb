@@ -81,7 +81,7 @@ public class TagManager extends BaseSystem {
 	 */
 	public void register(String tag, Entity e) {
 		unregister(tag);
-		if(getTag(e) != null) {
+		if (getTag(e) != null) {
 			unregister(getTag(e));
 		}
 
