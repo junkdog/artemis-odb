@@ -1,6 +1,9 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 #### Version: 1.2.0-SNAPSHOT
+
+
+#### Version: 1.1.2 - 2015-10-27
 - **Fix**: entities having more than one tag.
 
 
