@@ -14,8 +14,7 @@ import com.artemis.systems.EntityProcessingSystem;
 public class WorldPooledComponentTest
 {
 	@Test
-	public void pooled_component_reuse_with_deleted_entities()
-	{
+	public void pooled_component_reuse_with_deleted_entities() {
 		World world = new World(new WorldConfiguration()
 				.setSystem(new SystemComponentEntityRemover()));
 
@@ -23,8 +22,7 @@ public class WorldPooledComponentTest
 		assertEquals("Contents: " + hashes, 3, hashes.size());
 	}
 
-	private Set<Integer> runWorld(World world)
-	{
+	private Set<Integer> runWorld(World world) {
 		Set<Integer> hashes = new HashSet<Integer>();
 		hashes.add(createEntity(world));
 		hashes.add(createEntity(world));
@@ -58,7 +56,7 @@ public class WorldPooledComponentTest
 
 		assertEquals(cpc1, e.edit().create(CountingPooledComponent.class));
 	}
-	
+
 	private int createEntity(World world)
 	{
 		Entity e = world.createEntity();

@@ -1,6 +1,7 @@
 package com.artemis.component;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Assert;
@@ -45,6 +46,25 @@ public class PooledResetTest {
 		assertEquals(0, pc2.list.size());
 		assertEquals(0, pc2.map.size());
 		assertEquals(0, pc2.objectMap.size);
+	}
+
+	@Test
+	public void test_string_fields_are_reset() {
+		assertEquals(PooledComponent.class, PooledString.class.getSuperclass());
+
+		Entity e = world.createEntity();
+		PooledString ps = e.edit().create(PooledString.class);
+		ps.s = "i'm instanced";
+
+		world.process();
+		e.deleteFromWorld();
+		world.process();
+
+		Entity e2 = world.createEntity();
+		PooledString ps2 = e2.edit().create(PooledString.class);
+
+		assertTrue(ps == ps2);
+		assertNull(ps.s);
 	}
 
 	@Test
