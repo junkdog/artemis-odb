@@ -29,12 +29,7 @@ final class EntityEditPool {
 		pendingDeletion.set(entityId);
 
 		if (editedIds.get(entityId)) {
-			EntityEdit edit = findEntityEdit(entityId, true);
-
-			em.updateCompositionIdentity(edit);
-			pool.add(edit);
-
-			editedIds.set(entityId, false);
+			processAndRemove(entityId);
 		}
 	}
 
