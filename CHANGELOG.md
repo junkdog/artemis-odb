@@ -2,6 +2,7 @@
 
 #### Version: 1.2.0-SNAPSHOT
 - Deprecated `EntityEdit#deleteEntity`, use `World#delete` or `Entity#deleteFromWorld` instead.
+- **Fix**: `@Wire` registered classes would silently fail when not registered.
 - **Fix**: Woven pooled components didn't null strings on reset.
 - **Fix**: EntityTransmuter cause entities to lose any pending deletes.
 
