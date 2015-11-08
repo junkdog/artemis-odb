@@ -36,7 +36,22 @@ public class EntityTransmuterTest {
 			.remove(ReusedComponent.class)
 			.build();
 	}
-	
+
+	@Test
+	public void transmute_deleted_entity_does_not_cancel_delete() {
+		EntityManager em = world.getEntityManager();
+		int id = world.create();
+
+		world.process();
+		assertTrue(em.isActive(id));
+
+		world.delete(id);
+		transmuter3.transmute(id);
+
+		world.process();
+		assertFalse(em.isActive(id));
+	}
+
 	@Test
 	public void transmuting_entities() {
 		Entity e1 = createEntity(ComponentY.class, ReusedComponent.class);
