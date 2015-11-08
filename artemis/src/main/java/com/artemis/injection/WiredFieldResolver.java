@@ -24,9 +24,7 @@ public class WiredFieldResolver implements FieldResolver, UseInjectionCache {
 	}
 
 	@Override
-	public void initialize(World world) {
-
-	}
+	public void initialize(World world) {}
 
 	@Override
 	public Object resolve(Class<?> fieldType, Field field) {
@@ -41,7 +39,7 @@ public class WiredFieldResolver implements FieldResolver, UseInjectionCache {
 				}
 
 				if (!pojos.containsKey(key) && cachedField.failOnNull) {
-					String err = format("Not registered: %s=%s", key, fieldType);
+					String err = "Not registered: " + key + "=" + fieldType;
 					throw new MundaneWireException(err);
 				}
 
