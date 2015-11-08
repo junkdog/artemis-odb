@@ -1,9 +1,5 @@
 package com.artemis;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,6 +9,8 @@ import com.artemis.component.ComponentY;
 import com.artemis.managers.TagManager;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.systems.VoidEntitySystem;
+
+import static org.junit.Assert.*;
 
 public class WireTest {
 	
@@ -52,7 +50,59 @@ public class WireTest {
 		
 		world.process();
 	}
-	
+
+	@Test
+	public void inject_custom_type() {
+		CustomInjectedManager injected = new CustomInjectedManager();
+		InjectMe injectMe = new InjectMe();
+
+		WorldConfiguration config = new WorldConfiguration()
+			.setSystem(injected)
+			.register(injectMe);
+
+		World w = new World(config);
+		assertSame(injectMe, injected.injectMe);
+		assertNull(injected.nullInjectMe);
+	}
+
+	@Test(expected = MundaneWireException.class)
+	public void inject_custom_type_not_registered() {
+		CustomInjectedManager injected = new CustomInjectedManager();
+		InjectMe injectMe = new InjectMe();
+
+		WorldConfiguration config = new WorldConfiguration()
+			.setSystem(injected);
+
+		World w = new World(config);
+		fail("expected exception");
+	}
+
+	@Test
+	public void inject_named_custom_type() {
+		CustomNamedInjectedManager injected = new CustomNamedInjectedManager();
+		InjectMe injectMe = new InjectMe();
+
+		WorldConfiguration config = new WorldConfiguration()
+			.setSystem(injected)
+			.register("hi", injectMe);
+
+		World w = new World(config);
+		assertSame(injectMe, injected.injectMe);
+		assertNull(injected.nullInjectMe);
+	}
+
+	@Test(expected = MundaneWireException.class)
+	public void inject_named_custom_type_not_registered() {
+		CustomNamedInjectedManager injected = new CustomNamedInjectedManager();
+		InjectMe injectMe = new InjectMe();
+
+		WorldConfiguration config = new WorldConfiguration()
+			.setSystem(injected);
+
+		World w = new World(config);
+		fail("expected exception");
+	}
+
 	@Test
 	public void systems_support_wire_annotation() {
 		assertNotNull(mappedSystem.x);
@@ -307,4 +357,16 @@ public class WireTest {
 		@SuppressWarnings("unused")
 		private FailingSystem fail;
 	}
+
+	private static class CustomInjectedManager extends Manager {
+		@Wire InjectMe injectMe;
+		InjectMe nullInjectMe;
+	}
+
+	private static class CustomNamedInjectedManager extends Manager {
+		@Wire(name = "hi") InjectMe injectMe;
+		InjectMe nullInjectMe;
+	}
+
+	public static class InjectMe {}
 }
