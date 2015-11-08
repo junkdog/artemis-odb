@@ -35,6 +35,8 @@ public class ComponentManager extends BaseSystem {
 	private final ComponentPool pooledComponents;
 	
 	private int highestSeenEntityId;
+
+	private Bag<ComponentMapper> componentMappers = new Bag<ComponentMapper>();
 	
 	protected final ComponentTypeFactory typeFactory;
 
@@ -150,14 +152,22 @@ public class ComponentManager extends BaseSystem {
 		}
 	}
 
-	protected BitSet getPackedComponentOwners(ComponentType type)
-	{
+	protected BitSet getPackedComponentOwners(ComponentType type) {
 		BitSet owners = packedComponentOwners.safeGet(type.getIndex());
 		if (owners == null) {
 			owners = new BitSet();
 			packedComponentOwners.set(type.getIndex(), owners);
 		}
 		return owners;
+	}
+
+	<T extends Component> ComponentMapper<T> getMapper(Class<T> mapper) {
+		int index = typeFactory.getIndexFor(mapper);
+		if (componentMappers.safeGet(index) == null) {
+			componentMappers.set(index, ComponentMapper.getFor(mapper, world));
+		}
+
+		return componentMappers.get(index);
 	}
 
 	@SuppressWarnings("unchecked")

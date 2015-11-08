@@ -50,6 +50,16 @@ public class ComponentMapperTest {
 	}
 
 	@Test
+	public void mappers_are_per_type_per_world() {
+		World w1 = new World();
+		World w2 = new World();
+
+		assertNotSame(w1.getMapper(ComponentX.class), w2.getMapper(ComponentX.class));
+		assertNotSame(w1.getMapper(ComponentX.class), w1.getMapper(ComponentY.class));
+		assertSame(w1.getMapper(ComponentX.class), w1.getMapper(ComponentX.class));
+	}
+
+	@Test
 	public void create_if_exists_should_recycle_existing_component() {
 
 		@Wire(injectInherited = true)

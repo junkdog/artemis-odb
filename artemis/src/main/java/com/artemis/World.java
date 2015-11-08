@@ -432,7 +432,7 @@ public class World {
 	 * @return mapper for specified component type
 	 */
 	public <T extends Component> ComponentMapper<T> getMapper(Class<T> type) {
-		return BasicComponentMapper.getFor(type, this);
+		return cm.getMapper(type);
 	}
 
 	/**
