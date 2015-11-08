@@ -141,7 +141,7 @@ public final class Entity {
 	 * entity scheduled for deletion will likely throw exceptions.
 	 */
 	public void deleteFromWorld() {
-		edit().deleteEntity();
+		world.delete(id);
 	}
 
 	/**

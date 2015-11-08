@@ -28,7 +28,6 @@ public final class EntityEdit {
 	int entityId;
 	private ComponentManager cm;
 	final BitSet componentBits;
-	boolean scheduledDeletion;
 
 	EntityEdit(World world) {
 		cm = world.getComponentManager();
@@ -36,12 +35,15 @@ public final class EntityEdit {
 	}
 
 	/**
-	 * Delete the entity from the world. The entity is considered to be
+	 * <p>Delete the entity from the world. The entity is considered to be
 	 * in a final state once invoked; adding or removing components from an
-	 * entity scheduled for deletion will likely throw exceptions.
+	 * entity scheduled for deletion will likely throw exceptions.</p>
+	 *
+	 * @deprecated Use {@link World#delete(int)} and {@link Entity#deleteFromWorld()} instead.
 	 */
+	@Deprecated
 	public void deleteEntity() {
-		scheduledDeletion = true;
+		cm.getWorld().delete(entityId);
 	}
 
 	/**

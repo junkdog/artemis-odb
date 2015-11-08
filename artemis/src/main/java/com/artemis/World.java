@@ -265,7 +265,7 @@ public class World {
 	 * @see #delete(int) recommended alternative.
 	 */
 	public void deleteEntity(Entity e) {
-		e.edit().deleteEntity();
+		delete(e.id);
 	}
 
 	/**
@@ -279,7 +279,7 @@ public class World {
 	 * 		the entity to delete
 	 */
 	public void delete(int entityId) {
-		deleteEntity(em.getEntity(entityId));
+		editPool.delete(entityId);
 	}
 
 	/**

@@ -53,8 +53,10 @@ public class Issue357SystemTest {
 
 	@Test
 	public void test_two_systems_in_world_delete_before_process() throws Exception {
-		World world = new World(new WorldConfiguration().setSystem(TestSystemWithoutDelete.class)
-				.setSystem(AnyOldeBaseSystem.class));
+		World world = new World(new WorldConfiguration()
+			.setSystem(TestSystemWithoutDelete.class)
+			.setSystem(AnyOldeBaseSystem.class));
+
 		Entity entity = world.createEntity();
 		entity.edit().create(TestComponent.class);
 		entity.deleteFromWorld();

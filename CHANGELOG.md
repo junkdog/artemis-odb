@@ -2,6 +2,7 @@
 
 #### Version: 1.2.0-SNAPSHOT
 - **Fix**: Woven pooled components didn't null strings on reset.
+- **Fix**: EntityTransmuter cause entities to lose any pending deletes.
 
 
 #### Version: 1.1.2 - 2015-10-27

@@ -12,13 +12,34 @@ final class EntityEditPool {
 	private WildBag<EntityEdit> edited;
 	private WildBag<EntityEdit> alternateEdited;
 	private final BitSet editedIds;
-	
+
+	private final BitSet pendingDeletion;
+
 	EntityEditPool(EntityManager entityManager) {
 		em = entityManager;
 		
 		edited = new WildBag<EntityEdit>();
 		alternateEdited = new WildBag<EntityEdit>();
 		editedIds = new BitSet();
+
+		pendingDeletion = new BitSet();
+	}
+
+	void delete(int entityId) {
+		pendingDeletion.set(entityId);
+
+		if (editedIds.get(entityId)) {
+			EntityEdit edit = findEntityEdit(entityId, true);
+
+			em.updateCompositionIdentity(edit);
+			pool.add(edit);
+
+			editedIds.set(entityId, false);
+		}
+	}
+
+	boolean isPendingDeletion(int entityId) {
+		return pendingDeletion.get(entityId);
 	}
 	
 	boolean isEdited(int entityId) {
@@ -26,9 +47,12 @@ final class EntityEditPool {
 	}
 
 	void processAndRemove(int entityId) {
-		editedIds.set(entityId, false);
 		EntityEdit edit = findEntityEdit(entityId, true);
 		em.updateCompositionIdentity(edit);
+
+		pool.add(edit);
+
+		editedIds.set(entityId, false);
 	}
 
 
@@ -66,7 +90,6 @@ final class EntityEditPool {
 		} else {
 			EntityEdit edit = pool.removeLast();
 			edit.componentBits.clear();
-			edit.scheduledDeletion = false;
 			return edit;
 		}
 	}
@@ -86,7 +109,7 @@ final class EntityEditPool {
 			if (edit.entityId != entityId)
 				continue;
 
-			return remove ? edited.remove(i) : edit;
+			return (remove) ? edited.remove(i) : edit;
 		}
 		
 		throw new RuntimeException();
@@ -94,7 +117,7 @@ final class EntityEditPool {
 
 	boolean processEntities() {
 		int size = edited.size();
-		if (size == 0)
+		if (size == 0 && pendingDeletion.isEmpty())
 			return false;
 		
 		Object[] data = edited.getData();
@@ -103,23 +126,18 @@ final class EntityEditPool {
 		swapEditBags();
 		
 		World w = em.world;
+
+		w.deleted.or(pendingDeletion);
+		pendingDeletion.clear();
 		for (int i = 0; size > i; i++) {
 			EntityEdit edit = (EntityEdit)data[i];
 			em.updateCompositionIdentity(edit);
-			addToPerformer(w, edit);
-			
+			w.changed.set(edit.entityId);
+
 			pool.add(edit);
 		}
-		
-		return true;
-	}
 
-	private void addToPerformer(World w, EntityEdit edit) {
-		if (edit.scheduledDeletion) {
-			w.deleted.set(edit.entityId);
-		} else {
-			w.changed.set(edit.entityId);
-		}
+		return true;
 	}
 
 	private void swapEditBags() {

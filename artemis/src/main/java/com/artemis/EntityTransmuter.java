@@ -34,15 +34,18 @@ public final class EntityTransmuter {
 	}
 
 	/**
-	 * Apply on target entity.
+	 * <p>Apply on target entity. Does nothing if entity has been scheduled for
+	 * deletion.</p>
 	 *
-	 * Transmuter will add components by replacing and retire pre-existing components.
+	 * <p>Transmuter will add components by replacing and retire pre-existing components.</p>
 	 *
 	 * @param entityId target entity id
 	 */
 	public void transmute(int entityId) {
-		TransmuteOperation operation = getOperation(entityId);
+		if (world.editPool.isPendingDeletion(entityId))
+			return;
 
+		TransmuteOperation operation = getOperation(entityId);
 		operation.perform(entityId, world.getComponentManager());
 		world.getEntityManager().setIdentity(entityId, operation.compositionId);
 
