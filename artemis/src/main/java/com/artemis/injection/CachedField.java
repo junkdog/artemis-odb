@@ -14,10 +14,11 @@ import com.artemis.utils.reflect.Field;
  * @author Snorre E. Brekke
  */
 public class CachedField {
-    public CachedField(Field field, WireType wireType, String name) {
+    public CachedField(Field field, WireType wireType, String name, boolean failOnNull) {
         this.field = field;
         this.wireType = wireType;
         this.name = name;
+	    this.failOnNull = failOnNull;
     }
 
     /**
@@ -37,4 +38,7 @@ public class CachedField {
      * {@link com.artemis.annotations.Wire#name()}.
      */
     public final String name;
+
+
+	public final boolean failOnNull;
 }

@@ -1,14 +1,15 @@
 package com.artemis.injection;
 
-import com.artemis.annotations.SkipWire;
-
 /**
- * Enum used by {@link ClassType} to indicate if a class or field is annotated with {@link com.artemis.annotations.Wire}.
+ * <p>Enum used by {@link ClassType} to indicate if a class or field is annotated
+ * with {@link com.artemis.annotations.Wire}.</p>
+ *
  * @author Snorre E. Brekke
  */
 public enum WireType {
     /**
-     * Indicates that a class is (implicitly or explicitly) annotated with {@link com.artemis.annotations.Wire}.
+     * Indicates that a class is (implicitly or explicitly) annotated
+     * with {@link com.artemis.annotations.Wire}.
      */
     WIRE,
     /**

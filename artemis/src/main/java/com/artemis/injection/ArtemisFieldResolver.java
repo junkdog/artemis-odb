@@ -12,7 +12,7 @@ import java.util.Map;
 
 /**
  * Can resolve {@link com.artemis.ComponentMapper}, {@link com.artemis.BaseSystem} and
- * {@link com.artemis.Manager} types registerd in the {@link World}
+ * {@link com.artemis.Manager} types registered in the {@link World}
  *
  * @author Snorre E. Brekke
  */

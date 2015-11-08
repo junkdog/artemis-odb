@@ -1,9 +1,12 @@
 package com.artemis.injection;
 
+import com.artemis.MundaneWireException;
 import com.artemis.World;
 import com.artemis.utils.reflect.Field;
 
 import java.util.Map;
+
+import static java.lang.String.format;
 
 /**
  * Can inject arbitrary fields annotated with {@link com.artemis.annotations.Wire},
@@ -37,7 +40,12 @@ public class WiredFieldResolver implements FieldResolver, UseInjectionCache {
                     key = field.getType().getName();
                 }
 
-                return pojos.get(key);
+	            if (!pojos.containsKey(key) && cachedField.failOnNull) {
+		            String err = format("Not registered: %s=%s", key, fieldType);
+		            throw new MundaneWireException(err);
+	            }
+
+	            return pojos.get(key);
             }
         }
         return null;

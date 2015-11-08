@@ -93,11 +93,11 @@ public class InjectionCache {
 		if (cachedField == null) {
 			if (field.isAnnotationPresent(Wire.class)) {
 				final Wire wire = field.getAnnotation(Wire.class);
-				cachedField = new CachedField(field, WireType.WIRE, wire.name());
+				cachedField = new CachedField(field, WireType.WIRE, wire.name(), wire.failOnNull());
 			} else if (field.isAnnotationPresent(SkipWire.class)) {
-				cachedField = new CachedField(field, WireType.SKIPWIRE, null);
+				cachedField = new CachedField(field, WireType.SKIPWIRE, null, false);
 			} else {
-				cachedField = new CachedField(field, WireType.IGNORED, null);
+				cachedField = new CachedField(field, WireType.IGNORED, null, false);
 			}
 			namedWireCache.put(field, cachedField);
 		}
