@@ -15,44 +15,44 @@ import static java.lang.String.format;
  * @author Snorre E. Brekke
  */
 public class WiredFieldResolver implements FieldResolver, UseInjectionCache {
-    private InjectionCache cache;
+	private InjectionCache cache;
 
-    private Map<String, Object> pojos;
+	private Map<String, Object> pojos;
 
-    public WiredFieldResolver(Map<String, Object> pojos) {
-        this.pojos = pojos;
-    }
+	public WiredFieldResolver(Map<String, Object> pojos) {
+		this.pojos = pojos;
+	}
 
-    @Override
-    public void initialize(World world) {
+	@Override
+	public void initialize(World world) {
 
-    }
+	}
 
-    @Override
-    public Object resolve(Class<?> fieldType, Field field) {
-        ClassType injectionType = cache.getFieldClassType(fieldType);
-        CachedField cachedField = cache.getCachedField(field);
+	@Override
+	public Object resolve(Class<?> fieldType, Field field) {
+		ClassType injectionType = cache.getFieldClassType(fieldType);
+		CachedField cachedField = cache.getCachedField(field);
 
-        if (injectionType == ClassType.CUSTOM) {
-            if (cachedField.wireType == WireType.WIRE) {
-                String key = cachedField.name;
-                if ("".equals(key)) {
-                    key = field.getType().getName();
-                }
+		if (injectionType == ClassType.CUSTOM) {
+			if (cachedField.wireType == WireType.WIRE) {
+				String key = cachedField.name;
+				if ("".equals(key)) {
+					key = field.getType().getName();
+				}
 
-	            if (!pojos.containsKey(key) && cachedField.failOnNull) {
-		            String err = format("Not registered: %s=%s", key, fieldType);
-		            throw new MundaneWireException(err);
-	            }
+				if (!pojos.containsKey(key) && cachedField.failOnNull) {
+					String err = format("Not registered: %s=%s", key, fieldType);
+					throw new MundaneWireException(err);
+				}
 
-	            return pojos.get(key);
-            }
-        }
-        return null;
-    }
+				return pojos.get(key);
+			}
+		}
+		return null;
+	}
 
-    @Override
-    public void setCache(InjectionCache cache) {
-        this.cache = cache;
-    }
+	@Override
+	public void setCache(InjectionCache cache) {
+		this.cache = cache;
+	}
 }

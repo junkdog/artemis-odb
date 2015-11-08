@@ -18,54 +18,54 @@ import java.util.Map;
  */
 public class ArtemisFieldResolver implements FieldResolver, UseInjectionCache {
 
-    private World world;
-    private InjectionCache cache;
+	private World world;
+	private InjectionCache cache;
 
-    private Map<Class<?>, Class<?>> systems;
+	private Map<Class<?>, Class<?>> systems;
 
-    public ArtemisFieldResolver() {
-        systems = new IdentityHashMap<Class<?>, Class<?>>();
-    }
+	public ArtemisFieldResolver() {
+		systems = new IdentityHashMap<Class<?>, Class<?>>();
+	}
 
-    @Override
-    public void initialize(World world) {
-        this.world = world;
+	@Override
+	public void initialize(World world) {
+		this.world = world;
 
-        for (BaseSystem es : world.getSystems()) {
-            Class<?> origin = es.getClass();
-            Class<?> clazz = origin;
-            do {
-                systems.put(clazz, origin);
-            } while ((clazz = clazz.getSuperclass()) != Object.class);
-        }
-    }
+		for (BaseSystem es : world.getSystems()) {
+			Class<?> origin = es.getClass();
+			Class<?> clazz = origin;
+			do {
+				systems.put(clazz, origin);
+			} while ((clazz = clazz.getSuperclass()) != Object.class);
+		}
+	}
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public Object resolve(Class<?> fieldType, Field field) {
-        ClassType injectionType = cache.getFieldClassType(fieldType);
-        switch (injectionType) {
-            case MAPPER:
-                return getComponentMapper(field);
-            case SYSTEM:
-                return world.getSystem((Class<BaseSystem>) systems.get(fieldType));
-            case FACTORY:
-                return world.createFactory(fieldType);
-            default:
-                return null;
+	@Override
+	@SuppressWarnings("unchecked")
+	public Object resolve(Class<?> fieldType, Field field) {
+		ClassType injectionType = cache.getFieldClassType(fieldType);
+		switch (injectionType) {
+			case MAPPER:
+				return getComponentMapper(field);
+			case SYSTEM:
+				return world.getSystem((Class<BaseSystem>) systems.get(fieldType));
+			case FACTORY:
+				return world.createFactory(fieldType);
+			default:
+				return null;
 
-        }
-    }
+		}
+	}
 
-    @SuppressWarnings("unchecked")
-    private ComponentMapper<?> getComponentMapper(Field field) {
-        Class<?> mapperType = cache.getGenericType(field);
-        return world.getMapper((Class<? extends Component>) mapperType);
+	@SuppressWarnings("unchecked")
+	private ComponentMapper<?> getComponentMapper(Field field) {
+		Class<?> mapperType = cache.getGenericType(field);
+		return world.getMapper((Class<? extends Component>) mapperType);
 
-    }
+	}
 
-    @Override
-    public void setCache(InjectionCache cache) {
-        this.cache = cache;
-    }
+	@Override
+	public void setCache(InjectionCache cache) {
+		this.cache = cache;
+	}
 }

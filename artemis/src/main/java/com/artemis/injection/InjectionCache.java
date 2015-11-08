@@ -3,7 +3,6 @@ package com.artemis.injection;
 import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
 import com.artemis.EntityFactory;
-import com.artemis.Manager;
 import com.artemis.annotations.SkipWire;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.reflect.ClassReflection;
