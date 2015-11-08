@@ -36,7 +36,7 @@ public class ResetMethodVisitor extends MethodVisitor implements Opcodes {
 	public void visitCode() {
 		mv.visitCode();
 		for (FieldDescriptor field : instanceFields(meta)) {
-			if (sizeOf(field) > 0) { // if 0 then field is a complex type
+			if (isZeroable(field)) {
 				resetField(field);
 			} else if (mapSetsListsInterfaces.matcher(field.desc).find()) {
 				clearCollection(field, INVOKEINTERFACE);
@@ -50,6 +50,11 @@ public class ResetMethodVisitor extends MethodVisitor implements Opcodes {
 		return mapSetsLists.matcher(f.desc).find()
 			|| intBags.matcher(f.desc).find()
 			|| libgdxCollections.matcher(f.desc).find();
+	}
+
+	private boolean isZeroable(FieldDescriptor f) {
+		 // primitive fields reports size > 0
+		return sizeOf(f) > 0 || "Ljava/lang/String;".equals(f.desc);
 	}
 
 	private void clearCollection(FieldDescriptor field, int invoke) {
@@ -81,7 +86,9 @@ public class ResetMethodVisitor extends MethodVisitor implements Opcodes {
 			return FCONST_0;
 		if ("D".equals(field.desc))
 			return DCONST_0;
-		else
+		if ("Ljava/lang/String;".equals(field.desc))
 			return ACONST_NULL;
+
+		throw new RuntimeException(field.toString());
 	}
 }

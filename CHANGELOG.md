@@ -1,6 +1,7 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 #### Version: 1.2.0-SNAPSHOT
+- **Fix**: Woven pooled components didn't null strings on reset.
 
 
 #### Version: 1.1.2 - 2015-10-27
