@@ -1,6 +1,7 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 #### Version: 1.2.0-SNAPSHOT
+- Deprecated `EntityEdit#deleteEntity`, use `World#delete` or `Entity#deleteFromWorld` instead.
 - **Fix**: Woven pooled components didn't null strings on reset.
 - **Fix**: EntityTransmuter cause entities to lose any pending deletes.
 
