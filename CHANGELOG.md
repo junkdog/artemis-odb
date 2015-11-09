@@ -1,6 +1,10 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
-#### Version: 1.2.0-SNAPSHOT
+#### Version: 1.3.0-SNAPSHOT
+
+
+#### Version: 1.2.0 - 2015-11-08
+- ComponentMappers are reused when injected or when retrieved via `World#getMapper`.
 - Deprecated `EntityEdit#deleteEntity`, use `World#delete` or `Entity#deleteFromWorld` instead.
 - **Fix**: `@Wire` registered classes would silently fail when not registered.
 - **Fix**: Woven pooled components didn't null strings on reset.
