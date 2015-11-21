@@ -1,8 +1,11 @@
 package com.artemis;
 
 
+import static com.artemis.Aspect.all;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
+import com.artemis.utils.IntBag;
 import org.junit.Test;
 
 import com.artemis.component.ComponentX;
@@ -47,6 +50,37 @@ public class EntityEditTest {
 		Entity e = world.createEntity();
 		assertEquals(1, e.getCompositionId());
 	}
+
+	@Test
+	public void test_edit_right_after_delete_must_not_trigger_insertions() {
+		World w = new World(new WorldConfiguration());
+
+		int id = w.create();
+
+		w.process();
+
+		w.getAspectSubscriptionManager()
+			.get(all(ComponentX.class))
+			.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+				@Override
+				public void inserted(IntBag entities) {
+					fail("shouldn't be here...");
+				}
+
+				@Override
+				public void removed(IntBag entities) {
+					fail("shouldn't have time to be here...");
+				}
+			});
+
+
+		w.delete(id);
+		w.edit(id).create(ComponentX.class);
+
+		w.process();
+	}
+
+
 	
 	private static class LeManager extends Manager {
 		
@@ -57,4 +91,5 @@ public class EntityEditTest {
 			added++;
 		}
 	}
+
 }

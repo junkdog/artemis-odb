@@ -121,16 +121,18 @@ final class EntityEditPool {
 		swapEditBags();
 		
 		World w = em.world;
-
-		w.deleted.or(pendingDeletion);
-		pendingDeletion.clear();
 		for (int i = 0; size > i; i++) {
 			EntityEdit edit = (EntityEdit)data[i];
 			em.updateCompositionIdentity(edit);
-			w.changed.set(edit.entityId);
+
+			if (!pendingDeletion.get(edit.entityId))
+				w.changed.set(edit.entityId);
 
 			pool.add(edit);
 		}
+
+		w.deleted.or(pendingDeletion);
+		pendingDeletion.clear();
 
 		return true;
 	}
