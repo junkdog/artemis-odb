@@ -1,8 +1,12 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 #### Version: 1.3.0-SNAPSHOT
+
+
+#### Version: 1.2.1 - 2015-11-23
 - **Fix**: `@PooledWeaver` properly resets primitives and strings back to initial values.
 - **Fix**: Entity edit right after delete could cause entities to show up in subscription insertions.
+
 
 #### Version: 1.2.0 - 2015-11-08
 - ComponentMappers are reused when injected or when retrieved via `World#getMapper`.
