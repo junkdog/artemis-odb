@@ -97,50 +97,13 @@ public class MetaScannerTest {
 		assertTrue(scan2.foundEnd);
 	}
 
-	@Test
-	public void read_default_boolean() throws Exception {
-		ClassMetadata scan = scan(DefaultBoolean.class);
-
-		assertEquals(true, scan.field("set").value);
-		assertEquals(false, scan.field("unset").value);
-	}
-
-	@Test
-	public void read_default_decimal_values() throws Exception {
-		ClassMetadata scan = scan(DefaultDecimal.class);
-
-		assertEquals(0, scan.field("f0").value);
-		assertEquals(0, scan.field("d0").value);
-		assertEquals(123f, scan.field("f123").value);
-		assertEquals(0.00123f, scan.field("d123").value);
-	}
-
-	@Test
-	public void read_default_integer_values() throws Exception {
-		ClassMetadata scan = scan(DefaultInteger.class);
-
-		assertEquals(0x12, scan.field("b012").value);
-		assertEquals(0x0, scan.field("b0").value);
-		assertEquals(0, scan.field("i0").value);
-		assertEquals(543, scan.field("i543").value);
-		assertEquals(-1, scan.field("l1").value);
-	}
-
-	@Test
-	public void read_default_string() throws Exception {
-		ClassMetadata scan = scan(DefaultString.class);
-
-		assertEquals("hi", scan.field("hi").value);
-		assertEquals("bye", scan.field("bye").value);
-		assertEquals(null, scan.field("nullString").value);
-	}
-
 	static ClassMetadata scan(Class<?> klazz) throws Exception {
 		String classResource = "/" + klazz.getName().replace('.', '/') + ".class";
 		
 		InputStream stream = MetaScannerTest.class.getResourceAsStream(classResource);
 		ClassReader cr = new ClassReader(stream);
 		ClassMetadata info = new ClassMetadata();
+		info.type = Type.getType(klazz);
 		cr.accept(new MetaScanner(info), 0);
 		stream.close();
 		return info;

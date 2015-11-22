@@ -10,6 +10,7 @@ import java.util.*;
 @PooledWeaver
 public class ComponentToWeave extends Component {
 	private boolean hasBeenReset;
+	private String s;
 
 	public Bag<String> bag = new Bag<String>();
 	public ArrayList<String> arrayList = new ArrayList<String>();

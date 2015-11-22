@@ -1,7 +1,6 @@
 package com.artemis.weaver.pooled;
 
 import static com.artemis.meta.ClassMetadataUtil.instanceFields;
-import static com.artemis.meta.ClassMetadataUtil.sizeOf;
 
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -36,7 +35,7 @@ public class ResetMethodVisitor extends MethodVisitor implements Opcodes {
 	public void visitCode() {
 		mv.visitCode();
 		for (FieldDescriptor field : instanceFields(meta)) {
-			if (isZeroable(field)) {
+			if (field.isResettable()) {
 				resetField(field);
 			} else if (mapSetsListsInterfaces.matcher(field.desc).find()) {
 				clearCollection(field, INVOKEINTERFACE);
@@ -52,11 +51,6 @@ public class ResetMethodVisitor extends MethodVisitor implements Opcodes {
 			|| libgdxCollections.matcher(f.desc).find();
 	}
 
-	private boolean isZeroable(FieldDescriptor f) {
-		 // primitive fields reports size > 0
-		return sizeOf(f) > 0 || "Ljava/lang/String;".equals(f.desc);
-	}
-
 	private void clearCollection(FieldDescriptor field, int invoke) {
 		mv.visitVarInsn(ALOAD, 0);
 		mv.visitFieldInsn(GETFIELD, meta.type.getInternalName(), field.name, field.desc);
@@ -67,28 +61,7 @@ public class ResetMethodVisitor extends MethodVisitor implements Opcodes {
 
 	private void resetField(FieldDescriptor field) {
 		mv.visitVarInsn(ALOAD, 0);
-		mv.visitInsn(constInstructionFor(field));
+		field.reset.accept(mv);
 		mv.visitFieldInsn(PUTFIELD, meta.type.getInternalName(), field.name, field.desc);
-	}
-
-	private static int constInstructionFor(FieldDescriptor field) {
-		if ("Z".equals(field.desc))
-			return ICONST_0;
-		if ("C".equals(field.desc))
-			return ICONST_0;
-		if ("S".equals(field.desc))
-			return ICONST_0;
-		if ("I".equals(field.desc))
-			return ICONST_0;
-		if ("J".equals(field.desc))
-			return LCONST_0;
-		if ("F".equals(field.desc))
-			return FCONST_0;
-		if ("D".equals(field.desc))
-			return DCONST_0;
-		if ("Ljava/lang/String;".equals(field.desc))
-			return ACONST_NULL;
-
-		throw new RuntimeException(field.toString());
 	}
 }

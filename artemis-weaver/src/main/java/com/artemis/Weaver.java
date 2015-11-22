@@ -232,9 +232,9 @@ public class Weaver {
 
 	public static ClassMetadata scan(ClassReader source) {
 		ClassMetadata info = new ClassMetadata();
-		source.accept(new MetaScanner(info), 0);
 		info.type = Type.getObjectType(source.getClassName());
-		
+		source.accept(new MetaScanner(info), 0);
+
 		for (FieldDescriptor fd : info.fields()) {
 			if ((fd.access & ACC_PUBLIC) == ACC_PUBLIC) {
 				info.directFieldAccess = true;

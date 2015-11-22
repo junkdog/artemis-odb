@@ -1,6 +1,7 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 #### Version: 1.3.0-SNAPSHOT
+- **Fix**: `@PooledWeaver` properly resets primitives and strings back to initial values.
 - **Fix**: Entity edit right after delete could cause entities to show up in subscription insertions.
 
 #### Version: 1.2.0 - 2015-11-08

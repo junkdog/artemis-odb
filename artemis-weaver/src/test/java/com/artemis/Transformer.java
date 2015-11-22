@@ -22,8 +22,7 @@ final class Transformer {
 		InputStream classStream = klazz.getResourceAsStream("/" + klazz.getName().replace('.', '/') + ".class");
 		ClassReader cr = Weaver.classReaderFor(classStream);
 		ClassMetadata meta = Weaver.scan(cr);
-		meta.type = Type.getObjectType(cr.getClassName());
-		
+
 		ClassWriter cw = null;
 		if (meta.annotation != WeaverType.NONE) {
 			ComponentTypeTransmuter weaver = new ComponentTypeTransmuter(null, cr, meta);

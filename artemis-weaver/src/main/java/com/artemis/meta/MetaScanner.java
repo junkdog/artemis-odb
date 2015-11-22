@@ -16,6 +16,8 @@ import org.objectweb.asm.Opcodes;
 import com.artemis.Weaver;
 import com.artemis.meta.ClassMetadata.OptimizationType;
 import com.artemis.meta.ClassMetadata.WeaverType;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.InsnNode;
 
 public class MetaScanner extends ClassVisitor implements Opcodes {
 	
@@ -77,12 +79,18 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 	
 	@Override
 	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
-		info.field(name).set(access, desc, signature, value);
+		FieldDescriptor field = info.field(name);
+		field.set(access, desc, signature, value);
+		if (field.isResettable())
+			field.reset = constInstructionFor(field);
+
 		return super.visitField(access, name, desc, signature, value);
 	}
 	
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+		MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
+
 		info.methods.add(new MethodDescriptor(access, name, desc, signature, exceptions));
 		if ("reset".equals(name) && "()V".equals(desc))
 			info.foundReset = true;
@@ -97,12 +105,32 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 		else if ("<clinit>".equals(name) && "()V".equals(desc))
 			info.foundStaticInitializer = true;
 
+		if ("<init>".equals(name) && "()V".equals(desc)) {
+			return new DefaultValueScanner(mv, info);
+		} else {
+			return mv;
+		}
+	}
 
-//		if ("<clinit>".equals(name) && "()V".equals(desc))
-//			return new MethodVisitor() {
-//			}
+	private static AbstractInsnNode constInstructionFor(FieldDescriptor field) {
+		if ("Ljava/lang/String;".equals(field.desc))
+				return new InsnNode(ACONST_NULL);
 
+		switch (field.desc.charAt(0)) {
+			case 'Z':
+			case 'B':
+			case 'C':
+			case 'S':
+			case 'I':
+				return new InsnNode(ICONST_0);
+			case 'J':
+				return new InsnNode(LCONST_0);
+			case 'F':
+				return new InsnNode(FCONST_0);
+			case 'D':
+				return new InsnNode(DCONST_0);
+		}
 
-		return super.visitMethod(access, name, desc, signature, exceptions);
+		throw new RuntimeException(field.toString());
 	}
 }
