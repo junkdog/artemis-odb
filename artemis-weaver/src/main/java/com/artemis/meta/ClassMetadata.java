@@ -30,7 +30,7 @@ public final class ClassMetadata {
 	public String superClass;
 
 	public List<MethodDescriptor> methods = new ArrayList<MethodDescriptor>(); 
-	public List<FieldDescriptor> fields = new ArrayList<FieldDescriptor>();
+	private List<FieldDescriptor> fields = new ArrayList<FieldDescriptor>();
 
 	// pooled components
 	public boolean forcePooledWeaving;
@@ -45,6 +45,22 @@ public final class ClassMetadata {
 	public enum OptimizationType { NOT_OPTIMIZABLE, SAFE, FULL }
 
 	public Future<?> weaverTask;
+
+	public FieldDescriptor field(String name) {
+		for (FieldDescriptor f : fields) {
+			if (name.equals(f.name))
+				return f;
+		}
+
+		FieldDescriptor fd = new FieldDescriptor(name);
+		fields.add(fd);
+
+		return fd;
+	}
+
+	public List<FieldDescriptor> fields() {
+		return fields;
+	}
 
 	public static class GlobalConfiguration {
 		public static boolean ideFriendlyPacking;

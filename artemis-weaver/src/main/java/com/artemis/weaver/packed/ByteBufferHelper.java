@@ -68,7 +68,7 @@ class ByteBufferHelper {
 	}
 	
 	private FieldDescriptor find(String name) {
-		for (FieldDescriptor fd : meta.fields) {
+		for (FieldDescriptor fd : meta.fields()) {
 			if (fd.name.equals(name))
 				return fd;
 		}

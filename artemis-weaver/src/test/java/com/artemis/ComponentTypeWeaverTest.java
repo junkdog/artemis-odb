@@ -57,7 +57,7 @@ public class ComponentTypeWeaverTest {
 		assertEquals(WeaverType.NONE, meta.annotation);
 		assertTrue(meta.foundReset); 
 		assertTrue(meta.foundEntityFor);
-		assertEquals(meta.fields.toString(), 0, meta.fields.size());
+		assertEquals(meta.fields().toString(), 0, meta.fields().size());
 		assertEquals("com/artemis/PackedComponent", meta.superClass); 
 	}
 	

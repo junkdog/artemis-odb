@@ -23,7 +23,7 @@ public final class ClassMetadataUtil {
 	
 	public static List<FieldDescriptor> instanceFields(ClassMetadata meta) {
 		List<FieldDescriptor> instanceFields = new ArrayList<FieldDescriptor>();
-		for (FieldDescriptor field : meta.fields) {
+		for (FieldDescriptor field : meta.fields()) {
 			if ("$data".equals(field.name) || "$world".equals(field.name))
 					continue;
 			
@@ -109,7 +109,7 @@ public final class ClassMetadataUtil {
 	
 	public static int sizeOf(ClassMetadata meta) {
 		int size = 0;
-		for (FieldDescriptor fd : meta.fields) {
+		for (FieldDescriptor fd : meta.fields()) {
 			size +=  sizeOf(fd);
 		}
 		

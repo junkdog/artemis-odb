@@ -8,8 +8,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -237,7 +235,7 @@ public class Weaver {
 		source.accept(new MetaScanner(info), 0);
 		info.type = Type.getObjectType(source.getClassName());
 		
-		for (FieldDescriptor fd : info.fields) {
+		for (FieldDescriptor fd : info.fields()) {
 			if ((fd.access & ACC_PUBLIC) == ACC_PUBLIC) {
 				info.directFieldAccess = true;
 			}

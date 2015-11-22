@@ -1,11 +1,8 @@
 package com.artemis.meta;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import java.io.InputStream;
 
+import com.artemis.component.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
@@ -15,14 +12,11 @@ import org.objectweb.asm.Type;
 import com.artemis.Entity;
 import com.artemis.NullProfiler;
 import com.artemis.World;
-import com.artemis.component.ComponentToWeave;
-import com.artemis.component.PackedToBeA;
-import com.artemis.component.PackedToBeB;
-import com.artemis.component.PooledComponentNotScanned;
-import com.artemis.component.PooledComponentWithReset;
 import com.artemis.meta.ClassMetadata.WeaverType;
 import com.artemis.system.BeginEndSystem;
 import com.artemis.system.NoBeginEndSystem;
+
+import static org.junit.Assert.*;
 
 @SuppressWarnings("static-method")
 public class MetaScannerTest {
@@ -78,9 +72,9 @@ public class MetaScannerTest {
 		ClassMetadata scan1 = scan(PackedToBeB.class);
 		ClassMetadata scan2 = scan(PackedToBeA.class);
 		
-		assertEquals(2, scan1.fields.size());
-		assertEquals("F", scan1.fields.get(1).desc);
-		assertEquals(Opcodes.ACC_PRIVATE, scan1.fields.get(1).access);
+		assertEquals(2, scan1.fields().size());
+		assertEquals("F", scan1.fields().get(1).desc);
+		assertEquals(Opcodes.ACC_PRIVATE, scan1.fields().get(1).access);
 		assertEquals(1 /* default constructor*/, scan1.methods.size());
 		
 		assertEquals(2 /* default constructor*/, scan2.methods.size());
@@ -102,7 +96,45 @@ public class MetaScannerTest {
 		assertTrue(scan2.foundBegin);
 		assertTrue(scan2.foundEnd);
 	}
-	
+
+	@Test
+	public void read_default_boolean() throws Exception {
+		ClassMetadata scan = scan(DefaultBoolean.class);
+
+		assertEquals(true, scan.field("set").value);
+		assertEquals(false, scan.field("unset").value);
+	}
+
+	@Test
+	public void read_default_decimal_values() throws Exception {
+		ClassMetadata scan = scan(DefaultDecimal.class);
+
+		assertEquals(0, scan.field("f0").value);
+		assertEquals(0, scan.field("d0").value);
+		assertEquals(123f, scan.field("f123").value);
+		assertEquals(0.00123f, scan.field("d123").value);
+	}
+
+	@Test
+	public void read_default_integer_values() throws Exception {
+		ClassMetadata scan = scan(DefaultInteger.class);
+
+		assertEquals(0x12, scan.field("b012").value);
+		assertEquals(0x0, scan.field("b0").value);
+		assertEquals(0, scan.field("i0").value);
+		assertEquals(543, scan.field("i543").value);
+		assertEquals(-1, scan.field("l1").value);
+	}
+
+	@Test
+	public void read_default_string() throws Exception {
+		ClassMetadata scan = scan(DefaultString.class);
+
+		assertEquals("hi", scan.field("hi").value);
+		assertEquals("bye", scan.field("bye").value);
+		assertEquals(null, scan.field("nullString").value);
+	}
+
 	static ClassMetadata scan(Class<?> klazz) throws Exception {
 		String classResource = "/" + klazz.getName().replace('.', '/') + ".class";
 		

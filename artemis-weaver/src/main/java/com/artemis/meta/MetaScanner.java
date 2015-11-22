@@ -77,12 +77,13 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 	
 	@Override
 	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
-		info.fields.add(new FieldDescriptor(access, name, desc, signature, value));
+		info.field(name).set(access, desc, signature, value);
 		return super.visitField(access, name, desc, signature, value);
 	}
 	
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+		info.methods.add(new MethodDescriptor(access, name, desc, signature, exceptions));
 		if ("reset".equals(name) && "()V".equals(desc))
 			info.foundReset = true;
 		else if ("forEntity".equals(name) && desc.startsWith("(I)"))
@@ -95,9 +96,13 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 			info.foundInitialize = true;
 		else if ("<clinit>".equals(name) && "()V".equals(desc))
 			info.foundStaticInitializer = true;
-		
-		info.methods.add(new MethodDescriptor(access, name, desc, signature, exceptions));
-		
+
+
+//		if ("<clinit>".equals(name) && "()V".equals(desc))
+//			return new MethodVisitor() {
+//			}
+
+
 		return super.visitMethod(access, name, desc, signature, exceptions);
 	}
 }

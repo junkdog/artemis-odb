@@ -34,7 +34,7 @@ public class FieldToStructTransformer implements ClassTransformer, Opcodes {
 		
 		List<FieldDescriptor> toPack = instanceFields(meta);
 		
-		for (FieldDescriptor fd : meta.fields) {
+		for (FieldDescriptor fd : meta.fields()) {
 			
 			FieldToStructMethodTransformer methodTransformer = new FieldToStructMethodTransformer(null, meta, fd);
 			List<MethodNode> methods = cn.methods;

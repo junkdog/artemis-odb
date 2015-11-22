@@ -36,7 +36,7 @@ public class ComponentTypeTransmuter extends CallableTransmuter<Void> implements
 		
 		switch (meta.annotation) {
 			case PACKED:
-				validateOnlyPrimitives(meta.fields);
+				validateOnlyPrimitives(meta.fields());
 				cr = new AccessorGenerator(cr, meta).transform();
 				cr = new PackedStubs(cr, meta).transform();
 				cv = new CommonClassWeaver(cv, meta);

@@ -222,7 +222,7 @@ public class FieldToStructMethodTransformer extends MethodTransformer implements
 	}
 	
 	private int offset(String name) {
-		List<FieldDescriptor> fields = meta.fields;
+		List<FieldDescriptor> fields = meta.fields();
 		
 		int offset = 0;
 		for (int i = 0; fields.size() > i; i++) {
