@@ -27,8 +27,6 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 	private TagManager tagManager;
 	private final Collection<String> registeredTags;
 
-	private final ObjectMap<String, Class<? extends Component>> componentClasses;
-
 	private boolean isSerializingEntity;
 
 	private ComponentMapper<SerializationTag> saveTagMapper;
@@ -42,7 +40,6 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		this.referenceTracker = referenceTracker;
 		world.inject(this);
 
-		componentClasses = new ObjectMap<String, Class<? extends Component>>();
 		registeredTags = (tagManager != null)
 			? tagManager.getRegisteredTags()
 			: Collections.EMPTY_LIST;
@@ -72,6 +69,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		components.sort(comparator);
 
 		json.writeObjectStart();
+		writeArchetype(json, e);
 		writeTag(json, e);
 		writeKeyTag(json, e);
 		writeGroups(json, e);
@@ -96,8 +94,8 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		isSerializingEntity = false;
 	}
 
-	private ComponentLookupSerializer componentLookup(Json json) {
-		return (ComponentLookupSerializer) json.getSerializer(IdentityHashMap.class);
+	private void writeArchetype(Json json, Entity e) {
+		json.writeValue("archetype", e.getCompositionId());
 	}
 
 	private void writeTag(Json json, Entity e) {
@@ -149,6 +147,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 
 		Entity e = world.createEntity();
 
+		jsonData = readArchetype(jsonData, e);
 		jsonData = readTag(jsonData, e);
 		jsonData = readKeyTag(jsonData, e);
 		jsonData = readGroups(jsonData, e);
@@ -187,6 +186,15 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 				group = group.next;
 			}
 
+			jsonData = jsonData.next;
+		}
+
+		return jsonData;
+	}
+
+	private JsonValue readArchetype(JsonValue jsonData, Entity e) {
+		// archetypes is optional, to avoid breaking compatibility
+		if ("archetype".equals(jsonData.name)) {
 			jsonData = jsonData.next;
 		}
 
