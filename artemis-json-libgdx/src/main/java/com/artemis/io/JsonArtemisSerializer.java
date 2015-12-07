@@ -12,7 +12,6 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
@@ -44,6 +43,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		json.setSerializer(Bag.class, new EntityBagSerializer(world));
 		json.setSerializer(IntBag.class, intBagEntitySerializer);
 		json.setSerializer(Entity.class, entitySerializer);
+		json.setSerializer(ArchetypeMapper.TransmuterEntry.class, new TransmuterEntrySerializer());
 	}
 
 	public JsonArtemisSerializer prettyPrint(boolean prettyPrint) {
@@ -65,6 +65,9 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	@Override
 	protected void save(Writer writer, SaveFileFormat save) {
 		try {
+			json.setSerializer(ArchetypeMapper.class, new ArchetypeMapperSerializer(world));
+			save.archetypes = new ArchetypeMapper(world, save.entities);
+
 			referenceTracker.inspectTypes(world);
 			referenceTracker.preWrite(save);
 
@@ -90,16 +93,6 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		t.tracker = entitySerializer.keyTracker;
 		referenceTracker.translate(intBagEntitySerializer.getTranslatedIds());
 		return t;
-	}
-
-	private void inspectComponentTypes(SaveFileFormat save) {
-		BitSet compositionIds = new BitSet();
-		int[] ids = save.entities.getData();
-		for (int i = 0, s = save.entities.size(); s > i; i++) {
-			Entity e = world.getEntity(ids[i]);
-			compositionIds.set(e.getCompositionId());
-		}
-
 	}
 
 	private Map<String, Class<? extends Component>> updateLookupMap(InputStream is) {

@@ -1,9 +1,6 @@
 package com.artemis.io;
 
-import com.artemis.Component;
-import com.artemis.ComponentCollector;
-import com.artemis.Entity;
-import com.artemis.World;
+import com.artemis.*;
 import com.artemis.managers.WorldSerializationManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
@@ -40,6 +37,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		json.setSerializer(Bag.class, new EntityBagSerializer(world));
 		json.setSerializer(IntBag.class, intBagEntitySerializer);
 		json.setSerializer(Entity.class, entitySerializer);
+		json.setSerializer(ArchetypeMapper.TransmuterEntry.class, new TransmuterEntrySerializer());
 	}
 
 	public JsonArtemisSerializer prettyPrint(boolean prettyPrint) {
@@ -61,6 +59,9 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	@Override
 	protected void save(Writer writer, SaveFileFormat save) {
 		try {
+			json.setSerializer(ArchetypeMapper.class, new ArchetypeMapperSerializer(world));
+			save.archetypes = new ArchetypeMapper(world, save.entities);
+
 			referenceTracker.inspectTypes(world);
 			referenceTracker.preWrite(save);
 
@@ -86,16 +87,6 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		t.tracker = entitySerializer.keyTracker;
 		referenceTracker.translate(intBagEntitySerializer.getTranslatedIds());
 		return t;
-	}
-
-	private void inspectComponentTypes(SaveFileFormat save) {
-		BitSet compositionIds = new BitSet();
-		int[] ids = save.entities.getData();
-		for (int i = 0, s = save.entities.size(); s > i; i++) {
-			Entity e = world.getEntity(ids[i]);
-			compositionIds.set(e.getCompositionId());
-		}
-
 	}
 
 	private Map<String, Class<? extends Component>> updateLookupMap(InputStream is) {

@@ -39,6 +39,7 @@ public class SaveFileFormat {
 	public Metadata metadata;
 	public IdentityHashMap<Class<? extends Component>, String> componentIdentifiers;
 	public IntBag entities;
+	public ArchetypeMapper archetypes;
 
 	transient SerializationKeyTracker tracker = new SerializationKeyTracker();
 
