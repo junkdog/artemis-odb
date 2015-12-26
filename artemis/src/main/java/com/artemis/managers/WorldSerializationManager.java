@@ -1,9 +1,7 @@
 package com.artemis.managers;
 
 import com.artemis.BaseSystem;
-import com.artemis.Manager;
 import com.artemis.World;
-import com.artemis.annotations.Wire;
 import com.artemis.io.InputStreamHelper;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;

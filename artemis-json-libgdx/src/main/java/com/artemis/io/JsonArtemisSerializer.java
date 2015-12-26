@@ -91,8 +91,10 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 	@Override
 	protected <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
-		JsonValue jsonData = new JsonReader().parse(is);
+		return load(new JsonReader().parse(is), format);
+	}
 
+	public <T extends SaveFileFormat> T load(JsonValue jsonData, Class<T> format) {
 		entitySerializer.preLoad();
 
 		SaveFileFormat partial = partialLoad(jsonData);
