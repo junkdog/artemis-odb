@@ -53,6 +53,10 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 			: Collections.EMPTY_LIST;
 	}
 
+	void setUsePrototypes(boolean usePrototypes) {
+		defaultValues.setUsePrototypes(usePrototypes);
+	}
+
 	void preLoad() {
 		keyTracker = new SerializationKeyTracker();
 	}

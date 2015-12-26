@@ -53,6 +53,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 	public JsonArtemisSerializer setUsePrototypes(boolean usePrototypes) {
 		json.setUsePrototypes(usePrototypes);
+		entitySerializer.setUsePrototypes(usePrototypes);
 		return this;
 	}
 

@@ -11,8 +11,12 @@ import java.util.Map;
 class DefaultObjectStore {
 
 	private Map<Class, TypeData> defaultValues = new HashMap<Class, TypeData>();
+	private boolean usePrototypes = true;
 
 	public boolean hasDefaultValues(Object object) {
+		if (!usePrototypes)
+			return false;
+
 		TypeData typeData = defaultValues.get(object.getClass());
 		if (typeData == null) {
 			typeData = new TypeData(newInstance(object.getClass()));
@@ -28,6 +32,10 @@ class DefaultObjectStore {
 		} catch (ReflectionException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public void setUsePrototypes(boolean usePrototypes) {
+		this.usePrototypes = usePrototypes;
 	}
 
 	static class TypeData {

@@ -2,7 +2,6 @@ package com.artemis.io;
 
 import com.artemis.Entity;
 import com.artemis.World;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;
 import com.esotericsoftware.jsonbeans.Json;
 import com.esotericsoftware.jsonbeans.JsonSerializer;
