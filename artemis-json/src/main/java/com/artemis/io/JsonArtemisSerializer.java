@@ -4,6 +4,9 @@ import com.artemis.*;
 import com.artemis.managers.WorldSerializationManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
+import com.artemis.utils.reflect.ClassReflection;
+import com.artemis.utils.reflect.Constructor;
+import com.artemis.utils.reflect.ReflectionException;
 import com.esotericsoftware.jsonbeans.*;
 
 import java.io.IOException;
@@ -39,6 +42,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		json.setSerializer(Bag.class, new EntityBagSerializer(world));
 		json.setSerializer(IntBag.class, intBagEntitySerializer);
 		json.setSerializer(Entity.class, entitySerializer);
+		json.setSerializer(ArchetypeMapper.class, new ArchetypeMapperSerializer());
 		json.setSerializer(ArchetypeMapper.TransmuterEntry.class, new TransmuterEntrySerializer());
 	}
 
@@ -46,7 +50,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		this.prettyPrint = prettyPrint;
 		return this;
 	}
-	
+
 	public JsonArtemisSerializer setUsePrototypes(boolean usePrototypes) {
 		json.setUsePrototypes(usePrototypes);
 		return this;
@@ -61,7 +65,6 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	@Override
 	protected void save(Writer writer, SaveFileFormat save) {
 		try {
-			json.setSerializer(ArchetypeMapper.class, new ArchetypeMapperSerializer(world));
 			save.archetypes = new ArchetypeMapper(world, save.entities);
 
 			referenceTracker.inspectTypes(world);
@@ -86,6 +89,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 		entitySerializer.preLoad();
 		referenceTracker.inspectTypes(updateLookupMap(jsonData).values());
+		updateArchetypeMapper(jsonData);
 
 		T t = newInstance(format);
 		json.readFields(t, jsonData);
@@ -96,12 +100,19 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 	private <T extends SaveFileFormat> T newInstance(Class<T> format) {
 		try {
-			return format.newInstance();
-		} catch (InstantiationException e) {
-			throw new RuntimeException(e);
-		} catch (IllegalAccessException e) {
+			Constructor ctor = ClassReflection.getDeclaredConstructor(format);
+			ctor.setAccessible(true);
+			return (T) ctor.newInstance();
+		} catch (ReflectionException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private ArchetypeMapper updateArchetypeMapper(JsonValue jsonMap) {
+		SaveFileFormat save = new SaveFileFormat((IntBag)null);
+		json.readField(save, "archetypes", jsonMap);
+		entitySerializer.archetypeMapper = save.archetypes;
+		return save.archetypes;
 	}
 
 	private Map<String, Class<? extends Component>> updateLookupMap(JsonValue jsonMap) {

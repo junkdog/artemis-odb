@@ -11,7 +11,6 @@ import com.artemis.utils.ImmutableBag;
 import com.esotericsoftware.jsonbeans.Json;
 import com.esotericsoftware.jsonbeans.JsonSerializer;
 import com.esotericsoftware.jsonbeans.JsonValue;
-import com.esotericsoftware.jsonbeans.ObjectMap;
 
 import java.util.*;
 
@@ -27,17 +26,22 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 	private TagManager tagManager;
 	private final Collection<String> registeredTags;
 
+	private Archetype emptyEntity;
 	private boolean isSerializingEntity;
 
 	private ComponentMapper<SerializationTag> saveTagMapper;
-	SerializationKeyTracker keyTracker;
 
+	SerializationKeyTracker keyTracker;
+	ArchetypeMapper archetypeMapper;
 
 	Map<String, Class<? extends Component>> types = new HashMap<String, Class<? extends Component>>();
 	private IdentityHashMap<Class<? extends Component>, String> lookupMap;
 
+	private int archetype = -1;
+
 	public EntitySerializer(World world, ReferenceTracker referenceTracker) {
 		this.world = world;
+		this.emptyEntity = new ArchetypeBuilder().build(world);
 		this.referenceTracker = referenceTracker;
 		world.inject(this);
 
@@ -146,7 +150,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 			isSerializingEntity = true;
 		}
 
-		Entity e = world.createEntity();
+		Entity e = world.createEntity(emptyEntity);
 
 		jsonData = readArchetype(jsonData, e);
 		jsonData = readTag(jsonData, e);
@@ -160,23 +164,45 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		assert("components".equals(jsonData.name));
 		JsonValue component = jsonData.child;
 
-		EntityEdit edit = e.edit();
-		while (component != null) {
-			assert(component.name() != null);
-			Class<? extends Component> componentType = types.get(component.name);
-			Component c = edit.create(componentType);
-			json.readFields(c, component);
-
-			// if component contains entity references, add
-			// entity reference operations
-			referenceTracker.addEntityReferencingComponent(c);
-
-			component = component.next;
+		if (archetype != -1) {
+			readComponentsArchetype(json, e, component);
+		} else {
+			readComponentsEdit(json, e, component);
 		}
 
 		isSerializingEntity = false;
 
-		return edit.getEntity();
+		return e;
+	}
+
+	private void readComponentsArchetype(Json json, Entity e, JsonValue component) {
+		archetypeMapper.transmute(e, archetype);
+		while (component != null) {
+			assert (component.name() != null);
+			Class<? extends Component> componentType = types.get(component.name);
+			readComponent(json, component, e.getComponent(componentType));
+
+			component = component.next;
+		}
+	}
+
+	private void readComponentsEdit(Json json, Entity e, JsonValue component) {
+		EntityEdit edit = e.edit();
+		while (component != null) {
+			assert (component.name() != null);
+			Class<? extends Component> componentType = types.get(component.name);
+			readComponent(json, component, edit.create(componentType));
+
+			component = component.next;
+		}
+	}
+
+	private void readComponent(Json json, JsonValue component, Component c) {
+		json.readFields(c, component);
+
+		// if component contains entity references, add
+		// entity reference operations
+		referenceTracker.addEntityReferencingComponent(c);
 	}
 
 	private JsonValue readGroups(JsonValue jsonData, Entity e) {
@@ -196,7 +222,10 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 	private JsonValue readArchetype(JsonValue jsonData, Entity e) {
 		// archetypes is optional, to avoid breaking compatibility
 		if ("archetype".equals(jsonData.name)) {
+			archetype = jsonData.asInt();
 			jsonData = jsonData.next;
+		} else {
+			archetype = -1;
 		}
 
 		return jsonData;

@@ -8,12 +8,6 @@ import com.esotericsoftware.jsonbeans.JsonValue;
 import java.util.Map;
 
 public class ArchetypeMapperSerializer implements JsonSerializer<ArchetypeMapper> {
-	private World world;
-
-	public ArchetypeMapperSerializer(World world) {
-		this.world = world;
-	}
-
 	@Override
 	public void write(Json json, ArchetypeMapper object, Class knownType) {
 		json.writeObjectStart();

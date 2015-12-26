@@ -43,8 +43,8 @@ public class ArchetypeMapper {
 
 		return target;
 	}
-	public void transmute(Entity e) {
-		compositionIdMapper.get(e.getCompositionId()).transmute(e);
+	public void transmute(Entity e, int compositionId) {
+		compositionIdMapper.get(compositionId).transmute(e);
 	}
 
 	public Iterable<? extends Map.Entry<Integer, TransmuterEntry>> entrySet() {

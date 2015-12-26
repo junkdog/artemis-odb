@@ -1,18 +1,11 @@
 package com.artemis.io;
 
-import com.artemis.World;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 
 import java.util.Map;
 
 public class ArchetypeMapperSerializer implements Json.Serializer<ArchetypeMapper> {
-	private World world;
-
-	public ArchetypeMapperSerializer(World world) {
-		this.world = world;
-	}
-
 	@Override
 	public void write(Json json, ArchetypeMapper object, Class knownType) {
 		json.writeObjectStart();
