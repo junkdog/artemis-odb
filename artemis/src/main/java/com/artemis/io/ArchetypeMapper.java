@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is only public in order to keep GWT happy.
+ * Nothing to see here (API can change without prior notice)
+ */
 public class ArchetypeMapper {
 	public Map<Integer, TransmuterEntry> compositionIdMapper = new HashMap<Integer, TransmuterEntry>();
 	public SaveFileFormat serializationState;

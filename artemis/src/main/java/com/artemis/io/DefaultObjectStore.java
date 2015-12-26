@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * This class is only public in order to keep GWT happy.
+ * Nothing to see here (API can change without prior notice)
+ */
 public class DefaultObjectStore {
 
 	private HashMap<Class, TypeData> defaultValues = new HashMap<Class, TypeData>();
