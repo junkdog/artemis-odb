@@ -5,12 +5,10 @@ import com.artemis.utils.reflect.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+public class DefaultObjectStore {
 
-class DefaultObjectStore {
-
-	private Map<Class, TypeData> defaultValues = new HashMap<Class, TypeData>();
+	private HashMap<Class, TypeData> defaultValues = new HashMap<Class, TypeData>();
 	private boolean usePrototypes = true;
 
 	public boolean hasDefaultValues(Object object) {
