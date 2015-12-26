@@ -6,14 +6,15 @@ import java.util.BitSet;
 
 
 /**
- * The entity convenience class.
  * <p>
+ * The entity convenience class.
+ * </p><p>
  * In artemis-odb, entities are represented by an int for performance reasons.
  * For convenience, Entity class is also supported.
- *
+ * </p><p>
  * Entity instances and ids get recycled. It is not safe to retain a reference
  * to an Entity after it has been deleted from the world.
- *
+ * </p><p>
  * Cannot be instantiated outside the framework, you must create new entities
  * using World. The world creates entities via it's entity manager.
  * </p>
@@ -44,12 +45,12 @@ public final class Entity {
 	}
 
 	/**
-	 * The internal id for this entity within the framework.
+	 * The internal id for this entity within the framework. Id is zero or greater.
 	 * <p>
 	 * No other entity will have the same ID, but ID's are however reused so
 	 * another entity may acquire this ID if the previous entity was deleted.
 	 * </p>
-	 * @return id of the entity
+	 * @return id of the entity, a positive integer.
 	 */
 	public int getId() {
 		return id;
