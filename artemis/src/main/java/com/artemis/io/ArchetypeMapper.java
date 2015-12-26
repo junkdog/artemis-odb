@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ArchetypeMapper {
+class ArchetypeMapper {
 	public Map<Integer, TransmuterEntry> compositionIdMapper = new HashMap<Integer, TransmuterEntry>();
 
 	public ArchetypeMapper(World world, IntBag toSave) {

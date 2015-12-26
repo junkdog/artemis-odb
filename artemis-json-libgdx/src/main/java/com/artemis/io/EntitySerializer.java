@@ -21,6 +21,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 	private final ComponentNameComparator comparator = new ComponentNameComparator();
 	private final World world;
 	private final ReferenceTracker referenceTracker;
+	private final DefaultObjectStore defaultValues;
 
 	private GroupManager groupManager;
 	private TagManager tagManager;
@@ -43,6 +44,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		this.world = world;
 		this.emptyEntity = new ArchetypeBuilder().build(world);
 		this.referenceTracker = referenceTracker;
+		defaultValues = new DefaultObjectStore();
 		world.inject(this);
 
 		registeredTags = (tagManager != null)
@@ -83,6 +85,9 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		for (int i = 0, s = components.size(); s > i; i++) {
 			Component c = components.get(i);
 			if (ClassReflection.getDeclaredAnnotation(c.getClass(), Transient.class) != null)
+				continue;
+
+			if (defaultValues.hasDefaultValues(c))
 				continue;
 
 			String componentIdentifier = lookupMap.get(c.getClass());

@@ -47,6 +47,7 @@ public class JsonWorldSerializationManagerTest {
 		ee3.create(ComponentX.class).text = "hello 3";
 		ee3.create(ComponentY.class).text = "whatever 3";
 		ee3.create(ReusedComponent.class);
+		ee3.create(SerializationTag.class).tag = "whatever";
 
 		world.process();
 		assertEquals(3, allEntities.getEntities().size());
@@ -87,7 +88,7 @@ public class JsonWorldSerializationManagerTest {
 
 		deleteAll();
 		assertEquals(0, allEntities.getEntities().size());
-	}
+		}
 
 	@Test
 	public void serializer_save_to_file_and_load_std_format_new_world() throws Exception {
@@ -319,6 +320,38 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
+	public void save_excludes_default_value_components() {
+		setTags();
+
+		EntityEdit ee1 = world.createEntity().edit();
+		ee1.create(ComponentX.class);
+		ee1.create(ComponentY.class);
+		ee1.create(ReusedComponent.class);
+		ee1.create(SerializationTag.class).tag = "one";
+		EntityEdit ee2 = world.createEntity().edit();
+		ee2.create(ComponentX.class);
+		ee2.create(ComponentY.class).text = "only me";
+		ee2.create(ReusedComponent.class);
+		ee2.create(SerializationTag.class).tag = "two";
+
+		world.process();
+
+		String json = save(allEntities);
+
+		deleteAll();
+
+		ByteArrayInputStream is = new ByteArrayInputStream(
+				json.getBytes(StandardCharsets.UTF_8));
+		SaveFileFormat l = manger.load(is, SaveFileFormat.class);
+
+		world.process();
+
+		assertEquals(5, allEntities.getEntities().size());
+		assertEquals(tags.getEntity("tag3").getCompositionId(), l.get("one").getCompositionId());
+		assertEquals(l.get("one").getCompositionId(), l.get("two").getCompositionId());
+	}
+
+	@Test
 	public void save_load_intbag_entity_references() {
 		setTags();
 
@@ -335,7 +368,7 @@ public class JsonWorldSerializationManagerTest {
 		String json = save(allEntities);
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
+			json.getBytes(StandardCharsets.UTF_8));
 		manger.load(is, SaveFileFormat.class);
 
 		world.process();
