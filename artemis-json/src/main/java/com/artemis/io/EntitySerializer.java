@@ -34,9 +34,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 
 	SerializationKeyTracker keyTracker;
 	ArchetypeMapper archetypeMapper;
-
-	Map<String, Class<? extends Component>> types = new HashMap<String, Class<? extends Component>>();
-	private IdentityHashMap<Class<? extends Component>, String> lookupMap;
+	SaveFileFormat serializationState;
 
 	private int archetype = -1;
 
@@ -47,10 +45,9 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		defaultValues = new DefaultObjectStore();
 		world.inject(this);
 
-
 		registeredTags = (tagManager != null)
 			? tagManager.getRegisteredTags()
-			: Collections.EMPTY_LIST;
+			: Collections.<String>emptyList();
 	}
 
 	void setUsePrototypes(boolean usePrototypes) {
@@ -59,10 +56,6 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 
 	void preLoad() {
 		keyTracker = new SerializationKeyTracker();
-	}
-
-	void preWrite(SaveFileFormat save) {
-		lookupMap =	save.componentIdentifiers;
 	}
 
 	@Override
@@ -87,6 +80,9 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		writeGroups(json, e);
 
 		json.writeObjectStart("components");
+		Map<Class<? extends Component>, String> typeToName =
+			serializationState.componentIdentifiers.typeToName;
+
 		for (int i = 0, s = components.size(); s > i; i++) {
 			Component c = components.get(i);
 			if (c.getClass().getAnnotation(Transient.class) != null)
@@ -95,7 +91,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 			if (defaultValues.hasDefaultValues(c))
 				continue;
 
-			String componentIdentifier = lookupMap.get(c.getClass());
+			String componentIdentifier = typeToName.get(c.getClass());
 			json.writeObjectStart(componentIdentifier);
 
 			json.writeFields(c);
@@ -186,10 +182,13 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 	}
 
 	private void readComponentsArchetype(Json json, Entity e, JsonValue component) {
+		Map<String, Class<? extends Component>> nameToType =
+			serializationState.componentIdentifiers.nameToType;
+
 		archetypeMapper.transmute(e, archetype);
 		while (component != null) {
 			assert (component.name() != null);
-			Class<? extends Component> componentType = types.get(component.name);
+			Class<? extends Component> componentType = nameToType.get(component.name);
 			readComponent(json, component, e.getComponent(componentType));
 
 			component = component.next;
@@ -197,10 +196,13 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 	}
 
 	private void readComponentsEdit(Json json, Entity e, JsonValue component) {
+		Map<String, Class<? extends Component>> nameToType =
+			serializationState.componentIdentifiers.nameToType;
+
 		EntityEdit edit = e.edit();
 		while (component != null) {
 			assert (component.name() != null);
-			Class<? extends Component> componentType = types.get(component.name);
+			Class<? extends Component> componentType = nameToType.get(component.name);
 			readComponent(json, component, edit.create(componentType));
 
 			component = component.next;

@@ -4,10 +4,7 @@ import com.artemis.annotations.Transient;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.reflect.ClassReflection;
 
-import java.util.BitSet;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.Set;
+import java.util.*;
 
 /**
  * During saving, this class is responsible for collecting all used
@@ -33,7 +30,7 @@ public class ComponentCollector {
 
 	protected void extractComponents(SaveFileFormat save) {
 		ComponentManager cm = world.getComponentManager();
-		IdentityHashMap<Class<? extends Component>, String> lookup = save.componentIdentifiers;
+		Map<Class<? extends Component>, String> lookup = save.componentIdentifiers.typeToName;
 
 		Set<String> names = new HashSet<String>();
 		BitSet bs = componentIds;

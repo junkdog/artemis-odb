@@ -37,7 +37,8 @@ public class SaveFileFormat {
 
 	// all non-transient fields are automatically serialized
 	public Metadata metadata;
-	public IdentityHashMap<Class<? extends Component>, String> componentIdentifiers;
+//	public IdentityHashMap<Class<? extends Component>, String> componentIdentifiers;
+	public ComponentIdentifiers componentIdentifiers;
 	public IntBag entities;
 	public ArchetypeMapper archetypes;
 
@@ -45,7 +46,7 @@ public class SaveFileFormat {
 
 	public SaveFileFormat(IntBag entities) {
 		this.entities = (entities != null) ? entities : new IntBag();
-		componentIdentifiers = new IdentityHashMap<Class<? extends Component>, String>();
+		componentIdentifiers = new ComponentIdentifiers();
 		metadata = new Metadata();
 		metadata.version = Metadata.LATEST;
 	}
@@ -59,16 +60,16 @@ public class SaveFileFormat {
 		this((IntBag)null);
 	}
 
-	protected Map<String, Class<? extends Component>> readLookupMap() {
-		Map<String, Class<? extends Component>> lookup
-				= new HashMap<String, Class<? extends Component>>();
-
-		for (Map.Entry<Class<? extends Component>, String> entry : componentIdentifiers.entrySet()) {
-			lookup.put(entry.getValue(), entry.getKey());
-		}
-
-		return lookup;
-	}
+//	protected Map<String, Class<? extends Component>> readLookupMap() {
+//		Map<String, Class<? extends Component>> lookup
+//				= new HashMap<String, Class<? extends Component>>();
+//
+//		for (Map.Entry<Class<? extends Component>, String> entry : componentIdentifiers.entrySet()) {
+//			lookup.put(entry.getValue(), entry.getKey());
+//		}
+//
+//		return lookup;
+//	}
 
 	public final Entity get(String key) {
 		return tracker.get(key);
@@ -87,5 +88,18 @@ public class SaveFileFormat {
 		public static final int LATEST = VERSION_1;
 
 		public int version;
+	}
+
+	public static class ComponentIdentifiers {
+		public Map<Class<? extends Component>, String> typeToName =
+			new IdentityHashMap<Class<? extends Component>, String>();
+		public Map<String, Class<? extends Component>> nameToType =
+			new HashMap<String, Class<? extends Component>>();
+
+		void build() {
+			for (Map.Entry<Class<? extends Component>, String> entry : typeToName.entrySet()) {
+				nameToType.put(entry.getValue(), entry.getKey());
+			}
+		}
 	}
 }

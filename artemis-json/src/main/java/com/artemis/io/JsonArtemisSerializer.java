@@ -12,7 +12,6 @@ import com.esotericsoftware.jsonbeans.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Writer;
-import java.util.*;
 
 public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSerializer<JsonSerializer> {
 	private final Json json;
@@ -32,13 +31,13 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		componentCollector = new ComponentCollector(world);
 		referenceTracker = new ReferenceTracker(world);
 
-		lookup = new ComponentLookupSerializer(world);
+		lookup = new ComponentLookupSerializer();
 		intBagEntitySerializer = new IntBagEntitySerializer(world);
 		entitySerializer = new EntitySerializer(world, referenceTracker);
 
 		json = new Json(OutputType.json);
 		json.setIgnoreUnknownFields(true);
-		json.setSerializer(IdentityHashMap.class, lookup);
+		json.setSerializer(SaveFileFormat.ComponentIdentifiers.class, lookup);
 		json.setSerializer(Bag.class, new EntityBagSerializer(world));
 		json.setSerializer(IntBag.class, intBagEntitySerializer);
 		json.setSerializer(Entity.class, entitySerializer);
@@ -72,8 +71,10 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 			referenceTracker.preWrite(save);
 
 			componentCollector.preWrite(save);
-			entitySerializer.preWrite(save);
-			lookup.setComponentMap(save.componentIdentifiers);
+			entitySerializer.serializationState = save;
+			entitySerializer.archetypeMapper = new ArchetypeMapper(world, save.entities);
+			entitySerializer.archetypeMapper.serializationState = save;
+			save.componentIdentifiers.build();
 			if (prettyPrint) {
 				writer.append(json.prettyPrint(save));
 			} else {
@@ -89,8 +90,8 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		JsonValue jsonData = new JsonReader().parse(is);
 
 		entitySerializer.preLoad();
-		referenceTracker.inspectTypes(updateLookupMap(jsonData).values());
 		updateArchetypeMapper(jsonData);
+		referenceTracker.inspectTypes(updateLookupMap(jsonData).nameToType.values());
 
 		T t = newInstance(format);
 		json.readFields(t, jsonData);
@@ -116,13 +117,14 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		return save.archetypes;
 	}
 
-	private Map<String, Class<? extends Component>> updateLookupMap(JsonValue jsonMap) {
+	private SaveFileFormat.ComponentIdentifiers updateLookupMap(JsonValue jsonMap) {
 		SaveFileFormat save = new SaveFileFormat((IntBag)null);
 		json.readField(save, "componentIdentifiers", jsonMap);
 
-		Map<String, Class<? extends Component>> lookup = save.readLookupMap();
-		entitySerializer.types = lookup;
+		entitySerializer.serializationState = save;
+		if (entitySerializer.archetypeMapper != null)
+			entitySerializer.archetypeMapper.serializationState = save;
 
-		return lookup;
+		return save.componentIdentifiers;
 	}
 }

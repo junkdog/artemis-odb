@@ -14,6 +14,7 @@ import java.util.Map;
 
 class ArchetypeMapper {
 	public Map<Integer, TransmuterEntry> compositionIdMapper = new HashMap<Integer, TransmuterEntry>();
+	public SaveFileFormat serializationState;
 
 	public ArchetypeMapper(World world, IntBag toSave) {
 		int[] ids = toSave.getData();
