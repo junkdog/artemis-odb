@@ -33,6 +33,8 @@ public class ArchetypeMapper {
 		}
 	}
 
+	public ArchetypeMapper() {} // for serialization
+
 	private static Bag<Class<? extends Component>> toClasses(Bag<Component> source,
 	                                                         Bag<Class<? extends Component>> target) {
 		for (int i = 0; i < source.size(); i++) {
@@ -41,9 +43,6 @@ public class ArchetypeMapper {
 
 		return target;
 	}
-
-	public ArchetypeMapper() {} // for serialization
-
 	public void transmute(Entity e) {
 		compositionIdMapper.get(e.getCompositionId()).transmute(e);
 	}

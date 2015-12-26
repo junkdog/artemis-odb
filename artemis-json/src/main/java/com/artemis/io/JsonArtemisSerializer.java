@@ -18,6 +18,8 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	private final EntitySerializer entitySerializer;
 	private final ComponentCollector componentCollector;
 
+	private ArchetypeMapper archetypeMapper;
+
 	private boolean prettyPrint;
 	private ReferenceTracker referenceTracker;
 
@@ -80,28 +82,35 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 	@Override
 	protected <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
-		entitySerializer.preLoad();
-		referenceTracker.inspectTypes(updateLookupMap(is).values());
+		JsonValue jsonData = new JsonReader().parse(is);
 
-		T t = json.fromJson(format, is);
+		entitySerializer.preLoad();
+		referenceTracker.inspectTypes(updateLookupMap(jsonData).values());
+
+		T t = newInstance(format);
+		json.readFields(t, jsonData);
 		t.tracker = entitySerializer.keyTracker;
 		referenceTracker.translate(intBagEntitySerializer.getTranslatedIds());
 		return t;
 	}
 
-	private Map<String, Class<? extends Component>> updateLookupMap(InputStream is) {
+	private <T extends SaveFileFormat> T newInstance(Class<T> format) {
 		try {
-			JsonValue jsonData = new JsonReader().parse(is);
-			SaveFileFormat save = new SaveFileFormat((IntBag)null);
-			json.readField(save, "componentIdentifiers", jsonData);
-
-			is.reset();
-			Map<String, Class<? extends Component>> lookup = save.readLookupMap();
-			entitySerializer.types = lookup;
-
-			return lookup;
-		} catch (IOException e) {
+			return format.newInstance();
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private Map<String, Class<? extends Component>> updateLookupMap(JsonValue jsonMap) {
+		SaveFileFormat save = new SaveFileFormat((IntBag)null);
+		json.readField(save, "componentIdentifiers", jsonMap);
+
+		Map<String, Class<? extends Component>> lookup = save.readLookupMap();
+		entitySerializer.types = lookup;
+
+		return lookup;
 	}
 }
