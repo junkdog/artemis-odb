@@ -1,7 +1,11 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 #### Version: 1.3.0-SNAPSHOT
-
+- **Serialization**
+  - Archetypes recorded in output; somewhat smaller output and faster load.
+  - If JsonArtemisSerializer#setUsePrototypes is true (default), omit components made
+    up of default values.
+  - Json DOM was parsed multiple times, fixed.
 
 #### Version: 1.2.1 - 2015-11-23
 - **Fix**: `@PooledWeaver` properly resets primitives and strings back to initial values.
