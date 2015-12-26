@@ -17,10 +17,9 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	private final Json json;
 	private final ComponentLookupSerializer lookup;
 	private final IntBagEntitySerializer intBagEntitySerializer;
+	private final TransmuterEntrySerializer transmuterEntrySerializer;
 	private final EntitySerializer entitySerializer;
 	private final ComponentCollector componentCollector;
-
-	private ArchetypeMapper archetypeMapper;
 
 	private boolean prettyPrint;
 	private ReferenceTracker referenceTracker;
@@ -34,6 +33,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		lookup = new ComponentLookupSerializer();
 		intBagEntitySerializer = new IntBagEntitySerializer(world);
 		entitySerializer = new EntitySerializer(world, referenceTracker);
+		transmuterEntrySerializer = new TransmuterEntrySerializer();
 
 		json = new Json(OutputType.json);
 		json.setIgnoreUnknownFields(true);
@@ -42,7 +42,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		json.setSerializer(IntBag.class, intBagEntitySerializer);
 		json.setSerializer(Entity.class, entitySerializer);
 		json.setSerializer(ArchetypeMapper.class, new ArchetypeMapperSerializer());
-		json.setSerializer(ArchetypeMapper.TransmuterEntry.class, new TransmuterEntrySerializer());
+		json.setSerializer(ArchetypeMapper.TransmuterEntry.class, transmuterEntrySerializer);
 	}
 
 	public JsonArtemisSerializer prettyPrint(boolean prettyPrint) {
@@ -72,6 +72,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 			componentCollector.preWrite(save);
 			entitySerializer.serializationState = save;
+			transmuterEntrySerializer.identifiers = save.componentIdentifiers;
 			entitySerializer.archetypeMapper = new ArchetypeMapper(world, save.entities);
 			entitySerializer.archetypeMapper.serializationState = save;
 			save.componentIdentifiers.build();
@@ -90,8 +91,9 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		JsonValue jsonData = new JsonReader().parse(is);
 
 		entitySerializer.preLoad();
-		updateArchetypeMapper(jsonData);
-		referenceTracker.inspectTypes(updateLookupMap(jsonData).nameToType.values());
+
+		SaveFileFormat partial = partialLoad(jsonData);
+		referenceTracker.inspectTypes(partial.componentIdentifiers.nameToType.values());
 
 		T t = newInstance(format);
 		json.readFields(t, jsonData);
@@ -110,21 +112,20 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		}
 	}
 
-	private ArchetypeMapper updateArchetypeMapper(JsonValue jsonMap) {
-		SaveFileFormat save = new SaveFileFormat((IntBag)null);
-		json.readField(save, "archetypes", jsonMap);
-		entitySerializer.archetypeMapper = save.archetypes;
-		return save.archetypes;
-	}
-
-	private SaveFileFormat.ComponentIdentifiers updateLookupMap(JsonValue jsonMap) {
+	private SaveFileFormat partialLoad(JsonValue jsonMap) {
 		SaveFileFormat save = new SaveFileFormat((IntBag)null);
 		json.readField(save, "componentIdentifiers", jsonMap);
+		transmuterEntrySerializer.identifiers = save.componentIdentifiers;
+
+		json.readField(save, "archetypes", jsonMap);
+		entitySerializer.archetypeMapper = save.archetypes;
 
 		entitySerializer.serializationState = save;
-		if (entitySerializer.archetypeMapper != null)
+		if (entitySerializer.archetypeMapper != null) {
 			entitySerializer.archetypeMapper.serializationState = save;
+			transmuterEntrySerializer.identifiers = save.componentIdentifiers;
+		}
 
-		return save.componentIdentifiers;
+		return save;
 	}
 }

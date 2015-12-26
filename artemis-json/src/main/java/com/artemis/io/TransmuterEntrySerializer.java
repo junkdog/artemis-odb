@@ -2,18 +2,20 @@ package com.artemis.io;
 
 import com.artemis.Component;
 import com.artemis.utils.Bag;
-import com.artemis.utils.reflect.ClassReflection;
-import com.artemis.utils.reflect.ReflectionException;
 import com.esotericsoftware.jsonbeans.Json;
 import com.esotericsoftware.jsonbeans.JsonSerializer;
 import com.esotericsoftware.jsonbeans.JsonValue;
 
 public class TransmuterEntrySerializer implements JsonSerializer<ArchetypeMapper.TransmuterEntry> {
+	SaveFileFormat.ComponentIdentifiers identifiers;
+
 	@Override
 	public void write(Json json, ArchetypeMapper.TransmuterEntry object, Class knownType) {
 		json.writeArrayStart();
 		for (int i = 0; i < object.componentTypes.size(); i++) {
-			json.writeValue(object.componentTypes.get(i).getName());
+			Class<? extends Component> type = object.componentTypes.get(i);
+			String name = identifiers.typeToName.get(type);
+			json.writeValue(name);
 		}
 
 		json.writeArrayEnd();
@@ -29,10 +31,6 @@ public class TransmuterEntrySerializer implements JsonSerializer<ArchetypeMapper
 	}
 
 	private Class<? extends Component> toClass(String klazz) {
-		try {
-			return ClassReflection.forName(klazz);
-		} catch (ReflectionException e) {
-			throw new RuntimeException(e);
-		}
+		return identifiers.nameToType.get(klazz);
 	}
 }
