@@ -22,8 +22,8 @@ public class WorldSerializationManager extends BaseSystem {
 		this.backend = backend;
 	}
 
-	public ArtemisSerializer<?> getSerializer() {
-		return backend;
+	public <T extends ArtemisSerializer> T getSerializer() {
+		return (T) backend;
 	}
 
 	public <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {

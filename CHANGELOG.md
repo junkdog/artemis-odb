@@ -1,14 +1,19 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
-#### Version: 1.3.0-SNAPSHOT
+#### Version: 1.4.0-SNAPSHOT
+
+#### Version: 1.3.0 - 2015-12-27
 - **Serialization**
   - Archetypes recorded in output; somewhat smaller output and faster load.
-  - If JsonArtemisSerializer#setUsePrototypes is true (default), omit components made
+  - If `JsonArtemisSerializer#setUsePrototypes` is true (default), omit components made
     up of default values.
   - Json DOM was parsed multiple times, fixed.
   - Overloaded JsonArtemisSerializer#load - deserialize directly from JsonValue.
   - When loading entities, each deserialized child is assigned an entity id greater
     than its parent's.
+  - added `WorldSerializationManager#getSerializer` (if you need to load JsonValue direclty, for instance)
+- **Fix**: Work-around for a NPE during weaving; occurred when trying to inspect fields belonging to any parent class
+
 
 #### Version: 1.2.1 - 2015-11-23
 - **Fix**: `@PooledWeaver` properly resets primitives and strings back to initial values.
