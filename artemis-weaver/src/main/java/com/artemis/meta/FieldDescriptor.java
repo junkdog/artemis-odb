@@ -29,7 +29,10 @@ public class FieldDescriptor {
 	}
 
 	public boolean isResettable() {
-		return desc.length() == 1 || "Ljava/lang/String;".equals(desc);
+		// desc == null; means we're actually dealing with a reference to a field
+		// in a parent class; tricky... but it mostly affects packed components, so
+		// we'll leave it here for now
+		return desc != null && (desc.length() == 1 || "Ljava/lang/String;".equals(desc));
 	}
 
 	@Override
