@@ -26,8 +26,6 @@ class EntityPoolFactory {
 	}
 
 	void configureWith(JsonValue jsonData) {
-		assert (pool.isEmpty());
-
 		int count = countChildren(jsonData.get("entities"));
 		preallocateEntities(count);
 	}
@@ -50,6 +48,7 @@ class EntityPoolFactory {
 	}
 
 	private void preallocateEntities(int count) {
+		poolIndex = 0;
 		pool.setSize(0);
 		pool.ensureCapacity(count);
 		for (int i = 0; i < count; i++) {
