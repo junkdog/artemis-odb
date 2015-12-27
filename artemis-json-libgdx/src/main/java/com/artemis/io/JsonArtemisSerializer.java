@@ -99,6 +99,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 		SaveFileFormat partial = partialLoad(jsonData);
 		referenceTracker.inspectTypes(partial.componentIdentifiers.nameToType.values());
+		entitySerializer.factory.configureWith(jsonData);
 
 		T t = newInstance(format);
 		json.readFields(t, jsonData);

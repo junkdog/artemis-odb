@@ -3,7 +3,6 @@ package com.artemis.io;
 import com.artemis.Component;
 import com.artemis.Entity;
 import com.artemis.EntitySubscription;
-import com.artemis.annotations.Wire;
 import com.artemis.utils.IntBag;
 
 import java.util.HashMap;
@@ -37,7 +36,6 @@ public class SaveFileFormat {
 
 	// all non-transient fields are automatically serialized
 	public Metadata metadata;
-//	public IdentityHashMap<Class<? extends Component>, String> componentIdentifiers;
 	public ComponentIdentifiers componentIdentifiers;
 	public IntBag entities;
 	public ArchetypeMapper archetypes;
@@ -59,17 +57,6 @@ public class SaveFileFormat {
 	public SaveFileFormat() {
 		this((IntBag)null);
 	}
-
-//	protected Map<String, Class<? extends Component>> readLookupMap() {
-//		Map<String, Class<? extends Component>> lookup
-//				= new HashMap<String, Class<? extends Component>>();
-//
-//		for (Map.Entry<Class<? extends Component>, String> entry : componentIdentifiers.entrySet()) {
-//			lookup.put(entry.getValue(), entry.getKey());
-//		}
-//
-//		return lookup;
-//	}
 
 	public final Entity get(String key) {
 		return tracker.get(key);

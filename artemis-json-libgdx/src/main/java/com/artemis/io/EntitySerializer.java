@@ -22,6 +22,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 	private final World world;
 	private final ReferenceTracker referenceTracker;
 	private final DefaultObjectStore defaultValues;
+	final EntityPoolFactory factory;
 
 	private GroupManager groupManager;
 	private TagManager tagManager;
@@ -43,6 +44,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		this.emptyEntity = new ArchetypeBuilder().build(world);
 		this.referenceTracker = referenceTracker;
 		defaultValues = new DefaultObjectStore();
+		factory = new EntityPoolFactory(world);
 		world.inject(this);
 
 		registeredTags = (tagManager != null)
@@ -156,7 +158,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 			isSerializingEntity = true;
 		}
 
-		Entity e = world.createEntity(emptyEntity);
+		Entity e = factory.createEntity();
 
 		jsonData = readArchetype(jsonData, e);
 		jsonData = readTag(jsonData, e);

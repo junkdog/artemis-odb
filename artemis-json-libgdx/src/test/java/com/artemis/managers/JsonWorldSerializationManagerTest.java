@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
@@ -382,6 +383,32 @@ public class JsonWorldSerializationManagerTest {
 		assertEquals(tags.getEntity("tag3"), world.getEntity(holder2.entities.get(1)));
 	}
 
+	@Test
+	public void loaded_entities_id_order_matches_json_layout() {
+		String json = save(allEntities);
+
+		world.delete(2);
+		world.process();
+
+		deleteAll();
+
+		assertEquals(0, allEntities.getEntities().size());
+
+		ByteArrayInputStream is = new ByteArrayInputStream(
+			json.getBytes(StandardCharsets.UTF_8));
+
+		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		world.process();
+
+		assertEquals(3, allEntities.getEntities().size());
+
+		// this would be out of order in 1.2.1 and earlier, due
+		// to entityId 2 being deleted before 0 and 1.
+		IntBag sorted = new IntBag();
+		sorted.addAll(load.entities);
+		Arrays.sort(sorted.getData(), 0, sorted.size());
+		assertEquals(sorted, load.entities);
+	}
 
 	private void setTags() {
 		IntBag entities = allEntities.getEntities();
