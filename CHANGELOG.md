@@ -10,8 +10,8 @@
   - Json DOM was parsed multiple times, fixed.
   - Overloaded JsonArtemisSerializer#load - deserialize directly from JsonValue.
   - When loading entities, each deserialized child is assigned an entity id greater
-    than its parent's.
-  - added `WorldSerializationManager#getSerializer` (if you need to load JsonValue direclty, for instance)
+    than its parent.
+  - added `WorldSerializationManager#getSerializer` (if you need to load JsonValue directly, for instance)
 - **Fix**: Work-around for a NPE during weaving; occurred when trying to inspect fields belonging to any parent class
 
 
