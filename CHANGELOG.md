@@ -2,7 +2,7 @@
 
 #### Version: 1.4.0-SNAPSHOT
 
-#### Version: 1.3.0 - 2015-12-27
+#### Version: 1.3.0 - 2015-12-28
 - **Serialization**
   - Archetypes recorded in output; somewhat smaller output and faster load.
   - If `JsonArtemisSerializer#setUsePrototypes` is true (default), omit components made
