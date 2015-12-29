@@ -65,10 +65,10 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	@Override
 	protected void save(Writer writer, SaveFileFormat save) {
 		try {
-			save.archetypes = new ArchetypeMapper(world, save.entities);
-
 			referenceTracker.inspectTypes(world);
 			referenceTracker.preWrite(save);
+
+			save.archetypes = new ArchetypeMapper(world, save.entities);
 
 			componentCollector.preWrite(save);
 			entitySerializer.serializationState = save;
@@ -88,10 +88,10 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 	@Override
 	protected <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
-		return getT(new JsonReader().parse(is), format);
+		return load(new JsonReader().parse(is), format);
 	}
 
-	public <T extends SaveFileFormat> T getT(JsonValue jsonData, Class<T> format) {
+	public <T extends SaveFileFormat> T load(JsonValue jsonData, Class<T> format) {
 		entitySerializer.preLoad();
 
 		SaveFileFormat partial = partialLoad(jsonData);

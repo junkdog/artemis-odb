@@ -68,10 +68,10 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	@Override
 	protected void save(Writer writer, SaveFileFormat save) {
 		try {
-			save.archetypes = new ArchetypeMapper(world, save.entities);
-
 			referenceTracker.inspectTypes(world);
 			referenceTracker.preWrite(save);
+
+			save.archetypes = new ArchetypeMapper(world, save.entities);
 
 			componentCollector.preWrite(save);
 			entitySerializer.serializationState = save;

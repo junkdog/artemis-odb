@@ -2,6 +2,10 @@
 
 #### Version: 1.4.0-SNAPSHOT
 
+#### Version: 1.3.1 - 2015-12-29
+- **Fix**: During deserialization, indirectly referenced entities were not included in
+  the archetypes section
+
 #### Version: 1.3.0 - 2015-12-28
 - **Serialization**
   - Archetypes recorded in output; somewhat smaller output and faster load.

@@ -31,8 +31,6 @@ public class JsonWorldSerializationManagerTest {
 	public void setup() {
 		setupWorld();
 
-		allEntities = subscriptions.get(Aspect.all());
-
 		EntityEdit ee = world.createEntity().edit();
 		ee.create(ComponentX.class).text = "hello";
 		ee.create(ComponentY.class).text = "whatever";
@@ -64,6 +62,8 @@ public class JsonWorldSerializationManagerTest {
 		JsonArtemisSerializer backend = new JsonArtemisSerializer(world);
 		backend.prettyPrint(true);
 		manger.setSerializer(backend);
+
+		allEntities = subscriptions.get(Aspect.all());
 	}
 
 	@Test
@@ -410,6 +410,31 @@ public class JsonWorldSerializationManagerTest {
 		assertEquals(sorted, load.entities);
 	}
 
+	@Test
+	public void implicitly_saved_entities_includes_archetypes() {
+		setupWorld();
+
+		EntityEdit ee = world.createEntity().edit();
+		ee.create(Size.class);
+		int id1 = ee.getEntityId();
+
+		EntityEdit ee2 = world.createEntity().edit();
+		ee2.create(EntityHolder.class).entityId = id1;
+		int id2 = ee2.getEntityId();
+
+		world.process();
+
+		IntBag toSave = new IntBag();
+		toSave.add(id2);
+		StringWriter writer = new StringWriter();
+		SaveFileFormat save = new SaveFileFormat(toSave);
+		manger.save(writer, save);
+
+		// only saving 2nd entity, need to make sure the archetype for
+		// id1 is pulled in too
+		assertEquals(2, save.archetypes.compositionIdMapper.size());
+	}
+
 	private void setTags() {
 		IntBag entities = allEntities.getEntities();
 		tags.register("tag1", world.getEntity(entities.get(0)));
@@ -447,8 +472,12 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	private String save(EntitySubscription subscription) {
+		return save(subscription.getEntities());
+	}
+
+	private String save(IntBag entities) {
 		StringWriter writer = new StringWriter();
-		SaveFileFormat save = new SaveFileFormat(subscription.getEntities());
+		SaveFileFormat save = new SaveFileFormat(entities);
 		manger.save(writer, save);
 		return writer.toString();
 	}
