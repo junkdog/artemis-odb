@@ -4,6 +4,7 @@ import com.artemis.MundaneWireException;
 import com.artemis.World;
 import com.artemis.utils.reflect.Field;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.String.format;
@@ -14,13 +15,12 @@ import static java.lang.String.format;
  *
  * @author Snorre E. Brekke
  */
-public class WiredFieldResolver implements FieldResolver, UseInjectionCache {
+public class WiredFieldResolver implements UseInjectionCache, PojoFieldResolver {
 	private InjectionCache cache;
 
-	private Map<String, Object> pojos;
+	private Map<String, Object> pojos = new HashMap<String, Object>();
 
-	public WiredFieldResolver(Map<String, Object> pojos) {
-		this.pojos = pojos;
+	public WiredFieldResolver() {
 	}
 
 	@Override
@@ -52,5 +52,10 @@ public class WiredFieldResolver implements FieldResolver, UseInjectionCache {
 	@Override
 	public void setCache(InjectionCache cache) {
 		this.cache = cache;
+	}
+
+	@Override
+	public void setPojos(Map<String, Object> pojos) {
+		this.pojos = pojos;
 	}
 }

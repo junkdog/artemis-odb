@@ -37,9 +37,10 @@ public final class CachedInjector implements Injector {
 	@Override
 	public void initialize(World world, Map<String, Object> injectables) {
 		if (fieldHandler == null) {
-			fieldHandler = new FieldHandler(cache, injectables);
+			fieldHandler = new FieldHandler(cache);
 		}
-		fieldHandler.initialize(world);
+
+		fieldHandler.initialize(world, injectables);
 	}
 
 	@Override

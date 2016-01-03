@@ -1,5 +1,6 @@
 package com.artemis.injection;
 
+import com.artemis.InjectionException;
 import com.artemis.World;
 
 import java.util.Map;
@@ -21,6 +22,7 @@ public interface Injector {
 	/**
 	 * @param world       this Injector will be used for
 	 * @param injectables registered via {@link com.artemis.WorldConfiguration#register}
+	 * @throws InjectionException when injector lacks a means to inject injectables.
 	 */
 	void initialize(World world, Map<String, Object> injectables);
 

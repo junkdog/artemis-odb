@@ -1,6 +1,8 @@
 package com.artemis.injection;
 
+import com.artemis.InjectionException;
 import com.artemis.World;
+import com.artemis.WorldConfigurationException;
 import com.artemis.utils.Bag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
@@ -49,9 +51,10 @@ public class FieldHandler {
 
 
 	/**
-	 * Constructs a ned FieldHandler with an {@link ArtemisFieldResolver} already registered, which can resolve
-	 * {@link com.artemis.ComponentMapper}, {@link com.artemis.BaseSystem}
+	 * Constructs a ned FieldHandler with an {@link ArtemisFieldResolver} and {@link WiredFieldResolver}
+	 * already registered, which can resolve {@link com.artemis.ComponentMapper}, {@link com.artemis.BaseSystem}
 	 * and {@link com.artemis.Manager} types registered in the {@link World}
+	 * {@link com.artemis.annotations.Wire}.
 	 *
 	 * @param cache used for better reflection-speed.
 	 * @see ArtemisFieldResolver
@@ -60,21 +63,7 @@ public class FieldHandler {
 		this.fieldResolvers = new Bag<FieldResolver>();
 		this.cache = cache;
 		addFieldResolver(new ArtemisFieldResolver());
-	}
-
-	/**
-	 * Constructs a ned FieldHandler with an {@link ArtemisFieldResolver} and {@link WiredFieldResolver} already registered.
-	 * {@link com.artemis.annotations.Wire}.
-	 *
-	 * @param cache       used for better reflection-speed.
-	 * @param injectables typically registered via registered via {@link com.artemis.WorldConfiguration#register}
-	 * @see ArtemisFieldResolver
-	 * @see WiredFieldResolver
-	 * @see FieldHandler#FieldHandler(InjectionCache)
-	 */
-	public FieldHandler(InjectionCache cache, Map<String, Object> injectables) {
-		this(cache);
-		addFieldResolver(new WiredFieldResolver(injectables));
+		addFieldResolver(new WiredFieldResolver());
 	}
 
 	/**
@@ -87,14 +76,29 @@ public class FieldHandler {
 	 * used by this handler.
 	 *
 	 * @param world the world this FieldHandler is being used for
+	 * @throws com.artemis.WorldConfigurationException when injector has no way to deal with injectables.
 	 */
-	public void initialize(World world) {
+	public void initialize(World world, Map<String, Object> injectables) {
+
+		boolean fieldResolverFound = false;
+
 		for (int i = 0, s = fieldResolvers.size(); i < s; i++) {
 			FieldResolver fieldResolver = fieldResolvers.get(i);
 			if (ClassReflection.isInstance(UseInjectionCache.class, fieldResolver)) {
 				((UseInjectionCache) fieldResolver).setCache(cache);
 			}
+
+			if (ClassReflection.isInstance(PojoFieldResolver.class, fieldResolver)) {
+				((PojoFieldResolver) fieldResolver).setPojos(injectables);
+				fieldResolverFound = true;
+			}
+
 			fieldResolver.initialize(world);
+		}
+
+		if ( !fieldResolverFound )
+		{
+			throw new InjectionException("FieldHandler lacks resolver capable of dealing with your custom injectables. Register a WiredFieldResolver or PojoFieldResolver with your FieldHandler.");
 		}
 	}
 
@@ -125,5 +129,9 @@ public class FieldHandler {
 	 */
 	public final void addFieldResolver(FieldResolver fieldResolver) {
 		fieldResolvers.add(fieldResolver);
+	}
+
+	public Bag<FieldResolver> getFieldResolvers() {
+		return fieldResolvers;
 	}
 }
