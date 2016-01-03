@@ -96,7 +96,7 @@ public class FieldHandler {
 			fieldResolver.initialize(world);
 		}
 
-		if ( !fieldResolverFound )
+		if ( injectables != null && !injectables.isEmpty() && !fieldResolverFound )
 		{
 			throw new InjectionException("FieldHandler lacks resolver capable of dealing with your custom injectables. Register a WiredFieldResolver or PojoFieldResolver with your FieldHandler.");
 		}

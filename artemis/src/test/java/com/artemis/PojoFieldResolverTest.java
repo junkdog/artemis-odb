@@ -25,6 +25,13 @@ public class PojoFieldResolverTest {
 	}
 
 	@Test
+	public void custom_field_handler_without_field_resolver_should_not_fail_if_no_injectables() {
+		WorldConfiguration configuration =
+				new WorldConfiguration().setInjector(createInjectorWithCustomHandler());
+		new World(configuration);
+	}
+
+	@Test
 	public void pojo_field_resolver_should_be_supplied_with_any_injectables() {
 		PojoFieldResolverImpl pojoFieldResolver = new PojoFieldResolverImpl();
 		WorldConfiguration configuration =
