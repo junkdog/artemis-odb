@@ -50,6 +50,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.UseInjectionCache"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.ArtemisFieldResolver"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.WiredFieldResolver"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.PojoFieldResolver"/>
 
     <source path="">
         <exclude name="**/gen/**"/>
