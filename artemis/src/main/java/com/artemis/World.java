@@ -105,7 +105,7 @@ public class World {
 	/**
 	 * Inject dependencies on object.
 	 * <p/>
-	 * Immediately perform dependency injection on the target.
+	 * Immediately perform dependency injection on the target, even if the target isn't of an Artemis class.
 	 * <p/>
 	 * If you want to specify nonstandard dependencies to inject, use
 	 * {@link com.artemis.WorldConfiguration#register(String, Object)} instead, or
