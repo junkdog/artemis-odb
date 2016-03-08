@@ -5,9 +5,11 @@ import com.artemis.component.ComponentY;
 import com.artemis.component.Packed;
 import com.artemis.component.ReusedComponent;
 import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.systems.IteratingSystem;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.artemis.Aspect.all;
 import static org.junit.Assert.*;
 
 public class EntityTransmuterTest {
@@ -126,6 +128,16 @@ public class EntityTransmuterTest {
 		assertEquals(0, subscription.getEntities().size());
 	}
 
+	@Test
+	public void deleted_transmuted_editors_never_inserted_test() {
+		World world = new World(new WorldConfiguration()
+			.setSystem(SysTransmuter.class)
+			.setSystem(SysSubscriber.class));
+
+		world.createEntity().edit().create(ComponentX.class);
+		world.process();
+	}
+
 	private Entity createEntity(Class<? extends Component>... components) {
 		Entity e = world.createEntity();
 		EntityEdit edit = e.edit();
@@ -133,6 +145,43 @@ public class EntityTransmuterTest {
 			edit.create(c);
 
 		return e;
+	}
+
+	public static class SysTransmuter extends IteratingSystem {
+		private EntityTransmuter transmuter;
+
+		public SysTransmuter() {
+			super(all(ComponentX.class));
+		}
+
+		@Override
+		protected void initialize() {
+			transmuter = new EntityTransmuterFactory(world)
+				.add(ComponentY.class)
+				.build();
+		}
+
+		@Override
+		protected void process(int entityId) {
+			transmuter.transmute(entityId);
+			world.edit(entityId).create(ReusedComponent.class);
+			world.delete(entityId);
+		}
+	}
+
+	public static class SysSubscriber extends BaseEntitySystem {
+		public SysSubscriber() {
+			super(all(ComponentY.class));
+		}
+
+		@Override
+		protected void processSystem() {}
+
+		@Override
+		protected void inserted(int entityId) {
+			super.inserted(entityId);
+			fail("entity is dead");
+		}
 	}
 
 	private static class ES1 extends EntityProcessingSystem {

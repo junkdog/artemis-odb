@@ -3,8 +3,9 @@
 #### Version: 1.4.0-SNAPSHOT
 - **BREAKING CHANGES**
   - If you have overridden default injection functionality and instance FieldHandler
-    yourself, be aware the FieldHandler constructor behaviour has changed.
+    yourself, be aware the FieldHandler constructor behaviour has changed. See below.
 
+- **Fix**: Simultaneous transmute + delete caused dead entities in `SubscriptionListener#inserted`.
 - **Fix**: Using custom FieldHandler or FieldResolver disabled @Wire on fields.
   - Warn if attempting to inject custom objects without prerequisite resolver (PojoFieldResolver).
 

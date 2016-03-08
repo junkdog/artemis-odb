@@ -280,6 +280,9 @@ public class World {
 	 */
 	public void delete(int entityId) {
 		editPool.delete(entityId);
+
+		// guarding against previous transmutations
+		changed.set(entityId, false);
 	}
 
 	/**
