@@ -18,6 +18,10 @@ public class WorldSerializationManager extends BaseSystem {
 	protected void processSystem() {
 	}
 
+	/**
+	 * Provide a serializer that can read or write data in your choice of format (likely
+	 * some form of data file, e.g. JSON).
+	 */
 	public void setSerializer(ArtemisSerializer<?> backend) {
 		this.backend = backend;
 	}
@@ -26,6 +30,10 @@ public class WorldSerializationManager extends BaseSystem {
 		return (T) backend;
 	}
 
+	/**
+	 * Loads data from an InputStream (usually a file) and provides a SaveFileFormat (or subclass)
+	 * object that contains the deserialized data.
+	 */
 	public <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
 		if (alwaysLoadStreamMemory || !InputStreamHelper.isMarkSupported(is)) {
 			try {
@@ -53,6 +61,11 @@ public class WorldSerializationManager extends BaseSystem {
 		backend.save(writer, format);
 	}
 
+	/**
+	 * Override this class to actually decide the format in which an object (not necessarily
+	 * of Artemis type) should be serialized.  A JSON serializer is provided, but by overriding
+	 * this class you may serialize to/from YAML, XML, UDP packets, or even your own JSON format!
+	 */
 	public static abstract class ArtemisSerializer<T> {
 		protected World world;
 
@@ -60,12 +73,25 @@ public class WorldSerializationManager extends BaseSystem {
 			this.world = world;
 		}
 
+		/**
+		 * Convenience method for immediately serializing a group of entities with the default
+		 * SaveFileFormat.  For finer control or SaveFileFormat subclasses, use #save.
+		 */
 		protected final void save(Writer writer, IntBag entities) {
 			save(writer, new SaveFileFormat(entities));
 		}
 
+		/**
+		 * Register a custom serializer for some known class.  It is left to the implementation
+		 * to decide how this custom serializer is actually used.
+		 */
 		public abstract ArtemisSerializer register(Class<?> type, T serializer);
+		
 		protected abstract void save(Writer writer, SaveFileFormat format);
+		
+		/**
+		 * Deserializes data (usually a file) of a known class to a SaveFileFormat.
+		 */
 		protected abstract <T extends SaveFileFormat> T load(InputStream is, Class<T> format);
 	}
 }

@@ -10,9 +10,11 @@ import com.artemis.utils.reflect.ClassReflection;
 import java.util.*;
 
 /**
- * <p>The default save file format. This class can be extended if additional
- * data requires persisting. All instance fields in this class - or its children -
- * are persisted.</p>
+ * <p>
+ * Represents a set of Entities ready to be serialized, or a set of Entities that was just
+ * deserialized (and therefore ready to use in your game). This class can be extended if additional
+ * data requires persisting. All instance fields in this class - or its children - are persisted.
+ * </p>
  *
  * <p>The default de/serializer backend provided is
  * {@code JsonArtemisSerializer}. A kryo backend is planned for a later release.
