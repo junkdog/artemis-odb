@@ -5,9 +5,11 @@
   - If you have overridden default injection functionality and instance FieldHandler
     yourself, be aware the FieldHandler constructor behaviour has changed. See below.
 
+- **Fix**: Transmuting deleted entities throws an exception, mirroring `EntityEdit`` on deleted.
 - **Fix**: Simultaneous transmute + delete caused dead entities in `SubscriptionListener#inserted`.
 - **Fix**: Using custom FieldHandler or FieldResolver disabled @Wire on fields.
   - Warn if attempting to inject custom objects without prerequisite resolver (PojoFieldResolver).
+
 
 #### Version: 1.3.1 - 2015-12-29
 - **Fix**: During deserialization, indirectly referenced entities were not included in

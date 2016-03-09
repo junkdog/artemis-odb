@@ -322,7 +322,7 @@ public class World {
 	 * - {@link com.artemis.EntityFactory} Fast, clean and convenient. For fixed composition entities. Requires some setup.
 	 * Best choice for parameterizing pooled components.
 	 *
-	 * @see #create(int) recommended alternative.
+	 * @see #create() recommended alternative.
 	 * @return entity
 	 */
 	public Entity createEntity(Archetype archetype) {
