@@ -1,14 +1,12 @@
 package com.artemis.io;
 
 import com.artemis.*;
-import com.artemis.annotations.Transient;
 import com.artemis.annotations.Wire;
 import com.artemis.components.SerializationTag;
 import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
-import com.artemis.utils.reflect.ClassReflection;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 
@@ -82,12 +80,12 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		writeGroups(json, e);
 
 		json.writeObjectStart("components");
-		Map<Class<? extends Component>, String> typeToName =
-			serializationState.componentIdentifiers.typeToName;
+		SaveFileFormat.ComponentIdentifiers identifiers = serializationState.componentIdentifiers;
+		Map<Class<? extends Component>, String> typeToName = identifiers.typeToName;
 
 		for (int i = 0, s = components.size(); s > i; i++) {
 			Component c = components.get(i);
-			if (ClassReflection.getDeclaredAnnotation(c.getClass(), Transient.class) != null)
+			if (identifiers.isTransient(c.getClass()))
 				continue;
 
 			if (defaultValues.hasDefaultValues(c))

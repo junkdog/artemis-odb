@@ -3,12 +3,11 @@ package com.artemis.io;
 import com.artemis.Component;
 import com.artemis.Entity;
 import com.artemis.EntitySubscription;
+import com.artemis.annotations.Transient;
 import com.artemis.utils.IntBag;
+import com.artemis.utils.reflect.ClassReflection;
 
-import java.util.HashMap;
-import java.util.IdentityHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * <p>The default save file format. This class can be extended if additional
@@ -83,10 +82,25 @@ public class SaveFileFormat {
 		public Map<String, Class<? extends Component>> nameToType =
 			new HashMap<String, Class<? extends Component>>();
 
+		transient Set<Class<? extends Component>> transientComponents =
+			new HashSet<Class<? extends Component>>();
+
 		void build() {
-			for (Map.Entry<Class<? extends Component>, String> entry : typeToName.entrySet()) {
-				nameToType.put(entry.getValue(), entry.getKey());
+			Iterator<Map.Entry<Class<? extends Component>, String>> it = typeToName.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<Class<? extends Component>, String> entry = it.next();
+				Class<? extends Component> c = entry.getKey();
+				if (ClassReflection.getDeclaredAnnotation(c, Transient.class) == null) {
+					nameToType.put(entry.getValue(), c);
+				} else {
+					transientComponents.add(c);
+					it.remove();
+				}
 			}
+		}
+
+		boolean isTransient(Class<? extends Component> c) {
+			return transientComponents.contains(c);
 		}
 	}
 }

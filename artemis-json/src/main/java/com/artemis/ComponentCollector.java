@@ -36,9 +36,6 @@ public class ComponentCollector {
 		BitSet bs = componentIds;
 		for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
 			Class<? extends Component> type = cm.typeFactory.getTypeFor(i).getType();
-			if (ClassReflection.getDeclaredAnnotation(type, Transient.class) != null)
-				continue;
-
 			lookup.put(type, resolveNameId(names, type));
 		}
 	}

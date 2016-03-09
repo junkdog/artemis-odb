@@ -1,7 +1,6 @@
 package com.artemis.io;
 
 import com.artemis.*;
-import com.artemis.annotations.Transient;
 import com.artemis.annotations.Wire;
 import com.artemis.components.SerializationTag;
 import com.artemis.managers.GroupManager;
@@ -80,12 +79,12 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		writeGroups(json, e);
 
 		json.writeObjectStart("components");
-		Map<Class<? extends Component>, String> typeToName =
-			serializationState.componentIdentifiers.typeToName;
+		SaveFileFormat.ComponentIdentifiers identifiers = serializationState.componentIdentifiers;
+		Map<Class<? extends Component>, String> typeToName = identifiers.typeToName;
 
 		for (int i = 0, s = components.size(); s > i; i++) {
 			Component c = components.get(i);
-			if (c.getClass().getAnnotation(Transient.class) != null)
+			if (identifiers.isTransient(c.getClass()))
 				continue;
 
 			if (defaultValues.hasDefaultValues(c))
