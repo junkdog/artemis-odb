@@ -1,6 +1,9 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
-#### Version: 1.4.0-SNAPSHOT
+#### Version: 1.5.0-SNAPSHOT
+
+
+#### Version: 1.4.0 - 2016-03-09
 - **BREAKING CHANGES**
   - If you have overridden default injection functionality and instance FieldHandler
     yourself, be aware the FieldHandler constructor behaviour has changed. See below.
@@ -15,6 +18,7 @@
 #### Version: 1.3.1 - 2015-12-29
 - **Fix**: During deserialization, indirectly referenced entities were not included in
   the archetypes section
+
 
 #### Version: 1.3.0 - 2015-12-28
 - **Serialization**
