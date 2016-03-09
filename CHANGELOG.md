@@ -5,6 +5,7 @@
   - If you have overridden default injection functionality and instance FieldHandler
     yourself, be aware the FieldHandler constructor behaviour has changed. See below.
 
+- **Fix**: `IntervalEntitySystem#getIntervalDelta` sometimes returned wrong value when interval < `world.delta`.
 - **Fix**: Transmuting deleted entities throws an exception, mirroring `EntityEdit`` on deleted.
 - **Fix**: Simultaneous transmute + delete caused dead entities in `SubscriptionListener#inserted`.
 - **Fix**: Using custom FieldHandler or FieldResolver disabled @Wire on fields.
