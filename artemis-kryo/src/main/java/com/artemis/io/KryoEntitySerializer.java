@@ -11,6 +11,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.serializers.FieldSerializer;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -190,12 +191,17 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 			archetypeMapper.transmute(e, archetype);
 		}
 
-		EntityEdit edit = e.edit();
+		final EntityEdit edit = e.edit();
 		for (int i = 0; i < count; i++) {
 			String name = input.readString();
-			Class<? extends Component> type = nameToType.get(name);
-			Component c = kryo.readObject(input, type);
-			edit.add(c);
+			final Class<? extends Component> type = nameToType.get(name);
+			// note we use custom serializer because we must use edit.create() for non basic types
+			FieldSerializer fieldSerializer = new FieldSerializer(kryo, type) {
+				@Override protected Object create (Kryo kryo, Input input, Class type) {
+					return edit.create(type);
+				}
+			};
+			Component c = kryo.readObject(input, type, fieldSerializer);
 			referenceTracker.addEntityReferencingComponent(c);
 		}
 
