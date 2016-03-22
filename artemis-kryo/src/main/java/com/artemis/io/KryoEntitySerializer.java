@@ -15,6 +15,7 @@ import com.esotericsoftware.kryo.serializers.FieldSerializer;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 @Wire(failOnNull = false)
@@ -196,17 +197,53 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 			String name = input.readString();
 			final Class<? extends Component> type = nameToType.get(name);
 			// note we use custom serializer because we must use edit.create() for non basic types
-			FieldSerializer fieldSerializer = new FieldSerializer(kryo, type) {
-				@Override protected Object create (Kryo kryo, Input input, Class type) {
-					return edit.create(type);
-				}
-			};
-			Component c = kryo.readObject(input, type, fieldSerializer);
+			Component c = kryo.readObject(input, type, serializer(kryo, type, edit));
 			referenceTracker.addEntityReferencingComponent(c);
 		}
 
 		isSerializingEntity = false;
 
 		return e;
+	}
+
+	private Map<Class, Serializer> serializers = new HashMap<Class, Serializer>();
+	private Serializer serializer (Kryo kryo, Class<? extends Component> type, EntityEdit edit) {
+		Serializer serializer = serializers.get(type);
+		if (serializer == null) {
+			serializer = kryo.getSerializer(type);
+			// note we replace the default serializers with our own
+			if (serializer.getClass() == FieldSerializer.class) {
+				serializer = new EditFieldSerializer(kryo, type);
+			}
+			serializers.put(type, serializer);
+		}
+		if (serializer instanceof EditFieldSerializer) {
+			((EditFieldSerializer)serializer).init(edit);
+		} else {
+			// TODO exception?
+			System.err.println("Serializer for " + type + " should extend EditFieldSerializer");
+		}
+		return serializer;
+	}
+
+	protected void clearSerializerCache() {
+		serializers.clear();
+	}
+
+	// TODO do we need to expose this for subclassing?
+	public static class EditFieldSerializer extends FieldSerializer {
+		protected EntityEdit edit;
+		public EditFieldSerializer (Kryo kryo, Class type) {
+			super(kryo, type);
+		}
+
+		public EditFieldSerializer init (EntityEdit edit) {
+			this.edit = edit;
+			return this;
+		}
+
+		@Override protected Object create (Kryo kryo, Input input, Class type) {
+			return edit.create(type);
+		}
 	}
 }

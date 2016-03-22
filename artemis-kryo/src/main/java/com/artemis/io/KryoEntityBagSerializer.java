@@ -1,6 +1,5 @@
 package com.artemis.io;
 
-import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.utils.Bag;
 import com.esotericsoftware.kryo.Kryo;
@@ -20,19 +19,16 @@ public class KryoEntityBagSerializer extends Serializer<Bag> {
 	public void write (Kryo kryo, Output output, Bag bag) {
 		output.writeInt(bag.size());
 		for (Object item : bag) {
-			kryo.writeObject(output, item);
+			kryo.writeClassAndObject(output, item);
 		}
 	}
 
 	@Override
 	public Bag read (Kryo kryo, Input input, Class<Bag> aClass) {
-		Bag<Entity> result = new Bag<Entity>();
+		Bag result = new Bag();
 		int count = input.readInt();
 		for (int i = 0; i < count; i++) {
-			// note this is a reference
-			Entity entity = kryo.readObject(input, Entity.class);
-
-			result.add(entity);
+			result.add(kryo.readClassAndObject(input));
 		}
 		return result;
 	}

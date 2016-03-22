@@ -7,6 +7,7 @@ import com.artemis.io.JsonArtemisSerializer;
 import com.artemis.io.KryoArtemisSerializer;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
+import com.badlogic.gdx.Gdx;
 import org.junit.Test;
 
 import java.io.*;
@@ -91,7 +92,16 @@ public class KryoEntityReferencesTest {
 ////		String loaded = writer.toString();
 ////		System.out.println(loaded);
 //
-//		deleteAll();
+//		try {
+//			FileOutputStream fos = new FileOutputStream("/Users/PiotrJ/7drl/welp.bin");
+//			backend.saveBinary(fos, load);
+//			fos.flush();
+//			fos.close();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+
+		deleteAll();
 		SaveFileFormat load;
 		// note the file should all be on one line
 		URL resource = KryoEntityReferencesTest.class.getResource("/level_3.b64");

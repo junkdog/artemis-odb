@@ -8,15 +8,10 @@ import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.StreamUtils;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
-import com.esotericsoftware.kryo.io.ByteBufferInput;
-import com.esotericsoftware.kryo.io.ByteBufferOutput;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.io.*;
 import org.objenesis.strategy.InstantiatorStrategy;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
+import java.io.*;
 
 public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSerializer<Serializer> {
 	private final Kryo kryo;
@@ -46,6 +41,8 @@ public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		kryo.setReferences(false);
 
 		kryo.register(SaveFileFormat.ComponentIdentifiers.class, lookup);
+		/* TODO this sorta expects Bag<Entity, what do we do if it doesn't?
+		 * we could require custom serializer for stuff with it, but thats kinda crap */
 		kryo.register(Bag.class, new KryoEntityBagSerializer(world));
 		kryo.register(IntBag.class, intBagEntitySerializer);
 		kryo.register(Entity.class, entitySerializer);
@@ -66,27 +63,14 @@ public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	@Override
 	protected void save(Writer writer, SaveFileFormat save) {
 		try {
-			referenceTracker.inspectTypes(world);
-			referenceTracker.preWrite(save);
+			ByteArrayOutputStream os = new ByteArrayOutputStream(4096);
+			saveBinary(os, save);
 
-			save.archetypes = new ArchetypeMapper(world, save.entities);
-
-			componentCollector.preWrite(save);
-			entitySerializer.serializationState = save;
-			transmuterEntrySerializer.identifiers = save.componentIdentifiers;
-			entitySerializer.archetypeMapper = new ArchetypeMapper(world, save.entities);
-			entitySerializer.archetypeMapper.serializationState = save;
-			save.componentIdentifiers.build();
-
-			Output output = new Output(new ByteBufferOutput());
-			kryo.writeObjectOrNull(output, save.componentIdentifiers, SaveFileFormat.ComponentIdentifiers.class);
-			kryo.writeObjectOrNull(output, save.archetypes, ArchetypeMapper.class);
-			output.writeInt(save.entities.size());
-			kryo.writeObjectOrNull(output, save, save.getClass());
-			// do we want this encode/decode stuff? source is short
+			// do we want this encode/decode stuff? source is short, probably not
 			// could add it to util or whatever
-			char[] encode = Base64Coder.encode(output.getBuffer());
+			char[] encode = Base64Coder.encode(os.toByteArray());
 			String encoded = new String(encode);
+//			System.out.println(new String(os.toByteArray()));
 			writer.append(encoded);
 
 		} catch (IOException e) {
@@ -94,40 +78,72 @@ public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		}
 	}
 
+	public void saveBinary(OutputStream os, SaveFileFormat save) {
+		referenceTracker.inspectTypes(world);
+		referenceTracker.preWrite(save);
+
+		save.archetypes = new ArchetypeMapper(world, save.entities);
+
+		componentCollector.preWrite(save);
+		entitySerializer.serializationState = save;
+		transmuterEntrySerializer.identifiers = save.componentIdentifiers;
+		entitySerializer.archetypeMapper = new ArchetypeMapper(world, save.entities);
+		entitySerializer.archetypeMapper.serializationState = save;
+		save.componentIdentifiers.build();
+
+		Output output = new Output(os);
+		kryo.writeObject(output, save.componentIdentifiers);
+		kryo.writeObject(output, save.archetypes);
+		output.writeInt(save.entities.size());
+		kryo.writeObject(output, save);
+		output.flush();
+		output.close();
+		entitySerializer.clearSerializerCache();
+	}
+
 	@Override
 	protected <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
 		try {
-			entitySerializer.preLoad();
-
 			byte[] bytes = StreamUtils.copyStreamToByteArray(is);
 			String raw = new String(bytes);
 			bytes = Base64Coder.decode(raw);
-			Input input = new ByteBufferInput(bytes);
-
-			SaveFileFormat partial = new SaveFileFormat((IntBag)null);
-			partial.componentIdentifiers = kryo.readObjectOrNull(input, SaveFileFormat.ComponentIdentifiers.class);
-			transmuterEntrySerializer.identifiers = partial.componentIdentifiers;
-
-			partial.archetypes = kryo.readObjectOrNull(input, ArchetypeMapper.class);
-			entitySerializer.archetypeMapper = partial.archetypes;
-
-			entitySerializer.serializationState = partial;
-			if (entitySerializer.archetypeMapper != null) {
-				entitySerializer.archetypeMapper.serializationState = partial;
-				transmuterEntrySerializer.identifiers = partial.componentIdentifiers;
-			}
-
-			referenceTracker.inspectTypes(partial.componentIdentifiers.nameToType.values());
-			entitySerializer.factory.configureWith(input.readInt());
-
-			T t = kryo.readObjectOrNull(input, format);
-			t.tracker = entitySerializer.keyTracker;
-			// FIXME this is broken due to kryo loading entities in order then bags for
-			// whatever stupid reason, disabling refs fixes that
-			referenceTracker.translate(intBagEntitySerializer.getTranslatedIds());
-			return t;
+			is = new ByteBufferInput(bytes);
+			return loadBinary(is, format);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public <T extends SaveFileFormat> T loadBinary(InputStream is, Class<T> format) {
+		entitySerializer.preLoad();
+
+		Input input = new ByteBufferInput(is);
+
+		SaveFileFormat partial = new SaveFileFormat((IntBag)null);
+		partial.componentIdentifiers = kryo.readObject(input, SaveFileFormat.ComponentIdentifiers.class);
+		transmuterEntrySerializer.identifiers = partial.componentIdentifiers;
+
+		partial.archetypes = kryo.readObject(input, ArchetypeMapper.class);
+		entitySerializer.archetypeMapper = partial.archetypes;
+
+		entitySerializer.serializationState = partial;
+		if (entitySerializer.archetypeMapper != null) {
+			entitySerializer.archetypeMapper.serializationState = partial;
+			transmuterEntrySerializer.identifiers = partial.componentIdentifiers;
+		}
+
+		referenceTracker.inspectTypes(partial.componentIdentifiers.nameToType.values());
+		entitySerializer.factory.configureWith(input.readInt());
+
+		T t = kryo.readObject(input, format);
+		t.tracker = entitySerializer.keyTracker;
+		referenceTracker.translate(intBagEntitySerializer.getTranslatedIds());
+		// TODO do we want to clear those?
+		entitySerializer.clearSerializerCache();
+		return t;
+	}
+
+	public Kryo getKryo () {
+		return kryo;
 	}
 }

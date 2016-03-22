@@ -327,7 +327,7 @@ public class KryoWorldSerializationManagerTest {
 		EntityEdit ee1 = world.createEntity().edit();
 		ee1.create(ComponentX.class);
 		ee1.create(ComponentY.class);
-		ee1.create(ReusedComponent.class).data = "reused";
+		ee1.create(ReusedComponent.class);
 		ee1.create(SerializationTag.class).tag = "one";
 		EntityEdit ee2 = world.createEntity().edit();
 		ee2.create(ComponentX.class);
