@@ -230,10 +230,9 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 		serializers.clear();
 	}
 
-	// TODO do we need to expose this for subclassing?
-	public static class EditFieldSerializer extends FieldSerializer {
+	public static class EditFieldSerializer<T extends Component> extends FieldSerializer<T> {
 		protected EntityEdit edit;
-		public EditFieldSerializer (Kryo kryo, Class type) {
+		public EditFieldSerializer (Kryo kryo, Class<? extends Component> type) {
 			super(kryo, type);
 		}
 
@@ -242,8 +241,8 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 			return this;
 		}
 
-		@Override protected Object create (Kryo kryo, Input input, Class type) {
-			return edit.create(type);
+		@Override protected T create (Kryo kryo, Input input, Class type) {
+			return (T)edit.create(type);
 		}
 	}
 }
