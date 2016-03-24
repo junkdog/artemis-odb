@@ -7,8 +7,11 @@ import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.StreamUtils;
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.ReferenceResolver;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.*;
+import com.esotericsoftware.kryo.util.MapReferenceResolver;
+import com.esotericsoftware.kryo.util.Util;
 import org.objenesis.strategy.InstantiatorStrategy;
 
 import java.io.*;
@@ -34,11 +37,15 @@ public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		entitySerializer = new KryoEntitySerializer(world, referenceTracker);
 		transmuterEntrySerializer = new KryoTransmuterEntrySerializer();
 
-		kryo = new Kryo();
+		// note we don't want to use references for Entity, we use our own stuff so we can keep track of ids
+		MapReferenceResolver resolver = new MapReferenceResolver() {
+			@Override public boolean useReferences (Class type) {
+				if (type == Entity.class) return false;
+				return super.useReferences(type);
+			}
+		};
+		kryo = new Kryo(resolver);
 		kryo.setRegistrationRequired(false);
-
-		// note this is here so entity references work, but could break other stuff
-		kryo.setReferences(false);
 
 		kryo.register(SaveFileFormat.ComponentIdentifiers.class, lookup);
 		/* TODO this sorta expects Bag<Entity, what do we do if it doesn't?

@@ -5,6 +5,7 @@ import com.artemis.component.LevelState;
 import com.artemis.component.ParentedPosition;
 import com.artemis.io.JsonArtemisSerializer;
 import com.artemis.io.KryoArtemisSerializer;
+import com.artemis.io.KryoEntitySerializer;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
 import com.badlogic.gdx.Gdx;
@@ -16,6 +17,7 @@ import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 public class KryoEntityReferencesTest {
 	private World world;
@@ -77,41 +79,36 @@ public class KryoEntityReferencesTest {
 				.setSystem(WorldSerializationManager.class));
 
 		world.inject(this);
-//
-//		JsonArtemisSerializer backend2 = new JsonArtemisSerializer(world);
-//		manger.setSerializer(backend2);
-//		InputStream is = KryoEntityReferencesTest.class.getResourceAsStream("/level_3.json");
-//		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
-//		world.process();
-//
-//
+
+		// TODO this is super janky
+		JsonArtemisSerializer backend2 = new JsonArtemisSerializer(world);
+		manger.setSerializer(backend2);
+		InputStream is = KryoEntityReferencesTest.class.getResourceAsStream("/level_3.json");
+		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		world.process();
+
 		KryoArtemisSerializer backend = new KryoArtemisSerializer(world);
+		world.inject(backend);
 		manger.setSerializer(backend);
-//		StringWriter writer = new StringWriter();
-//		manger.save(writer, load);
-////		String loaded = writer.toString();
-////		System.out.println(loaded);
-//
-//		try {
-//			FileOutputStream fos = new FileOutputStream("/Users/PiotrJ/7drl/welp.bin");
-//			backend.saveBinary(fos, load);
-//			fos.flush();
-//			fos.close();
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+
+		try {
+			// todo this doenst really work
+			File root = new File(KryoEntityReferencesTest.class.getResource("/level_3.json").getFile()).getParentFile();
+			// this is actually in target/test-classes for whatever reason
+			File file = new File(root, "/level_3.bin");
+			FileOutputStream fos = new FileOutputStream(file);
+			backend.saveBinary(fos, load);
+			fos.flush();
+			fos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		deleteAll();
-		SaveFileFormat load;
-		// note the file should all be on one line
-		URL resource = KryoEntityReferencesTest.class.getResource("/level_3.b64");
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(new File(resource.toURI())));
-//			is = KryoEntityReferencesTest.class.getResourceAsStream("/level_3.b64");
-			InputStream is = new ByteArrayInputStream(reader.readLine().getBytes());
-			load = manger.load(is, SaveFileFormat.class);
-		} catch (URISyntaxException e) {
-			throw new AssertionError(e);
+			is = KryoEntityReferencesTest.class.getResource("/level_3.bin").openStream();
+			// using binary is more flexible, but we don't have api for that in manager
+			load = backend.loadBinary(is, SaveFileFormat.class);
 		} catch (FileNotFoundException e) {
 			throw new AssertionError(e);
 		} catch (IOException e) {
