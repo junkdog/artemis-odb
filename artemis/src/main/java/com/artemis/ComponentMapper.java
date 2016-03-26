@@ -266,10 +266,13 @@ public abstract class ComponentMapper<A extends Component> {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Component> ComponentMapper<T> getFor(Class<T> type, World world) {
-		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-		if (tf.getTypeFor(type).isPackedComponent())
-			return (ComponentMapper<T>) PackedComponentMapper.create((Class<PackedComponent>) type, world);
+		return getFor(world.getComponentManager().typeFactory.getTypeFor(type), world);
+	}
+
+	static <T extends Component> ComponentMapper<T> getFor(ComponentType type, World world) {
+		if (type.isPackedComponent())
+			return (ComponentMapper<T>) PackedComponentMapper.create((Class<PackedComponent>)type.getType(), world);
 		else
-			return new BasicComponentMapper<T>(type, world);
+			return new BasicComponentMapper<T>((Class<T>) type.getType(), world);
 	}
 }

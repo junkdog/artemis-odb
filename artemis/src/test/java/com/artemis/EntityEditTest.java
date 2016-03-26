@@ -40,7 +40,7 @@ public class EntityEditTest {
 
 		Entity e = world.createEntity();
 		world.process();
-		assertEquals(1, e.getCompositionId());
+		assertEquals(0, e.getCompositionId());
 	}
 	
 	@Test
@@ -48,7 +48,7 @@ public class EntityEditTest {
 		World world = new World();
 
 		Entity e = world.createEntity();
-		assertEquals(1, e.getCompositionId());
+		assertEquals(0, e.getCompositionId());
 	}
 
 	@Test
@@ -83,7 +83,6 @@ public class EntityEditTest {
 
 	
 	private static class LeManager extends Manager {
-		
 		int added;
 
 		@Override

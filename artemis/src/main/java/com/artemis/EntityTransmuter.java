@@ -42,15 +42,16 @@ public final class EntityTransmuter {
 	 * @param entityId target entity id
 	 */
 	public void transmute(int entityId) {
-		if (world.editPool.isPendingDeletion(entityId))
+		if (world.deleted.get(entityId))
 			return;
 
-		if (!world.getEntityManager().isActive(entityId))
+		EntityManager em = world.getEntityManager();
+		if (!em.isActive(entityId))
 			throw new RuntimeException("Issued transmute on deleted " + entityId);
 
 		TransmuteOperation operation = getOperation(entityId);
 		operation.perform(entityId, world.getComponentManager());
-		world.getEntityManager().setIdentity(entityId, operation.compositionId);
+		em.setIdentity(entityId, operation.compositionId);
 
 		world.changed.set(entityId);
 	}
@@ -67,10 +68,6 @@ public final class EntityTransmuter {
 	}
 
 	private TransmuteOperation getOperation(int entityId) {
-		if (world.editPool.isEdited(entityId)) {
-			world.editPool.processAndRemove(entityId);
-		}
-
 		EntityManager em = world.getEntityManager();
 		int compositionId = em.getIdentity(entityId);
 		TransmuteOperation operation = operations.safeGet(compositionId);

@@ -2,7 +2,6 @@ package com.artemis;
 
 import com.artemis.ComponentType.Taxonomy;
 
-import java.util.BitSet;
 
 /**
  * Entity mutator.
@@ -27,11 +26,9 @@ public final class EntityEdit {
 
 	int entityId;
 	private ComponentManager cm;
-	final BitSet componentBits;
 
 	EntityEdit(World world) {
 		cm = world.getComponentManager();
-		componentBits = new BitSet();
 	}
 
 	/**
@@ -55,12 +52,7 @@ public final class EntityEdit {
 	 * @return Newly instanced component.
 	 */
 	public <T extends Component> T create(Class<T> componentKlazz) {
-		T component = cm.create(entityId, componentKlazz);
-
-		ComponentType componentType = cm.typeFactory.getTypeFor(componentKlazz);
-		componentBits.set(componentType.getIndex());
-
-		return component;
+		return cm.getMapper(componentKlazz).create(entityId);
 	}
 
 	/**
@@ -92,8 +84,8 @@ public final class EntityEdit {
 				"Use EntityEdit#create(Class<Component>) for adding non-basic component types");
 		}
 
+		cm.getMapper(type.getType()).create(entityId);
 		cm.addComponent(entityId, type, component);
-		componentBits.set(type.getIndex());
 
 		return this;
 	}
@@ -135,10 +127,7 @@ public final class EntityEdit {
 	 * @return this EntityEdit for chaining
 	 */
 	public EntityEdit remove(ComponentType type) {
-		if (componentBits.get(type.getIndex())) {
-			cm.removeComponent(entityId, type);
-			componentBits.clear(type.getIndex());
-		}
+		cm.getMapper(type.getType()).remove(entityId);
 		return this;
 	}
 

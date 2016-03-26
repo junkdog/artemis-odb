@@ -80,9 +80,7 @@ public class ComponentManager extends BaseSystem {
 	 * @return Newly created packed, pooled or basic component.
 	 */
 	protected <T extends Component> T create(int owner, Class<T> componentClass) {
-		ComponentType type = typeFactory.getTypeFor(componentClass);
-		T component = create(owner, type);
-		return component;
+		return getMapper(componentClass).create(owner);
 	}
 
 	/**
@@ -101,18 +99,6 @@ public class ComponentManager extends BaseSystem {
 			case BASIC:
 				component = newInstance(componentClass, false); 
 				break;
-			case PACKED:
-				PackedComponent packedComponent = packedComponents.safeGet(type.getIndex());
-				if (packedComponent == null) {
-					packedComponent = (PackedComponent)newInstance(
-							componentClass, type.packedHasWorldConstructor);
-					packedComponents.set(type.getIndex(), packedComponent);
-				}
-				getPackedComponentOwners(type).set(owner);
-				ensurePackedComponentCapacity(owner);
-				packedComponent.forEntity(owner);
-				component = (T)packedComponent;
-				break;
 			case POOLED:
 				try {
 					reclaimPooled(owner, type);
@@ -121,11 +107,28 @@ public class ComponentManager extends BaseSystem {
 				} catch (ReflectionException e) {
 					throw new InvalidComponentException(componentClass, "Unable to instantiate component.", e);
 				}
+			case PACKED:
+				component = createPacked(owner, type, componentClass);
+				break;
 			default:
 				throw new InvalidComponentException(componentClass, " unknown component type: " + type.getTaxonomy());
 		}
 		
 		addComponent(owner, type, component);
+		return component;
+	}
+
+	private <T extends Component> T createPacked(int owner, ComponentType type, Class<T> componentClass) {
+		T component;PackedComponent packedComponent = packedComponents.safeGet(type.getIndex());
+		if (packedComponent == null) {
+			packedComponent = (PackedComponent)newInstance(
+					componentClass, type.packedHasWorldConstructor);
+			packedComponents.set(type.getIndex(), packedComponent);
+		}
+		getPackedComponentOwners(type).set(owner);
+		ensurePackedComponentCapacity(owner);
+		packedComponent.forEntity(owner);
+		component = (T)packedComponent;
 		return component;
 	}
 
@@ -161,10 +164,13 @@ public class ComponentManager extends BaseSystem {
 		return owners;
 	}
 
-	<T extends Component> ComponentMapper<T> getMapper(Class<T> mapper) {
-		int index = typeFactory.getIndexFor(mapper);
-		if (componentMappers.safeGet(index) == null) {
-			componentMappers.set(index, ComponentMapper.getFor(mapper, world));
+	protected <T extends Component> ComponentMapper<T> getMapper(Class<T> mapper) {
+		ComponentType type = typeFactory.getTypeFor(mapper);
+		int index = type.getIndex();
+		ComponentMapper cm = componentMappers.safeGet(index);
+		if (cm == null) {
+			cm = ComponentMapper.getFor(type, world);
+			componentMappers.set(index, cm);
 		}
 
 		return componentMappers.get(index);

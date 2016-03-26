@@ -88,7 +88,7 @@ public class World {
 		cm = lcm == null ? new ComponentManager(configuration.expectedEntityCount()) : lcm;
 		em = lem == null ? new EntityManager(configuration.expectedEntityCount()) : lem;
 		am = lam == null ? new AspectSubscriptionManager() : lam;
-		editPool = new EntityEditPool(em);
+		editPool = new EntityEditPool(this);
 
 		injector = configuration.injector;
 		if (injector == null) {
@@ -279,7 +279,7 @@ public class World {
 	 * 		the entity to delete
 	 */
 	public void delete(int entityId) {
-		editPool.delete(entityId);
+		deleted.set(entityId);
 
 		// guarding against previous transmutations
 		changed.set(entityId, false);
@@ -294,7 +294,7 @@ public class World {
 	 */
 	public Entity createEntity() {
 		Entity e = em.createEntityInstance();
-		e.edit();
+		changed.set(e.getId());
 		return e;
 	}
 
@@ -306,7 +306,7 @@ public class World {
 	 */
 	public int create() {
 		int entityId = em.create();
-		edit(entityId);
+		changed.set(entityId);
 		return entityId;
 	}
 
@@ -416,10 +416,11 @@ public class World {
 	void updateEntityStates() {
 		// changed can be populated by EntityTransmuters and Archetypes,
 		// bypassing the editPool.
-		while (!changed.isEmpty() || editPool.processEntities())
+		while (!changed.isEmpty() || !deleted.isEmpty())
 				am.process(changed, deleted);
 
 		cm.clean();
+		editPool.clean();
 	}
 
 	/**

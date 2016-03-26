@@ -27,8 +27,8 @@ public class EntityFactoryTest {
 		Entity e2 = shipFactory.create();
 		
 		// 1 is an entity with zero components.
-		assertEquals(2, e.getCompositionId());
-		assertEquals(2, e2.getCompositionId());
+		assertEquals(1, e.getCompositionId());
+		assertEquals(1, e2.getCompositionId());
 		
 		assertNotEquals(e.getId(), e2.getId());
 	}
