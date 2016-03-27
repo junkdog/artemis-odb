@@ -1,6 +1,7 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 #### Version: 1.5.0-SNAPSHOT
+- Re-worked `EntityEdit` logic, less code and more performance.
 
 
 #### Version: 1.4.0 - 2016-03-09
