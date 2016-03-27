@@ -2,14 +2,19 @@ package com.artemis;
 
 import com.artemis.utils.Bag;
 
-final class EntityEditPool {
-	
-	private final Bag<EntityEdit> pool = new Bag<EntityEdit>();
+import java.util.BitSet;
+
+final class BatchChangeProcessor {
+
+	final BitSet changed = new BitSet();
+	final BitSet deleted = new BitSet();
+
 	private World world;
-	
+
+	private final Bag<EntityEdit> pool = new Bag<EntityEdit>();
 	private WildBag<EntityEdit> edited = new WildBag<EntityEdit>();
 
-	EntityEditPool(World world) {
+	BatchChangeProcessor(World world) {
 		this.world = world;
 	}
 
@@ -40,8 +45,16 @@ final class EntityEditPool {
 			return pool.removeLast();
 		}
 	}
+
+	void update(AspectSubscriptionManager asm) {
+		while(!changed.isEmpty() || !deleted.isEmpty()) {
+			asm.process(changed, deleted);
+		}
+
+		clean();
+	}
 	
-	boolean clean() {
+	private boolean clean() {
 		if (edited.isEmpty())
 			return false;
 

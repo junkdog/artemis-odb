@@ -17,7 +17,9 @@ import java.util.BitSet;
  * @see com.artemis.EntityTransmuterFactory
  */
 public final class EntityTransmuter {
-	private final World world;
+	private final EntityManager em;
+	private final ComponentManager cm;
+	private final BatchChangeProcessor batchProcessor;
 	private final BitSet additions;
 	private final BitSet removals;
 	private final Bag<TransmuteOperation> operations;
@@ -25,7 +27,9 @@ public final class EntityTransmuter {
 	private final BitSet bs;
 
 	EntityTransmuter(World world, BitSet additions, BitSet removals) {
-		this.world = world;
+		em = world.getEntityManager();
+		cm = world.getComponentManager();
+		batchProcessor = world.batchProcessor;
 		this.additions = additions;
 		this.removals = removals;
 		operations = new Bag<TransmuteOperation>();
@@ -42,18 +46,17 @@ public final class EntityTransmuter {
 	 * @param entityId target entity id
 	 */
 	public void transmute(int entityId) {
-		if (world.deleted.get(entityId))
+		if (batchProcessor.deleted.get(entityId))
 			return;
 
-		EntityManager em = world.getEntityManager();
 		if (!em.isActive(entityId))
 			throw new RuntimeException("Issued transmute on deleted " + entityId);
 
 		TransmuteOperation operation = getOperation(entityId);
-		operation.perform(entityId, world.getComponentManager());
+		operation.perform(entityId);
 		em.setIdentity(entityId, operation.compositionId);
 
-		world.changed.set(entityId);
+		batchProcessor.changed.set(entityId);
 	}
 
 	/**
@@ -68,7 +71,6 @@ public final class EntityTransmuter {
 	}
 
 	private TransmuteOperation getOperation(int entityId) {
-		EntityManager em = world.getEntityManager();
 		int compositionId = em.getIdentity(entityId);
 		TransmuteOperation operation = operations.safeGet(compositionId);
 		if (operation == null) {
@@ -83,13 +85,13 @@ public final class EntityTransmuter {
 		bs.or(componentBits);
 		bs.or(additions);
 		bs.andNot(removals);
-		int compositionId = world.getEntityManager().compositionIdentity(bs);
-		return new TransmuteOperation(
+		int compositionId = em.compositionIdentity(bs);
+		return new TransmuteOperation(cm,
 				compositionId, getAdditions(componentBits), getRemovals(componentBits));
 	}
 
 	private Bag<ComponentType> getAdditions(BitSet origin) {
-		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+		ComponentTypeFactory tf = cm.typeFactory;
 		Bag<ComponentType> types = new Bag<ComponentType>();
 		for (int i = additions.nextSetBit(0); i >= 0; i = additions.nextSetBit(i + 1)) {
 			if (!origin.get(i))
@@ -100,7 +102,7 @@ public final class EntityTransmuter {
 	}
 
 	private Bag<ComponentType> getRemovals(BitSet origin) {
-		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
+		ComponentTypeFactory tf = cm.typeFactory;
 		Bag<ComponentType> types = new Bag<ComponentType>();
 		for (int i = removals.nextSetBit(0); i >= 0; i = removals.nextSetBit(i + 1)) {
 			if (origin.get(i))
@@ -118,15 +120,20 @@ public final class EntityTransmuter {
 	static class TransmuteOperation {
 		private Bag<ComponentType> additions;
 		private Bag<ComponentType> removals;
+		private ComponentManager cm;
 		public final int compositionId;
 
-		public TransmuteOperation(int compositionId, Bag<ComponentType> additions, Bag<ComponentType> removals) {
+		public TransmuteOperation(ComponentManager cm,
+		                          int compositionId,
+		                          Bag<ComponentType> additions,
+		                          Bag<ComponentType> removals) {
+			this.cm = cm;
 			this.compositionId = compositionId;
 			this.additions = additions;
 			this.removals = removals;
 		}
 
-		public void perform(int entityId, ComponentManager cm) {
+		public void perform(int entityId) {
 			for (int i = 0, s = additions.size(); s > i; i++)
 				cm.create(entityId, additions.get(i));
 

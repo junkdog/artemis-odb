@@ -31,26 +31,13 @@ public class World {
 	/** Manages all aspect based entity subscriptions for the world. */
 	private final AspectSubscriptionManager am;
 
+	/** Pool of entity edits. */
+	final BatchChangeProcessor batchProcessor;
+
+	final Partition partition;
+
 	/** The time passed since the last update. */
 	public float delta;
-
-	final BitSet changed;
-	final BitSet deleted;
-
-	/** Contains all systems and systems classes mapped. */
-	final Map<Class<?>, BaseSystem> systems;
-
-	/** Contains all systems unordered. */
-	private final Bag<BaseSystem> systemsBag;
-
-	/** Responsible for dependency injection. */
-	private Injector injector;
-
-	/** Pool of entity edits. */
-	final EntityEditPool editPool;
-
-	/** Contains strategy for invoking systems upon process. */
-	private SystemInvocationStrategy invocationStrategy;
 
 	/**
 	 * Creates a world without custom systems.
@@ -74,12 +61,7 @@ public class World {
 	 * @see WorldConfiguration
 	 */
 	public World(WorldConfiguration configuration) {
-
-		systems = new IdentityHashMap<Class<?>, BaseSystem>();
-		systemsBag = configuration.systems;
-
-		changed = new BitSet();
-		deleted = new BitSet();
+		partition = new Partition(configuration);
 
 		final ComponentManager lcm = (ComponentManager) configuration.systems.get(WorldConfiguration.COMPONENT_MANAGER_IDX);
 		final EntityManager lem = (EntityManager) configuration.systems.get(WorldConfiguration.ENTITY_MANAGER_IDX);
@@ -88,16 +70,11 @@ public class World {
 		cm = lcm == null ? new ComponentManager(configuration.expectedEntityCount()) : lcm;
 		em = lem == null ? new EntityManager(configuration.expectedEntityCount()) : lem;
 		am = lam == null ? new AspectSubscriptionManager() : lam;
-		editPool = new EntityEditPool(this);
+		batchProcessor = new BatchChangeProcessor(this);
 
-		injector = configuration.injector;
-		if (injector == null) {
-			injector = new CachedInjector();
-		}
+		configuration.initialize(this, partition.injector, am);
 
-		configuration.initialize(this, injector, am);
-
-		if (invocationStrategy == null) {
+		if (partition.invocationStrategy == null) {
 			setInvocationStrategy(new InvocationStrategy());
 		}
 	}
@@ -140,13 +117,13 @@ public class World {
 	 * @see #inject(Object)
 	 */
 	public void inject(Object target, boolean failIfNotInjectable) {
-		boolean injectable = injector.isInjectable(target);
+		boolean injectable = partition.injector.isInjectable(target);
 		if (!injectable && failIfNotInjectable)
 			throw new MundaneWireException("Attempted injection on " + target.getClass()
 					.getName() + ", which is annotated with @SkipWire");
 
 		if (injectable)
-			injector.inject(target);
+			partition.injector.inject(target);
 	}
 
 	/**
@@ -158,7 +135,7 @@ public class World {
 	public void dispose() {
 		List<Throwable> exceptions = new ArrayList<Throwable>();
 
-		for (BaseSystem system : systemsBag) {
+		for (BaseSystem system : partition.systemsBag) {
 			try {
 				system.dispose();
 			} catch (Exception e) {
@@ -199,7 +176,7 @@ public class World {
 	 * @param entityId entity to fetch editor for.
 	 */
 	public EntityEdit edit(int entityId) {
-		return editPool.obtainEditor(entityId);
+		return batchProcessor.obtainEditor(entityId);
 	}
 
 	/**
@@ -238,7 +215,7 @@ public class World {
 	@SuppressWarnings("unchecked")
 	@Deprecated
 	public <T extends BaseSystem> T getManager(Class<T> managerType) {
-		return (T) systems.get(managerType);
+		return (T) partition.systems.get(managerType);
 	}
 
 	/**
@@ -279,10 +256,10 @@ public class World {
 	 * 		the entity to delete
 	 */
 	public void delete(int entityId) {
-		deleted.set(entityId);
+		batchProcessor.deleted.set(entityId);
 
 		// guarding against previous transmutations
-		changed.set(entityId, false);
+		batchProcessor.changed.set(entityId, false);
 	}
 
 	/**
@@ -294,7 +271,7 @@ public class World {
 	 */
 	public Entity createEntity() {
 		Entity e = em.createEntityInstance();
-		changed.set(e.getId());
+		batchProcessor.changed.set(e.getId());
 		return e;
 	}
 
@@ -306,7 +283,7 @@ public class World {
 	 */
 	public int create() {
 		int entityId = em.create();
-		changed.set(entityId);
+		batchProcessor.changed.set(entityId);
 		return entityId;
 	}
 
@@ -328,7 +305,7 @@ public class World {
 	public Entity createEntity(Archetype archetype) {
 		Entity e = em.createEntityInstance(archetype);
 		cm.addComponents(e.getId(), archetype);
-		changed.set(e.getId());
+		batchProcessor.changed.set(e.getId());
 		return e;
 	}
 
@@ -349,7 +326,7 @@ public class World {
 	public int create(Archetype archetype) {
 		int entityId = em.create(archetype);
 		cm.addComponents(entityId, archetype);
-		changed.set(entityId);
+		batchProcessor.changed.set(entityId);
 		return entityId;
 	}
 
@@ -373,7 +350,7 @@ public class World {
 	 * @return all entity systems in world
 	 */
 	public ImmutableBag<BaseSystem> getSystems() {
-		return systemsBag;
+		return partition.systemsBag;
 	}
 
 	/**
@@ -386,12 +363,12 @@ public class World {
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends BaseSystem> T getSystem(Class<T> type) {
-		return (T) systems.get(type);
+		return (T) partition.systems.get(type);
 	}
 
 	/** Set strategy for invoking systems on {@link #process()}. */
 	protected void setInvocationStrategy(SystemInvocationStrategy invocationStrategy) {
-		this.invocationStrategy = invocationStrategy;
+		partition.invocationStrategy = invocationStrategy;
 		invocationStrategy.setWorld(this);
 		invocationStrategy.initialize();
 	}
@@ -402,7 +379,7 @@ public class World {
 	 */
 	public void process() {
 		updateEntityStates();
-		invocationStrategy.process(systemsBag);
+		partition.invocationStrategy.process(partition.systemsBag);
 	}
 
 	/**
@@ -414,13 +391,8 @@ public class World {
 	 * Will run repeatedly until any state changes caused by subscribers have been handled.
 	 */
 	void updateEntityStates() {
-		// changed can be populated by EntityTransmuters and Archetypes,
-		// bypassing the editPool.
-		while (!changed.isEmpty() || !deleted.isEmpty())
-				am.process(changed, deleted);
-
+		batchProcessor.update(am);
 		cm.clean();
-		editPool.clean();
 	}
 
 	/**
@@ -444,13 +416,37 @@ public class World {
 	 * @return Injector responsible for dependency injection.
 	 */
 	public Injector getInjector() {
-		return injector;
+		return partition.injector;
 	}
 
 	/**
 	 * @return Strategy used for invoking systems during {@link World#process()}.
 	 */
 	public <T extends SystemInvocationStrategy> T getInvocationStrategy() {
-		return (T) invocationStrategy;
+		return (T) partition.invocationStrategy;
+	}
+
+	static class Partition {
+		/** Contains all systems and systems classes mapped. */
+		final Map<Class<?>, BaseSystem> systems;
+
+		/** Contains all systems unordered. */
+		final Bag<BaseSystem> systemsBag;
+
+		/** Responsible for dependency injection. */
+		final Injector injector;
+
+
+		/** Contains strategy for invoking systems upon process. */
+		SystemInvocationStrategy invocationStrategy;
+
+		Partition(WorldConfiguration configuration) {
+			systems = new IdentityHashMap<Class<?>, BaseSystem>();
+			systemsBag = configuration.systems;
+
+			injector = (configuration.injector != null)
+				? configuration.injector
+				: new CachedInjector();
+		}
 	}
 }

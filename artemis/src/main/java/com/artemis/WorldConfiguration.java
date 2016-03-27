@@ -154,7 +154,7 @@ public final class WorldConfiguration {
 		systems.set(ASPECT_SUBSCRIPTION_MANAGER_IDX, asm);
 
 		for (BaseSystem system : systems) {
-			world.systems.put(system.getClass(), system);
+			world.partition.systems.put(system.getClass(), system);
 			system.setWorld(world);
 			if (ClassReflection.isInstance(Manager.class, system)) {
 				((Manager) system).registerManager();
