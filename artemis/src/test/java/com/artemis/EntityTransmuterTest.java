@@ -88,7 +88,7 @@ public class EntityTransmuterTest {
 		assertEquals(2, e.getCompositionId());
 
 		transmuter1.transmute(e);
-		assertEquals(1, e.getCompositionId());
+		assertEquals(0, e.getCompositionId());
 
 		transmuter3.transmute(e);
 		assertEquals(3, e.getCompositionId());

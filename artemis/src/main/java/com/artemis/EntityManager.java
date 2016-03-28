@@ -20,12 +20,14 @@ import static com.artemis.Aspect.all;
 public class EntityManager extends BaseSystem {
 
 	/** Adrian's secret rebellion. */
-	static final int NO_COMPONENTS = 1;
+	static final int NO_COMPONENTS = 0;
 	/** Contains all entities in the manager. */
 	private final Bag<Entity> entities;
 	/** Stores the bits of all currently disabled entities IDs. */
 	private RecyclingEntityFactory recyclingEntityFactory;
-	
+
+	private IntBag pendingDeletion = new IntBag();
+
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
 	private IntBag entityToIdentity = new IntBag();
 	private int highestSeenIdentity;
@@ -52,7 +54,7 @@ public class EntityManager extends BaseSystem {
 
 							@Override
 							public void removed(IntBag entities) {
-								deleted(entities);
+								pendingDeletion.addAll(entities);
 							}
 						});
 	}
@@ -105,16 +107,7 @@ public class EntityManager extends BaseSystem {
 	/** Get component composition of entity. */
 	BitSet componentBits(int entityId) {
 		int identityIndex = entityToIdentity.get(entityId);
-		if (identityIndex == 0)
-			identityIndex = forceResolveIdentity(entityId);
-		
 		return identityResolver.composition.get(identityIndex);
-	}
-
-	/** Refresh entity composition identity if it changed. */
-	void updateCompositionIdentity(EntityEdit edit) {
-		int identity = compositionIdentity(edit.componentBits);
-		entityToIdentity.set(edit.entityId, identity);
 	}
 
 	/**
@@ -132,10 +125,13 @@ public class EntityManager extends BaseSystem {
 		}
 		return identity;
 	}
-	
-	void deleted(IntBag entities) {
-		int[] ids = entities.getData();
-		for(int i = 0, s = entities.size(); s > i; i++) {
+
+	void clean() {
+		if (pendingDeletion.isEmpty())
+			return;
+
+		int[] ids = pendingDeletion.getData();
+		for(int i = 0, s = pendingDeletion.size(); s > i; i++) {
 			int entityId = ids[i];
 			// usually never happens but:
 			// this happens when an entity is deleted before
@@ -145,6 +141,8 @@ public class EntityManager extends BaseSystem {
 				recyclingEntityFactory.free(entityId);
 			}
 		}
+
+		pendingDeletion.setSize(0);
 	}
 
 	/**
@@ -186,11 +184,7 @@ public class EntityManager extends BaseSystem {
 	 * @return composition identity.
 	 */
 	protected int getIdentity(int entityId) {
-		int identity = entityToIdentity.get(entityId);
-		if (identity == 0)
-			identity = forceResolveIdentity(entityId);
-
-		return identity;
+		return entityToIdentity.get(entityId);
 	}
 
 	/**
@@ -201,17 +195,6 @@ public class EntityManager extends BaseSystem {
 	 */
 	void setIdentity(int entityId, int compositionId) {
 		entityToIdentity.set(entityId, compositionId);
-	}
-
-	/**
-	 * Force creation of entity composition id.
-	 *
-	 * @param entityId entity
-	 * @return composition id.
-	 */
-	private int forceResolveIdentity(int entityId) {
-		updateCompositionIdentity(entities.get(entityId).edit());
-		return entityToIdentity.get(entityId);
 	}
 
 	/**
@@ -249,7 +232,6 @@ public class EntityManager extends BaseSystem {
 		
 		ComponentIdentityResolver() {
 			composition = new Bag<BitSet>();
-			composition.add(null);
 			composition.add(new BitSet());
 		}
 

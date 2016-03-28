@@ -64,7 +64,7 @@ public class PerformerWorldTest {
 		}
 	}
 
-	private static class TestComponent extends Component {
+	public static class TestComponent extends Component {
 		public TestComponent() {}
 	}
 }

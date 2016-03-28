@@ -9,7 +9,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
@@ -42,9 +41,9 @@ public class ArchetypeTest {
 
 	@Test
 	public void test_composition_id() throws Exception {
-		assertEquals(1, arch1.compositionId);
-		assertEquals(2, arch2.compositionId);
-		assertEquals(3, arch3.compositionId);
+		assertEquals(0, arch1.compositionId);
+		assertEquals(1, arch2.compositionId);
+		assertEquals(2, arch3.compositionId);
 	}
 
 	@Test
@@ -65,7 +64,7 @@ public class ArchetypeTest {
 
 		assertEquals(arch2.compositionId, arch4.compositionId);
 		assertEquals(arch3.compositionId, arch5.compositionId);
-		assertEquals(4, arch6.compositionId);
+		assertEquals(3, arch6.compositionId);
 
 		assertEquals(1, arch6.types.length);
 		assertEquals(ComponentY.class, arch6.types[0].getType());

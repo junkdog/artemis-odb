@@ -29,7 +29,7 @@ public abstract class SystemInvocationStrategy {
 
 	/** Call to inform all systems and subscription of world state changes. */
 	protected final void updateEntityStates() {
-		world.updateEntityStates();
+		world.batchProcessor.update();
 	}
 
 	/** Process all systems. */

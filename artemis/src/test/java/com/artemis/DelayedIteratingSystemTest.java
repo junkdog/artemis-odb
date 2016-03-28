@@ -137,13 +137,11 @@ public class DelayedIteratingSystemTest
 		return e;
 	}
 
-	public class Expiration extends Component {
+	public static class Expiration extends Component {
 		public float delay;
 
-		/**
-		 * @param delay
-		 *			in seconds
-		 */
+		public Expiration() {}
+
 		public Expiration(final float delay) {
 			this.delay = delay;
 		}

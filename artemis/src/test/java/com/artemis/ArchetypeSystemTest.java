@@ -5,7 +5,6 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
@@ -31,9 +30,9 @@ public class ArchetypeSystemTest {
 	
 	@Test
 	public void test_composition_id() throws Exception {
-		assertEquals(1, arch1.compositionId);
-		assertEquals(2, arch2.compositionId);
-		assertEquals(3, arch3.compositionId);
+		assertEquals(0, arch1.compositionId);
+		assertEquals(1, arch2.compositionId);
+		assertEquals(2, arch3.compositionId);
 	}
 	
 	@Test
