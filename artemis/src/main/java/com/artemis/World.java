@@ -10,6 +10,8 @@ import com.artemis.utils.reflect.ReflectionException;
 
 import java.util.*;
 
+import static com.artemis.WorldConfiguration.ASPECT_SUBSCRIPTION_MANAGER_IDX;
+
 /**
  * The primary instance for the framework.
  * <p>
@@ -28,13 +30,10 @@ public class World {
 	/** Manages all component-entity associations for the world. */
 	private final ComponentManager cm;
 
-	/** Manages all aspect based entity subscriptions for the world. */
-	private final AspectSubscriptionManager am;
-
 	/** Pool of entity edits. */
 	final BatchChangeProcessor batchProcessor;
 
-	final Partition partition;
+	final WorldSegment partition;
 
 	/** The time passed since the last update. */
 	public float delta;
@@ -61,18 +60,16 @@ public class World {
 	 * @see WorldConfiguration
 	 */
 	public World(WorldConfiguration configuration) {
-		partition = new Partition(configuration);
+		partition = new WorldSegment(configuration);
 
 		final ComponentManager lcm = (ComponentManager) configuration.systems.get(WorldConfiguration.COMPONENT_MANAGER_IDX);
 		final EntityManager lem = (EntityManager) configuration.systems.get(WorldConfiguration.ENTITY_MANAGER_IDX);
-		final AspectSubscriptionManager lam = (AspectSubscriptionManager) configuration.systems.get(WorldConfiguration.ASPECT_SUBSCRIPTION_MANAGER_IDX);
 
 		cm = lcm == null ? new ComponentManager(configuration.expectedEntityCount()) : lcm;
 		em = lem == null ? new EntityManager(configuration.expectedEntityCount()) : lem;
-		am = lam == null ? new AspectSubscriptionManager() : lam;
 		batchProcessor = new BatchChangeProcessor(this);
 
-		configuration.initialize(this, partition.injector, am);
+		configuration.initialize(this, partition.injector, partition.asm);
 
 		if (partition.invocationStrategy == null) {
 			setInvocationStrategy(new InvocationStrategy());
@@ -200,7 +197,7 @@ public class World {
 	 * @return aspect subscription manager
 	 */
 	public AspectSubscriptionManager getAspectSubscriptionManager() {
-		return am;
+		return partition.asm;
 	}
 
 	/**
@@ -378,21 +375,9 @@ public class World {
 	 * @see InvocationStrategy to control and extend how systems are invoked.
 	 */
 	public void process() {
-		updateEntityStates();
-		partition.invocationStrategy.process(partition.systemsBag);
-	}
-
-	/**
-	 * Inform subscribers of state changes.
-	 *
-	 * Performs callbacks on registered instances of
-	 * {@link com.artemis.EntitySubscription.SubscriptionListener}.
-	 *
-	 * Will run repeatedly until any state changes caused by subscribers have been handled.
-	 */
-	void updateEntityStates() {
-		batchProcessor.update(am);
-		cm.clean();
+		batchProcessor.update();
+		partition.process();
+		em.clean();
 	}
 
 	/**
@@ -426,7 +411,7 @@ public class World {
 		return (T) partition.invocationStrategy;
 	}
 
-	static class Partition {
+	static class WorldSegment {
 		/** Contains all systems and systems classes mapped. */
 		final Map<Class<?>, BaseSystem> systems;
 
@@ -436,17 +421,26 @@ public class World {
 		/** Responsible for dependency injection. */
 		final Injector injector;
 
+		/** Manages all aspect based entity subscriptions for the world. */
+		final AspectSubscriptionManager asm;
 
 		/** Contains strategy for invoking systems upon process. */
 		SystemInvocationStrategy invocationStrategy;
 
-		Partition(WorldConfiguration configuration) {
+		WorldSegment(WorldConfiguration configuration) {
 			systems = new IdentityHashMap<Class<?>, BaseSystem>();
 			systemsBag = configuration.systems;
+
+			AspectSubscriptionManager asm = (AspectSubscriptionManager) systemsBag.get(ASPECT_SUBSCRIPTION_MANAGER_IDX);
+			this.asm = (asm == null) ? new AspectSubscriptionManager() : asm;
 
 			injector = (configuration.injector != null)
 				? configuration.injector
 				: new CachedInjector();
+		}
+
+		void process() {
+			invocationStrategy.process(systemsBag);
 		}
 	}
 }

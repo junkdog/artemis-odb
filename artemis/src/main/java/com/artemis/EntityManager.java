@@ -26,6 +26,8 @@ public class EntityManager extends BaseSystem {
 	/** Stores the bits of all currently disabled entities IDs. */
 	private RecyclingEntityFactory recyclingEntityFactory;
 
+	private IntBag pendingDeletion = new IntBag();
+
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
 	private IntBag entityToIdentity = new IntBag();
 	private int highestSeenIdentity;
@@ -52,7 +54,7 @@ public class EntityManager extends BaseSystem {
 
 							@Override
 							public void removed(IntBag entities) {
-								deleted(entities);
+								pendingDeletion.addAll(entities);
 							}
 						});
 	}
@@ -124,9 +126,12 @@ public class EntityManager extends BaseSystem {
 		return identity;
 	}
 
-	void deleted(IntBag entities) {
-		int[] ids = entities.getData();
-		for(int i = 0, s = entities.size(); s > i; i++) {
+	void clean() {
+		if (pendingDeletion.isEmpty())
+			return;
+
+		int[] ids = pendingDeletion.getData();
+		for(int i = 0, s = pendingDeletion.size(); s > i; i++) {
 			int entityId = ids[i];
 			// usually never happens but:
 			// this happens when an entity is deleted before
@@ -136,6 +141,8 @@ public class EntityManager extends BaseSystem {
 				recyclingEntityFactory.free(entityId);
 			}
 		}
+
+		pendingDeletion.setSize(0);
 	}
 
 	/**

@@ -31,9 +31,8 @@ public class ComponentManager extends BaseSystem {
 	private final Bag<PackedComponent> packedComponents;
 	private final Bag<BitSet> packedComponentOwners;
 	/** Collects all Entites marked for deletion from this ComponentManager. */
-	final IntBag deletedIds = new IntBag();
 	private final ComponentPool pooledComponents;
-	
+
 	private int highestSeenEntityId;
 
 	private Bag<ComponentMapper> componentMappers = new Bag<ComponentMapper>();
@@ -68,7 +67,7 @@ public class ComponentManager extends BaseSystem {
 
 					@Override
 					public void removed(IntBag entities) {
-						deletedIds.addAll(entities);
+						deleted(entities);
 					}
 				});
 	}
@@ -389,15 +388,11 @@ public class ComponentManager extends BaseSystem {
 	/**
 	 * Removes all components from entities marked for deletion.
 	 */
-	protected void clean() {
-		if (deletedIds.isEmpty())
-			return;
-
+	void deleted(IntBag deletedIds) {
 		int[] ids = deletedIds.getData();
 		for(int i = 0, s = deletedIds.size(); s > i; i++) {
 			removeComponents(ids[i]);
 		}
-		deletedIds.setSize(0);
 	}
 
 	/**
