@@ -2,6 +2,7 @@ package com.artemis;
 
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
+import com.artemis.systems.IteratingSystem;
 import com.artemis.utils.IntBag;
 import org.junit.Before;
 import org.junit.Test;
@@ -99,6 +100,53 @@ public class AspectSubscriptionManagerTest {
 		assertEquals(3, listener.totalInserted);
 		world.process();
 		assertEquals(3, listener.totalInserted);
+	}
+
+	@Test
+	public void create_delete_same_tick() {
+		CreateInremoveSystem es = new CreateInremoveSystem();
+		World w = new World(new WorldConfiguration().setSystem(es));
+
+		int original = w.create();
+		w.edit(original).create(ComponentX.class);
+		w.edit(original).create(ComponentY.class);
+
+		int copy = w.create();
+		w.edit(copy).create(ComponentX.class);
+		w.edit(copy).create(ComponentY.class);
+
+		w.process();
+
+		assertEquals("entites should have same components/compositionId",
+			w.getEntity(original).getCompositionId(),
+			w.getEntity(es.replacedEntityId).getCompositionId());
+	}
+
+	public static class CreateInremoveSystem extends IteratingSystem {
+		private ComponentMapper<ComponentX> componentXMapper;
+
+		int replacedEntityId = -1;
+		int deleteCount = 0;
+
+		public CreateInremoveSystem() {
+			super(all(ComponentX.class));
+		}
+
+		@Override
+		protected void removed(int entityId) {
+			int e = world.create();
+			world.edit(e).create(ComponentX.class);
+			world.edit(e).create(ComponentY.class);
+			replacedEntityId = e;
+		}
+
+		@Override
+		protected void process(int entityId) {
+			if (entityId == 1 && deleteCount == 0) {
+				world.delete(entityId);
+				deleteCount++;
+			}
+		}
 	}
 
 	private static class SubListener implements EntitySubscription.SubscriptionListener {
