@@ -7,35 +7,34 @@ import com.artemis.utils.reflect.Constructor;
 /**
  * Identifies components in artemis without having to use classes.
  * <p>
- * This class keeps a list of all generated component types for fast
- * retrieval.
- * </p>
+ * Contains ordinal for a component type, which allows for fast
+ * retrieval of components.
  *
  * @author Arni Arent
+ * @author Adrian Papari
  */
 public class ComponentType {
 	enum Taxonomy {
-		BASIC, POOLED, PACKED;
+		BASIC, POOLED, PACKED
 	}
 
-	
 	/** The class type of the component type. */
 	private final Class<? extends Component> type;
-	/** True if component type is a {@link PackedComponent} */
 	private final Taxonomy taxonomy;
 
 	boolean packedHasWorldConstructor = false;
 
+	/** Ordinal for fast lookups. */
 	private final int index;
 
 	/**
 	 * <b>Do not call this constructor!</b> This method is only public so that
 	 * we play nice with GWT.
-	 * 
+	 *
 	 *  @@see {@link ComponentTypeFactory#getTypeFor(Class)}
 	 */
 	public ComponentType(Class<? extends Component> type, int index) {
-		
+
 		this.index = index;
 		this.type = type;
 		if (ClassReflection.isAssignableFrom(PackedComponent.class, type)) {
@@ -63,24 +62,33 @@ public class ComponentType {
 	/**
 	 * Get the component type's index.
 	 *
+	 * Index is distinct for each {@link World} instance,
+	 * allowing for fast lookups.
+	 *
 	 * @return the component types index
 	 */
 	public int getIndex() {
 		return index;
 	}
-	
+
 	protected Taxonomy getTaxonomy() {
 		return taxonomy;
 	}
-	
+
+	/**
+	 * @return {@code true} if of taxonomy packed.
+	 */
 	public boolean isPackedComponent() {
 		return taxonomy == Taxonomy.PACKED;
 	}
-	
+
+	/**
+	 * @return {@code Class} that this type represents.
+	 */
 	public Class<? extends Component> getType() {
 		return type;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "ComponentType["+ ClassReflection.getSimpleName(type) +"] ("+index+")";
