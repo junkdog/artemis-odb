@@ -6,6 +6,7 @@ import com.artemis.component.Packed;
 import com.artemis.component.ReusedComponent;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.systems.IteratingSystem;
+import com.artemis.utils.IntBag;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -135,6 +136,44 @@ public class EntityTransmuterTest {
 			.setSystem(SysSubscriber.class));
 
 		world.createEntity().edit().create(ComponentX.class);
+		world.process();
+	}
+
+	@Test
+	public void operation_cancelled_when_pending_deletion_with_different_updates_ticks() {
+		final World world = new World(new WorldConfiguration()
+			.setSystem(new ES1()));
+
+
+		EntitySubscription subscription = world.getAspectSubscriptionManager()
+			.get(all(ComponentX.class, ComponentY.class));
+
+		subscription.addSubscriptionListener(
+			new EntitySubscription.SubscriptionListener() {
+				private boolean insertedOnce;
+
+				@Override
+				public void inserted(IntBag entities) {
+					if (!insertedOnce) {
+						insertedOnce = true;
+						world.delete(entities.get(0));
+					} else {
+						fail("entity was deleted, but a 2nd insertion was made, " +
+							 "probably due to the removal in #removed");
+					}
+				}
+
+				@Override
+				public void removed(IntBag entities) {
+					world.edit(entities.get(0)).remove(ReusedComponent.class);
+				}
+			});
+
+		final int e = world.create();
+		world.edit(e).create(ComponentX.class);
+		world.edit(e).create(ComponentY.class);
+		world.edit(e).create(ReusedComponent.class);
+
 		world.process();
 	}
 
