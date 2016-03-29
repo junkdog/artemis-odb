@@ -93,14 +93,14 @@ public class ShortBag {
 	/**
 	 * Check if bag contains this element.
 	 *
-	 * @param e
+	 * @param value
 	 *			element to check
 	 *
 	 * @return {@code true} if the bag contains this element
 	 */
-	public boolean contains(short e) {
+	public boolean contains(short value) {
 		for(int i = 0; size > i; i++) {
-			if(e == data[i]) {
+			if(value == data[i]) {
 				return true;
 			}
 		}
@@ -166,16 +166,16 @@ public class ShortBag {
 	 * If required, it also increases the capacity of the bag.
 	 * </p>
 	 * 
-	 * @param e
+	 * @param value
 	 *			element to be added to this list
 	 */
-	public void add(short e) {
+	public void add(short value) {
 		// is size greater than capacity increase capacity
 		if (size == data.length) {
 			grow();
 		}
 
-		data[size++] = e;
+		data[size++] = value;
 	}
 
 	/**

@@ -76,14 +76,14 @@ public class IntBag {
 	/**
 	 * Find index of element.
 	 *
-	 * @param e
+	 * @param value
 	 *			element to check
 	 *
 	 * @return index of element, or {@code -1} if there is no such index.
 	 */
-	public int indexOf(int e) {
+	public int indexOf(int value) {
 		for(int i = 0; size > i; i++) {
-			if(e == data[i]) {
+			if(value == data[i]) {
 				return i;
 			}
 		}
@@ -93,14 +93,14 @@ public class IntBag {
 	/**
 	 * Check if bag contains this element.
 	 *
-	 * @param e
+	 * @param value
 	 *			element to check
 	 *
 	 * @return {@code true} if the bag contains this element
 	 */
-	public boolean contains(int e) {
+	public boolean contains(int value) {
 		for(int i = 0; size > i; i++) {
-			if(e == data[i]) {
+			if(value == data[i]) {
 				return true;
 			}
 		}
@@ -166,16 +166,16 @@ public class IntBag {
 	 * If required, it also increases the capacity of the bag.
 	 * </p>
 	 * 
-	 * @param e
+	 * @param value
 	 *			element to be added to this list
 	 */
-	public void add(int e) {
+	public void add(int value) {
 		// is size greater than capacity increase capacity
 		if (size == data.length) {
 			grow();
 		}
 
-		data[size++] = e;
+		data[size++] = value;
 	}
 
 	/**
@@ -198,15 +198,15 @@ public class IntBag {
 	 * 
 	 * @param index
 	 *			position of element
-	 * @param e
+	 * @param value
 	 *			the element
 	 */
-	public void set(int index, int e) {
+	public void set(int index, int value) {
 		if(index >= data.length) {
 			grow((index * 7) / 4 + 1);
 		}
 		size = Math.max(size, index + 1);
-		data[index] = e;
+		data[index] = value;
 	}
 
 	/**
