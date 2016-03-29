@@ -9,7 +9,7 @@ package com.artemis;
  */
 public final class Archetype {
 	final ComponentType[] types;
-	final int compositionId;
+	final short compositionId;
 
 	/**
 	 * @param types Desired composition of derived components.
@@ -17,6 +17,6 @@ public final class Archetype {
 	 */
 	Archetype(ComponentType[] types, int compositionId) {
 		this.types = types;
-		this.compositionId = compositionId;
+		this.compositionId = (short) compositionId;
 	}
 }

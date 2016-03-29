@@ -4,6 +4,7 @@ import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.IntDeque;
+import com.artemis.utils.ShortBag;
 
 import java.util.BitSet;
 
@@ -24,7 +25,7 @@ public class EntityManager extends BaseSystem {
 	private final RecyclingEntityFactory recyclingEntityFactory;
 
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
-	private IntBag entityToIdentity = new IntBag();
+	private ShortBag entityToIdentity = new ShortBag();
 	private int highestSeenIdentity;
 
 	/**
@@ -45,7 +46,7 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected Entity createEntityInstance() {
 		Entity e = recyclingEntityFactory.obtain();
-		entityToIdentity.set(e.getId(), 0);
+		entityToIdentity.set(e.getId(), (short) 0);
 
 		return e;
 	}
@@ -57,7 +58,7 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected int create() {
 		int id = recyclingEntityFactory.obtain().id;
-		entityToIdentity.set(id, 0);
+		entityToIdentity.set(id, (short) 0);
 		return id;
 	}
 
@@ -168,7 +169,7 @@ public class EntityManager extends BaseSystem {
 	 * @param compositionId composition id
 	 */
 	void setIdentity(int entityId, int compositionId) {
-		entityToIdentity.set(entityId, compositionId);
+		entityToIdentity.set(entityId, (short) compositionId);
 	}
 
 	/**
