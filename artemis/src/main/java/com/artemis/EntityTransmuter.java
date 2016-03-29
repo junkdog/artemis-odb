@@ -46,7 +46,7 @@ public final class EntityTransmuter {
 	 * @param entityId target entity id
 	 */
 	public void transmute(int entityId) {
-		if (batchProcessor.deleted.get(entityId))
+		if (batchProcessor.isDeleted(entityId))
 			return;
 
 		if (!em.isActive(entityId))

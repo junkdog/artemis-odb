@@ -1,6 +1,8 @@
 package com.artemis;
 
 import com.artemis.utils.Bag;
+import com.artemis.utils.ConverterUtil;
+import com.artemis.utils.IntBag;
 
 import java.util.BitSet;
 
@@ -9,7 +11,9 @@ final class BatchChangeProcessor {
 	private final AspectSubscriptionManager asm;
 
 	final BitSet changed = new BitSet();
-	final BitSet deleted = new BitSet();
+	private final BitSet deleted = new BitSet();
+	private final BitSet pendingPurge = new BitSet();
+	private final IntBag toPurge = new IntBag();
 
 	private final Bag<EntityEdit> pool = new Bag<EntityEdit>();
 	private final WildBag<EntityEdit> edited = new WildBag<EntityEdit>();
@@ -17,6 +21,15 @@ final class BatchChangeProcessor {
 	BatchChangeProcessor(World world) {
 		this.world = world;
 		asm = world.getAspectSubscriptionManager();
+	}
+
+	boolean isDeleted(int entityId) {
+		return pendingPurge.get(entityId);
+	}
+
+	void delete(int entityId) {
+		deleted.set(entityId);
+		pendingPurge.set(entityId);
 	}
 
 	/**
@@ -54,7 +67,13 @@ final class BatchChangeProcessor {
 
 		clean();
 	}
-	
+
+	IntBag getPendingPurge() {
+		ConverterUtil.toIntBag(pendingPurge, toPurge);
+		pendingPurge.clear();
+		return toPurge;
+	}
+
 	private boolean clean() {
 		if (edited.isEmpty())
 			return false;

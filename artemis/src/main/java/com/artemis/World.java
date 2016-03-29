@@ -4,6 +4,7 @@ import com.artemis.injection.CachedInjector;
 import com.artemis.injection.Injector;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
@@ -253,7 +254,7 @@ public class World {
 	 * 		the entity to delete
 	 */
 	public void delete(int entityId) {
-		batchProcessor.deleted.set(entityId);
+		batchProcessor.delete(entityId);
 
 		// guarding against previous transmutations
 		batchProcessor.changed.set(entityId, false);
@@ -377,7 +378,12 @@ public class World {
 	public void process() {
 		batchProcessor.update();
 		partition.process();
-		em.clean();
+
+		IntBag pendingPurge = batchProcessor.getPendingPurge();
+		if (!pendingPurge.isEmpty()) {
+			cm.clean(pendingPurge);
+			em.clean(pendingPurge);
+		}
 	}
 
 	/**

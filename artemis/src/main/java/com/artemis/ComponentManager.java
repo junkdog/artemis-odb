@@ -10,8 +10,6 @@ import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
 
-import static com.artemis.Aspect.all;
-
 
 /**
  * Handles the association between entities and their components.
@@ -54,23 +52,6 @@ public class ComponentManager extends BaseSystem {
 
 	@Override
 	protected void processSystem() {}
-
-	@Override
-	protected void initialize() {
-		world.getAspectSubscriptionManager()
-				.get(all())
-				.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
-					@Override
-					public void inserted(IntBag entities) {
-						added(entities);
-					}
-
-					@Override
-					public void removed(IntBag entities) {
-						deleted(entities);
-					}
-				});
-	}
 
 	/**
 	 * Create a component of given type by class.
@@ -388,7 +369,7 @@ public class ComponentManager extends BaseSystem {
 	/**
 	 * Removes all components from entities marked for deletion.
 	 */
-	void deleted(IntBag deletedIds) {
+	void clean(IntBag deletedIds) {
 		int[] ids = deletedIds.getData();
 		for(int i = 0, s = deletedIds.size(); s > i; i++) {
 			removeComponents(ids[i]);

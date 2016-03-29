@@ -7,9 +7,6 @@ import com.artemis.utils.IntDeque;
 
 import java.util.BitSet;
 
-import static com.artemis.Aspect.all;
-
-
 /**
  * Manages entity instances.
  *
@@ -24,9 +21,7 @@ public class EntityManager extends BaseSystem {
 	/** Contains all entities in the manager. */
 	private final Bag<Entity> entities;
 	/** Stores the bits of all currently disabled entities IDs. */
-	private RecyclingEntityFactory recyclingEntityFactory;
-
-	private IntBag pendingDeletion = new IntBag();
+	private final RecyclingEntityFactory recyclingEntityFactory;
 
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
 	private IntBag entityToIdentity = new IntBag();
@@ -37,27 +32,11 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected EntityManager(int initialContainerSize) {
 		entities = new Bag<Entity>(initialContainerSize);
+		recyclingEntityFactory = new RecyclingEntityFactory(this);
 	}
 
 	@Override
 	protected void processSystem() {}
-
-	@Override
-	protected void initialize() {
-		recyclingEntityFactory = new RecyclingEntityFactory(this);
-		world.getAspectSubscriptionManager()
-				.get(all())
-				.addSubscriptionListener(
-						new EntitySubscription.SubscriptionListener() {
-							@Override
-							public void inserted(IntBag entities) {}
-
-							@Override
-							public void removed(IntBag entities) {
-								pendingDeletion.addAll(entities);
-							}
-						});
-	}
 
 	/**
 	 * Create a new entity.
@@ -126,10 +105,7 @@ public class EntityManager extends BaseSystem {
 		return identity;
 	}
 
-	void clean() {
-		if (pendingDeletion.isEmpty())
-			return;
-
+	void clean(IntBag pendingDeletion) {
 		int[] ids = pendingDeletion.getData();
 		for(int i = 0, s = pendingDeletion.size(); s > i; i++) {
 			int entityId = ids[i];
@@ -141,8 +117,6 @@ public class EntityManager extends BaseSystem {
 				recyclingEntityFactory.free(entityId);
 			}
 		}
-
-		pendingDeletion.setSize(0);
 	}
 
 	/**
