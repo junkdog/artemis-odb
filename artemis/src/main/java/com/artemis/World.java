@@ -174,6 +174,9 @@ public class World {
 	 * @param entityId entity to fetch editor for.
 	 */
 	public EntityEdit edit(int entityId) {
+		if (!em.isActive(entityId))
+			throw new RuntimeException("Issued edit on deleted " + entityId);
+
 		return batchProcessor.obtainEditor(entityId);
 	}
 
@@ -255,9 +258,6 @@ public class World {
 	 */
 	public void delete(int entityId) {
 		batchProcessor.delete(entityId);
-
-		// guarding against previous transmutations
-		batchProcessor.changed.set(entityId, false);
 	}
 
 	/**

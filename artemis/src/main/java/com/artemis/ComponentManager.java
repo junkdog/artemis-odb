@@ -72,29 +72,30 @@ public class ComponentManager extends BaseSystem {
 	@SuppressWarnings("unchecked")
 	<T extends Component> T create(int owner, ComponentType type) {
 		Class<T> componentClass = (Class<T>)type.getType();
-		T component = null;
-		
-		switch (type.getTaxonomy())
-		{
+
+		T component;
+		switch (type.getTaxonomy()) {
 			case BASIC:
-				component = newInstance(componentClass, false); 
+				component = newInstance(componentClass, false);
+				addBasicComponent(owner, type, component);
 				break;
 			case POOLED:
 				try {
 					reclaimPooled(owner, type);
 					component = (T)pooledComponents.obtain((Class<PooledComponent>)componentClass, type);
-					break;
+					addBasicComponent(owner, type, component);
 				} catch (ReflectionException e) {
 					throw new InvalidComponentException(componentClass, "Unable to instantiate component.", e);
 				}
+				break;
 			case PACKED:
 				component = createPacked(owner, type, componentClass);
+				addPackedComponent(type, (PackedComponent) component);
 				break;
 			default:
 				throw new InvalidComponentException(componentClass, " unknown component type: " + type.getTaxonomy());
 		}
-		
-		addComponent(owner, type, component);
+
 		return component;
 	}
 

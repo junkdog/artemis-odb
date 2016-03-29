@@ -30,6 +30,9 @@ final class BatchChangeProcessor {
 	void delete(int entityId) {
 		deleted.set(entityId);
 		pendingPurge.set(entityId);
+
+		// guarding against previous transmutations
+		changed.set(entityId, false);
 	}
 
 	/**
@@ -38,16 +41,14 @@ final class BatchChangeProcessor {
 	 * @param entityId entity to fetch editor for.
 	 */
 	EntityEdit obtainEditor(int entityId) {
-		if (!edited.isEmpty() && edited.get(edited.size() - 1).getEntityId() == entityId)
-			return edited.get(edited.size() - 1);
+		int size = edited.size();
+		if (size != 0 && edited.get(size - 1).getEntityId() == entityId)
+			return edited.get(size - 1);
 
 		EntityEdit edit = entityEdit();
 		edited.add(edit);
 
 		edit.entityId = entityId;
-
-		if (!world.getEntityManager().isActive(entityId))
-			throw new RuntimeException("Issued edit on deleted " + edit.entityId);
 
 		return edit;
 	}
