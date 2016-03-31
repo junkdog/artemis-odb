@@ -1,6 +1,7 @@
 package com.artemis.managers;
 
 import com.artemis.*;
+import com.artemis.component.*;
 import com.artemis.io.KryoArtemisSerializer;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
@@ -34,6 +35,8 @@ public class CustomKryoWorldSerializationManagerTest {
 		world.inject(this);
 		KryoArtemisSerializer backend = new KryoArtemisSerializer(world);
 		backend.register(SerializedSystem.class, new SerializedSystemSerializer(world));
+		backend.register(CustomSaveFormat.class);
+		backend.register(CustomKryoWorldSerializationManagerTest.DummySegment.class);
 		manger.setSerializer(backend);
 
 		allEntities = subscriptions.get(Aspect.all());

@@ -1,13 +1,14 @@
 package com.artemis.managers;
 
 import com.artemis.*;
-import com.artemis.component.LevelState;
-import com.artemis.component.ParentedPosition;
+import com.artemis.component.*;
+import com.artemis.component.render.TextureReference;
 import com.artemis.io.JsonArtemisSerializer;
 import com.artemis.io.KryoArtemisSerializer;
 import com.artemis.io.KryoEntitySerializer;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
+import com.artemis.utils.Vector2;
 import com.badlogic.gdx.Gdx;
 import org.junit.Test;
 
@@ -80,7 +81,6 @@ public class KryoEntityReferencesTest {
 
 		world.inject(this);
 
-		// TODO this is super janky
 		JsonArtemisSerializer backend2 = new JsonArtemisSerializer(world);
 		manger.setSerializer(backend2);
 		InputStream is = KryoEntityReferencesTest.class.getResourceAsStream("/level_3.json");
@@ -88,11 +88,17 @@ public class KryoEntityReferencesTest {
 		world.process();
 
 		KryoArtemisSerializer backend = new KryoArtemisSerializer(world);
+		backend.register(LevelState.class);
+		backend.register(ParentedPosition.class);
+		backend.register(Position.class);
+		backend.register(TextureReference.class);
+		backend.register(Anchor.class);
+		backend.register(Size.class);
+		backend.register(Vector2.class);
 		world.inject(backend);
 		manger.setSerializer(backend);
 
 		try {
-			// todo this doenst really work
 			File root = new File(KryoEntityReferencesTest.class.getResource("/level_3.json").getFile()).getParentFile();
 			// this is actually in target/test-classes for whatever reason
 			File file = new File(root, "/level_3.bin");

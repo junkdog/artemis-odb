@@ -5,8 +5,14 @@ import com.artemis.annotations.Wire;
 import com.artemis.component.*;
 import com.artemis.components.SerializationTag;
 import com.artemis.io.KryoArtemisSerializer;
+import com.artemis.io.KryoEntitySerializer;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.Serializer;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +30,7 @@ public class KryoWorldSerializationManagerTest {
 	private GroupManager groups;
 	private World world;
 	private EntitySubscription allEntities;
-
+	private KryoArtemisSerializer backend;
 	private ComponentMapper<SerializationTag> serializationTagMapper;
 
 	@Before
@@ -59,8 +65,14 @@ public class KryoWorldSerializationManagerTest {
 				.setSystem(WorldSerializationManager.class));
 
 		world.inject(this);
-		KryoArtemisSerializer backend = new KryoArtemisSerializer(world);
-//		backend.prettyPrint(true);
+		backend = new KryoArtemisSerializer(world);
+		backend.register(ComponentX.class);
+		backend.register(ComponentY.class);
+		backend.register(EntityBagHolder.class);
+		backend.register(EntityHolder.class);
+		backend.register(EntityIntBagHolder.class);
+		backend.register(NameComponent.class);
+		backend.register(NotEntityBagHolder.class);
 		manger.setSerializer(backend);
 
 		allEntities = subscriptions.get(Aspect.all());
@@ -433,6 +445,91 @@ public class KryoWorldSerializationManagerTest {
 		// only saving 2nd entity, need to make sure the archetype for
 		// id1 is pulled in too
 		assertEquals(2, save.archetypes.compositionIdMapper.size());
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void serializer_fail_save_invalid_custom_serializer() throws Exception {
+		setupWorld();
+
+		EntityEdit ee = world.createEntity().edit();
+		ReusedComponent reused = ee.create(ReusedComponent.class);
+		reused.data = "s1";
+		backend.register(ReusedComponent.class, new Serializer() {
+			@Override public void write (Kryo kryo, Output output, Object o) {
+
+			}
+
+			@Override public Object read (Kryo kryo, Input input, Class aClass) {
+				return null;
+			}
+		});
+		world.process();
+
+		save(allEntities);
+		Assert.fail("Should have failed");
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void serializer_save_not_entity_bag_fail() throws Exception {
+		setupWorld();
+
+		EntityEdit ee = world.createEntity().edit();
+		NotEntityBagHolder holder = ee.create(NotEntityBagHolder.class);
+		holder.strings.add("s1");
+		world.process();
+
+		String json = save(allEntities);
+
+		ByteArrayInputStream is = new ByteArrayInputStream(
+			json.getBytes(StandardCharsets.UTF_8));
+		manger.load(is, SaveFileFormat.class);
+
+		world.process();
+		Assert.fail("Should have failed");
+	}
+
+	@Test
+	public void serializer_save_not_entity_bag_success() throws Exception {
+		setupWorld();
+
+		backend.register(NotEntityBagHolder.class, new KryoEntitySerializer.ComponentFieldSerializer<NotEntityBagHolder>(backend.getKryo(), NotEntityBagHolder.class) {
+			@Override public void write (Kryo kryo, Output output, NotEntityBagHolder holder) {
+				output.writeInt(holder.strings.size());
+				for (String string : holder.strings) {
+					output.writeString(string);
+				}
+			}
+
+			@Override public NotEntityBagHolder read (Kryo kryo, Input input, Class aClass) {
+				NotEntityBagHolder holder = edit.create(NotEntityBagHolder.class);
+				int size = input.readInt();
+				for (int i = 0; i < size; i++) {
+					holder.strings.add(input.readString());
+				}
+				return holder;
+			}
+		});
+
+		EntityEdit ee = world.createEntity().edit();
+		NotEntityBagHolder holder = ee.create(NotEntityBagHolder.class);
+		holder.strings.add("s1");
+		holder.strings.add("s2");
+		tags.register("reused-tag", ee.getEntity());
+		world.process();
+
+		String json = save(allEntities);
+
+		ByteArrayInputStream is = new ByteArrayInputStream(
+			json.getBytes(StandardCharsets.UTF_8));
+		manger.load(is, SaveFileFormat.class);
+
+		world.process();
+
+		Entity entity = tags.getEntity("reused-tag");
+		NotEntityBagHolder holder2 = entity.getComponent(NotEntityBagHolder.class);
+		assertEquals(holder.strings.size(), holder2.strings.size());
+		assertEquals(holder.strings.get(0), holder2.strings.get(0));
+		assertEquals(holder.strings.get(1), holder2.strings.get(1));
 	}
 
 	private void setTags() {

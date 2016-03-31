@@ -141,7 +141,7 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 
 			String componentIdentifier = typeToName.get(c.getClass());
 			output.writeString(componentIdentifier);
-			kryo.writeObject(output, c);
+			kryo.writeObject(output, c, serializer(kryo, c.getClass(), null));
 		}
 		components.clear();
 
@@ -187,7 +187,6 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 		Map<String, Class<? extends Component>> nameToType = identifiers.nameToType;
 
 		int count = input.readInt();
-		// -1 doesn't seem to be a thing
 		if (archetype != -1) {
 			archetypeMapper.transmute(e, archetype);
 		}
@@ -196,7 +195,7 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 		for (int i = 0; i < count; i++) {
 			String name = input.readString();
 			final Class<? extends Component> type = nameToType.get(name);
-			// note we use custom serializer because we must use edit.create() for non basic types
+			// note we use custom serializer because we must use edit.create(T) for non basic types
 			Component c = kryo.readObject(input, type, serializer(kryo, type, edit));
 			referenceTracker.addEntityReferencingComponent(c);
 		}
@@ -211,17 +210,15 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 		Serializer serializer = serializers.get(type);
 		if (serializer == null) {
 			serializer = kryo.getSerializer(type);
-			// note we replace the default serializers with our own
 			if (serializer.getClass() == FieldSerializer.class) {
-				serializer = new EditFieldSerializer(kryo, type);
+				serializer = new ComponentFieldSerializer(kryo, type);
 			}
 			serializers.put(type, serializer);
 		}
-		if (serializer instanceof EditFieldSerializer) {
-			((EditFieldSerializer)serializer).init(edit);
+		if (serializer instanceof ComponentFieldSerializer) {
+			((ComponentFieldSerializer)serializer).init(edit);
 		} else {
-			// TODO exception?
-			System.err.println("Serializer for " + type + " should extend EditFieldSerializer");
+			throw new RuntimeException("Custom serializer for " + type + " must extend ComponentFieldSerializer.");
 		}
 		return serializer;
 	}
@@ -230,13 +227,14 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 		serializers.clear();
 	}
 
-	public static class EditFieldSerializer<T extends Component> extends FieldSerializer<T> {
+	public static class ComponentFieldSerializer<T extends Component> extends FieldSerializer<T> {
 		protected EntityEdit edit;
-		public EditFieldSerializer (Kryo kryo, Class<? extends Component> type) {
+
+		public ComponentFieldSerializer (Kryo kryo, Class<? extends Component> type) {
 			super(kryo, type);
 		}
 
-		public EditFieldSerializer init (EntityEdit edit) {
+		public ComponentFieldSerializer init (EntityEdit edit) {
 			this.edit = edit;
 			return this;
 		}

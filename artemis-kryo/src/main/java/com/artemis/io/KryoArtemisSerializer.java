@@ -7,15 +7,22 @@ import com.artemis.utils.IntBag;
 import com.badlogic.gdx.utils.Base64Coder;
 import com.badlogic.gdx.utils.StreamUtils;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.ReferenceResolver;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.*;
 import com.esotericsoftware.kryo.util.MapReferenceResolver;
-import com.esotericsoftware.kryo.util.Util;
-import org.objenesis.strategy.InstantiatorStrategy;
 
 import java.io.*;
 
+/**
+ * {@link com.artemis.managers.WorldSerializationManager.ArtemisSerializer} implementation with {@link Kryo} as a backend.
+ *
+ * {@link Kryo#setRegistrationRequired(boolean)} is set to {@code true} by default for security purposes. It can be changed by accessing Kryo instance via {@link #getKryo()}
+ *
+ * All custom {@link Component} serializers must extend {@link com.artemis.io.KryoEntitySerializer.ComponentFieldSerializer}
+ * All {@link IntBag}s are treated as annotated with {@link com.artemis.annotations.EntityId}, if component has IntBag for other purpose, custom serializer is required.
+ * Only {@link Bag}s of {@link Entity}s are supported, if component has other type of Bag, custom serializer is required.
+ *
+ */
 public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSerializer<Serializer> {
 	private final Kryo kryo;
 	private final KryoComponentLookupSerializer lookup;
@@ -45,25 +52,27 @@ public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 			}
 		};
 		kryo = new Kryo(resolver);
-		kryo.setRegistrationRequired(false);
+		kryo.setRegistrationRequired(true);
 
 		kryo.register(SaveFileFormat.ComponentIdentifiers.class, lookup);
-		/* TODO this sorta expects Bag<Entity, what do we do if it doesn't?
-		 * we could require custom serializer for stuff with it, but thats kinda crap */
 		kryo.register(Bag.class, new KryoEntityBagSerializer(world));
 		kryo.register(IntBag.class, intBagEntitySerializer);
 		kryo.register(Entity.class, entitySerializer);
 		kryo.register(ArchetypeMapper.class, new KryoArchetypeMapperSerializer());
 		kryo.register(ArchetypeMapper.TransmuterEntry.class, transmuterEntrySerializer);
-	}
 
-	public void setKryoInstantiatorStrategy (InstantiatorStrategy strategy) {
-		kryo.setInstantiatorStrategy(strategy);
+		kryo.register(SaveFileFormat.class);
+		kryo.register(SaveFileFormat.Metadata.class);
 	}
 
 	@Override
 	public WorldSerializationManager.ArtemisSerializer register (Class<?> type, Serializer serializer) {
 		kryo.register(type, serializer);
+		return this;
+	}
+
+	public WorldSerializationManager.ArtemisSerializer register (Class<?> type) {
+		kryo.register(type);
 		return this;
 	}
 
@@ -77,7 +86,6 @@ public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 			// could add it to util or whatever
 			char[] encode = Base64Coder.encode(os.toByteArray());
 			String encoded = new String(encode);
-//			System.out.println(new String(os.toByteArray()));
 			writer.append(encoded);
 
 		} catch (IOException e) {

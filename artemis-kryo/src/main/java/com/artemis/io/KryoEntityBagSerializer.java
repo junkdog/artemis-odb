@@ -1,5 +1,6 @@
 package com.artemis.io;
 
+import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.utils.Bag;
 import com.esotericsoftware.kryo.Kryo;
@@ -19,7 +20,10 @@ public class KryoEntityBagSerializer extends Serializer<Bag> {
 	public void write (Kryo kryo, Output output, Bag bag) {
 		output.writeInt(bag.size());
 		for (Object item : bag) {
-			kryo.writeClassAndObject(output, item);
+			kryo.writeObject(output, item);
+			if (!(item instanceof Entity)) {
+				throw new RuntimeException("Only Bag<Entity> are supported. Write ComponentFieldSerializer for Components with Bags in them.");
+			}
 		}
 	}
 
@@ -28,7 +32,11 @@ public class KryoEntityBagSerializer extends Serializer<Bag> {
 		Bag result = new Bag();
 		int count = input.readInt();
 		for (int i = 0; i < count; i++) {
-			result.add(kryo.readClassAndObject(input));
+			Object item = kryo.readObject(input, Entity.class);
+			result.add(item);
+			if (!(item instanceof Entity)) {
+				throw new RuntimeException("Only Bag<Entity> are supported. Write ComponentFieldSerializer for Components with Bags in them.");
+			}
 		}
 		return result;
 	}
