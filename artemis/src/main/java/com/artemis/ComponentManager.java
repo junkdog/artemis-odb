@@ -113,20 +113,6 @@ public class ComponentManager extends BaseSystem {
 		return component;
 	}
 
-	private <T extends Component> T createPacked(int owner, ComponentType type, Class<T> componentClass) {
-		T component;PackedComponent packedComponent = packedComponents.safeGet(type.getIndex());
-		if (packedComponent == null) {
-			packedComponent = (PackedComponent)newInstance(
-					componentClass, type.packedHasWorldConstructor);
-			packedComponents.set(type.getIndex(), packedComponent);
-		}
-		getPackedComponentOwners(type).set(owner);
-		ensurePackedComponentCapacity(owner);
-		packedComponent.forEntity(owner);
-		component = (T)packedComponent;
-		return component;
-	}
-
 	private void reclaimPooled(int owner, ComponentType type) {
 		Bag<Component> components = componentsByType.safeGet(type.getIndex());
 		if (components == null)
