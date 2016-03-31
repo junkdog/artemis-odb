@@ -10,8 +10,6 @@ import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
 
-import static com.artemis.Aspect.all;
-
 
 /**
  * Handles the association between entities and their components.
@@ -55,23 +53,6 @@ public class ComponentManager extends BaseSystem {
 	@Override
 	protected void processSystem() {}
 
-	@Override
-	protected void initialize() {
-		world.getAspectSubscriptionManager()
-				.get(all())
-				.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
-					@Override
-					public void inserted(IntBag entities) {
-						added(entities);
-					}
-
-					@Override
-					public void removed(IntBag entities) {
-						deleted(entities);
-					}
-				});
-	}
-
 	/**
 	 * Create a component of given type by class.
 	 * @param owner entity id
@@ -91,29 +72,44 @@ public class ComponentManager extends BaseSystem {
 	@SuppressWarnings("unchecked")
 	<T extends Component> T create(int owner, ComponentType type) {
 		Class<T> componentClass = (Class<T>)type.getType();
-		T component = null;
-		
-		switch (type.getTaxonomy())
-		{
+
+		T component;
+		switch (type.getTaxonomy()) {
 			case BASIC:
-				component = newInstance(componentClass, false); 
+				component = newInstance(componentClass, false);
+				addBasicComponent(owner, type, component);
 				break;
 			case POOLED:
 				try {
 					reclaimPooled(owner, type);
 					component = (T)pooledComponents.obtain((Class<PooledComponent>)componentClass, type);
-					break;
+					addBasicComponent(owner, type, component);
 				} catch (ReflectionException e) {
 					throw new InvalidComponentException(componentClass, "Unable to instantiate component.", e);
 				}
+				break;
 			case PACKED:
 				component = createPacked(owner, type, componentClass);
+				addPackedComponent(type, (PackedComponent) component);
 				break;
 			default:
 				throw new InvalidComponentException(componentClass, " unknown component type: " + type.getTaxonomy());
 		}
-		
-		addComponent(owner, type, component);
+
+		return component;
+	}
+
+	private <T extends Component> T createPacked(int owner, ComponentType type, Class<T> componentClass) {
+		T component;PackedComponent packedComponent = packedComponents.safeGet(type.getIndex());
+		if (packedComponent == null) {
+			packedComponent = (PackedComponent)newInstance(
+					componentClass, type.packedHasWorldConstructor);
+			packedComponents.set(type.getIndex(), packedComponent);
+		}
+		getPackedComponentOwners(type).set(owner);
+		ensurePackedComponentCapacity(owner);
+		packedComponent.forEntity(owner);
+		component = (T)packedComponent;
 		return component;
 	}
 
@@ -388,7 +384,7 @@ public class ComponentManager extends BaseSystem {
 	/**
 	 * Removes all components from entities marked for deletion.
 	 */
-	void deleted(IntBag deletedIds) {
+	void clean(IntBag deletedIds) {
 		int[] ids = deletedIds.getData();
 		for(int i = 0, s = deletedIds.size(); s > i; i++) {
 			removeComponents(ids[i]);

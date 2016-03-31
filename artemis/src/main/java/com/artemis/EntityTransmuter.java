@@ -46,7 +46,7 @@ public final class EntityTransmuter {
 	 * @param entityId target entity id
 	 */
 	public void transmute(int entityId) {
-		if (batchProcessor.deleted.get(entityId))
+		if (batchProcessor.isDeleted(entityId))
 			return;
 
 		if (!em.isActive(entityId))
@@ -121,14 +121,14 @@ public final class EntityTransmuter {
 		private Bag<ComponentType> additions;
 		private Bag<ComponentType> removals;
 		private ComponentManager cm;
-		public final int compositionId;
+		public final short compositionId;
 
 		public TransmuteOperation(ComponentManager cm,
 		                          int compositionId,
 		                          Bag<ComponentType> additions,
 		                          Bag<ComponentType> removals) {
 			this.cm = cm;
-			this.compositionId = compositionId;
+			this.compositionId = (short) compositionId;
 			this.additions = additions;
 			this.removals = removals;
 		}

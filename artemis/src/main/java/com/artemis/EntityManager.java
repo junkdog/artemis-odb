@@ -4,11 +4,9 @@ import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.IntDeque;
+import com.artemis.utils.ShortBag;
 
 import java.util.BitSet;
-
-import static com.artemis.Aspect.all;
-
 
 /**
  * Manages entity instances.
@@ -24,12 +22,10 @@ public class EntityManager extends BaseSystem {
 	/** Contains all entities in the manager. */
 	private final Bag<Entity> entities;
 	/** Stores the bits of all currently disabled entities IDs. */
-	private RecyclingEntityFactory recyclingEntityFactory;
-
-	private IntBag pendingDeletion = new IntBag();
+	private final RecyclingEntityFactory recyclingEntityFactory;
 
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
-	private IntBag entityToIdentity = new IntBag();
+	private ShortBag entityToIdentity = new ShortBag();
 	private int highestSeenIdentity;
 
 	/**
@@ -37,27 +33,11 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected EntityManager(int initialContainerSize) {
 		entities = new Bag<Entity>(initialContainerSize);
+		recyclingEntityFactory = new RecyclingEntityFactory(this);
 	}
 
 	@Override
 	protected void processSystem() {}
-
-	@Override
-	protected void initialize() {
-		recyclingEntityFactory = new RecyclingEntityFactory(this);
-		world.getAspectSubscriptionManager()
-				.get(all())
-				.addSubscriptionListener(
-						new EntitySubscription.SubscriptionListener() {
-							@Override
-							public void inserted(IntBag entities) {}
-
-							@Override
-							public void removed(IntBag entities) {
-								pendingDeletion.addAll(entities);
-							}
-						});
-	}
 
 	/**
 	 * Create a new entity.
@@ -66,7 +46,7 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected Entity createEntityInstance() {
 		Entity e = recyclingEntityFactory.obtain();
-		entityToIdentity.set(e.getId(), 0);
+		entityToIdentity.set(e.getId(), (short) 0);
 
 		return e;
 	}
@@ -78,7 +58,7 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected int create() {
 		int id = recyclingEntityFactory.obtain().id;
-		entityToIdentity.set(id, 0);
+		entityToIdentity.set(id, (short) 0);
 		return id;
 	}
 
@@ -126,10 +106,7 @@ public class EntityManager extends BaseSystem {
 		return identity;
 	}
 
-	void clean() {
-		if (pendingDeletion.isEmpty())
-			return;
-
+	void clean(IntBag pendingDeletion) {
 		int[] ids = pendingDeletion.getData();
 		for(int i = 0, s = pendingDeletion.size(); s > i; i++) {
 			int entityId = ids[i];
@@ -194,7 +171,7 @@ public class EntityManager extends BaseSystem {
 	 * @param compositionId composition id
 	 */
 	void setIdentity(int entityId, int compositionId) {
-		entityToIdentity.set(entityId, compositionId);
+		entityToIdentity.set(entityId, (short) compositionId);
 	}
 
 	/**

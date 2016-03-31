@@ -1,6 +1,8 @@
 package com.artemis;
 
 import com.artemis.utils.Bag;
+import com.artemis.utils.ConverterUtil;
+import com.artemis.utils.IntBag;
 
 import java.util.BitSet;
 
@@ -9,7 +11,9 @@ final class BatchChangeProcessor {
 	private final AspectSubscriptionManager asm;
 
 	final BitSet changed = new BitSet();
-	final BitSet deleted = new BitSet();
+	private final BitSet deleted = new BitSet();
+	private final BitSet pendingPurge = new BitSet();
+	private final IntBag toPurge = new IntBag();
 
 	private final Bag<EntityEdit> pool = new Bag<EntityEdit>();
 	private final WildBag<EntityEdit> edited = new WildBag<EntityEdit>();
@@ -19,22 +23,32 @@ final class BatchChangeProcessor {
 		asm = world.getAspectSubscriptionManager();
 	}
 
+	boolean isDeleted(int entityId) {
+		return pendingPurge.get(entityId);
+	}
+
+	void delete(int entityId) {
+		deleted.set(entityId);
+		pendingPurge.set(entityId);
+
+		// guarding against previous transmutations
+		changed.set(entityId, false);
+	}
+
 	/**
 	 * Get entity editor.
 	 * @return a fast albeit verbose editor to perform batch changes to entities.
 	 * @param entityId entity to fetch editor for.
 	 */
 	EntityEdit obtainEditor(int entityId) {
-		if (!edited.isEmpty() && edited.get(edited.size() - 1).getEntityId() == entityId)
-			return edited.get(edited.size() - 1);
+		int size = edited.size();
+		if (size != 0 && edited.get(size - 1).getEntityId() == entityId)
+			return edited.get(size - 1);
 
 		EntityEdit edit = entityEdit();
 		edited.add(edit);
 
 		edit.entityId = entityId;
-
-		if (!world.getEntityManager().isActive(entityId))
-			throw new RuntimeException("Issued edit on deleted " + edit.entityId);
 
 		return edit;
 	}
@@ -54,7 +68,13 @@ final class BatchChangeProcessor {
 
 		clean();
 	}
-	
+
+	IntBag getPendingPurge() {
+		ConverterUtil.toIntBag(pendingPurge, toPurge);
+		pendingPurge.clear();
+		return toPurge;
+	}
+
 	private boolean clean() {
 		if (edited.isEmpty())
 			return false;

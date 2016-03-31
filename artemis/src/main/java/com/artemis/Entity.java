@@ -70,7 +70,7 @@ public final class Entity {
 	 * @return a fast albeit verbose editor to perform batch changes to entities.
 	 */
 	public EntityEdit edit() {
-		return world.batchProcessor.obtainEditor(id);
+		return world.edit(id);
 	}
 
 

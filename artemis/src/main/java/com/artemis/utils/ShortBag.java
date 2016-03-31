@@ -10,28 +10,28 @@ import java.util.Arrays;
  *
  * @author original Bag by Arni Arent
  */
-public class IntBag {
+public class ShortBag {
 
 	/** The backing array. */
-	private int[] data;
+	private short[] data;
 	/** The number of values stored by this bag. */
 	protected int size = 0;
 
 	/**
 	 * Constructs an empty Bag with an initial capacity of 64.
 	 */
-	public IntBag() {
+	public ShortBag() {
 		this(64);
 	}
 
 	/**
 	 * Constructs an empty Bag with the specified initial capacity.
-	 * 
+	 *
 	 * @param capacity
 	 *			the initial capacity of Bag
 	 */
-	public IntBag(int capacity) {
-		data = new int[capacity];
+	public ShortBag(int capacity) {
+		data = new short[capacity];
 	}
 
 
@@ -44,7 +44,7 @@ public class IntBag {
 	 *
 	 * @return true, if value was removed
 	 */
-	public boolean removeValue(int value) throws ArrayIndexOutOfBoundsException {
+	public boolean removeValue(short value) throws ArrayIndexOutOfBoundsException {
 		int index = indexOf(value);
 		if (index > -1)
 			remove(index);
@@ -81,7 +81,7 @@ public class IntBag {
 	 *
 	 * @return index of element, or {@code -1} if there is no such index.
 	 */
-	public int indexOf(int value) {
+	public int indexOf(short value) {
 		for(int i = 0; size > i; i++) {
 			if(value == data[i]) {
 				return i;
@@ -98,7 +98,7 @@ public class IntBag {
 	 *
 	 * @return {@code true} if the bag contains this element
 	 */
-	public boolean contains(int value) {
+	public boolean contains(short value) {
 		for(int i = 0; size > i; i++) {
 			if(value == data[i]) {
 				return true;
@@ -117,7 +117,7 @@ public class IntBag {
 	 *
 	 * @throws ArrayIndexOutOfBoundsException
 	 */
-	public int get(int index) throws ArrayIndexOutOfBoundsException {
+	public short get(int index) throws ArrayIndexOutOfBoundsException {
 		return data[index];
 	}
 	
@@ -169,7 +169,7 @@ public class IntBag {
 	 * @param value
 	 *			element to be added to this list
 	 */
-	public void add(int value) {
+	public void add(short value) {
 		// is size greater than capacity increase capacity
 		if (size == data.length) {
 			grow();
@@ -187,7 +187,7 @@ public class IntBag {
 	 * @param other
 	 *			elements to be added to this list
 	 */
-	public void addAll(IntBag other) {
+	public void addAll(ShortBag other) {
 		for (int i = 0; i < other.size(); i++) {
 			add(other.get(i));
 		}
@@ -201,7 +201,7 @@ public class IntBag {
 	 * @param value
 	 *			the element
 	 */
-	public void set(int index, int value) {
+	public void set(int index, short value) {
 		if(index >= data.length) {
 			grow((index * 7) / 4 + 1);
 		}
@@ -229,8 +229,8 @@ public class IntBag {
 	 * @throws ArrayIndexOutOfBoundsException if new capacity is smaller than old
 	 */
 	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
-		int[] oldData = data;
-		data = new int[newCapacity];
+		short[] oldData = data;
+		data = new short[newCapacity];
 		System.arraycopy(oldData, 0, data, 0, oldData.length);
 	}
 
@@ -256,7 +256,9 @@ public class IntBag {
 	 * </p>
 	 */
 	public void clear() {
-		Arrays.fill(data, 0, size, 0);
+		for (int i = 0, s = size; s > i; i++)
+			data[i] = 0;
+
 		size = 0;
 	}
 	
@@ -268,9 +270,9 @@ public class IntBag {
 	 * 
 	 * @return the underlying array
 	 *
-	 * @see IntBag#size()
+	 * @see ShortBag#size()
 	 */
-	public int[] getData() {
+	public short[] getData() {
 		return data;
 	}
 
@@ -293,7 +295,7 @@ public class IntBag {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 
-		IntBag intBag = (IntBag) o;
+		ShortBag intBag = (ShortBag) o;
 		return size == intBag.size() && Arrays.equals(data, intBag.data);
 	}
 
