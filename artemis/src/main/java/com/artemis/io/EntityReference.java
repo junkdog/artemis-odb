@@ -77,10 +77,14 @@ class EntityReference {
 		ENTITY_BAG {
 			void translate(Component c, Field field, Bag<Entity> translatedIds) {
 				try {
-					Bag<Entity> bag = (Bag<Entity>) field.get(c);
+					Bag bag = (Bag) field.get(c);
 					for (int i = 0, s = bag.size(); s > i; i++) {
-						Entity e = bag.get(i);
-						bag.set(i, translatedIds.get(e.getId()));
+						Object o = bag.get(i);
+						if (o instanceof Entity) {
+							bag.set(i, translatedIds.get(((Entity)o).getId()));
+						} else {
+							return;
+						}
 					}
 				} catch (ReflectionException e) {
 					throw new RuntimeException(e);

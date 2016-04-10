@@ -99,6 +99,7 @@
         <module>artemis</module>
         <module>artemis-json</module>
         <module>artemis-json-libgdx</module>
+        <module>artemis-kryo</module>
         <module>artemis-weaver</module>
         <module>artemis-maven</module>
         <module>artemis-gradle</module>

@@ -144,7 +144,7 @@ class ReferenceTracker {
 			} else if (type.equals(IntBag.class)) {
 				return updateReferenced((IntBag)f.get(c), referencedIds);
 			} else if (type.equals(Bag.class)) {
-				return updateReferenced((Bag<Entity>)f.get(c), referencedIds);
+				return updateReferenced((Bag)f.get(c), referencedIds);
 			} else {
 				throw new RuntimeException("unknown type: " + type);
 			}
@@ -153,10 +153,16 @@ class ReferenceTracker {
 		}
 	}
 
-	private boolean updateReferenced(Bag<Entity> entities, BitSet referencedIds) {
+	private boolean updateReferenced(Bag objects, BitSet referencedIds) {
 		boolean updated = false;
-		for (int i = 0; i < entities.size(); i++)
-			updated |= updateReferenced(entities.get(i), referencedIds);
+		for (int i = 0; i < objects.size(); i++) {
+			Object o = objects.get(i);
+			if (o instanceof Entity) {
+				updated |= updateReferenced((Entity)o, referencedIds);
+			} else {
+				return false;
+			}
+		}
 
 		return updated;
 	}
