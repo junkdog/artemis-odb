@@ -14,31 +14,18 @@ import com.artemis.utils.reflect.Constructor;
  * @author Adrian Papari
  */
 public class ComponentType {
-	enum Taxonomy {
-		BASIC, POOLED, PACKED
-	}
+	public final boolean isPooled;
 
 	/** The class type of the component type. */
 	private final Class<? extends Component> type;
-	private final Taxonomy taxonomy;
-	
-	boolean packedHasWorldConstructor = false;
 
 	/** Ordinal for fast lookups. */
 	private final int index;
 
 	ComponentType(Class<? extends Component> type, int index) {
-		
 		this.index = index;
 		this.type = type;
-		if (ClassReflection.isAssignableFrom(PackedComponent.class, type)) {
-			taxonomy = Taxonomy.PACKED;
-			packedHasWorldConstructor = hasWorldConstructor(type);
-		} else if (ClassReflection.isAssignableFrom(PooledComponent.class, type)) {
-			taxonomy = Taxonomy.POOLED;
-		} else {
-			taxonomy = Taxonomy.BASIC;
-		}
+		isPooled = (ClassReflection.isAssignableFrom(PooledComponent.class, type));
 	}
 
 	private static boolean hasWorldConstructor(Class<? extends Component> type) {
@@ -49,7 +36,7 @@ public class ComponentType {
 			if (types.length == 1 && types[0] == World.class)
 				return true;
 		}
-		
+
 		return false;
 	}
 
@@ -64,17 +51,6 @@ public class ComponentType {
 	public int getIndex() {
 		return index;
 	}
-	
-	protected Taxonomy getTaxonomy() {
-		return taxonomy;
-	}
-
-	/**
-	 * @return {@code true} if of taxonomy packed.
-	 */
-	public boolean isPackedComponent() {
-		return taxonomy == Taxonomy.PACKED;
-	}
 
 	/**
 	 * @return {@code Class} that this type represents.
@@ -82,7 +58,7 @@ public class ComponentType {
 	public Class<? extends Component> getType() {
 		return type;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "ComponentType["+ ClassReflection.getSimpleName(type) +"] ("+index+")";

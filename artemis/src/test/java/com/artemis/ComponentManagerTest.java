@@ -49,70 +49,10 @@ public class ComponentManagerTest {
 		assertEquals(0xffff, typeFactory.getIndexFor(Pooled.class));
 	}
 	
-	@Test
-	public void ensure_packed_components_dont_throw_aioob() throws Exception {
-		world.getMapper(Packed.class);
-		ComponentTypeFactory typeFactory = world.getComponentManager().typeFactory;
-		assertTrue(0xffff <= field("componentTypeCount").getInt(typeFactory));
-		assertEquals(0xffff, typeFactory.getIndexFor(Packed.class));
-	}
-	
-	@Test
-	public void instantiate_packed_empty_constructor() {
-		Entity e = world.createEntity();
-		assertNotNull(e.edit().create(Packed.class));
-	}
-	
-	@Test
-	public void instantiate_packed_world_constructor() {
-		Entity e = world.createEntity();
-		assertNotNull(e.edit().create(PackedWorld.class));
-	}
-	
 	private static Field field(String f) throws NoSuchFieldException {
 		Field field = ComponentTypeFactory.class.getDeclaredField(f);
 		field.setAccessible(true);
 		return field;
-	}
-	
-	public static class Packed extends PackedComponent {
-		public int entityId;
-		
-		@Override
-		protected void forEntity(int entityId) {
-			this.entityId = entityId;
-		}
-		
-		@Override
-		protected void reset() {}
-
-		@Override
-		protected void ensureCapacity(int id) {
-			// TODO Auto-generated method stub
-			
-		}
-	}
-	
-	public static class PackedWorld extends PackedComponent {
-		public int entityId;
-
-		public PackedWorld(World world) {
-			assertNotNull(world);
-		}
-		
-		@Override
-		protected void forEntity(int entityId) {
-			this.entityId = entityId;
-		}
-
-		@Override
-		protected void reset() {}
-
-		@Override
-		protected void ensureCapacity(int id) {
-			// TODO Auto-generated method stub
-			
-		}
 	}
 	
 	private static class Pooled extends PooledComponent {

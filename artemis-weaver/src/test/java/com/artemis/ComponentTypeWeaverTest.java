@@ -13,14 +13,10 @@ import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.Type;
 
 import com.artemis.component.ComponentToWeave;
-import com.artemis.component.IllegalComponent;
-import com.artemis.component.PackedToBeB;
 import com.artemis.component.PooledForced;
-import com.artemis.component.SingletonTagComponent;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.GlobalConfiguration;
 import com.artemis.meta.ClassMetadata.WeaverType;
-import com.artemis.weaver.WeaverException;
 
 @SuppressWarnings("static-method")
 public class ComponentTypeWeaverTest {
@@ -37,30 +33,6 @@ public class ComponentTypeWeaverTest {
 		assertTrue(meta.foundReset); 
 		assertFalse(meta.foundEntityFor);
 		assertEquals("com/artemis/PooledComponent", meta.superClass); 
-	}
-	
-	@Test
-	public void packed_weaver_test() throws Exception {
-		ClassMetadata meta = Weaver.scan(transform(PackedToBeB.class));
-		assertEquals(WeaverType.NONE, meta.annotation);
-		assertTrue(meta.foundReset); 
-		assertTrue(meta.foundEntityFor);
-		assertEquals("com/artemis/PackedComponent", meta.superClass); 
-	}
-	
-	@Test
-	public void singleton_tag_test() throws Exception {
-		ClassMetadata meta = Weaver.scan(transform(SingletonTagComponent.class));
-		assertEquals(WeaverType.NONE, meta.annotation);
-		assertTrue(meta.foundReset); 
-		assertTrue(meta.foundEntityFor);
-		assertEquals(meta.fields().toString(), 0, meta.fields().size());
-		assertEquals("com/artemis/PackedComponent", meta.superClass); 
-	}
-	
-	@Test(expected=WeaverException.class)
-	public void fail_weaver_test() throws Exception {
-		transform(IllegalComponent.class);
 	}
 	
 	@Test

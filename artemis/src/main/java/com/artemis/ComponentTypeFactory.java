@@ -2,7 +2,6 @@ package com.artemis;
 
 import java.util.IdentityHashMap;
 
-import com.artemis.ComponentType.Taxonomy;
 import com.artemis.utils.Bag;
 
 /**
@@ -78,13 +77,5 @@ public class ComponentTypeFactory {
 	 */
 	public int getIndexFor(Class<? extends Component> c) {
 		return getTypeFor(c).getIndex();
-	}
-
-	protected Taxonomy getTaxonomy(int index) {
-		return types.get(index).getTaxonomy();
-	}
-
-	protected boolean isPackedComponent(int index) {
-		return types.get(index).isPackedComponent();
 	}
 }

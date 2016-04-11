@@ -1,7 +1,5 @@
 package com.artemis;
 
-import com.artemis.ComponentType.Taxonomy;
-
 
 /**
  * Entity mutator.
@@ -79,7 +77,7 @@ public final class EntityEdit {
 	 * @see #create(Class)
 	 */
 	public EntityEdit add(Component component, ComponentType type) {
-		if (type.getTaxonomy() != Taxonomy.BASIC) {
+		if (type.isPooled) {
 			throw new InvalidComponentException(component.getClass(),
 				"Use EntityEdit#create(Class<Component>) for adding non-basic component types");
 		}

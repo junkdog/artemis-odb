@@ -14,37 +14,18 @@ import com.artemis.utils.reflect.Constructor;
  * @author Adrian Papari
  */
 public class ComponentType {
-	enum Taxonomy {
-		BASIC, POOLED, PACKED
-	}
+	public final boolean isPooled;
 
 	/** The class type of the component type. */
 	private final Class<? extends Component> type;
-	private final Taxonomy taxonomy;
-
-	boolean packedHasWorldConstructor = false;
 
 	/** Ordinal for fast lookups. */
 	private final int index;
 
-	/**
-	 * <b>Do not call this constructor!</b> This method is only public so that
-	 * we play nice with GWT.
-	 *
-	 *  @@see {@link ComponentTypeFactory#getTypeFor(Class)}
-	 */
 	public ComponentType(Class<? extends Component> type, int index) {
-
 		this.index = index;
 		this.type = type;
-		if (ClassReflection.isAssignableFrom(PackedComponent.class, type)) {
-			taxonomy = Taxonomy.PACKED;
-			packedHasWorldConstructor = hasWorldConstructor(type);
-		} else if (ClassReflection.isAssignableFrom(PooledComponent.class, type)) {
-			taxonomy = Taxonomy.POOLED;
-		} else {
-			taxonomy = Taxonomy.BASIC;
-		}
+		isPooled = (ClassReflection.isAssignableFrom(PooledComponent.class, type));
 	}
 
 	private static boolean hasWorldConstructor(Class<? extends Component> type) {
@@ -69,17 +50,6 @@ public class ComponentType {
 	 */
 	public int getIndex() {
 		return index;
-	}
-
-	protected Taxonomy getTaxonomy() {
-		return taxonomy;
-	}
-
-	/**
-	 * @return {@code true} if of taxonomy packed.
-	 */
-	public boolean isPackedComponent() {
-		return taxonomy == Taxonomy.PACKED;
 	}
 
 	/**

@@ -1,23 +1,8 @@
 package com.artemis.component;
 
-import com.artemis.Entity;
-import com.artemis.PackedComponent;
+import com.artemis.Component;
 
-public class Packed extends PackedComponent
+public class Packed extends Component
 {
-	public int entityId;
-
-	@Override
-	protected void forEntity(int entityId) {
-		this.entityId = entityId;
-	}
-
-	@Override
-	protected void reset() {}
-
-	@Override
-	protected void ensureCapacity(int id) {
-		// TODO Auto-generated method stub
-		
-	}
+	public String text;
 }

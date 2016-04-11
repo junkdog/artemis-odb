@@ -7,7 +7,6 @@ import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.ClassReflection;
-import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
 
 
@@ -60,27 +59,7 @@ public class ComponentManager extends BaseSystem {
 
 	void registerComponentType(ComponentType type) {
 		int index = type.getIndex();
-		if (type.isPackedComponent()) {
-			mappers.set(index,
-				PackedComponentMapper.create((Class<PackedComponent>) type.getType(), world));
-		} else {
-			mappers.set(index,
-				new BasicComponentMapper(type, world));
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	<T extends Component> T newInstance(Class<T> componentClass, boolean constructorHasWorldParameter) {
-		try {
-			if (constructorHasWorldParameter) {
-				Constructor constructor = ClassReflection.getConstructor(componentClass, World.class);
-				return (T) constructor.newInstance(world);
-			} else {
-				return ClassReflection.newInstance(componentClass);
-			}
-		} catch (ReflectionException e) {
-			throw new InvalidComponentException(componentClass, "Unable to instantiate component.", e);
-		}
+		mappers.set(index, new BasicComponentMapper(type, world));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -105,24 +84,6 @@ public class ComponentManager extends BaseSystem {
 		}
 	}
 
-	@Override
-	protected void dispose() {
-		for (ComponentType type : typeFactory.types) {
-			if (type.isPackedComponent()) {
-				PackedComponentMapper mapper = (PackedComponentMapper) getMapper(type.getType());
-				if (mapper.component == null)
-					continue;
-
-
-				PackedComponent component = mapper.component;
-				if (ClassReflection.isInstance(PackedComponent.DisposedWithWorld.class, component) ) {
-					((PackedComponent.DisposedWithWorld)component).free(world);
-				}
-			}
-
-		}
-	}
-
 
 	/**
 	 * Get all components from all entities for a given type.
@@ -132,17 +93,6 @@ public class ComponentManager extends BaseSystem {
 	 * @return a bag containing all components of the given type
 	 */
 	protected Bag<Component> getComponentsByType(ComponentType type) {
-		if (type.isPackedComponent())
-			throw new InvalidComponentException(type.getType(), "PackedComponent types aren't supported.");
-
-//		return componentsByType.safeGet(type.getIndex());
-//		Bag<Component> components = componentsByType.safeGet(type.getIndex());
-//		if(components == null) {
-//			components = new Bag<Component>();
-//			componentsByType.set(type.getIndex(), components);
-//		}
-//		return components;
-
 		BasicComponentMapper mapper = (BasicComponentMapper) mappers.get(type.getIndex());
 		return mapper.components;
 	}
@@ -165,16 +115,7 @@ public class ComponentManager extends BaseSystem {
 	 */
 	protected Component getComponent(int entityId, ComponentType type) {
 		ComponentMapper mapper = mappers.get(type.getIndex());
-		if (type.isPackedComponent()) {
-			PackedComponent component = (PackedComponent) mapper.get(entityId);
-			if (component != null) component.forEntity(entityId);
-			return component;
-		} else {
-			if (mapper.has(entityId)) {
-				return mapper.get(entityId);
-			}
-		}
-		return null;
+		return mapper.getSafe(entityId);
 	}
 
 	/**
@@ -189,23 +130,11 @@ public class ComponentManager extends BaseSystem {
 	public Bag<Component> getComponentsFor(int entityId, Bag<Component> fillBag) {
 		BitSet componentBits = world.getEntityManager().componentBits(entityId);
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
-			if (typeFactory.isPackedComponent(i)) {
-				fillBag.add(mappers.get(i).get(entityId));
-			} else {
-				fillBag.add(mappers.get(i).get(entityId));
-			}
+			fillBag.add(mappers.get(i).get(entityId));
 		}
 		
 		return fillBag;
 	}
-
-//	void added(IntBag entities) {
-//		// entities is sorted, so enough to just grab the last entity
-//		int entityId = entities.get(entities.size() - 1);
-//		if ((highestSeenEntityId - 1) < entityId) {
-//			ensurePackedComponentCapacity(entityId);
-//		}
-//	}
 
 	/**
 	 * Removes all components from entities marked for deletion.

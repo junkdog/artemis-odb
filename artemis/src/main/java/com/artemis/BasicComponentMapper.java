@@ -2,9 +2,6 @@ package com.artemis;
 
 import com.artemis.utils.Bag;
 
-import static com.artemis.ComponentType.Taxonomy.POOLED;
-
-
 /**
  * High performance component retrieval from entities. Utilized by {@link Component} and {@link PooledComponent}
  * types.
@@ -39,7 +36,7 @@ class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 		super((Class<A>) type.getType(), world);
 		components = new Bag<A>();
 
-		pool = (type.getTaxonomy() == POOLED)
+		pool = (type.isPooled)
 			? world.getComponentManager().pooledComponents
 			: null;
 

@@ -53,34 +53,6 @@ public class MetaScannerTest {
 	}
 	
 	@Test
-	public void packed_component_scanning() throws Exception {
-		
-		ClassMetadata scan1 = scan(PackedToBeA.class);
-		ClassMetadata scan2 = scan(PackedToBeB.class);
-		
-		assertEquals(WeaverType.PACKED, scan1.annotation);
-		assertEquals(true, scan1.foundEntityFor);
-		assertEquals(false, scan1.foundReset);
-		
-		assertEquals(WeaverType.PACKED, scan2.annotation);
-		assertEquals(false, scan2.foundEntityFor);
-		assertEquals(false, scan2.foundReset);
-	}
-	
-	@Test
-	public void find_fields_and_methods() throws Exception {
-		ClassMetadata scan1 = scan(PackedToBeB.class);
-		ClassMetadata scan2 = scan(PackedToBeA.class);
-		
-		assertEquals(2, scan1.fields().size());
-		assertEquals("F", scan1.fields().get(1).desc);
-		assertEquals(Opcodes.ACC_PRIVATE, scan1.fields().get(1).access);
-		assertEquals(1 /* default constructor*/, scan1.methods.size());
-		
-		assertEquals(2 /* default constructor*/, scan2.methods.size());
-	}
-	
-	@Test
 	public void detect_begin_end() throws Exception {
 		ClassMetadata scan1 = scan(NoBeginEndSystem.class);
 		ClassMetadata scan2 = scan(BeginEndSystem.class);
