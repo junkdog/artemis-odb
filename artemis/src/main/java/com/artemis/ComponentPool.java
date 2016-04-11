@@ -13,11 +13,14 @@ class ComponentPool {
 	}
 	
 	@SuppressWarnings("unchecked")
-	<T extends PooledComponent> T obtain(Class<T> componentClass, ComponentType type)
-		throws ReflectionException {
+	<T extends PooledComponent> T obtain(ComponentType type) {
 		
 		Pool pool = getPool(type.getIndex());
-		return (T)((pool.size() > 0) ? pool.obtain() :  ClassReflection.newInstance(componentClass));
+		try {
+			return (T)((pool.size() > 0) ? pool.obtain() :  ClassReflection.newInstance(type.getType()));
+		} catch (ReflectionException e) {
+			throw new InvalidComponentException(type.getType(), e.getMessage(), e);
+		}
 	}
 	
 	void free(PooledComponent c, ComponentType type) {

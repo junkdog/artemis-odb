@@ -2,6 +2,7 @@ package com.artemis;
 
 import java.util.BitSet;
 
+import com.artemis.EntityTransmuter.TransmuteOperation;
 import com.artemis.utils.Bag;
 
 /**
@@ -28,9 +29,8 @@ public class ArchetypeBuilder {
 		classes = new Bag<Class<? extends Component>>();
 		if (parent == null)
 			return;
-		
-		for (int i = 0; parent.types.length > i; i++)
-			classes.add(parent.types[i].getType());
+
+		parent.transmuter.getAdditions(classes);
 	}
 
 	/**
@@ -104,7 +104,18 @@ public class ArchetypeBuilder {
 	public Archetype build(World world) {
 		ComponentType[] types = resolveTypes(world);
 		EntityManager em = world.getEntityManager();
-		return new Archetype(types, em.compositionIdentity(bitset(types)));
+
+		ComponentMapper[] mappers = new ComponentMapper[types.length];
+		for (int i = 0, s = mappers.length; s > i; i++) {
+			mappers[i] = world.getMapper(types[i].getType());
+		}
+
+		int compositionId = em.compositionIdentity(bitset(types));
+		ComponentManager cm = world.getComponentManager();
+		TransmuteOperation operation =
+			new TransmuteOperation(cm, compositionId, mappers, new ComponentMapper[0]);
+
+		return new Archetype(operation, compositionId);
 	}
 	
 	/** generate bitset mask of types. */

@@ -22,8 +22,14 @@ public class ComponentTypeFactory {
 	
 	/** Index of this component type in componentTypes. */
 	final Bag<ComponentType> types = new Bag<ComponentType>();
-	
-	
+
+	private final ComponentManager cm;
+
+	public ComponentTypeFactory(ComponentManager cm) {
+		this.cm = cm;
+	}
+
+
 	/**
 	 * Gets the component type for the given component class.
 	 * <p>
@@ -44,7 +50,10 @@ public class ComponentTypeFactory {
 			type = new ComponentType(c, index);
 			componentTypes.put(c, type);
 			types.set(index, type);
+
+			cm.registerComponentType(type);
 		}
+
 
 		return type;
 	}
@@ -70,11 +79,11 @@ public class ComponentTypeFactory {
 	public int getIndexFor(Class<? extends Component> c) {
 		return getTypeFor(c).getIndex();
 	}
-	
+
 	protected Taxonomy getTaxonomy(int index) {
 		return types.get(index).getTaxonomy();
 	}
-	
+
 	protected boolean isPackedComponent(int index) {
 		return types.get(index).isPackedComponent();
 	}

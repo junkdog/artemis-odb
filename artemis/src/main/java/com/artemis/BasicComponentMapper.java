@@ -2,6 +2,8 @@ package com.artemis;
 
 import com.artemis.utils.Bag;
 
+import static com.artemis.ComponentType.Taxonomy.POOLED;
+
 
 /**
  * High performance component retrieval from entities. Utilized by {@link Component} and {@link PooledComponent}
@@ -19,7 +21,10 @@ import com.artemis.utils.Bag;
 class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 
 	/** Holds all components of given type in the world. */
-	private final Bag<Component> components;
+	final Bag<A> components;
+	private final EntityTransmuter removeTransmuter;
+	private final EntityTransmuter createTransmuter;
+	private final ComponentPool pool;
 
 	/**
 	 * Creates a new {@code ComponentMapper} instance handling the given type
@@ -30,9 +35,16 @@ class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 	 * @param world
 	 *			the world to handle components for
 	 */
-	BasicComponentMapper(Class<A> type, World world) {
-		super(type, world);
-		components = world.getComponentManager().getComponentsByType(this.type);
+	BasicComponentMapper(ComponentType type, World world) {
+		super((Class<A>) type.getType(), world);
+		components = new Bag<A>();
+
+		pool = (type.getTaxonomy() == POOLED)
+			? world.getComponentManager().pooledComponents
+			: null;
+
+		createTransmuter = new EntityTransmuterFactory(world).add(type.getType()).build();
+		removeTransmuter = new EntityTransmuterFactory(world).remove(type.getType()).build();
 	}
 
 
@@ -46,7 +58,7 @@ class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 	@Override
 	public A getSafe(int entityId) {
 		if(components.isIndexWithinBounds(entityId)) {
-			return (A) components.get(entityId);
+			return components.get(entityId);
 		}
 		return null;
 	}
@@ -64,5 +76,58 @@ class BasicComponentMapper<A extends Component> extends ComponentMapper<A> {
 	@Override
 	public A getSafe(int entityId, boolean forceNewInstance) {
 		return getSafe(entityId);
+	}
+
+	@Override
+	public void remove(int entityId) {
+		A component = getSafe(entityId);
+		if (component != null) {
+			// running transmuter first, as it performs som validation
+			removeTransmuter.transmuteNoOperation(entityId);
+
+			if (pool != null)
+				pool.free((PooledComponent) component, type);
+		}
+
+		components.set(entityId, null);
+	}
+
+	@Override
+	protected void internalRemove(int entityId) { // triggers no composition id update
+		A component = getSafe(entityId);
+		if (component != null && pool != null)
+			pool.free((PooledComponent) component, type);
+
+		components.set(entityId, null);
+	}
+
+	@Override
+	public A create(int entityId) {
+		A component = getSafe(entityId);
+		if (component == null) {
+			// running transmuter first, as it performs som validation
+			createTransmuter.transmuteNoOperation(entityId);
+			component = createNew();
+			components.set(entityId, component);
+		}
+
+		return component;
+	}
+
+	@Override
+	public A internalCreate(int entityId) {
+		A component = getSafe(entityId);
+		if (component == null) {
+			component = createNew();
+			components.set(entityId, component);
+		}
+
+		return component;
+	}
+
+	private A createNew() {
+		return (pool != null)
+			? (A) pool.obtain(type)
+			: (A) ComponentManager.newInstance(type.getType());
 	}
 }

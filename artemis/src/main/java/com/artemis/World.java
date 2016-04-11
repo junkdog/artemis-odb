@@ -302,8 +302,11 @@ public class World {
 	 */
 	public Entity createEntity(Archetype archetype) {
 		Entity e = em.createEntityInstance(archetype);
-		cm.addComponents(e.getId(), archetype);
-		batchProcessor.changed.set(e.getId());
+
+		int id = e.getId();
+		archetype.transmuter.perform(id);
+		batchProcessor.changed.set(id);
+
 		return e;
 	}
 
@@ -323,8 +326,10 @@ public class World {
 	 */
 	public int create(Archetype archetype) {
 		int entityId = em.create(archetype);
-		cm.addComponents(entityId, archetype);
+
+		archetype.transmuter.perform(entityId);
 		batchProcessor.changed.set(entityId);
+
 		return entityId;
 	}
 
@@ -383,6 +388,7 @@ public class World {
 		if (!pendingPurge.isEmpty()) {
 			cm.clean(pendingPurge);
 			em.clean(pendingPurge);
+			pendingPurge.setSize(0);
 		}
 	}
 

@@ -59,6 +59,18 @@ public final class EntityTransmuter {
 		batchProcessor.changed.set(entityId);
 	}
 
+	void transmuteNoOperation(int entityId) {
+		if (batchProcessor.isDeleted(entityId))
+			return;
+
+		if (!em.isActive(entityId))
+			throw new RuntimeException("Issued transmute on deleted " + entityId);
+
+		TransmuteOperation operation = getOperation(entityId);
+		em.setIdentity(entityId, operation.compositionId);
+		batchProcessor.changed.set(entityId);
+	}
+
 	/**
 	 * Apply on target entity.
 	 *
@@ -70,7 +82,7 @@ public final class EntityTransmuter {
 		transmute(e.id);
 	}
 
-	private TransmuteOperation getOperation(int entityId) {
+	TransmuteOperation getOperation(int entityId) {
 		int compositionId = em.getIdentity(entityId);
 		TransmuteOperation operation = operations.safeGet(compositionId);
 		if (operation == null) {
@@ -90,23 +102,23 @@ public final class EntityTransmuter {
 				compositionId, getAdditions(componentBits), getRemovals(componentBits));
 	}
 
-	private Bag<ComponentType> getAdditions(BitSet origin) {
+	private Bag<ComponentMapper> getAdditions(BitSet origin) {
 		ComponentTypeFactory tf = cm.typeFactory;
-		Bag<ComponentType> types = new Bag<ComponentType>();
+		Bag<ComponentMapper> types = new Bag<ComponentMapper>();
 		for (int i = additions.nextSetBit(0); i >= 0; i = additions.nextSetBit(i + 1)) {
 			if (!origin.get(i))
-				types.add(tf.getTypeFor(i));
+				types.add(cm.getMapper(tf.getTypeFor(i).getType()));
 		}
 
 		return types;
 	}
 
-	private Bag<ComponentType> getRemovals(BitSet origin) {
+	private Bag<ComponentMapper> getRemovals(BitSet origin) {
 		ComponentTypeFactory tf = cm.typeFactory;
-		Bag<ComponentType> types = new Bag<ComponentType>();
+		Bag<ComponentMapper> types = new Bag<ComponentMapper>();
 		for (int i = removals.nextSetBit(0); i >= 0; i = removals.nextSetBit(i + 1)) {
 			if (origin.get(i))
-				types.add(tf.getTypeFor(i));
+				types.add(cm.getMapper(tf.getTypeFor(i).getType()));
 		}
 
 		return types;
@@ -118,27 +130,56 @@ public final class EntityTransmuter {
 	}
 
 	static class TransmuteOperation {
-		private Bag<ComponentType> additions;
-		private Bag<ComponentType> removals;
+		private final ComponentMapper[] additions;
+		private final ComponentMapper[] removals;
+
 		private ComponentManager cm;
 		public final short compositionId;
 
 		public TransmuteOperation(ComponentManager cm,
 		                          int compositionId,
-		                          Bag<ComponentType> additions,
-		                          Bag<ComponentType> removals) {
+		                          ComponentMapper[] additions,
+		                          ComponentMapper[] removals) {
 			this.cm = cm;
 			this.compositionId = (short) compositionId;
 			this.additions = additions;
 			this.removals = removals;
 		}
 
-		public void perform(int entityId) {
-			for (int i = 0, s = additions.size(); s > i; i++)
-				cm.create(entityId, additions.get(i));
+		public TransmuteOperation(ComponentManager cm,
+		                          int compositionId,
+		                          Bag<ComponentMapper> additions,
+		                          Bag<ComponentMapper> removals) {
+			this.cm = cm;
+			this.compositionId = (short) compositionId;
+			this.additions = new ComponentMapper[additions.size()];
+			this.removals = new ComponentMapper[removals.size()];
 
-			for (int i = 0, s = removals.size(); s > i; i++)
-				cm.removeComponent(entityId, removals.get(i));
+			for (int i = 0, s = additions.size(); s > i; i++) {
+				this.additions[i] = additions.get(i);
+			}
+
+			for (int i = 0, s = removals.size(); s > i; i++) {
+				this.removals[i] = removals.get(i);
+			}
+		}
+
+		public void perform(int entityId) {
+			for (int i = 0, s = additions.length; s > i; i++) {
+				additions[i].internalCreate(entityId);
+			}
+
+			for (int i = 0, s = removals.length; s > i; i++) {
+					removals[i].internalRemove(entityId);
+			}
+		}
+
+		Bag<Class<? extends Component>> getAdditions(Bag<Class<? extends Component>> out) {
+			for (int i = 0, s = additions.length; s > i; i++) {
+				out.add(additions[i].getType().getType());
+			}
+
+			return out;
 		}
 
 		@Override
@@ -146,24 +187,24 @@ public final class EntityTransmuter {
 			StringBuilder sb = new StringBuilder();
 			sb.append("TransmuteOperation(");
 
-			if (additions.size() > 0) {
+			if (additions.length > 0) {
 				sb.append("add={");
 				String delim = "";
-				for (ComponentType ct : additions) {
-					sb.append(delim).append(ct.getType().getSimpleName());
+				for (ComponentMapper mapper : additions) {
+					sb.append(delim).append(mapper.getType().getType().getSimpleName());
 					delim = ", ";
 				}
 				sb.append("}");
 			}
 
-			if (removals.size() > 0) {
-				if (additions.size() > 0)
+			if (removals.length > 0) {
+				if (additions.length > 0)
 					sb.append(" ");
 
 				sb.append("remove={");
 				String delim = "";
-				for (ComponentType ct : removals) {
-					sb.append(delim).append(ct.getType().getSimpleName());
+				for (ComponentMapper mapper : removals) {
+					sb.append(delim).append(mapper.getType().getType().getSimpleName());
 					delim = ", ";
 				}
 				sb.append("}");

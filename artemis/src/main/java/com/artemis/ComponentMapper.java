@@ -11,17 +11,13 @@ package com.artemis;
  */
 public abstract class ComponentMapper<A extends Component> {
 
-	private final EntityTransmuter createTransmuter;
-	private final EntityTransmuter removeTransmuter;
-
 	/** The type of components this mapper handles. */
 	public final ComponentType type;
 
 	public ComponentMapper(Class<A> type, World world) {
 		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
 		this.type = tf.getTypeFor(type);
-		createTransmuter = new EntityTransmuterFactory(world).add(type).build();
-		removeTransmuter = new EntityTransmuterFactory(world).remove(type).build();
+
 	}
 	
 	/**
@@ -160,11 +156,7 @@ public abstract class ComponentMapper<A extends Component> {
 	 *
 	 * @param entityId
 	 */
-	public void remove(int entityId) {
-		if (has(entityId)) {
-			removeTransmuter.transmute(entityId);
-		}
-	}
+	public abstract void remove(int entityId);
 
 	/**
 	 * Remove component from entity.
@@ -183,14 +175,10 @@ public abstract class ComponentMapper<A extends Component> {
 	 * @param entityId the entity that should possess the component
 	 * @return the instance of the component.
 	 */
-	public A create(int entityId) {
-		A component = getSafe(entityId);
-		if (component == null) {
-			createTransmuter.transmute(entityId);
-			component = get(entityId);
-		}
-		return component;
-	}
+	public abstract A create(int entityId);
+
+	protected abstract A internalCreate(int entityId);
+	protected abstract void internalRemove(int entityId);
 
 	/**
 	 * Fast and safe retrieval of a component for this entity.
@@ -266,13 +254,11 @@ public abstract class ComponentMapper<A extends Component> {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends Component> ComponentMapper<T> getFor(Class<T> type, World world) {
-		return getFor(world.getComponentManager().typeFactory.getTypeFor(type), world);
+		return world.getMapper(type);
 	}
 
-	static <T extends Component> ComponentMapper<T> getFor(ComponentType type, World world) {
-		if (type.isPackedComponent())
-			return (ComponentMapper<T>) PackedComponentMapper.create((Class<PackedComponent>)type.getType(), world);
-		else
-			return new BasicComponentMapper<T>((Class<T>) type.getType(), world);
+	@Override
+	public String toString() {
+		return "ComponentMapper[" + type.getType().getSimpleName() + ']';
 	}
 }

@@ -35,16 +35,7 @@ public class ArchetypeManagerTest {
 		assertEquals(2, arch3.compositionId);
 	}
 	
-	@Test
-	public void test_archetypes_component_classes() throws Exception {
-		assertEquals(0, arch1.types.length);
-		assertEquals(2, arch2.types.length);
-		assertEquals(ComponentX.class, arch2.types[0].getType());
-		assertEquals(ComponentY.class, arch2.types[1].getType());
-		assertEquals(1, arch3.types.length);
-		assertEquals(ComponentX.class, arch3.types[0].getType());
-	}
-	
+
 	@Test
 	public void test_adding_to_systems() {
 		archetypeEntity(arch1, 2); // never inserted

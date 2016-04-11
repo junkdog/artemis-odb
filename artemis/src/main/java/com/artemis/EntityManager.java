@@ -118,8 +118,6 @@ public class EntityManager extends BaseSystem {
 				recyclingEntityFactory.free(entityId);
 			}
 		}
-
-		pendingDeletion.setSize(0);
 	}
 
 	/**

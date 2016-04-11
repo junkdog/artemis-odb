@@ -8,15 +8,15 @@ package com.artemis;
  * @see EntityEdit for a list of alternate ways to alter composition and access components.
  */
 public final class Archetype {
-	final ComponentType[] types;
+	final EntityTransmuter.TransmuteOperation transmuter;
 	final short compositionId;
 
 	/**
-	 * @param types Desired composition of derived components.
+	 * @param transmuter Desired composition of derived components.
 	 * @param compositionId uniquely identifies component composition.
 	 */
-	Archetype(ComponentType[] types, int compositionId) {
-		this.types = types;
+	Archetype(EntityTransmuter.TransmuteOperation transmuter, int compositionId) {
+		this.transmuter = transmuter;
 		this.compositionId = (short) compositionId;
 	}
 }

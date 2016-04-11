@@ -21,9 +21,12 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 	private final Class<A> componentType;
 	
 	/** Holds all components of given type in the world. */
-	private final PackedComponent component;
+	final A component;
 	private final BitSet owners;
-	
+
+	private final EntityTransmuter removeTransmuter;
+	private final EntityTransmuter createTransmuter;
+
 	private boolean newInstanceWithWorld = false;
 
 	private World world;
@@ -43,11 +46,14 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 		ComponentManager cm = world.getComponentManager();
 		ComponentType type = cm.typeFactory.getTypeFor(componentType);
 		newInstanceWithWorld = type.packedHasWorldConstructor;
-		owners = cm.getPackedComponentOwners(type);
+		owners = new BitSet();
 		
 		this.componentType = componentType;
 		
 		component = newInstance();
+
+		createTransmuter = new EntityTransmuterFactory(world).add(type.getType()).build();
+		removeTransmuter = new EntityTransmuterFactory(world).remove(type.getType()).build();
 	}
 	
 	static PackedComponentMapper<PackedComponent> create(Class<PackedComponent> type, World world) {
@@ -72,6 +78,38 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 	}
 
 	@Override
+	public void remove(int entityId) {
+		component.forEntity(entityId);
+		component.reset();
+		removeTransmuter.transmuteNoOperation(entityId);
+		owners.set(entityId, false);
+	}
+
+	@Override
+	protected void internalRemove(int entityId) {
+		component.forEntity(entityId);
+		component.reset();
+		owners.set(entityId, false);
+	}
+
+	@Override
+	public A create(int entityId) {
+		owners.set(entityId);
+		ensurePackedComponentCapacity(entityId);
+		createTransmuter.transmuteNoOperation(entityId);
+		component.forEntity(entityId);
+		return component;
+	}
+
+	@Override
+	protected A internalCreate(int entityId) {
+		owners.set(entityId);
+		ensurePackedComponentCapacity(entityId);
+		component.forEntity(entityId);
+		return component;
+	}
+
+	@Override
 	public A get(int entityId, boolean forceNewInstance) throws ArrayIndexOutOfBoundsException {
 		if (forceNewInstance) {
 			A c = newInstance();
@@ -84,6 +122,7 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 
 	@Override
 	public A getSafe(int entityId, boolean forceNewInstance) {
+		ensurePackedComponentCapacity(entityId);
 		if (has(entityId)) {
 			return get(entityId, forceNewInstance);
 		} else {
@@ -93,5 +132,9 @@ class PackedComponentMapper<A extends PackedComponent> extends ComponentMapper<A
 
 	private A newInstance() {
 		return world.getComponentManager().newInstance(componentType, newInstanceWithWorld);
+	}
+
+	private void ensurePackedComponentCapacity(int entityId) {
+		component.ensureCapacity(entityId + 1);
 	}
 }

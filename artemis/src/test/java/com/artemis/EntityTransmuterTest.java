@@ -79,6 +79,10 @@ public class EntityTransmuterTest {
 		assertNotNull(e1.getComponent(Packed.class));
 		assertNotNull(e1.getComponent(ReusedComponent.class));
 		assertNull(e1.getComponent(ComponentY.class));
+		assertNotNull(e2.getComponent(ComponentX.class));
+		assertNotNull(e2.getComponent(Packed.class));
+		assertNotNull(e2.getComponent(ReusedComponent.class));
+		assertNull(e2.getComponent(ComponentY.class));
 	}
 
 	@Test

@@ -47,16 +47,6 @@ public class ArchetypeTest {
 	}
 
 	@Test
-	public void test_archetypes_component_classes() throws Exception {
-		assertEquals(0, arch1.types.length);
-		assertEquals(2, arch2.types.length);
-		assertEquals(ComponentX.class, arch2.types[0].getType());
-		assertEquals(ComponentY.class, arch2.types[1].getType());
-		assertEquals(1, arch3.types.length);
-		assertEquals(ComponentX.class, arch3.types[0].getType());
-	}
-
-	@Test
 	public void test_inherited_archetypes_and_composition_resolution() throws Exception {
 		Archetype arch4 = new ArchetypeBuilder(arch2).build(world);
 		Archetype arch5 = new ArchetypeBuilder(arch2).remove(ComponentY.class).build(world);
@@ -65,9 +55,6 @@ public class ArchetypeTest {
 		assertEquals(arch2.compositionId, arch4.compositionId);
 		assertEquals(arch3.compositionId, arch5.compositionId);
 		assertEquals(3, arch6.compositionId);
-
-		assertEquals(1, arch6.types.length);
-		assertEquals(ComponentY.class, arch6.types[0].getType());
 	}
 
 	@Test
