@@ -7,7 +7,7 @@ import com.artemis.utils.reflect.ReflectionException;
 
 import java.util.*;
 
-import static com.artemis.EntityManager.NO_COMPONENTS;
+import static com.artemis.ComponentManager.NO_COMPONENTS;
 
 /**
  * Contains configuration for your world.

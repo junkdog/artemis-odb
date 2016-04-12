@@ -6,6 +6,7 @@ import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
+import com.artemis.utils.ShortBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.ReflectionException;
 
@@ -21,14 +22,20 @@ import com.artemis.utils.reflect.ReflectionException;
  */
 @SkipWire
 public class ComponentManager extends BaseSystem {
+	/** Adrian's secret rebellion. */
+	static final int NO_COMPONENTS = 0;
 
 	/** Collects all Entites marked for deletion from this ComponentManager. */
 	final ComponentPool pooledComponents;
-	private int highestSeenEntityId;
 	private Bag<ComponentMapper> mappers = new Bag<ComponentMapper>();
-	
+
+
+	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
+	private ShortBag entityToIdentity = new ShortBag();
 	protected final ComponentTypeFactory typeFactory;
 
+	private int highestSeenIdentity;
+	private int highestSeenEntityId;
 	/**
 	 * Creates a new instance of {@link ComponentManager}.
 	 */
@@ -78,7 +85,7 @@ public class ComponentManager extends BaseSystem {
 	 *			the entity to remove components from
 	 */
 	private void removeComponents(int entityId) {
-		BitSet componentBits = world.getEntityManager().componentBits(entityId);
+		BitSet componentBits = componentBits(entityId);
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
 			mappers.get(i).internalRemove(entityId);
 		}
@@ -127,7 +134,7 @@ public class ComponentManager extends BaseSystem {
 	 * @return the {@code fillBag}, filled with the entities components
 	 */
 	public Bag<Component> getComponentsFor(int entityId, Bag<Component> fillBag) {
-		BitSet componentBits = world.getEntityManager().componentBits(entityId);
+		BitSet componentBits = componentBits(entityId);
 		for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i+1)) {
 			fillBag.add(mappers.get(i).get(entityId));
 		}
@@ -142,7 +149,73 @@ public class ComponentManager extends BaseSystem {
 		int[] ids = deletedIds.getData();
 		for(int i = 0, s = deletedIds.size(); s > i; i++) {
 			removeComponents(ids[i]);
+			entityToIdentity.set(ids[i], (short)0);
 		}
+	}
+
+	/** Get component composition of entity. */
+	BitSet componentBits(int entityId) {
+		int identityIndex = entityToIdentity.get(entityId);
+		return identityResolver.composition.get(identityIndex);
+	}
+
+	/**
+	 * Fetches unique identifier for composition.
+	 *
+	 * @param componentBits composition to fetch unique identifier for.
+	 * @return Unique identifier for passed composition.
+	 */
+	int compositionIdentity(BitSet componentBits) {
+		int identity = identityResolver.getIdentity(componentBits);
+		if (identity > highestSeenIdentity) {
+			world.getAspectSubscriptionManager()
+				.processComponentIdentity(identity, componentBits);
+			highestSeenIdentity = identity;
+		}
+		return identity;
+	}
+
+	/**
+	 * Fetch composition id for entity.
+	 *
+	 * A composition id is uniquely identified by a single Aspect. For performance reasons, each entity is
+	 * identified by its composition id. Adding or removing components from an entity will change its compositionId.
+	 *
+	 * @param entityId
+	 * @return composition identity.
+	 */
+	protected int getIdentity(int entityId) {
+		entityToIdentity.ensureCapacity(entityId);
+		return entityToIdentity.get(entityId);
+	}
+
+	/**
+	 * Synchronizes new subscriptions with {@link World} state.
+	 *
+	 * @param es entity subscription to update.
+	 */
+	void synchronize(EntitySubscription es) {
+		for (int i = 1; highestSeenIdentity >= i; i++) {
+			BitSet componentBits = identityResolver.composition.get(i);
+			es.processComponentIdentity(i, componentBits);
+		}
+
+		for (Entity e : world.getEntityManager().entities) {
+			if (e != null) es.check(e.id);
+		}
+
+		es.informEntityChanges();
+		es.rebuildCompressedActives();
+	}
+
+	/**
+	 * Set composition id of entity.
+	 *
+	 * @param entityId entity id
+	 * @param compositionId composition id
+	 */
+	void setIdentity(int entityId, int compositionId) {
+		entityToIdentity.set(entityId, (short) compositionId);
 	}
 
 	/**
@@ -150,5 +223,28 @@ public class ComponentManager extends BaseSystem {
 	 */
 	public ComponentTypeFactory getTypeFactory() {
 		return typeFactory;
+	}
+
+
+	/** Tracks all unique component compositions. */
+	private static final class ComponentIdentityResolver {
+		private final Bag<BitSet> composition;
+
+		ComponentIdentityResolver() {
+			composition = new Bag<BitSet>();
+			composition.add(new BitSet());
+		}
+
+		/** Fetch unique identity for passed composition. */
+		int getIdentity(BitSet components) {
+			Object[] bitsets = composition.getData();
+			int size = composition.size();
+			for (int i = NO_COMPONENTS; size > i; i++) { // want to start from 1 so that 0 can mean null
+				if (components.equals(bitsets[i]))
+					return i;
+			}
+			composition.add((BitSet)components.clone());
+			return size;
+		}
 	}
 }

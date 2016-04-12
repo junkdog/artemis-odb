@@ -305,6 +305,8 @@ public class World {
 
 		int id = e.getId();
 		archetype.transmuter.perform(id);
+		cm.setIdentity(e.id, archetype.compositionId);
+
 		batchProcessor.changed.set(id);
 
 		return e;
@@ -326,6 +328,10 @@ public class World {
 	 */
 	public int create(Archetype archetype) {
 		int entityId = em.create(archetype);
+
+		archetype.transmuter.perform(entityId);
+		cm.setIdentity(entityId, archetype.compositionId);
+
 		batchProcessor.changed.set(entityId);
 
 		return entityId;
@@ -386,7 +392,6 @@ public class World {
 		if (!pendingPurge.isEmpty()) {
 			cm.clean(pendingPurge);
 			em.clean(pendingPurge);
-			pendingPurge.setSize(0);
 		}
 	}
 

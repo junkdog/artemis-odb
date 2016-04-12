@@ -52,10 +52,10 @@ public class ComponentCollector {
 	}
 
 	protected void inspectComponentTypes(SaveFileFormat save) {
-		EntityManager em = world.getEntityManager();
+		ComponentManager cm = world.getComponentManager();
 
 		int[] ids = save.entities.getData();
 		for (int i = 0, s = save.entities.size(); s > i; i++)
-			componentIds.or(em.componentBits(ids[i]));
+			componentIds.or(cm.componentBits(ids[i]));
 	}
 }

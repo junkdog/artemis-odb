@@ -103,17 +103,16 @@ public class ArchetypeBuilder {
 	 */
 	public Archetype build(World world) {
 		ComponentType[] types = resolveTypes(world);
-		EntityManager em = world.getEntityManager();
 
+		ComponentManager cm = world.getComponentManager();
 		ComponentMapper[] mappers = new ComponentMapper[types.length];
 		for (int i = 0, s = mappers.length; s > i; i++) {
-			mappers[i] = world.getMapper(types[i].getType());
+			mappers[i] = cm.getMapper(types[i].getType());
 		}
 
-		int compositionId = em.compositionIdentity(bitset(types));
-		ComponentManager cm = world.getComponentManager();
+		int compositionId = cm.compositionIdentity(bitset(types));
 		TransmuteOperation operation =
-			new TransmuteOperation(cm, compositionId, mappers, new ComponentMapper[0]);
+			new TransmuteOperation(compositionId, mappers, new ComponentMapper[0]);
 
 		return new Archetype(operation, compositionId);
 	}
@@ -129,11 +128,7 @@ public class ArchetypeBuilder {
 
 	/** Converts java classes to component types. */
 	private ComponentType[] resolveTypes(World world) {
-		ComponentManager cm = world.getComponentManager();
-		if (cm == null)
-			throw new MundaneWireException("World#initialize() has not been called.");
-		
-		ComponentTypeFactory tf = cm.typeFactory;
+		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
 		ComponentType[] types = new ComponentType[classes.size()];
 		for (int i = 0, s = classes.size(); s > i; i++)
 			types[i] = tf.getTypeFor(classes.get(i));

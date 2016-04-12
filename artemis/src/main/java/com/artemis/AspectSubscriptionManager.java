@@ -52,8 +52,7 @@ public class AspectSubscriptionManager extends Manager {
 		subscriptionMap.put(builder, entitySubscription);
 		subscriptions.add(entitySubscription);
 
-		world.getEntityManager().synchronize(entitySubscription);
-
+		world.getComponentManager().synchronize(entitySubscription);
 		return entitySubscription;
 	}
 

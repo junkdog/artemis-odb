@@ -16,17 +16,10 @@ import java.util.BitSet;
  */
 @SkipWire
 public class EntityManager extends BaseSystem {
-
-	/** Adrian's secret rebellion. */
-	static final int NO_COMPONENTS = 0;
 	/** Contains all entities in the manager. */
-	private final Bag<Entity> entities;
+	final Bag<Entity> entities;
 	/** Stores the bits of all currently disabled entities IDs. */
 	private final RecyclingEntityFactory recyclingEntityFactory;
-
-	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
-	private ShortBag entityToIdentity = new ShortBag();
-	private int highestSeenIdentity;
 
 	/**
 	 * Creates a new EntityManager Instance.
@@ -46,7 +39,7 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected Entity createEntityInstance() {
 		Entity e = recyclingEntityFactory.obtain();
-		entityToIdentity.set(e.getId(), (short) 0);
+//		entityToIdentity.set(e.getId(), (short) 0);
 
 		return e;
 	}
@@ -58,7 +51,7 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected int create() {
 		int id = recyclingEntityFactory.obtain().id;
-		entityToIdentity.set(id, (short) 0);
+//		entityToIdentity.set(id, (short) 0);
 		return id;
 	}
 
@@ -69,7 +62,7 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected int create(Archetype archetype) {
 		int id = recyclingEntityFactory.obtain().id;
-		createOperation(archetype, id);
+//		createOperation(archetype, id);
 		return id;
 	}
 
@@ -80,37 +73,17 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected Entity createEntityInstance(Archetype archetype) {
 		Entity e = createEntityInstance();
-		createOperation(archetype, e.id);
+//		createOperation(archetype, e.id);
 		return e;
 	}
+//
+//	private void createOperation(Archetype archetype, int id) {
+//		EntityTransmuter.TransmuteOperation transmuter = archetype.transmuter;
+//		transmuter.perform(id);
+//		entityToIdentity.set(id, transmuter.compositionId);
+//	}
 
-	private void createOperation(Archetype archetype, int id) {
-		EntityTransmuter.TransmuteOperation transmuter = archetype.transmuter;
-		transmuter.perform(id);
-		entityToIdentity.set(id, transmuter.compositionId);
-	}
 
-	/** Get component composition of entity. */
-	BitSet componentBits(int entityId) {
-		int identityIndex = entityToIdentity.get(entityId);
-		return identityResolver.composition.get(identityIndex);
-	}
-
-	/**
-	 * Fetches unique identifier for composition.
-	 *
-	 * @param componentBits composition to fetch unique identifier for.
-	 * @return Unique identifier for passed composition.
-	 */
-	int compositionIdentity(BitSet componentBits) {
-		int identity = identityResolver.getIdentity(componentBits);
-		if (identity > highestSeenIdentity) {
-			world.getAspectSubscriptionManager()
-					.processComponentIdentity(identity, componentBits);
-			highestSeenIdentity = identity;
-		}
-		return identity;
-	}
 
 	void clean(IntBag pendingDeletion) {
 		int[] ids = pendingDeletion.getData();
@@ -156,77 +129,11 @@ public class EntityManager extends BaseSystem {
 	}
 
 	/**
-	 * Fetch composition id for entity.
-	 *
-	 * A composition id is uniquely identified by a single Aspect. For performance reasons, each entity is
-	 * identified by its composition id. Adding or removing components from an entity will change its compositionId.
-	 *
-	 * @param entityId
-	 * @return composition identity.
-	 */
-	protected int getIdentity(int entityId) {
-		return entityToIdentity.get(entityId);
-	}
-
-	/**
-	 * Set composition id of entity.
-	 *
-	 * @param entityId entity id
-	 * @param compositionId composition id
-	 */
-	void setIdentity(int entityId, int compositionId) {
-		entityToIdentity.set(entityId, (short) compositionId);
-	}
-
-	/**
-	 * Synchronizes new subscriptions with {@link World} state.
-	 *
-	 * @param es entity subscription to update.
-	 */
-	void synchronize(EntitySubscription es) {
-		for (int i = 1; highestSeenIdentity >= i; i++) {
-			BitSet componentBits = identityResolver.composition.get(i);
-			es.processComponentIdentity(i, componentBits);
-		}
-
-		for (int i = 0; i < entities.size(); i++) {
-			Entity e = entities.get(i);
-			if (e != null && isActive(i))
-				es.check(e.getId());
-		}
-
-		es.informEntityChanges();
-		es.rebuildCompressedActives();
-	}
-
-	/**
 	 * Instantiates an Entity without registering it into the world.
 	 * @param id The ID to be set on the Entity
 	 */
 	protected Entity createEntity(int id) {
 		return new Entity(world, id);
-	}
-	
-	/** Tracks all unique component compositions. */
-	private static final class ComponentIdentityResolver {
-		private final Bag<BitSet> composition;
-		
-		ComponentIdentityResolver() {
-			composition = new Bag<BitSet>();
-			composition.add(new BitSet());
-		}
-
-		/** Fetch unique identity for passed composition. */
-		int getIdentity(BitSet components) {
-			Object[] bitsets = composition.getData();
-			int size = composition.size();
-			for (int i = NO_COMPONENTS; size > i; i++) { // want to start from 1 so that 0 can mean null
-				if (components.equals(bitsets[i]))
-					return i;
-			}
-			composition.add((BitSet)components.clone());
-			return size;
-		}
 	}
 
 	/** Track retired entities for recycling. */

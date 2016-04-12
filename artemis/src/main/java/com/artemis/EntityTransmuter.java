@@ -54,7 +54,7 @@ public final class EntityTransmuter {
 
 		TransmuteOperation operation = getOperation(entityId);
 		operation.perform(entityId);
-		em.setIdentity(entityId, operation.compositionId);
+		cm.setIdentity(entityId, operation.compositionId);
 
 		batchProcessor.changed.set(entityId);
 	}
@@ -67,7 +67,7 @@ public final class EntityTransmuter {
 			throw new RuntimeException("Issued transmute on deleted " + entityId);
 
 		TransmuteOperation operation = getOperation(entityId);
-		em.setIdentity(entityId, operation.compositionId);
+		cm.setIdentity(entityId, operation.compositionId);
 		batchProcessor.changed.set(entityId);
 	}
 
@@ -83,10 +83,14 @@ public final class EntityTransmuter {
 	}
 
 	TransmuteOperation getOperation(int entityId) {
-		int compositionId = em.getIdentity(entityId);
-		TransmuteOperation operation = operations.safeGet(compositionId);
+		int compositionId = cm.getIdentity(entityId);
+		return operation(entityId, compositionId);
+	}
+
+	private TransmuteOperation operation(int entityId, int compositionId) {
+		TransmuteOperation operation = operations.get(compositionId);
 		if (operation == null) {
-			operation = createOperation(em.componentBits(entityId));
+			operation = createOperation(cm.componentBits(entityId));
 			operations.set(compositionId, operation);
 		}
 		return operation;
@@ -97,9 +101,9 @@ public final class EntityTransmuter {
 		bs.or(componentBits);
 		bs.or(additions);
 		bs.andNot(removals);
-		int compositionId = em.compositionIdentity(bs);
-		return new TransmuteOperation(cm,
-				compositionId, getAdditions(componentBits), getRemovals(componentBits));
+		int compositionId = cm.compositionIdentity(bs);
+		return new TransmuteOperation(compositionId,
+			getAdditions(componentBits), getRemovals(componentBits));
 	}
 
 	private Bag<ComponentMapper> getAdditions(BitSet origin) {
@@ -133,24 +137,21 @@ public final class EntityTransmuter {
 		private final ComponentMapper[] additions;
 		private final ComponentMapper[] removals;
 
-		private ComponentManager cm;
 		public final short compositionId;
 
-		public TransmuteOperation(ComponentManager cm,
-		                          int compositionId,
+		public TransmuteOperation(int compositionId,
 		                          ComponentMapper[] additions,
 		                          ComponentMapper[] removals) {
-			this.cm = cm;
+
 			this.compositionId = (short) compositionId;
 			this.additions = additions;
 			this.removals = removals;
 		}
 
-		public TransmuteOperation(ComponentManager cm,
-		                          int compositionId,
+		public TransmuteOperation(int compositionId,
 		                          Bag<ComponentMapper> additions,
 		                          Bag<ComponentMapper> removals) {
-			this.cm = cm;
+
 			this.compositionId = (short) compositionId;
 			this.additions = new ComponentMapper[additions.size()];
 			this.removals = new ComponentMapper[removals.size()];
@@ -170,7 +171,7 @@ public final class EntityTransmuter {
 			}
 
 			for (int i = 0, s = removals.length; s > i; i++) {
-					removals[i].internalRemove(entityId);
+				removals[i].internalRemove(entityId);
 			}
 		}
 

@@ -7,7 +7,6 @@ import com.artemis.components.SerializationTag;
 import com.artemis.io.JsonArtemisSerializer;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
-import com.esotericsoftware.jsonbeans.JsonReader;
 import org.junit.Before;
 import org.junit.Test;
 

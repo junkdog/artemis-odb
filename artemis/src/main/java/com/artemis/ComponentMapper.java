@@ -15,11 +15,11 @@ public final class ComponentMapper<A extends Component> {
 
 	/** The type of components this mapper handles. */
 	public final ComponentType type;
-
 	/** Holds all components of given type in the world. */
 	final Bag<A> components;
-	private final EntityTransmuter removeTransmuter;
+
 	private final EntityTransmuter createTransmuter;
+	private final EntityTransmuter removeTransmuter;
 	private final ComponentPool pool;
 
 

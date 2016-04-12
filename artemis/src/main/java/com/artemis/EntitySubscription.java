@@ -20,7 +20,7 @@ public class EntitySubscription {
 
 	private final IntBag entities;
 	private final BitSet activeEntityIds;
-	private final EntityManager em;
+	private final ComponentManager cm;
 
 	private final Bag<SubscriptionListener> listeners;
 
@@ -35,7 +35,7 @@ public class EntitySubscription {
 		aspect = builder.build(world);
 		aspectReflection = builder;
 		aspectCache = new BitSet();
-		em = world.getEntityManager();
+		cm = world.getComponentManager();
 
 		activeEntityIds = new BitSet();
 		entities = new IntBag();
@@ -112,7 +112,7 @@ public class EntitySubscription {
 	}
 
 	final void check(int id) {
-		boolean interested = aspectCache.get(em.getIdentity(id));
+		boolean interested = aspectCache.get(cm.getIdentity(id));
 		boolean contains = activeEntityIds.get(id);
 
 		if (interested && !contains) {

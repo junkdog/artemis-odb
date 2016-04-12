@@ -245,7 +245,7 @@ public class ShortBag {
 	 */
 	public void ensureCapacity(int index) {
 		if(index >= data.length) {
-			grow(index);
+			grow(index + 1);
 		}
 	}
 

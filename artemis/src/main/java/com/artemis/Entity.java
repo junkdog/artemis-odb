@@ -62,7 +62,7 @@ public final class Entity {
 	 * @return a BitSet containing the entities component bits
 	 */
 	protected BitSet getComponentBits() {
-		return world.getEntityManager().componentBits(id);
+		return world.getComponentManager().componentBits(id);
 	}
 
 	/**
@@ -157,7 +157,7 @@ public final class Entity {
 	 * @return unique identifier for entities with this specific component configuration.
 	 */
 	public int getCompositionId() {
-		return world.getEntityManager().getIdentity(id);
+		return world.getComponentManager().getIdentity(id);
 	}
 
 	/** id equality */
