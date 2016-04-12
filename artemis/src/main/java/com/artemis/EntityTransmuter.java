@@ -88,7 +88,7 @@ public final class EntityTransmuter {
 	}
 
 	private TransmuteOperation operation(int entityId, int compositionId) {
-		TransmuteOperation operation = operations.get(compositionId);
+		TransmuteOperation operation = operations.safeGet(compositionId);
 		if (operation == null) {
 			operation = createOperation(cm.componentBits(entityId));
 			operations.set(compositionId, operation);

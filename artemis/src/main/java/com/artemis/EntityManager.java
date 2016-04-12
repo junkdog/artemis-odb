@@ -4,7 +4,6 @@ import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.IntDeque;
-import com.artemis.utils.ShortBag;
 
 import java.util.BitSet;
 
@@ -38,10 +37,7 @@ public class EntityManager extends BaseSystem {
 	 * @return a new entity
 	 */
 	protected Entity createEntityInstance() {
-		Entity e = recyclingEntityFactory.obtain();
-//		entityToIdentity.set(e.getId(), (short) 0);
-
-		return e;
+		return recyclingEntityFactory.obtain();
 	}
 
 	/**
@@ -50,40 +46,8 @@ public class EntityManager extends BaseSystem {
 	 * @return a new entity id
 	 */
 	protected int create() {
-		int id = recyclingEntityFactory.obtain().id;
-//		entityToIdentity.set(id, (short) 0);
-		return id;
+		return recyclingEntityFactory.obtain().id;
 	}
-
-	/**
-	 * Create a new entity based on the supplied archetype.
-	 *
-	 * @return a new entity id
-	 */
-	protected int create(Archetype archetype) {
-		int id = recyclingEntityFactory.obtain().id;
-//		createOperation(archetype, id);
-		return id;
-	}
-
-	/**
-	 * Create a new entity based on the supplied archetype.
-	 *
-	 * @return a new entity
-	 */
-	protected Entity createEntityInstance(Archetype archetype) {
-		Entity e = createEntityInstance();
-//		createOperation(archetype, e.id);
-		return e;
-	}
-//
-//	private void createOperation(Archetype archetype, int id) {
-//		EntityTransmuter.TransmuteOperation transmuter = archetype.transmuter;
-//		transmuter.perform(id);
-//		entityToIdentity.set(id, transmuter.compositionId);
-//	}
-
-
 
 	void clean(IntBag pendingDeletion) {
 		int[] ids = pendingDeletion.getData();
@@ -133,7 +97,17 @@ public class EntityManager extends BaseSystem {
 	 * @param id The ID to be set on the Entity
 	 */
 	protected Entity createEntity(int id) {
-		return new Entity(world, id);
+		Entity e = new Entity(world, id);
+		if (e.id >= entities.getCapacity()) {
+			int newSize = 2 * entities.getCapacity();
+			entities.ensureCapacity(newSize);
+			ComponentManager cm = world.getComponentManager();
+			cm.ensureCapacity(newSize);
+		}
+
+		entities.fastSet(e.id, e);
+
+		return e;
 	}
 
 	/** Track retired entities for recycling. */
@@ -156,9 +130,7 @@ public class EntityManager extends BaseSystem {
 		
 		Entity obtain() {
 			if (limbo.isEmpty()) {
-				Entity e = em.createEntity(nextId++);
-				em.entities.set(e.id, e);
-				return e;
+				return em.createEntity(nextId++);
 			} else {
 				int id = limbo.popFirst();
 				recycled.set(id, false);

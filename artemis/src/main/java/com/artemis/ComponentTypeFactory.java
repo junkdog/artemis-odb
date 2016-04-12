@@ -16,16 +16,15 @@ public class ComponentTypeFactory {
 	private final IdentityHashMap<Class<? extends Component>, ComponentType> componentTypes
 			= new IdentityHashMap<Class<? extends Component>, ComponentType>();
 	
-	/** Amount of generated component types. */
-	private int componentTypeCount = 0;
-	
 	/** Index of this component type in componentTypes. */
 	final Bag<ComponentType> types = new Bag<ComponentType>();
 
+	int initialMapperCapacity;
 	private final ComponentManager cm;
 
-	public ComponentTypeFactory(ComponentManager cm) {
+	public ComponentTypeFactory(ComponentManager cm, int entityContainerSize) {
 		this.cm = cm;
+		initialMapperCapacity = entityContainerSize;
 	}
 
 
@@ -45,12 +44,11 @@ public class ComponentTypeFactory {
 		ComponentType type = componentTypes.get(c);
 
 		if (type == null) {
-			int index = componentTypeCount++;
-			type = new ComponentType(c, index);
+			type = new ComponentType(c, types.size());
 			componentTypes.put(c, type);
-			types.set(index, type);
+			types.add(type);
 
-			cm.registerComponentType(type);
+			cm.registerComponentType(type, initialMapperCapacity);
 		}
 
 

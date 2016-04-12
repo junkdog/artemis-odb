@@ -33,22 +33,6 @@ public class ComponentManagerTest {
 		}
 	}
 
-	@Test
-	public void ensure_basic_components_dont_throw_aioob() throws Exception {
-		world.getMapper(Basic.class);
-		ComponentTypeFactory typeFactory = world.getComponentManager().typeFactory;
-		assertTrue(0xffff <= field("componentTypeCount").getInt(typeFactory));
-		assertEquals(0xffff, typeFactory.getTypeFor(Basic.class).getIndex());
-	}
-	
-	@Test
-	public void ensure_pooled_components_dont_throw_aioob() throws Exception {
-		world.getMapper(Pooled.class);
-		ComponentTypeFactory typeFactory = world.getComponentManager().typeFactory;
-		assertTrue(0xffff <= field("componentTypeCount").getInt(typeFactory));
-		assertEquals(0xffff, typeFactory.getIndexFor(Pooled.class));
-	}
-	
 	private static Field field(String f) throws NoSuchFieldException {
 		Field field = ComponentTypeFactory.class.getDeclaredField(f);
 		field.setAccessible(true);

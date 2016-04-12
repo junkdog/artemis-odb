@@ -1,11 +1,11 @@
 package com.artemis.utils;
 
-import com.artemis.Entity;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+
+import static java.lang.Math.max;
 
 
 /**
@@ -193,10 +193,9 @@ public class Bag<E> implements ImmutableBag<E> {
 	 *
 	 */
 	public E safeGet(int index) {
-		if(index >= data.length) {
-			grow((index * 7) / 4 + 1);
-		}
-		
+		if(index >= data.length)
+			grow(Math.max((2 * data.length), index));
+
 		return data[index];
 	}
 
@@ -251,8 +250,6 @@ public class Bag<E> implements ImmutableBag<E> {
 	 *			element to be added to this list
 	 */
 	public void add(E e) {
-		//#include "./bag_no_flyweight.inc"
-
 		// is size greater than capacity increase capacity
 		if (size == data.length) {
 			grow();
@@ -270,32 +267,35 @@ public class Bag<E> implements ImmutableBag<E> {
 	 *			the element
 	 */
 	public void set(int index, E e) {
-		if(index >= data.length) {
-			grow((index * 7) / 4 + 1);
-		}
+		if(index >= data.length)
+			grow(max((2 * data.length), index + 1));
+
+		fastSet(index, e);
+	}
+
+	/**
+	 * Set element at specified index in the bag.
+	 *
+	 * @param index
+	 *			position of element
+	 * @param e
+	 *			the element
+	 */
+	public void fastSet(int index, E e) {
 		size = Math.max(size, index + 1);
 		data[index] = e;
 	}
 
 	/**
 	 * Increase the capacity of the bag.
-	 * <p>
-	 * Capacity will increase by (3/2)*capacity + 1.
-	 * </p>
-	 */
-	private void grow() {
-		int newCapacity = (data.length * 7) / 4 + 1;
-		grow(newCapacity);
-	}
-
-	/**
-	 * Increase the capacity of the bag.
-	 *
-	 * @param newCapacity
-	 *			new capacity to grow to
 	 *
 	 * @throws ArrayIndexOutOfBoundsException if new capacity is smaller than old
 	 */
+	@SuppressWarnings("unchecked")
+	private void grow() {
+		grow(data.length * 2);
+	}
+
 	@SuppressWarnings("unchecked")
 	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
 		E[] oldData = data;
@@ -309,12 +309,14 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * If not, the bag capacity will be increased to hold an item at the index.
 	 * </p>
 	 *
+	 * <p>yeah, sorry, it's weird, but we don't want to change existing change behavior</p>
+	 *
 	 * @param index
 	 *			index to check
 	 */
 	public void ensureCapacity(int index) {
 		if(index >= data.length) {
-			grow(index);
+			grow(index + 1);
 		}
 	}
 

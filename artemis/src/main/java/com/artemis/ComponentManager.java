@@ -29,21 +29,18 @@ public class ComponentManager extends BaseSystem {
 	final ComponentPool pooledComponents;
 	private Bag<ComponentMapper> mappers = new Bag<ComponentMapper>();
 
-
 	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
-	private ShortBag entityToIdentity = new ShortBag();
+	private final ShortBag entityToIdentity;
 	protected final ComponentTypeFactory typeFactory;
 
 	private int highestSeenIdentity;
-	private int highestSeenEntityId;
 	/**
 	 * Creates a new instance of {@link ComponentManager}.
 	 */
 	protected ComponentManager(int entityContainerSize) {
-		this.highestSeenEntityId = entityContainerSize;
 		pooledComponents = new ComponentPool();
-
-		typeFactory = new ComponentTypeFactory(this);
+		entityToIdentity = new ShortBag(entityContainerSize);
+		typeFactory = new ComponentTypeFactory(this, entityContainerSize);
 	}
 
 	@Override
@@ -64,9 +61,11 @@ public class ComponentManager extends BaseSystem {
 		return mappers.get(type.getIndex());
 	}
 
-	void registerComponentType(ComponentType ct) {
+	void registerComponentType(ComponentType ct, int capacity) {
 		int index = ct.getIndex();
-		mappers.set(index, new ComponentMapper(ct.getType(), world));
+		ComponentMapper mapper = new ComponentMapper(ct.getType(), world);
+		mapper.components.ensureCapacity(capacity);
+		mappers.set(index, mapper);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -121,7 +120,7 @@ public class ComponentManager extends BaseSystem {
 	 */
 	protected Component getComponent(int entityId, ComponentType type) {
 		ComponentMapper mapper = mappers.get(type.getIndex());
-		return mapper.getSafe(entityId);
+		return mapper.get(entityId);
 	}
 
 	/**
@@ -185,7 +184,6 @@ public class ComponentManager extends BaseSystem {
 	 * @return composition identity.
 	 */
 	protected int getIdentity(int entityId) {
-		entityToIdentity.ensureCapacity(entityId);
 		return entityToIdentity.get(entityId);
 	}
 
@@ -223,6 +221,14 @@ public class ComponentManager extends BaseSystem {
 	 */
 	public ComponentTypeFactory getTypeFactory() {
 		return typeFactory;
+	}
+
+	public void ensureCapacity(int newSize) {
+		typeFactory.initialMapperCapacity = newSize;
+		entityToIdentity.ensureCapacity(newSize);
+		for (ComponentMapper mapper : mappers) {
+			mapper.components.ensureCapacity(newSize);
+		}
 	}
 
 

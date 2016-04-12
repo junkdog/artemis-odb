@@ -79,8 +79,9 @@ public final class ComponentMapper<A extends Component> {
 	 * @param e the entity that should possess the component
 	 * @return the instance of the component
 	 */
+	@Deprecated
 	public A getSafe(Entity e) {
-		return getSafe(e.getId());
+		return get(e.getId());
 	}
 
 	/**
@@ -92,10 +93,9 @@ public final class ComponentMapper<A extends Component> {
 	 * @param entityId the id of entity that should possess the component
 	 * @return the instance of the component
 	 */
+	@Deprecated
 	public A getSafe(int entityId) {
-		return (components.isIndexWithinBounds(entityId))
-			? components.get(entityId)
-			: null;
+		return get(entityId);
 	}
 
 	/**
@@ -115,7 +115,7 @@ public final class ComponentMapper<A extends Component> {
 	 * @return true if the entity has this component type, false if it doesn't
 	 */
 	public boolean has(int entityId) {
-		return getSafe(entityId) != null;
+		return get(entityId) != null;
 	}
 
 
@@ -137,16 +137,15 @@ public final class ComponentMapper<A extends Component> {
 	 * @param entityId
 	 */
 	public void remove(int entityId) {
-		A component = getSafe(entityId);
+		A component = get(entityId);
 		if (component != null) {
-			// running transmuter first, as it performs som validation
+			// running transmuter first, as it performs some validation
 			removeTransmuter.transmuteNoOperation(entityId);
+			components.fastSet(entityId, null);
 
 			if (pool != null)
 				pool.free((PooledComponent) component, type);
 		}
-
-		components.set(entityId, null);
 	}
 
 	/**
@@ -160,11 +159,14 @@ public final class ComponentMapper<A extends Component> {
 	}
 
 	protected void internalRemove(int entityId) { // triggers no composition id update
-		A component = getSafe(entityId);
-		if (component != null && pool != null)
-			pool.free((PooledComponent) component, type);
+		if (pool != null) {
+			A component = get(entityId);
+			if (component != null) {
+				pool.free((PooledComponent) component, type);
+			}
+		}
 
-		components.set(entityId, null);
+		components.fastSet(entityId, null);
 	}
 
 	/**
@@ -175,22 +177,22 @@ public final class ComponentMapper<A extends Component> {
 	 * @return the instance of the component.
 	 */
 	public A create(int entityId) {
-		A component = getSafe(entityId);
+		A component = get(entityId);
 		if (component == null) {
 			// running transmuter first, as it performs som validation
 			createTransmuter.transmuteNoOperation(entityId);
 			component = createNew();
-			components.set(entityId, component);
+			components.fastSet(entityId, component);
 		}
 
 		return component;
 	}
 
 	public A internalCreate(int entityId) {
-		A component = getSafe(entityId);
+		A component = get(entityId);
 		if (component == null) {
 			component = createNew();
-			components.set(entityId, component);
+			components.fastSet(entityId, component);
 		}
 
 		return component;
@@ -211,7 +213,7 @@ public final class ComponentMapper<A extends Component> {
 	 * @return the instance of the component
 	 */
 	public A getSafe(int entityId, A fallback) {
-		final A c = getSafe(entityId);
+		final A c = get(entityId);
 		return (c != null) ? c : fallback;
 	}
 

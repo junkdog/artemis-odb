@@ -2,6 +2,8 @@ package com.artemis.utils;
 
 import java.util.Arrays;
 
+import static java.lang.Math.max;
+
 
 /**
  * Collection type a bit like ArrayList but does not preserve the order of its
@@ -203,31 +205,24 @@ public class IntBag {
 	 */
 	public void set(int index, int value) {
 		if(index >= data.length) {
-			grow((index * 7) / 4 + 1);
+			grow(max((2 * data.length), index + 1));
 		}
-		size = Math.max(size, index + 1);
+
+		size = max(size, index + 1);
 		data[index] = value;
 	}
 
 	/**
 	 * Increase the capacity of the bag.
-	 * <p>
-	 * Capacity will increase by (3/2)*capacity + 1.
-	 * </p>
-	 */
-	private void grow() {
-		int newCapacity = (data.length * 7) / 4 + 1;
-		grow(newCapacity);
-	}
-
-	/**
-	 * Increase the capacity of the bag.
-	 *
-	 * @param newCapacity
-	 *			new capacity to grow to
 	 *
 	 * @throws ArrayIndexOutOfBoundsException if new capacity is smaller than old
 	 */
+	@SuppressWarnings("unchecked")
+	private void grow() {
+		grow(2 * data.length);
+	}
+
+	@SuppressWarnings("unchecked")
 	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
 		int[] oldData = data;
 		data = new int[newCapacity];
@@ -245,7 +240,7 @@ public class IntBag {
 	 */
 	public void ensureCapacity(int index) {
 		if(index >= data.length) {
-			grow(index);
+			grow(index + 1);
 		}
 	}
 

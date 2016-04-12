@@ -3,7 +3,6 @@ package com.artemis.injection;
 import com.artemis.BaseSystem;
 import com.artemis.Component;
 import com.artemis.ComponentMapper;
-import com.artemis.Manager;
 import com.artemis.World;
 import com.artemis.utils.reflect.Field;
 

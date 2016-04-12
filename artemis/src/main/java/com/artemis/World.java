@@ -301,7 +301,7 @@ public class World {
 	 * @return entity
 	 */
 	public Entity createEntity(Archetype archetype) {
-		Entity e = em.createEntityInstance(archetype);
+		Entity e = em.createEntityInstance();
 
 		int id = e.getId();
 		archetype.transmuter.perform(id);
@@ -327,7 +327,7 @@ public class World {
 	 * @return assigned entity id
 	 */
 	public int create(Archetype archetype) {
-		int entityId = em.create(archetype);
+		int entityId = em.create();
 
 		archetype.transmuter.perform(entityId);
 		cm.setIdentity(entityId, archetype.compositionId);
