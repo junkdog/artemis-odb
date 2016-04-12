@@ -1,5 +1,7 @@
 package com.artemis;
 
+import com.artemis.utils.Bag;
+
 /**
  * Provide high performance component access and mutation from within a System.
  *
@@ -9,14 +11,30 @@ package com.artemis;
  * @param <A> Component type to map.
  * @see EntityEdit for a list of alternate ways to alter composition and access components.
  */
-public abstract class ComponentMapper<A extends Component> {
+public final class ComponentMapper<A extends Component> {
 
 	/** The type of components this mapper handles. */
 	public final ComponentType type;
 
+	/** Holds all components of given type in the world. */
+	final Bag<A> components;
+	private final EntityTransmuter removeTransmuter;
+	private final EntityTransmuter createTransmuter;
+	private final ComponentPool pool;
+
+
 	public ComponentMapper(Class<A> type, World world) {
 		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
 		this.type = tf.getTypeFor(type);
+
+		components = new Bag<A>();
+
+		pool = (this.type.isPooled)
+			? world.getComponentManager().pooledComponents
+			: null;
+
+		createTransmuter = new EntityTransmuterFactory(world).add(type).build();
+		removeTransmuter = new EntityTransmuterFactory(world).remove(type).build();
 
 	}
 	
@@ -36,8 +54,6 @@ public abstract class ComponentMapper<A extends Component> {
 		return get(e.getId());
 	}
 
-	public abstract A get(int entityId) throws ArrayIndexOutOfBoundsException;
-
 	/**
 	 * Fast but unsafe retrieval of a component for this entity.
 	 * <p>
@@ -46,29 +62,13 @@ public abstract class ComponentMapper<A extends Component> {
 	 * already know the entity possesses this component.
 	 * </p>
 	 *
-	 * @param e                the entity that should possess the component
-	 * @param forceNewInstance Returns a new instance of the component (only applies to {@link PackedComponent}s)
+	 * @param entityId the entity that should possess the component
 	 * @return the instance of the component
 	 * @throws ArrayIndexOutOfBoundsException
 	 */
-	public A get(Entity e, boolean forceNewInstance) throws ArrayIndexOutOfBoundsException {
-		return get(e.getId(), forceNewInstance);
+	public A get(int entityId) throws ArrayIndexOutOfBoundsException {
+		return components.get(entityId);
 	}
-
-	/**
-	 * Fast but unsafe retrieval of a component for this entity, by id.
-	 * <p>
-	 * No bounding checks, so this could throw an
-	 * {@link ArrayIndexOutOfBoundsException}, however in most scenarios you
-	 * already know the entity possesses this component.
-	 * </p>
-	 *
-	 * @param entityId         the entity that should possess the component
-	 * @param forceNewInstance Returns a new instance of the component (only applies to {@link PackedComponent}s)
-	 * @return the instance of the component
-	 * @throws ArrayIndexOutOfBoundsException
-	 */
-	public abstract A get(int entityId, boolean forceNewInstance) throws ArrayIndexOutOfBoundsException;
 
 	/**
 	 * Fast and safe retrieval of a component for this entity.
@@ -92,33 +92,11 @@ public abstract class ComponentMapper<A extends Component> {
 	 * @param entityId the id of entity that should possess the component
 	 * @return the instance of the component
 	 */
-	public abstract A getSafe(int entityId);
-
-	/**
-	 * Fast and safe retrieval of a component for this entity.
-	 * <p>
-	 * If the entity does not have this component then null is returned.
-	 * </p>
-	 *
-	 * @param e                the entity that should possess the component
-	 * @param forceNewInstance If true, returns a new instance of the component (only applies to {@link PackedComponent}s)
-	 * @return the instance of the component
-	 */
-	public A getSafe(Entity e, boolean forceNewInstance) {
-		return getSafe(e.getId(), forceNewInstance);
+	public A getSafe(int entityId) {
+		return (components.isIndexWithinBounds(entityId))
+			? components.get(entityId)
+			: null;
 	}
-
-	/**
-	 * Fast and safe retrieval of a component for this entity, by id.
-	 * <p>
-	 * If the entity does not have this component then null is returned.
-	 * </p>
-	 *
-	 * @param entityId         the entity id that should possess the component
-	 * @param forceNewInstance If true, returns a new instance of the component (only applies to {@link PackedComponent}s)
-	 * @return the instance of the component
-	 */
-	public abstract A getSafe(int entityId, boolean forceNewInstance);
 
 	/**
 	 * Checks if the entity has this type of component.
@@ -136,7 +114,9 @@ public abstract class ComponentMapper<A extends Component> {
 	 * @param entityId the id of entity to check
 	 * @return true if the entity has this component type, false if it doesn't
 	 */
-	public abstract boolean has(int entityId);
+	public boolean has(int entityId) {
+		return getSafe(entityId) != null;
+	}
 
 
 	/**
@@ -156,7 +136,18 @@ public abstract class ComponentMapper<A extends Component> {
 	 *
 	 * @param entityId
 	 */
-	public abstract void remove(int entityId);
+	public void remove(int entityId) {
+		A component = getSafe(entityId);
+		if (component != null) {
+			// running transmuter first, as it performs som validation
+			removeTransmuter.transmuteNoOperation(entityId);
+
+			if (pool != null)
+				pool.free((PooledComponent) component, type);
+		}
+
+		components.set(entityId, null);
+	}
 
 	/**
 	 * Remove component from entity.
@@ -168,6 +159,14 @@ public abstract class ComponentMapper<A extends Component> {
 		remove(entity.getId());
 	}
 
+	protected void internalRemove(int entityId) { // triggers no composition id update
+		A component = getSafe(entityId);
+		if (component != null && pool != null)
+			pool.free((PooledComponent) component, type);
+
+		components.set(entityId, null);
+	}
+
 	/**
 	 * Create component for this entity.
 	 * Will avoid creation if component exists.
@@ -175,10 +174,33 @@ public abstract class ComponentMapper<A extends Component> {
 	 * @param entityId the entity that should possess the component
 	 * @return the instance of the component.
 	 */
-	public abstract A create(int entityId);
+	public A create(int entityId) {
+		A component = getSafe(entityId);
+		if (component == null) {
+			// running transmuter first, as it performs som validation
+			createTransmuter.transmuteNoOperation(entityId);
+			component = createNew();
+			components.set(entityId, component);
+		}
 
-	protected abstract A internalCreate(int entityId);
-	protected abstract void internalRemove(int entityId);
+		return component;
+	}
+
+	public A internalCreate(int entityId) {
+		A component = getSafe(entityId);
+		if (component == null) {
+			component = createNew();
+			components.set(entityId, component);
+		}
+
+		return component;
+	}
+
+	private A createNew() {
+		return (pool != null)
+			? (A) pool.obtain(type)
+			: (A) ComponentManager.newInstance(type.getType());
+	}
 
 	/**
 	 * Fast and safe retrieval of a component for this entity.

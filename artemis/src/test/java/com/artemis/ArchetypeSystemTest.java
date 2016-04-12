@@ -30,9 +30,9 @@ public class ArchetypeSystemTest {
 	
 	@Test
 	public void test_composition_id() throws Exception {
-		assertEquals(0, arch1.compositionId);
-		assertEquals(1, arch2.compositionId);
-		assertEquals(2, arch3.compositionId);
+		assertEquals(0, arch1.transmuter.compositionId);
+		assertEquals(1, arch2.transmuter.compositionId);
+		assertEquals(2, arch3.transmuter.compositionId);
 	}
 	
 

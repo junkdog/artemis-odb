@@ -2,20 +2,19 @@ package com.artemis;
 
 /**
  * Provides a blueprint for new entities, offering greatly
- * improved insertion performance for systems and managers.
+ * improved insertion performance for systems.
  * </p>
- * Instance entities using {@link com.artemis.World#createEntity(Archetype)}
+ * Instance entities using {@link com.artemis.World#create(Archetype)}
+ * @see EntityEdit for a list of alternate ways to alter composition and access components.
  */
 public final class Archetype {
-	final ComponentType[] types;
-	final short compositionId;
+	final EntityTransmuter.TransmuteOperation transmuter;
 
 	/**
-	 * @param types Desired composition of derived components.
+	 * @param transmuter Desired composition of derived components.
 	 * @param compositionId uniquely identifies component composition.
 	 */
-	public Archetype(ComponentType[] types, int compositionId) {
-		this.types = types;
-		this.compositionId = (short) compositionId;
+	public Archetype(EntityTransmuter.TransmuteOperation transmuter, int compositionId) {
+		this.transmuter = transmuter;
 	}
 }

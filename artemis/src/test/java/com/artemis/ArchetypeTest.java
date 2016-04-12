@@ -41,9 +41,9 @@ public class ArchetypeTest {
 
 	@Test
 	public void test_composition_id() throws Exception {
-		assertEquals(0, arch1.compositionId);
-		assertEquals(1, arch2.compositionId);
-		assertEquals(2, arch3.compositionId);
+		assertEquals(0, arch1.transmuter.compositionId);
+		assertEquals(1, arch2.transmuter.compositionId);
+		assertEquals(2, arch3.transmuter.compositionId);
 	}
 
 	@Test
@@ -52,9 +52,9 @@ public class ArchetypeTest {
 		Archetype arch5 = new ArchetypeBuilder(arch2).remove(ComponentY.class).build(world);
 		Archetype arch6 = new ArchetypeBuilder(arch2).remove(ComponentX.class).build(world);
 
-		assertEquals(arch2.compositionId, arch4.compositionId);
-		assertEquals(arch3.compositionId, arch5.compositionId);
-		assertEquals(3, arch6.compositionId);
+		assertEquals(arch2.transmuter.compositionId, arch4.transmuter.compositionId);
+		assertEquals(arch3.transmuter.compositionId, arch5.transmuter.compositionId);
+		assertEquals(3, arch6.transmuter.compositionId);
 	}
 
 	@Test

@@ -326,8 +326,6 @@ public class World {
 	 */
 	public int create(Archetype archetype) {
 		int entityId = em.create(archetype);
-
-		archetype.transmuter.perform(entityId);
 		batchProcessor.changed.set(entityId);
 
 		return entityId;

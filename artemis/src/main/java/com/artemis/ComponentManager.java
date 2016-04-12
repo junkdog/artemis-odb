@@ -57,9 +57,9 @@ public class ComponentManager extends BaseSystem {
 		return mappers.get(type.getIndex());
 	}
 
-	void registerComponentType(ComponentType type) {
-		int index = type.getIndex();
-		mappers.set(index, new BasicComponentMapper(type, world));
+	void registerComponentType(ComponentType ct) {
+		int index = ct.getIndex();
+		mappers.set(index, new ComponentMapper(ct.getType(), world));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -93,8 +93,7 @@ public class ComponentManager extends BaseSystem {
 	 * @return a bag containing all components of the given type
 	 */
 	protected Bag<Component> getComponentsByType(ComponentType type) {
-		BasicComponentMapper mapper = (BasicComponentMapper) mappers.get(type.getIndex());
-		return mapper.components;
+		return mappers.get(type.getIndex()).components;
 	}
 
    /**

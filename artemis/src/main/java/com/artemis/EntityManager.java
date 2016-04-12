@@ -69,7 +69,7 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected int create(Archetype archetype) {
 		int id = recyclingEntityFactory.obtain().id;
-		entityToIdentity.set(id, archetype.compositionId);
+		createOperation(archetype, id);
 		return id;
 	}
 
@@ -80,8 +80,14 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected Entity createEntityInstance(Archetype archetype) {
 		Entity e = createEntityInstance();
-		entityToIdentity.set(e.id, archetype.compositionId);
+		createOperation(archetype, e.id);
 		return e;
+	}
+
+	private void createOperation(Archetype archetype, int id) {
+		EntityTransmuter.TransmuteOperation transmuter = archetype.transmuter;
+		transmuter.perform(id);
+		entityToIdentity.set(id, transmuter.compositionId);
 	}
 
 	/** Get component composition of entity. */

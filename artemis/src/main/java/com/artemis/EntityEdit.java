@@ -82,8 +82,7 @@ public final class EntityEdit {
 				"Use EntityEdit#create(Class<Component>) for adding non-basic component types");
 		}
 
-		BasicComponentMapper<? extends Component> mapper =
-			(BasicComponentMapper<? extends Component>) cm.getMapper(type.getType());
+		ComponentMapper mapper = cm.getMapper(type.getType());
 
 		mapper.create(entityId);
 		mapper.components.getData()[entityId] =  component;
