@@ -17,15 +17,15 @@ import java.util.BitSet;
 public class EntityManager extends BaseSystem {
 	/** Contains all entities in the manager. */
 	final Bag<Entity> entities;
-	/** Stores the bits of all currently disabled entities IDs. */
-	private final RecyclingEntityFactory recyclingEntityFactory;
+	private final BitSet recycled = new BitSet();
+	private final IntDeque limbo = new IntDeque();
+	private int nextId;
 
 	/**
 	 * Creates a new EntityManager Instance.
 	 */
 	protected EntityManager(int initialContainerSize) {
 		entities = new Bag<Entity>(initialContainerSize);
-		recyclingEntityFactory = new RecyclingEntityFactory(this);
 	}
 
 	@Override
@@ -37,7 +37,7 @@ public class EntityManager extends BaseSystem {
 	 * @return a new entity
 	 */
 	protected Entity createEntityInstance() {
-		return recyclingEntityFactory.obtain();
+		return obtain();
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class EntityManager extends BaseSystem {
 	 * @return a new entity id
 	 */
 	protected int create() {
-		return recyclingEntityFactory.obtain().id;
+		return obtain().id;
 	}
 
 	void clean(IntBag pendingDeletion) {
@@ -57,8 +57,8 @@ public class EntityManager extends BaseSystem {
 			// this happens when an entity is deleted before
 			// it is added to the world, ie; created and deleted
 			// before World#process has been called
-			if (!recyclingEntityFactory.has(entityId)) {
-				recyclingEntityFactory.free(entityId);
+			if (!recycled.get(entityId)) {
+				free(entityId);
 			}
 		}
 	}
@@ -75,7 +75,7 @@ public class EntityManager extends BaseSystem {
 	 * @return true if active, false if not
 	 */
 	public boolean isActive(int entityId) {
-		return !recyclingEntityFactory.has(entityId);
+		return !recycled.get(entityId);
 	}
 
 	/**
@@ -110,36 +110,18 @@ public class EntityManager extends BaseSystem {
 		return e;
 	}
 
-	/** Track retired entities for recycling. */
-	private static final class RecyclingEntityFactory {
-		private final EntityManager em;
-		private final IntDeque limbo;
-		private final BitSet recycled;
-		private int nextId;
+	private Entity obtain() {
+		if (limbo.isEmpty()) {
+			return createEntity(nextId++);
+		} else {
+			int id = limbo.popFirst();
+			recycled.set(id, false);
+			return entities.get(id);
+		}
+	}
 
-		RecyclingEntityFactory(EntityManager em) {
-			this.em = em;
-			recycled = new BitSet();
-			limbo = new IntDeque();
-		}
-		
-		void free(int entityId) {
-			limbo.add(entityId);
-			recycled.set(entityId);
-		}
-		
-		Entity obtain() {
-			if (limbo.isEmpty()) {
-				return em.createEntity(nextId++);
-			} else {
-				int id = limbo.popFirst();
-				recycled.set(id, false);
-				return em.entities.get(id);
-			}
-		}
-
-		boolean has(int entityId) {
-			return recycled.get(entityId);
-		}
+	private void free(int entityId) {
+		limbo.add(entityId);
+		recycled.set(entityId);
 	}
 }

@@ -23,14 +23,13 @@ import static com.artemis.utils.ConverterUtil.toIntBag;
 public class AspectSubscriptionManager extends Manager {
 
 	private final Map<Aspect.Builder, EntitySubscription> subscriptionMap;
-	private Bag<EntitySubscription> subscriptions;
+	private final Bag<EntitySubscription> subscriptions = new Bag<EntitySubscription>();
 
 	private final IntBag changedIds = new IntBag();
 	private final IntBag deletedIds = new IntBag();
 
 	protected AspectSubscriptionManager() {
 		subscriptionMap = new HashMap<Aspect.Builder, EntitySubscription>();
-		subscriptions = new Bag<EntitySubscription>();
 	}
 
 	/**
@@ -78,10 +77,8 @@ public class AspectSubscriptionManager extends Manager {
 		// note: processAll != process
 		subscriptions.get(0).processAll(changedIds, deletedIds);
 
-		Object[] subscribers = subscriptions.getData();
 		for (int i = 1, s = subscriptions.size(); s > i; i++) {
-			EntitySubscription subscriber = (EntitySubscription)subscribers[i];
-			subscriber.process(changedIds, deletedIds);
+			subscriptions.get(i).process(changedIds, deletedIds);
 		}
 	}
 
@@ -94,10 +91,8 @@ public class AspectSubscriptionManager extends Manager {
 	}
 
 	void processComponentIdentity(int id, BitSet componentBits) {
-		Object[] subscribers = subscriptions.getData();
 		for (int i = 0, s = subscriptions.size(); s > i; i++) {
-			EntitySubscription subscriber = (EntitySubscription)subscribers[i];
-			subscriber.processComponentIdentity(id, componentBits);
+			subscriptions.get(i).processComponentIdentity(id, componentBits);
 		}
 	}
 }
