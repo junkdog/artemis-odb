@@ -31,8 +31,6 @@ public class ConstructorInvocationVisitor extends MethodVisitor implements Opcod
 			return owner;
 		
 		switch (meta.annotation) {
-			case PACKED:
-				return "com/artemis/PackedComponent";
 			case POOLED:
 				return "com/artemis/PooledComponent";
 			default:

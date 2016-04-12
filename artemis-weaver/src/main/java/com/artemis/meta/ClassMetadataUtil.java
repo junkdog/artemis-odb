@@ -1,6 +1,5 @@
 package com.artemis.meta;
 
-import static com.artemis.meta.ClassMetadata.WeaverType.PACKED;
 import static org.objectweb.asm.Opcodes.ACC_FINAL;
 import static org.objectweb.asm.Opcodes.ACC_STATIC;
 
@@ -65,19 +64,8 @@ public final class ClassMetadataUtil {
 		return instanceFields;
 	}
 	
-	public static List<ClassMetadata> packedFieldAccess(Collection<ClassMetadata> components) {
-		List<ClassMetadata> packedFieldComponents = new ArrayList<ClassMetadata>();
-		for (ClassMetadata c : components) {
-			if (PACKED == c.annotation && c.directFieldAccess)
-				packedFieldComponents.add(c);
-		}
-		return packedFieldComponents;
-	}
-	
 	public static String superName(ClassMetadata meta) {
 		switch (meta.annotation) {
-			case PACKED:
-				return "com/artemis/PackedComponent";
 			case POOLED:
 				return "com/artemis/PooledComponent";
 			case NONE:

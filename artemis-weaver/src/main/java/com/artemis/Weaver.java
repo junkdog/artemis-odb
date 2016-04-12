@@ -1,7 +1,5 @@
 package com.artemis;
 
-import static com.artemis.meta.ClassMetadataUtil.packedFieldAccess;
-import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,10 +10,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
 import com.artemis.weaver.*;
@@ -26,11 +22,9 @@ import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.GlobalConfiguration;
 import com.artemis.meta.ClassMetadata.OptimizationType;
 import com.artemis.meta.ClassMetadata.WeaverType;
-import com.artemis.meta.FieldDescriptor;
 import com.artemis.meta.MetaScanner;
 
 public class Weaver {
-	public static final String PACKED_ANNOTATION = "Lcom/artemis/annotations/PackedWeaver;";
 	public static final String PROFILER_ANNOTATION = "Lcom/artemis/annotations/Profile;";
 	public static final String POOLED_ANNOTATION = "Lcom/artemis/annotations/PooledWeaver;";
 	public static final String WOVEN_ANNOTATION = "Lcom/artemis/annotations/internal/Transmuted";
@@ -47,7 +41,7 @@ public class Weaver {
 		
 		List<File> classes = ClassUtil.find(targetClasses);
 		rewriteComponents(classes, log);
-		rewriteFieldAccess(classes, packedFieldAccess(log.components), log);
+//		rewriteFieldAccess(classes, packedFieldAccess(log.components), log);
 		rewriteProfilers(classes);
 		
 		if (ClassMetadata.GlobalConfiguration.optimizeEntitySystems)
@@ -114,42 +108,42 @@ public class Weaver {
 	}
 	
 	
-	// TODO: collect rewritten systems
-	private static void rewriteFieldAccess(List<File> classes, List<ClassMetadata> packed, WeaverLog log) {
-		if (packed.isEmpty())
-			return;
-		
-		Timer timer = new Timer();
-		
-		ExecutorService threadPool = newThreadPool();
-		
-		List<Future<ClassMetadata>> tasks = new ArrayList<Future<ClassMetadata>>();
-		for (File file : classes) {
-			String path = file.getAbsolutePath();
-			ClassReader cr = classReaderFor(path);
-			ComponentAccessTransmuter transmuter =	new ComponentAccessTransmuter(path, cr, packed);
-			
-			tasks.add(threadPool.submit(transmuter));
-		}
-		
-		try {
-			
-			List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
-			for (Future<ClassMetadata> result : tasks) {
-				ClassMetadata metadata = result.get();
-				if (metadata != null)
-					processed.add(metadata);
-			}
-			
-			awaitTermination(threadPool);
-			log.timeComponentSystems = timer.duration();
-			log.componentSystems = processed; 
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}
-	}
+//	// TODO: collect rewritten systems
+//	private static void rewriteFieldAccess(List<File> classes, List<ClassMetadata> packed, WeaverLog log) {
+//		if (packed.isEmpty())
+//			return;
+//
+//		Timer timer = new Timer();
+//
+//		ExecutorService threadPool = newThreadPool();
+//
+//		List<Future<ClassMetadata>> tasks = new ArrayList<Future<ClassMetadata>>();
+//		for (File file : classes) {
+//			String path = file.getAbsolutePath();
+//			ClassReader cr = classReaderFor(path);
+//			ComponentAccessTransmuter transmuter =	new ComponentAccessTransmuter(path, cr, packed);
+//
+//			tasks.add(threadPool.submit(transmuter));
+//		}
+//
+//		try {
+//
+//			List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
+//			for (Future<ClassMetadata> result : tasks) {
+//				ClassMetadata metadata = result.get();
+//				if (metadata != null)
+//					processed.add(metadata);
+//			}
+//
+//			awaitTermination(threadPool);
+//			log.timeComponentSystems = timer.duration();
+//			log.componentSystems = processed;
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		} catch (ExecutionException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	public static void retainFieldsWhenPacking(boolean ideFriendlyPacking) {
 		ClassMetadata.GlobalConfiguration.ideFriendlyPacking = ideFriendlyPacking;
@@ -159,8 +153,9 @@ public class Weaver {
 		ClassMetadata.GlobalConfiguration.enabledPooledWeaving = enablePooledWeaving;
 	}
 
+	@Deprecated
 	public static void enablePackedWeaving(boolean enablePackedWeaving) {
-		ClassMetadata.GlobalConfiguration.enabledPackedWeaving = enablePackedWeaving;
+
 	}
 
 	public static void optimizeEntitySystems(boolean enabled) {
@@ -182,9 +177,6 @@ public class Weaver {
 		if (meta.annotation == WeaverType.POOLED && !GlobalConfiguration.enabledPooledWeaving) {
 			if (!meta.forcePooledWeaving) return;
 		}
-
-		if  (meta.annotation == WeaverType.PACKED && !GlobalConfiguration.enabledPackedWeaving)
-			return;
 
 		meta.weaverTask = threadPool.submit(new ComponentTypeTransmuter(file, cr, meta));
 		processed.add(meta);
@@ -235,12 +227,6 @@ public class Weaver {
 		info.type = Type.getObjectType(source.getClassName());
 		source.accept(new MetaScanner(info), 0);
 
-		for (FieldDescriptor fd : info.fields()) {
-			if ((fd.access & ACC_PUBLIC) == ACC_PUBLIC) {
-				info.directFieldAccess = true;
-			}
-		}
-		
 		return info;
 	}
 	

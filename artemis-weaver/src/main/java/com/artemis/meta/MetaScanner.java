@@ -1,7 +1,6 @@
 package com.artemis.meta;
 
 
-import static com.artemis.Weaver.PACKED_ANNOTATION;
 import static com.artemis.Weaver.POOLED_ANNOTATION;
 import static com.artemis.Weaver.PROFILER_ANNOTATION;
 import static com.artemis.Weaver.WOVEN_ANNOTATION;
@@ -59,9 +58,7 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
 		AnnotationVisitor av = super.visitAnnotation(desc, visible);
 		
-		if (PACKED_ANNOTATION.equals(desc)) {
-			info.annotation = WeaverType.PACKED;
-		} else if (POOLED_ANNOTATION.equals(desc)) {
+		if (POOLED_ANNOTATION.equals(desc)) {
 			info.annotation = WeaverType.POOLED;
 			av = new AnnotationReader(av, info);
 		} else if (PROFILER_ANNOTATION.equals(desc)) {
@@ -102,8 +99,6 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 			info.foundEnd = true;
 		else if ("initialize".equals(name) && "()V".equals(desc))
 			info.foundInitialize = true;
-		else if ("<clinit>".equals(name) && "()V".equals(desc))
-			info.foundStaticInitializer = true;
 
 		if ("<init>".equals(name) && "()V".equals(desc)) {
 			return new DefaultValueScanner(mv, info);

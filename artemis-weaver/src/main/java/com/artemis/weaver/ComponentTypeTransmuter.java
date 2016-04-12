@@ -14,8 +14,6 @@ import org.objectweb.asm.Opcodes;
 import com.artemis.ClassUtil;
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.FieldDescriptor;
-import com.artemis.weaver.packed.PackedComponentWeaver;
-import com.artemis.weaver.packed.PackedStubs;
 import com.artemis.weaver.pooled.PooledComponentWeaver;
 
 public class ComponentTypeTransmuter extends CallableTransmuter<Void> implements Opcodes {
@@ -35,13 +33,6 @@ public class ComponentTypeTransmuter extends CallableTransmuter<Void> implements
 		ClassVisitor cv = cw;
 		
 		switch (meta.annotation) {
-			case PACKED:
-				validateOnlyPrimitives(meta.fields());
-				cr = new AccessorGenerator(cr, meta).transform();
-				cr = new PackedStubs(cr, meta).transform();
-				cv = new CommonClassWeaver(cv, meta);
-				cv = new PackedComponentWeaver(cv, meta);
-				break;
 			case POOLED:
 				if (!meta.foundReset) {
 					injectMethodStub("reset", "()V");

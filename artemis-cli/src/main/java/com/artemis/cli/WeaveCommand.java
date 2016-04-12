@@ -1,6 +1,5 @@
 package com.artemis.cli;
 
-import static com.artemis.meta.ClassMetadata.WeaverType.PACKED;
 import static com.artemis.meta.ClassMetadata.WeaverType.POOLED;
 
 import java.io.File;
@@ -67,8 +66,7 @@ public class WeaveCommand {
 	private static CharSequence getSummary(List<ClassMetadata> processed, long start) {
 		int pooled = 0, packed = 0;
 		for (ClassMetadata meta : processed) {
-			if (PACKED == meta.annotation) packed++;
-			else if (POOLED == meta.annotation) pooled++;
+			if (POOLED == meta.annotation) pooled++;
 		}
 		
 		return String.format("Processed %d PackedComponents and %d PooledComponents in %dms.",

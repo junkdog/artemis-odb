@@ -48,7 +48,7 @@ public class OptimizingSystemWeaver extends ClassVisitor implements Opcodes {
 
 	@Override
 	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		return (Weaver.PACKED_ANNOTATION.equals(desc) || Weaver.POOLED_ANNOTATION.equals(desc))
+		return (Weaver.POOLED_ANNOTATION.equals(desc))
 			? null
 			: super.visitAnnotation(desc, visible);
 	}

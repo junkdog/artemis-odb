@@ -35,12 +35,7 @@ public final class ClassMetadata {
 	// pooled components
 	public boolean forcePooledWeaving;
 	
-	// packed components
-	public boolean foundStaticInitializer;
-	public boolean directFieldAccess;
-
-
-	public enum WeaverType { NONE, POOLED, PACKED }
+	public enum WeaverType { NONE, POOLED }
 
 	public enum OptimizationType { NOT_OPTIMIZABLE, SAFE, FULL }
 
