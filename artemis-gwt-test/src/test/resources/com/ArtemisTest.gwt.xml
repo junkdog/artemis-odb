@@ -18,7 +18,6 @@
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.EntityIntBagHolder"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.HitPoints"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.NameComponent"/>
-	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Packed"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Position"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.ReusedComponent"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Size"/>
@@ -43,7 +42,6 @@
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.EntityIntBagHolder"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.HitPoints"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.NameComponent"/>
-	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Packed"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Position"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.ReusedComponent"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Size"/>

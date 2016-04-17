@@ -28,18 +28,6 @@ public class ComponentType {
 		isPooled = (ClassReflection.isAssignableFrom(PooledComponent.class, type));
 	}
 
-	private static boolean hasWorldConstructor(Class<? extends Component> type) {
-		Constructor[] constructors = ClassReflection.getConstructors(type);
-		for (int i = 0; constructors.length > i; i++) {
-			@SuppressWarnings("rawtypes")
-			Class[] types = constructors[i].getParameterTypes();
-			if (types.length == 1 && types[0] == World.class)
-				return true;
-		}
-
-		return false;
-	}
-
 	/**
 	 * Get the component type's index.
 	 *

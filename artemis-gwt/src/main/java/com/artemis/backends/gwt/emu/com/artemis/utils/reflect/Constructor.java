@@ -18,6 +18,8 @@ package com.artemis.utils.reflect;
 
 import com.artemis.utils.reflect.ReflectionException;
 
+import java.lang.reflect.Modifier;
+
 /** Provides information about, and access to, a single constructor for a Class.
  * @author nexsoftware */
 public final class Constructor {
@@ -44,6 +46,10 @@ public final class Constructor {
 
 	public void setAccessible (boolean accessible) {
 		// NOOP in GWT
+	}
+
+	public int getModifiers() {
+		return Modifier.PUBLIC; // sorry
 	}
 
 	/** Uses the constructor to create and initialize a new instance of the constructor's declaring class, with the supplied
