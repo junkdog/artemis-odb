@@ -2,15 +2,11 @@ package com.artemis;
 
 import com.artemis.annotations.Wire;
 import com.artemis.injection.*;
-import com.artemis.utils.Bag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
 import org.junit.Test;
 
-import java.util.Map;
-
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -67,9 +63,7 @@ public class FieldHandlerTest {
         private Object notInjected;
     }
 
-    private static class SomeComponent extends Component{
-
-    }
+    public static class SomeComponent extends Component {}
 
     private static class SomeSystem extends BaseSystem{
         @Override

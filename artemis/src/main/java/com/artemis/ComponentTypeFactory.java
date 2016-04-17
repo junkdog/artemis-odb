@@ -1,8 +1,12 @@
 package com.artemis; 
 
+import java.lang.reflect.Modifier;
 import java.util.IdentityHashMap;
 
 import com.artemis.utils.Bag;
+import com.artemis.utils.reflect.ClassReflection;
+import com.artemis.utils.reflect.Constructor;
+import com.artemis.utils.reflect.ReflectionException;
 
 /**
  * Tracks all component types in a single world.
@@ -43,18 +47,30 @@ public class ComponentTypeFactory {
 	public ComponentType getTypeFor(Class<? extends Component> c) {
 		ComponentType type = componentTypes.get(c);
 
-		if (type == null) {
-			type = new ComponentType(c, types.size());
-			componentTypes.put(c, type);
-			types.add(type);
-
-			cm.registerComponentType(type, initialMapperCapacity);
-		}
-
+		if (type == null)
+			type = createComponentType(c);
 
 		return type;
 	}
-	
+
+	private ComponentType createComponentType(Class<? extends Component> c) {
+		try {
+			Constructor ctor = ClassReflection.getConstructor(c);
+			if ((ctor.getModifiers() & Modifier.PUBLIC) == 0)
+				throw new InvalidComponentException(c, "missing public constructor");
+		} catch (ReflectionException e) {
+			throw new InvalidComponentException(c, "missing public constructor", e);
+		}
+
+		ComponentType type = new ComponentType(c, types.size());
+		componentTypes.put(c, type);
+		types.add(type);
+
+		cm.registerComponentType(type, initialMapperCapacity);
+
+		return type;
+	}
+
 	/**
 	 * Gets component type by index.
 	 * <p>

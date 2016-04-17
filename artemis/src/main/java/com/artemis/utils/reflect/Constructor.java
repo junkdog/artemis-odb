@@ -47,6 +47,10 @@ public final class Constructor {
 		constructor.setAccessible(accessible);
 	}
 
+	public int getModifiers() {
+		return constructor.getModifiers();
+	}
+
 	/** Uses the constructor to create and initialize a new instance of the constructor's declaring class, with the supplied initialization parameters. */
 	public Object newInstance (Object... args) throws ReflectionException {
 		try {
