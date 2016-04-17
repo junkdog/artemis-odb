@@ -2,6 +2,8 @@
 
 #### Version: 1.5.0-SNAPSHOT
 - Re-worked `EntityEdit` logic, less code and more performance.
+- ComponentType validates component when first encountered.
+- Removed `PackedComponent` and `@PackedWeaver`.
 
 
 #### Version: 1.4.0 - 2016-03-09
