@@ -23,7 +23,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 
 	public ComponentMapper(Class<A> type, World world) {
 		super(world.getComponentManager().typeFactory.getTypeFor(type));
-		components = new Bag<A>();
+		components = new Bag<A>(type);
 
 		pool = (this.type.isPooled)
 			? world.getComponentManager().pooledComponents

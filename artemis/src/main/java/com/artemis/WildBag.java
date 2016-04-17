@@ -18,6 +18,10 @@ import com.artemis.utils.Bag;
 class WildBag<T> extends Bag<T> {
 
 
+	public WildBag(Class<T> type) {
+		super(type);
+	}
+
 	/**
 	 * Set the size.
 	 * <p>

@@ -21,7 +21,7 @@ public class ComponentTypeFactory {
 			= new IdentityHashMap<Class<? extends Component>, ComponentType>();
 	
 	/** Index of this component type in componentTypes. */
-	final Bag<ComponentType> types = new Bag<ComponentType>();
+	final Bag<ComponentType> types = new Bag(ComponentType.class);
 
 	int initialMapperCapacity;
 	private final ComponentManager cm;

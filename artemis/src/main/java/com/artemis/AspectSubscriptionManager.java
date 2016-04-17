@@ -23,7 +23,7 @@ import static com.artemis.utils.ConverterUtil.toIntBag;
 public class AspectSubscriptionManager extends Manager {
 
 	private final Map<Aspect.Builder, EntitySubscription> subscriptionMap;
-	private final Bag<EntitySubscription> subscriptions = new Bag<EntitySubscription>();
+	private final Bag<EntitySubscription> subscriptions = new Bag(EntitySubscription.class);
 
 	private final IntBag changedIds = new IntBag();
 	private final IntBag deletedIds = new IntBag();

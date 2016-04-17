@@ -60,7 +60,7 @@ public class FieldHandler {
 	 * @see ArtemisFieldResolver
 	 */
 	public FieldHandler(InjectionCache cache) {
-		this.fieldResolvers = new Bag<FieldResolver>();
+		this.fieldResolvers = new Bag(FieldResolver.class);
 		this.cache = cache;
 		addFieldResolver(new ArtemisFieldResolver());
 		addFieldResolver(new WiredFieldResolver());

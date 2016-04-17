@@ -32,7 +32,7 @@ public final class EntityTransmuter {
 		batchProcessor = world.batchProcessor;
 		this.additions = additions;
 		this.removals = removals;
-		operations = new Bag<TransmuteOperation>();
+		operations = new Bag<TransmuteOperation>(TransmuteOperation.class);
 
 		bs = new BitSet();
 	}
@@ -108,7 +108,7 @@ public final class EntityTransmuter {
 
 	private Bag<ComponentMapper> getAdditions(BitSet origin) {
 		ComponentTypeFactory tf = cm.typeFactory;
-		Bag<ComponentMapper> types = new Bag<ComponentMapper>();
+		Bag<ComponentMapper> types = new Bag(ComponentMapper.class);
 		for (int i = additions.nextSetBit(0); i >= 0; i = additions.nextSetBit(i + 1)) {
 			if (!origin.get(i))
 				types.add(cm.getMapper(tf.getTypeFor(i).getType()));
@@ -119,7 +119,7 @@ public final class EntityTransmuter {
 
 	private Bag<ComponentMapper> getRemovals(BitSet origin) {
 		ComponentTypeFactory tf = cm.typeFactory;
-		Bag<ComponentMapper> types = new Bag<ComponentMapper>();
+		Bag<ComponentMapper> types = new Bag(ComponentMapper.class);
 		for (int i = removals.nextSetBit(0); i >= 0; i = removals.nextSetBit(i + 1)) {
 			if (origin.get(i))
 				types.add(cm.getMapper(tf.getTypeFor(i).getType()));

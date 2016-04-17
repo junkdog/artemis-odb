@@ -27,7 +27,7 @@ public abstract class EntitySystem extends BaseEntitySystem
 	static final int FLAG_REMOVED = 1 << 1;
 
 	private boolean shouldSyncEntities;
-	private WildBag<Entity> entities = new WildBag<Entity>();
+	private WildBag<Entity> entities = new WildBag(Entity.class);
 
 	private int methodFlags;
 

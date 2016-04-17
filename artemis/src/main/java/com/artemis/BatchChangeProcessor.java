@@ -16,7 +16,7 @@ final class BatchChangeProcessor {
 	private final IntBag toPurge = new IntBag();
 
 	private final Bag<EntityEdit> pool = new Bag<EntityEdit>();
-	private final WildBag<EntityEdit> edited = new WildBag<EntityEdit>();
+	private final WildBag<EntityEdit> edited = new WildBag(EntityEdit.class);
 
 	BatchChangeProcessor(World world) {
 		this.world = world;

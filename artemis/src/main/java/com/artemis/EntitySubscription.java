@@ -40,7 +40,7 @@ public class EntitySubscription {
 		activeEntityIds = new BitSet();
 		entities = new IntBag();
 
-		listeners = new Bag<SubscriptionListener>();
+		listeners = new Bag(SubscriptionListener.class);
 
 		insertedIds = new BitSet();
 		removedIds = new BitSet();

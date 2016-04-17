@@ -1,5 +1,7 @@
 package com.artemis.utils;
 
+import com.artemis.utils.reflect.ArrayReflection;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
@@ -35,6 +37,13 @@ public class Bag<E> implements ImmutableBag<E> {
 	}
 
 	/**
+	 * Constructs an empty Bag with an initial capacity of 64.
+	 */
+	public Bag(Class<E> type) {
+		this(type, 64);
+	}
+
+	/**
 	 * Constructs an empty Bag with the specified initial capacity.
 	 * 
 	 * @param capacity
@@ -42,7 +51,11 @@ public class Bag<E> implements ImmutableBag<E> {
 	 */
 	@SuppressWarnings("unchecked")
 	public Bag(int capacity) {
-		data = (E[])new Object[capacity];
+		data = (E[])ArrayReflection.newInstance(Object.class, capacity);
+	}
+
+	public Bag(Class<E> type, int capacity) {
+		data = (E[])ArrayReflection.newInstance(type, capacity);
 	}
 
 
@@ -296,11 +309,8 @@ public class Bag<E> implements ImmutableBag<E> {
 		grow(data.length * 2);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
-		E[] oldData = data;
-		data = (E[])new Object[newCapacity];
-		System.arraycopy(oldData, 0, data, 0, oldData.length);
+		data = Arrays.copyOf(data, newCapacity);
 	}
 
 	/**

@@ -9,7 +9,7 @@ class ComponentPool {
 	private Bag<Pool> pools;
 
 	ComponentPool() {
-		pools = new Bag<Pool>();
+		pools = new Bag(Pool.class);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -42,7 +42,7 @@ class ComponentPool {
 	}
 	
 	private static class Pool {
-		private final Bag<PooledComponent> cache = new Bag<PooledComponent>();
+		private final Bag<PooledComponent> cache = new Bag(PooledComponent.class);
 		
 		@SuppressWarnings("unchecked")
 		<T extends PooledComponent> T obtain() {

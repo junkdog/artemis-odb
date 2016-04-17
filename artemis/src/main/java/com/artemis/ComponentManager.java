@@ -27,9 +27,9 @@ public class ComponentManager extends BaseSystem {
 
 	/** Collects all Entites marked for deletion from this ComponentManager. */
 	final ComponentPool pooledComponents;
-	private Bag<ComponentMapper> mappers = new Bag<ComponentMapper>();
+	private Bag<ComponentMapper> mappers = new Bag(ComponentMapper.class);
 
-	ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
+	private final ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
 	private final ShortBag entityToIdentity;
 	protected final ComponentTypeFactory typeFactory;
 
@@ -237,7 +237,7 @@ public class ComponentManager extends BaseSystem {
 		private final Bag<BitSet> composition;
 
 		ComponentIdentityResolver() {
-			composition = new Bag<BitSet>();
+			composition = new Bag(BitSet.class);
 			composition.add(new BitSet());
 		}
 
