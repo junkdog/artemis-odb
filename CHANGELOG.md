@@ -4,6 +4,7 @@
 - Re-worked `EntityEdit` logic, less code and more performance.
 - ComponentType validates component when first encountered.
 - Removed `PackedComponent` and `@PackedWeaver`.
+- `Bag(Class<T>)` and `Bag(Class<T>, int capacity)` added.
 
 
 #### Version: 1.4.0 - 2016-03-09
