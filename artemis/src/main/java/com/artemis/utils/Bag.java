@@ -207,7 +207,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 */
 	public E safeGet(int index) {
 		if(index >= data.length)
-			grow(Math.max((2 * data.length), index));
+			grow(Math.max((2 * data.length), (3 * index) / 2));
 
 		return data[index];
 	}
@@ -264,9 +264,8 @@ public class Bag<E> implements ImmutableBag<E> {
 	 */
 	public void add(E e) {
 		// is size greater than capacity increase capacity
-		if (size == data.length) {
-			grow();
-		}
+		if (size == data.length)
+			grow(data.length * 2);
 
 		data[size++] = e;
 	}
@@ -297,16 +296,6 @@ public class Bag<E> implements ImmutableBag<E> {
 	public void fastSet(int index, E e) {
 		size = Math.max(size, index + 1);
 		data[index] = e;
-	}
-
-	/**
-	 * Increase the capacity of the bag.
-	 *
-	 * @throws ArrayIndexOutOfBoundsException if new capacity is smaller than old
-	 */
-	@SuppressWarnings("unchecked")
-	private void grow() {
-		grow(data.length * 2);
 	}
 
 	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {

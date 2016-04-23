@@ -173,9 +173,8 @@ public class IntBag {
 	 */
 	public void add(int value) {
 		// is size greater than capacity increase capacity
-		if (size == data.length) {
-			grow();
-		}
+		if (size == data.length)
+			grow(2 * data.length);
 
 		data[size++] = value;
 	}
@@ -210,16 +209,6 @@ public class IntBag {
 
 		size = max(size, index + 1);
 		data[index] = value;
-	}
-
-	/**
-	 * Increase the capacity of the bag.
-	 *
-	 * @throws ArrayIndexOutOfBoundsException if new capacity is smaller than old
-	 */
-	@SuppressWarnings("unchecked")
-	private void grow() {
-		grow(2 * data.length);
 	}
 
 	@SuppressWarnings("unchecked")
