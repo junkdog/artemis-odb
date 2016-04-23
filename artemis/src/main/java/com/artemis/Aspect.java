@@ -400,5 +400,27 @@ public class Aspect {
 			result = 31 * result + oneTypes.hashCode();
 			return result;
 		}
+
+		@Override
+		public String toString() {
+			return "Aspect[" +
+				"all=" + append(allTypes) +
+				", one=" + append(oneTypes) +
+				", exclude=" + append(exclusionTypes) +
+				']';
+		}
+
+		private StringBuilder append(Bag<Class<? extends Component>> types) {
+			StringBuilder sb = new StringBuilder();
+			String delim = "";
+
+			sb.append("(");
+			for (Class<? extends Component> type : types) {
+				sb.append(delim).append(type.getSimpleName());
+				delim = ", ";
+			}
+			sb.append(")");
+			return sb;
+		}
 	}
 }
