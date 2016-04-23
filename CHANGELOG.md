@@ -1,6 +1,6 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
-#### Version: 1.5.0-SNAPSHOT
+#### Version: 2.0.0-SNAPSHOT
 - Re-worked `EntityEdit` logic, less code and more performance.
 - ComponentType validates component when first encountered.
 - Removed `PackedComponent` and `@PackedWeaver`.
