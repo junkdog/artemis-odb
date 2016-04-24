@@ -80,7 +80,7 @@ public class CustomJsonWorldSerializationManagerTest extends GWTTestCase {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
 		SaveFileFormat save = new CustomSaveFormat(subscription, s, i);
 		manger.save(baos, save);
-		return baos.toString("utf-8");
+		return baos.toString(StandardCharsets.UTF_8);
 	}
 
 	private int deleteAll() {

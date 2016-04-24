@@ -479,7 +479,7 @@ public class JsonWorldSerializationManagerTest {
 		SaveFileFormat save = new SaveFileFormat(entities);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
 		manger.save(baos, save);
-		return baos.toString("utf-8");
+		return baos.toString(StandardCharsets.UTF_8.name());
 	}
 
 	private int deleteAll() {
