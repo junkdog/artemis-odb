@@ -4,6 +4,7 @@ import com.artemis.BaseSystem;
 import com.artemis.World;
 import com.artemis.io.InputStreamHelper;
 import com.artemis.io.SaveFileFormat;
+import com.artemis.io.SerializationException;
 import com.artemis.utils.IntBag;
 
 import java.io.*;
@@ -52,6 +53,7 @@ public class WorldSerializationManager extends BaseSystem {
 		return backend.load(is, format);
 	}
 
+	@Deprecated
 	public void save(Writer writer, SaveFileFormat format) {
 		if (backend == null) {
 			throw new RuntimeException("Missing ArtemisSerializer, see #setBackend.");
@@ -59,6 +61,15 @@ public class WorldSerializationManager extends BaseSystem {
 
 		world.inject(format);
 		backend.save(writer, format);
+	}
+
+	public void save(OutputStream out, SaveFileFormat format) throws SerializationException {
+		if (backend == null) {
+			throw new RuntimeException("Missing ArtemisSerializer, see #setBackend.");
+		}
+
+		world.inject(format);
+		backend.save(out, format);
 	}
 
 	/**
@@ -77,8 +88,17 @@ public class WorldSerializationManager extends BaseSystem {
 		 * Convenience method for immediately serializing a group of entities with the default
 		 * SaveFileFormat.  For finer control or SaveFileFormat subclasses, use #save.
 		 */
+		@Deprecated
 		protected final void save(Writer writer, IntBag entities) {
 			save(writer, new SaveFileFormat(entities));
+		}
+
+		/**
+		 * Convenience method for immediately serializing a group of entities with the default
+		 * SaveFileFormat.  For finer control or SaveFileFormat subclasses, use #save.
+		 */
+		protected final void save(OutputStream out, IntBag entities) {
+			save(out, new SaveFileFormat(entities));
 		}
 
 		/**
@@ -86,8 +106,12 @@ public class WorldSerializationManager extends BaseSystem {
 		 * to decide how this custom serializer is actually used.
 		 */
 		public abstract ArtemisSerializer register(Class<?> type, T serializer);
-		
+
+		@Deprecated
 		protected abstract void save(Writer writer, SaveFileFormat format);
+
+		protected abstract void save(OutputStream out, SaveFileFormat format)
+			throws SerializationException;
 		
 		/**
 		 * Deserializes data (usually a file) of a known class to a SaveFileFormat.

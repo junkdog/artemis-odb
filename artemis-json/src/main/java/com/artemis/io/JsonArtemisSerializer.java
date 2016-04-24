@@ -9,9 +9,7 @@ import com.artemis.utils.reflect.Constructor;
 import com.artemis.utils.reflect.ReflectionException;
 import com.esotericsoftware.jsonbeans.*;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
+import java.io.*;
 
 public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSerializer<JsonSerializer> {
 	private final Json json;
@@ -83,6 +81,17 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	protected void save(OutputStream out, SaveFileFormat save) throws SerializationException {
+		try {
+			OutputStreamWriter osw = new OutputStreamWriter(out);
+			save(osw, save);
+			osw.flush();
+		} catch (IOException e) {
+			throw new SerializationException(e);
 		}
 	}
 

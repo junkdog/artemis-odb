@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.JsonValue;
 import com.google.gwt.junit.client.GWTTestCase;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 
@@ -53,7 +54,7 @@ public class CustomJsonWorldSerializationManagerTest extends GWTTestCase {
 		assertEquals(0, allEntities.getEntities().size());
 	}
 
-	public void test_custom_save_format_save_load() throws UnsupportedEncodingException {
+	public void test_custom_save_format_save_load() throws Exception {
 		serializedSystem.serializeMe = "dog";
 
 		String json = save(allEntities, "a string", 420);
@@ -73,11 +74,13 @@ public class CustomJsonWorldSerializationManagerTest extends GWTTestCase {
 		assertEquals(420, load.noSerializer.number);
 	}
 
-	private String save(EntitySubscription subscription, String s, int i) {
-		StringWriter writer = new StringWriter();
+	private String save(EntitySubscription subscription, String s, int i)
+			throws Exception {
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
 		SaveFileFormat save = new CustomSaveFormat(subscription, s, i);
-		manger.save(writer, save);
-		return writer.toString();
+		manger.save(baos, save);
+		return baos.toString("utf-8");
 	}
 
 	private int deleteAll() {

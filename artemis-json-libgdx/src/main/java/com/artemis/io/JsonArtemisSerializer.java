@@ -12,9 +12,7 @@ import com.badlogic.gdx.utils.JsonReader;
 import com.badlogic.gdx.utils.JsonValue;
 import com.badlogic.gdx.utils.JsonWriter;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Writer;
+import java.io.*;
 
 public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSerializer<Json.Serializer> {
 	private final Json json;
@@ -85,7 +83,18 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 				json.toJson(save, writer);
 			}
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new SerializationException(e);
+		}
+	}
+
+	@Override
+	protected void save(OutputStream out, SaveFileFormat save) throws SerializationException {
+		try {
+			OutputStreamWriter osw = new OutputStreamWriter(out);
+			save(osw, save);
+			osw.flush();
+		} catch (IOException e) {
+			throw new SerializationException(e);
 		}
 	}
 

@@ -4,8 +4,6 @@ import com.artemis.*;
 import com.artemis.managers.WorldSerializationManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
-import com.badlogic.gdx.utils.Base64Coder;
-import com.badlogic.gdx.utils.StreamUtils;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.*;
@@ -76,24 +74,15 @@ public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		return this;
 	}
 
-	@Override
+	@Override @Deprecated
 	protected void save(Writer writer, SaveFileFormat save) {
-		try {
-			ByteArrayOutputStream os = new ByteArrayOutputStream(4096);
-			saveBinary(os, save);
-
-			// do we want this encode/decode stuff? source is short, probably not
-			// could add it to util or whatever
-			char[] encode = Base64Coder.encode(os.toByteArray());
-			String encoded = new String(encode);
-			writer.append(encoded);
-
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		throw new UnsupportedOperationException("not supported");
 	}
 
-	public void saveBinary(OutputStream os, SaveFileFormat save) {
+	@Override
+	public void save(OutputStream os, SaveFileFormat save)
+			throws SerializationException {
+
 		referenceTracker.inspectTypes(world);
 		referenceTracker.preWrite(save);
 
@@ -117,19 +106,7 @@ public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	}
 
 	@Override
-	protected <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
-		try {
-			byte[] bytes = StreamUtils.copyStreamToByteArray(is);
-			String raw = new String(bytes);
-			bytes = Base64Coder.decode(raw);
-			is = new ByteBufferInput(bytes);
-			return loadBinary(is, format);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public <T extends SaveFileFormat> T loadBinary(InputStream is, Class<T> format) {
+	public  <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
 		entitySerializer.preLoad();
 
 		Input input = new ByteBufferInput(is);
@@ -153,8 +130,10 @@ public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		T t = kryo.readObject(input, format);
 		t.tracker = entitySerializer.keyTracker;
 		referenceTracker.translate(intBagEntitySerializer.getTranslatedIds());
+
 		// TODO do we want to clear those?
 		entitySerializer.clearSerializerCache();
+
 		return t;
 	}
 

@@ -67,7 +67,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void serializer_save_load_std_format_new_world() {
+	public void serializer_save_load_std_format_new_world() throws Exception {
 		String json = save(allEntities);
 
 		deleteAll();
@@ -121,7 +121,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void serializer_save_load_with_keys() {
+	public void serializer_save_load_with_keys() throws Exception {
 		setKeys();
 
 		String json = save(allEntities);
@@ -139,7 +139,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void serializer_save_load_with_tags() {
+	public void serializer_save_load_with_tags() throws Exception {
 		setTags();
 
 		String json = save(allEntities);
@@ -156,7 +156,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void serializer_save_load_with_groups() {
+	public void serializer_save_load_with_groups() throws Exception {
 		setGroups();
 
 		String json = save(allEntities);
@@ -176,7 +176,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void serializer_save_load_with_groups_and_tags() {
+	public void serializer_save_load_with_groups_and_tags() throws Exception {
 		setTags();
 		setGroups();
 
@@ -196,7 +196,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void serializer_save_load_with_groups_and_tags_and_keys() {
+	public void serializer_save_load_with_groups_and_tags_and_keys() throws Exception {
 		setKeys();
 		setTags();
 		setGroups();
@@ -218,7 +218,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void save_load_entity_references() {
+	public void save_load_entity_references() throws Exception {
 		setTags();
 
 		EntityEdit ee1 = world.createEntity().edit();
@@ -248,7 +248,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void save_load_entity_reference_with_null() {
+	public void save_load_entity_reference_with_null() throws Exception {
 		EntityEdit ee1 = world.createEntity().edit();
 		EntityHolder holder = ee1.create(EntityHolder.class);
 		holder.entity = null;
@@ -290,7 +290,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void save_load_bag_entity_references() {
+	public void save_load_bag_entity_references() throws Exception {
 		setTags();
 
 		EntityEdit ee1 = world.createEntity().edit();
@@ -321,7 +321,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void save_excludes_default_value_components() {
+	public void save_excludes_default_value_components() throws Exception {
 		setTags();
 
 		EntityEdit ee1 = world.createEntity().edit();
@@ -353,7 +353,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void save_load_intbag_entity_references() {
+	public void save_load_intbag_entity_references() throws Exception {
 		setTags();
 
 		EntityEdit ee1 = world.createEntity().edit();
@@ -384,7 +384,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void loaded_entities_id_order_matches_json_layout() {
+	public void loaded_entities_id_order_matches_json_layout() throws Exception {
 		String json = save(allEntities);
 
 		world.delete(2);
@@ -426,9 +426,10 @@ public class JsonWorldSerializationManagerTest {
 
 		IntBag toSave = new IntBag();
 		toSave.add(id2);
-		StringWriter writer = new StringWriter();
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
 		SaveFileFormat save = new SaveFileFormat(toSave);
-		manger.save(writer, save);
+		manger.save(baos, save);
 
 		// only saving 2nd entity, need to make sure the archetype for
 		// id1 is pulled in too
@@ -471,15 +472,16 @@ public class JsonWorldSerializationManagerTest {
 		groups.add(world.getEntity(entities.get(2)), "group1");
 	}
 
-	private String save(EntitySubscription subscription) {
+	private String save(EntitySubscription subscription) throws Exception {
 		return save(subscription.getEntities());
 	}
 
-	private String save(IntBag entities) {
-		StringWriter writer = new StringWriter();
+	private String save(IntBag entities) throws Exception {
+
 		SaveFileFormat save = new SaveFileFormat(entities);
-		manger.save(writer, save);
-		return writer.toString();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
+		manger.save(baos, save);
+		return baos.toString("utf-8");
 	}
 
 	private int deleteAll() {

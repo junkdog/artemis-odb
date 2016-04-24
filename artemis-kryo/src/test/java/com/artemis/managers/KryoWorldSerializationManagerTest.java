@@ -79,25 +79,22 @@ public class KryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void serializer_save_load_std_format_new_world() {
-		String json = save(allEntities);
+	public void serializer_save_load_std_format_new_world() throws Exception {
+		byte[] save = save(allEntities);
 
 		deleteAll();
 		assertEquals(0, allEntities.getEntities().size());
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
-
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
 		setupWorld();
 
 		allEntities = subscriptions.get(Aspect.all());
-
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		SaveFileFormat load = manger.load(bais, SaveFileFormat.class);
 
 		world.process();
 		assertEquals(3, allEntities.getEntities().size());
 
-		String json2 = save(allEntities);
+		byte[] save2  = save(allEntities);
 
 		deleteAll();
 		assertEquals(0, allEntities.getEntities().size());
@@ -105,15 +102,16 @@ public class KryoWorldSerializationManagerTest {
 
 	@Test
 	public void serializer_save_to_file_and_load_std_format_new_world() throws Exception {
-		String json = save(allEntities);
-		PrintWriter writer = new PrintWriter("save_temp.json", "UTF-8");
-		writer.append(json);
-		writer.close();
+		byte[] save = save(allEntities);
+
+		FileOutputStream fos = new FileOutputStream("save_temp.bin");
+		fos.write(save);
+		fos.close();
 
 		deleteAll();
 		assertEquals(0, allEntities.getEntities().size());
 
-		File file = new File("save_temp.json");
+		File file = new File("save_temp.bin");
 		InputStream is = new FileInputStream(file);
 		setupWorld();
 
@@ -125,7 +123,7 @@ public class KryoWorldSerializationManagerTest {
 		world.process();
 		assertEquals(3, allEntities.getEntities().size());
 
-		String json2 = save(allEntities);
+		byte[] save2 = save(allEntities);
 
 		deleteAll();
 		assertEquals(0, allEntities.getEntities().size());
@@ -133,16 +131,15 @@ public class KryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void serializer_save_load_with_keys() {
+	public void serializer_save_load_with_keys() throws Exception {
 		setKeys();
 
-		String json = save(allEntities);
+		byte[] save = save(allEntities);
 
 		deleteAll();
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		SaveFileFormat load = manger.load(bais, SaveFileFormat.class);
 		world.process();
 
 		assertEquals(3, allEntities.getEntities().size());
@@ -151,16 +148,15 @@ public class KryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void serializer_save_load_with_tags() {
+	public void serializer_save_load_with_tags() throws Exception {
 		setTags();
 
-		String json = save(allEntities);
+		byte[] save = save(allEntities);
 
 		deleteAll();
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		SaveFileFormat load = manger.load(bais, SaveFileFormat.class);
 		world.process();
 
 		assertEquals(3, allEntities.getEntities().size());
@@ -168,19 +164,18 @@ public class KryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void serializer_save_load_with_groups() {
+	public void serializer_save_load_with_groups() throws Exception {
 		setGroups();
 
-		String json = save(allEntities);
+		byte[] save = save(allEntities);
 
 		deleteAll();
 
 		assertEquals(0, groups.getEntities("group1").size());
 		assertEquals(0, groups.getEntities("group2").size());
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		SaveFileFormat load = manger.load(bais, SaveFileFormat.class);
 		world.process();
 
 		assertEquals(3, allEntities.getEntities().size());
@@ -188,17 +183,16 @@ public class KryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void serializer_save_load_with_groups_and_tags() {
+	public void serializer_save_load_with_groups_and_tags() throws Exception {
 		setTags();
 		setGroups();
 
-		String json = save(allEntities);
+		byte[] save = save(allEntities);
 
 		deleteAll();
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		SaveFileFormat load = manger.load(bais, SaveFileFormat.class);
 		world.process();
 
 		assertEquals(3, allEntities.getEntities().size());
@@ -208,18 +202,17 @@ public class KryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void serializer_save_load_with_groups_and_tags_and_keys() {
+	public void serializer_save_load_with_groups_and_tags_and_keys() throws Exception {
 		setKeys();
 		setTags();
 		setGroups();
 
-		String json = save(allEntities);
+		byte[] save = save(allEntities);
 
 		deleteAll();
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		SaveFileFormat load = manger.load(bais, SaveFileFormat.class);
 		world.process();
 
 		assertEquals(3, allEntities.getEntities().size());
@@ -230,7 +223,7 @@ public class KryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void save_load_entity_references() {
+	public void save_load_entity_references() throws Exception {
 		setTags();
 
 		EntityEdit ee1 = world.createEntity().edit();
@@ -243,11 +236,10 @@ public class KryoWorldSerializationManagerTest {
 
 		world.process();
 
-		String json = save(allEntities);
+		byte[] save = save(allEntities);
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
-		manger.load(is, SaveFileFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		SaveFileFormat load = manger.load(bais, SaveFileFormat.class);
 
 		world.process();
 
@@ -260,7 +252,7 @@ public class KryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void save_load_entity_reference_with_null() {
+	public void save_load_entity_reference_with_null() throws Exception {
 		EntityEdit ee1 = world.createEntity().edit();
 		EntityHolder holder = ee1.create(EntityHolder.class);
 		holder.entity = null;
@@ -279,11 +271,10 @@ public class KryoWorldSerializationManagerTest {
 
 		world.process();
 
-		String json = save(allEntities);
+		byte[] save = save(allEntities);
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
-		manger.load(is, SaveFileFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		SaveFileFormat load = manger.load(bais, SaveFileFormat.class);
 
 		world.process();
 
@@ -302,7 +293,7 @@ public class KryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void save_load_bag_entity_references() {
+	public void save_load_bag_entity_references() throws Exception {
 		setTags();
 
 		EntityEdit ee1 = world.createEntity().edit();
@@ -315,11 +306,10 @@ public class KryoWorldSerializationManagerTest {
 
 		world.process();
 
-		String json = save(allEntities);
+		byte[] save = save(allEntities);
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
-		manger.load(is, SaveFileFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		SaveFileFormat load = manger.load(bais, SaveFileFormat.class);
 
 		world.process();
 
@@ -333,7 +323,7 @@ public class KryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void save_excludes_default_value_components() {
+	public void save_excludes_default_value_components() throws Exception {
 		setTags();
 
 		EntityEdit ee1 = world.createEntity().edit();
@@ -349,13 +339,12 @@ public class KryoWorldSerializationManagerTest {
 
 		world.process();
 
-		String json = save(allEntities);
+		byte[] save = save(allEntities);
 
 		deleteAll();
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
-		SaveFileFormat l = manger.load(is, SaveFileFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		SaveFileFormat l = manger.load(bais, SaveFileFormat.class);
 
 		world.process();
 
@@ -365,7 +354,7 @@ public class KryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void save_load_intbag_entity_references() {
+	public void save_load_intbag_entity_references() throws Exception {
 		setTags();
 
 		EntityEdit ee1 = world.createEntity().edit();
@@ -378,11 +367,10 @@ public class KryoWorldSerializationManagerTest {
 
 		world.process();
 
-		String json = save(allEntities);
+		byte[] save = save(allEntities);
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-			json.getBytes(StandardCharsets.UTF_8));
-		manger.load(is, SaveFileFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		SaveFileFormat l = manger.load(bais, SaveFileFormat.class);
 
 		world.process();
 
@@ -396,8 +384,8 @@ public class KryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void loaded_entities_id_order_matches_json_layout() {
-		String json = save(allEntities);
+	public void loaded_entities_id_order_matches_json_layout() throws Exception {
+		byte[] save = save(allEntities);
 
 		world.delete(2);
 		world.process();
@@ -406,10 +394,8 @@ public class KryoWorldSerializationManagerTest {
 
 		assertEquals(0, allEntities.getEntities().size());
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-			json.getBytes(StandardCharsets.UTF_8));
-
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		SaveFileFormat load = manger.load(bais, SaveFileFormat.class);;
 		world.process();
 
 		assertEquals(3, allEntities.getEntities().size());
@@ -438,9 +424,9 @@ public class KryoWorldSerializationManagerTest {
 
 		IntBag toSave = new IntBag();
 		toSave.add(id2);
-		StringWriter writer = new StringWriter();
 		SaveFileFormat save = new SaveFileFormat(toSave);
-		manger.save(writer, save);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
+		manger.save(baos, save);
 
 		// only saving 2nd entity, need to make sure the archetype for
 		// id1 is pulled in too
@@ -478,11 +464,10 @@ public class KryoWorldSerializationManagerTest {
 		holder.strings.add("s1");
 		world.process();
 
-		String json = save(allEntities);
+		byte[] save = save(allEntities);
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-			json.getBytes(StandardCharsets.UTF_8));
-		manger.load(is, SaveFileFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		SaveFileFormat l = manger.load(bais, SaveFileFormat.class);
 
 		world.process();
 		Assert.fail("Should have failed");
@@ -517,11 +502,10 @@ public class KryoWorldSerializationManagerTest {
 		tags.register("reused-tag", ee.getEntity());
 		world.process();
 
-		String json = save(allEntities);
+		byte[] save = save(allEntities);
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-			json.getBytes(StandardCharsets.UTF_8));
-		manger.load(is, SaveFileFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		SaveFileFormat l = manger.load(bais, SaveFileFormat.class);
 
 		world.process();
 
@@ -568,15 +552,15 @@ public class KryoWorldSerializationManagerTest {
 		groups.add(world.getEntity(entities.get(2)), "group1");
 	}
 
-	private String save(EntitySubscription subscription) {
+	private byte[] save(EntitySubscription subscription) throws Exception {
 		return save(subscription.getEntities());
 	}
 
-	private String save(IntBag entities) {
-		StringWriter writer = new StringWriter();
+	private byte[] save(IntBag entities) throws Exception {
 		SaveFileFormat save = new SaveFileFormat(entities);
-		manger.save(writer, save);
-		return writer.toString();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
+		manger.save(baos, save);
+		return baos.toByteArray();
 	}
 
 	private int deleteAll() {

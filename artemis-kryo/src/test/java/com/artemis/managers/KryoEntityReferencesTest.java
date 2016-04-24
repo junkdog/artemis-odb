@@ -98,7 +98,7 @@ public class KryoEntityReferencesTest {
 			// this is actually in target/test-classes for whatever reason
 			File file = new File(root, "/level_3.bin");
 			FileOutputStream fos = new FileOutputStream(file);
-			backend.saveBinary(fos, load);
+			backend.save(fos, load);
 			fos.flush();
 			fos.close();
 		} catch (IOException e) {
@@ -109,7 +109,7 @@ public class KryoEntityReferencesTest {
 		try {
 			is = KryoEntityReferencesTest.class.getResource("/level_3.bin").openStream();
 			// using binary is more flexible, but we don't have api for that in manager
-			load = backend.loadBinary(is, SaveFileFormat.class);
+			load = backend.load(is, SaveFileFormat.class);
 		} catch (FileNotFoundException e) {
 			throw new AssertionError(e);
 		} catch (IOException e) {

@@ -12,7 +12,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.*;
@@ -44,7 +46,7 @@ public class CustomJsonWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void custom_save_format_save_load() {
+	public void custom_save_format_save_load() throws Exception {
 		serializedSystem.serializeMe = "dog";
 
 		String json = save(allEntities, "a string", 420);
@@ -64,11 +66,13 @@ public class CustomJsonWorldSerializationManagerTest {
 		assertEquals(420, load.noSerializer.number);
 	}
 
-	private String save(EntitySubscription subscription, String s, int i) {
-		StringWriter writer = new StringWriter();
+	private String save(EntitySubscription subscription, String s, int i)
+			throws Exception {
+
 		SaveFileFormat save = new CustomSaveFormat(subscription, s, i);
-		manger.save(writer, save);
-		return writer.toString();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
+		manger.save(baos, save);
+		return baos.toString("utf-8");
 	}
 
 	private int deleteAll() {

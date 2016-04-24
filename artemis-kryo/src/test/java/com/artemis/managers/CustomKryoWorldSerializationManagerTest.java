@@ -13,7 +13,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.*;
@@ -46,18 +48,17 @@ public class CustomKryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void custom_save_format_save_load() {
+	public void custom_save_format_save_load() throws Exception {
 		serializedSystem.serializeMe = "dog";
 
-		String b64 = save(allEntities, "a string", 420);
+		byte[] save = save(allEntities, "a string", 420);
 		serializedSystem.serializeMe = "cat";
 
 		deleteAll();
 		assertEquals(0, allEntities.getEntities().size());
 
-		ByteArrayInputStream is = new ByteArrayInputStream(
-			b64.getBytes(StandardCharsets.UTF_8));
-		CustomSaveFormat load = manger.load(is, CustomSaveFormat.class);
+		ByteArrayInputStream bais = new ByteArrayInputStream(save);
+		CustomSaveFormat load = manger.load(bais, CustomSaveFormat.class);
 
 		world.process();
 		assertEquals("DOG", serializedSystem.serializeMe);
@@ -66,11 +67,13 @@ public class CustomKryoWorldSerializationManagerTest {
 		assertEquals(420, load.noSerializer.number);
 	}
 
-	private String save(EntitySubscription subscription, String s, int i) {
-		StringWriter writer = new StringWriter();
+	private byte[] save(EntitySubscription subscription, String s, int i)
+			throws Exception {
+
 		SaveFileFormat save = new CustomSaveFormat(subscription, s, i);
-		manger.save(writer, save);
-		return writer.toString();
+		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
+		manger.save(baos, save);
+		return baos.toByteArray();
 	}
 
 	private int deleteAll() {
