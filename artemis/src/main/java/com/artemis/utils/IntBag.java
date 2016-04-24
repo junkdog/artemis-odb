@@ -120,6 +120,9 @@ public class IntBag {
 	 * @throws ArrayIndexOutOfBoundsException
 	 */
 	public int get(int index) throws ArrayIndexOutOfBoundsException {
+		if (index >= size) {
+			throw new ArrayIndexOutOfBoundsException(index);
+		}
 		return data[index];
 	}
 	
