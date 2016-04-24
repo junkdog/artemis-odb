@@ -11,8 +11,10 @@
 - `Bag(Class<T>)` and `Bag(Class<T>, int capacity)` added.
 - `IntBag#get` throws `ArrayIndexOutOfBoundsException` whenever `index` is greater than the reported size,
   regardless of the size of the underlying array.
-- Kryo serialization backend: [binary with kryo](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization)
-  (thanks to @piotr-j).
+- **Serialization**
+  - new `artemis-odb-serializer` artifact, used by all serialization backends,
+  - Kryo serialization backend: [binary with kryo](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization)
+    (thanks to @piotr-j).
 
 
 #### Version: 1.4.0 - 2016-03-09
