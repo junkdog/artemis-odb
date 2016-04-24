@@ -80,17 +80,46 @@ public class SaveFileFormat {
 			new IdentityHashMap<Class<? extends Component>, String>();
 		public Map<String, Class<? extends Component>> nameToType =
 			new HashMap<String, Class<? extends Component>>();
+		public Map<Class<? extends Component>, Integer> typeToId =
+			new HashMap<Class<? extends Component>, Integer>();
+		public Map<Integer, Class<? extends Component>> idToType =
+			new HashMap<Integer, Class<? extends Component>>();
 
 		transient Set<Class<? extends Component>> transientComponents =
 			new HashSet<Class<? extends Component>>();
 
 		void build() {
+			if (typeToName.size() > 0)
+				buildFromNames();
+			else
+				buildFromIndices();
+		}
+
+		private void buildFromNames() {
 			Iterator<Map.Entry<Class<? extends Component>, String>> it = typeToName.entrySet().iterator();
 			while (it.hasNext()) {
 				Map.Entry<Class<? extends Component>, String> entry = it.next();
 				Class<? extends Component> c = entry.getKey();
 				if (ClassReflection.getDeclaredAnnotation(c, Transient.class) == null) {
 					nameToType.put(entry.getValue(), c);
+					if (typeToId.get(c) == null) {
+						typeToId.put(c, nameToType.size());
+						idToType.put(nameToType.size(), c);
+					}
+				} else {
+					transientComponents.add(c);
+					it.remove();
+				}
+			}
+		}
+
+		private void buildFromIndices() {
+			Iterator<Map.Entry<Integer, Class<? extends Component>>> it = idToType.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<Integer, Class<? extends Component>> entry = it.next();
+				Class<? extends Component> c = entry.getValue();
+				if (ClassReflection.getDeclaredAnnotation(c, Transient.class) == null) {
+					typeToId.put(c, nameToType.size());
 				} else {
 					transientComponents.add(c);
 					it.remove();

@@ -15,13 +15,13 @@ public class KryoComponentLookupSerializer extends Serializer<SaveFileFormat.Com
 	@Override
 	public void write (Kryo kryo, Output output, SaveFileFormat.ComponentIdentifiers ci) {
 		int count = 0;
-		for (Map.Entry<Class<? extends Component>, String> entry : ci.typeToName.entrySet()) {
+		for (Map.Entry<Integer, Class<? extends Component>> entry : ci.idToType.entrySet()) {
 			count++;
 		}
-		output.writeInt(count);
-		for (Map.Entry<Class<? extends Component>, String> entry : ci.typeToName.entrySet()) {
-			output.writeString(entry.getKey().getName());
-			output.writeString(entry.getValue());
+		output.writeShort(count);
+		for (Map.Entry<Integer, Class<? extends Component>> entry : ci.idToType.entrySet()) {
+			output.writeShort(entry.getKey().intValue());
+			output.writeString(entry.getValue().getName());
 		}
 	}
 
@@ -29,11 +29,11 @@ public class KryoComponentLookupSerializer extends Serializer<SaveFileFormat.Com
 	public SaveFileFormat.ComponentIdentifiers read (Kryo kryo, Input input,
 		Class<SaveFileFormat.ComponentIdentifiers> aClass) {
 		SaveFileFormat.ComponentIdentifiers ci = new SaveFileFormat.ComponentIdentifiers();
-		int count = input.readInt();
+		int count = input.readShort();
 		try {
 			for (int i = 0; i < count; i++) {
-				Class c = ClassReflection.forName(input.readString());
-				ci.typeToName.put(c, input.readString());
+				int index = input.readShort();
+				ci.idToType.put(index, ClassReflection.forName(input.readString()));
 			}
 		} catch (ReflectionException e) {
 			throw new RuntimeException(e);

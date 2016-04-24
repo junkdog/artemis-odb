@@ -83,13 +83,6 @@ public class KryoEntityReferencesTest {
 		world.process();
 
 		KryoArtemisSerializer backend = new KryoArtemisSerializer(world);
-		backend.register(LevelState.class);
-		backend.register(ParentedPosition.class);
-		backend.register(Position.class);
-		backend.register(TextureReference.class);
-		backend.register(Anchor.class);
-		backend.register(Size.class);
-		backend.register(Vector2.class);
 		world.inject(backend);
 		manger.setSerializer(backend);
 

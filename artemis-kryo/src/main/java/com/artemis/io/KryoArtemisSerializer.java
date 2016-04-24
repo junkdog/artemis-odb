@@ -50,7 +50,7 @@ public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 			}
 		};
 		kryo = new Kryo(resolver);
-		kryo.setRegistrationRequired(true);
+		kryo.setRegistrationRequired(false);
 
 		kryo.register(SaveFileFormat.ComponentIdentifiers.class, lookup);
 		kryo.register(Bag.class, new KryoEntityBagSerializer(world));
@@ -124,7 +124,7 @@ public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 			transmuterEntrySerializer.identifiers = partial.componentIdentifiers;
 		}
 
-		referenceTracker.inspectTypes(partial.componentIdentifiers.nameToType.values());
+		referenceTracker.inspectTypes(partial.componentIdentifiers.typeToId.keySet());
 		entitySerializer.factory.configureWith(input.readInt());
 
 		T t = kryo.readObject(input, format);

@@ -116,8 +116,27 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 
 		// write components
 		SaveFileFormat.ComponentIdentifiers identifiers = serializationState.componentIdentifiers;
-		Map<Class<? extends Component>, String> typeToName = identifiers.typeToName;
 
+		int count = getComponentCount(identifiers);
+		output.writeInt(count);
+
+		for (int i = 0, s = components.size(); s > i; i++) {
+			Component c = components.get(i);
+			if (identifiers.isTransient(c.getClass()))
+				continue;
+
+			if (defaultValues.hasDefaultValues(c))
+				continue;
+
+			output.writeShort(identifiers.typeToId.get(c.getClass()));
+			kryo.writeObject(output, c, serializer(kryo, c.getClass(), null));
+		}
+		components.clear();
+
+		isSerializingEntity = false;
+	}
+
+	private int getComponentCount(SaveFileFormat.ComponentIdentifiers identifiers) {
 		int count = 0;
 		for (int i = 0, s = components.size(); s > i; i++) {
 			Component c = components.get(i);
@@ -129,23 +148,7 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 
 			count++;
 		}
-		output.writeInt(count);
-
-		for (int i = 0, s = components.size(); s > i; i++) {
-			Component c = components.get(i);
-			if (identifiers.isTransient(c.getClass()))
-				continue;
-
-			if (defaultValues.hasDefaultValues(c))
-				continue;
-
-			String componentIdentifier = typeToName.get(c.getClass());
-			output.writeString(componentIdentifier);
-			kryo.writeObject(output, c, serializer(kryo, c.getClass(), null));
-		}
-		components.clear();
-
-		isSerializingEntity = false;
+		return count;
 	}
 
 	@Override
@@ -184,17 +187,14 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 		}
 		// read components
 		SaveFileFormat.ComponentIdentifiers identifiers = serializationState.componentIdentifiers;
-		Map<String, Class<? extends Component>> nameToType = identifiers.nameToType;
 
 		int count = input.readInt();
-		if (archetype != -1) {
-			archetypeMapper.transmute(e, archetype);
-		}
+		archetypeMapper.transmute(e, archetype);
 
 		final EntityEdit edit = e.edit();
 		for (int i = 0; i < count; i++) {
-			String name = input.readString();
-			final Class<? extends Component> type = nameToType.get(name);
+			int id = input.readShort();
+			final Class<? extends Component> type = identifiers.idToType.get(id);
 			// note we use custom serializer because we must use edit.create(T) for non basic types
 			Component c = kryo.readObject(input, type, serializer(kryo, type, edit));
 			referenceTracker.addEntityReferencingComponent(c);
@@ -206,6 +206,7 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 	}
 
 	private Map<Class, Serializer> serializers = new HashMap<Class, Serializer>();
+
 	private Serializer serializer (Kryo kryo, Class<? extends Component> type, EntityEdit edit) {
 		Serializer serializer = serializers.get(type);
 		if (serializer == null) {

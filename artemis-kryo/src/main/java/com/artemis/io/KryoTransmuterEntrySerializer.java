@@ -16,8 +16,8 @@ public class KryoTransmuterEntrySerializer extends Serializer<ArchetypeMapper.Tr
 		output.writeInt(count);
 		for (int i = 0; i < count; i++) {
 			Class<? extends Component> type = te.componentTypes.get(i);
-			String name = identifiers.typeToName.get(type);
-			output.writeString(name);
+			int index = identifiers.typeToId.get(type);
+			output.writeShort(index);
 		}
 	}
 
@@ -26,8 +26,8 @@ public class KryoTransmuterEntrySerializer extends Serializer<ArchetypeMapper.Tr
 		Bag<Class<? extends Component>> components = new Bag<Class<? extends Component>>();
 		int count = input.readInt();
 		for (int i = 0; i < count; i++) {
-			String name = input.readString();
-			Class<? extends Component> type = identifiers.nameToType.get(name);
+			int index = input.readShort();
+			Class<? extends Component> type = identifiers.idToType.get(index);
 			components.add(type);
 		}
 		return new ArchetypeMapper.TransmuterEntry(components);

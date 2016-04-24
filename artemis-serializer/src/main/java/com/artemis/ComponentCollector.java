@@ -2,7 +2,6 @@ package com.artemis;
 
 import com.artemis.annotations.Transient;
 import com.artemis.io.SaveFileFormat;
-import com.artemis.utils.reflect.ClassReflection;
 
 import java.util.*;
 
@@ -37,6 +36,10 @@ public class ComponentCollector {
 		for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
 			Class<? extends Component> type = cm.typeFactory.getTypeFor(i).getType();
 			lookup.put(type, resolveNameId(names, type));
+			if (save.componentIdentifiers.typeToId.get(type) == null) {
+				save.componentIdentifiers.typeToId.put(type, lookup.size());
+				save.componentIdentifiers.idToType.put(lookup.size(), type);
+			}
 		}
 	}
 
