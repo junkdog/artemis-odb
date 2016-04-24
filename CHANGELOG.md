@@ -5,7 +5,8 @@
 - ComponentType validates component when first encountered.
 - Removed `PackedComponent` and `@PackedWeaver`.
 - `Bag(Class<T>)` and `Bag(Class<T>, int capacity)` added.
-
+- Kryo serialization backend: [binary with kryo](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization)
+  (thanks to @piotr-j).
 
 #### Version: 1.4.0 - 2016-03-09
 - **BREAKING CHANGES**

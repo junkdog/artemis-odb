@@ -12,8 +12,8 @@ It is mature, actively maintained, and a continuation of the popular [Artemis](h
 
 - Full Android, [HTML5](https://github.com/junkdog/artemis-odb/wiki/GWT), iOS support.
 - High performance, GC-friendly, [less boilerplate](https://github.com/junkdog/artemis-odb/wiki/@Wire)!
-- Optional [struct emulation](https://github.com/junkdog/artemis-odb/wiki/Packed-Weaver) and [pooled](https://github.com/junkdog/artemis-odb/wiki/@PooledWeaver) components, [hotspot optimization](https://github.com/junkdog/artemis-odb/wiki/Hotspot-Optimization), leveraged by [bytecode injection](https://github.com/junkdog/artemis-odb/wiki/Bytecode weaving).
-- [Json Serialization](https://github.com/junkdog/artemis-odb/wiki/Json Serialization) `0.11+`.
+- Compile-time [bytecode instrumentation](https://github.com/junkdog/artemis-odb/wiki/Bytecode weaving) offers opt-in [pooled](https://github.com/junkdog/artemis-odb/wiki/@PooledWeaver) components, and [hotspot optimization](https://github.com/junkdog/artemis-odb/wiki/Hotspot-Optimization).
+- Serialize to either [json](https://github.com/junkdog/artemis-odb/wiki/Json Serialization) or [binary](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization).
 - Convenient [dependency matrices](https://github.com/junkdog/artemis-odb/wiki/Component Dependency Matrix) for your components and systems.
 - Easy migration from Artemis clones.
 
