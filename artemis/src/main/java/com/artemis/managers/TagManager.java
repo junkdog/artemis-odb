@@ -132,6 +132,11 @@ public class TagManager extends BaseSystem {
 		return entitiesByTag.get(tag);
 	}
 
+	public int getEntityId(String tag) {
+		Entity e = getEntity(tag);
+		return e != null ? e.getId() : -1;
+	}
+
 	/**
 	 * Get the tag the given entity is tagged with.
 	 *
