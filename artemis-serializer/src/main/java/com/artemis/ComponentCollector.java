@@ -33,12 +33,13 @@ public class ComponentCollector {
 
 		Set<String> names = new HashSet<String>();
 		BitSet bs = componentIds;
+		SaveFileFormat.ComponentIdentifiers identifiers = save.componentIdentifiers;
 		for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
 			Class<? extends Component> type = cm.typeFactory.getTypeFor(i).getType();
 			lookup.put(type, resolveNameId(names, type));
-			if (save.componentIdentifiers.typeToId.get(type) == null) {
-				save.componentIdentifiers.typeToId.put(type, lookup.size());
-				save.componentIdentifiers.idToType.put(lookup.size(), type);
+			if (identifiers.typeToId.get(type) == null) {
+				identifiers.typeToId.put(type, lookup.size());
+				identifiers.idToType.put(lookup.size(), type);
 			}
 		}
 	}
