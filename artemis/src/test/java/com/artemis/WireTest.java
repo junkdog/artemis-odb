@@ -90,6 +90,20 @@ public class WireTest {
 		assertNull(injected.nullInjectMe);
 	}
 
+	@Test
+	public void get_registered_types() {
+		InjectMe injectMeName = new InjectMe();
+		InjectMe injectMeType = new InjectMe();
+
+		WorldConfiguration config = new WorldConfiguration()
+			.register("hi", injectMeName)
+			.register(injectMeType);
+
+		World w = new World(config);
+		assertSame(injectMeName, w.getRegistered("hi"));
+		assertSame(injectMeType, w.getRegistered(InjectMe.class));
+	}
+
 	@Test(expected = MundaneWireException.class)
 	public void inject_named_custom_type_not_registered() {
 		CustomNamedInjectedManager injected = new CustomNamedInjectedManager();

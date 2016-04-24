@@ -19,6 +19,9 @@ import java.util.Map;
  */
 public interface Injector {
 
+	<T> T getRegistered(String id);
+	<T> T getRegistered(Class<T> id);
+
 	/**
 	 * @param world       this Injector will be used for
 	 * @param injectables registered via {@link com.artemis.WorldConfiguration#register}

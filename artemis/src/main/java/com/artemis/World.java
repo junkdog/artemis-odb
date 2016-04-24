@@ -124,6 +124,14 @@ public class World {
 			partition.injector.inject(target);
 	}
 
+	public <T> T getRegistered(String name) {
+		return partition.injector.getRegistered(name);
+	}
+
+	public <T> T getRegistered(Class<T> type) {
+		return partition.injector.getRegistered(type);
+	}
+
 	/**
 	 * Disposes all systems. Only necessary if either need to free
 	 * managed resources upon bringing the world to an end.

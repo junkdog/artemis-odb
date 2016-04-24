@@ -27,6 +27,7 @@ import java.util.Map;
 public final class CachedInjector implements Injector {
 	private InjectionCache cache = new InjectionCache();
 	private FieldHandler fieldHandler;
+	private Map<String, Object> injectables;
 
 	@Override
 	public Injector setFieldHandler(FieldHandler fieldHandler) {
@@ -35,7 +36,18 @@ public final class CachedInjector implements Injector {
 	}
 
 	@Override
+	public <T> T getRegistered(String id) {
+		return (T) injectables.get(id);
+	}
+
+	@Override
+	public <T> T getRegistered(Class<T> id) {
+		return getRegistered(id.getName());
+	}
+
+	@Override
 	public void initialize(World world, Map<String, Object> injectables) {
+		this.injectables = injectables;
 		if (fieldHandler == null) {
 			fieldHandler = new FieldHandler(cache);
 		}

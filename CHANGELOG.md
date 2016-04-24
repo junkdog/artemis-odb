@@ -1,6 +1,10 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 #### Version: 2.0.0-SNAPSHOT
+- **BREAKING CHANGES**
+  - Methods added to interface `Injector#getRegistered(Class|String)`
+
+- `World#getRegistered`, retrieves injectable objects programmatically.
 - Re-worked `EntityEdit` logic, less code and more performance.
 - ComponentType validates component when first encountered.
 - Removed `PackedComponent` and `@PackedWeaver`.
@@ -9,6 +13,7 @@
   regardless of the size of the underlying array.
 - Kryo serialization backend: [binary with kryo](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization)
   (thanks to @piotr-j).
+
 
 #### Version: 1.4.0 - 2016-03-09
 - **BREAKING CHANGES**
