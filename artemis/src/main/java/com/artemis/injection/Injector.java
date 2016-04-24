@@ -19,7 +19,28 @@ import java.util.Map;
  */
 public interface Injector {
 
+	/**
+	 * Programmatic retrieval of registered objects. Useful when
+	 * full injection isn't necessary.
+	 *
+	 * @param id Name or class name.
+	 * @return the requested object, or null if not found
+	 *
+	 * @see com.artemis.WorldConfiguration#register(String, Object)
+	 */
 	<T> T getRegistered(String id);
+
+	/**
+	 * Programmatic retrieval of registered objects. Useful when
+	 * full injection isn't necessary. This method internally
+	 * calls {@link #getRegistered(String)}, with the class name
+	 * as parameter.
+	 *
+	 * @param id Uniquely registered instance, identified by class..
+	 * @return the requested object, or null if not found
+	 *
+	 * @see com.artemis.WorldConfiguration#register(Object)
+	 */
 	<T> T getRegistered(Class<T> id);
 
 	/**
