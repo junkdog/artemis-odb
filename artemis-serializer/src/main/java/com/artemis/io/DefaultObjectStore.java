@@ -1,6 +1,8 @@
 package com.artemis.io;
 
-import com.artemis.utils.reflect.*;
+import com.artemis.utils.reflect.ClassReflection;
+import com.artemis.utils.reflect.Field;
+import com.artemis.utils.reflect.ReflectionException;
 
 import java.util.ArrayList;
 import java.util.HashMap;

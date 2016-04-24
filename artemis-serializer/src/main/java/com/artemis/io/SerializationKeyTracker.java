@@ -2,7 +2,9 @@ package com.artemis.io;
 
 import com.artemis.Entity;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Maintains serialization-local key-to-entity mappings.

@@ -22,9 +22,8 @@
 		</dependency>
 		<dependency>
 			<groupId>net.onedaybeard.artemis</groupId>
-			<artifactId>artemis-odb-serializer-json-libgdx</artifactId>
+			<artifactId>artemis-odb-serializer</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.esotericsoftware</groupId>
@@ -36,6 +35,12 @@
 			<artifactId>gdx</artifactId>
 			<version>[1.6.0, 2.0.0)</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId>
+			<artifactId>artemis-odb-serializer-json-libgdx</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

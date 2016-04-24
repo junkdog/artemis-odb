@@ -28,9 +28,6 @@ import java.util.*;
  * be registered to only interact with that class; during loading and saving, the
  * serializer interacts directly with the manager and reads/writes the data as needed.</p>
  *
- * <p><b>Nota Bene:</b> PackedComponent types are not yet supported.</p>
- *
- * @see JsonArtemisSerializer
  * @see EntityReference
  */
 public class SaveFileFormat {

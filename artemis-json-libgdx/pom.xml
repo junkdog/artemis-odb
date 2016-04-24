@@ -21,6 +21,11 @@
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId>
+			<artifactId>artemis-odb-serializer</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
 			<version>[1.6.0, 2.0.0)</version>

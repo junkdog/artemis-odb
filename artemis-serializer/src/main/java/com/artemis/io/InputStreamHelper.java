@@ -25,8 +25,8 @@ public class InputStreamHelper {
 	 *
 	 * @return  <code>true</code> if this stream instance supports the mark
 	 *          and reset methods; <code>false</code> otherwise.
-	 * @see     java.io.InputStream#mark(int)
-	 * @see     java.io.InputStream#reset()
+	 * @see     InputStream#mark(int)
+	 * @see     InputStream#reset()
 	 */
 	public static boolean isMarkSupported(InputStream is)
 	{

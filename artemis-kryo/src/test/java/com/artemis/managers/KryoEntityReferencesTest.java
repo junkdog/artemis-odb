@@ -5,20 +5,15 @@ import com.artemis.component.*;
 import com.artemis.component.render.TextureReference;
 import com.artemis.io.JsonArtemisSerializer;
 import com.artemis.io.KryoArtemisSerializer;
-import com.artemis.io.KryoEntitySerializer;
 import com.artemis.io.SaveFileFormat;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.Vector2;
-import com.badlogic.gdx.Gdx;
 import org.junit.Test;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
 
 public class KryoEntityReferencesTest {
 	private World world;
