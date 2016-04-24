@@ -5,7 +5,6 @@
 
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.Component"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.PooledComponent"/>
-	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.PackedComponent"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.Entity"/>
 
 	<!-- Known limitation: Add serializable classes to both reflection caches! -->

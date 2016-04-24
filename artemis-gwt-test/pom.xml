@@ -49,6 +49,14 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>artemis-odb-serializer</artifactId>
+			<version>${project.version}</version>
+			<classifier>sources</classifier>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>artemis-odb-gwt</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
