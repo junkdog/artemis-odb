@@ -144,6 +144,10 @@ public class TagManager extends BaseSystem {
 		return tagsByEntity.get(entity);
 	}
 
+	public String getTag(int entityId) {
+		return getTag(world.getEntity(entityId));
+	}
+
 	/**
 	 * Get all used tags.
 	 *
