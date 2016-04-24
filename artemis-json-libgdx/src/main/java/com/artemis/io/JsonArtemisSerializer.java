@@ -108,7 +108,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 		SaveFileFormat partial = partialLoad(jsonData);
 		referenceTracker.inspectTypes(partial.componentIdentifiers.nameToType.values());
-		entitySerializer.factory.configureWith(jsonData);
+		entitySerializer.factory.configureWith(countChildren(jsonData.get("entities")));
 
 		T t = newInstance(format);
 		json.readFields(t, jsonData);
@@ -142,5 +142,18 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		}
 
 		return save;
+	}
+
+	private int countChildren(JsonValue jsonData) {
+		if (jsonData == null || jsonData.child == null)
+			return 0;
+
+		JsonValue entity = jsonData.child;
+		int count = 0;
+		while (entity != null) {
+			count++;
+			entity = entity.next;
+		}
+		return count;
 	}
 }

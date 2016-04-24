@@ -5,7 +5,6 @@ import com.artemis.ArchetypeBuilder;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.utils.IntBag;
-import com.esotericsoftware.jsonbeans.JsonValue;
 
 import java.util.Arrays;
 
@@ -25,29 +24,7 @@ class EntityPoolFactory {
 		archetype = new ArchetypeBuilder().build(world);
 	}
 
-	void configureWith(JsonValue jsonData) {
-		int count = countChildren(jsonData.get("entities"));
-		preallocateEntities(count);
-	}
-
-	Entity createEntity() {
-		return world.getEntity(pool.get(poolIndex++));
-	}
-
-	private int countChildren(JsonValue jsonData) {
-		if (jsonData == null || jsonData.child == null)
-			return 0;
-
-		JsonValue entity = jsonData.child;
-		int count = 0;
-		while (entity != null) {
-			count++;
-			entity = entity.next;
-		}
-		return count;
-	}
-
-	private void preallocateEntities(int count) {
+	void configureWith(int count) {
 		poolIndex = 0;
 		pool.setSize(0);
 		pool.ensureCapacity(count);
@@ -56,5 +33,9 @@ class EntityPoolFactory {
 		}
 
 		Arrays.sort(pool.getData(), 0, pool.size());
+	}
+
+	Entity createEntity() {
+		return world.getEntity(pool.get(poolIndex++));
 	}
 }

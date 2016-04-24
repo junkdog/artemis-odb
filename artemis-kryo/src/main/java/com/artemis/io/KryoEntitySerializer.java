@@ -26,7 +26,7 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 	private final World world;
 	private final ReferenceTracker referenceTracker;
 	private final DefaultObjectStore defaultValues;
-	final KryoEntityPoolFactory factory;
+	final EntityPoolFactory factory;
 
 	private GroupManager groupManager;
 	private TagManager tagManager;
@@ -44,7 +44,7 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 		this.world = world;
 		this.referenceTracker = referenceTracker;
 		defaultValues = new DefaultObjectStore();
-		factory = new KryoEntityPoolFactory(world);
+		factory = new EntityPoolFactory(world);
 		world.inject(this);
 
 		registeredTags = (tagManager != null)
