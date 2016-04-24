@@ -121,8 +121,10 @@ public class IntBag {
 	 */
 	public int get(int index) throws ArrayIndexOutOfBoundsException {
 		if (index >= size) {
-			throw new ArrayIndexOutOfBoundsException(index);
+			String message = "tried accessing element " + index + "/" + data.length;
+			throw new ArrayIndexOutOfBoundsException(message);
 		}
+
 		return data[index];
 	}
 	
@@ -193,7 +195,7 @@ public class IntBag {
 	 */
 	public void addAll(IntBag other) {
 		for (int i = 0; i < other.size(); i++) {
-			add(other.get(i));
+			add(other.data[i]);
 		}
 	}
 

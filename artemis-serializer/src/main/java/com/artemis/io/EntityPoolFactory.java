@@ -36,6 +36,6 @@ class EntityPoolFactory {
 	}
 
 	Entity createEntity() {
-		return world.getEntity(pool.get(poolIndex++));
+		return world.getEntity(pool.getData()[poolIndex++]);
 	}
 }
