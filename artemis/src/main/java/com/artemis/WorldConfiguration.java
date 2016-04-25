@@ -176,6 +176,10 @@ public final class WorldConfiguration {
 		for (int i = 0, s = systems.size(); i < s; i++) {
 			BaseSystem system = systems.get(i);
 			injector.inject(system);
+		}
+
+		for (int i = 0, s = systems.size(); i < s; i++) {
+			BaseSystem system = systems.get(i);
 			system.initialize();
 		}
 	}
