@@ -19,6 +19,9 @@ public class ComponentTypeFactory {
 	 */
 	private final IdentityHashMap<Class<? extends Component>, ComponentType> componentTypes
 			= new IdentityHashMap<Class<? extends Component>, ComponentType>();
+
+	private final Bag<ComponentTypeListener> listeners
+			= new Bag<ComponentTypeListener>();
 	
 	/** Index of this component type in componentTypes. */
 	final Bag<ComponentType> types = new Bag(ComponentType.class);
@@ -68,6 +71,10 @@ public class ComponentTypeFactory {
 
 		cm.registerComponentType(type, initialMapperCapacity);
 
+		for (int i = 0; i < listeners.size(); i++) {
+			listeners.get(i).onCreated(type);
+		}
+
 		return type;
 	}
 
@@ -91,5 +98,15 @@ public class ComponentTypeFactory {
 	 */
 	public int getIndexFor(Class<? extends Component> c) {
 		return getTypeFor(c).getIndex();
+	}
+
+	public void register(ComponentTypeListener listener) {
+		listeners.add(listener);
+		listener.initialize(types);
+	}
+
+	public interface ComponentTypeListener {
+		void initialize(Bag<ComponentType> registered);
+		void onCreated(ComponentType type);
 	}
 }

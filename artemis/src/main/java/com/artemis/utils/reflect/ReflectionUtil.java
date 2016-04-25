@@ -19,4 +19,8 @@ public final class ReflectionUtil {
 			throw new RuntimeException(e);
 		}
 	}
+
+	public static boolean isGenericType(Field f, Class<?> mainType, Class typeParameter) {
+		return mainType == f.getType() && typeParameter == f.getElementType(0);
+	}
 }
