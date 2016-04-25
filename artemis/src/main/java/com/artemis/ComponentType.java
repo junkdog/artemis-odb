@@ -1,7 +1,6 @@
 package com.artemis;
 
 import com.artemis.utils.reflect.ClassReflection;
-import com.artemis.utils.reflect.Constructor;
 
 
 /**
@@ -50,5 +49,20 @@ public class ComponentType {
 	@Override
 	public String toString() {
 		return "ComponentType["+ ClassReflection.getSimpleName(type) +"] ("+index+")";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		ComponentType that = (ComponentType) o;
+
+		return index == that.index;
+	}
+
+	@Override
+	public int hashCode() {
+		return index;
 	}
 }
