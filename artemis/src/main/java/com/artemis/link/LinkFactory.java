@@ -2,7 +2,6 @@ package com.artemis.link;
 
 import com.artemis.ComponentType;
 import com.artemis.Entity;
-import com.artemis.EntitySubscription;
 import com.artemis.World;
 import com.artemis.annotations.EntityId;
 import com.artemis.utils.Bag;
@@ -10,7 +9,6 @@ import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 
-import static com.artemis.Aspect.all;
 import static com.artemis.utils.reflect.ReflectionUtil.isGenericType;
 
 class LinkFactory {
@@ -25,12 +23,6 @@ class LinkFactory {
 
 	public LinkFactory(World world) {
 		this.world = world;
-	}
-
-
-	private EntitySubscription subscription(ComponentType ct) {
-		return world.getAspectSubscriptionManager()
-			.get(all(ct.getType()));
 	}
 
 	static int getReferenceType(Field f) {
@@ -58,7 +50,7 @@ class LinkFactory {
 			int referenceTypeId = getReferenceType(f);
 			if (referenceTypeId > 0) {
 				if (SINGLE_REFERENCE == referenceTypeId) {
-					SingleLinkSite linkSite = new SingleLinkSite(world, ct, f, subscription(ct));
+					SingleLinkSite linkSite = new SingleLinkSite(world, ct, f);
 					links.add(withDefaultEntityReader(linkSite));
 				} else if (MULTI_REFERENCE == referenceTypeId) {
 //						links.add(MultiLinkSite(world, ct, f, subscription(ct)));

@@ -14,10 +14,9 @@ class SingleLinkSite extends LinkSite {
 
 	protected SingleLinkSite(World world,
 	                         ComponentType type,
-	                         Field field,
-	                         EntitySubscription subscription) {
+	                         Field field) {
 
-		super(world, type, field, subscription);
+		super(world, type, field);
 		em = world.getEntityManager();
 	}
 
@@ -33,7 +32,7 @@ class SingleLinkSite extends LinkSite {
 				if (listener != null) listener.onTargetDead(id, target);
 			} else {
 				sourceToTarget.set(id, newTarget);
-				if (listener != null) listener.onTargetChanged(id, target);
+				if (listener != null) listener.onTargetChanged(id, newTarget, target);
 			}
 		}
 	}

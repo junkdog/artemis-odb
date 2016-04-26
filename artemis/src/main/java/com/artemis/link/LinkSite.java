@@ -4,6 +4,8 @@ import com.artemis.*;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.Field;
 
+import static com.artemis.Aspect.all;
+
 abstract class LinkSite implements EntitySubscription.SubscriptionListener {
 	protected final ComponentType type;
 	protected final Field field;
@@ -12,12 +14,14 @@ abstract class LinkSite implements EntitySubscription.SubscriptionListener {
 	protected FieldReader entityReader;
 	protected LinkListener listener;
 
-	protected LinkSite(World world, ComponentType type, Field field, EntitySubscription subscription) {
-		mapper = world.getMapper(type.getType());
+	protected LinkSite(World world, ComponentType type, Field field) {
 		this.type = type;
 		this.field = field;
 
-		this.subscription = subscription;
+		mapper = world.getMapper(type.getType());
+
+		AspectSubscriptionManager subscriptions = world.getAspectSubscriptionManager();
+		subscription = subscriptions.get(all(type.getType()));
 		subscription.addSubscriptionListener(this);
 	}
 
