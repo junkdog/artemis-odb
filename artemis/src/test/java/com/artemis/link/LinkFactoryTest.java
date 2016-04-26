@@ -1,4 +1,4 @@
-package com.artemis.managers;
+package com.artemis.link;
 
 import com.artemis.Component;
 import com.artemis.Entity;
@@ -9,7 +9,7 @@ import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 import org.junit.Test;
 
-import static com.artemis.managers.EntityLinkManager.LinkFactory.getReferenceType;
+import static com.artemis.link.LinkFactory.getReferenceType;
 import static org.junit.Assert.*;
 
 public class LinkFactoryTest {

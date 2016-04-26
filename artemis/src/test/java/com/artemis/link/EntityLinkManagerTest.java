@@ -1,4 +1,4 @@
-package com.artemis.managers;
+package com.artemis.link;
 
 public class EntityLinkManagerTest {
 
