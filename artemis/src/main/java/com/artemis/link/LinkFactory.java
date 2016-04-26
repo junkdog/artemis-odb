@@ -21,6 +21,8 @@ class LinkFactory {
 	private final Bag<LinkSite> links = new Bag<LinkSite>();
 	private World world;
 
+	private final DefaultReaders defaultReaders = new DefaultReaders();
+
 	public LinkFactory(World world) {
 		this.world = world;
 	}
@@ -57,8 +59,7 @@ class LinkFactory {
 			if (referenceTypeId > 0) {
 				if (SINGLE_REFERENCE == referenceTypeId) {
 					SingleLinkSite linkSite = new SingleLinkSite(world, ct, f, subscription(ct));
-					linkSite = withDefaultEntityReader(linkSite);
-					links.add(linkSite);
+					links.add(withDefaultEntityReader(linkSite));
 				} else if (MULTI_REFERENCE == referenceTypeId) {
 //						links.add(MultiLinkSite(world, ct, f, subscription(ct)));
 					throw new UnsupportedOperationException("not impl");
@@ -69,16 +70,27 @@ class LinkFactory {
 		return links;
 	}
 
-	private SingleLinkSite withDefaultEntityReader(SingleLinkSite linkSite) {
+	private <T extends LinkSite> T withDefaultEntityReader(T linkSite) {
 		Class type = linkSite.field.getType();
-		if (type == Entity.class) {
-			linkSite.entityReader = new EntityFieldReader();
-		} else if (type == int.class) {
-			linkSite.entityReader = new IntFieldReader();
+		if (Entity.class == type) {
+			linkSite.entityReader = defaultReaders.entityFieldReader;
+		} else if (int.class == type) {
+			linkSite.entityReader = defaultReaders.intFieldReader;
+		} else if (IntBag.class == type) {
+			linkSite.entityReader = defaultReaders.intBagFieldReader;
+		} else if (Bag.class == type) {
+			linkSite.entityReader = defaultReaders.entityBagFieldReader;
 		} else {
 			throw new RuntimeException("unexpected '" + type + "', on " + linkSite.type);
 		}
 
 		return linkSite;
+	}
+
+	class DefaultReaders {
+		EntityFieldReader entityFieldReader = new EntityFieldReader();
+		IntFieldReader intFieldReader = new IntFieldReader();
+		IntBagFieldReader intBagFieldReader = new IntBagFieldReader();
+		EntityBagFieldReader entityBagFieldReader = new EntityBagFieldReader();
 	}
 }

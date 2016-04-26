@@ -11,6 +11,8 @@
 - `Bag(Class<T>)` and `Bag(Class<T>, int capacity)` added.
 - `IntBag#get` throws `ArrayIndexOutOfBoundsException` whenever `index` is greater than the reported size,
   regardless of the size of the underlying array.
+- All systems are first injected, after which all systems are initialized. Previously,
+  each system was injected/initialized at the same time.
 - **Serialization**
   - new `artemis-odb-serializer` artifact, used by all serialization backends,
   - Kryo serialization backend: [binary with kryo](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization)

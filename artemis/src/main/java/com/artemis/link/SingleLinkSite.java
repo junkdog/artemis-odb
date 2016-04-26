@@ -54,7 +54,7 @@ class SingleLinkSite extends LinkSite {
 			: -1;
 
 		if (target != -1) {
-			listener.onLinkKill(id);
+			listener.onLinkKilled(id);
 			sourceToTarget.set(id, 0);
 		}
 	}
