@@ -2,7 +2,6 @@ package com.artemis.link;
 
 import com.artemis.ComponentType;
 import com.artemis.EntityManager;
-import com.artemis.EntitySubscription;
 import com.artemis.World;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.Field;

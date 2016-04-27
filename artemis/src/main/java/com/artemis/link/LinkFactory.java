@@ -44,6 +44,8 @@ class LinkFactory {
 	Bag<LinkSite> create(ComponentType ct) {
 		Class<?> type = ct.getType();
 		Field[] fields = ClassReflection.getDeclaredFields(type);
+
+		links.clear();
 		for (int i = 0; fields.length > i; i++) {
 			Field f = fields[i];
 			Class t = f.getType();

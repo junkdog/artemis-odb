@@ -92,8 +92,6 @@ public class EntityLinkManager extends BaseEntitySystem
 			bag.addAll(links);
 			multiLinkSites.set(type.getIndex(), bag);
 		}
-
-		links.clear();
 	}
 
 }

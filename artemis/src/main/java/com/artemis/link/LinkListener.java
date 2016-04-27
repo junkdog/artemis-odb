@@ -23,7 +23,7 @@ public interface LinkListener {
 
 	/**
 	 * Target entity dead.
-	 *
+	 * 
 	 * @param sourceId entity owning component.
 	 * @param deadTargetId a valid entity id.
 	 */

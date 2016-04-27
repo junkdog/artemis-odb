@@ -1,7 +1,6 @@
 package com.artemis.link;
 
-import com.artemis.Component;
-import com.artemis.Entity;
+import com.artemis.*;
 import com.artemis.annotations.EntityId;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
@@ -92,24 +91,51 @@ public class LinkFactoryTest {
 		assertNotNull(found);
 	}
 
-	static class LttEmpty extends Component {
+	@Test
+	public void create_single_link_site() {
+		World w = new World();
+		ComponentTypeFactory typeFactory = w.getComponentManager().getTypeFactory();
+		ComponentType ct = typeFactory.getTypeFor(LttEntity.class);
+
+		LinkFactory linkFactory = new LinkFactory(w);
+		Bag<LinkSite> links = linkFactory.create(ct);
+
+		assertEquals(1, links.size());
+
+		SingleLinkSite link = (SingleLinkSite) links.get(0);
+		assertEquals("entity", link.field.getName());
+	}
+
+	@Test
+	public void create_zero_link_site() {
+		World w = new World();
+		ComponentTypeFactory typeFactory = w.getComponentManager().getTypeFactory();
+		ComponentType ct = typeFactory.getTypeFor(LttEmpty.class);
+
+		LinkFactory linkFactory = new LinkFactory(w);
+		Bag<LinkSite> links = linkFactory.create(ct);
+
+		assertEquals(0, links.size());
+	}
+
+	public static class LttEmpty extends Component {
 		public int id;
 		public Bag<Void> entities;
 	}
 
-	static class LttEntity extends Component {
+	public static class LttEntity extends Component {
 		public Entity entity;
 	}
 
-	static class LttEntityId extends Component {
+	public static class LttEntityId extends Component {
 		@EntityId public int id;
 	}
 
-	static class LttBagEntity extends Component {
+	public static class LttBagEntity extends Component {
 		public Bag<Entity> entities;
 	}
 
-	static class LttIntBag extends Component {
+	public static class LttIntBag extends Component {
 		@EntityId public IntBag ids;
 	}
 }
