@@ -52,7 +52,7 @@ class LinkFactory {
 			int referenceTypeId = getReferenceType(f);
 			if (referenceTypeId > 0) {
 				if (SINGLE_REFERENCE == referenceTypeId) {
-					SingleLinkSite linkSite = new SingleLinkSite(world, ct, f);
+					UniLinkSite linkSite = new UniLinkSite(world, ct, f);
 					links.add(withDefaultEntityReader(linkSite));
 				} else if (MULTI_REFERENCE == referenceTypeId) {
 //						links.add(MultiLinkSite(world, ct, f, subscription(ct)));

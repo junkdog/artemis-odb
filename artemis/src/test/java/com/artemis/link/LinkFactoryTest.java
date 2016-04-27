@@ -102,7 +102,7 @@ public class LinkFactoryTest {
 
 		assertEquals(1, links.size());
 
-		SingleLinkSite link = (SingleLinkSite) links.get(0);
+		UniLinkSite link = (UniLinkSite) links.get(0);
 		assertEquals("entity", link.field.getName());
 	}
 

@@ -6,14 +6,14 @@ import com.artemis.World;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.Field;
 
-class SingleLinkSite extends LinkSite {
+class UniLinkSite extends LinkSite {
 
 	private final IntBag sourceToTarget = new IntBag();
 	private final EntityManager em;
 
-	protected SingleLinkSite(World world,
-	                         ComponentType type,
-	                         Field field) {
+	protected UniLinkSite(World world,
+	                      ComponentType type,
+	                      Field field) {
 
 		super(world, type, field);
 		em = world.getEntityManager();
