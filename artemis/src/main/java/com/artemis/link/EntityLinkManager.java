@@ -25,12 +25,15 @@ public class EntityLinkManager extends BaseEntitySystem {
 	final Bag<LinkSite> singleLinkSites = new Bag<LinkSite>();
 	final Bag<Bag<LinkSite>> multiLinkSites = new Bag<Bag<LinkSite>>();
 
-	public EntityLinkManager(Aspect.Builder aspect) {
+	private final boolean requireListener;
+
+	public EntityLinkManager(Aspect.Builder aspect, boolean requireListenerToProcess) {
 		super(aspect);
+		this.requireListener = requireListenerToProcess;
 	}
 
 	public EntityLinkManager() {
-		this(all());
+		this(all(), false);
 	}
 
 	@Override
@@ -39,15 +42,23 @@ public class EntityLinkManager extends BaseEntitySystem {
 		world.getComponentManager().getTypeFactory().register(listener);
 	}
 
+
 	@Override
 	protected void processSystem() {
 		for (LinkSite ls : singleLinkSites) {
+			if (requireListener && ls.listener == null)
+				continue;
+
 			ls.process();
 		}
 
-		for (Bag<LinkSite> ls : multiLinkSites) {
-			for (int i = 0, s = ls.size(); s > i; i++) {
-				ls.get(i).process();
+		for (Bag<LinkSite> sites : multiLinkSites) {
+			for (int i = 0, s = sites.size(); s > i; i++) {
+				LinkSite ls = sites.get(i);
+				if (requireListener && ls.listener == null)
+					continue;
+
+				ls.process();
 			}
 		}
 	}
@@ -85,14 +96,14 @@ public class EntityLinkManager extends BaseEntitySystem {
 
 			ComponentType ct = world.getComponentManager().getTypeFactory().getTypeFor(component);
 			for (LinkSite site : singleLinkSites) {
-				if (ct.equals(site.type) && (f == null ||site.field.equals(f))) {
+				if (ct.equals(site.type) && (f == null || site.field.equals(f))) {
 					site.listener = listener;
 				}
 			}
 			for (Bag<LinkSite> ls : multiLinkSites) {
 				for (int i = 0, s = ls.size(); s > i; i++) {
 					LinkSite site = ls.get(i);
-					if (ct.equals(site.type) && (f == null ||site.field.equals(f))) {
+					if (ct.equals(site.type) && (f == null || site.field.equals(f))) {
 						ls.get(i).process();
 					}
 				}
