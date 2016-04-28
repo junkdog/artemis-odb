@@ -20,14 +20,14 @@ class UniLinkSite extends LinkSite {
 
 	@Override
 	protected void check(int id) {
-		int oldTarget = sourceToTarget.get(id);
 		// -1 == not linked
 		int target = fieldMutator.read(mapper.get(id), field);
-		if (!activeEntityIds.get(target)) {
+		if (target != -1 && !activeEntityIds.get(target)) {
 			target = -1;
 			fieldMutator.write(target, mapper.get(id), field);
 		}
 
+		int oldTarget = sourceToTarget.get(id);
 		if (target != oldTarget) {
 			sourceToTarget.set(id, target);
 			if (oldTarget == -1) {
