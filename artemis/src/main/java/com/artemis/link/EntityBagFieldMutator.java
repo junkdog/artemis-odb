@@ -19,11 +19,11 @@ class EntityBagFieldMutator implements MultiFieldMutator<Bag<Entity>, Component>
 	}
 
 	@Override
-	public void validate(int sourceId, Bag<Entity> collection, LinkListener listener) {
-		for (int i = 0; collection.size() > i; i++) {
-			Entity e = collection.get(i);
+	public void validate(int sourceId, Bag<Entity> entities, LinkListener listener) {
+		for (int i = 0; entities.size() > i; i++) {
+			Entity e = entities.get(i);
 			if (!all.getActiveEntityIds().get(e.getId())) {
-				collection.remove(i--);
+				entities.remove(i--);
 				if (listener != null)
 					listener.onTargetDead(sourceId, e.getId());
 			}

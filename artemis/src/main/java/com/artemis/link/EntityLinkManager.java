@@ -63,20 +63,7 @@ public class EntityLinkManager extends BaseEntitySystem {
 	 * @param listener link listener
 	 */
 	public void register(Class<? extends Component> component, LinkListener listener) {
-		world.inject(listener);
-		ComponentType ct = world.getComponentManager().getTypeFactory().getTypeFor(component);
-		for (LinkSite site : singleLinkSites) {
-			if (ct.equals(site.type)) {
-				site.listener = listener;
-			}
-		}
-		for (Bag<LinkSite> ls : multiLinkSites) {
-			for (int i = 0, s = ls.size(); s > i; i++) {
-				if (ct.equals(ls.get(i).type)) {
-					ls.get(i).process();
-				}
-			}
-		}
+		register(component, null, listener);
 	}
 
 	/**
@@ -92,17 +79,20 @@ public class EntityLinkManager extends BaseEntitySystem {
 	public void register(Class<? extends Component> component, String field, LinkListener listener) {
 		world.inject(listener);
 		try {
-			Field f = ClassReflection.getDeclaredField(component, field);
+			Field f = (field != null)
+				? ClassReflection.getDeclaredField(component, field)
+				: null;
+
 			ComponentType ct = world.getComponentManager().getTypeFactory().getTypeFor(component);
 			for (LinkSite site : singleLinkSites) {
-				if (ct.equals(site.type) && site.field.equals(f)) {
+				if (ct.equals(site.type) && (f == null ||site.field.equals(f))) {
 					site.listener = listener;
 				}
 			}
 			for (Bag<LinkSite> ls : multiLinkSites) {
 				for (int i = 0, s = ls.size(); s > i; i++) {
 					LinkSite site = ls.get(i);
-					if (ct.equals(site.type) && site.field.equals(f)) {
+					if (ct.equals(site.type) && (f == null ||site.field.equals(f))) {
 						ls.get(i).process();
 					}
 				}
