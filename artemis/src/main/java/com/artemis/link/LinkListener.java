@@ -5,7 +5,7 @@ package com.artemis.link;
  * injection when registered with {@link EntityLinkManager}
  *
  * @see EntityLinkManager#register(Class, LinkListener)
- * @see EntityLinkManager#register(Class, String, LinkListener) 
+ * @see EntityLinkManager#register(Class, String, LinkListener)
  */
 public interface LinkListener {
 

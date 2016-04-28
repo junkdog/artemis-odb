@@ -41,17 +41,10 @@ public class EntityLinkManager extends BaseEntitySystem {
 
 	@Override
 	protected void processSystem() {
-		processUni();
-		processMulti();
-	}
-
-	private void processUni() {
 		for (LinkSite ls : singleLinkSites) {
 			ls.process();
 		}
-	}
 
-	private void processMulti() {
 		for (Bag<LinkSite> ls : multiLinkSites) {
 			for (int i = 0, s = ls.size(); s > i; i++) {
 				ls.get(i).process();
@@ -59,6 +52,16 @@ public class EntityLinkManager extends BaseEntitySystem {
 		}
 	}
 
+	/**
+	 * <p>Injects and associates the listener with the component. This method
+	 * is only recommended if only field references entities, or if all entity
+	 * fields are of the same type.</p>
+	 *
+	 * <p>Each <code>ComponentType::Field</code> pair can only have one {@link LinkListener}</p>
+	 *
+	 * @param component component type associated with listener
+	 * @param listener link listener
+	 */
 	public void register(Class<? extends Component> component, LinkListener listener) {
 		world.inject(listener);
 		ComponentType ct = world.getComponentManager().getTypeFactory().getTypeFor(component);
@@ -76,6 +79,16 @@ public class EntityLinkManager extends BaseEntitySystem {
 		}
 	}
 
+	/**
+	 * <p>Injects and associates the listener with a specific field for a given
+	 * component type.</p>
+	 *
+	 * <p>Each <code>ComponentType::Field</code> pair can only have one {@link LinkListener}</p>
+	 *
+	 * @param component component type associated with listener
+	 * @param field target field for listener
+	 * @param listener link listener
+	 */
 	public void register(Class<? extends Component> component, String field, LinkListener listener) {
 		world.inject(listener);
 		try {
