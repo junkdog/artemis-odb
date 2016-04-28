@@ -28,22 +28,25 @@ class UniLinkSite extends LinkSite {
 		int oldTarget = sourceToTarget.get(id);
 		// -1 == not linked
 		int target = entityReader.read(mapper.get(id), field);
-		if (!activeEntityIds.get(target))
+		if (!activeEntityIds.get(target)) {
 			target = -1;
+			entityReader.write(target, mapper.get(id), field);
+		}
 
-		if (target != oldTarget)
+		if (target != oldTarget) {
 			sourceToTarget.set(id, target);
 			if (oldTarget == -1) {
 				if (listener != null) listener.onLinkEstablished(id, target);
 			} else {
 				if (listener != null) {
-					if (target == -1) {
+					if (target != -1) {
 						listener.onTargetChanged(id, target, oldTarget);
 					} else {
 						listener.onTargetDead(id, oldTarget);
 					}
 				}
 			}
+		}
 	}
 
 	@Override
