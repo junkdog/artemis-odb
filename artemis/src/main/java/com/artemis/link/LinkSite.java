@@ -8,6 +8,7 @@ import com.artemis.utils.reflect.Field;
 import java.util.BitSet;
 
 import static com.artemis.Aspect.all;
+import static com.artemis.annotations.LinkPolicy.Policy.CHECK_SOURCE_AND_TARGETS;
 
 abstract class LinkSite implements EntitySubscription.SubscriptionListener {
 	protected final ComponentType type;
@@ -76,6 +77,9 @@ abstract class LinkSite implements EntitySubscription.SubscriptionListener {
 	protected abstract void check(int id);
 
 	protected void process() {
+		if (CHECK_SOURCE_AND_TARGETS != policy)
+			return;
+
 		IntBag entities = subscription.getEntities();
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {

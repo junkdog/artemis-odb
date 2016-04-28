@@ -22,10 +22,11 @@ class LinkFactory {
 	private final Bag<LinkSite> links = new Bag<LinkSite>();
 	private World world;
 
-	private final DefaultMutators defaultMutators = new DefaultMutators();
+	private final DefaultMutators defaultMutators;
 
 	public LinkFactory(World world) {
 		this.world = world;
+		defaultMutators = new DefaultMutators(world);
 	}
 
 	static int getReferenceTypeId(Field f) {
@@ -52,13 +53,13 @@ class LinkFactory {
 		for (int i = 0; fields.length > i; i++) {
 			Field f = fields[i];
 			int referenceTypeId = getReferenceTypeId(f);
-			if (referenceTypeId > 0 && (SKIP != getPolicy(f))) {
+			if (referenceTypeId != NULL_REFERENCE && (SKIP != getPolicy(f))) {
 				if (SINGLE_REFERENCE == referenceTypeId) {
 					UniLinkSite linkSite = new UniLinkSite(world, ct, f);
 					links.add(withDefaultMutator(linkSite));
 				} else if (MULTI_REFERENCE == referenceTypeId) {
-//						links.add(MultiLinkSite(world, ct, f, subscription(ct)));
-					throw new UnsupportedOperationException("not impl");
+					MultiLinkSite e = new MultiLinkSite(world, ct, f);
+					links.add(withDefaultMutator(e));
 				}
 			}
 		}
@@ -72,10 +73,19 @@ class LinkFactory {
 			linkSite.fieldMutator = defaultMutators.entityFieldMutator;
 		} else if (int.class == type) {
 			linkSite.fieldMutator = defaultMutators.intFieldMutator;
-		} else if (IntBag.class == type) {
-//			linkSite.fieldMutator = defaultMutators.intBagFieldMutator;
+		} else {
+			throw new RuntimeException("unexpected '" + type + "', on " + linkSite.type);
+		}
+
+		return linkSite;
+	}
+
+	private MultiLinkSite withDefaultMutator(MultiLinkSite linkSite) {
+		Class type = linkSite.field.getType();
+		if (IntBag.class == type) {
+			linkSite.fieldMutator = defaultMutators.intBagFieldMutator;
 		} else if (Bag.class == type) {
-//			linkSite.fieldMutator = defaultReaders.entityBagFieldMutator;
+			linkSite.fieldMutator = defaultMutators.entityBagFieldMutator;
 		} else {
 			throw new RuntimeException("unexpected '" + type + "', on " + linkSite.type);
 		}
@@ -93,10 +103,17 @@ class LinkFactory {
 		return null;
 	}
 
-	class DefaultMutators {
-		EntityFieldMutator entityFieldMutator = new EntityFieldMutator(world);
-		IntFieldMutator intFieldMutator = new IntFieldMutator();
-		IntBagFieldMutator intBagFieldMutator = new IntBagFieldMutator();
-		EntityBagFieldMutator entityBagFieldMutator = new EntityBagFieldMutator();
+	static class DefaultMutators {
+		final EntityFieldMutator entityFieldMutator;
+		final IntFieldMutator intFieldMutator;
+		final IntBagFieldMutator intBagFieldMutator;
+		final EntityBagFieldMutator entityBagFieldMutator;
+
+		public DefaultMutators(World world) {
+			entityFieldMutator = new EntityFieldMutator(world);
+			intFieldMutator = new IntFieldMutator();
+			intBagFieldMutator = new IntBagFieldMutator(world);
+			entityBagFieldMutator = new EntityBagFieldMutator(world);
+		}
 	}
 }

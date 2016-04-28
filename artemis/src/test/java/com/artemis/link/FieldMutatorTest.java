@@ -80,7 +80,7 @@ public class FieldMutatorTest {
 		IntBag ids = new IntBag();
 		ids.addAll(c.ids);
 
-		IntBagFieldMutator mutator = new IntBagFieldMutator();
+		IntBagFieldMutator mutator = new IntBagFieldMutator(w);
 		assertEquals(ids, mutator.read(c, field(c, "ids")));
 
 		c.ids.remove(1);
@@ -100,7 +100,7 @@ public class FieldMutatorTest {
 		Bag<Entity> entities = new Bag<Entity>();
 		entities.addAll(c.entities);
 
-		EntityBagFieldMutator mutator = new EntityBagFieldMutator();
+		EntityBagFieldMutator mutator = new EntityBagFieldMutator(w);
 		assertEquals(entities, mutator.read(c, field(c, "entities")));
 
 		c.entities.remove(1);

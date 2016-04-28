@@ -10,7 +10,7 @@ public interface LinkListener {
 	 * and <code>targetId</code>.
 	 *
 	 * @param sourceId entity owning component.
-	 * @param targetId a valid entity id.
+	 * @param targetId a valid entity id, or -1 if source links via IntBag or Bag-of-Entity.
 	 */
 	void onLinkEstablished(int sourceId, int targetId);
 
@@ -18,9 +18,9 @@ public interface LinkListener {
 	 * Deletion of source entity or its component.
 	 *
 	 * @param sourceId entity owning component.
-	 * @param target appointed child
+	 * @param targetId appointed child, or -1 if source links via IntBag or Bag-of-Entity.
 	 */
-	void onLinkKilled(int sourceId, int target);
+	void onLinkKilled(int sourceId, int targetId);
 
 	/**
 	 * Target entity dead.
@@ -31,7 +31,7 @@ public interface LinkListener {
 	void onTargetDead(int sourceId, int deadTargetId);
 
 	/**
-	 * Target entity has changed.
+	 * Target entity has changed. Never called if source links via IntBag or Bag-of-Entity.
 	 *
 	 * @param sourceId entity owning component.
 	 * @param targetId a valid entity id.
