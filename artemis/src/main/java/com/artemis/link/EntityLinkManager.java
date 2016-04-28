@@ -26,7 +26,6 @@ public class EntityLinkManager extends BaseEntitySystem {
 
 	final Bag<LinkSite> singleLinkSites = new Bag<LinkSite>();
 	final Bag<Bag<LinkSite>> multiLinkSites = new Bag<Bag<LinkSite>>();
-	private LinkFactory linkFactory;
 
 	public EntityLinkManager(Aspect.Builder aspect) {
 		super(aspect);
@@ -38,7 +37,6 @@ public class EntityLinkManager extends BaseEntitySystem {
 
 	@Override
 	protected void initialize() {
-		linkFactory = new LinkFactory(world);
 		LinkCreateListener listener = new LinkCreateListener(this);
 		world.getComponentManager().getTypeFactory().register(listener);
 	}
@@ -82,9 +80,11 @@ public class EntityLinkManager extends BaseEntitySystem {
 
 	private static class LinkCreateListener implements ComponentTypeFactory.ComponentTypeListener {
 		private final EntityLinkManager elm;
+		private final LinkFactory linkFactory;
 
 		public LinkCreateListener(EntityLinkManager elm) {
 			this.elm = elm;
+			this.linkFactory = new LinkFactory(elm.getWorld());
 		}
 
 		@Override
@@ -96,7 +96,7 @@ public class EntityLinkManager extends BaseEntitySystem {
 
 		@Override
 		public void onCreated(ComponentType type) {
-			Bag<LinkSite> links = elm.linkFactory.create(type);
+			Bag<LinkSite> links = linkFactory.create(type);
 			if (links.isEmpty())
 				return;
 

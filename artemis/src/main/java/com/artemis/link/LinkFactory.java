@@ -11,7 +11,6 @@ import com.artemis.utils.reflect.Annotation;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 
-import static com.artemis.annotations.LinkPolicy.Policy.CHECK_SOURCE;
 import static com.artemis.annotations.LinkPolicy.Policy.SKIP;
 import static com.artemis.utils.reflect.ReflectionUtil.isGenericType;
 
