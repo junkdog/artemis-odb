@@ -27,13 +27,13 @@ public class EntityLinkManager extends BaseEntitySystem {
 
 	private final boolean requireListener;
 
-	public EntityLinkManager(Aspect.Builder aspect, boolean requireListenerToProcess) {
+	public EntityLinkManager(Aspect.Builder aspect, boolean processSitesEvenIfNoListener) {
 		super(aspect);
-		this.requireListener = requireListenerToProcess;
+		this.requireListener = !processSitesEvenIfNoListener;
 	}
 
 	public EntityLinkManager() {
-		this(all(), false);
+		this(all(), true);
 	}
 
 	@Override
@@ -46,19 +46,15 @@ public class EntityLinkManager extends BaseEntitySystem {
 	@Override
 	protected void processSystem() {
 		for (LinkSite ls : singleLinkSites) {
-			if (requireListener && ls.listener == null)
-				continue;
-
-			ls.process();
+			if (!requireListener || ls.listener != null)
+				ls.process();
 		}
 
 		for (Bag<LinkSite> sites : multiLinkSites) {
 			for (int i = 0, s = sites.size(); s > i; i++) {
 				LinkSite ls = sites.get(i);
-				if (requireListener && ls.listener == null)
-					continue;
-
-				ls.process();
+				if (!requireListener || ls.listener != null)
+					ls.process();
 			}
 		}
 	}
