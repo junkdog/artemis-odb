@@ -107,15 +107,30 @@ public class LinkFactoryTest {
 	}
 
 	@Test
-	public void create_zero_link_site() {
+	public void create_multi_link_site() {
 		World w = new World();
 		ComponentTypeFactory typeFactory = w.getComponentManager().getTypeFactory();
-		ComponentType ct = typeFactory.getTypeFor(LttEmpty.class);
+		ComponentType ct = typeFactory.getTypeFor(LttEntity.class);
 
 		LinkFactory linkFactory = new LinkFactory(w);
 		Bag<LinkSite> links = linkFactory.create(ct);
 
-		assertEquals(0, links.size());
+		assertEquals(1, links.size());
+
+		UniLinkSite link = (UniLinkSite) links.get(0);
+		assertEquals("entity", link.field.getName());
+	}
+
+	@Test
+	public void create_zero_link_site() {
+		World w = new World();
+		ComponentTypeFactory typeFactory = w.getComponentManager().getTypeFactory();
+		ComponentType ct = typeFactory.getTypeFor(LttMulti.class);
+
+		LinkFactory linkFactory = new LinkFactory(w);
+		Bag<LinkSite> links = linkFactory.create(ct);
+
+		assertEquals(4, links.size());
 	}
 
 	public static class LttEmpty extends Component {
@@ -137,5 +152,13 @@ public class LinkFactoryTest {
 
 	public static class LttIntBag extends Component {
 		@EntityId public IntBag ids = new IntBag();
+	}
+
+	public static class LttMulti extends Component {
+		@EntityId public IntBag intIds = new IntBag();
+		@EntityId public int id;
+		public Entity e;
+		public Bag<Entity> entities = new Bag<Entity>();
+		public int notMe;
 	}
 }

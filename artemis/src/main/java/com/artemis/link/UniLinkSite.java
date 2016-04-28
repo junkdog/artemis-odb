@@ -60,7 +60,7 @@ class UniLinkSite extends LinkSite {
 
 		if (target != -1) {
 			sourceToTarget.set(id, 0);
-			listener.onLinkKilled(id, target);
+			if (listener != null) listener.onLinkKilled(id, target);
 		}
 	}
 }

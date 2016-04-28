@@ -22,11 +22,11 @@ class LinkFactory {
 	private final Bag<LinkSite> links = new Bag<LinkSite>();
 	private World world;
 
-	private final DefaultMutators defaultMutators;
+	private final ReflexiveMutators reflexiveMutators;
 
 	public LinkFactory(World world) {
 		this.world = world;
-		defaultMutators = new DefaultMutators(world);
+		reflexiveMutators = new ReflexiveMutators(world);
 	}
 
 	static int getReferenceTypeId(Field f) {
@@ -56,10 +56,10 @@ class LinkFactory {
 			if (referenceTypeId != NULL_REFERENCE && (SKIP != getPolicy(f))) {
 				if (SINGLE_REFERENCE == referenceTypeId) {
 					UniLinkSite linkSite = new UniLinkSite(world, ct, f);
-					links.add(defaultMutators.withMutator(linkSite));
+					links.add(reflexiveMutators.withMutator(linkSite));
 				} else if (MULTI_REFERENCE == referenceTypeId) {
 					MultiLinkSite e = new MultiLinkSite(world, ct, f);
-					links.add(defaultMutators.withMutator(e));
+					links.add(reflexiveMutators.withMutator(e));
 				}
 			}
 		}
@@ -77,25 +77,25 @@ class LinkFactory {
 		return null;
 	}
 
-	static class DefaultMutators {
-		final EntityFieldMutator entityFieldMutator;
-		final IntFieldMutator intFieldMutator;
-		final IntBagFieldMutator intBagFieldMutator;
-		final EntityBagFieldMutator entityBagFieldMutator;
+	static class ReflexiveMutators {
+		final EntityFieldMutator entityField;
+		final IntFieldMutator intField;
+		final IntBagFieldMutator intBagField;
+		final EntityBagFieldMutator entityBagField;
 
-		public DefaultMutators(World world) {
-			entityFieldMutator = new EntityFieldMutator(world);
-			intFieldMutator = new IntFieldMutator();
-			intBagFieldMutator = new IntBagFieldMutator(world);
-			entityBagFieldMutator = new EntityBagFieldMutator(world);
+		public ReflexiveMutators(World world) {
+			entityField = new EntityFieldMutator(world);
+			intField = new IntFieldMutator();
+			intBagField = new IntBagFieldMutator(world);
+			entityBagField = new EntityBagFieldMutator(world);
 		}
 
 		UniLinkSite withMutator(UniLinkSite linkSite) {
 			Class type = linkSite.field.getType();
 			if (Entity.class == type) {
-				linkSite.fieldMutator = entityFieldMutator;
+				linkSite.fieldMutator = entityField;
 			} else if (int.class == type) {
-				linkSite.fieldMutator = intFieldMutator;
+				linkSite.fieldMutator = intField;
 			} else {
 				throw new RuntimeException("unexpected '" + type + "', on " + linkSite.type);
 			}
@@ -106,9 +106,9 @@ class LinkFactory {
 		MultiLinkSite withMutator(MultiLinkSite linkSite) {
 			Class type = linkSite.field.getType();
 			if (IntBag.class == type) {
-				linkSite.fieldMutator = intBagFieldMutator;
+				linkSite.fieldMutator = intBagField;
 			} else if (Bag.class == type) {
-				linkSite.fieldMutator = entityBagFieldMutator;
+				linkSite.fieldMutator = entityBagField;
 			} else {
 				throw new RuntimeException("unexpected '" + type + "', on " + linkSite.type);
 			}

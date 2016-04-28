@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
 public class EntityLinkManagerTest {
 
 	@Test
-	public void uni_link_explicit_field_int_test() {
+	public void unilink_explicit_field_int_test() {
 		World world = new World(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
@@ -54,7 +54,7 @@ public class EntityLinkManagerTest {
 
 
 	@Test
-	public void uni_link_automatic_field_entity_test() {
+	public void unilink_automatic_field_entity_test() {
 		World world = new World(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
@@ -92,7 +92,7 @@ public class EntityLinkManagerTest {
 	}
 
 	@Test
-	public void uni_link_automatic_field_entity_check_source_policy_test() {
+	public void unilink_automatic_field_entity_check_source_policy_test() {
 		World world = new World(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
@@ -152,7 +152,7 @@ public class EntityLinkManagerTest {
 	}
 
 	@Test
-	public void uni_link_automatic_field_entity_skip_policy_test() {
+	public void unilink_automatic_field_entity_skip_policy_test() {
 		World world = new World(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
@@ -377,6 +377,44 @@ public class EntityLinkManagerTest {
 		world.process();
 	}
 
+	@Test
+	public void mulltilink_explicit_field_int_test() {
+		World world = new World(new WorldConfiguration()
+			.setSystem(EntityLinkManager.class));
+
+		final int padding = world.create();
+		final int otherA = world.create();
+		final int otherB = world.create();
+		final int e = world.create();
+
+		ComponentMapper<MuchOfEverything> mapper = world.getMapper(MuchOfEverything.class);
+
+		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
+		elm.register(MuchOfEverything.class, "otherId", new MyLinkListener(e, otherA, otherB));
+
+		// establish link
+		mapper.create(e).otherId = otherA;
+		world.process();
+
+		// target change
+		mapper.get(e).otherId = otherB;
+		world.process();
+
+		// target dead
+		world.delete(otherB);
+		world.process();
+		assertEquals(-1, mapper.get(e).otherId);
+
+		// on restablish
+		mapper.get(e).otherId = otherA;
+		world.process();
+		assertEquals(otherA, mapper.get(e).otherId);
+
+		// kill link
+		world.delete(e);
+		world.process();
+	}
+
 	public static class EntityLink extends Component {
 		@EntityId
 		public int otherId;
@@ -410,6 +448,15 @@ public class EntityLinkManagerTest {
 	public static class MultiLinkCheckAll extends Component {
 		@EntityId @LinkPolicy(CHECK_SOURCE_AND_TARGETS)
 		public IntBag other = new IntBag();
+	}
+
+
+	public static class MuchOfEverything extends Component {
+		@EntityId public IntBag intIds = new IntBag();
+		@EntityId public int otherId;
+		public Entity e;
+		public Bag<Entity> entities = new Bag<Entity>();
+		public int notMe;
 	}
 
 	private static class MyLinkListener implements LinkListener {
