@@ -8,7 +8,7 @@ import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 import org.junit.Test;
 
-import static com.artemis.link.LinkFactory.getReferenceType;
+import static com.artemis.link.LinkFactory.getReferenceTypeId;
 import static org.junit.Assert.*;
 
 public class LinkFactoryTest {
@@ -18,7 +18,7 @@ public class LinkFactoryTest {
 		Field found = null;
 
 		for (Field field : fields) {
-			if (getReferenceType(field) > 0) {
+			if (getReferenceTypeId(field) > 0) {
 				found = field;
 			}
 		}
@@ -33,7 +33,7 @@ public class LinkFactoryTest {
 		Field found = null;
 
 		for (Field field : fields) {
-			if (getReferenceType(field) > 0) {
+			if (getReferenceTypeId(field) > 0) {
 				found = field;
 				break;
 			}
@@ -49,7 +49,7 @@ public class LinkFactoryTest {
 		Field found = null;
 
 		for (Field field : fields) {
-			if (getReferenceType(field) > 0) {
+			if (getReferenceTypeId(field) > 0) {
 				found = field;
 				break;
 			}
@@ -65,7 +65,7 @@ public class LinkFactoryTest {
 		Field found = null;
 
 		for (Field field : fields) {
-			if (getReferenceType(field) > 0) {
+			if (getReferenceTypeId(field) > 0) {
 				found = field;
 				break;
 			}
@@ -81,7 +81,7 @@ public class LinkFactoryTest {
 		Field found = null;
 
 		for (Field field : fields) {
-			if (getReferenceType(field) > 0) {
+			if (getReferenceTypeId(field) > 0) {
 				found = field;
 				break;
 			}

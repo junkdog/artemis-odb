@@ -20,12 +20,10 @@ import static com.artemis.Aspect.all;
  * @see com.artemis.annotations.EntityId
  *
  */
-public class EntityLinkManager extends BaseEntitySystem
-		implements ComponentTypeFactory.ComponentTypeListener {
+public class EntityLinkManager extends BaseEntitySystem {
 
-	private final Bag<LinkSite> singleLinkSites = new Bag<LinkSite>();
-	private final Bag<Bag<LinkSite>> multiLinkSites = new Bag<Bag<LinkSite>>();
-
+	final Bag<LinkSite> singleLinkSites = new Bag<LinkSite>();
+	final Bag<Bag<LinkSite>> multiLinkSites = new Bag<Bag<LinkSite>>();
 	private LinkFactory linkFactory;
 
 	public EntityLinkManager(Aspect.Builder aspect) {
@@ -34,6 +32,13 @@ public class EntityLinkManager extends BaseEntitySystem
 
 	public EntityLinkManager() {
 		this(all());
+	}
+
+	@Override
+	protected void initialize() {
+		linkFactory = new LinkFactory(world);
+		LinkCreateListener listener = new LinkCreateListener(this);
+		world.getComponentManager().getTypeFactory().register(listener);
 	}
 
 	@Override
@@ -71,27 +76,33 @@ public class EntityLinkManager extends BaseEntitySystem
 		}
 	}
 
-	@Override
-	public void initialize(Bag<ComponentType> types) {
-		linkFactory = new LinkFactory(world);
-		for (int i = 0, s = types.size(); s > i; i++) {
-			onCreated(types.get(i));
+	private static class LinkCreateListener implements ComponentTypeFactory.ComponentTypeListener {
+		private final EntityLinkManager elm;
+
+		public LinkCreateListener(EntityLinkManager elm) {
+			this.elm = elm;
+		}
+
+		@Override
+		public void initialize(Bag<ComponentType> types) {
+			for (int i = 0, s = types.size(); s > i; i++) {
+				onCreated(types.get(i));
+			}
+		}
+
+		@Override
+		public void onCreated(ComponentType type) {
+			Bag<LinkSite> links = elm.linkFactory.create(type);
+			if (links.isEmpty())
+				return;
+
+			if (links.size() == 1) {
+				elm.singleLinkSites.set(type.getIndex(), links.get(0));
+			} else {
+				Bag<LinkSite> bag = new Bag<LinkSite>(links.size());
+				bag.addAll(links);
+				elm.multiLinkSites.set(type.getIndex(), bag);
+			}
 		}
 	}
-
-	@Override
-	public void onCreated(ComponentType type) {
-		Bag<LinkSite> links = linkFactory.create(type);
-		if (links.isEmpty())
-			return;
-
-		if (links.size() == 1) {
-			singleLinkSites.set(type.getIndex(), links.get(0));
-		} else {
-			Bag<LinkSite> bag = new Bag<LinkSite>(links.size());
-			bag.addAll(links);
-			multiLinkSites.set(type.getIndex(), bag);
-		}
-	}
-
 }

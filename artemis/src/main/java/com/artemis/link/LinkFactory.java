@@ -19,13 +19,13 @@ class LinkFactory {
 	private final Bag<LinkSite> links = new Bag<LinkSite>();
 	private World world;
 
-	private final DefaultReaders defaultReaders = new DefaultReaders();
+	private final DefaultMutators defaultMutators = new DefaultMutators();
 
 	public LinkFactory(World world) {
 		this.world = world;
 	}
 
-	static int getReferenceType(Field f) {
+	static int getReferenceTypeId(Field f) {
 		Class type = f.getType();
 		if (Entity.class == type)
 			return SINGLE_REFERENCE;
@@ -48,8 +48,7 @@ class LinkFactory {
 		links.clear();
 		for (int i = 0; fields.length > i; i++) {
 			Field f = fields[i];
-			Class t = f.getType();
-			int referenceTypeId = getReferenceType(f);
+			int referenceTypeId = getReferenceTypeId(f);
 			if (referenceTypeId > 0) {
 				if (SINGLE_REFERENCE == referenceTypeId) {
 					UniLinkSite linkSite = new UniLinkSite(world, ct, f);
@@ -64,16 +63,16 @@ class LinkFactory {
 		return links;
 	}
 
-	private <T extends LinkSite> T withDefaultEntityReader(T linkSite) {
+	private UniLinkSite withDefaultEntityReader(UniLinkSite linkSite) {
 		Class type = linkSite.field.getType();
 		if (Entity.class == type) {
-			linkSite.entityReader = defaultReaders.entityFieldReader;
+			linkSite.entityReader = defaultMutators.entityFieldReader;
 		} else if (int.class == type) {
-			linkSite.entityReader = defaultReaders.intFieldReader;
+			linkSite.entityReader = defaultMutators.intFieldReader;
 		} else if (IntBag.class == type) {
-			linkSite.entityReader = defaultReaders.intBagFieldReader;
+//			linkSite.entityReader = defaultReaders.intBagFieldReader;
 		} else if (Bag.class == type) {
-			linkSite.entityReader = defaultReaders.entityBagFieldReader;
+//			linkSite.entityReader = defaultReaders.entityBagFieldReader;
 		} else {
 			throw new RuntimeException("unexpected '" + type + "', on " + linkSite.type);
 		}
@@ -81,10 +80,10 @@ class LinkFactory {
 		return linkSite;
 	}
 
-	class DefaultReaders {
-		EntityFieldReader entityFieldReader = new EntityFieldReader();
-		IntFieldReader intFieldReader = new IntFieldReader();
-		IntBagFieldReader intBagFieldReader = new IntBagFieldReader();
-		EntityBagFieldReader entityBagFieldReader = new EntityBagFieldReader();
+	class DefaultMutators {
+		EntityFieldMutator entityFieldReader = new EntityFieldMutator();
+		IntFieldMutator intFieldReader = new IntFieldMutator();
+		IntBagFieldMutator intBagFieldReader = new IntBagFieldMutator();
+		EntityBagFieldMutator entityBagFieldReader = new EntityBagFieldMutator();
 	}
 }

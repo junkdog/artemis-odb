@@ -11,7 +11,6 @@ abstract class LinkSite implements EntitySubscription.SubscriptionListener {
 	protected final Field field;
 	protected final ComponentMapper<? extends Component> mapper;
 	protected final EntitySubscription subscription;
-	protected FieldReader entityReader;
 	protected LinkListener listener;
 
 	protected LinkSite(World world, ComponentType type, Field field) {

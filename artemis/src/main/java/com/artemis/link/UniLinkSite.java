@@ -1,48 +1,57 @@
 package com.artemis.link;
 
 import com.artemis.ComponentType;
-import com.artemis.EntityManager;
 import com.artemis.World;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.Field;
 
+import java.util.BitSet;
+
+import static com.artemis.Aspect.all;
+
 class UniLinkSite extends LinkSite {
+	UniFieldMutator entityReader;
 
 	private final IntBag sourceToTarget = new IntBag();
-	private final EntityManager em;
+	private final BitSet activeEntityIds;
 
 	protected UniLinkSite(World world,
 	                      ComponentType type,
 	                      Field field) {
 
 		super(world, type, field);
-		em = world.getEntityManager();
+		activeEntityIds = world.getAspectSubscriptionManager().get(all()).getActiveEntityIds();
 	}
-
 
 	@Override
 	protected void check(int id) {
-		int target = sourceToTarget.get(id);
+		int oldTarget = sourceToTarget.get(id);
 		// -1 == not linked
-		if (target != -1 && !em.isActive(target)) {
-			// target appears dead, check if it's been updated
-			int newTarget = entityReader.readField(mapper.get(id), field, null);
-			if (newTarget == target) {
-				if (listener != null) listener.onTargetDead(id, target);
+		int target = entityReader.read(mapper.get(id), field);
+		if (!activeEntityIds.get(target))
+			target = -1;
+
+		if (target != oldTarget)
+			sourceToTarget.set(id, target);
+			if (oldTarget == -1) {
+				if (listener != null) listener.onLinkEstablished(id, target);
 			} else {
-				sourceToTarget.set(id, newTarget);
-				if (listener != null) listener.onTargetChanged(id, newTarget, target);
+				if (listener != null) {
+					if (target == -1) {
+						listener.onTargetChanged(id, target, oldTarget);
+					} else {
+						listener.onTargetDead(id, oldTarget);
+					}
+				}
 			}
-		}
 	}
 
 	@Override
 	protected void insert(int id) {
-		int target = entityReader.readField(mapper.get(id), field, null);
-		if (target != -1) {
-			sourceToTarget.set(id, target);
+		int target = entityReader.read(mapper.get(id), field);
+		sourceToTarget.set(id, target);
+		if (target != -1 && listener != null)
 			listener.onLinkEstablished(id, target);
-		}
 	}
 
 	@Override
@@ -52,8 +61,8 @@ class UniLinkSite extends LinkSite {
 			: -1;
 
 		if (target != -1) {
-			listener.onLinkKilled(id);
 			sourceToTarget.set(id, 0);
+			listener.onLinkKilled(id);
 		}
 	}
 }

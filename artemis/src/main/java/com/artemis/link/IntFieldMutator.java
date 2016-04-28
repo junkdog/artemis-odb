@@ -1,13 +1,12 @@
 package com.artemis.link;
 
 import com.artemis.Component;
-import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
 
-class IntFieldReader implements FieldReader {
+class IntFieldMutator implements UniFieldMutator {
 	@Override
-	public int readField(Component c, Field f, IntBag out) {
+	public int read(Component c, Field f) {
 		try {
 			return (Integer) f.get(c);
 		} catch (ReflectionException e) {
