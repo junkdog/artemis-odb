@@ -10,7 +10,7 @@ import com.artemis.utils.reflect.ReflectionException;
 
 import static com.artemis.Aspect.all;
 
-class EntityBagFieldMutator implements MultiFieldMutator<Bag<Entity>> {
+class EntityBagFieldMutator implements MultiFieldMutator<Bag<Entity>, Component> {
 	private final Bag<Entity> empty = new Bag<Entity>();
 	private final EntitySubscription all;
 
