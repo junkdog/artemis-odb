@@ -53,7 +53,7 @@ class LinkFactory {
 		for (int i = 0; fields.length > i; i++) {
 			Field f = fields[i];
 			int referenceTypeId = getReferenceTypeId(f);
-			if (referenceTypeId > 0 && (SKIP != getPolicy(f, CHECK_SOURCE))) {
+			if (referenceTypeId > 0 && (SKIP != getPolicy(f))) {
 				if (SINGLE_REFERENCE == referenceTypeId) {
 					UniLinkSite linkSite = new UniLinkSite(world, ct, f);
 					links.add(withDefaultMutator(linkSite));
@@ -84,14 +84,14 @@ class LinkFactory {
 		return linkSite;
 	}
 
-	static LinkPolicy.Policy getPolicy(Field f, LinkPolicy.Policy defaultPolicy) {
+	static LinkPolicy.Policy getPolicy(Field f) {
 		Annotation annotation = f.getDeclaredAnnotation(LinkPolicy.class);
 		if (annotation != null) {
 			LinkPolicy lp = annotation.getAnnotation(LinkPolicy.class);
 			return lp.value();
 		}
 
-		return defaultPolicy;
+		return null;
 	}
 
 	class DefaultMutators {

@@ -27,7 +27,8 @@ abstract class LinkSite implements EntitySubscription.SubscriptionListener {
 
 		this.type = type;
 		this.field = field;
-		this.policy = LinkFactory.getPolicy(field, defaultPolicy);
+		LinkPolicy.Policy policyOverride = LinkFactory.getPolicy(field);
+		this.policy = (policyOverride != null) ? policyOverride : defaultPolicy;
 
 		mapper = world.getMapper(type.getType());
 
