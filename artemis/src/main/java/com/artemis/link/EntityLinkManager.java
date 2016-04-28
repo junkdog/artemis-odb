@@ -22,8 +22,8 @@ import static com.artemis.Aspect.all;
  */
 public class EntityLinkManager extends BaseEntitySystem {
 
-	final Bag<LinkSite> singleLinkSites = new Bag<LinkSite>();
-	final Bag<Bag<LinkSite>> multiLinkSites = new Bag<Bag<LinkSite>>();
+	final Bag<LinkSite> linkSites = new Bag<LinkSite>();
+	final Bag<LinkSite> decoratedLinkSites = new Bag<LinkSite>();
 
 	private final boolean requireListener;
 
@@ -45,17 +45,16 @@ public class EntityLinkManager extends BaseEntitySystem {
 
 	@Override
 	protected void processSystem() {
-		for (LinkSite ls : singleLinkSites) {
-			if (!requireListener || ls.listener != null)
-				ls.process();
+		if (requireListener) {
+			process(decoratedLinkSites);
+		} else {
+			process(linkSites);
 		}
+	}
 
-		for (Bag<LinkSite> sites : multiLinkSites) {
-			for (int i = 0, s = sites.size(); s > i; i++) {
-				LinkSite ls = sites.get(i);
-				if (!requireListener || ls.listener != null)
-					ls.process();
-			}
+	private void process(Bag<LinkSite> sites) {
+		for (LinkSite ls : sites) {
+			ls.process();
 		}
 	}
 
@@ -91,17 +90,11 @@ public class EntityLinkManager extends BaseEntitySystem {
 				: null;
 
 			ComponentType ct = world.getComponentManager().getTypeFactory().getTypeFor(component);
-			for (LinkSite site : singleLinkSites) {
+			for (LinkSite site : linkSites) {
 				if (ct.equals(site.type) && (f == null || site.field.equals(f))) {
 					site.listener = listener;
-				}
-			}
-			for (Bag<LinkSite> ls : multiLinkSites) {
-				for (int i = 0, s = ls.size(); s > i; i++) {
-					LinkSite site = ls.get(i);
-					if (ct.equals(site.type) && (f == null || site.field.equals(f))) {
-						ls.get(i).process();
-					}
+					if (!decoratedLinkSites.contains(site))
+						decoratedLinkSites.add(site);
 				}
 			}
 		} catch (ReflectionException e) {
@@ -131,12 +124,8 @@ public class EntityLinkManager extends BaseEntitySystem {
 			if (links.isEmpty())
 				return;
 
-			if (links.size() == 1) {
-				elm.singleLinkSites.add(links.get(0));
-			} else {
-				Bag<LinkSite> bag = new Bag<LinkSite>(links.size());
-				bag.addAll(links);
-				elm.multiLinkSites.add(bag);
+			for (int i = 0, s = links.size(); s > i; i++) {
+				elm.linkSites.add(links.get(i));
 			}
 		}
 	}
