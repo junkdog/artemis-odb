@@ -13,4 +13,13 @@ class IntFieldMutator implements UniFieldMutator {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public void write(int value, Component c, Field f) {
+		try {
+			f.set(c, value);
+		} catch (ReflectionException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

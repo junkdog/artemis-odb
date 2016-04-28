@@ -81,7 +81,7 @@ class LinkFactory {
 	}
 
 	class DefaultMutators {
-		EntityFieldMutator entityFieldReader = new EntityFieldMutator();
+		EntityFieldMutator entityFieldReader = new EntityFieldMutator(world);
 		IntFieldMutator intFieldReader = new IntFieldMutator();
 		IntBagFieldMutator intBagFieldReader = new IntBagFieldMutator();
 		EntityBagFieldMutator entityBagFieldReader = new EntityBagFieldMutator();

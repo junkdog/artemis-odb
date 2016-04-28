@@ -5,4 +5,5 @@ import com.artemis.utils.reflect.Field;
 
 interface UniFieldMutator {
 	int read(Component c, Field f);
+	void write(int value, Component c, Field f);
 }
