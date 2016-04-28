@@ -11,9 +11,6 @@ import java.lang.annotation.Target;
  * entity - int or {@link com.artemis.Entity} - default to
  * {@link Policy#CHECK_SOURCE_AND_TARGETS}, while Bag and IntBag of entities are
  * assigned {@link Policy#CHECK_SOURCE}.</p>
- *
- *
- * <p>This</p>
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

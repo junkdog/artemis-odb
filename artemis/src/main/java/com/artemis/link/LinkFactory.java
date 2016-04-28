@@ -56,41 +56,15 @@ class LinkFactory {
 			if (referenceTypeId != NULL_REFERENCE && (SKIP != getPolicy(f))) {
 				if (SINGLE_REFERENCE == referenceTypeId) {
 					UniLinkSite linkSite = new UniLinkSite(world, ct, f);
-					links.add(withDefaultMutator(linkSite));
+					links.add(defaultMutators.withMutator(linkSite));
 				} else if (MULTI_REFERENCE == referenceTypeId) {
 					MultiLinkSite e = new MultiLinkSite(world, ct, f);
-					links.add(withDefaultMutator(e));
+					links.add(defaultMutators.withMutator(e));
 				}
 			}
 		}
 
 		return links;
-	}
-
-	private UniLinkSite withDefaultMutator(UniLinkSite linkSite) {
-		Class type = linkSite.field.getType();
-		if (Entity.class == type) {
-			linkSite.fieldMutator = defaultMutators.entityFieldMutator;
-		} else if (int.class == type) {
-			linkSite.fieldMutator = defaultMutators.intFieldMutator;
-		} else {
-			throw new RuntimeException("unexpected '" + type + "', on " + linkSite.type);
-		}
-
-		return linkSite;
-	}
-
-	private MultiLinkSite withDefaultMutator(MultiLinkSite linkSite) {
-		Class type = linkSite.field.getType();
-		if (IntBag.class == type) {
-			linkSite.fieldMutator = defaultMutators.intBagFieldMutator;
-		} else if (Bag.class == type) {
-			linkSite.fieldMutator = defaultMutators.entityBagFieldMutator;
-		} else {
-			throw new RuntimeException("unexpected '" + type + "', on " + linkSite.type);
-		}
-
-		return linkSite;
 	}
 
 	static LinkPolicy.Policy getPolicy(Field f) {
@@ -114,6 +88,32 @@ class LinkFactory {
 			intFieldMutator = new IntFieldMutator();
 			intBagFieldMutator = new IntBagFieldMutator(world);
 			entityBagFieldMutator = new EntityBagFieldMutator(world);
+		}
+
+		UniLinkSite withMutator(UniLinkSite linkSite) {
+			Class type = linkSite.field.getType();
+			if (Entity.class == type) {
+				linkSite.fieldMutator = entityFieldMutator;
+			} else if (int.class == type) {
+				linkSite.fieldMutator = intFieldMutator;
+			} else {
+				throw new RuntimeException("unexpected '" + type + "', on " + linkSite.type);
+			}
+
+			return linkSite;
+		}
+
+		MultiLinkSite withMutator(MultiLinkSite linkSite) {
+			Class type = linkSite.field.getType();
+			if (IntBag.class == type) {
+				linkSite.fieldMutator = intBagFieldMutator;
+			} else if (Bag.class == type) {
+				linkSite.fieldMutator = entityBagFieldMutator;
+			} else {
+				throw new RuntimeException("unexpected '" + type + "', on " + linkSite.type);
+			}
+
+			return linkSite;
 		}
 	}
 }
