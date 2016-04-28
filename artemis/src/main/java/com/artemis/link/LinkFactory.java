@@ -4,11 +4,15 @@ import com.artemis.ComponentType;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.annotations.EntityId;
+import com.artemis.annotations.LinkPolicy;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
+import com.artemis.utils.reflect.Annotation;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 
+import static com.artemis.annotations.LinkPolicy.Policy.CHECK_SOURCE;
+import static com.artemis.annotations.LinkPolicy.Policy.SKIP;
 import static com.artemis.utils.reflect.ReflectionUtil.isGenericType;
 
 class LinkFactory {
@@ -49,10 +53,10 @@ class LinkFactory {
 		for (int i = 0; fields.length > i; i++) {
 			Field f = fields[i];
 			int referenceTypeId = getReferenceTypeId(f);
-			if (referenceTypeId > 0) {
+			if (referenceTypeId > 0 && (SKIP != getPolicy(f, CHECK_SOURCE))) {
 				if (SINGLE_REFERENCE == referenceTypeId) {
 					UniLinkSite linkSite = new UniLinkSite(world, ct, f);
-					links.add(withDefaultEntityReader(linkSite));
+					links.add(withDefaultMutator(linkSite));
 				} else if (MULTI_REFERENCE == referenceTypeId) {
 //						links.add(MultiLinkSite(world, ct, f, subscription(ct)));
 					throw new UnsupportedOperationException("not impl");
@@ -63,16 +67,16 @@ class LinkFactory {
 		return links;
 	}
 
-	private UniLinkSite withDefaultEntityReader(UniLinkSite linkSite) {
+	private UniLinkSite withDefaultMutator(UniLinkSite linkSite) {
 		Class type = linkSite.field.getType();
 		if (Entity.class == type) {
-			linkSite.entityReader = defaultMutators.entityFieldReader;
+			linkSite.fieldMutator = defaultMutators.entityFieldMutator;
 		} else if (int.class == type) {
-			linkSite.entityReader = defaultMutators.intFieldReader;
+			linkSite.fieldMutator = defaultMutators.intFieldMutator;
 		} else if (IntBag.class == type) {
-//			linkSite.entityReader = defaultReaders.intBagFieldReader;
+//			linkSite.fieldMutator = defaultMutators.intBagFieldMutator;
 		} else if (Bag.class == type) {
-//			linkSite.entityReader = defaultReaders.entityBagFieldReader;
+//			linkSite.fieldMutator = defaultReaders.entityBagFieldMutator;
 		} else {
 			throw new RuntimeException("unexpected '" + type + "', on " + linkSite.type);
 		}
@@ -80,10 +84,20 @@ class LinkFactory {
 		return linkSite;
 	}
 
+	static LinkPolicy.Policy getPolicy(Field f, LinkPolicy.Policy defaultPolicy) {
+		Annotation annotation = f.getDeclaredAnnotation(LinkPolicy.class);
+		if (annotation != null) {
+			LinkPolicy lp = annotation.getAnnotation(LinkPolicy.class);
+			return lp.value();
+		}
+
+		return defaultPolicy;
+	}
+
 	class DefaultMutators {
-		EntityFieldMutator entityFieldReader = new EntityFieldMutator(world);
-		IntFieldMutator intFieldReader = new IntFieldMutator();
-		IntBagFieldMutator intBagFieldReader = new IntBagFieldMutator();
-		EntityBagFieldMutator entityBagFieldReader = new EntityBagFieldMutator();
+		EntityFieldMutator entityFieldMutator = new EntityFieldMutator(world);
+		IntFieldMutator intFieldMutator = new IntFieldMutator();
+		IntBagFieldMutator intBagFieldMutator = new IntBagFieldMutator();
+		EntityBagFieldMutator entityBagFieldMutator = new EntityBagFieldMutator();
 	}
 }

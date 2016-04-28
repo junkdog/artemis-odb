@@ -132,10 +132,10 @@ public class LinkFactoryTest {
 	}
 
 	public static class LttBagEntity extends Component {
-		public Bag<Entity> entities;
+		public Bag<Entity> entities = new Bag<Entity>();
 	}
 
 	public static class LttIntBag extends Component {
-		@EntityId public IntBag ids;
+		@EntityId public IntBag ids = new IntBag();
 	}
 }

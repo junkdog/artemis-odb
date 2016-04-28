@@ -18,8 +18,9 @@ public interface LinkListener {
 	 * Deletion of source entity or its component.
 	 *
 	 * @param sourceId entity owning component.
+	 * @param target appointed child
 	 */
-	void onLinkKilled(int sourceId);
+	void onLinkKilled(int sourceId, int target);
 
 	/**
 	 * Target entity dead.

@@ -2,35 +2,30 @@ package com.artemis.link;
 
 import com.artemis.ComponentType;
 import com.artemis.World;
+import com.artemis.annotations.LinkPolicy;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.Field;
 
-import java.util.BitSet;
-
-import static com.artemis.Aspect.all;
-
 class UniLinkSite extends LinkSite {
-	UniFieldMutator entityReader;
+	UniFieldMutator fieldMutator;
 
 	private final IntBag sourceToTarget = new IntBag();
-	private final BitSet activeEntityIds;
 
 	protected UniLinkSite(World world,
 	                      ComponentType type,
 	                      Field field) {
 
-		super(world, type, field);
-		activeEntityIds = world.getAspectSubscriptionManager().get(all()).getActiveEntityIds();
+		super(world, type, field, LinkPolicy.Policy.CHECK_SOURCE_AND_TARGETS);
 	}
 
 	@Override
 	protected void check(int id) {
 		int oldTarget = sourceToTarget.get(id);
 		// -1 == not linked
-		int target = entityReader.read(mapper.get(id), field);
+		int target = fieldMutator.read(mapper.get(id), field);
 		if (!activeEntityIds.get(target)) {
 			target = -1;
-			entityReader.write(target, mapper.get(id), field);
+			fieldMutator.write(target, mapper.get(id), field);
 		}
 
 		if (target != oldTarget) {
@@ -51,7 +46,7 @@ class UniLinkSite extends LinkSite {
 
 	@Override
 	protected void insert(int id) {
-		int target = entityReader.read(mapper.get(id), field);
+		int target = fieldMutator.read(mapper.get(id), field);
 		sourceToTarget.set(id, target);
 		if (target != -1 && listener != null)
 			listener.onLinkEstablished(id, target);
@@ -65,7 +60,7 @@ class UniLinkSite extends LinkSite {
 
 		if (target != -1) {
 			sourceToTarget.set(id, 0);
-			listener.onLinkKilled(id);
+			listener.onLinkKilled(id, target);
 		}
 	}
 }

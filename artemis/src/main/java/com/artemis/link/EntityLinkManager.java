@@ -1,6 +1,7 @@
 package com.artemis.link;
 
 import com.artemis.*;
+import com.artemis.annotations.LinkPolicy;
 import com.artemis.utils.Bag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
@@ -8,6 +9,7 @@ import com.artemis.utils.reflect.ReflectionException;
 
 
 import static com.artemis.Aspect.all;
+import static com.artemis.annotations.LinkPolicy.Policy.CHECK_SOURCE_AND_TARGETS;
 
 /**
  * <p>Maintains relationships between entities. By default, all entities
@@ -43,13 +45,15 @@ public class EntityLinkManager extends BaseEntitySystem {
 
 	@Override
 	protected void processSystem() {
-		processSingle();
+		processUni();
 //		processMulti();
 	}
 
-	private void processSingle() {
+	private void processUni() {
 		for (LinkSite ls : singleLinkSites) {
-			ls.process();
+			if (CHECK_SOURCE_AND_TARGETS == ls.policy) {
+				ls.process();
+			}
 		}
 	}
 

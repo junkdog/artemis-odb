@@ -1,23 +1,37 @@
 package com.artemis.link;
 
 import com.artemis.*;
+import com.artemis.annotations.LinkPolicy;
 import com.artemis.utils.IntBag;
+import com.artemis.utils.reflect.Annotation;
 import com.artemis.utils.reflect.Field;
 
+import java.util.BitSet;
+
 import static com.artemis.Aspect.all;
+import static com.artemis.annotations.LinkPolicy.Policy.CHECK_SOURCE_AND_TARGETS;
 
 abstract class LinkSite implements EntitySubscription.SubscriptionListener {
 	protected final ComponentType type;
 	protected final Field field;
 	protected final ComponentMapper<? extends Component> mapper;
 	protected final EntitySubscription subscription;
+	protected final LinkPolicy.Policy policy;
+	protected final BitSet activeEntityIds;
 	protected LinkListener listener;
 
-	protected LinkSite(World world, ComponentType type, Field field) {
+	protected LinkSite(World world,
+	                   ComponentType type,
+	                   Field field,
+	                   LinkPolicy.Policy defaultPolicy) {
+
 		this.type = type;
 		this.field = field;
+		this.policy = LinkFactory.getPolicy(field, defaultPolicy);
 
 		mapper = world.getMapper(type.getType());
+
+		activeEntityIds = world.getAspectSubscriptionManager().get(all()).getActiveEntityIds();
 
 		AspectSubscriptionManager subscriptions = world.getAspectSubscriptionManager();
 		subscription = subscriptions.get(all(type.getType()));
@@ -66,7 +80,7 @@ abstract class LinkSite implements EntitySubscription.SubscriptionListener {
 		IntBag entities = subscription.getEntities();
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			check(ids[i]);
+				check(ids[i]);
 		}
 	}
 }

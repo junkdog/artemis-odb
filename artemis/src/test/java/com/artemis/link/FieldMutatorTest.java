@@ -2,6 +2,8 @@ package com.artemis.link;
 
 import com.artemis.Entity;
 import com.artemis.World;
+import com.artemis.utils.Bag;
+import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
@@ -64,6 +66,47 @@ public class FieldMutatorTest {
 
 		assertEquals(-1, mutator.read(c, field(c, "entity")));
 		assertNull(c.entity);
+	}
+
+
+	@Test
+	public void read_int_bag() throws Exception {
+		World w = new World();
+		LinkFactoryTest.LttIntBag c = new LinkFactoryTest.LttIntBag();
+		c.ids.add(20);
+		c.ids.add(30);
+		c.ids.add(40);
+
+		IntBag ids = new IntBag();
+		ids.addAll(c.ids);
+
+		IntBagFieldMutator mutator = new IntBagFieldMutator();
+		assertEquals(ids, mutator.read(c, field(c, "ids")));
+
+		c.ids.remove(1);
+		ids.remove(1);
+
+		assertEquals(ids, mutator.read(c, field(c, "ids")));
+	}
+
+	@Test
+	public void read_entity_bag() throws Exception {
+		World w = new World();
+		LinkFactoryTest.LttBagEntity c = new LinkFactoryTest.LttBagEntity();
+		c.entities.add(w.createEntity());
+		c.entities.add(w.createEntity());
+		c.entities.add(w.createEntity());
+
+		Bag<Entity> entities = new Bag<Entity>();
+		entities.addAll(c.entities);
+
+		EntityBagFieldMutator mutator = new EntityBagFieldMutator();
+		assertEquals(entities, mutator.read(c, field(c, "entities")));
+
+		c.entities.remove(1);
+		entities.remove(1);
+
+		assertEquals(entities, mutator.read(c, field(c, "entities")));
 	}
 
 	private static Field field(Object object, String field) throws ReflectionException {
