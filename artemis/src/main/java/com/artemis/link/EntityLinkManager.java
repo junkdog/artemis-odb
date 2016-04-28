@@ -60,6 +60,7 @@ public class EntityLinkManager extends BaseEntitySystem {
 	}
 
 	public void register(Class<? extends Component> component, LinkListener listener) {
+		world.inject(listener);
 		ComponentType ct = world.getComponentManager().getTypeFactory().getTypeFor(component);
 		for (LinkSite site : singleLinkSites) {
 			if (ct.equals(site.type)) {
@@ -76,6 +77,7 @@ public class EntityLinkManager extends BaseEntitySystem {
 	}
 
 	public void register(Class<? extends Component> component, String field, LinkListener listener) {
+		world.inject(listener);
 		try {
 			Field f = ClassReflection.getDeclaredField(component, field);
 			ComponentType ct = world.getComponentManager().getTypeFactory().getTypeFor(component);

@@ -1,7 +1,11 @@
 package com.artemis.link;
 
 /**
- * Callbacks for links between entities.
+ * Callbacks for links between entities. Implementations undergo dependency-
+ * injection when registered with {@link EntityLinkManager}
+ *
+ * @see EntityLinkManager#register(Class, LinkListener)
+ * @see EntityLinkManager#register(Class, String, LinkListener) 
  */
 public interface LinkListener {
 
