@@ -1,7 +1,6 @@
 package com.artemis.link;
 
 import com.artemis.*;
-import com.artemis.annotations.LinkPolicy;
 import com.artemis.utils.Bag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
@@ -9,7 +8,6 @@ import com.artemis.utils.reflect.ReflectionException;
 
 
 import static com.artemis.Aspect.all;
-import static com.artemis.annotations.LinkPolicy.Policy.CHECK_SOURCE_AND_TARGETS;
 
 /**
  * <p>Maintains relationships between entities. By default, all entities
@@ -44,13 +42,19 @@ public class EntityLinkManager extends BaseEntitySystem {
 	@Override
 	protected void processSystem() {
 		processUni();
-//		processMulti();
+		processMulti();
 	}
 
 	private void processUni() {
 		for (LinkSite ls : singleLinkSites) {
-			if (CHECK_SOURCE_AND_TARGETS == ls.policy) {
-				ls.process();
+			ls.process();
+		}
+	}
+
+	private void processMulti() {
+		for (Bag<LinkSite> ls : multiLinkSites) {
+			for (int i = 0, s = ls.size(); s > i; i++) {
+				ls.get(i).process();
 			}
 		}
 	}
@@ -62,6 +66,13 @@ public class EntityLinkManager extends BaseEntitySystem {
 				site.listener = listener;
 			}
 		}
+		for (Bag<LinkSite> ls : multiLinkSites) {
+			for (int i = 0, s = ls.size(); s > i; i++) {
+				if (ct.equals(ls.get(i).type)) {
+					ls.get(i).process();
+				}
+			}
+		}
 	}
 
 	public void register(Class<? extends Component> component, String field, LinkListener listener) {
@@ -71,6 +82,14 @@ public class EntityLinkManager extends BaseEntitySystem {
 			for (LinkSite site : singleLinkSites) {
 				if (ct.equals(site.type) && site.field.equals(f)) {
 					site.listener = listener;
+				}
+			}
+			for (Bag<LinkSite> ls : multiLinkSites) {
+				for (int i = 0, s = ls.size(); s > i; i++) {
+					LinkSite site = ls.get(i);
+					if (ct.equals(site.type) && site.field.equals(f)) {
+						ls.get(i).process();
+					}
 				}
 			}
 		} catch (ReflectionException e) {
@@ -101,11 +120,11 @@ public class EntityLinkManager extends BaseEntitySystem {
 				return;
 
 			if (links.size() == 1) {
-				elm.singleLinkSites.set(type.getIndex(), links.get(0));
+				elm.singleLinkSites.add(links.get(0));
 			} else {
 				Bag<LinkSite> bag = new Bag<LinkSite>(links.size());
 				bag.addAll(links);
-				elm.multiLinkSites.set(type.getIndex(), bag);
+				elm.multiLinkSites.add(bag);
 			}
 		}
 	}
