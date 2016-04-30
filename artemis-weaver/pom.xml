@@ -94,4 +94,11 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<distributionManagement>
+		<site>
+			<id>junkdog.github.com</id>
+			<url>file:/home/junkdog/opt/dev/junkdog.github.io/sites/artemis-odb/artemis-weaver/</url>
+		</site>
+	</distributionManagement>
 </project>

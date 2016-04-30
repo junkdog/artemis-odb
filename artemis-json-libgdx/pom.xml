@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -8,9 +9,9 @@
 	</parent>
 	<artifactId>artemis-odb-serializer-json-libgdx</artifactId>
 	<packaging>jar</packaging>
-	<name>artemis-odb-libgdx-serializer</name>	
+	<name>artemis-odb-libgdx-serializer</name>
 	<description>Json serializer for libgdx.</description>
-	
+
 	<url>https://github.com/junkdog/artemis-odb</url>
 
 	<dependencies>
@@ -51,5 +52,12 @@
 			</plugin>
 		</plugins>
 	</build>
-	
+
+	<distributionManagement>
+		<site>
+			<id>junkdog.github.com</id>
+			<url>file:/home/junkdog/opt/dev/junkdog.github.io/sites/artemis-odb/artemis-serializer-json-libgdx</url>
+		</site>
+	</distributionManagement>
+
 </project>
