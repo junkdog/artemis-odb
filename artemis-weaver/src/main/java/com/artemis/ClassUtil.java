@@ -46,7 +46,7 @@ public final class ClassUtil implements Opcodes
 			}
 		}
 	}
-	
+
 	public static String verifyClass(ClassWriter writer) {
 		StringWriter sw = new StringWriter();
 		PrintWriter printer = new PrintWriter(sw);

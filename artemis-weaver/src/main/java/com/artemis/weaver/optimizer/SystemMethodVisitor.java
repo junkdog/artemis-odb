@@ -9,7 +9,7 @@ public class SystemMethodVisitor extends MethodVisitor implements Opcodes {
 	private final ClassMetadata meta;
 
 	public SystemMethodVisitor(MethodVisitor mv, ClassMetadata meta) {
-		super(ASM4, mv);
+		super(ASM5, mv);
 		this.meta = meta;
 	}
 

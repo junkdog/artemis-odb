@@ -2,12 +2,12 @@ package com.artemis.weaver;
 
 import com.artemis.ClassUtil;
 import com.artemis.meta.ClassMetadata;
+import com.artemis.systems.EntityProcessingSystem;
+import com.artemis.systems.IteratingSystem;
+import com.artemis.weaver.optimizer.EntitySystemType;
 import com.artemis.weaver.optimizer.OptimizingSystemWeaver;
-import com.artemis.weaver.optimizer.SystemBytecodeInjector;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassVisitor;
-import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Opcodes;
+import com.artemis.weaver.transplant.MethodTransplantAdapter;
+import org.objectweb.asm.*;
 
 import java.io.IOException;
 
@@ -21,27 +21,86 @@ public class OptimizationTransmuter extends CallableTransmuter<Void> implements 
 		this.cr = cr;
 		this.meta = meta;
 	}
-	
+
 	@Override
 	protected Void process(String file) throws IOException {
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		ClassVisitor cv = cw;
-		
-		cr = new SystemBytecodeInjector(cr, meta).transform();
+
+		cv = new ClassVisitor(ASM5, cv) {
+			@Override
+			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+				MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
+				if ("processSystem".equals(name) && "()V".equals(desc))
+					mv = new ProcessInvocationOptimizer(meta, mv);
+
+				return mv;
+			}
+		};
+		switch (EntitySystemType.resolve(meta)) {
+			case ENTITY_PROCESSING:
+				cv = new MethodTransplantAdapter(
+					EntityProcessingSystem.class, "processSystem", "()V", cv, meta);
+
+				break;
+			case ITERATING:
+				cv = new MethodTransplantAdapter(
+					IteratingSystem.class, "processSystem", "()V", cv, meta);
+
+				break;
+			default:
+				throw new RuntimeException("missing case: " + EntitySystemType.resolve(meta));
+		}
 		cv = new OptimizingSystemWeaver(cv, meta);
-		
+
 		try {
 			cr.accept(cv, ClassReader.EXPAND_FRAMES);
 			if (file != null) ClassUtil.writeClass(cw, file);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 
 	public ClassWriter getClassWriter() {
 		return cw;
 	}
-	
+
+	static class ProcessInvocationOptimizer extends MethodVisitor {
+		private final ClassMetadata meta;
+
+		public ProcessInvocationOptimizer(ClassMetadata meta, MethodVisitor mv) {
+			super(ASM5, mv);
+			this.meta = meta;
+		}
+
+		@Override
+		public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
+			if ("process".equals(name) && "(I)V".equals(desc) && !itf) {
+				mv.visitMethodInsn(invocation(meta.sysetemOptimizable),
+					owner, name, desc, false);
+			} else if ("process".equals(name) && "(Lcom/artemis/Entity;)V".equals(desc) && !itf) {
+				mv.visitMethodInsn(invocation(meta.sysetemOptimizable),
+					owner, name, desc, false);
+			} else {
+				super.visitMethodInsn(opcode, owner, name, desc, itf);
+			}
+		}
+
+
+		private static int invocation(ClassMetadata.OptimizationType systemOptimization) {
+			switch (systemOptimization) {
+				case FULL:
+					return INVOKESPECIAL;
+				case SAFE:
+					return INVOKEVIRTUAL;
+				case NOT_OPTIMIZABLE:
+					assert false;
+				default:
+					throw new RuntimeException("Missing case: " + systemOptimization);
+
+			}
+		}
+	}
 }

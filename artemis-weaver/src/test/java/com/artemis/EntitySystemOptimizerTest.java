@@ -5,9 +5,12 @@ import static com.artemis.meta.ClassMetadata.OptimizationType.FULL;
 import static com.artemis.meta.ClassMetadata.OptimizationType.NOT_OPTIMIZABLE;
 import static com.artemis.meta.ClassMetadata.OptimizationType.SAFE;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.InputStream;
+import java.util.List;
 
+import com.artemis.meta.MethodDescriptor;
 import com.artemis.system.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +40,8 @@ public class EntitySystemOptimizerTest {
 		ClassMetadata meta = Weaver.scan(transform(PoorFellowSystem.class));
 		
 		assertEquals("com/artemis/EntitySystem", meta.superClass);
-		assertEquals(NOT_OPTIMIZABLE, meta.sysetemOptimizable); 
+		assertTrue(meta.methods.toString(), contains("processSystem", meta.methods));
+		assertEquals(NOT_OPTIMIZABLE, meta.sysetemOptimizable);
 	}
 
 	@Test
@@ -62,4 +66,13 @@ public class EntitySystemOptimizerTest {
 		
 		return meta;
 	}
+	private boolean contains(String methodName, List<MethodDescriptor> methods) {
+		for (MethodDescriptor method : methods) {
+			if (methodName.equals(method.name))
+				return true;
+		}
+
+		return false;
+	}
+
 }

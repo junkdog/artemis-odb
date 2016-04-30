@@ -41,7 +41,6 @@ public class Weaver {
 		
 		List<File> classes = ClassUtil.find(targetClasses);
 		rewriteComponents(classes, log);
-//		rewriteFieldAccess(classes, packedFieldAccess(log.components), log);
 		rewriteProfilers(classes);
 		
 		if (ClassMetadata.GlobalConfiguration.optimizeEntitySystems)
@@ -106,44 +105,6 @@ public class Weaver {
 		log.components = processed;
 		log.timeComponents = timer.duration();
 	}
-	
-	
-//	// TODO: collect rewritten systems
-//	private static void rewriteFieldAccess(List<File> classes, List<ClassMetadata> packed, WeaverLog log) {
-//		if (packed.isEmpty())
-//			return;
-//
-//		Timer timer = new Timer();
-//
-//		ExecutorService threadPool = newThreadPool();
-//
-//		List<Future<ClassMetadata>> tasks = new ArrayList<Future<ClassMetadata>>();
-//		for (File file : classes) {
-//			String path = file.getAbsolutePath();
-//			ClassReader cr = classReaderFor(path);
-//			ComponentAccessTransmuter transmuter =	new ComponentAccessTransmuter(path, cr, packed);
-//
-//			tasks.add(threadPool.submit(transmuter));
-//		}
-//
-//		try {
-//
-//			List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
-//			for (Future<ClassMetadata> result : tasks) {
-//				ClassMetadata metadata = result.get();
-//				if (metadata != null)
-//					processed.add(metadata);
-//			}
-//
-//			awaitTermination(threadPool);
-//			log.timeComponentSystems = timer.duration();
-//			log.componentSystems = processed;
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		} catch (ExecutionException e) {
-//			e.printStackTrace();
-//		}
-//	}
 	
 	public static void retainFieldsWhenPacking(boolean ideFriendlyPacking) {
 		ClassMetadata.GlobalConfiguration.ideFriendlyPacking = ideFriendlyPacking;

@@ -46,7 +46,6 @@
 			<groupId>${project.groupId}</groupId>
 			<artifactId>artemis-odb</artifactId>
 			<version>${project.version}</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
