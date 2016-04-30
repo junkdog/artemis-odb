@@ -71,7 +71,7 @@ class LinkFactory {
 		Annotation annotation = f.getDeclaredAnnotation(LinkPolicy.class);
 		if (annotation != null) {
 			LinkPolicy lp = annotation.getAnnotation(LinkPolicy.class);
-			return lp.value();
+			return lp != null ? lp.value() : null;
 		}
 
 		return null;

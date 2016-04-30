@@ -1,8 +1,6 @@
 package com.artemis;
 
-import com.artemis.annotations.Wire;
 import com.artemis.systems.EntityProcessingSystem;
-import com.artemis.utils.IntBag;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;

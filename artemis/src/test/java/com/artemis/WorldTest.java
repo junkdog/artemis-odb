@@ -2,11 +2,9 @@ package com.artemis;
 
 import static org.junit.Assert.assertEquals;
 
-import com.artemis.utils.IntBag;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.DelayedEntityProcessingSystem;

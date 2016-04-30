@@ -7,8 +7,6 @@ import com.artemis.utils.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.lang.String.format;
-
 /**
  * Can inject arbitrary fields annotated with {@link com.artemis.annotations.Wire},
  * typically registered via registered via {@link com.artemis.WorldConfiguration#register}

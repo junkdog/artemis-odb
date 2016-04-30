@@ -172,11 +172,9 @@ public final class CachedInjector implements Injector {
 	}
 
 	private MundaneWireException onFailedInjection(String typeName, Field failedInjection) {
-		String error = new StringBuilder()
-				.append("Failed to inject ").append(failedInjection.getType().getName())
-				.append(" into ").append(failedInjection.getDeclaringClass().getName()).append(": ")
-				.append(typeName).append(" not registered with world.")
-				.toString();
+		String error = "Failed to inject " + failedInjection.getType().getName() +
+			" into " + failedInjection.getDeclaringClass().getName() + ": " +
+			typeName + " not registered with world.";
 
 		return new MundaneWireException(error);
 	}

@@ -1,7 +1,6 @@
 package com.artemis.utils;
 
 import com.artemis.BaseSystem;
-import com.artemis.EntitySystem;
 import com.artemis.World;
 import com.artemis.annotations.Profile;
 

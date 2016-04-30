@@ -1,7 +1,5 @@
 package com.artemis.annotations;
 
-import com.artemis.*;
-
 import java.lang.annotation.*;
 
 

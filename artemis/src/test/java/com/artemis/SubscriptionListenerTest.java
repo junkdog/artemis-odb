@@ -2,12 +2,10 @@ package com.artemis;
 
 
 import com.artemis.EntitySubscription.SubscriptionListener;
-import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.systems.IteratingSystem;
-import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 import org.junit.Test;
 

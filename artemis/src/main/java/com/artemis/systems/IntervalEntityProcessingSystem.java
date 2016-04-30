@@ -2,7 +2,6 @@ package com.artemis.systems;
 
 import com.artemis.Aspect;
 import com.artemis.Entity;
-import com.artemis.World;
 import com.artemis.utils.Bag;
 
 

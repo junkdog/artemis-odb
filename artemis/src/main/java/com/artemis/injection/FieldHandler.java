@@ -2,7 +2,6 @@ package com.artemis.injection;
 
 import com.artemis.InjectionException;
 import com.artemis.World;
-import com.artemis.WorldConfigurationException;
 import com.artemis.utils.Bag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;

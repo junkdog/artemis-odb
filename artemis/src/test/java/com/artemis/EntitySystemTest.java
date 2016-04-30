@@ -2,13 +2,8 @@ package com.artemis;
 
 import static org.junit.Assert.assertEquals;
 
-import java.util.NoSuchElementException;
-
 import com.artemis.systems.EntityProcessingSystem;
-import com.artemis.utils.IntBag;
 import org.junit.Test;
-
-import com.artemis.utils.ImmutableBag;
 
 /**
  * Created by obartley on 6/9/14.
