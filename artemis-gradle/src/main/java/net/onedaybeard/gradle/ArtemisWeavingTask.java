@@ -27,8 +27,10 @@ public class ArtemisWeavingTask extends DefaultTask {
 
 	/**
 	 * If true, will leave field stubs to keep IDE:s happy after transformations.
+	 *
+	 * @deprecated no longer has any effect
 	 */
-	@Input
+	@Input @Deprecated
 	private boolean ideFriendlyPacking;
 
 	/**
@@ -38,12 +40,6 @@ public class ArtemisWeavingTask extends DefaultTask {
 	private boolean enablePooledWeaving;
 
 	/**
-	 * Enabled weaving of packed components.
-	 */
-	@Input
-	private boolean enablePackedWeaving;
-
-	/**
 	 * If false, no weaving will take place (useful for debugging).
 	 */
 	@Input
@@ -51,6 +47,13 @@ public class ArtemisWeavingTask extends DefaultTask {
 
 	@Input
 	private boolean optimizeEntitySystems;
+
+	/**
+	 * Generate optimized read/write classes for entity link fields, used
+	 * by the {@link com.artemis.link.EntityLinkManager}.
+	 */
+	@Input
+	private boolean generateLinkMutators;
 
 	@TaskAction
 	public void weave() {
@@ -70,16 +73,14 @@ public class ArtemisWeavingTask extends DefaultTask {
 //		log.info("");
 		log.info("CONFIGURATION");
 		log.info(WeaverLog.LINE.replaceAll("\n", ""));
-		log.info(WeaverLog.format("ideFriendlyPacking", ideFriendlyPacking));
-		log.info(WeaverLog.format("enablePackedWeaving", enablePackedWeaving));
 		log.info(WeaverLog.format("enablePooledWeaving", enablePooledWeaving));
 		log.info(WeaverLog.format("optimizeEntitySystems", optimizeEntitySystems));
+		log.info(WeaverLog.format("generateLinkMutators", generateLinkMutators));
 		log.info(WeaverLog.format("outputDirectory",  classesDir));
 		log.info(WeaverLog.LINE.replaceAll("\n", ""));
 		
-		Weaver.retainFieldsWhenPacking(ideFriendlyPacking);
 		Weaver.enablePooledWeaving(enablePooledWeaving);
-		Weaver.enablePackedWeaving(enablePackedWeaving);
+		Weaver.generateLinkMutators(generateLinkMutators);
 		Weaver.optimizeEntitySystems(optimizeEntitySystems);
 
 		Weaver weaver = new Weaver(classesDir);
@@ -113,8 +114,12 @@ public class ArtemisWeavingTask extends DefaultTask {
 		this.enablePooledWeaving = enablePooledWeaving;
 	}
 
-	public void setEnablePackedWeaving(boolean enablePackedWeaving) {
-		this.enablePackedWeaving = enablePackedWeaving;
+	public void setGenerateLinkMutators(boolean generateLinkMutators) {
+		this.generateLinkMutators = generateLinkMutators;
+	}
+
+	public boolean isGenerateLinkMutators() {
+		return generateLinkMutators;
 	}
 
 	public boolean isOptimizeEntitySystems() {

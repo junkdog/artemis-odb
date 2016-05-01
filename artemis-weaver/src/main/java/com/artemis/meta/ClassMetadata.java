@@ -32,7 +32,25 @@ public final class ClassMetadata {
 
 	// pooled components
 	public boolean forcePooledWeaving;
-	
+
+	public boolean foundEntityLinks() {
+		for (FieldDescriptor f : fields) {
+			if (f.entityLinkMutator != null)
+				return true;
+		}
+
+		return false;
+	}
+
+	public MethodDescriptor method(String name, String desc) {
+		for (MethodDescriptor md : methods) {
+			if (md.name.equals(name) && md.desc.equals(desc))
+				return md;
+		}
+
+		return null;
+	}
+
 	public enum WeaverType { NONE, POOLED }
 
 	public enum OptimizationType { NOT_OPTIMIZABLE, SAFE, FULL }

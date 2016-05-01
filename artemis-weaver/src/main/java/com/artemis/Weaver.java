@@ -41,8 +41,9 @@ public class Weaver {
 		
 		List<File> classes = ClassUtil.find(targetClasses);
 		rewriteComponents(classes, log);
+		generateLinkMutators(classes, log);
 		rewriteProfilers(classes);
-		
+
 		if (ClassMetadata.GlobalConfiguration.optimizeEntitySystems)
 			rewriteEntitySystems(classes, log);
 		
@@ -105,18 +106,31 @@ public class Weaver {
 		log.components = processed;
 		log.timeComponents = timer.duration();
 	}
-	
+
+	private static void generateLinkMutators(List<File> classes, WeaverLog log) {
+		Timer timer = new Timer();
+		ExecutorService threadPool = newThreadPool();
+
+		List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
+		for (File f : classes)
+			processClass(threadPool, f.getAbsolutePath(), processed);
+
+		awaitTermination(threadPool);
+
+		log.components = processed;
+		log.timeComponents = timer.duration();
+	}
+
 	public static void retainFieldsWhenPacking(boolean ideFriendlyPacking) {
 		ClassMetadata.GlobalConfiguration.ideFriendlyPacking = ideFriendlyPacking;
 	}
 
-	public static void enablePooledWeaving(boolean enablePooledWeaving) {
-		ClassMetadata.GlobalConfiguration.enabledPooledWeaving = enablePooledWeaving;
+	public static void generateLinkMutators(boolean generateLinkMutators) {
+		ClassMetadata.GlobalConfiguration.generateLinkMutators = generateLinkMutators;
 	}
 
-	@Deprecated
-	public static void enablePackedWeaving(boolean enablePackedWeaving) {
-
+	public static void enablePooledWeaving(boolean enablePooledWeaving) {
+		ClassMetadata.GlobalConfiguration.enabledPooledWeaving = enablePooledWeaving;
 	}
 
 	public static void optimizeEntitySystems(boolean enabled) {
@@ -128,19 +142,25 @@ public class Weaver {
 	}
 
 	private static void processClass(ExecutorService threadPool, String file, List<ClassMetadata> processed) {
-		
 		ClassReader cr = classReaderFor(file);
 		ClassMetadata meta = scan(cr);
-		
+
+		if (meta.foundEntityLinks() && false) {
+//			threadPool.submit(new EntityLinkGenerator(file, cr, meta));
+			processed.add(meta);
+			throw new UnsupportedOperationException("impl remains");
+		}
+
 		if (meta.annotation == WeaverType.NONE)
 			return;
-		
+
 		if (meta.annotation == WeaverType.POOLED && !GlobalConfiguration.enabledPooledWeaving) {
 			if (!meta.forcePooledWeaving) return;
 		}
 
 		threadPool.submit(new ComponentTypeTransmuter(file, cr, meta));
-		processed.add(meta);
+		if (!processed.contains(meta))
+			processed.add(meta);
 	}
 	
 	private static void optimizeEntitySystem(ExecutorService threadPool, String file) {

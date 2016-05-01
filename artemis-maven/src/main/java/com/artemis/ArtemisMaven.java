@@ -34,8 +34,9 @@ public class ArtemisMaven extends AbstractMojo {
 
 	/**
 	 * If true, will leave field stubs to keep IDE:s happy after transformations.
+	 * @deprecated no longer has any effect
 	 */
-	@Parameter(property = "ideFriendlyPacking")
+	@Parameter(property = "ideFriendlyPacking") @Deprecated
 	private boolean ideFriendlyPacking;
 
 	/**
@@ -43,12 +44,6 @@ public class ArtemisMaven extends AbstractMojo {
 	 */
 	@Parameter(defaultValue = "true", property = "enablePooledWeaving")
 	private boolean enablePooledWeaving;
-
-	/**
-	 * Enabled weaving of pooled components (more viable on Android than JVM).
-	 */
-	@Parameter(defaultValue = "true", property = "enablePackedWeaving")
-	private boolean enablePackedWeaving;
 
 	/**
 	 * If false, no weaving will take place (useful for debugging).
@@ -59,11 +54,18 @@ public class ArtemisMaven extends AbstractMojo {
 	@Parameter(defaultValue = "true", property = "optimizeEntitySystems")
 	private boolean optimizeEntitySystems;
 
+	/**
+	 * Generate optimized read/write classes for entity link fields, used
+	 * by the {@link com.artemis.link.EntityLinkManager}.
+	 */
+	@Parameter(defaultValue = "true", property = "generateLinkMutators")
+	public boolean generateLinkMutators;
+
 	@Component
 	private BuildContext context;
 
 	private Log log = getLog();
-	
+
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if (!enableArtemisPlugin) {
@@ -77,15 +79,14 @@ public class ArtemisMaven extends AbstractMojo {
 		log.info("");
 		log.info("CONFIGURATION");
 		log.info(WeaverLog.LINE.replaceAll("\n", ""));
-		log.info(WeaverLog.format("ideFriendlyPacking", ideFriendlyPacking));
-		log.info(WeaverLog.format("enablePackedWeaving", enablePackedWeaving));
 		log.info(WeaverLog.format("enablePooledWeaving", enablePooledWeaving));
 		log.info(WeaverLog.format("optimizeEntitySystems", optimizeEntitySystems));
+		log.info(WeaverLog.format("generateLinkMutators", generateLinkMutators));
 		log.info(WeaverLog.LINE.replaceAll("\n", ""));
 
 		Weaver.retainFieldsWhenPacking(ideFriendlyPacking);
 		Weaver.enablePooledWeaving(enablePooledWeaving);
-		Weaver.enablePackedWeaving(enablePackedWeaving);
+		Weaver.generateLinkMutators(generateLinkMutators);
 		Weaver.optimizeEntitySystems(optimizeEntitySystems);
 
 		Weaver weaver = new Weaver(outputDirectory);
