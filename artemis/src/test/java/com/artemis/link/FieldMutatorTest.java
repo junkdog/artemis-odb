@@ -43,7 +43,8 @@ public class FieldMutatorTest {
 		LinkFactoryTest.LttEntity c = new LinkFactoryTest.LttEntity();
 		c.entity = e;
 
-		EntityFieldMutator mutator = new EntityFieldMutator(w);
+		EntityFieldMutator mutator = new EntityFieldMutator();
+		mutator.setWorld(w);
 		assertEquals(e.getId(), mutator.read(c, field(c, "entity")));
 	}
 
@@ -56,7 +57,8 @@ public class FieldMutatorTest {
 
 		LinkFactoryTest.LttEntity c = new LinkFactoryTest.LttEntity();
 
-		EntityFieldMutator mutator = new EntityFieldMutator(w);
+		EntityFieldMutator mutator = new EntityFieldMutator();
+		mutator.setWorld(w);
 		mutator.write(e.getId(), c, field(c, "entity"));
 
 		assertEquals(e.getId(), mutator.read(c, field(c, "entity")));
@@ -80,7 +82,8 @@ public class FieldMutatorTest {
 		IntBag ids = new IntBag();
 		ids.addAll(c.ids);
 
-		IntBagFieldMutator mutator = new IntBagFieldMutator(w);
+		IntBagFieldMutator mutator = new IntBagFieldMutator();
+		mutator.setWorld(w);
 		assertEquals(ids, mutator.read(c, field(c, "ids")));
 
 		c.ids.remove(1);
@@ -100,7 +103,8 @@ public class FieldMutatorTest {
 		Bag<Entity> entities = new Bag<Entity>();
 		entities.addAll(c.entities);
 
-		EntityBagFieldMutator mutator = new EntityBagFieldMutator(w);
+		EntityBagFieldMutator mutator = new EntityBagFieldMutator();
+		mutator.setWorld(w);
 		assertEquals(entities, mutator.read(c, field(c, "entities")));
 
 		c.entities.remove(1);

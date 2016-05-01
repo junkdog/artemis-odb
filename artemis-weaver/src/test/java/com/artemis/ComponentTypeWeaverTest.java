@@ -31,8 +31,7 @@ public class ComponentTypeWeaverTest {
 		ClassMetadata meta = Weaver.scan(transform(ComponentToWeave.class));
 		assertEquals(WeaverType.NONE, meta.annotation);
 		assertTrue(meta.foundReset); 
-		assertFalse(meta.foundEntityFor);
-		assertEquals("com/artemis/PooledComponent", meta.superClass); 
+		assertEquals("com/artemis/PooledComponent", meta.superClass);
 	}
 	
 	@Test

@@ -12,11 +12,7 @@ import static com.artemis.Aspect.all;
 
 class EntityBagFieldMutator implements MultiFieldMutator<Bag<Entity>, Component> {
 	private final Bag<Entity> empty = new Bag<Entity>();
-	private final EntitySubscription all;
-
-	public EntityBagFieldMutator(World world) {
-		all = world.getAspectSubscriptionManager().get(all());
-	}
+	private EntitySubscription all;
 
 	@Override
 	public void validate(int sourceId, Bag<Entity> entities, LinkListener listener) {
@@ -38,5 +34,10 @@ class EntityBagFieldMutator implements MultiFieldMutator<Bag<Entity>, Component>
 		} catch (ReflectionException exc) {
 			throw new RuntimeException(exc);
 		}
+	}
+
+	@Override
+	public void setWorld(World world) {
+		all = world.getAspectSubscriptionManager().get(all());
 	}
 }

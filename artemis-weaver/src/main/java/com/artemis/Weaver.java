@@ -139,7 +139,7 @@ public class Weaver {
 			if (!meta.forcePooledWeaving) return;
 		}
 
-		meta.weaverTask = threadPool.submit(new ComponentTypeTransmuter(file, cr, meta));
+		threadPool.submit(new ComponentTypeTransmuter(file, cr, meta));
 		processed.add(meta);
 	}
 	

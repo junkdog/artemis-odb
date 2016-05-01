@@ -84,10 +84,17 @@ class LinkFactory {
 		final EntityBagFieldMutator entityBagField;
 
 		public ReflexiveMutators(World world) {
-			entityField = new EntityFieldMutator(world);
+			entityField = new EntityFieldMutator();
+			entityField.setWorld(world);
+
 			intField = new IntFieldMutator();
-			intBagField = new IntBagFieldMutator(world);
-			entityBagField = new EntityBagFieldMutator(world);
+			intField.setWorld(world);
+
+			intBagField = new IntBagFieldMutator();
+			intBagField.setWorld(world);
+
+			entityBagField = new EntityBagFieldMutator();
+			entityBagField.setWorld(world);
 		}
 
 		UniLinkSite withMutator(UniLinkSite linkSite) {

@@ -3,10 +3,13 @@ package com.artemis.meta;
 import java.io.InputStream;
 
 import com.artemis.component.*;
+import com.artemis.weaver.template.MultiEntityIdLink;
+import com.artemis.weaver.template.MultiEntityLink;
+import com.artemis.weaver.template.UniEntityIdLink;
+import com.artemis.weaver.template.UniEntityLink;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 import com.artemis.Entity;
@@ -40,12 +43,10 @@ public class MetaScannerTest {
 		ClassMetadata scan3 = scan(PooledComponentNotScanned.class);
 		
 		assertEquals(false, scan1.foundReset);
-		assertEquals(false, scan1.foundEntityFor);
 		assertEquals(WeaverType.POOLED, scan1.annotation);
 		assertEquals(false, scan1.isPreviouslyProcessed);
 		
 		assertEquals(true, scan2.foundReset);
-		assertEquals(false, scan2.foundEntityFor);
 		assertEquals(WeaverType.POOLED, scan2.annotation);
 		assertEquals(false, scan2.isPreviouslyProcessed);
 		
@@ -67,6 +68,52 @@ public class MetaScannerTest {
 		assertFalse(scan2.foundInitialize);
 		assertTrue(scan2.foundBegin);
 		assertTrue(scan2.foundEnd);
+	}
+
+	@Test
+	public void detect_entity_link_UniEntityLink() throws Exception {
+		ClassMetadata meta = scan(UniEntityLink.class);
+
+		assertEquals(1, meta.fields().size());
+		FieldDescriptor fd = meta.fields().get(0);
+		assertEquals(UniEntityLink.$fieldMutator.class, fd.entityLinkMutator);
+	}
+
+	@Test
+	public void detect_entity_link_UniEntityIdLink() throws Exception {
+		ClassMetadata meta = scan(UniEntityIdLink.class);
+
+		assertEquals(1, meta.fields().size());
+		FieldDescriptor fd = meta.fields().get(0);
+		assertEquals(UniEntityIdLink.$fieldMutator.class, fd.entityLinkMutator);
+	}
+
+	@Test
+	public void detect_entity_link_MultiEntityLink() throws Exception {
+		ClassMetadata meta = scan(MultiEntityLink.class);
+
+		assertEquals(1, meta.fields().size());
+		FieldDescriptor fd = meta.fields().get(0);
+		assertEquals(MultiEntityLink.$fieldMutator.class, fd.entityLinkMutator);
+	}
+
+	@Test
+	public void detect_entity_link_MultiEntityIdLink() throws Exception {
+		ClassMetadata meta = scan(MultiEntityIdLink.class);
+
+		assertEquals(1, meta.fields().size());
+		FieldDescriptor fd = meta.fields().get(0);
+		assertEquals(MultiEntityIdLink.$fieldMutator.class, fd.entityLinkMutator);
+	}
+
+	@Test
+	public void detect_entity_link_null() throws Exception {
+		ClassMetadata meta = scan(ComponentToWeave.class);
+
+		assertNotEquals(0, meta.fields().size());
+		for (FieldDescriptor fd : meta.fields()) {
+			assertNull(fd.entityLinkMutator);
+		}
 	}
 
 	static ClassMetadata scan(Class<?> klazz) throws Exception {

@@ -1,6 +1,7 @@
 package com.artemis.link;
 
 import com.artemis.Component;
+import com.artemis.World;
 import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
 
@@ -22,4 +23,7 @@ class IntFieldMutator implements UniFieldMutator {
 			throw new RuntimeException(e);
 		}
 	}
+
+	@Override
+	public void setWorld(World world) {}
 }

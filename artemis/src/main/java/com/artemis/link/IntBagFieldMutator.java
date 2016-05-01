@@ -10,12 +10,8 @@ import com.artemis.utils.reflect.ReflectionException;
 import static com.artemis.Aspect.all;
 
 class IntBagFieldMutator implements MultiFieldMutator<IntBag, Component> {
-	private final IntBag empty = new IntBag();
-	private final EntitySubscription all;
-
-	public IntBagFieldMutator(World world) {
-		all = world.getAspectSubscriptionManager().get(all());
-	}
+	private IntBag empty = new IntBag();
+	private EntitySubscription all;
 
 	@Override
 	public void validate(int sourceId, IntBag ids, LinkListener listener) {
@@ -37,5 +33,10 @@ class IntBagFieldMutator implements MultiFieldMutator<IntBag, Component> {
 		} catch (ReflectionException exc) {
 			throw new RuntimeException(exc);
 		}
+	}
+
+	@Override
+	public void setWorld(World world) {
+		all = world.getAspectSubscriptionManager().get(all());
 	}
 }

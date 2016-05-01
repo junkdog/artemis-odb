@@ -7,11 +7,7 @@ import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
 
 class EntityFieldMutator implements UniFieldMutator {
-	public final World world;
-
-	EntityFieldMutator(World world) {
-		this.world = world;
-	}
+	private World world;
 
 	@Override
 	public int read(Component c, Field f) {
@@ -31,5 +27,10 @@ class EntityFieldMutator implements UniFieldMutator {
 		} catch (ReflectionException exc) {
 			throw new RuntimeException(exc);
 		}
+	}
+
+	@Override
+	public void setWorld(World world) {
+		this.world = world;
 	}
 }

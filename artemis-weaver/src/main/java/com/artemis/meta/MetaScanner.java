@@ -6,6 +6,10 @@ import static com.artemis.Weaver.PROFILER_ANNOTATION;
 import static com.artemis.Weaver.WOVEN_ANNOTATION;
 
 import com.artemis.weaver.optimizer.EntitySystemType;
+import com.artemis.weaver.template.MultiEntityIdLink;
+import com.artemis.weaver.template.MultiEntityLink;
+import com.artemis.weaver.template.UniEntityIdLink;
+import com.artemis.weaver.template.UniEntityLink;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
@@ -46,7 +50,13 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 	}
 
 	@Override
-	public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
+	public void visit(int version,
+	                  int access,
+	                  String name,
+	                  String signature,
+	                  String superName,
+	                  String[] interfaces) {
+
 		info.superClass = superName;
 		if (EntitySystemType.resolve(info) != null)
 			info.sysetemOptimizable = OptimizationType.FULL;
@@ -75,24 +85,45 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 	}
 	
 	@Override
-	public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
-		FieldDescriptor field = info.field(name);
+	public FieldVisitor visitField(int access,
+	                               String name,
+	                               String desc,
+	                               String signature,
+	                               Object value) {
+
+		final FieldDescriptor field = info.field(name);
 		field.set(access, desc, signature, value);
+
+		FieldVisitor fv = super.visitField(access, name, desc, signature, value);
+
+		if ("Lcom/artemis/Entity;".equals(desc)) {
+			field.entityLinkMutator = UniEntityLink.$fieldMutator.class;
+		} else if ("I".equals(desc)) {
+			fv = new EntityIdScanVisitor(fv, field, UniEntityIdLink.$fieldMutator.class);
+		} else if ("Lcom/artemis/utils/IntBag;".equals(desc)) {
+			fv = new EntityIdScanVisitor(fv, field, MultiEntityIdLink.$fieldMutator.class);
+		} else if ("Lcom/artemis/utils/Bag<Lcom/artemis/Entity;>;".equals(signature)) {
+			field.entityLinkMutator = MultiEntityLink.$fieldMutator.class;
+		}
+
 		if (field.isResettable())
 			field.reset = constInstructionFor(field);
 
-		return super.visitField(access, name, desc, signature, value);
+		return fv;
 	}
 	
 	@Override
-	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+	public MethodVisitor visitMethod(int access,
+	                                 String name,
+	                                 String desc,
+	                                 String signature,
+	                                 String[] exceptions) {
+
 		MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
 
 		info.methods.add(new MethodDescriptor(access, name, desc, signature, exceptions));
 		if ("reset".equals(name) && "()V".equals(desc))
 			info.foundReset = true;
-		else if ("forEntity".equals(name) && desc.startsWith("(I)"))
-			info.foundEntityFor = true;
 		else if ("begin".equals(name) && "()V".equals(desc))
 			info.foundBegin = true;
 		else if ("end".equals(name) && desc.equals("()V"))
@@ -127,5 +158,28 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 		}
 
 		throw new RuntimeException(field.toString());
+	}
+
+	private static class EntityIdScanVisitor extends FieldVisitor {
+		private final FieldDescriptor field;
+		private final Class<?> mutatorClass;
+
+		public EntityIdScanVisitor(FieldVisitor fv,
+		                           FieldDescriptor field,
+		                           Class<?> mutatorClassIfFound) {
+
+			super(Opcodes.ASM5, fv);
+			this.field = field;
+			this.mutatorClass = mutatorClassIfFound;
+		}
+
+		@Override
+		public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+			if ("Lcom/artemis/annotations/EntityId;".equals(desc)) {
+				field.entityLinkMutator = mutatorClass;
+			}
+
+			return super.visitAnnotation(desc, visible);
+		}
 	}
 }
