@@ -29,38 +29,44 @@ public class OptimizationTransmuter extends CallableTransmuter<Void> implements 
 
 		cv = new ClassVisitor(ASM5, cv) {
 			@Override
-			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+			public MethodVisitor visitMethod(int access,
+			                                 String name,
+			                                 String desc,
+			                                 String signature,
+			                                 String[] exceptions) {
+
+
 				MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
+
+				// method is injected by the transplant adapter below
 				if ("processSystem".equals(name) && "()V".equals(desc))
 					mv = new ProcessInvocationOptimizer(meta, mv);
 
 				return mv;
 			}
 		};
-		switch (EntitySystemType.resolve(meta)) {
-			case ENTITY_PROCESSING:
-				cv = new MethodTransplantAdapter(
-					EntityProcessingSystem.class, "processSystem", "()V", cv, meta);
-
-				break;
-			case ITERATING:
-				cv = new MethodTransplantAdapter(
-					IteratingSystem.class, "processSystem", "()V", cv, meta);
-
-				break;
-			default:
-				throw new RuntimeException("missing case: " + EntitySystemType.resolve(meta));
-		}
+		cv = new MethodTransplantAdapter(sourceType(meta), "processSystem", "()V", cv, meta);
 		cv = new OptimizingSystemWeaver(cv, meta);
 
 		try {
 			cr.accept(cv, ClassReader.EXPAND_FRAMES);
 			if (file != null) ClassUtil.writeClass(cw, file);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new WeaverException(e);
 		}
 
 		return null;
+	}
+
+	private static Class<?> sourceType(ClassMetadata meta) {
+		switch (EntitySystemType.resolve(meta)) {
+			case ENTITY_PROCESSING:
+				return EntityProcessingSystem.class;
+			case ITERATING:
+				return IteratingSystem.class;
+			default:
+				throw new RuntimeException("missing case: " + EntitySystemType.resolve(meta));
+		}
 	}
 
 	public ClassWriter getClassWriter() {

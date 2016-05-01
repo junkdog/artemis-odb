@@ -1,6 +1,5 @@
 package com.artemis.weaver;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.concurrent.Callable;
 
