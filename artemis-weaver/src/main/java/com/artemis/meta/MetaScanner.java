@@ -97,13 +97,13 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 		FieldVisitor fv = super.visitField(access, name, desc, signature, value);
 
 		if ("Lcom/artemis/Entity;".equals(desc)) {
-			field.entityLinkMutator = UniEntityLink.$fieldMutator.class;
+			field.entityLinkMutator = UniEntityLink.Mutator.class;
 		} else if ("I".equals(desc)) {
-			fv = new EntityIdScanVisitor(fv, field, UniEntityIdLink.$fieldMutator.class);
+			fv = new EntityIdScanVisitor(fv, field, UniEntityIdLink.Mutator.class);
 		} else if ("Lcom/artemis/utils/IntBag;".equals(desc)) {
-			fv = new EntityIdScanVisitor(fv, field, MultiEntityIdLink.$fieldMutator.class);
+			fv = new EntityIdScanVisitor(fv, field, MultiEntityIdLink.Mutator.class);
 		} else if ("Lcom/artemis/utils/Bag<Lcom/artemis/Entity;>;".equals(signature)) {
-			field.entityLinkMutator = MultiEntityLink.$fieldMutator.class;
+			field.entityLinkMutator = MultiEntityLink.Mutator.class;
 		}
 
 		if (field.isResettable())

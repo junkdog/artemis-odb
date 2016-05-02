@@ -15,10 +15,12 @@ public class WeaverLog {
 	public int timeComponents;
 	public int timeComponentSystems;
 	public int timeSystems;
+	public int timeComponentsEntityLinks;
 	public List<ClassMetadata> components = new ArrayList<ClassMetadata>();
 	public List<ClassMetadata> componentSystems = new ArrayList<ClassMetadata>();
 	public List<ClassMetadata> systems = new ArrayList<ClassMetadata>();
-	
+	public List<ClassMetadata> componentsEntityLinks;
+
 	private static String format(String key, Object value, char delim) {
 		int length = key.length() + value.toString().length() + 2; // margin
 		length = Math.max(length, 3);

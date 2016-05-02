@@ -76,7 +76,7 @@ public class MetaScannerTest {
 
 		assertEquals(1, meta.fields().size());
 		FieldDescriptor fd = meta.fields().get(0);
-		assertEquals(UniEntityLink.$fieldMutator.class, fd.entityLinkMutator);
+		assertEquals(UniEntityLink.Mutator.class, fd.entityLinkMutator);
 	}
 
 	@Test
@@ -85,7 +85,7 @@ public class MetaScannerTest {
 
 		assertEquals(1, meta.fields().size());
 		FieldDescriptor fd = meta.fields().get(0);
-		assertEquals(UniEntityIdLink.$fieldMutator.class, fd.entityLinkMutator);
+		assertEquals(UniEntityIdLink.Mutator.class, fd.entityLinkMutator);
 	}
 
 	@Test
@@ -94,7 +94,7 @@ public class MetaScannerTest {
 
 		assertEquals(1, meta.fields().size());
 		FieldDescriptor fd = meta.fields().get(0);
-		assertEquals(MultiEntityLink.$fieldMutator.class, fd.entityLinkMutator);
+		assertEquals(MultiEntityLink.Mutator.class, fd.entityLinkMutator);
 	}
 
 	@Test
@@ -103,7 +103,7 @@ public class MetaScannerTest {
 
 		assertEquals(1, meta.fields().size());
 		FieldDescriptor fd = meta.fields().get(0);
-		assertEquals(MultiEntityIdLink.$fieldMutator.class, fd.entityLinkMutator);
+		assertEquals(MultiEntityIdLink.Mutator.class, fd.entityLinkMutator);
 	}
 
 	@Test

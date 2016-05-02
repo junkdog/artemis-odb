@@ -1,8 +1,6 @@
 package com.artemis.weaver;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
@@ -13,7 +11,6 @@ import org.objectweb.asm.Opcodes;
 
 import com.artemis.ClassUtil;
 import com.artemis.meta.ClassMetadata;
-import com.artemis.meta.FieldDescriptor;
 import com.artemis.weaver.pooled.PooledComponentWeaver;
 
 public class ComponentTypeTransmuter extends CallableTransmuter<Void> implements Opcodes {
@@ -69,15 +66,5 @@ public class ComponentTypeTransmuter extends CallableTransmuter<Void> implements
 		method.visitLabel(new Label());
 		method.visitInsn(RETURN);
 		method.visitEnd();
-	}
-	
-	private void validateOnlyPrimitives(List<FieldDescriptor> fields) {
-		for (FieldDescriptor fd : fields) {
-			if (fd.desc.length() > 1) {
-				String error = String.format("%s: @PackedWeaver only works with primitive fields: %s",
-					meta.type, fd);
-				throw new WeaverException(error);
-			}
-		}
 	}
 }

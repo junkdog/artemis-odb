@@ -6,7 +6,7 @@ import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.systems.IteratingSystem;
 import com.artemis.weaver.optimizer.EntitySystemType;
 import com.artemis.weaver.optimizer.OptimizingSystemWeaver;
-import com.artemis.weaver.transplant.MethodTransplantAdapter;
+import com.artemis.weaver.transplant.ClassMethodTransplantAdapter;
 import org.objectweb.asm.*;
 
 import java.io.IOException;
@@ -45,7 +45,8 @@ public class OptimizationTransmuter extends CallableTransmuter<Void> implements 
 				return mv;
 			}
 		};
-		cv = new MethodTransplantAdapter(sourceType(meta), "processSystem", "()V", cv, meta);
+		cv = new ClassMethodTransplantAdapter(
+			sourceType(meta), cv, meta).addMethod("processSystem", "()V");
 		cv = new OptimizingSystemWeaver(cv, meta);
 
 		try {

@@ -12,15 +12,13 @@ import com.artemis.utils.reflect.Field;
 import static com.artemis.Aspect.all;
 
 public class MultiEntityLink extends Component {
-	public Bag<Entity> $field;
+	public Bag<Entity> field;
 
-	public static class $fieldMutator implements MultiFieldMutator<Bag<Entity>, MultiEntityLink> {
-		private World world;
+	public static class Mutator implements MultiFieldMutator<Bag<Entity>, MultiEntityLink> {
 		private EntitySubscription all;
 
 		@Override
 		public void setWorld(World world) {
-			this.world = world;
 			all = world.getAspectSubscriptionManager().get(all());
 		}
 
@@ -38,7 +36,7 @@ public class MultiEntityLink extends Component {
 
 		@Override
 		public Bag<Entity> read(MultiEntityLink c, Field f) {
-			return c.$field;
+			return c.field;
 		}
 	}
 }

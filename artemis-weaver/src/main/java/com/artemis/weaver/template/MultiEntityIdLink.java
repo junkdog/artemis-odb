@@ -12,9 +12,9 @@ import com.artemis.utils.reflect.Field;
 import static com.artemis.Aspect.all;
 
 public class MultiEntityIdLink extends Component {
-	@EntityId public IntBag $field;
+	@EntityId public IntBag field;
 
-	public static class $fieldMutator implements MultiFieldMutator<IntBag, MultiEntityIdLink> {
+	public static class Mutator implements MultiFieldMutator<IntBag, MultiEntityIdLink> {
 		private EntitySubscription all;
 
 		@Override
@@ -36,7 +36,7 @@ public class MultiEntityIdLink extends Component {
 
 		@Override
 		public IntBag read(MultiEntityIdLink c, Field f) {
-			return c.$field;
+			return c.field;
 		}
 	}
 }

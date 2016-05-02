@@ -99,7 +99,7 @@ public class Weaver {
 		
 		List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
 		for (File f : classes)
-			processClass(threadPool, f.getAbsolutePath(), processed);
+			processComponentTypes(threadPool, f.getAbsolutePath(), processed);
 		
 		awaitTermination(threadPool);
 		
@@ -113,12 +113,12 @@ public class Weaver {
 
 		List<ClassMetadata> processed = new ArrayList<ClassMetadata>();
 		for (File f : classes)
-			processClass(threadPool, f.getAbsolutePath(), processed);
+			processEntityLinkMutators(threadPool, f.getAbsolutePath(), processed);
 
 		awaitTermination(threadPool);
 
-		log.components = processed;
-		log.timeComponents = timer.duration();
+		log.componentsEntityLinks = processed;
+		log.timeComponentsEntityLinks = timer.duration();
 	}
 
 	public static void retainFieldsWhenPacking(boolean ideFriendlyPacking) {
@@ -141,15 +141,9 @@ public class Weaver {
 		return Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 	}
 
-	private static void processClass(ExecutorService threadPool, String file, List<ClassMetadata> processed) {
+	private static void processComponentTypes(ExecutorService threadPool, String file, List<ClassMetadata> processed) {
 		ClassReader cr = classReaderFor(file);
 		ClassMetadata meta = scan(cr);
-
-		if (meta.foundEntityLinks() && false) {
-//			threadPool.submit(new EntityLinkGenerator(file, cr, meta));
-			processed.add(meta);
-			throw new UnsupportedOperationException("impl remains");
-		}
 
 		if (meta.annotation == WeaverType.NONE)
 			return;
@@ -159,10 +153,19 @@ public class Weaver {
 		}
 
 		threadPool.submit(new ComponentTypeTransmuter(file, cr, meta));
-		if (!processed.contains(meta))
-			processed.add(meta);
+		processed.add(meta);
 	}
-	
+
+	private static void processEntityLinkMutators(ExecutorService threadPool, String file, List<ClassMetadata> processed) {
+		ClassReader cr = classReaderFor(file);
+		ClassMetadata meta = scan(cr);
+
+		if (meta.foundEntityLinks()) {
+			threadPool.submit(new EntityLinkGenerator(file, cr, meta));
+			processed.add(meta);
+		}
+	}
+
 	private static void optimizeEntitySystem(ExecutorService threadPool, String file) {
 		ClassReader cr = classReaderFor(file);
 		ClassMetadata meta = scan(cr);
@@ -209,6 +212,20 @@ public class Weaver {
 		source.accept(new MetaScanner(info), 0);
 
 		return info;
+	}
+
+	public static ClassMetadata scan(Class<?> klazz) {
+		return scan(toClassReader(klazz));
+	}
+
+	public static ClassReader toClassReader(Class<?> klazz) {
+		try {
+			String resourceName = "/" + klazz.getName().replace('.', '/') + ".class";
+			InputStream classStream = klazz.getResourceAsStream(resourceName);
+			return new ClassReader(classStream);
+		} catch (IOException e) {
+			throw new WeaverException("Failed to create reader for " + klazz, e);
+		}
 	}
 	
 	private static void awaitTermination(ExecutorService threadPool) {
