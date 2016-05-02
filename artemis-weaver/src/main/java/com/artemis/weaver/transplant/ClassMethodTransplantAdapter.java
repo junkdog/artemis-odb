@@ -10,7 +10,7 @@ public class ClassMethodTransplantAdapter extends ClassVisitor implements Opcode
 	private final ClassMethodTransplantVisitor transplanter;
 
 	public ClassMethodTransplantAdapter(ClassReader source, ClassVisitor target, ClassMetadata meta) {
-		super(ASM5);
+		super(ASM5, target);
 		this.source = source;
 		transplanter = new ClassMethodTransplantVisitor(source, this, meta);
 	}
