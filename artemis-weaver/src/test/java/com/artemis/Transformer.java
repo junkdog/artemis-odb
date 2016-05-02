@@ -7,7 +7,6 @@ import java.io.InputStream;
 import com.artemis.weaver.OptimizationTransmuter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.Type;
 
 import com.artemis.meta.ClassMetadata;
 import com.artemis.meta.ClassMetadata.OptimizationType;

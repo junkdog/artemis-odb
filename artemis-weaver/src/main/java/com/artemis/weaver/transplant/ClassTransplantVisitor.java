@@ -5,7 +5,6 @@ import org.objectweb.asm.*;
 
 public class ClassTransplantVisitor extends ClassVisitor {
 	private final ClassReader source;
-	private final ClassVisitor target;
 	private final ClassMetadata meta;
 	private final String name;
 
@@ -16,7 +15,6 @@ public class ClassTransplantVisitor extends ClassVisitor {
 
 		super(Opcodes.ASM5, target);
 		this.source = source;
-		this.target = target;
 		this.meta = meta;
 		this.name = name;
 	}
@@ -63,8 +61,8 @@ public class ClassTransplantVisitor extends ClassVisitor {
 
 	@Override
 	public void visitInnerClass(String name, String outerName, String innerName, int access) {
-		innerName = this.name.replaceAll("^.*\\$", "");
-		outerName = this.name.replaceAll("\\$.*", "");
+		if (outerName != null) outerName = this.name.replaceAll("\\$.*", "");
+		if (innerName != null) innerName = this.name.replaceAll("^.*\\$", "");
 		super.visitInnerClass(this.name, outerName, innerName, access);
 	}
 

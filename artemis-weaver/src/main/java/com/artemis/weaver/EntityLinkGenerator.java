@@ -32,7 +32,6 @@ public class EntityLinkGenerator extends CallableTransmuter<Void> implements Opc
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		ClassVisitor cv = cw;
 
-//		cv = methodTransplantAdapter(cv);
 		try {
 			cr.accept(cv, ClassReader.EXPAND_FRAMES);
 			if (file != null) ClassUtil.writeClass(cw, file);
@@ -101,6 +100,14 @@ public class EntityLinkGenerator extends CallableTransmuter<Void> implements Opc
 							desc = desc.replaceAll(originalOuter, meta.type.getInternalName());
 						}
 						super.visitMethodInsn(opcode, owner, name, desc, itf);
+					}
+
+					@Override
+					public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+						if ("field".equals(name)) // see template classes
+							name = fd.name;
+
+						super.visitFieldInsn(opcode, owner, name, desc);
 					}
 				};
 			}
