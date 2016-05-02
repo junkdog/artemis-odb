@@ -1,8 +1,6 @@
 package com.artemis.weaver.transplant;
 
-import com.artemis.Weaver;
 import com.artemis.meta.ClassMetadata;
-import com.artemis.meta.MethodDescriptor;
 import org.objectweb.asm.*;
 
 public class ClassTransplantVisitor extends ClassVisitor {
@@ -31,7 +29,6 @@ public class ClassTransplantVisitor extends ClassVisitor {
 	                  String superName,
 	                  String[] interfaces) {
 
-		System.out.println("visit: " + name);
 		super.visit(version, access, this.name, signature, superName, interfaces);
 	}
 
