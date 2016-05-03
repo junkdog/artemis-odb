@@ -156,7 +156,10 @@ public class Weaver {
 		ClassReader cr = classReaderFor(file);
 		ClassMetadata meta = scan(classReaderFor(file));
 
-		if (meta.foundEntityLinks()) {
+		boolean likelyComponent = meta.superClass.equals("com/artemis/Component")
+			|| meta.superClass.equals("com/artemis/PooledComponent");
+
+		if (likelyComponent && meta.foundEntityLinks()) {
 			threadPool.submit(new EntityLinkGenerator(file, cr, meta));
 			processed.add(meta);
 		}

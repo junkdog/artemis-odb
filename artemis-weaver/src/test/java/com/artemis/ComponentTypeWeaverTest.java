@@ -42,13 +42,4 @@ public class ComponentTypeWeaverTest {
 		assertTrue(meta.foundReset); 
 		assertEquals("com/artemis/PooledComponent", meta.superClass); 
 	}
-	
-	private static ClassMetadata scan(Class<?> klazz) {
-		InputStream classStream = klazz.getResourceAsStream("/" + klazz.getName().replace('.', '/') + ".class");
-		ClassReader cr = Weaver.classReaderFor(classStream);
-		ClassMetadata meta = Weaver.scan(cr);
-		meta.type = Type.getObjectType(cr.getClassName());
-		
-		return meta;
-	}
 }

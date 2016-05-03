@@ -24,7 +24,6 @@ public class EntityLinkGenerator extends CallableTransmuter<Void> implements Opc
 	
 	@Override
 	protected Void process(String file) throws IOException {
-
 		final List<FieldDescriptor> mutators = new ArrayList<FieldDescriptor>();
 		for (FieldDescriptor fd : meta.fields()) {
 			if (fd.entityLinkMutator != null) {

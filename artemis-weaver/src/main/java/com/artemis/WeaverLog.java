@@ -59,7 +59,7 @@ public class WeaverLog {
 		if (timeSystems > 0) {
 			sb.append("").append('\n');
 			sb.append(format("OPTIMIZED ENTITY SYSTEMS", timeSystems + "ms", ' ')).append('\n');
-			sb.append(LINE).append('\n');
+			sb.append(LINE);
 			for (String detail : getSystemSummary(systems).split("\n"))
 				sb.append(detail).append('\n');
 			sb.append(LINE);
