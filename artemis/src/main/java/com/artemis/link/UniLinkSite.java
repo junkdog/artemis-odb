@@ -59,7 +59,7 @@ class UniLinkSite extends LinkSite {
 			: -1;
 
 		if (target != -1) {
-			sourceToTarget.set(id, 0);
+			sourceToTarget.set(id, -1);
 			if (listener != null) listener.onLinkKilled(id, target);
 		}
 	}
