@@ -3,7 +3,16 @@
 #### Version: 2.0.0-SNAPSHOT
 - **BREAKING CHANGES**
   - Methods added to interface `Injector#getRegistered(Class|String)`
+  - `ComponentMapper#getSafe` deprecated, `#get` is sufficient for all use-cases now.
+    due to mappers always growing their backing arrays to accomodate the highest entity id.
 
+
+- Optional manager: **EntityLinkManager**, discovery and maintenance of relationships between entities.
+  - Automatically tracks component fields: `@EntityId int`, `Entity`, `@EntityId IntBag`, `Bag<Entity>`
+    (shares behavior with serialization).
+  - `LinkListener` for listening in on when links between entities are established, changed or disconnected.
+  - Tune behavior with `@LinkPolicy`, applied on component fields referencing entities.
+  - Optimized link accessors via maven/gradle plugin - reflection-based fallback during development.
 - `World#getRegistered`, retrieves injectable objects programmatically.
 - Re-worked `EntityEdit` logic, less code and more performance.
 - ComponentType validates component when first encountered.
