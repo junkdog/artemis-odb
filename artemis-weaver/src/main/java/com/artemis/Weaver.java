@@ -61,7 +61,7 @@ public class Weaver {
 		};
 		
 		Collections.sort(log.components, comparator);
-		Collections.sort(log.componentSystems, comparator);
+		Collections.sort(log.componentsEntityLinks, comparator);
 		Collections.sort(log.systems, comparator);
 	}
 
@@ -119,10 +119,6 @@ public class Weaver {
 
 		log.componentsEntityLinks = processed;
 		log.timeComponentsEntityLinks = timer.duration();
-	}
-
-	public static void retainFieldsWhenPacking(boolean ideFriendlyPacking) {
-		ClassMetadata.GlobalConfiguration.ideFriendlyPacking = ideFriendlyPacking;
 	}
 
 	public static void generateLinkMutators(boolean generateLinkMutators) {

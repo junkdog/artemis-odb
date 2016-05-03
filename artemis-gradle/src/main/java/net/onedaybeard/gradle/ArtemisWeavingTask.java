@@ -74,8 +74,8 @@ public class ArtemisWeavingTask extends DefaultTask {
 		log.info("CONFIGURATION");
 		log.info(WeaverLog.LINE.replaceAll("\n", ""));
 		log.info(WeaverLog.format("enablePooledWeaving", enablePooledWeaving));
-		log.info(WeaverLog.format("optimizeEntitySystems", optimizeEntitySystems));
 		log.info(WeaverLog.format("generateLinkMutators", generateLinkMutators));
+		log.info(WeaverLog.format("optimizeEntitySystems", optimizeEntitySystems));
 		log.info(WeaverLog.format("outputDirectory",  classesDir));
 		log.info(WeaverLog.LINE.replaceAll("\n", ""));
 		

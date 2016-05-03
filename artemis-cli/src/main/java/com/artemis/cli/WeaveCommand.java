@@ -52,8 +52,8 @@ public class WeaveCommand {
 		long start = System.currentTimeMillis();
 		
 		Weaver.enablePooledWeaving(!disablePooledWeaving);
-		Weaver.optimizeEntitySystems(!disableOptimizeEntitySystems);
 		Weaver.generateLinkMutators(!disableLinkMutatorGen);
+		Weaver.optimizeEntitySystems(!disableOptimizeEntitySystems);
 		Weaver weaver = new Weaver(classRoot);
 		WeaverLog processed = weaver.execute();
 		if (verbose && processed.components.size() > 0) {
@@ -69,7 +69,7 @@ public class WeaveCommand {
 			if (POOLED == meta.annotation) pooled++;
 		}
 		
-		return String.format("Processed %d PackedComponents and %d PooledComponents in %dms.",
+		return String.format("Processed %d PooledComponents in %dms.",
 			packed, pooled, (System.currentTimeMillis() - start));
 	}
 }

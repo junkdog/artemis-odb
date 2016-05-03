@@ -80,11 +80,10 @@ public class ArtemisMaven extends AbstractMojo {
 		log.info("CONFIGURATION");
 		log.info(WeaverLog.LINE.replaceAll("\n", ""));
 		log.info(WeaverLog.format("enablePooledWeaving", enablePooledWeaving));
-		log.info(WeaverLog.format("optimizeEntitySystems", optimizeEntitySystems));
 		log.info(WeaverLog.format("generateLinkMutators", generateLinkMutators));
+		log.info(WeaverLog.format("optimizeEntitySystems", optimizeEntitySystems));
 		log.info(WeaverLog.LINE.replaceAll("\n", ""));
 
-		Weaver.retainFieldsWhenPacking(ideFriendlyPacking);
 		Weaver.enablePooledWeaving(enablePooledWeaving);
 		Weaver.generateLinkMutators(generateLinkMutators);
 		Weaver.optimizeEntitySystems(optimizeEntitySystems);

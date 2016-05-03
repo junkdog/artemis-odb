@@ -72,7 +72,6 @@ public final class ClassMetadata {
 	}
 
 	public static class GlobalConfiguration {
-		public static boolean ideFriendlyPacking;
 		public static boolean enabledPooledWeaving;
 		public static boolean optimizeEntitySystems;
 		public static boolean generateLinkMutators;
