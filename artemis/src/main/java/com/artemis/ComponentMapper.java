@@ -58,6 +58,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 	 *
 	 * @param entityId the id of entity that should possess the component
 	 * @return the instance of the component
+	 * @deprecated no longer necessary, refer to normal {@link #get(int)}
 	 */
 	@Override
 	@Deprecated

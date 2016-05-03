@@ -47,6 +47,7 @@ public abstract class BaseComponentMapper<A extends Component> {
 	 *
 	 * @param e the entity that should possess the component
 	 * @return the instance of the component
+	 * @deprecated no longer necessary, refer to normal {@link #get(Entity)}
 	 */
 	@Deprecated
 	public A getSafe(Entity e) {
