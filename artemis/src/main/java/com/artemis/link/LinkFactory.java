@@ -99,7 +99,10 @@ class LinkFactory {
 
 		UniLinkSite withMutator(UniLinkSite linkSite) {
 			Class type = linkSite.field.getType();
-			if (Entity.class == type) {
+			UniFieldMutator mutator = getGeneratedMutator(linkSite);
+			if (mutator != null) {
+				linkSite.fieldMutator = mutator;
+			} else if (Entity.class == type) {
 				linkSite.fieldMutator = entityField;
 			} else if (int.class == type) {
 				linkSite.fieldMutator = intField;
@@ -112,7 +115,10 @@ class LinkFactory {
 
 		MultiLinkSite withMutator(MultiLinkSite linkSite) {
 			Class type = linkSite.field.getType();
-			if (IntBag.class == type) {
+			MultiFieldMutator mutator = getGeneratedMutator(linkSite);
+			if (mutator != null) {
+				linkSite.fieldMutator = mutator;
+			} else if (IntBag.class == type) {
 				linkSite.fieldMutator = intBagField;
 			} else if (Bag.class == type) {
 				linkSite.fieldMutator = entityBagField;
@@ -121,6 +127,24 @@ class LinkFactory {
 			}
 
 			return linkSite;
+		}
+
+		private <T> T getGeneratedMutator(LinkSite linkSite) {
+			Class[] possibleMutators = linkSite.field.getDeclaringClass().getDeclaredClasses();
+			String mutatorName = "Mutator_" + linkSite.field.getName();
+			for (int i = 0, s = possibleMutators.length; s > i; i++) {
+				if (mutatorName.equals(possibleMutators[i].getSimpleName())) {
+					try {
+						return  (T) possibleMutators[i].newInstance();
+					} catch (InstantiationException e) {
+						throw new RuntimeException(e);
+					} catch (IllegalAccessException e) {
+						throw new RuntimeException(e);
+					}
+				}
+			}
+
+			return null;
 		}
 	}
 }

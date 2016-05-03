@@ -9,6 +9,8 @@ import com.artemis.weaver.transplant.MethodBodyTransplanter;
 import org.objectweb.asm.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntityLinkGenerator extends CallableTransmuter<Void> implements Opcodes {
 	private ClassMetadata meta;
@@ -23,14 +25,62 @@ public class EntityLinkGenerator extends CallableTransmuter<Void> implements Opc
 	@Override
 	protected Void process(String file) throws IOException {
 
+		final List<FieldDescriptor> mutators = new ArrayList<FieldDescriptor>();
 		for (FieldDescriptor fd : meta.fields()) {
 			if (fd.entityLinkMutator != null) {
 				String mutatorFile = file.replaceAll("\\.class", "\\$Mutator_" + fd.name + ".class");
 				generateMutator(fd, mutatorFile);
+				mutators.add(fd);
 			}
 		}
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		ClassVisitor cv = cw;
+		cv = new ClassVisitor(ASM5, cv) {
+			boolean injectedMutatorsReferences;
+
+			private void injectMutators() {
+				injectedMutatorsReferences = true;
+
+				String internalName = meta.type.getInternalName();
+				for (FieldDescriptor mutator : mutators) {
+					super.visitInnerClass(
+						internalName + getMutatorName(mutator),
+						internalName,
+						getMutatorName(mutator),
+						ACC_PUBLIC | ACC_STATIC);
+				}
+			}
+
+			@Override
+			public void visitInnerClass(String name, String outerName, String innerName, int access) {
+				super.visitInnerClass(name, outerName, innerName, access);
+				injectMutators();
+			}
+
+			@Override
+			public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
+				if (!injectedMutatorsReferences)
+					injectMutators();
+
+				return super.visitField(access, name, desc, signature, value);
+			}
+
+			@Override
+			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+				if (!injectedMutatorsReferences)
+					injectMutators();
+
+				return super.visitMethod(access, name, desc, signature, exceptions);
+			}
+
+			@Override
+			public void visitEnd() {
+				if (!injectedMutatorsReferences)
+					injectMutators();
+
+				super.visitEnd();
+			}
+		};
 
 		try {
 			cr.accept(cv, ClassReader.EXPAND_FRAMES);
@@ -46,7 +96,7 @@ public class EntityLinkGenerator extends CallableTransmuter<Void> implements Opc
 		final ClassReader sourceClassReader = Weaver.toClassReader(fd.entityLinkMutator);
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		ClassVisitor cv = cw;
-		final String typeName = meta.type.getInternalName() + "$Mutator_" + fd.name;
+		final String typeName = meta.type.getInternalName() + getMutatorName(fd);
 		cv = new ClassVisitor(ASM5, cv) {
 			@Override
 			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
@@ -116,10 +166,16 @@ public class EntityLinkGenerator extends CallableTransmuter<Void> implements Opc
 
 		try {
 			sourceClassReader.accept(cv, ClassReader.EXPAND_FRAMES);
-			if (file != null) ClassUtil.writeClass(cw, file);
+			if (file != null)
+				ClassUtil.writeClass(cw, file);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new WeaverException(e);
 		}
+	}
+
+	static String getMutatorName(FieldDescriptor fd) {
+		return "$Mutator_" + fd.name;
 	}
 }

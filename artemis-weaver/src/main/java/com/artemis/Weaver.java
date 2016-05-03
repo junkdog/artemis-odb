@@ -158,7 +158,7 @@ public class Weaver {
 
 	private static void processEntityLinkMutators(ExecutorService threadPool, String file, List<ClassMetadata> processed) {
 		ClassReader cr = classReaderFor(file);
-		ClassMetadata meta = scan(cr);
+		ClassMetadata meta = scan(classReaderFor(file));
 
 		if (meta.foundEntityLinks()) {
 			threadPool.submit(new EntityLinkGenerator(file, cr, meta));
