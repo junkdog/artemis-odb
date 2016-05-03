@@ -25,6 +25,13 @@ public class MethodBodyTransplanter extends MethodVisitor {
 		this.owner = newType.getInternalName();
 	}
 
+	public MethodBodyTransplanter(String oldOwner, Type newType, MethodVisitor mv) {
+		super(Opcodes.ASM5, mv);
+		this.oldOwner = Type.getType(oldOwner).getInternalName();
+		this.type = newType;
+		this.owner = newType.getInternalName();
+	}
+
 
 
 	@Override

@@ -55,11 +55,17 @@ class LinkFactory {
 			int referenceTypeId = getReferenceTypeId(f);
 			if (referenceTypeId != NULL_REFERENCE && (SKIP != getPolicy(f))) {
 				if (SINGLE_REFERENCE == referenceTypeId) {
-					UniLinkSite linkSite = new UniLinkSite(world, ct, f);
-					links.add(reflexiveMutators.withMutator(linkSite));
+					UniLinkSite ls = new UniLinkSite(world, ct, f);
+					if (!configureMutator(ls))
+						reflexiveMutators.withMutator(ls);
+
+					links.add(ls);
 				} else if (MULTI_REFERENCE == referenceTypeId) {
-					MultiLinkSite e = new MultiLinkSite(world, ct, f);
-					links.add(reflexiveMutators.withMutator(e));
+					MultiLinkSite ls = new MultiLinkSite(world, ct, f);
+					if (!configureMutator(ls))
+						reflexiveMutators.withMutator(ls);
+
+					links.add(ls);
 				}
 			}
 		}
@@ -72,6 +78,47 @@ class LinkFactory {
 		if (annotation != null) {
 			LinkPolicy lp = annotation.getAnnotation(LinkPolicy.class);
 			return lp != null ? lp.value() : null;
+		}
+
+		return null;
+	}
+
+	private boolean configureMutator(UniLinkSite linkSite) {
+		UniFieldMutator mutator = getGeneratedMutator(linkSite);
+		if (mutator != null) {
+			mutator.setWorld(world);
+			linkSite.fieldMutator = mutator;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean configureMutator(MultiLinkSite linkSite) {
+		MultiFieldMutator mutator = getGeneratedMutator(linkSite);
+		if (mutator != null) {
+			mutator.setWorld(world);
+			linkSite.fieldMutator = mutator;
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+	private <T> T getGeneratedMutator(LinkSite linkSite) {
+		Class[] possibleMutators = linkSite.field.getDeclaringClass().getDeclaredClasses();
+		String mutatorName = "Mutator_" + linkSite.field.getName();
+		for (int i = 0, s = possibleMutators.length; s > i; i++) {
+			if (mutatorName.equals(possibleMutators[i].getSimpleName())) {
+				try {
+					return  (T) possibleMutators[i].newInstance();
+				} catch (InstantiationException e) {
+					throw new RuntimeException(e);
+				} catch (IllegalAccessException e) {
+					throw new RuntimeException(e);
+				}
+			}
 		}
 
 		return null;
@@ -98,11 +145,11 @@ class LinkFactory {
 		}
 
 		UniLinkSite withMutator(UniLinkSite linkSite) {
+			if (linkSite.fieldMutator != null)
+				return linkSite;
+
 			Class type = linkSite.field.getType();
-			UniFieldMutator mutator = getGeneratedMutator(linkSite);
-			if (mutator != null) {
-				linkSite.fieldMutator = mutator;
-			} else if (Entity.class == type) {
+			if (Entity.class == type) {
 				linkSite.fieldMutator = entityField;
 			} else if (int.class == type) {
 				linkSite.fieldMutator = intField;
@@ -114,11 +161,11 @@ class LinkFactory {
 		}
 
 		MultiLinkSite withMutator(MultiLinkSite linkSite) {
+			if (linkSite.fieldMutator != null)
+				return linkSite;
+
 			Class type = linkSite.field.getType();
-			MultiFieldMutator mutator = getGeneratedMutator(linkSite);
-			if (mutator != null) {
-				linkSite.fieldMutator = mutator;
-			} else if (IntBag.class == type) {
+			if (IntBag.class == type) {
 				linkSite.fieldMutator = intBagField;
 			} else if (Bag.class == type) {
 				linkSite.fieldMutator = entityBagField;
@@ -127,24 +174,6 @@ class LinkFactory {
 			}
 
 			return linkSite;
-		}
-
-		private <T> T getGeneratedMutator(LinkSite linkSite) {
-			Class[] possibleMutators = linkSite.field.getDeclaringClass().getDeclaredClasses();
-			String mutatorName = "Mutator_" + linkSite.field.getName();
-			for (int i = 0, s = possibleMutators.length; s > i; i++) {
-				if (mutatorName.equals(possibleMutators[i].getSimpleName())) {
-					try {
-						return  (T) possibleMutators[i].newInstance();
-					} catch (InstantiationException e) {
-						throw new RuntimeException(e);
-					} catch (IllegalAccessException e) {
-						throw new RuntimeException(e);
-					}
-				}
-			}
-
-			return null;
 		}
 	}
 }

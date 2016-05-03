@@ -162,6 +162,14 @@ public class EntityLinkGenerator extends CallableTransmuter<Void> implements Opc
 				};
 			}
 		};
+		cv = new ClassVisitor(ASM5, cv) {
+			@Override
+			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+				MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
+				Type target = Type.getType(meta.type.getInternalName() + "$Mutator_" + fd.name);
+				return new MethodBodyTransplanter(sourceClassReader.getClassName(), target, mv);
+			}
+		};
 		cv = new ClassTransplantVisitor(sourceClassReader, cv, Weaver.scan(fd.entityLinkMutator), typeName);
 
 		try {

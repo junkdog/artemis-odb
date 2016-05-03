@@ -78,7 +78,7 @@ public class ClassTransplantVisitor extends ClassVisitor {
 
 	@Override
 	public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-		MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
-		return new MethodBodyTransplanter(source.getClassName(), meta, mv);
+		return super.visitMethod(access, name, desc, signature, exceptions);
+//		return new MethodBodyTransplanter(source.getClassName(), meta, mv);
 	}
 }
