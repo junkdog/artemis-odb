@@ -41,7 +41,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * Constructs an empty Bag with an initial capacity of 64.
 	 */
 	public Bag(Class<E> type) {
-		this(type, 64);
+		this(64);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	}
 
 	public Bag(Class<E> type, int capacity) {
-		data = (E[])ArrayReflection.newInstance(type, capacity);
+		this(capacity);
 	}
 
 
@@ -310,7 +310,9 @@ public class Bag<E> implements ImmutableBag<E> {
 	}
 
 	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
-		data = Arrays.copyOf(data, newCapacity);
+		E[] oldData = data;
+		data = (E[])new Object[newCapacity];
+		System.arraycopy(oldData, 0, data, 0, oldData.length);
 	}
 
 	/**
