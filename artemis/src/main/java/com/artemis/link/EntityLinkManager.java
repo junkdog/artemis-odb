@@ -10,9 +10,7 @@ import com.artemis.utils.reflect.ReflectionException;
 import static com.artemis.Aspect.all;
 
 /**
- * <p>Maintains relationships between entities. By default, all entities
- * are considered when intercepting relationships. To only consider a sub-set
- * of entities, this system can be fed a custom <code>aspect</code>.</p>
+ * <p>Maintains relationships between entities.</p>
  *
  * <p>This system is optional and must be manually registered with
  * the world instance.</p>
@@ -27,13 +25,19 @@ public class EntityLinkManager extends BaseEntitySystem {
 
 	private final boolean requireListener;
 
-	public EntityLinkManager(Aspect.Builder aspect, boolean processSitesEvenIfNoListener) {
-		super(aspect);
+	/**
+	 * @param processSitesEvenIfNoListener If true, only act on fields with an attached {@link LinkListener}.
+	 */
+	public EntityLinkManager(boolean processSitesEvenIfNoListener) {
+		super(all());
 		this.requireListener = !processSitesEvenIfNoListener;
 	}
 
+	/**
+	 * Processes all fields, even if they don't have a {@link LinkListener}.
+	 */
 	public EntityLinkManager() {
-		this(all(), true);
+		this(true);
 	}
 
 	@Override
