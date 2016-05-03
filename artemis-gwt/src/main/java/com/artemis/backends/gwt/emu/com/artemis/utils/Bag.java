@@ -41,7 +41,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * Constructs an empty Bag with an initial capacity of 64.
 	 */
 	public Bag(Class<E> type) {
-		this(64);
+		this(type, 64);
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	}
 
 	public Bag(Class<E> type, int capacity) {
-		this(capacity);
+		data = (E[])ArrayReflection.newInstance(type, capacity);
 	}
 
 
@@ -208,7 +208,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 */
 	public E safeGet(int index) {
 		if(index >= data.length)
-			grow(Math.max((2 * data.length), index));
+			grow(Math.max((2 * data.length), (3 * index) / 2));
 
 		return data[index];
 	}
@@ -265,9 +265,8 @@ public class Bag<E> implements ImmutableBag<E> {
 	 */
 	public void add(E e) {
 		// is size greater than capacity increase capacity
-		if (size == data.length) {
-			grow();
-		}
+		if (size == data.length)
+			grow(data.length * 2);
 
 		data[size++] = e;
 	}
@@ -311,9 +310,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	}
 
 	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
-		E[] oldData = data;
-		data = (E[])new Object[newCapacity];
-		System.arraycopy(oldData, 0, data, 0, oldData.length);
+		data = Arrays.copyOf(data, newCapacity);
 	}
 
 	/**

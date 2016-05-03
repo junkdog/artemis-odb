@@ -1,7 +1,6 @@
 package com.artemis;
 
 import com.artemis.utils.reflect.ClassReflection;
-import com.artemis.utils.reflect.Constructor;
 
 
 /**
