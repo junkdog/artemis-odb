@@ -64,7 +64,7 @@ public class EntityLinkManager extends BaseEntitySystem {
 
 	/**
 	 * <p>Injects and associates the listener with the component. This method
-	 * is only recommended if only field references entities, or if all entity
+	 * is only recommended if only a single field references entities, or if all entity
 	 * fields are of the same type.</p>
 	 *
 	 * <p>Each <code>ComponentType::Field</code> pair can only have one {@link LinkListener}</p>
