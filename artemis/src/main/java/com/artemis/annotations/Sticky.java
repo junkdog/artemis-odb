@@ -25,4 +25,5 @@ import com.artemis.EntityFactory;
 @Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.METHOD)
 @Documented
+@Deprecated
 public @interface Sticky {}

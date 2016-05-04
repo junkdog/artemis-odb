@@ -24,6 +24,8 @@ import com.artemis.EntityFactory;
  */
 @Retention(RetentionPolicy.CLASS)
 @Target({ElementType.TYPE, ElementType.METHOD})
+
+@Deprecated
 public @interface Bind {
 	Class<? extends Component>[] value();
 }

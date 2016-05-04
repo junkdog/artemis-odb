@@ -35,8 +35,11 @@ import com.artemis.annotations.UseSetter;
  * @see Sticky
  * @see UseSetter
  * @see EntityEdit for a list of alternate ways to alter composition and access components.
+ *
+ * @deprecated type-erasure, singular entities, prone to erroneous state
+ * via annotation-processors - this feature is best retired.
  */
-@UnstableApi
+@Deprecated
 public interface EntityFactory<T> {
 
 	/**

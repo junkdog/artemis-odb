@@ -19,6 +19,7 @@ import com.artemis.EntityFactory;
 @Retention(SOURCE)
 @Target(METHOD)
 @Documented
+@Deprecated
 public @interface UseSetter {
 	String value() default "";
 }
