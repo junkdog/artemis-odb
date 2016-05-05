@@ -108,8 +108,7 @@ public class EntityLinkGenerator extends CallableTransmuter<Void> implements Opc
 			@Override
 			public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
 				final MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
-				Class<?> enclosingClass = fd.entityLinkMutator;
-				return new MethodBodyTransplanter(enclosingClass, Type.getType(typeName), mv);
+				return new MethodBodyTransplanter(fd.entityLinkMutator, Type.getType(typeName), mv);
 			}
 		};
 		cv = new ClassVisitor(ASM5, cv) {
