@@ -5,14 +5,15 @@ import com.artemis.component.ComponentY;
 import com.artemis.utils.IntBag;
 import org.junit.Test;
 
+import static com.artemis.Aspect.all;
 import static org.junit.Assert.*;
 
 public class EntitySubscriptionTest {
 
 	@Test
 	public void aspect_builder_equality_test() {
-		Aspect.Builder allX = Aspect.all(ComponentX.class);
-		Aspect.Builder allX2 = Aspect.all(ComponentX.class);
+		Aspect.Builder allX = all(ComponentX.class);
+		Aspect.Builder allX2 = all(ComponentX.class);
 		assertEquals(allX, allX2);
 		assertEquals(allX.hashCode(), allX2.hashCode());
 	}
@@ -22,10 +23,81 @@ public class EntitySubscriptionTest {
 		World world = new World();
 
 		AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
-		EntitySubscription subscription = asm.get(Aspect.all(ComponentX.class));
+		EntitySubscription subscription = asm.get(all(ComponentX.class));
 
-		assertSame(subscription, asm.get(Aspect.all(ComponentX.class)));
-		assertNotSame(subscription, asm.get(Aspect.all(ComponentX.class).exclude(ComponentY.class)));
+		assertSame(subscription, asm.get(all(ComponentX.class)));
+		assertNotSame(subscription, asm.get(all(ComponentX.class).exclude(ComponentY.class)));
+	}
+
+	@Test
+	public void deleted_entities_retain_components() {
+		World world = new World();
+
+		final ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
+
+		world.getAspectSubscriptionManager()
+			.get(all(ComponentX.class))
+			.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+				@Override
+				public void inserted(IntBag entities) {
+					assertEquals(1, entities.size());
+				}
+
+				@Override
+				public void removed(IntBag entities) {
+					assertEquals(1, entities.size());
+					assertNotNull(mapper.get(entities.get(0)));
+				}
+			});
+
+		int id1 = world.create();
+		world.edit(id1).create(ComponentX.class);
+
+		world.process();
+		world.delete(id1);
+		world.process();
+
+		int id2 = world.create();
+		world.edit(id2).create(ComponentX.class);
+
+		world.process();
+		world.delete(id2);
+		world.process();
+	}
+
+	@Test
+	public void removed_component_retained_in_remove() {
+		World world = new World();
+
+		final ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
+
+		world.getAspectSubscriptionManager()
+			.get(all(ComponentX.class))
+			.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+				@Override
+				public void inserted(IntBag entities) {
+					assertEquals(1, entities.size());
+				}
+
+				@Override
+				public void removed(IntBag entities) {
+					assertEquals(1, entities.size());
+					assertNotNull(mapper.get(entities.get(0)));
+				}
+			});
+
+		int id1 = world.create();
+		world.edit(id1).create(ComponentX.class);
+
+		world.process();
+		world.edit(id1).remove(ComponentX.class);
+		world.process();
+
+		world.edit(id1).create(ComponentX.class);
+
+		world.process();
+		world.edit(id1).remove(ComponentX.class);
+		world.process();
 	}
 
 	@Test
@@ -78,13 +150,13 @@ public class EntitySubscriptionTest {
 		@Override
 		protected void initialize() {
 			AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
-			EntitySubscription subscription = asm.get(Aspect.all(ComponentX.class));
+			EntitySubscription subscription = asm.get(all(ComponentX.class));
 			subscription.addSubscriptionListener(this);
 		}
 
 		public void killAlmostAll() {
 			AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
-			EntitySubscription subscription = asm.get(Aspect.all(ComponentX.class));
+			EntitySubscription subscription = asm.get(all(ComponentX.class));
 			IntBag entities = subscription.getEntities();
 			for (int i = 0, s = entities.size(); s > i; i++) {
 				if (entities.get(i) > 0)
@@ -108,7 +180,7 @@ public class EntitySubscriptionTest {
 
 			@Override
 			protected void initialize() {
-				EntitySubscription subscription = subscriptionManager.get(Aspect.all());
+				EntitySubscription subscription = subscriptionManager.get(all());
 
 				subscription.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
 					@Override
