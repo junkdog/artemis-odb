@@ -111,7 +111,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 
 	/**
 	 * Create component for this entity.
-	 * Will avoid creation if component exists.
+	 * Avoids creation if component exists.
 	 *
 	 * @param entityId the entity that should possess the component
 	 * @return the instance of the component.

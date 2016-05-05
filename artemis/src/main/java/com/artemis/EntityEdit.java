@@ -49,6 +49,7 @@ public final class EntityEdit {
 	 * @param componentKlazz Class to create.
 	 * @return Newly instanced component.
 	 */
+	// FIXME: BREAKING CHANGFE - no longe rreplaces component (desirable)
 	public <T extends Component> T create(Class<T> componentKlazz) {
 		return cm.getMapper(componentKlazz).create(entityId);
 	}
