@@ -26,7 +26,6 @@ public class ComponentManager extends BaseSystem {
 	static final int NO_COMPONENTS = 0;
 
 	/** Collects all Entites marked for deletion from this ComponentManager. */
-	final ComponentPool pooledComponents;
 	private Bag<ComponentMapper> mappers = new Bag(ComponentMapper.class);
 
 	private final ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
@@ -38,7 +37,6 @@ public class ComponentManager extends BaseSystem {
 	 * Creates a new instance of {@link ComponentManager}.
 	 */
 	protected ComponentManager(int entityContainerSize) {
-		pooledComponents = new ComponentPool();
 		entityToIdentity = new ShortBag(entityContainerSize);
 		typeFactory = new ComponentTypeFactory(this, entityContainerSize);
 	}

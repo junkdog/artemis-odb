@@ -4,57 +4,28 @@ import com.artemis.utils.Bag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.ReflectionException;
 
-class ComponentPool {
-	
-	private Bag<Pool> pools;
+class ComponentPool<T extends PooledComponent> {
+	private final Bag<T> cache;
+	private Class<T> type;
 
-	ComponentPool() {
-		pools = new Bag(Pool.class);
+	ComponentPool(Class<T> type) {
+		this.type = type;
+		cache = new Bag<T>(type);
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	<T extends PooledComponent> T obtain(ComponentType type) {
-		
-		Pool pool = getPool(type.getIndex());
+	<T extends PooledComponent> T obtain() {
 		try {
-			return (T)((pool.size() > 0) ? pool.obtain() :  ClassReflection.newInstance(type.getType()));
+			return (T) ((cache.size() > 0)
+				? cache.removeLast()
+				: ClassReflection.newInstance(type));
 		} catch (ReflectionException e) {
-			throw new InvalidComponentException(type.getType(), e.getMessage(), e);
+			throw new InvalidComponentException(type, e.getMessage(), e);
 		}
-	}
-	
-	void free(PooledComponent c, ComponentType type) {
-		free(c, type.getIndex());
 	}
 
-	void free(PooledComponent c, int typeIndex) {
-		c.reset();
-		getPool(typeIndex).free(c);
-	}
-
-	private <T extends PooledComponent>Pool getPool(int typeIndex) {
-		Pool pool = pools.safeGet(typeIndex);
-		if (pool == null) {
-			pool = new Pool();
-			pools.set(typeIndex, pool);
-		}
-		return pool;
-	}
-	
-	private static class Pool {
-		private final Bag<PooledComponent> cache = new Bag(PooledComponent.class);
-		
-		@SuppressWarnings("unchecked")
-		<T extends PooledComponent> T obtain() {
-			return (T)cache.removeLast();
-		}
-		
-		int size() {
-			return cache.size();
-		}
-		
-		void free(PooledComponent component) {
-			cache.add(component);
-		}
+	void free(T component) {
+		component.reset();
+		cache.add(component);
 	}
 }

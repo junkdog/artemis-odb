@@ -26,7 +26,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 		components = new Bag<A>(type);
 
 		pool = (this.type.isPooled)
-			? world.getComponentManager().pooledComponents
+			? new ComponentPool(type)
 			: null;
 
 		createTransmuter = new EntityTransmuterFactory(world).add(type).build();
@@ -93,7 +93,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 			components.fastSet(entityId, null);
 
 			if (pool != null)
-				pool.free((PooledComponent) component, type);
+				pool.free((PooledComponent) component);
 		}
 	}
 
@@ -102,7 +102,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 		if (pool != null) {
 			A component = get(entityId);
 			if (component != null) {
-				pool.free((PooledComponent) component, type);
+				pool.free((PooledComponent) component);
 			}
 		}
 
@@ -142,7 +142,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 
 	private A createNew() {
 		return (pool != null)
-			? (A) pool.obtain(type)
+			? (A) pool.obtain()
 			: (A) ComponentManager.newInstance(type.getType());
 	}
 
