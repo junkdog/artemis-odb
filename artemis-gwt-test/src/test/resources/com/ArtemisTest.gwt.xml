@@ -23,6 +23,7 @@
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Size"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Sprite"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Velocity"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.link.MyLinkListener"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.SystemComponentXRemover"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.ExpirationSystem"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.SystemB"/>
@@ -44,6 +45,7 @@
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.NameComponent"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Position"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.ReusedComponent"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.link.MyLinkListener"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Size"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Sprite"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Velocity"/>

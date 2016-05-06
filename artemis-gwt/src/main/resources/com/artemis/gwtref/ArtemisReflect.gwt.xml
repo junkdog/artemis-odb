@@ -32,6 +32,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.components"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.PackedComponent"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.PooledComponent"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.annotations.LinkPolicy"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.annotations.Wire"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.ComponentType"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.ComponentMapper"/>
@@ -47,6 +48,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.io"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.Archetype"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.ArtemisPlugin"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.link.EntityLinkManager"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.UseInjectionCache"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.ArtemisFieldResolver"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.WiredFieldResolver"/>

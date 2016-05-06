@@ -1,9 +1,8 @@
 package com.artemis.link;
 
 import com.artemis.*;
-import com.artemis.annotations.EntityId;
+import com.artemis.component.*;
 import com.artemis.utils.Bag;
-import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 import com.google.gwt.junit.client.GWTTestCase;
@@ -129,32 +128,4 @@ public class LinkFactoryTest extends GWTTestCase {
 		assertEquals(4, links.size());
 	}
 
-	public static class LttEmpty extends Component {
-		public int id;
-		public Bag<Void> entities;
-	}
-
-	public static class LttEntity extends Component {
-		public Entity entity;
-	}
-
-	public static class LttEntityId extends Component {
-		@EntityId public int id;
-	}
-
-	public static class LttBagEntity extends Component {
-		public Bag<Entity> entities = new Bag<Entity>();
-	}
-
-	public static class LttIntBag extends Component {
-		@EntityId public IntBag ids = new IntBag();
-	}
-
-	public static class LttMulti extends Component {
-		@EntityId public IntBag intIds = new IntBag();
-		@EntityId public int id;
-		public Entity e;
-		public Bag<Entity> entities = new Bag<Entity>();
-		public int notMe;
-	}
 }

@@ -84,7 +84,7 @@ class LinkFactory {
 	}
 
 	private boolean configureMutator(UniLinkSite linkSite) {
-		UniFieldMutator mutator = getGeneratedMutator(linkSite);
+		UniFieldMutator mutator = MutatorUtil.getGeneratedMutator(linkSite);
 		if (mutator != null) {
 			mutator.setWorld(world);
 			linkSite.fieldMutator = mutator;
@@ -95,7 +95,7 @@ class LinkFactory {
 	}
 
 	private boolean configureMutator(MultiLinkSite linkSite) {
-		MultiFieldMutator mutator = getGeneratedMutator(linkSite);
+		MultiFieldMutator mutator = MutatorUtil.getGeneratedMutator(linkSite);
 		if (mutator != null) {
 			mutator.setWorld(world);
 			linkSite.fieldMutator = mutator;
@@ -103,25 +103,6 @@ class LinkFactory {
 		} else {
 			return false;
 		}
-	}
-
-
-	private <T> T getGeneratedMutator(LinkSite linkSite) {
-		Class[] possibleMutators = linkSite.field.getDeclaringClass().getDeclaredClasses();
-		String mutatorName = "Mutator_" + linkSite.field.getName();
-		for (int i = 0, s = possibleMutators.length; s > i; i++) {
-			if (mutatorName.equals(possibleMutators[i].getSimpleName())) {
-				try {
-					return  (T) possibleMutators[i].newInstance();
-				} catch (InstantiationException e) {
-					throw new RuntimeException(e);
-				} catch (IllegalAccessException e) {
-					throw new RuntimeException(e);
-				}
-			}
-		}
-
-		return null;
 	}
 
 	static class ReflexiveMutators {

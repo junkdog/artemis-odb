@@ -2,6 +2,9 @@ package com.artemis;
 
 import com.artemis.io.InputStreamHelperTest;
 import com.artemis.io.ReferenceTrackerTest;
+import com.artemis.link.EntityLinkManagerTest;
+import com.artemis.link.FieldMutatorTest;
+import com.artemis.link.LinkFactoryTest;
 import com.artemis.managers.CustomJsonWorldSerializationManagerTest;
 import com.artemis.managers.JsonWorldSerializationManagerTest;
 import com.google.gwt.junit.client.GWTTestCase;
@@ -20,7 +23,12 @@ public class GWTArtemisTestSuite extends TestCase {
 			ReferenceTrackerTest.class,
 			CustomJsonWorldSerializationManagerTest.class,
 			JsonWorldSerializationManagerTest.class,
-			InputStreamHelperTest.class
+			InputStreamHelperTest.class,
+
+			// links
+			FieldMutatorTest.class,
+			LinkFactoryTest.class,
+			EntityLinkManagerTest.class
 	};
 
 	public static GWTTestSuite suite() {

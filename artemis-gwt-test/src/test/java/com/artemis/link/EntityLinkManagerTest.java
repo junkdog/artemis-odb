@@ -1,13 +1,8 @@
 package com.artemis.link;
 
 import com.artemis.*;
-import com.artemis.annotations.EntityId;
-import com.artemis.annotations.LinkPolicy;
-import com.artemis.utils.Bag;
-import com.artemis.utils.IntBag;
+import com.artemis.component.*;
 import com.google.gwt.junit.client.GWTTestCase;
-
-import static com.artemis.annotations.LinkPolicy.Policy.*;
 
 public class EntityLinkManagerTest extends GWTTestCase {
 
@@ -103,29 +98,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 		ComponentMapper<EntityLinkC> mapper = world.getMapper(EntityLinkC.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
-		elm.register(EntityLinkC.class, new LinkListener() {
-			@Override
-			public void onLinkEstablished(int sourceId, int targetId) {
-				assertEquals(sourceId, e);
-				assertEquals(targetId, otherA);
-			}
-
-			@Override
-			public void onLinkKilled(int sourceId, int targetId) {
-				assertEquals(sourceId, e);
-				assertEquals(targetId, otherA);
-			}
-
-			@Override
-			public void onTargetDead(int sourceId, int deadTargetId) {
-				fail();
-			}
-
-			@Override
-			public void onTargetChanged(int sourceId, int targetId, int oldTargetId) {
-				fail();
-			}
-		});
+		elm.register(EntityLinkC.class, new LinkListenerC(e, otherA));
 
 		// establish link
 		mapper.create(e).other = world.getEntity(otherA);
@@ -162,27 +135,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 		ComponentMapper<EntityLinkSkip> mapper = world.getMapper(EntityLinkSkip.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
-		elm.register(EntityLinkSkip.class, new LinkListener() {
-			@Override
-			public void onLinkEstablished(int sourceId, int targetId) {
-				fail();
-			}
-
-			@Override
-			public void onLinkKilled(int sourceId, int targetId) {
-				fail();
-			}
-
-			@Override
-			public void onTargetDead(int sourceId, int deadTargetId) {
-				fail();
-			}
-
-			@Override
-			public void onTargetChanged(int sourceId, int targetId, int oldTargetId) {
-				fail();
-			}
-		});
+		elm.register(EntityLinkSkip.class, new MyLinkListenerD());
 
 		// establish link
 		mapper.create(e).other = world.getEntity(otherA);
@@ -219,27 +172,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 		ComponentMapper<MultiLinkSkip> mapper = world.getMapper(MultiLinkSkip.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
-		elm.register(MultiLinkSkip.class, new LinkListener() {
-			@Override
-			public void onLinkEstablished(int sourceId, int targetId) {
-				fail();
-			}
-
-			@Override
-			public void onLinkKilled(int sourceId, int targetId) {
-				fail();
-			}
-
-			@Override
-			public void onTargetDead(int sourceId, int deadTargetId) {
-				fail();
-			}
-
-			@Override
-			public void onTargetChanged(int sourceId, int targetId, int oldTargetId) {
-				fail();
-			}
-		});
+		elm.register(MultiLinkSkip.class, new LinkListenere());
 
 		// establish link
 		mapper.create(e).other.add(world.getEntity(otherB));
@@ -272,29 +205,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 		ComponentMapper<MultiLinkSkipTargetCheck> mapper = world.getMapper(MultiLinkSkipTargetCheck.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
-		elm.register(MultiLinkSkipTargetCheck.class, new LinkListener() {
-			@Override
-			public void onLinkEstablished(int sourceId, int targetId) {
-				assertEquals(e, sourceId);
-				assertEquals(-1, targetId);
-			}
-
-			@Override
-			public void onLinkKilled(int sourceId, int targetId) {
-				assertEquals(e, sourceId);
-				assertEquals(-1, targetId);
-			}
-
-			@Override
-			public void onTargetDead(int sourceId, int deadTargetId) {
-				fail();
-			}
-
-			@Override
-			public void onTargetChanged(int sourceId, int targetId, int oldTargetId) {
-				fail();
-			}
-		});
+		elm.register(MultiLinkSkipTargetCheck.class, new LinkListenerA(e));
 
 		// establish link
 		mapper.create(e).other.add(world.getEntity(otherB));
@@ -327,30 +238,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 		ComponentMapper<MultiLinkCheckAll> mapper = world.getMapper(MultiLinkCheckAll.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
-		elm.register(MultiLinkCheckAll.class, new LinkListener() {
-			@Override
-			public void onLinkEstablished(int sourceId, int targetId) {
-				assertEquals(e, sourceId);
-				assertEquals(-1, targetId);
-			}
-
-			@Override
-			public void onLinkKilled(int sourceId, int targetId) {
-				assertEquals(e, sourceId);
-				assertEquals(-1, targetId);
-			}
-
-			@Override
-			public void onTargetDead(int sourceId, int deadTargetId) {
-				assertEquals(e, sourceId);
-				assertEquals(otherB, deadTargetId);
-			}
-
-			@Override
-			public void onTargetChanged(int sourceId, int targetId, int oldTargetId) {
-				fail();
-			}
-		});
+		elm.register(MultiLinkCheckAll.class, new LinkListeneBr(e, otherB));
 
 		// establish link
 		world.process();
@@ -409,59 +297,46 @@ public class EntityLinkManagerTest extends GWTTestCase {
 		world.process();
 	}
 
-	public static class EntityLink extends Component {
-		@EntityId
-		public int otherId;
-		public int nothingHere;
-	}
-
-	public static class EntityLinkB extends Component {
-		public Entity other;
-		public int nothingHere;
-	}
-
-	public static class EntityLinkC extends Component {
-		@LinkPolicy(CHECK_SOURCE)
-		public Entity other;
-	}
-
-	public static class EntityLinkSkip extends Component {
-		@LinkPolicy(SKIP)
-		public Entity other;
-	}
-
-	public static class MultiLinkSkip extends Component {
-		@LinkPolicy(SKIP)
-		public Bag<Entity> other = new Bag<Entity>();
-	}
-
-	public static class MultiLinkSkipTargetCheck extends Component {
-		public Bag<Entity> other = new Bag<Entity>();
-	}
-
-	public static class MultiLinkCheckAll extends Component {
-		@EntityId @LinkPolicy(CHECK_SOURCE_AND_TARGETS)
-		public IntBag other = new IntBag();
-	}
-
-
-	public static class MuchOfEverything extends Component {
-		@EntityId public IntBag intIds = new IntBag();
-		@EntityId public int otherId;
-		public Entity e;
-		public Bag<Entity> entities = new Bag<Entity>();
-		public int notMe;
-	}
-
-	private static class MyLinkListener implements LinkListener {
+	public static class LinkListeneBr implements LinkListener {
 		private final int e;
-		private final int otherA;
 		private final int otherB;
 
-		public MyLinkListener(int e, int otherA, int otherB) {
+		public LinkListeneBr(int e, int otherB) {
+			this.e = e;
+			this.otherB = otherB;
+		}
+
+		@Override
+		public void onLinkEstablished(int sourceId, int targetId) {
+			assertEquals(e, sourceId);
+			assertEquals(-1, targetId);
+		}
+
+		@Override
+		public void onLinkKilled(int sourceId, int targetId) {
+			assertEquals(e, sourceId);
+			assertEquals(-1, targetId);
+		}
+
+		@Override
+		public void onTargetDead(int sourceId, int deadTargetId) {
+			assertEquals(e, sourceId);
+			assertEquals(otherB, deadTargetId);
+		}
+
+		@Override
+		public void onTargetChanged(int sourceId, int targetId, int oldTargetId) {
+			fail();
+		}
+	}
+
+	public static class LinkListenerC implements LinkListener {
+		private final int e;
+		private final int otherA;
+
+		public LinkListenerC(int e, int otherA) {
 			this.e = e;
 			this.otherA = otherA;
-			this.otherB = otherB;
 		}
 
 		@Override
@@ -478,15 +353,86 @@ public class EntityLinkManagerTest extends GWTTestCase {
 
 		@Override
 		public void onTargetDead(int sourceId, int deadTargetId) {
-			assertEquals(sourceId, e);
-			assertEquals(deadTargetId, otherB);
+			fail();
 		}
 
 		@Override
 		public void onTargetChanged(int sourceId, int targetId, int oldTargetId) {
-			assertEquals(sourceId, e);
-			assertEquals(targetId, otherB);
-			assertEquals(oldTargetId, otherA);
+			fail();
+		}
+	}
+
+	public static class MyLinkListenerD implements LinkListener {
+		@Override
+		public void onLinkEstablished(int sourceId, int targetId) {
+			fail();
+		}
+
+		@Override
+		public void onLinkKilled(int sourceId, int targetId) {
+			fail();
+		}
+
+		@Override
+		public void onTargetDead(int sourceId, int deadTargetId) {
+			fail();
+		}
+
+		@Override
+		public void onTargetChanged(int sourceId, int targetId, int oldTargetId) {
+			fail();
+		}
+	}
+
+	public static class LinkListenere implements LinkListener {
+		@Override
+		public void onLinkEstablished(int sourceId, int targetId) {
+			fail();
+		}
+
+		@Override
+		public void onLinkKilled(int sourceId, int targetId) {
+			fail();
+		}
+
+		@Override
+		public void onTargetDead(int sourceId, int deadTargetId) {
+			fail();
+		}
+
+		@Override
+		public void onTargetChanged(int sourceId, int targetId, int oldTargetId) {
+			fail();
+		}
+	}
+
+	public static class LinkListenerA implements LinkListener {
+		private final int e;
+
+		public LinkListenerA(int e) {
+			this.e = e;
+		}
+
+		@Override
+		public void onLinkEstablished(int sourceId, int targetId) {
+			assertEquals(e, sourceId);
+			assertEquals(-1, targetId);
+		}
+
+		@Override
+		public void onLinkKilled(int sourceId, int targetId) {
+			assertEquals(e, sourceId);
+			assertEquals(-1, targetId);
+		}
+
+		@Override
+		public void onTargetDead(int sourceId, int deadTargetId) {
+			fail();
+		}
+
+		@Override
+		public void onTargetChanged(int sourceId, int targetId, int oldTargetId) {
+			fail();
 		}
 	}
 }

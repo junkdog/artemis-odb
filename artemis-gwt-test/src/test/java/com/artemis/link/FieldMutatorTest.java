@@ -2,6 +2,10 @@ package com.artemis.link;
 
 import com.artemis.Entity;
 import com.artemis.World;
+import com.artemis.component.LttBagEntity;
+import com.artemis.component.LttEntity;
+import com.artemis.component.LttEntityId;
+import com.artemis.component.LttIntBag;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.ClassReflection;
@@ -16,7 +20,7 @@ public class FieldMutatorTest extends GWTTestCase {
 	}
 
 	public void test_read_entity_id() throws Exception {
-		LinkFactoryTest.LttEntityId c = new LinkFactoryTest.LttEntityId();
+		LttEntityId c = new LttEntityId();
 		c.id = 1337;
 
 		IntFieldMutator mutator = new IntFieldMutator();
@@ -24,7 +28,7 @@ public class FieldMutatorTest extends GWTTestCase {
 	}
 
 	public void test_write_entity_id() throws Exception {
-		LinkFactoryTest.LttEntityId c = new LinkFactoryTest.LttEntityId();
+		LttEntityId c = new LttEntityId();
 
 		IntFieldMutator mutator = new IntFieldMutator();
 		mutator.write(1337, c, field(c, "id"));
@@ -39,7 +43,7 @@ public class FieldMutatorTest extends GWTTestCase {
 		w.create();
 		Entity e = w.createEntity();
 
-		LinkFactoryTest.LttEntity c = new LinkFactoryTest.LttEntity();
+		LttEntity c = new LttEntity();
 		c.entity = e;
 
 		EntityFieldMutator mutator = new EntityFieldMutator();
@@ -49,7 +53,7 @@ public class FieldMutatorTest extends GWTTestCase {
 
 	public void test_read_int_bag() throws Exception {
 		World w = new World();
-		LinkFactoryTest.LttIntBag c = new LinkFactoryTest.LttIntBag();
+		LttIntBag c = new LttIntBag();
 		c.ids.add(20);
 		c.ids.add(30);
 		c.ids.add(40);
@@ -74,7 +78,7 @@ public class FieldMutatorTest extends GWTTestCase {
 		w.create();
 		Entity e = w.createEntity();
 
-		LinkFactoryTest.LttEntity c = new LinkFactoryTest.LttEntity();
+		LttEntity c = new LttEntity();
 
 		EntityFieldMutator mutator = new EntityFieldMutator();
 		mutator.setWorld(w);
@@ -91,7 +95,7 @@ public class FieldMutatorTest extends GWTTestCase {
 
 	public void test_read_entity_bag() throws Exception {
 		World w = new World();
-		LinkFactoryTest.LttBagEntity c = new LinkFactoryTest.LttBagEntity();
+		LttBagEntity c = new LttBagEntity();
 		c.entities.add(w.createEntity());
 		c.entities.add(w.createEntity());
 		c.entities.add(w.createEntity());
