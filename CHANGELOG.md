@@ -5,7 +5,9 @@
   - Methods added to interface `Injector#getRegistered(Class|String)`
   - `ComponentMapper#getSafe` deprecated, `#get` is sufficient for all use-cases now.
     due to mappers always growing their backing arrays to accomodate the highest entity id.
-
+  - Calling `BaseSystem#process` will now run the system, even if `setEnabled(false)` has been called.
+    `SystemInvocationStrategy` now tracks which systems are enabled/disabled.
+    (you may want to update your custom `SystemInvocationStrategy` implementations).
 
 - Optional manager: **EntityLinkManager**, discovery and maintenance of relationships between entities.
   - Automatically tracks component fields: `@EntityId int`, `Entity`, `@EntityId IntBag`, `Bag<Entity>`
@@ -13,6 +15,7 @@
   - `LinkListener` for listening in on when links between entities are established, changed or disconnected.
   - Tune behavior with `@LinkPolicy`, applied on component fields referencing entities.
   - Optimized link accessors via maven/gradle plugin - reflection-based fallback during development.
+- `@DelayedComponentDeletion` guarantees that component is available in `SubscriptionListener#removed(IntBag)`.
 - `World#getRegistered`, retrieves injectable objects programmatically.
 - Re-worked `EntityEdit` logic, less code and more performance.
 - ComponentType validates component when first encountered.
