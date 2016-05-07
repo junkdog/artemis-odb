@@ -15,7 +15,7 @@
   - `LinkListener` for listening in on when links between entities are established, changed or disconnected.
   - Tune behavior with `@LinkPolicy`, applied on component fields referencing entities.
   - Optimized link accessors via maven/gradle plugin - reflection-based fallback during development.
-- `@DelayedComponentDeletion` guarantees that component is available in `SubscriptionListener#removed(IntBag)`.
+- `@DelayedComponentRemoval` guarantees that component is available in `SubscriptionListener#removed(IntBag)`.
 - `World#getRegistered`, retrieves injectable objects programmatically.
 - Re-worked `EntityEdit` logic, less code and more performance.
 - ComponentType validates component when first encountered.

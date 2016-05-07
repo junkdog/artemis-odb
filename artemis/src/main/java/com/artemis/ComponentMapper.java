@@ -1,6 +1,6 @@
 package com.artemis;
 
-import com.artemis.annotations.DelayedComponentDeletion;
+import com.artemis.annotations.DelayedComponentRemoval;
 import com.artemis.utils.Bag;
 
 import static com.artemis.utils.reflect.ClassReflection.isAnnotationPresent;
@@ -33,7 +33,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 			? new ComponentPool(type)
 			: null;
 
-		if (isAnnotationPresent(type, DelayedComponentDeletion.class))
+		if (isAnnotationPresent(type, DelayedComponentRemoval.class))
 			purgatory = new DelayedComponentRemover<A>(components, pool, world.batchProcessor);
 		else
 			purgatory = new ImmediateComponentRemover<A>(components, pool);

@@ -1,9 +1,9 @@
 package com.artemis.component;
 
 import com.artemis.Component;
-import com.artemis.annotations.DelayedComponentDeletion;
+import com.artemis.annotations.DelayedComponentRemoval;
 
-@DelayedComponentDeletion
+@DelayedComponentRemoval
 public class ComponentX extends Component {
 	public String text;
 }
