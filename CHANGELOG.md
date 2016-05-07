@@ -9,13 +9,13 @@
     `SystemInvocationStrategy` now tracks which systems are enabled/disabled.
     (you may want to update your custom `SystemInvocationStrategy` implementations).
 
-- Optional manager: **EntityLinkManager**, discovery and maintenance of relationships between entities.
+- Optional manager: **[EntityLinkManager][ELM]**, discovery and maintenance of relationships between entities.
   - Automatically tracks component fields: `@EntityId int`, `Entity`, `@EntityId IntBag`, `Bag<Entity>`
     (shares behavior with serialization).
   - `LinkListener` for listening in on when links between entities are established, changed or disconnected.
   - Tune behavior with `@LinkPolicy`, applied on component fields referencing entities.
   - Optimized link accessors via maven/gradle plugin - reflection-based fallback during development.
-- `@DelayedComponentRemoval` guarantees that component is available in `SubscriptionListener#removed(IntBag)`.
+- [`@DelayedComponentRemoval`][DCR] guarantees that component is available in `SubscriptionListener#removed(IntBag)`.
 - `World#getRegistered`, retrieves injectable objects programmatically.
 - Re-worked `EntityEdit` logic, less code and more performance.
 - ComponentType validates component when first encountered.
@@ -30,6 +30,8 @@
   - Kryo serialization backend: [binary with kryo](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization)
     (thanks to @piotr-j).
 
+ - [ELM]: https://github.com/junkdog/artemis-odb/wiki/AspectSubscriptionManager#delayedcomponentremoval----keeping-components-around
+ - [DCR]: https://github.com/junkdog/artemis-odb/wiki/AspectSubscriptionManager#delayedcomponentremoval----keeping-components-around
 
 #### Version: 1.4.0 - 2016-03-09
 - **BREAKING CHANGES**
