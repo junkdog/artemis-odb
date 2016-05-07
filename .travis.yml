@@ -5,3 +5,7 @@ notifications:
   webhooks:
     urls:
       - https://webhooks.gitter.im/e/21541a510dc29899ac85
+
+
+    on_success: always
+    on_failure: always
