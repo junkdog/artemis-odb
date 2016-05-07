@@ -33,10 +33,10 @@ public class EntitySubscriptionTest {
 	public void deleted_entities_retain_components() {
 		World world = new World();
 
-		final ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
+		final ComponentMapper<ComponentY> mapper = world.getMapper(ComponentY.class);
 
 		world.getAspectSubscriptionManager()
-			.get(all(ComponentX.class))
+			.get(all(ComponentY.class))
 			.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
 				@Override
 				public void inserted(IntBag entities) {
@@ -51,14 +51,14 @@ public class EntitySubscriptionTest {
 			});
 
 		int id1 = world.create();
-		world.edit(id1).create(ComponentX.class);
+		world.edit(id1).create(ComponentY.class);
 
 		world.process();
 		world.delete(id1);
 		world.process();
 
 		int id2 = world.create();
-		world.edit(id2).create(ComponentX.class);
+		world.edit(id2).create(ComponentY.class);
 
 		world.process();
 		world.delete(id2);
@@ -97,6 +97,41 @@ public class EntitySubscriptionTest {
 
 		world.process();
 		world.edit(id1).remove(ComponentX.class);
+		world.process();
+	}
+
+	@Test
+	public void removed_component_not_retained_in_remove() {
+		World world = new World();
+
+		final ComponentMapper<ComponentY> mapper = world.getMapper(ComponentY.class);
+
+		world.getAspectSubscriptionManager()
+			.get(all(ComponentY.class))
+			.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+				@Override
+				public void inserted(IntBag entities) {
+					assertEquals(1, entities.size());
+				}
+
+				@Override
+				public void removed(IntBag entities) {
+					assertEquals(1, entities.size());
+					assertNull(mapper.get(entities.get(0)));
+				}
+			});
+
+		int id1 = world.create();
+		world.edit(id1).create(ComponentY.class);
+
+		world.process();
+		world.edit(id1).remove(ComponentY.class);
+		world.process();
+
+		world.edit(id1).create(ComponentY.class);
+
+		world.process();
+		world.edit(id1).remove(ComponentY.class);
 		world.process();
 	}
 

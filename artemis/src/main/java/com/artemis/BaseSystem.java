@@ -16,8 +16,6 @@ package com.artemis;
 public abstract class BaseSystem {
 	/** The world this system belongs to. */
 	protected World world;
-	/** If the system is enabled or not. */
-	boolean enabled = true;
 
 	public BaseSystem() {}
 
@@ -40,7 +38,7 @@ public abstract class BaseSystem {
 	 * @see InvocationStrategy
 	 */
 	public final void process() {
-		if(enabled && checkProcessing()) {
+		if(checkProcessing()) {
 			begin();
 			processSystem();
 			end();
@@ -89,7 +87,7 @@ public abstract class BaseSystem {
 	 * @return {@code true} if enabled, otherwise false
 	 */
 	public boolean isEnabled() {
-		return enabled;
+		return world.partition.invocationStrategy.isEnabled(this);
 	}
 
 	/**
@@ -105,7 +103,7 @@ public abstract class BaseSystem {
 	 * @see #checkProcessing() both must be true before the system will process.
 	 */
 	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
+		world.partition.invocationStrategy.setEnabled(this, enabled);
 	}
 
 	/**

@@ -149,6 +149,13 @@ public final class WorldConfiguration {
 	}
 
 	void initialize(World world, Injector injector, AspectSubscriptionManager asm) {
+		if (invocationStrategy == null)
+			invocationStrategy = new InvocationStrategy();
+
+		invocationStrategy.setWorld(world);
+
+		world.partition.invocationStrategy = invocationStrategy;
+
 		systems.set(COMPONENT_MANAGER_IDX, world.getComponentManager());
 		systems.set(ENTITY_MANAGER_IDX, world.getEntityManager());
 		systems.set(ASPECT_SUBSCRIPTION_MANAGER_IDX, asm);
@@ -167,9 +174,8 @@ public final class WorldConfiguration {
 
 		asm.processComponentIdentity(NO_COMPONENTS, new BitSet());
 
-		if (invocationStrategy != null) {
-			world.setInvocationStrategy(invocationStrategy);
-		}
+
+		invocationStrategy.initialize();
 	}
 
 	private void initializeSystems(Injector injector) {

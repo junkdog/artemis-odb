@@ -16,7 +16,8 @@ public class IntOptimizedSystemAdditional extends IteratingSystem {
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		super.setEnabled(enabled);
+		if (world != null)
+			super.setEnabled(enabled);
 	}
 
 	@Override

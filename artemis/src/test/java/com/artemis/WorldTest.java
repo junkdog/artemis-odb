@@ -2,6 +2,8 @@ package com.artemis;
 
 import static org.junit.Assert.assertEquals;
 
+import com.artemis.ComponentManager.ComponentIdentityResolver;
+import com.artemis.systems.IteratingSystem;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -10,9 +12,41 @@ import com.artemis.component.ComponentY;
 import com.artemis.systems.DelayedEntityProcessingSystem;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.Bag;
+import org.mockito.asm.util.ASMifiable;
+import org.openjdk.jol.info.ClassLayout;
+import org.openjdk.jol.vm.VM;
 
 public class WorldTest
 {
+	@Test
+	public void sandbox() {
+		System.out.println(VM.current().details());
+		System.out.println();
+		print(AspectSubscriptionManager.class);
+		print(BaseEntitySystem.class);
+		print(BatchChangeProcessor.class);
+		print(ComponentIdentityResolver.class);
+		print(BaseComponentMapper.class);
+		print(ComponentMapper.class);
+		print(ComponentType.class);
+		print(ComponentPool.class);
+		print(ComponentManager.class);
+		print(DelayedComponentRemover.class);
+		print(EntityManager.class);
+		print(EntitySubscription.class);
+		print(EntitySubscription.SubscriptionExtra.class);
+		print(EntityTransmuter.class);
+		print(EntityTransmuter.TransmuteOperation.class);
+		print(ImmediateComponentRemover.class);
+		print(IteratingSystem.class);
+		print(SystemInvocationStrategy.class);
+		print(World.class);
+	}
+
+	protected void print(Class<?> klazz) {
+		System.out.println(ClassLayout.parseClass(klazz).toPrintable());
+	}
+
 	@Test
 	public void get_component_should_not_throw_exception()
 	{

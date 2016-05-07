@@ -1,6 +1,7 @@
 package com.artemis;
 
 import com.artemis.utils.Bag;
+import com.artemis.utils.ShortBag;
 
 import java.util.BitSet;
 
@@ -17,24 +18,21 @@ import java.util.BitSet;
  * @see com.artemis.EntityTransmuterFactory
  */
 public final class EntityTransmuter {
+	private final Factory factory;
+
 	private final EntityManager em;
-	private final ComponentManager cm;
 	private final BatchChangeProcessor batchProcessor;
-	private final BitSet additions;
-	private final BitSet removals;
 	private final Bag<TransmuteOperation> operations;
 
-	private final BitSet bs;
+	private final ShortBag entityToIdentity;
 
 	EntityTransmuter(World world, BitSet additions, BitSet removals) {
 		em = world.getEntityManager();
-		cm = world.getComponentManager();
+		entityToIdentity = world.getComponentManager().entityToIdentity;
 		batchProcessor = world.batchProcessor;
-		this.additions = additions;
-		this.removals = removals;
 		operations = new Bag<TransmuteOperation>(TransmuteOperation.class);
 
-		bs = new BitSet();
+		factory = new Factory(world, additions, removals);
 	}
 
 	/**
@@ -46,29 +44,30 @@ public final class EntityTransmuter {
 	 * @param entityId target entity id
 	 */
 	public void transmute(int entityId) {
-		if (batchProcessor.isDeleted(entityId))
-			return;
-
-		if (!em.isActive(entityId))
-			throw new RuntimeException("Issued transmute on deleted " + entityId);
+		if (!isValid(entityId)) return;
 
 		TransmuteOperation operation = getOperation(entityId);
 		operation.perform(entityId);
-		cm.setIdentity(entityId, operation.compositionId);
-
-		batchProcessor.changed.set(entityId);
+		entityToIdentity.set(entityId, operation.compositionId);
 	}
 
 	void transmuteNoOperation(int entityId) {
-		if (batchProcessor.isDeleted(entityId))
-			return;
+		if (!isValid(entityId)) return;
 
+		TransmuteOperation operation = getOperation(entityId);
+		entityToIdentity.set(entityId, operation.compositionId);
+	}
+
+	private boolean isValid(int entityId) {
 		if (!em.isActive(entityId))
 			throw new RuntimeException("Issued transmute on deleted " + entityId);
 
-		TransmuteOperation operation = getOperation(entityId);
-		cm.setIdentity(entityId, operation.compositionId);
+		if (batchProcessor.isDeleted(entityId))
+			return false;
+
 		batchProcessor.changed.set(entityId);
+
+		return true;
 	}
 
 	/**
@@ -83,54 +82,69 @@ public final class EntityTransmuter {
 	}
 
 	TransmuteOperation getOperation(int entityId) {
-		int compositionId = cm.getIdentity(entityId);
-		return operation(entityId, compositionId);
+		return operation(entityId, entityToIdentity.get(entityId));
 	}
 
 	private TransmuteOperation operation(int entityId, int compositionId) {
 		TransmuteOperation operation = operations.safeGet(compositionId);
 		if (operation == null) {
-			operation = createOperation(cm.componentBits(entityId));
+			operation = factory.createOperation(entityId);
 			operations.set(compositionId, operation);
 		}
 		return operation;
 	}
 
-	private TransmuteOperation createOperation(BitSet componentBits) {
-		bs.clear();
-		bs.or(componentBits);
-		bs.or(additions);
-		bs.andNot(removals);
-		int compositionId = cm.compositionIdentity(bs);
-		return new TransmuteOperation(compositionId,
-			getAdditions(componentBits), getRemovals(componentBits));
-	}
-
-	private Bag<ComponentMapper> getAdditions(BitSet origin) {
-		ComponentTypeFactory tf = cm.typeFactory;
-		Bag<ComponentMapper> types = new Bag(ComponentMapper.class);
-		for (int i = additions.nextSetBit(0); i >= 0; i = additions.nextSetBit(i + 1)) {
-			if (!origin.get(i))
-				types.add(cm.getMapper(tf.getTypeFor(i).getType()));
-		}
-
-		return types;
-	}
-
-	private Bag<ComponentMapper> getRemovals(BitSet origin) {
-		ComponentTypeFactory tf = cm.typeFactory;
-		Bag<ComponentMapper> types = new Bag(ComponentMapper.class);
-		for (int i = removals.nextSetBit(0); i >= 0; i = removals.nextSetBit(i + 1)) {
-			if (origin.get(i))
-				types.add(cm.getMapper(tf.getTypeFor(i).getType()));
-		}
-
-		return types;
-	}
-
 	@Override
 	public String toString() {
-		return "EntityTransmuter(add=" + additions + " remove=" + removals + ")";
+		return "EntityTransmuter(add=" + factory.additions + " remove=" + factory.removals + ")";
+	}
+
+	static class Factory {
+		private final ComponentManager cm;
+		private final BitSet additions;
+		private final BitSet removals;
+		private final BitSet bs;
+
+		Factory(World world, BitSet additions, BitSet removals) {
+			this.cm = world.getComponentManager();
+			this.additions = additions;
+			this.removals = removals;
+			this.bs = new BitSet();
+		}
+
+		TransmuteOperation createOperation(int entityId) {
+			BitSet componentBits = cm.componentBits(entityId);
+
+			bs.clear();
+			bs.or(componentBits);
+			bs.or(additions);
+			bs.andNot(removals);
+			int compositionId = cm.compositionIdentity(bs);
+			return new TransmuteOperation(compositionId,
+				getAdditions(componentBits), getRemovals(componentBits));
+		}
+
+		private Bag<ComponentMapper> getAdditions(BitSet origin) {
+			ComponentTypeFactory tf = cm.typeFactory;
+			Bag<ComponentMapper> types = new Bag(ComponentMapper.class);
+			for (int i = additions.nextSetBit(0); i >= 0; i = additions.nextSetBit(i + 1)) {
+				if (!origin.get(i))
+					types.add(cm.getMapper(tf.getTypeFor(i).getType()));
+			}
+
+			return types;
+		}
+
+		private Bag<ComponentMapper> getRemovals(BitSet origin) {
+			ComponentTypeFactory tf = cm.typeFactory;
+			Bag<ComponentMapper> types = new Bag(ComponentMapper.class);
+			for (int i = removals.nextSetBit(0); i >= 0; i = removals.nextSetBit(i + 1)) {
+				if (origin.get(i))
+					types.add(cm.getMapper(tf.getTypeFor(i).getType()));
+			}
+
+			return types;
+		}
 	}
 
 	static class TransmuteOperation {
@@ -215,4 +229,5 @@ public final class EntityTransmuter {
 			return sb.toString();
 		}
 	}
+
 }

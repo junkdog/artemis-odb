@@ -8,6 +8,7 @@ import java.util.BitSet;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.artemis.Aspect.all;
 import static com.artemis.utils.ConverterUtil.toIntBag;
 
 /**
@@ -20,7 +21,7 @@ import static com.artemis.utils.ConverterUtil.toIntBag;
  * @see EntitySubscription
  */
 @SkipWire
-public class AspectSubscriptionManager extends Manager {
+public class AspectSubscriptionManager extends BaseSystem {
 
 	private final Map<Aspect.Builder, EntitySubscription> subscriptionMap;
 	private final Bag<EntitySubscription> subscriptions = new Bag(EntitySubscription.class);
@@ -30,6 +31,15 @@ public class AspectSubscriptionManager extends Manager {
 
 	protected AspectSubscriptionManager() {
 		subscriptionMap = new HashMap<Aspect.Builder, EntitySubscription>();
+	}
+
+	@Override
+	protected void processSystem() {}
+
+	@Override
+	protected void initialize() {
+		// making sure subscription 0 matches all entities
+		get(all());
 	}
 
 	/**

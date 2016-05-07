@@ -62,6 +62,9 @@ public class World {
 	 */
 	public World(WorldConfiguration configuration) {
 		partition = new WorldSegment(configuration);
+//		if (partition.invocationStrategy == null) {
+//			setInvocationStrategy(new InvocationStrategy());
+//		}
 
 		final ComponentManager lcm = (ComponentManager) configuration.systems.get(WorldConfiguration.COMPONENT_MANAGER_IDX);
 		final EntityManager lem = (EntityManager) configuration.systems.get(WorldConfiguration.ENTITY_MANAGER_IDX);
@@ -71,10 +74,6 @@ public class World {
 		batchProcessor = new BatchChangeProcessor(this);
 
 		configuration.initialize(this, partition.injector, partition.asm);
-
-		if (partition.invocationStrategy == null) {
-			setInvocationStrategy(new InvocationStrategy());
-		}
 	}
 
 	/**
@@ -400,6 +399,8 @@ public class World {
 		if (!pendingPurge.isEmpty()) {
 			cm.clean(pendingPurge);
 			em.clean(pendingPurge);
+
+			batchProcessor.purgeComponents();
 		}
 	}
 

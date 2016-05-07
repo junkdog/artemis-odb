@@ -29,10 +29,9 @@ public class ComponentManager extends BaseSystem {
 	private Bag<ComponentMapper> mappers = new Bag(ComponentMapper.class);
 
 	private final ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
-	private final ShortBag entityToIdentity;
+	final ShortBag entityToIdentity;
 	protected final ComponentTypeFactory typeFactory;
 
-	private int highestSeenIdentity;
 	/**
 	 * Creates a new instance of {@link ComponentManager}.
 	 */
@@ -75,18 +74,28 @@ public class ComponentManager extends BaseSystem {
 		}
 	}
 
+
 	/**
-	 * Removes all components from the entity associated in this manager.
+	 * Removes all components from deleted entities.
 	 *
-	 * @param entityId
-	 *			the entity to remove components from
+	 * @param pendingPurge
+	 *			the entities to remove components from
 	 */
+	void clean(IntBag pendingPurge) {
+		int[] ids = pendingPurge.getData();
+		for (int i = 0, s = pendingPurge.size(); s > i; i++) {
+			removeComponents(ids[i]);
+		}
+	}
+
 	private void removeComponents(int entityId) {
 		IntBag typeIds = componentTypeIds(entityId);
 		int[] ids = typeIds.getData();
 		for (int i = 0, s = typeIds.size(); s > i; i++) {
 			mappers.get(ids[i]).internalRemove(entityId);
 		}
+
+		setIdentity(entityId, 0);
 	}
 
 	/**
@@ -141,17 +150,6 @@ public class ComponentManager extends BaseSystem {
 		return fillBag;
 	}
 
-	/**
-	 * Removes all components from entities marked for deletion.
-	 */
-	void clean(IntBag deletedIds) {
-		int[] ids = deletedIds.getData();
-		for(int i = 0, s = deletedIds.size(); s > i; i++) {
-			removeComponents(ids[i]);
-			entityToIdentity.set(ids[i], (short)0);
-		}
-	}
-
 	/** Get component composition of entity. */
 	BitSet componentBits(int entityId) {
 		int identityIndex = entityToIdentity.get(entityId);
@@ -172,11 +170,12 @@ public class ComponentManager extends BaseSystem {
 	 */
 	int compositionIdentity(BitSet componentBits) {
 		int identity = identityResolver.getIdentity(componentBits);
-		if (identity > highestSeenIdentity) {
+		if (identity == -1) {
+			identity = identityResolver.allocateIdentity(componentBits);
 			world.getAspectSubscriptionManager()
 				.processComponentIdentity(identity, componentBits);
-			highestSeenIdentity = identity;
 		}
+
 		return identity;
 	}
 
@@ -199,8 +198,9 @@ public class ComponentManager extends BaseSystem {
 	 * @param es entity subscription to update.
 	 */
 	void synchronize(EntitySubscription es) {
-		for (int i = 1; highestSeenIdentity >= i; i++) {
-			BitSet componentBits = identityResolver.compositionBits.get(i);
+		Bag<BitSet> compositionBits = identityResolver.compositionBits;
+		for (int i = 1, s = compositionBits.size(); s > i; i++) {
+			BitSet componentBits = compositionBits.get(i);
 			es.processComponentIdentity(i, componentBits);
 		}
 
@@ -237,7 +237,6 @@ public class ComponentManager extends BaseSystem {
 		}
 	}
 
-
 	/** Tracks all unique component compositions. */
 	static final class ComponentIdentityResolver {
 		final Bag<BitSet> compositionBits;
@@ -259,11 +258,10 @@ public class ComponentManager extends BaseSystem {
 					return i;
 			}
 
-			allocate(components);
-			return size;
+			return -1;
 		}
 
-		private void allocate(BitSet componentBits) {
+		int allocateIdentity(BitSet componentBits) {
 			IntBag ids = new IntBag(componentBits.cardinality());
 			for (int i = componentBits.nextSetBit(0); i >= 0; i = componentBits.nextSetBit(i + 1)) {
 				ids.add(i);
@@ -271,6 +269,8 @@ public class ComponentManager extends BaseSystem {
 
 			compositionIds.add(ids);
 			compositionBits.add((BitSet)componentBits.clone());
+
+			return compositionBits.size() - 1;
 		}
 	}
 }

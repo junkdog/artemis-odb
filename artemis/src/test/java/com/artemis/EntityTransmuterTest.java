@@ -71,6 +71,7 @@ public class EntityTransmuterTest {
 		edit.remove(ComponentY.class);
 
 		world.process();
+		world.process();
 
 		assertTrue("compositionId=" + e2.getCompositionId(), 2 != e2.getCompositionId());
 		assertEquals(e1.getCompositionId(), e2.getCompositionId());

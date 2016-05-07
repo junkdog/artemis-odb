@@ -1,6 +1,9 @@
 package com.artemis;
 
 import com.artemis.utils.Bag;
+import com.artemis.utils.ImmutableBag;
+
+import java.util.BitSet;
 
 /** Delegate for system invocation.
  *
@@ -18,6 +21,7 @@ public abstract class SystemInvocationStrategy {
 
 	/** World to operate on. */
 	protected World world;
+	protected final BitSet disabled = new BitSet();
 
 	/** World to operate on. */
 	protected final void setWorld(World world) {
@@ -34,4 +38,24 @@ public abstract class SystemInvocationStrategy {
 
 	/** Process all systems. */
 	protected abstract void process(Bag<BaseSystem> systems);
+
+	public boolean isEnabled(BaseSystem system) {
+		Class<? extends BaseSystem> target = system.getClass();
+		ImmutableBag<BaseSystem> systems = world.getSystems();
+		for (int i = 0; i < systems.size(); i++) {
+			if (target == systems.get(i).getClass())
+				return !disabled.get(i);
+		}
+
+		throw new RuntimeException("huh?");
+	}
+
+	public void setEnabled(BaseSystem system, boolean value) {
+		Class<? extends BaseSystem> target = system.getClass();
+		ImmutableBag<BaseSystem> systems = world.getSystems();
+		for (int i = 0; i < systems.size(); i++) {
+			if (target == systems.get(i).getClass())
+				disabled.set(i, !value);
+		}
+	}
 }

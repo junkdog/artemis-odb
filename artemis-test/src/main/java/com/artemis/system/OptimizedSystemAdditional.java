@@ -15,7 +15,8 @@ public class OptimizedSystemAdditional extends EntityProcessingSystem {
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		super.setEnabled(enabled);
+		if (world != null)
+			super.setEnabled(enabled);
 	}
 
 	@Override

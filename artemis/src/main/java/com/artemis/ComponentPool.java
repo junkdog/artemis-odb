@@ -4,7 +4,7 @@ import com.artemis.utils.Bag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.ReflectionException;
 
-class ComponentPool<T extends PooledComponent> {
+public class ComponentPool<T extends PooledComponent> {
 	private final Bag<T> cache;
 	private Class<T> type;
 

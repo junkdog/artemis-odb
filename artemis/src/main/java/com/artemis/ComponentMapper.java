@@ -1,6 +1,9 @@
 package com.artemis;
 
+import com.artemis.annotations.DelayedComponentDeletion;
 import com.artemis.utils.Bag;
+
+import static com.artemis.utils.reflect.ClassReflection.isAnnotationPresent;
 
 /**
  * Provide high performance component access and mutation from within a System.
@@ -19,6 +22,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 	private final EntityTransmuter createTransmuter;
 	private final EntityTransmuter removeTransmuter;
 	private final ComponentPool pool;
+	private final ComponentRemover<A> purgatory;
 
 
 	public ComponentMapper(Class<A> type, World world) {
@@ -28,6 +32,11 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 		pool = (this.type.isPooled)
 			? new ComponentPool(type)
 			: null;
+
+		if (isAnnotationPresent(type, DelayedComponentDeletion.class))
+			purgatory = new DelayedComponentRemover<A>(components, pool, world.batchProcessor);
+		else
+			purgatory = new ImmediateComponentRemover<A>(components, pool);
 
 		createTransmuter = new EntityTransmuterFactory(world).add(type).build();
 		removeTransmuter = new EntityTransmuterFactory(world).remove(type).build();
@@ -74,7 +83,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 	 */
 	@Override
 	public boolean has(int entityId) {
-		return get(entityId) != null;
+		return get(entityId) != null && !purgatory.has(entityId);
 	}
 
 
@@ -88,25 +97,16 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 	public void remove(int entityId) {
 		A component = get(entityId);
 		if (component != null) {
-			// running transmuter first, as it performs some validation
 			removeTransmuter.transmuteNoOperation(entityId);
-			components.fastSet(entityId, null);
-
-			if (pool != null)
-				pool.free((PooledComponent) component);
+			purgatory.mark(entityId);
 		}
 	}
 
 	@Override
 	protected void internalRemove(int entityId) { // triggers no composition id update
-		if (pool != null) {
-			A component = get(entityId);
-			if (component != null) {
-				pool.free((PooledComponent) component);
-			}
-		}
-
-		components.fastSet(entityId, null);
+		A component = get(entityId);
+		if (component != null)
+			purgatory.mark(entityId);
 	}
 
 	/**
@@ -141,9 +141,9 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 	}
 
 	private A createNew() {
-		return (pool != null)
-			? (A) pool.obtain()
-			: (A) ComponentManager.newInstance(type.getType());
+		return (A) ((pool != null)
+			? pool.obtain()
+			: ComponentManager.newInstance(type.getType()));
 	}
 
 }
