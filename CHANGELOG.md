@@ -30,8 +30,8 @@
   - Kryo serialization backend: [binary with kryo](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization)
     (thanks to @piotr-j).
 
- - [ELM]: https://github.com/junkdog/artemis-odb/wiki/AspectSubscriptionManager#delayedcomponentremoval----keeping-components-around
- - [DCR]: https://github.com/junkdog/artemis-odb/wiki/AspectSubscriptionManager#delayedcomponentremoval----keeping-components-around
+ [ELM]: https://github.com/junkdog/artemis-odb/wiki/AspectSubscriptionManager#delayedcomponentremoval----keeping-components-around
+ [DCR]: https://github.com/junkdog/artemis-odb/wiki/AspectSubscriptionManager#delayedcomponentremoval----keeping-components-around
 
 #### Version: 1.4.0 - 2016-03-09
 - **BREAKING CHANGES**
