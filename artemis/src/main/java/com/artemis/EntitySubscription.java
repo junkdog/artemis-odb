@@ -186,6 +186,11 @@ public class EntitySubscription {
 		extra.listeners.add(listener);
 	}
 
+	@Override
+	public String toString() {
+		return "EntitySubscription[" + getAspectBuilder() + "]";
+	}
+
 	/**
 	 * <p>This interfaces reports entities inserted or
 	 * removed when matched against their {@link com.artemis.EntitySubscription}</p>

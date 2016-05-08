@@ -2,6 +2,7 @@ package com.artemis;
 
 import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
+import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 
 import java.util.BitSet;
@@ -104,5 +105,15 @@ public class AspectSubscriptionManager extends BaseSystem {
 		for (int i = 0, s = subscriptions.size(); s > i; i++) {
 			subscriptions.get(i).processComponentIdentity(id, componentBits);
 		}
+	}
+
+	/**
+	 * Gets the active list of all current entity subscriptions. Meant to assist
+	 * in tooling/debugging.
+	 *
+	 * @return All active subscriptions.
+	 */
+	public ImmutableBag<EntitySubscription> getSubscriptions() {
+		return subscriptions;
 	}
 }

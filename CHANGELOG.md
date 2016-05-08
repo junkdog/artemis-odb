@@ -20,7 +20,8 @@
 - Re-worked `EntityEdit` logic, less code and more performance.
 - ComponentType validates component when first encountered.
 - Removed `PackedComponent` and `@PackedWeaver`.
-- `Bag(Class<T>)` and `Bag(Class<T>, int capacity)` added.
+- added `AspectSubscriptionManager#getSubscriptions`
+- added `Bag(Class<T>)` and `Bag(Class<T>, int capacity)`
 - `IntBag#get` throws `ArrayIndexOutOfBoundsException` whenever `index` is greater than the reported size,
   regardless of the size of the underlying array.
 - All systems are first injected, after which all systems are initialized. Previously,
