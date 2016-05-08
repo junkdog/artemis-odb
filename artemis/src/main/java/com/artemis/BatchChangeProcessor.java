@@ -13,7 +13,11 @@ final class BatchChangeProcessor {
 	final BitSet changed = new BitSet();
 	final WildBag<ComponentRemover> purgatories = new WildBag<ComponentRemover>(ComponentRemover.class);
 
+	// marked for deletion, will be removed for entity subscriptions asap
 	private final BitSet deleted = new BitSet();
+
+	// collected deleted entities during this {@link World#process()} round;
+	// cleaned at end of round.
 	private final BitSet pendingPurge = new BitSet();
 	private final IntBag toPurge = new IntBag();
 
