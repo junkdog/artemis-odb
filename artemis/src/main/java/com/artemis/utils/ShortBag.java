@@ -140,18 +140,6 @@ public class ShortBag {
 	}
 	
 	/**
-	 * Checks if the internal storage supports this index.
-	 * 
-	 * @param index
-	 *			index to check
-	 *
-	 * @return {@code true} if the index is within bounds
-	 */
-	public boolean isIndexWithinBounds(int index) {
-		return index < getCapacity();
-	}
-
-	/**
 	 * Returns true if this bag contains no elements.
 	 * 
 	 * @return {@code true} if this bag contains no elements
@@ -193,9 +181,13 @@ public class ShortBag {
 		}
 	}
 
+	public void unsafeSet(int index, short value) {
+		data[index] = value;
+	}
+
 	/**
 	 * Set element at specified index in the bag.
-	 * 
+	 *
 	 * @param index
 	 *			position of element
 	 * @param value

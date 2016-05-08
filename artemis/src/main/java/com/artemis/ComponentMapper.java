@@ -123,7 +123,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 			// running transmuter first, as it performs som validation
 			createTransmuter.transmuteNoOperation(entityId);
 			component = createNew();
-			components.fastSet(entityId, component);
+			components.unsafeSet(entityId, component);
 		}
 
 		return component;
@@ -134,7 +134,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 		A component = get(entityId);
 		if (component == null || purgatory.unmark(entityId)) {
 			component = createNew();
-			components.fastSet(entityId, component);
+			components.unsafeSet(entityId, component);
 		}
 
 		return component;

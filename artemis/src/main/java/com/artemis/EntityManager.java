@@ -105,7 +105,10 @@ public class EntityManager extends BaseSystem {
 			cm.ensureCapacity(newSize);
 		}
 
-		entities.fastSet(e.id, e);
+		// can't use unsafe set, as we need to track highest id
+		// for faster iteration when syncing up new subscriptions
+		// in ComponentManager#synchronize
+		entities.set(e.id, e);
 
 		return e;
 	}

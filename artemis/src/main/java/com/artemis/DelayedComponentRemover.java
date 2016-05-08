@@ -54,13 +54,13 @@ class DelayedComponentRemover<A extends Component> extends ComponentRemover<A> {
 			A c = components.get(id);
 				pool.free((PooledComponent) c);
 
-			components.fastSet(id, null);
+			components.unsafeSet(id, null);
 		}
 	}
 
 	private void purgeNoPool() {
 		for (int id = idBits.nextSetBit(0); id >= 0; id = idBits.nextSetBit(id + 1)) {
-			components.fastSet(id, null);
+			components.unsafeSet(id, null);
 		}
 	}
 }

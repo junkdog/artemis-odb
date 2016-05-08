@@ -111,7 +111,7 @@ public class IntBag {
 
 	/**
 	 * Returns the element at the specified position in Bag.
-	 * 
+	 *
 	 * @param index
 	 *			index of the element to return
 	 *
@@ -127,7 +127,7 @@ public class IntBag {
 
 		return data[index];
 	}
-	
+
 	/**
 	 * Returns the number of elements in this bag.
 	 * 

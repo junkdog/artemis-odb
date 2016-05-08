@@ -48,14 +48,14 @@ public final class EntityTransmuter {
 
 		TransmuteOperation operation = getOperation(entityId);
 		operation.perform(entityId);
-		entityToIdentity.set(entityId, operation.compositionId);
+		entityToIdentity.unsafeSet(entityId, operation.compositionId);
 	}
 
 	void transmuteNoOperation(int entityId) {
 		if (!isValid(entityId)) return;
 
 		TransmuteOperation operation = getOperation(entityId);
-		entityToIdentity.set(entityId, operation.compositionId);
+		entityToIdentity.unsafeSet(entityId, operation.compositionId);
 	}
 
 	private boolean isValid(int entityId) {

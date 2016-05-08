@@ -13,7 +13,7 @@ public class ImmediateComponentRemover<A extends Component> extends ComponentRem
 			PooledComponent c = (PooledComponent) components.get(entityId);
 			if (c != null) pool.free(c);
 		}
-		components.fastSet(entityId, null);
+		components.unsafeSet(entityId, null);
 	}
 
 	@Override

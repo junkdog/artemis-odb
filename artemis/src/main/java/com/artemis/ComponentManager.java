@@ -217,7 +217,7 @@ public class ComponentManager extends BaseSystem {
 	 * @param compositionId composition id
 	 */
 	void setIdentity(int entityId, int compositionId) {
-		entityToIdentity.set(entityId, (short) compositionId);
+		entityToIdentity.unsafeSet(entityId, (short) compositionId);
 	}
 
 	/**

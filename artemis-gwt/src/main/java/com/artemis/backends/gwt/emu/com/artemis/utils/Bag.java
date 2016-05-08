@@ -283,19 +283,21 @@ public class Bag<E> implements ImmutableBag<E> {
 		if(index >= data.length)
 			grow(max((2 * data.length), index + 1));
 
-		fastSet(index, e);
+		size = Math.max(size, index + 1);
+		data[index] = e;
 	}
 
 	/**
-	 * Set element at specified index in the bag.
+	 *<em>Unsafe method.</em> Sets element at specified index in the bag,
+	 * without updating size. Internally used by artemis when operation is
+	 * known to be safe.
 	 *
 	 * @param index
 	 *			position of element
 	 * @param e
 	 *			the element
 	 */
-	public void fastSet(int index, E e) {
-		size = Math.max(size, index + 1);
+	public void unsafeSet(int index, E e) {
 		data[index] = e;
 	}
 
