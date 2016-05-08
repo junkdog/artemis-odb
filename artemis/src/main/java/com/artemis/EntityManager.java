@@ -96,7 +96,7 @@ public class EntityManager extends BaseSystem {
 	 * Instantiates an Entity without registering it into the world.
 	 * @param id The ID to be set on the Entity
 	 */
-	protected Entity createEntity(int id) {
+	private Entity createEntity(int id) {
 		Entity e = new Entity(world, id);
 		if (e.id >= entities.getCapacity()) {
 			int newSize = 2 * entities.getCapacity();
