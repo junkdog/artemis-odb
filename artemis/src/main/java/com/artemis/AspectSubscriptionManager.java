@@ -38,7 +38,7 @@ public class AspectSubscriptionManager extends BaseSystem {
 
 	@Override
 	protected void initialize() {
-		// making sure subscription 0 matches all entities
+		// making sure subscription 1 matches all entities
 		get(all());
 	}
 

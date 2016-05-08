@@ -119,7 +119,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 	@Override
 	public A create(int entityId) {
 		A component = get(entityId);
-		if (component == null) {
+		if (component == null || purgatory.unmark(entityId)) {
 			// running transmuter first, as it performs som validation
 			createTransmuter.transmuteNoOperation(entityId);
 			component = createNew();
@@ -132,7 +132,7 @@ public final class ComponentMapper<A extends Component> extends BaseComponentMap
 	@Override
 	public A internalCreate(int entityId) {
 		A component = get(entityId);
-		if (component == null) {
+		if (component == null || purgatory.unmark(entityId)) {
 			component = createNew();
 			components.fastSet(entityId, component);
 		}

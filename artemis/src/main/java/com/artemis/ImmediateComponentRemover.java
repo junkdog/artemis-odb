@@ -17,6 +17,11 @@ public class ImmediateComponentRemover<A extends Component> extends ComponentRem
 	}
 
 	@Override
+	boolean unmark(int entityId) {
+		return false;
+	}
+
+	@Override
 	void purge() {}
 
 	@Override

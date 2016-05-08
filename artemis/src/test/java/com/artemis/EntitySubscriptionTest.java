@@ -2,6 +2,7 @@ package com.artemis;
 
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
+import com.artemis.systems.IteratingSystem;
 import com.artemis.utils.IntBag;
 import org.junit.Test;
 
@@ -98,6 +99,43 @@ public class EntitySubscriptionTest {
 		world.process();
 		world.edit(id1).remove(ComponentX.class);
 		world.process();
+	}
+
+	@Test
+	public void removed_and_create_cancels_removed() {
+		final World world = new World(new WorldConfiguration()
+			.setSystem(new IteratingSystem(all(ComponentX.class)) {
+				private ComponentMapper<ComponentX> xMapper;
+
+				@Override
+				protected void process(int entityId) {
+					xMapper.remove(entityId);
+				}
+			}));
+
+		final ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
+
+		world.getAspectSubscriptionManager()
+			.get(all(ComponentY.class).exclude(ComponentX.class))
+			.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+				@Override
+				public void inserted(IntBag entities) {
+					assertEquals(1, entities.size());
+					world.edit(entities.get(0)).create(ComponentX.class);
+				}
+
+				@Override
+				public void removed(IntBag entities) {
+					assertEquals(1, entities.size());
+				}
+			});
+
+		int id1 = world.create();
+		world.edit(id1).create(ComponentX.class);
+		world.edit(id1).create(ComponentY.class);
+
+		world.process();
+		assertNotNull(mapper.get(id1));
 	}
 
 	@Test

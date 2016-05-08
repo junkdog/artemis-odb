@@ -12,6 +12,7 @@ abstract class ComponentRemover<A extends Component> {
 	}
 
 	abstract void mark(int entityId);
+	abstract boolean unmark(int entityId);
 	abstract void purge();
 	abstract boolean has(int entityId);
 }

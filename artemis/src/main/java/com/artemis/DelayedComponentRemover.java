@@ -22,6 +22,19 @@ class DelayedComponentRemover<A extends Component> extends ComponentRemover<A> {
 	}
 
 	@Override
+	boolean unmark(int entityId) {
+		if (idBits.get(entityId)) {
+			idBits.set(entityId, false);
+			if (pool != null) {
+				pool.free((PooledComponent) components.get(entityId));
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
 	void purge() {
 		if (pool != null)
 			purgeWithPool();
