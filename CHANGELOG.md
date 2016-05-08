@@ -1,6 +1,8 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
-#### Version: 2.0.0-SNAPSHOT
+#### Version: 2.0.0-RC2-SNAPSHOT
+
+#### Version: 2.0.0-RC1 - 2016-05-09
 - **BREAKING CHANGES**
   - Methods added to interface `Injector#getRegistered(Class|String)`
   - `ComponentMapper#getSafe` deprecated, `#get` is sufficient for all use-cases now.
@@ -31,7 +33,7 @@
   - Kryo serialization backend: [binary with kryo](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization)
     (thanks to @piotr-j).
 
- [ELM]: https://github.com/junkdog/artemis-odb/wiki/AspectSubscriptionManager#delayedcomponentremoval----keeping-components-around
+ [ELM]: https://github.com/junkdog/artemis-odb/wiki/EntityLinkManager
  [DCR]: https://github.com/junkdog/artemis-odb/wiki/AspectSubscriptionManager#delayedcomponentremoval----keeping-components-around
 
 #### Version: 1.4.0 - 2016-03-09

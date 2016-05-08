@@ -72,6 +72,20 @@ Share your thoughts and questions with us!
 - [Slick forums](http://slick.ninjacave.com/forum/viewforum.php?f=28)
 
 #### Maven
+
+
+Anticipating 2.0.0: minor API changes may still occur
+
+```xml
+<dependency>
+	<groupId>net.onedaybeard.artemis</groupId>
+	<artifactId>artemis-odb</artifactId>
+	<version>2.0.0-RC1</version>
+</dependency>
+```
+
+Or, the safe route:
+
 ```xml
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
@@ -83,13 +97,18 @@ Share your thoughts and questions with us!
 See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automation) and [module overview](https://github.com/junkdog/artemis-odb/wiki/Module-Overview)
 
 #### Gradle
+
+```groovy
+  dependencies { compile "net.onedaybeard.artemis:artemis-odb:1.4.0" }
+```
+or
+
 ```groovy
   dependencies { compile "net.onedaybeard.artemis:artemis-odb:1.4.0" }
 ```
 
 #### Manual Download
 
- - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/1.4.0/) 
- - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/1.4.0/)
- - [Entity Factory Processor](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-processor/1.4.0/)
+ - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/2.0.0-RC1/) 
+ - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/2.0.0-RC1/)
 
