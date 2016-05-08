@@ -119,7 +119,7 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 */
 	@SuppressWarnings("unchecked")
-	public static final Aspect.Builder all() {
+	public static Aspect.Builder all() {
 		return new Builder().all();
 	}
 
@@ -134,7 +134,7 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 */
 	@SafeVarargs
-	public static final Aspect.Builder all(Class<? extends Component>... types) {
+	public static Aspect.Builder all(Class<? extends Component>... types) {
 		return new Builder().all(types);
 	}
 
@@ -165,7 +165,7 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 */
 	@SafeVarargs
-	public static final Aspect.Builder exclude(Class<? extends Component>... types) {
+	public static Aspect.Builder exclude(Class<? extends Component>... types) {
 		return new Builder().exclude(types);
 	}
 
@@ -196,7 +196,7 @@ public class Aspect {
 	 * @return an aspect that can be matched against entities
 	 */
 	@SafeVarargs
-	public static final Aspect.Builder one(Class<? extends Component>... types) {
+	public static Aspect.Builder one(Class<? extends Component>... types) {
 		return new Builder().one(types);
 	}
 

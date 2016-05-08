@@ -10,7 +10,7 @@ public final class EntityTransmuterFactory {
 	private final ComponentTypeFactory types;
 	private final BitSet additions;
 	private final BitSet removals;
-	private World world;
+	private final World world;
 
 	/** Prepare new builder. */
 	public EntityTransmuterFactory(World world) {

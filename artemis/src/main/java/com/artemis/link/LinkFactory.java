@@ -20,7 +20,7 @@ class LinkFactory {
 	private static final int MULTI_REFERENCE = 2;
 
 	private final Bag<LinkSite> links = new Bag<LinkSite>();
-	private World world;
+	private final World world;
 
 	private final ReflexiveMutators reflexiveMutators;
 

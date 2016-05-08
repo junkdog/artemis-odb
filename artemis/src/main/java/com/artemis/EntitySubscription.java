@@ -149,21 +149,21 @@ public class EntitySubscription {
 		removedIds.clear();
 	}
 
-	private final void changed(IntBag entities) {
+	private void changed(IntBag entities) {
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			check(ids[i]);
 		}
 	}
 
-	private final void deleted(IntBag entities) {
+	private void deleted(IntBag entities) {
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			deleted(ids[i]);
 		}
 	}
 
-	private final void deletedAll(IntBag entities) {
+	private void deletedAll(IntBag entities) {
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			int id = ids[i];
@@ -172,7 +172,7 @@ public class EntitySubscription {
 		}
 	}
 
-	private final void deleted(int entityId) {
+	private void deleted(int entityId) {
 		if(activeEntityIds.get(entityId))
 			remove(entityId);
 	}
