@@ -1,5 +1,6 @@
 package com.artemis;
 
+import com.artemis.annotations.DelayedComponentRemoval;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 
@@ -83,10 +84,30 @@ public abstract class EntitySystem extends BaseEntitySystem
 		removed(world.getEntity(entityId));
 	}
 
+	/**
+	 * Called if entity has come into scope for this system, e.g
+	 * created or a component was added to it.
+	 *
+	 * @param e
+	 *			the entity that was added to this system
+	 */
 	public void inserted(Entity e) {
 		throw new RuntimeException("everything changes");
 	}
 
+	/**
+	 * <p>Called if entity has gone out of scope of this system, e.g deleted
+	 * or had one of it's components removed.</p>
+	 *
+	 * <p>Explicitly removed components are only retrievable at this point
+	 * if annotated with {@link DelayedComponentRemoval}.</p>
+	 *
+	 * <p>Deleted entities retain all their components - until all listeners
+	 * have been informed.</p>
+	 *
+	 * @param e
+	 *			the entity that was removed from this system
+	 */
 	public void removed(Entity e) {
 		throw new RuntimeException("everything breaks");
 	}

@@ -1,5 +1,6 @@
 package com.artemis;
 
+import com.artemis.annotations.DelayedComponentRemoval;
 import com.artemis.utils.IntBag;
 
 /**
@@ -83,8 +84,14 @@ public abstract class BaseEntitySystem extends BaseSystem
 	}
 
 	/**
-	 * Called if entity has gone out of scope of this system, e.g deleted
-	 * or had one of it's components removed.
+	 * <p>Called if entity has gone out of scope of this system, e.g deleted
+	 * or had one of it's components removed.</p>
+	 *
+	 * <p>Explicitly removed components are only retrievable at this point
+	 * if annotated with {@link DelayedComponentRemoval}.</p>
+	 *
+	 * <p>Deleted entities retain all their components - until all listeners
+	 * have been informed.</p>
 	 *
 	 * @param entityId
 	 *			the entity that was removed from this system

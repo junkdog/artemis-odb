@@ -1,5 +1,6 @@
 package com.artemis;
 
+import com.artemis.annotations.DelayedComponentRemoval;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.ShortBag;
@@ -203,7 +204,12 @@ public class EntitySubscription {
 		void inserted(IntBag entities);
 
 		/**
-		 * Called after entities have been removed from an EntitySubscription.
+		 * <p>Called after entities have been removed from an EntitySubscription.
+		 * Explicitly removed components are only retrievable at this point
+		 * if annotated with {@link DelayedComponentRemoval}.</p>
+		 *
+		 * <p>Deleted entities retain all their components until - all listeners
+		 * have been informed.</p>
 		 */
 		void removed(IntBag entities);
 	}
