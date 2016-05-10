@@ -99,7 +99,7 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 #### Gradle
 
 ```groovy
-  dependencies { compile "net.onedaybeard.artemis:artemis-odb:1.4.0" }
+  dependencies { compile "net.onedaybeard.artemis:artemis-odb:2.0.0-RC1" }
 ```
 or
 
