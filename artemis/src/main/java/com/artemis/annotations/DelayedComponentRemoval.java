@@ -9,9 +9,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Guarantees that the decorated component is still present during
- * {@link SubscriptionListener#removed(IntBag)} - regardless of
- * removal method.
+ * Extends the lifecycle of this component type, ensuring removed instances are retrievable until
+ * all {@link SubscriptionListener#removed(IntBag) listeners} have been notified - regardless
+ * of removal method.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
