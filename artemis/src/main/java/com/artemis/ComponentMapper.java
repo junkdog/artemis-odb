@@ -14,7 +14,7 @@ import static com.artemis.utils.reflect.ClassReflection.isAnnotationPresent;
  * @param <A> Component type to map.
  * @see EntityEdit for a list of alternate ways to alter composition and access components.
  */
-public final class ComponentMapper<A extends Component> extends BaseComponentMapper<A> {
+public class ComponentMapper<A extends Component> extends BaseComponentMapper<A> {
 
 	/** Holds all components of given type in the world. */
 	final Bag<A> components;
