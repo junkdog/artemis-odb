@@ -127,23 +127,14 @@ public class AspectSubscriptionManager extends BaseSystem {
 		out.setSize(size);
 		out.ensureCapacity(size);
 
+		ComponentManager cm = world.getComponentManager();
 		int[] activesArray = out.getData();
 		for (int i = bs.nextSetBit(0), index = 0; i >= 0; i = bs.nextSetBit(i + 1)) {
 			activesArray[index] = i;
+			activesArray[index + 1] = cm.getIdentity(i);
 			index += 2;
 		}
 
-		updateCompositionIds(changed);
-
 		return out;
-	}
-
-	private void updateCompositionIds(IntBag paddedIds) {
-		ComponentManager cm = world.getComponentManager();
-
-		int[] data = paddedIds.getData();
-		for (int i = 0, s = paddedIds.size(); s > i; i += 2) {
-			data[i + 1] = cm.getIdentity(data[i]);
-		}
 	}
 }

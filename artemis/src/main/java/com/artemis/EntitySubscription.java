@@ -165,7 +165,9 @@ public class EntitySubscription {
 	private void deleted(IntBag entities) {
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			deleted(ids[i]);
+			int id = ids[i];
+			if(activeEntityIds.get(id))
+				remove(id);
 		}
 	}
 
@@ -176,11 +178,6 @@ public class EntitySubscription {
 			activeEntityIds.clear(id);
 			removedIds.set(id);
 		}
-	}
-
-	private void deleted(int entityId) {
-		if(activeEntityIds.get(entityId))
-			remove(entityId);
 	}
 
 	/**
@@ -240,11 +237,12 @@ public class EntitySubscription {
 
 		private void informListeners() {
 			for (int i = 0, s = listeners.size(); s > i; i++) {
+				SubscriptionListener listener = listeners.get(i);
 				if (removed.size() > 0)
-					listeners.get(i).removed(removed);
+					listener.removed(removed);
 
 				if (inserted.size() > 0)
-					listeners.get(i).inserted(inserted);
+					listener.inserted(inserted);
 			}
 		}
 	}
