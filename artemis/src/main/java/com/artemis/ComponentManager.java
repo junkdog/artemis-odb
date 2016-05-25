@@ -203,7 +203,7 @@ public class ComponentManager extends BaseSystem {
 		}
 
 		for (Entity e : world.getEntityManager().entities) {
-			if (e != null) es.check(e.id);
+			if (e != null) es.check(e.id, getIdentity(e.id));
 		}
 
 		es.informEntityChanges();

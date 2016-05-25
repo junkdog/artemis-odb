@@ -27,8 +27,8 @@ public class AspectSubscriptionManager extends BaseSystem {
 	private final Map<Aspect.Builder, EntitySubscription> subscriptionMap;
 	private final Bag<EntitySubscription> subscriptions = new Bag(EntitySubscription.class);
 
-	private final IntBag changedIds = new IntBag();
-	private final IntBag deletedIds = new IntBag();
+	private final IntBag changed = new IntBag();
+	private final IntBag deleted = new IntBag();
 
 	protected AspectSubscriptionManager() {
 		subscriptionMap = new HashMap<Aspect.Builder, EntitySubscription>();
@@ -67,7 +67,7 @@ public class AspectSubscriptionManager extends BaseSystem {
 	}
 
 	/**
-	 * Informs all listeners of added, changed and deleted changes.
+	 * Informs all listeners of added, changedBits and deletedBits changes.
 	 *
 	 * Two types of listeners:
 	 * {@see EntityObserver} implementations are guaranteed to be called back in order of system registration.
@@ -79,23 +79,23 @@ public class AspectSubscriptionManager extends BaseSystem {
 	 *
 	 * Observers are called before Subscriptions, which means managerial tasks get artificial priority.
 	 *
-	 * @param changed Entities with changed composition or state.
-	 * @param deleted Entities removed from world.
+	 * @param changedBits Entities with changedBits composition or state.
+	 * @param deletedBits Entities removed from world.
 	 */
-	void process(BitSet changed, BitSet deleted) {
-		toEntityIntBags(changed, deleted);
+	void process(BitSet changedBits, BitSet deletedBits) {
+		toEntityIntBags(changedBits, deletedBits);
 
 		// note: processAll != process
-		subscriptions.get(0).processAll(changedIds, deletedIds);
+		subscriptions.get(0).processAll(changed, deleted);
 
 		for (int i = 1, s = subscriptions.size(); s > i; i++) {
-			subscriptions.get(i).process(changedIds, deletedIds);
+			subscriptions.get(i).process(changed, deleted);
 		}
 	}
 
 	private void toEntityIntBags(BitSet changed, BitSet deleted) {
-		toIntBag(changed, changedIds);
-		toIntBag(deleted, deletedIds);
+		toPaddedIntBag(changed, this.changed);
+		toIntBag(deleted, this.deleted);
 
 		changed.clear();
 		deleted.clear();
@@ -115,5 +115,35 @@ public class AspectSubscriptionManager extends BaseSystem {
 	 */
 	public ImmutableBag<EntitySubscription> getSubscriptions() {
 		return subscriptions;
+	}
+
+	private IntBag toPaddedIntBag(BitSet bs, IntBag out) {
+		if (bs.isEmpty()) {
+			out.setSize(0);
+			return out;
+		}
+
+		int size = 2 * bs.cardinality();
+		out.setSize(size);
+		out.ensureCapacity(size);
+
+		int[] activesArray = out.getData();
+		for (int i = bs.nextSetBit(0), index = 0; i >= 0; i = bs.nextSetBit(i + 1)) {
+			activesArray[index] = i;
+			index += 2;
+		}
+
+		updateCompositionIds(changed);
+
+		return out;
+	}
+
+	private void updateCompositionIds(IntBag paddedIds) {
+		ComponentManager cm = world.getComponentManager();
+
+		int[] data = paddedIds.getData();
+		for (int i = 0, s = paddedIds.size(); s > i; i += 2) {
+			data[i + 1] = cm.getIdentity(data[i]);
+		}
 	}
 }

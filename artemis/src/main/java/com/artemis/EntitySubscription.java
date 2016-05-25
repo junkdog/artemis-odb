@@ -3,7 +3,6 @@ package com.artemis;
 import com.artemis.annotations.DelayedComponentRemoval;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
-import com.artemis.utils.ShortBag;
 
 import java.util.BitSet;
 
@@ -20,7 +19,6 @@ public class EntitySubscription {
 
 	private final IntBag entities;
 	private final BitSet activeEntityIds;
-	private final ShortBag entityToIdentity;
 
 	private final BitSet insertedIds;
 	private final BitSet removedIds;
@@ -29,7 +27,6 @@ public class EntitySubscription {
 
 	EntitySubscription(World world, Aspect.Builder builder) {
 		extra = new SubscriptionExtra(builder.build(world), builder);
-		entityToIdentity = world.getComponentManager().entityToIdentity;
 
 		activeEntityIds = new BitSet();
 		entities = new IntBag();
@@ -99,8 +96,8 @@ public class EntitySubscription {
 		}
 	}
 
-	final void check(int id) {
-		boolean interested = aspectCache.get(entityToIdentity.get(id));
+	final void check(int id, int cid) {
+		boolean interested = aspectCache.get(cid);
 		boolean contains = activeEntityIds.get(id);
 
 		if (interested && !contains) {
@@ -150,10 +147,18 @@ public class EntitySubscription {
 		removedIds.clear();
 	}
 
-	private void changed(IntBag entities) {
-		int[] ids = entities.getData();
-		for (int i = 0, s = entities.size(); s > i; i++) {
-			check(ids[i]);
+	private void changed(IntBag entitiesWithCompositions) {
+		int[] ids = entitiesWithCompositions.getData();
+		for (int i = 0, s = entitiesWithCompositions.size(); s > i; i += 2) {
+			int id = ids[i];
+			boolean interested = aspectCache.get(ids[i + 1]);
+			boolean contains = activeEntityIds.get(id);
+
+			if (interested && !contains) {
+				insert(id);
+			} else if (!interested && contains) {
+				remove(id);
+			}
 		}
 	}
 
