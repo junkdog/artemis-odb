@@ -12,6 +12,8 @@ import com.artemis.utils.reflect.ReflectionException;
 import java.util.*;
 
 import static com.artemis.WorldConfiguration.ASPECT_SUBSCRIPTION_MANAGER_IDX;
+import static com.artemis.WorldConfiguration.COMPONENT_MANAGER_IDX;
+import static com.artemis.WorldConfiguration.ENTITY_MANAGER_IDX;
 
 /**
  * The primary instance for the framework.
@@ -33,6 +35,14 @@ public class World {
 
 	/** Pool of entity edits. */
 	final BatchChangeProcessor batchProcessor;
+
+		/** Contains all systems unordered. */
+	final Bag<BaseSystem> systemsBag;
+	/** Manages all aspect based entity subscriptions for the world. */
+	final AspectSubscriptionManager asm;
+
+	/** Contains strategy for invoking systems upon process. */
+	SystemInvocationStrategy invocationStrategy;
 
 	final WorldSegment partition;
 
@@ -62,18 +72,21 @@ public class World {
 	 */
 	public World(WorldConfiguration configuration) {
 		partition = new WorldSegment(configuration);
-//		if (partition.invocationStrategy == null) {
-//			setInvocationStrategy(new InvocationStrategy());
-//		}
+		systemsBag = configuration.systems;
 
-		final ComponentManager lcm = (ComponentManager) configuration.systems.get(WorldConfiguration.COMPONENT_MANAGER_IDX);
-		final EntityManager lem = (EntityManager) configuration.systems.get(WorldConfiguration.ENTITY_MANAGER_IDX);
+		final ComponentManager lcm =
+			(ComponentManager) systemsBag.get(COMPONENT_MANAGER_IDX);
+		final EntityManager lem =
+			(EntityManager) systemsBag.get(ENTITY_MANAGER_IDX);
+		final AspectSubscriptionManager lasm =
+			(AspectSubscriptionManager) systemsBag.get(ASPECT_SUBSCRIPTION_MANAGER_IDX);
 
 		cm = lcm == null ? new ComponentManager(configuration.expectedEntityCount()) : lcm;
 		em = lem == null ? new EntityManager(configuration.expectedEntityCount()) : lem;
+		asm = lasm == null ? new AspectSubscriptionManager() : lasm;
 		batchProcessor = new BatchChangeProcessor(this);
 
-		configuration.initialize(this, partition.injector, partition.asm);
+		configuration.initialize(this, partition.injector, asm);
 	}
 
 	/**
@@ -140,7 +153,7 @@ public class World {
 	public void dispose() {
 		List<Throwable> exceptions = new ArrayList<Throwable>();
 
-		for (BaseSystem system : partition.systemsBag) {
+		for (BaseSystem system : systemsBag) {
 			try {
 				system.dispose();
 			} catch (Exception e) {
@@ -208,7 +221,7 @@ public class World {
 	 * @return aspect subscription manager
 	 */
 	public AspectSubscriptionManager getAspectSubscriptionManager() {
-		return partition.asm;
+		return asm;
 	}
 
 	/**
@@ -362,7 +375,7 @@ public class World {
 	 * @return all entity systems in world
 	 */
 	public ImmutableBag<BaseSystem> getSystems() {
-		return partition.systemsBag;
+		return systemsBag;
 	}
 
 	/**
@@ -380,7 +393,7 @@ public class World {
 
 	/** Set strategy for invoking systems on {@link #process()}. */
 	protected void setInvocationStrategy(SystemInvocationStrategy invocationStrategy) {
-		partition.invocationStrategy = invocationStrategy;
+		this.invocationStrategy = invocationStrategy;
 		invocationStrategy.setWorld(this);
 		invocationStrategy.initialize();
 	}
@@ -391,7 +404,7 @@ public class World {
 	 */
 	public void process() {
 		batchProcessor.update();
-		partition.process();
+		invocationStrategy.process(systemsBag);
 
 		IntBag pendingPurge = batchProcessor.getPendingPurge();
 		if (!pendingPurge.isEmpty()) {
@@ -430,39 +443,21 @@ public class World {
 	 * @return Strategy used for invoking systems during {@link World#process()}.
 	 */
 	public <T extends SystemInvocationStrategy> T getInvocationStrategy() {
-		return (T) partition.invocationStrategy;
+		return (T) invocationStrategy;
 	}
 
 	static class WorldSegment {
 		/** Contains all systems and systems classes mapped. */
 		final Map<Class<?>, BaseSystem> systems;
 
-		/** Contains all systems unordered. */
-		final Bag<BaseSystem> systemsBag;
-
 		/** Responsible for dependency injection. */
 		final Injector injector;
 
-		/** Manages all aspect based entity subscriptions for the world. */
-		final AspectSubscriptionManager asm;
-
-		/** Contains strategy for invoking systems upon process. */
-		SystemInvocationStrategy invocationStrategy;
-
 		WorldSegment(WorldConfiguration configuration) {
 			systems = new IdentityHashMap<Class<?>, BaseSystem>();
-			systemsBag = configuration.systems;
-
-			AspectSubscriptionManager asm = (AspectSubscriptionManager) systemsBag.get(ASPECT_SUBSCRIPTION_MANAGER_IDX);
-			this.asm = (asm == null) ? new AspectSubscriptionManager() : asm;
-
 			injector = (configuration.injector != null)
 				? configuration.injector
 				: new CachedInjector();
-		}
-
-		void process() {
-			invocationStrategy.process(systemsBag);
 		}
 	}
 }

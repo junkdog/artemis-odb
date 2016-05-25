@@ -1,6 +1,7 @@
 package com.artemis.link;
 
 import com.artemis.*;
+import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
@@ -18,6 +19,7 @@ import static com.artemis.Aspect.all;
  * @see com.artemis.annotations.EntityId
  *
  */
+@SkipWire
 public class EntityLinkManager extends BaseEntitySystem {
 
 	final Bag<LinkSite> linkSites = new Bag<LinkSite>();

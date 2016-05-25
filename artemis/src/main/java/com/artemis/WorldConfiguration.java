@@ -154,7 +154,7 @@ public final class WorldConfiguration {
 
 		invocationStrategy.setWorld(world);
 
-		world.partition.invocationStrategy = invocationStrategy;
+		world.invocationStrategy = invocationStrategy;
 
 		systems.set(COMPONENT_MANAGER_IDX, world.getComponentManager());
 		systems.set(ENTITY_MANAGER_IDX, world.getEntityManager());

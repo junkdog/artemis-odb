@@ -52,13 +52,13 @@ public class EntityManager extends BaseSystem {
 	void clean(IntBag pendingDeletion) {
 		int[] ids = pendingDeletion.getData();
 		for(int i = 0, s = pendingDeletion.size(); s > i; i++) {
-			int entityId = ids[i];
+			int id = ids[i];
 			// usually never happens but:
 			// this happens when an entity is deleted before
 			// it is added to the world, ie; created and deleted
 			// before World#process has been called
-			if (!recycled.get(entityId)) {
-				free(entityId);
+			if (!recycled.get(id)) {
+				free(id);
 			}
 		}
 	}

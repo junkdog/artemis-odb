@@ -16,8 +16,9 @@ public final class ConverterUtil {
 		out.ensureCapacity(size);
 
 		int[] activesArray = out.getData();
-		for (int i = bs.nextSetBit(0), index = 0; i >= 0; i = bs.nextSetBit(i + 1)) {
-			activesArray[index++] = i;
+		for (int i = 0, id = -1, s = size; s > i; i++) {
+			id = bs.nextSetBit(id + 1);
+			activesArray[i] = id;
 		}
 
 		return out;

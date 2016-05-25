@@ -87,7 +87,7 @@ public abstract class BaseSystem {
 	 * @return {@code true} if enabled, otherwise false
 	 */
 	public boolean isEnabled() {
-		return world.partition.invocationStrategy.isEnabled(this);
+		return world.invocationStrategy.isEnabled(this);
 	}
 
 	/**
@@ -103,7 +103,7 @@ public abstract class BaseSystem {
 	 * @see #checkProcessing() both must be true before the system will process.
 	 */
 	public void setEnabled(boolean enabled) {
-		world.partition.invocationStrategy.setEnabled(this, enabled);
+		world.invocationStrategy.setEnabled(this, enabled);
 	}
 
 	/**
