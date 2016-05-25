@@ -19,8 +19,8 @@ import java.lang.annotation.Target;
  *         is registed with the world.</li>
  * </ul>
  *
- * <p>{@link Bag} of {@link Entity} and plain <code>Entity</code> fields
- * don't need to be annotated.</p>
+ * <p>Annotation has no effect on {@link Bag}-of-entities and plain {@link Entity}
+ * fields.</p>
  *
  * @see <a href="https://github.com/junkdog/artemis-odb/wiki/Entity-References-and-Serialization">Entity References and Serialization</a>
  */
