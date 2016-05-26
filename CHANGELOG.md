@@ -3,7 +3,9 @@
 #### Version: 2.0.0-RC2-SNAPSHOT
 - `World#compositionId(entityId)` added. Previously, one had to go
   via `Entity#getCompositionId()`
-
+- Optimized entity subscriptions: compositionId pre-calculated and bundled
+  by `AspectSubscriptionManager` before informing listeners.
+- **Fix**: ComponeMapper was accidentally marked as final in RC1.
 
 #### Version: 2.0.0-RC1 - 2016-05-09
 - **BREAKING CHANGES**
