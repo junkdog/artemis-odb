@@ -201,6 +201,18 @@ public class World {
 	}
 
 	/**
+	 * Gets the <code>compisition id</code> uniquely identifying the
+	 * component composition of an entity. Each composition identity maps
+	 * to one unique <code>BitSet</code>.
+	 *
+	 * @param entityId Entity for which to get the composition id
+	 * @return composition identity of entity
+	 */
+	public int compositionId(int entityId) {
+		return cm.getIdentity(entityId);
+	}
+
+	/**
 	 * Returns a manager that takes care of all the entities in the world.
 	 * @return entity manager
 	 */

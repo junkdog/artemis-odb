@@ -1,6 +1,9 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 #### Version: 2.0.0-RC2-SNAPSHOT
+- `World#compositionId(entityId)` added. Previously, one had to go
+  via `Entity#getCompositionId()`
+
 
 #### Version: 2.0.0-RC1 - 2016-05-09
 - **BREAKING CHANGES**
