@@ -1,17 +1,17 @@
 package com.artemis;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertTrue;
-
 import java.util.HashSet;
 import java.util.Set;
 
+import com.artemis.managers.TagManager;
+import com.artemis.utils.IntBag;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.artemis.component.ComponentX;
+import sun.security.krb5.internal.ccache.Tag;
+
+import static org.junit.Assert.*;
 
 public class EntityManagerTest {
 	
@@ -94,5 +94,29 @@ public class EntityManagerTest {
 
 		assertEquals(id1, e2.getId());
 		assertFalse("Error:" + mapper.getSafe(e2), mapper.has(e2));
+	}
+
+	@Test
+	public void reset_entity_cache() {
+		World w = new World(new WorldConfiguration()
+			.setSystem(TagManager.class)
+		);
+		int[] ids = new int[] { w.create(), w.create(), w.create() };
+
+		assertArrayEquals(new int[] {0, 1, 2}, ids);
+
+		w.process();
+
+		w.delete(2);
+		w.delete(1);
+		w.delete(0);
+
+		boolean successfullReset = world.getEntityManager().reset();
+		assertTrue(successfullReset);
+
+		w.process();
+
+		ids = new int[] { w.create(), w.create(), w.create() };
+		assertArrayEquals(new int[] {0, 1, 2}, ids);
 	}
 }

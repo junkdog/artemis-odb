@@ -7,6 +7,8 @@ import com.artemis.utils.IntDeque;
 
 import java.util.BitSet;
 
+import static com.artemis.Aspect.all;
+
 /**
  * Manages entity instances.
  *
@@ -90,6 +92,34 @@ public class EntityManager extends BaseSystem {
 	 */
 	protected Entity getEntity(int entityId) {
 		return entities.get(entityId);
+	}
+
+	/**
+	 * <p>If all entties have been deleted, resets the entity cache - with next entity
+	 * entity receiving id <code>0</code>. There mustn't be any active entities in
+	 * the world for this method to work. This method does nothing if it fails.</p>
+	 *
+	 * <p>For the reset to take effect, a new {@link World#process()} must initiate.</p>
+	 *
+	 * @return true if entity id was successfully reset.
+	 *
+	 */
+	public boolean reset() {
+		int count = world.getAspectSubscriptionManager()
+			.get(all())
+			.getActiveEntityIds()
+			.cardinality();
+
+		if (count > 0)
+			return false;
+
+		limbo.clear();
+		recycled.clear();
+		entities.clear();
+
+		nextId = 0;
+
+		return true;
 	}
 
 	/**

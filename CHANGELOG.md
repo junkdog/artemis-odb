@@ -1,11 +1,15 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
-#### Version: 2.0.0-RC2-SNAPSHOT
+#### Version: 2.0.0-RC3 - 2016-05-09
+
+#### Version: 2.0.0-RC2 - 2016-05-26
 - `World#compositionId(entityId)` added. Previously, one had to go
   via `Entity#getCompositionId()`
+- `EntityManager#reset` - if the world is empty, resets entity id generation to `0`
 - Optimized entity subscriptions: compositionId pre-calculated and bundled
   by `AspectSubscriptionManager` before informing listeners.
-- **Fix**: ComponeMapper was accidentally marked as final in RC1.
+- **Fix**: ComponentMapper was accidentally marked as final in RC1.
+
 
 #### Version: 2.0.0-RC1 - 2016-05-09
 - **BREAKING CHANGES**
