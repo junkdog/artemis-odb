@@ -2,7 +2,12 @@
 
 #### Version: 2.0.0-RC3-SNAPSHOT
 
+
 #### Version: 2.0.0-RC2 - 2016-05-26
+- **BREAKING CHANGES**
+  - Components require a public no-args constructor. While this was allowed in past versions,
+    it never worked with serialization or pooled components.
+
 - `World#compositionId(entityId)` added. Previously, one had to go
   via `Entity#getCompositionId()`
 - `EntityManager#reset` - if the world is empty, resets entity id generation to `0`
