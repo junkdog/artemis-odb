@@ -24,6 +24,8 @@
   - Calling `BaseSystem#process` will now run the system, even if `setEnabled(false)` has been called.
     `SystemInvocationStrategy` now tracks which systems are enabled/disabled.
     (you may want to update your custom `SystemInvocationStrategy` implementations).
+  - Bag#getData throws ClassCastException when container wasn't created with any of the
+    typed constructors. 
 
 - Optional manager: **[EntityLinkManager][ELM]**, discovery and maintenance of relationships between entities.
   - Automatically tracks component fields: `@EntityId int`, `Entity`, `@EntityId IntBag`, `Bag<Entity>`
