@@ -1,6 +1,7 @@
 package com.artemis.utils;
 
 import com.artemis.utils.reflect.ArrayReflection;
+import com.artemis.utils.reflect.ClassReflection;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -355,6 +356,9 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * @see Bag#size()
 	 */
 	public E[] getData() {
+		if (ClassReflection.isInstance(Object[].class, data))
+			throw new ClassCastException("Method requires typed instantiation, e.g. Bag<E>(Class<E>)");
+
 		return data;
 	}
 
