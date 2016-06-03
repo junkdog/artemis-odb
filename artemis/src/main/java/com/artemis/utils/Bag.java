@@ -356,7 +356,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * @see Bag#size()
 	 */
 	public E[] getData() {
-		if (ClassReflection.isInstance(Object[].class, data))
+		if (Object[].class == data.getClass())
 			throw new ClassCastException("Method requires typed instantiation, e.g. Bag<E>(Class<E>)");
 
 		return data;

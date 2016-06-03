@@ -25,7 +25,7 @@ public final class WorldConfiguration {
 	public static final int ENTITY_MANAGER_IDX = 1;
 	public static final int ASPECT_SUBSCRIPTION_MANAGER_IDX = 2;
 	
-	final Bag<BaseSystem> systems = new Bag<BaseSystem>();
+	final Bag<BaseSystem> systems = new Bag<BaseSystem>(BaseSystem.class);
 
 	protected int expectedEntityCount = 128;
 	protected Map<String, Object> injectables = new HashMap<String, Object>();

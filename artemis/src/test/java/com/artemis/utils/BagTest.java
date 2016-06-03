@@ -1,10 +1,8 @@
 package com.artemis.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
 import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 @SuppressWarnings("static-method")
 public class BagTest
@@ -22,10 +20,18 @@ public class BagTest
 	}
 
 	@Test(expected = ClassCastException.class)
-	public void typed_getData() {
+	public void not_typed_getData() {
 		Bag<Integer> intBag = new Bag<Integer>();
 		intBag.add(1337);
 		Integer[] data = intBag.getData();
 		fail("huh?" + data);
+	}
+
+	@Test
+	public void typed_getData() {
+		Bag<Integer> intBag = new Bag<Integer>(Integer.class);
+		intBag.add(1337);
+		Integer[] data = intBag.getData();
+		assertNotNull(data);
 	}
 }

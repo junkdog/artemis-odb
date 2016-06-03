@@ -249,7 +249,7 @@ public class ComponentManager extends BaseSystem {
 
 		/** Fetch unique identity for passed composition. */
 		int getIdentity(BitSet components) {
-			Object[] bitsets = compositionBits.getData();
+			BitSet[] bitsets = compositionBits.getData();
 			int size = compositionBits.size();
 			for (int i = NO_COMPONENTS; size > i; i++) { // want to start from 1 so that 0 can mean null
 				if (components.equals(bitsets[i]))

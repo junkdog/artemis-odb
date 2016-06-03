@@ -1,7 +1,9 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 #### Version: 2.0.0-RC3-SNAPSHOT
-
+- **BREAKING CHANGES**
+  - World's systems array is now typed with `BaseSystem`; this should only have
+    implication for custom implementations of `SystemInvocationStrategy`.
 
 #### Version: 2.0.0-RC2 - 2016-05-26
 - **BREAKING CHANGES**
