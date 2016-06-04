@@ -347,8 +347,9 @@ public class Bag<E> implements ImmutableBag<E> {
 
 	/**
 	 * Returns this bag's underlying array.
+	 * 
 	 * <p>
-	 * Use with care.
+	 * <b>Use of this method requires typed instantiation, e.g. Bag<E>(Class<E>)</b>
 	 * </p>
 	 *
 	 * @return the underlying array
@@ -356,9 +357,6 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * @see Bag#size()
 	 */
 	public E[] getData() {
-		if (Object[].class == data.getClass())
-			throw new ClassCastException("Method requires typed instantiation, e.g. Bag<E>(Class<E>)");
-
 		return data;
 	}
 
