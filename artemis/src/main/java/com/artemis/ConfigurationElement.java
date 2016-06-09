@@ -23,7 +23,7 @@ class ConfigurationElement<T> implements Comparable<ConfigurationElement<T>> {
 	@Override
 	public int compareTo(ConfigurationElement<T> o) {
 		// Sort by priority descending.
-		return o.priority - priority;
+		return Integer.compare(o.priority, priority);
 	}
 
 	@Override
