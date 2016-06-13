@@ -4,6 +4,7 @@
 - **BREAKING CHANGES**
   - World's systems array is now typed with `BaseSystem`; this should only have
     implication for custom implementations of `SystemInvocationStrategy`.
+- **Fix**: WorldConfigurationBuilder.Priority didn't compare properly
 
 #### Version: 2.0.0-RC2 - 2016-05-26
 - **BREAKING CHANGES**
