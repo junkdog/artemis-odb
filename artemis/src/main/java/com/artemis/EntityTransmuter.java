@@ -26,6 +26,14 @@ public final class EntityTransmuter {
 
 	private final ShortBag entityToIdentity;
 
+	public EntityTransmuter(World world, Aspect.Builder aspect) {
+		this(world, world.getAspectSubscriptionManager().get(aspect).getAspect());
+	}
+
+	EntityTransmuter(World world, Aspect aspect) {
+		this(world, (BitSet) aspect.allSet.clone(), (BitSet) aspect.exclusionSet.clone());
+	}
+
 	EntityTransmuter(World world, BitSet additions, BitSet removals) {
 		em = world.getEntityManager();
 		entityToIdentity = world.getComponentManager().entityToIdentity;
@@ -34,6 +42,7 @@ public final class EntityTransmuter {
 
 		factory = new Factory(world, additions, removals);
 	}
+
 
 	/**
 	 * <p>Apply on target entity. Does nothing if entity has been scheduled for

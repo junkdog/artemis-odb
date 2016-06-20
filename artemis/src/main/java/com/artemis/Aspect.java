@@ -35,11 +35,11 @@ import com.artemis.utils.Bag;
 public class Aspect {
 
 	/** Component bits the entity must all possess. */
-	private BitSet allSet;
+	BitSet allSet;
 	/** Component bits the entity must not possess. */
-	private BitSet exclusionSet;
+	BitSet exclusionSet;
 	/** Component bits of which the entity must possess at least one. */
-	private BitSet oneSet;
+	BitSet oneSet;
 
 	private Aspect() {
 		this.allSet = new BitSet();

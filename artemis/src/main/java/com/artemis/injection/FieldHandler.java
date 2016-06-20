@@ -62,6 +62,7 @@ public class FieldHandler {
 		this.fieldResolvers = new Bag(FieldResolver.class);
 		this.cache = cache;
 		addFieldResolver(new ArtemisFieldResolver());
+		addFieldResolver(new AspectFieldResolver());
 		addFieldResolver(new WiredFieldResolver());
 	}
 
