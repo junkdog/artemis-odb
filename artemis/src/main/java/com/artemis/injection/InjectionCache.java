@@ -13,6 +13,8 @@ import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.artemis.utils.reflect.ClassReflection.isAnnotationPresent;
+
 /**
  * Date: 31/7/2015
  * Time: 17:13 PM
@@ -80,10 +82,10 @@ public class InjectionCache {
 	 * Convention is {@code Wire(injectInherited=true)}
 	 */
 	private WireType getWireType(Class<?> clazz) {
-		return ClassReflection.isAnnotationPresent(clazz, Wire.class) ?
-				WireType.WIRE : (ClassReflection.isAnnotationPresent(clazz, SkipWire.class) ?
-				WireType.SKIPWIRE :
-				WireType.IGNORED);
+		return
+			isAnnotationPresent(clazz, Wire.class) ? WireType.WIRE :
+			isAnnotationPresent(clazz, SkipWire.class) ? WireType.SKIPWIRE :
+			WireType.IGNORED;
 	}
 
 
