@@ -20,10 +20,10 @@ import java.util.Map;
  * @author Snorre E. Brekke
  */
 public class InjectionCache {
-	private static final Map<Class<?>, CachedClass> classCache = new HashMap<Class<?>, CachedClass>();
-	private static final Map<Class<?>, ClassType> fieldClassTypeCache = new HashMap<Class<?>, ClassType>();
-	private static final Map<Field, CachedField> namedWireCache = new HashMap<Field, CachedField>();
-	private static final Map<Field, Class<?>> genericsCache = new HashMap<Field, Class<?>>();
+	private final Map<Class<?>, CachedClass> classCache = new HashMap<Class<?>, CachedClass>();
+	private final Map<Class<?>, ClassType> fieldClassTypeCache = new HashMap<Class<?>, ClassType>();
+	private final Map<Field, CachedField> namedWireCache = new HashMap<Field, CachedField>();
+	private final Map<Field, Class<?>> genericsCache = new HashMap<Field, Class<?>>();
 
 	private static final Wire DEFAULT_WIRE = new Wire() {
 

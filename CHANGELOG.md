@@ -4,7 +4,8 @@
 - **BREAKING CHANGES**
   - World's systems array is now typed with `BaseSystem`; this should only have
     implication for custom implementations of `SystemInvocationStrategy`.
-- **Fix**: WorldConfigurationBuilder.Priority didn't compare properly
+- **Fix**: WorldConfigurationBuilder.Priority didn't compare properly.
+- **Fix**: thread safefty; InjectionCache's fields no longer static.
 
 #### Version: 2.0.0-RC2 - 2016-05-26
 - **BREAKING CHANGES**
