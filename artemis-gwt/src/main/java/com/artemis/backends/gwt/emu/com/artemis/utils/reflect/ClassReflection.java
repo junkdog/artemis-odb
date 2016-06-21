@@ -203,6 +203,9 @@ public final class ClassReflection {
 	/** Returns true if the supplied class includes an annotation of the given class type. */
 	static public boolean isAnnotationPresent (Class c, Class<? extends java.lang.annotation.Annotation> annotationType) {
 		java.lang.annotation.Annotation[] annotations = ReflectionCache.getType(c).getDeclaredAnnotations();
+		if (annotations == null)
+			return false;
+
 		for (java.lang.annotation.Annotation annotation : annotations) {
 			if (annotation.annotationType().equals(annotationType)) {
 				return true;

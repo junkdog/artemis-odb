@@ -85,7 +85,7 @@ public class EntitySubscriptionTest extends GWTTestCase {
 
 		world.getAspectSubscriptionManager()
 			.get(all(ComponentY.class))
-			.addSubscriptionListener(new RemovedNotReainted(mapper));
+			.addSubscriptionListener(new RemovedNotRetained(mapper));
 
 		int id1 = world.create();
 		world.edit(id1).create(ComponentY.class);
@@ -181,30 +181,10 @@ public class EntitySubscriptionTest extends GWTTestCase {
 			protected void initialize() {
 				EntitySubscription subscription = subscriptionManager.get(all());
 
-				subscription.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
-					@Override
-					public void inserted(IntBag entities) {
-						int[] data = entities.getData();
-						for (int i = 0; i < entities.size(); i++) {
-							int entityId = data[i];
-							assertEquals(0, entityId);
-
-							assertNotNull(world.getEntity(entityId));
-						}
-					}
-
-					@Override
-					public void removed(IntBag entities) {
-						int[] data = entities.getData();
-						for (int i = 0; i < entities.size(); i++) {
-							int entityId = data[i];
-							assertEquals(0, entityId);
-							assertNotNull(world.getEntity(entityId));
-						}
-					}
-				});
+				subscription.addSubscriptionListener(new MySubscriptionListener(world));
 			}
-		}
+
+	}
 
 	public static class RemovedRetainedInRemoveListener implements EntitySubscription.SubscriptionListener {
 		private final ComponentMapper<ComponentX> mapper;
@@ -225,10 +205,10 @@ public class EntitySubscriptionTest extends GWTTestCase {
 		}
 	}
 
-	public static class RemovedNotReainted implements EntitySubscription.SubscriptionListener {
+	public static class RemovedNotRetained implements EntitySubscription.SubscriptionListener {
 		private final ComponentMapper<ComponentY> mapper;
 
-		public RemovedNotReainted(ComponentMapper<ComponentY> mapper) {
+		public RemovedNotRetained(ComponentMapper<ComponentY> mapper) {
 			this.mapper = mapper;
 		}
 
@@ -260,6 +240,35 @@ public class EntitySubscriptionTest extends GWTTestCase {
 		public void removed(IntBag entities) {
 			assertEquals(1, entities.size());
 			assertNotNull(mapper.get(entities.get(0)));
+		}
+	}
+
+	public static class MySubscriptionListener implements EntitySubscription.SubscriptionListener {
+		private World world;
+
+		public MySubscriptionListener(World world) {
+			this.world = world;
+		}
+
+		@Override
+		public void inserted(IntBag entities) {
+			int[] data = entities.getData();
+			for (int i = 0; i < entities.size(); i++) {
+				int entityId = data[i];
+				assertEquals(0, entityId);
+
+				assertNotNull(world.getEntity(entityId));
+			}
+		}
+
+		@Override
+		public void removed(IntBag entities) {
+			int[] data = entities.getData();
+			for (int i = 0; i < entities.size(); i++) {
+				int entityId = data[i];
+				assertEquals(0, entityId);
+				assertNotNull(world.getEntity(entityId));
+			}
 		}
 	}
 }
