@@ -78,7 +78,7 @@ public class SaveFileFormat {
 	public static class ComponentIdentifiers {
 		public Map<Class<? extends Component>, String> typeToName =
 			new IdentityHashMap<Class<? extends Component>, String>();
-		public Map<String, Class<? extends Component>> nameToType =
+		private Map<String, Class<? extends Component>> nameToType =
 			new HashMap<String, Class<? extends Component>>();
 		public Map<Class<? extends Component>, Integer> typeToId =
 			new HashMap<Class<? extends Component>, Integer>();
@@ -93,6 +93,18 @@ public class SaveFileFormat {
 				buildFromNames();
 			else
 				buildFromIndices();
+		}
+
+		public Class<? extends Component> getType(String name) {
+			Class<? extends Component> type = nameToType.get(name);
+			if (type == null)
+				throw new SerializationException("No component type with name: " + name);
+
+			return type;
+		}
+
+		public Collection<Class<? extends Component>> getTypes() {
+			return nameToType.values();
 		}
 
 		private void buildFromNames() {

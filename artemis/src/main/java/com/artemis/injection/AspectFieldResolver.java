@@ -3,7 +3,6 @@ package com.artemis.injection;
 import com.artemis.*;
 import com.artemis.annotations.AspectDescriptor;
 import com.artemis.utils.reflect.Annotation;
-import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 
 import java.util.IdentityHashMap;

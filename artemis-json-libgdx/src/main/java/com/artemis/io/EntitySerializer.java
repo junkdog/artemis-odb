@@ -182,13 +182,12 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 	}
 
 	private void readComponentsArchetype(Json json, Entity e, JsonValue component) {
-		Map<String, Class<? extends Component>> nameToType =
-			serializationState.componentIdentifiers.nameToType;
+		SaveFileFormat.ComponentIdentifiers identifiers = serializationState.componentIdentifiers;
 
 		archetypeMapper.transmute(e, archetype);
 		while (component != null) {
 			assert (component.name() != null);
-			Class<? extends Component> componentType = nameToType.get(component.name);
+			Class<? extends Component> componentType = identifiers.getType(component.name);
 			readComponent(json, component, e.getComponent(componentType));
 
 			component = component.next;
@@ -196,13 +195,12 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 	}
 
 	private void readComponentsEdit(Json json, Entity e, JsonValue component) {
-		Map<String, Class<? extends Component>> nameToType =
-			serializationState.componentIdentifiers.nameToType;
+		SaveFileFormat.ComponentIdentifiers identifiers = serializationState.componentIdentifiers;
 
 		EntityEdit edit = e.edit();
 		while (component != null) {
 			assert (component.name() != null);
-			Class<? extends Component> componentType = nameToType.get(component.name);
+			Class<? extends Component> componentType = identifiers.getType(component.name);
 			readComponent(json, component, edit.create(componentType));
 
 			component = component.next;

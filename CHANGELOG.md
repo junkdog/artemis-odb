@@ -11,6 +11,8 @@
   - `@AspectDescriptor` on appropriate fields to inject
   - Valid targets: `Aspect`, `Aspect.Builder`, `EntityTransmuter`, `EntitySubscription`
 - add `EntityTransmuter(World, Aspect.Builder)` constructor
+- Deserialization exception reports on missing component identifiers (usually from
+  manually edited json).
 - **Fix**: WorldConfigurationBuilder.Priority didn't compare properly.
 - **Fix**: thread safefty; InjectionCache's fields no longer static.
 

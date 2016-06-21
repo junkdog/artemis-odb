@@ -31,6 +31,6 @@ public class TransmuterEntrySerializer implements JsonSerializer<ArchetypeMapper
 	}
 
 	private Class<? extends Component> toClass(String klazz) {
-		return identifiers.nameToType.get(klazz);
+		return identifiers.getType(klazz);
 	}
 }

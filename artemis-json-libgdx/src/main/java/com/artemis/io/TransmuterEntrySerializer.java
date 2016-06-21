@@ -24,12 +24,8 @@ public class TransmuterEntrySerializer implements Json.Serializer<ArchetypeMappe
 	public ArchetypeMapper.TransmuterEntry read(Json json, JsonValue jsonData, Class type) {
 		Bag components = new Bag();
 		for (JsonValue child = jsonData.child; child != null; child = child.next)
-			components.add(toClass(json.readValue(String.class, child)));
+			components.add(identifiers.getType(json.readValue(String.class, child)));
 
 		return new ArchetypeMapper.TransmuterEntry(components);
-	}
-
-	private Class<? extends Component> toClass(String klazz) {
-		return identifiers.nameToType.get(klazz);
 	}
 }
