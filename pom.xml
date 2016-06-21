@@ -108,7 +108,6 @@
 		<module>artemis-weaver</module>
 		<module>artemis-maven</module>
 		<module>artemis-gradle</module>
-		<module>artemis-processor</module>
 		<module>artemis-test</module>
 		<module>artemis-cli</module>
 		<module>artemis-gwt</module>

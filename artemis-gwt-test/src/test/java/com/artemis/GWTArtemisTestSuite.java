@@ -15,9 +15,8 @@ public class GWTArtemisTestSuite extends TestCase {
 	@SuppressWarnings("unchecked")
 	private static Class<? extends GWTTestCase>[] tests = new Class[]{
 			WorldTest.class,
-			FactoryWireTest.class,
-			EntityFactoryTest.class,
-			ExtendedEntityFactoryTest.class,
+			EntitySubscriptionTest.class,
+			AspectFieldHandlerTest.class,
 
 			// reflection
 			ReferenceTrackerTest.class,

@@ -15,10 +15,6 @@ public enum ClassType {
 	 */
 	SYSTEM,
 	/**
-	 * Used for (sub)classes of {@link com.artemis.EntityFactory}
-	 */
-	FACTORY,
-	/**
 	 * Used for everything else.
 	 */
 	CUSTOM

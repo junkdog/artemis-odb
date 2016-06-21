@@ -5,7 +5,6 @@ import static org.junit.Assert.fail;
 
 import com.artemis.BaseSystem;
 import com.artemis.annotations.Profile;
-import com.artemis.factory.Base;
 import com.artemis.util.SimpleProfiler;
 
 @Profile(enabled=true, using=SimpleProfiler.class)

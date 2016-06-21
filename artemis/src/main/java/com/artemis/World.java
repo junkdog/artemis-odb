@@ -5,9 +5,6 @@ import com.artemis.injection.Injector;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
-import com.artemis.utils.reflect.ClassReflection;
-import com.artemis.utils.reflect.Constructor;
-import com.artemis.utils.reflect.ReflectionException;
 
 import java.util.*;
 
@@ -166,29 +163,6 @@ public class World {
 	}
 
 	/**
-	 * Create entity factory for entities with a predefined component composition.
-	 *
-	 * @param factory type to create.
-	 * @param <T> type to create. Should implement {@link EntityFactory}.
-	 * @return Implementation of EntityFactory.
-	 * @see EntityFactory for instructions about configuration.
-	 */
-	@SuppressWarnings("unchecked")
-	public <T extends EntityFactory> T createFactory(Class<?> factory) {
-		if (!factory.isInterface())
-			throw new MundaneWireException("Expected interface for type: " + factory);
-
-		String impl = factory.getName() + "Impl";
-		try {
-			Class<?> implClass = ClassReflection.forName(impl);
-			Constructor constructor = ClassReflection.getConstructor(implClass, World.class);
-			return (T) constructor.newInstance(this);
-		} catch (ReflectionException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	/**
 	 * Get entity editor for entity.
 	 * @return a fast albeit verbose editor to perform batch changes to entities.
 	 * @param entityId entity to fetch editor for.
@@ -324,10 +298,12 @@ public class World {
 	 * Use {@link Entity#edit()} to set up your newly created entity.
 	 *
 	 * You can also create entities using:
-	 * - {@link com.artemis.utils.EntityBuilder} Convenient entity creation. Not useful when pooling.
-	 * - {@link com.artemis.Archetype} Fastest, low level, no parameterized components.
-	 * - {@link com.artemis.EntityFactory} Fast, clean and convenient. For fixed composition entities. Requires some setup.
-	 * Best choice for parameterizing pooled components.
+	 * <ul>
+	 *   <li>{@link com.artemis.utils.EntityBuilder} Convenient entity creation. Not useful when pooling.</li>
+	 *   <li>{@link com.artemis.Archetype} Fastest, low level, no parameterized components.</li>
+	 *   <li><a href="https://github.com/junkdog/artemis-odb/wiki/Serialization">Serialization</a>,
+	 *        with a simple prefab-like class to parameterize the entities.</li>
+	 * </ul>
 	 *
 	 * @see #create() recommended alternative.
 	 * @return entity
