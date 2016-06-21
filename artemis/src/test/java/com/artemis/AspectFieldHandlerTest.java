@@ -2,16 +2,11 @@ package com.artemis;
 
 import com.artemis.annotations.AspectDescriptor;
 import com.artemis.component.*;
-import com.artemis.injection.*;
-import com.artemis.utils.reflect.ClassReflection;
-import com.artemis.utils.reflect.Field;
-import com.artemis.utils.reflect.ReflectionException;
 import org.junit.Test;
 
 import static com.artemis.Aspect.all;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 public class AspectFieldHandlerTest {
 	private Aspect.Builder reference = all(ComponentX.class, ComponentY.class)

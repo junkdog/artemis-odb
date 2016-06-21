@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 
 /**
  * Customizes reflective injection of {@link ComponentMapper}, {@link EntitySystem},
- * {@link Manager} and {@link EntityFactory}.
+ * {@link Manager}, and registered types via {@link WorldConfiguration#register}.
  * <p/>
  * Odb automatically injects above types into entity systems, during initialization.
  * <p/>
@@ -27,6 +27,8 @@ import java.lang.annotation.*;
  * To specify which nonstandard dependencies to inject, use
  * {@link com.artemis.WorldConfiguration#register(String, Object)} and
  * {@link com.artemis.WorldConfiguration#register(Object)}.
+ *
+ * @see AspectDescriptor
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.TYPE})

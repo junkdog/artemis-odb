@@ -9,7 +9,6 @@ import com.artemis.utils.reflect.Field;
 import java.util.IdentityHashMap;
 
 import static com.artemis.Aspect.all;
-import static com.artemis.utils.reflect.ClassReflection.getDeclaredAnnotation;
 
 /**
  * <p>Resolves the following aspect-related types:</p>
@@ -21,6 +20,7 @@ import static com.artemis.utils.reflect.ClassReflection.getDeclaredAnnotation;
  * </ul>
  *
  * @author Snorre E. Brekke
+ * @author Adrian Papari
  */
 public class AspectFieldResolver implements FieldResolver {
 
