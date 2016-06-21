@@ -4,6 +4,8 @@
 - **BREAKING CHANGES**
   - World's systems array is now typed with `BaseSystem`; this should only have
     implication for custom implementations of `SystemInvocationStrategy`.
+  - EntityFactory annotation processor and related classes have been removed,
+    for more background, see [#428](https://github.com/junkdog/artemis-odb/issues/427#issuecomment-217629020).
 
 - AspectFieldResolver; additional default injection field resolver
   - `@AspectDescriptor` on appropriate fields to inject
