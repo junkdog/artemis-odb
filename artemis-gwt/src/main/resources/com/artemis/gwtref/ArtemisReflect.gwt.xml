@@ -34,6 +34,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.PooledComponent"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.annotations.LinkPolicy"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.annotations.Wire"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.annotations.AspectDescriptor"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.ComponentType"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.ComponentMapper"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.Component"/>
@@ -52,6 +53,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.UseInjectionCache"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.ArtemisFieldResolver"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.WiredFieldResolver"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.AspectFieldResolver"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.PojoFieldResolver"/>
 
     <source path="">
