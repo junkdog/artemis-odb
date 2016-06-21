@@ -80,7 +80,7 @@ Anticipating 2.0.0: minor API changes may still occur
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>2.0.0-RC2</version>
+	<version>2.0.0-RC3</version>
 </dependency>
 ```
 
@@ -99,7 +99,7 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 #### Gradle
 
 ```groovy
-  dependencies { compile "net.onedaybeard.artemis:artemis-odb:2.0.0-RC2" }
+  dependencies { compile "net.onedaybeard.artemis:artemis-odb:2.0.0-RC3" }
 ```
 or
 
@@ -109,6 +109,6 @@ or
 
 #### Manual Download
 
- - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/2.0.0-RC2/) 
- - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/2.0.0-RC2/)
+ - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/2.0.0-RC3/) 
+ - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/2.0.0-RC3/)
 
