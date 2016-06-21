@@ -60,22 +60,6 @@ public class ComponentMapper<A extends Component> extends BaseComponentMapper<A>
 	}
 
 	/**
-	 * Fast and safe retrieval of a component for this entity by id.
-	 * <p>
-	 * If the entity does not have this component then null is returned.
-	 * </p>
-	 *
-	 * @param entityId the id of entity that should possess the component
-	 * @return the instance of the component
-	 * @deprecated no longer necessary, refer to normal {@link #get(int)}
-	 */
-	@Override
-	@Deprecated
-	public A getSafe(int entityId) {
-		return get(entityId);
-	}
-
-	/**
 	 * Checks if the entity has this type of component.
 	 *
 	 * @param entityId the id of entity to check

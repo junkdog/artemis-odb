@@ -63,8 +63,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		return this;
 	}
 
-	@Override
-	protected void save(Writer writer, SaveFileFormat save) {
+	public void save(Writer writer, SaveFileFormat save) {
 		try {
 			referenceTracker.inspectTypes(world);
 			referenceTracker.preWrite(save);

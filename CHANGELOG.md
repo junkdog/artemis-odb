@@ -2,9 +2,11 @@
 
 
 #### Version: 2.0.0-SNAPSHOT
+- **BREAKING CHANGES**
+  - Removed deprecated methods, see: 
 
 
-#### Version: 2.0.0-RC4 - 2016-06-21
+#### Version: 2.0.0-RC3 - 2016-06-21
 - **BREAKING CHANGES**
   - World's systems array is now typed with `BaseSystem`; this should only have
     implication for custom implementations of `SystemInvocationStrategy`.

@@ -26,14 +26,6 @@ public class ArtemisWeavingTask extends DefaultTask {
 	private File classesDir;
 
 	/**
-	 * If true, will leave field stubs to keep IDE:s happy after transformations.
-	 *
-	 * @deprecated no longer has any effect
-	 */
-	@Input @Deprecated
-	private boolean ideFriendlyPacking;
-
-	/**
 	 * Enabled weaving of pooled components (more viable on Android than JVM).
 	 */
 	@Input
@@ -96,14 +88,6 @@ public class ArtemisWeavingTask extends DefaultTask {
 
 	public void setEnableArtemisPlugin(boolean enableArtemisPlugin) {
 		this.enableArtemisPlugin = enableArtemisPlugin;
-	}
-
-	public boolean isIdeFriendlyPacking() {
-		return ideFriendlyPacking;
-	}
-
-	public void setIdeFriendlyPacking(boolean ideFriendlyPacking) {
-		this.ideFriendlyPacking = ideFriendlyPacking;
 	}
 
 	public boolean isEnablePooledWeaving() {

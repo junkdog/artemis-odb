@@ -33,13 +33,6 @@ public class ArtemisMaven extends AbstractMojo {
 	private File sourceDirectory;
 
 	/**
-	 * If true, will leave field stubs to keep IDE:s happy after transformations.
-	 * @deprecated no longer has any effect
-	 */
-	@Parameter(property = "ideFriendlyPacking") @Deprecated
-	private boolean ideFriendlyPacking;
-
-	/**
 	 * Enabled weaving of pooled components (more viable on Android than JVM).
 	 */
 	@Parameter(defaultValue = "true", property = "enablePooledWeaving")

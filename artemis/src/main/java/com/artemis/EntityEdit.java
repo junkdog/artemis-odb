@@ -18,7 +18,6 @@ package com.artemis;
  * - {@link com.artemis.utils.EntityBuilder} Convenient entity creation. Not useful when pooling.
  * - {@link com.artemis.EntityTransmuterFactory} Fastest but rigid way of changing entity component compositions.
  * - {@link com.artemis.Archetype} Fastest, low level, no parameterized components.
- * - {@link com.artemis.EntityFactory} Fast, clean and convenient. For fixed composition entities. Requires some setup.
  */
 public final class EntityEdit {
 
@@ -27,18 +26,6 @@ public final class EntityEdit {
 
 	EntityEdit(World world) {
 		cm = world.getComponentManager();
-	}
-
-	/**
-	 * <p>Delete the entity from the world. The entity is considered to be
-	 * in a final state once invoked; adding or removing components from an
-	 * entity scheduled for deletion will likely throw exceptions.</p>
-	 *
-	 * @deprecated Use {@link World#delete(int)} and {@link Entity#deleteFromWorld()} instead.
-	 */
-	@Deprecated
-	public void deleteEntity() {
-		cm.getWorld().delete(entityId);
 	}
 
 	/**

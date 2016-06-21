@@ -76,7 +76,7 @@ public class EntityManagerTest {
 		Entity e2 = world.createEntity();
 		
 		assertNotEquals(id1, e2.getId());
-		assertFalse("Error:" + mapper.getSafe(e2), mapper.has(e2));
+		assertFalse("Error:" + mapper.get(e2), mapper.has(e2));
 	}
 	
 	@Test
@@ -93,7 +93,7 @@ public class EntityManagerTest {
 		Entity e2 = world.createEntity();
 
 		assertEquals(id1, e2.getId());
-		assertFalse("Error:" + mapper.getSafe(e2), mapper.has(e2));
+		assertFalse("Error:" + mapper.get(e2), mapper.has(e2));
 	}
 
 	@Test

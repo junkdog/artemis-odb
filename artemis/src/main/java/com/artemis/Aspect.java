@@ -214,19 +214,6 @@ public class Aspect {
 	}
 
 	/**
-	 * Creates an aspect that matches all entities.
-	 *
-	 * Prior to version 0.9.0, this method returned an aspect which matched no entities.
-	 *
-	 * @return an empty Aspect that will reject all entities
-	 * @deprecated extend {@link com.artemis.BaseSystem} instead of {@link com.artemis.EntitySystem} for entity-less systems.
-	 */
-	@Deprecated
-	public static Aspect.Builder getEmpty() {
-		return new Aspect.Builder();
-	}
-
-	/**
 	 * Constructs instances of {@link Aspect}.
 	 */
 	public static class Builder {

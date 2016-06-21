@@ -211,21 +211,6 @@ public class World {
 	}
 
 	/**
-	 * Returns a manager of the specified type.
-	 * @param <T>
-	 * 		class type of the manager
-	 * @param managerType
-	 * 		class type of the manager
-	 * @return the manager
-	 * @deprecated managers and systems are treated equally. use {@link #getSystem(Class)} instead.
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public <T extends BaseSystem> T getManager(Class<T> managerType) {
-		return (T) partition.systems.get(managerType);
-	}
-
-	/**
 	 * Time since last game loop.
 	 * @return delta time since last game loop
 	 */

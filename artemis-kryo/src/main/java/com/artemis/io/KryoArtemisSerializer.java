@@ -74,11 +74,6 @@ public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 		return this;
 	}
 
-	@Override @Deprecated
-	protected void save(Writer writer, SaveFileFormat save) {
-		throw new UnsupportedOperationException("not supported");
-	}
-
 	@Override
 	public void save(OutputStream os, SaveFileFormat save)
 			throws SerializationException {

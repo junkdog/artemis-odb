@@ -40,24 +40,6 @@ public abstract class BaseComponentMapper<A extends Component> {
 	public abstract A get(int entityId) throws ArrayIndexOutOfBoundsException;
 
 	/**
-	 * Fast and safe retrieval of a component for this entity.
-	 * <p>
-	 * If the entity does not have this component then null is returned.
-	 * </p>
-	 *
-	 * @param e the entity that should possess the component
-	 * @return the instance of the component
-	 * @deprecated no longer necessary, refer to normal {@link #get(Entity)}
-	 */
-	@Deprecated
-	public A getSafe(Entity e) {
-		return get(e.getId());
-	}
-
-	@Deprecated
-	public abstract A getSafe(int entityId);
-
-	/**
 	 * Checks if the entity has this type of component.
 	 *
 	 * @param e the entity to check
