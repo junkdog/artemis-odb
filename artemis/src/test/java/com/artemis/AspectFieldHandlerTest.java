@@ -7,6 +7,7 @@ import org.junit.Test;
 import static com.artemis.Aspect.all;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 public class AspectFieldHandlerTest {
 	private Aspect.Builder reference = all(ComponentX.class, ComponentY.class)
@@ -27,8 +28,9 @@ public class AspectFieldHandlerTest {
 		assertNotNull(withAspectFields.aspect);
 		assertEquals(reference, withAspectFields.sub.getAspectBuilder());
 		assertNotNull(withAspectFields.transmuter);
-	}
 
+		checkArchetype(world, withAspectFields.archetype);
+	}
 
 	@Test
 	public void inject_aspect_fields_system() throws Exception {
@@ -43,6 +45,15 @@ public class AspectFieldHandlerTest {
 		assertNotNull(withAspectFields.aspect);
 		assertEquals(reference, withAspectFields.sub.getAspectBuilder());
 		assertNotNull(withAspectFields.transmuter);
+
+		checkArchetype(world, withAspectFields.archetype);
+	}
+
+	private static void checkArchetype(World world, Archetype archetype) {
+		Entity e = world.getEntity(world.create(archetype));
+		assertNotNull(e.getComponent(ComponentX.class));
+		assertNotNull(e.getComponent(ReusedComponent.class));
+		assertNull(e.getComponent(ComponentY.class));
 	}
 
 	private static class ObjectAspectFields {
@@ -70,6 +81,10 @@ public class AspectFieldHandlerTest {
 			exclude = PooledString.class,
 			one = {ReusedComponent.class, EntityHolder.class})
 		public Aspect.Builder ab;
+
+		@AspectDescriptor(
+			all = {ComponentX.class, ReusedComponent.class})
+		public Archetype archetype;
 	}
 
 	private static class SomeSystem extends BaseSystem {
@@ -96,6 +111,10 @@ public class AspectFieldHandlerTest {
 			exclude = PooledString.class,
 			one = {ReusedComponent.class, EntityHolder.class})
 		public Aspect.Builder ab;
+
+		@AspectDescriptor(
+			all = {ComponentX.class, ReusedComponent.class})
+		public Archetype archetype;
 
 		@Override
 		protected void processSystem() {}

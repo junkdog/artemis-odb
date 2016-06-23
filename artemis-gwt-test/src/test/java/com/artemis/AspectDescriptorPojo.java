@@ -27,4 +27,8 @@ public class AspectDescriptorPojo {
 		exclude = PooledString.class,
 		one = {ReusedComponent.class, EntityHolder.class})
 	public Aspect.Builder ab;
+
+	@AspectDescriptor(
+		all = {ComponentX.class, ReusedComponent.class})
+	public Archetype archetype;
 }

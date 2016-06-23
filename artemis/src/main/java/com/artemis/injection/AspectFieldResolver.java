@@ -48,6 +48,10 @@ public class AspectFieldResolver implements FieldResolver {
 			return new EntityTransmuter(world, aspect);
 		} else if (EntitySubscription.class == type) {
 			return world.getAspectSubscriptionManager().get(aspect);
+		} else if (Archetype.class == type) {
+			return new ArchetypeBuilder()
+				.add(descriptor(field).all())
+				.build(world);
 		}
 
 		return null;
@@ -55,16 +59,23 @@ public class AspectFieldResolver implements FieldResolver {
 
 	private Aspect.Builder aspect(Field field) {
 		if (!fields.containsKey(field)) {
-			Annotation anno	= field.getDeclaredAnnotation(AspectDescriptor.class);
+			AspectDescriptor descriptor = descriptor(field);
 
-			if (anno != null) {
-				fields.put(field, toAspect(anno.getAnnotation(AspectDescriptor.class)));
+			if (descriptor != null) {
+				fields.put(field, toAspect(descriptor));
 			} else {
 				fields.put(field, null);
 			}
 		}
 
 		return  fields.get(field);
+	}
+
+	private AspectDescriptor descriptor(Field field) {
+		Annotation anno	= field.getDeclaredAnnotation(AspectDescriptor.class);
+		return (anno != null)
+			? anno.getAnnotation(AspectDescriptor.class)
+			: null;
 	}
 
 	private Aspect.Builder toAspect(AspectDescriptor ad) {

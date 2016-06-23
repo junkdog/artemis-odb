@@ -5,6 +5,8 @@
 - **BREAKING CHANGES**
   - Removed deprecated code, see: [5de377d](https://github.com/junkdog/artemis-odb/commit/5de377dac1123285f5b80921d9f4fcdf34b26c05) 
 
+- `@AspectDescriptor` now also valid on Archetypes.
+
 
 #### Version: 2.0.0-RC3 - 2016-06-21
 - **BREAKING CHANGES**
