@@ -3,9 +3,14 @@
 
 #### Version: 2.0.0-SNAPSHOT
 - **BREAKING CHANGES**
-  - Removed deprecated code, see: [5de377d](https://github.com/junkdog/artemis-odb/commit/5de377dac1123285f5b80921d9f4fcdf34b26c05) 
+  - Removed deprecated code, see: [5de377d][5de377d].
 
 - `@AspectDescriptor` now also valid on Archetypes.
+- `EntityLinkManager` fires events for initial entities when registering a LinkListener;
+  toggleable in constructor.
+
+
+[5de377d]: https://github.com/junkdog/artemis-odb/commit/5de377dac1123285f5b80921d9f4fcdf34b26c05
 
 
 #### Version: 2.0.0-RC3 - 2016-06-21

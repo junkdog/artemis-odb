@@ -3,8 +3,8 @@ package com.artemis.link;
 /**
  * Stub implementation of {@link LinkListener}.
  *
- * @see EntityLinkManager#register(Class, LinkAdapter)
- * @see EntityLinkManager#register(Class, String, LinkAdapter)
+ * @see EntityLinkManager#register(Class, LinkListener)
+ * @see EntityLinkManager#register(Class, String, LinkListener)
  */
 public class LinkAdapter implements LinkListener {
 	@Override

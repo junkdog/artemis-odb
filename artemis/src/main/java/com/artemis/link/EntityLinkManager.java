@@ -26,20 +26,26 @@ public class EntityLinkManager extends BaseEntitySystem {
 	final Bag<LinkSite> decoratedLinkSites = new Bag<LinkSite>();
 
 	private final boolean requireListener;
+	private final boolean fireEventsOnRegistration;
 
 	/**
-	 * @param processSitesEvenIfNoListener If true, only act on fields with an attached {@link LinkListener}.
+	 * @param processSitesEvenIfNoListener
+	 *  If true, only act on fields with an attached {@link LinkListener}.
+	 * @param fireEventsOnRegistration
+	 *  If true,
 	 */
-	public EntityLinkManager(boolean processSitesEvenIfNoListener) {
+	public EntityLinkManager(boolean processSitesEvenIfNoListener, boolean fireEventsOnRegistration) {
 		super(all());
 		this.requireListener = !processSitesEvenIfNoListener;
+		this.fireEventsOnRegistration = fireEventsOnRegistration;
 	}
 
 	/**
 	 * Processes all fields, even if they don't have a {@link LinkListener}.
+	 * LinkListener events will be fired when the listener is registered.
 	 */
 	public EntityLinkManager() {
-		this(true);
+		this(true, true);
 	}
 
 	@Override
@@ -101,6 +107,9 @@ public class EntityLinkManager extends BaseEntitySystem {
 					site.listener = listener;
 					if (!decoratedLinkSites.contains(site))
 						decoratedLinkSites.add(site);
+
+					if (fireEventsOnRegistration)
+						site.inserted(site.subscription.getEntities());
 				}
 			}
 		} catch (ReflectionException e) {
