@@ -1,6 +1,7 @@
 package com.artemis.cli;
 
 import java.io.File;
+import java.util.Arrays;
 
 import com.artemis.cli.converter.FileOutputConverter;
 import com.artemis.cli.converter.FolderConverter;
@@ -34,8 +35,11 @@ public class MatrixCommand {
 	private File output = new File("matrix.html");
 	
 	void execute() {
-		ComponentDependencyMatrix cdm =
-			new ComponentDependencyMatrix(projectName, classRoot, output);
+		ComponentDependencyMatrix cdm =	new ComponentDependencyMatrix(
+				projectName,
+				Arrays.asList(classRoot.toURI()),
+				output);
+
 		cdm.process();
 	}
 }
