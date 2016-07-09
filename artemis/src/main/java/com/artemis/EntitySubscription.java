@@ -11,7 +11,7 @@ import static com.artemis.utils.ConverterUtil.toIntBag;
 /**
  * Maintains the list of entities matched by an aspect. Entity subscriptions
  * are automatically updated during {@link com.artemis.World#process()}.
- * Any {@link com.artemis.EntitySubscription.SubscriptionListener | listeners}
+ * Any {@link com.artemis.EntitySubscription.SubscriptionListener listeners}
  * are informed when entities are added or removed.
  */
 public class EntitySubscription {

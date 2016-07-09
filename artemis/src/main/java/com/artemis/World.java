@@ -175,7 +175,7 @@ public class World {
 	}
 
 	/**
-	 * Gets the <code>compisition id</code> uniquely identifying the
+	 * Gets the <code>composition id</code> uniquely identifying the
 	 * component composition of an entity. Each composition identity maps
 	 * to one unique <code>BitSet</code>.
 	 *
@@ -203,7 +203,9 @@ public class World {
 	}
 
 	/**
-	 * Return a manager that takes care of all subscriptions in the world.
+	 * Returns the manager responsible for creating and maintaining
+	 * {@link EntitySubscription subscriptions} in the world.
+	 *
 	 * @return aspect subscription manager
 	 */
 	public AspectSubscriptionManager getAspectSubscriptionManager() {
@@ -332,8 +334,8 @@ public class World {
 	 * Get entity with the specified id.
 	 *
 	 * Resolves entity id to the unique entity instance. <em>This method may
-	 * return an entity even if it isn't active in the world. Make sure you
-	 * do not retain id's of deleted entities.
+	 * return an entity even if it isn't active in the world.</em> Make sure to
+	 * not retain id's of deleted entities.
 	 *
 	 * @param entityId
 	 * 		the entities id

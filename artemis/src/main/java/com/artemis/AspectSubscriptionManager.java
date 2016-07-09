@@ -13,11 +13,11 @@ import static com.artemis.Aspect.all;
 import static com.artemis.utils.ConverterUtil.toIntBag;
 
 /**
- * Manages all instances of {@link EntitySubscription}.
+ * <p>Manages all instances of {@link EntitySubscription}.</p>
  *
- * Entity subscriptions are automatically updated during {@link com.artemis.World#process()}.
- * Any {@link com.artemis.EntitySubscription.SubscriptionListener | listeners}
- * are informed when entities are added or removed.
+ * <p>Entity subscriptions are automatically updated during {@link com.artemis.World#process()}.
+ * Any {@link com.artemis.EntitySubscription.SubscriptionListener listeners}
+ * are informed when entities are added or removed.</p>
  *
  * @see EntitySubscription
  */
@@ -44,10 +44,8 @@ public class AspectSubscriptionManager extends BaseSystem {
 	}
 
 	/**
-	 * Get subscription to all entities matching {@link Aspect}.
-	 *
-	 * Will create a new subscription if not yet available for
-	 * given {@link Aspect} match.
+	 * <p>Gets the entity subscription for the {@link Aspect}.
+	 * Subscriptions are only created once per aspect.</p>
 	 *
 	 * @param builder Aspect to match.
 	 * @return {@link EntitySubscription} for aspect.
