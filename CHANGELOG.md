@@ -2,9 +2,6 @@
 
 
 #### Version: 2.0.0-SNAPSHOT
-
-
-#### Version: 2.0.0-RC4 - 2016-06-23
 - **BREAKING CHANGES**
   - Removed previously deprecated code, see: [5de377d][5de377d].
   - **InvocationStrategy**` - affectes custom implementations:
