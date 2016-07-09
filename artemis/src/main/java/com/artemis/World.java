@@ -368,6 +368,7 @@ public class World {
 	protected void setInvocationStrategy(SystemInvocationStrategy invocationStrategy) {
 		this.invocationStrategy = invocationStrategy;
 		invocationStrategy.setWorld(this);
+		invocationStrategy.setSystems(systemsBag);
 		invocationStrategy.initialize();
 	}
 
@@ -376,8 +377,7 @@ public class World {
 	 * @see InvocationStrategy to control and extend how systems are invoked.
 	 */
 	public void process() {
-		batchProcessor.update();
-		invocationStrategy.process(systemsBag);
+		invocationStrategy.process();
 
 		IntBag pendingPurge = batchProcessor.getPendingPurge();
 		if (!pendingPurge.isEmpty()) {

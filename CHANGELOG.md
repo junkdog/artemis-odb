@@ -2,13 +2,20 @@
 
 
 #### Version: 2.0.0-SNAPSHOT
+
+
+#### Version: 2.0.0-RC4 - 2016-06-23
 - **BREAKING CHANGES**
-  - Removed deprecated code, see: [5de377d][5de377d].
+  - Removed previously deprecated code, see: [5de377d][5de377d].
+  - **InvocationStrategy**` - affectes custom implementations:
+    - bag-of-systems now stored as a field, instead of being passed as a parameter
+      to `InvocationStrategy::process`
+    - `InvocationStrategy::updateEntityStates` must be called before processing the first system.
+      Previously, the initial update was done by the world instance.
 
 - `@AspectDescriptor` now also valid on Archetypes.
 - `EntityLinkManager` fires events for initial entities when registering a LinkListener;
   toggleable in constructor.
-
 
 [5de377d]: https://github.com/junkdog/artemis-odb/commit/5de377dac1123285f5b80921d9f4fcdf34b26c05
 

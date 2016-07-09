@@ -174,7 +174,7 @@ public final class WorldConfiguration {
 
 		asm.processComponentIdentity(NO_COMPONENTS, new BitSet());
 
-
+		invocationStrategy.setSystems(systems);
 		invocationStrategy.initialize();
 	}
 

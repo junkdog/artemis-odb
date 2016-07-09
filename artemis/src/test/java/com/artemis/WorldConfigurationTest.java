@@ -23,7 +23,7 @@ public class WorldConfigurationTest {
 	public void should_use_override_invocation_strategy_when_specified() {
 		SystemInvocationStrategy strategy = new SystemInvocationStrategy() {
 			@Override
-			protected void process(Bag<BaseSystem> systems) {
+			protected void process() {
 			}
 		};
 		World world = new World(new WorldConfiguration().setInvocationStrategy(strategy));
@@ -67,7 +67,7 @@ public class WorldConfigurationTest {
 			}
 
 			@Override
-			protected void process(Bag<BaseSystem> systems) {
+			protected void process() {
 			}
 		};
 		World world = new World(new WorldConfiguration().setInvocationStrategy(strategy));

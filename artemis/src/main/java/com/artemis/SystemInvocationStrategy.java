@@ -22,10 +22,18 @@ public abstract class SystemInvocationStrategy {
 	/** World to operate on. */
 	protected World world;
 	protected final BitSet disabled = new BitSet();
+	protected Bag<BaseSystem> systems;
 
 	/** World to operate on. */
 	protected final void setWorld(World world) {
 		this.world = world;
+	}
+
+	/**
+	 * Called prior to {@link #initialize()}
+	 */
+	protected void setSystems(Bag<BaseSystem> systems) {
+		this.systems = systems;
 	}
 
 	/** Called during world initialization phase. */
@@ -36,8 +44,17 @@ public abstract class SystemInvocationStrategy {
 		world.batchProcessor.update();
 	}
 
-	/** Process all systems. */
-	protected abstract void process(Bag<BaseSystem> systems);
+	/**
+	 * Process all systems.
+	 *
+	 * @deprecated superseded by {@link #process()}
+	 */
+	@Deprecated
+	protected final void process(Bag<BaseSystem> systems) {
+		throw new RuntimeException("wrong process method");
+	}
+
+	protected abstract void process();
 
 	public boolean isEnabled(BaseSystem system) {
 		Class<? extends BaseSystem> target = system.getClass();
