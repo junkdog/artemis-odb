@@ -47,7 +47,7 @@ public class ComponentMatrix extends AbstractMojo {
 			files.add(artifact.getFile().toURI());
 
 		ComponentDependencyMatrix matrix =
-			new ComponentDependencyMatrix(name, classDirectory, new File(saveDirectory, "matrix.html"));
+			new ComponentDependencyMatrix(name, files, new File(saveDirectory, "matrix.html"));
 
 		matrix.process();
 	}
