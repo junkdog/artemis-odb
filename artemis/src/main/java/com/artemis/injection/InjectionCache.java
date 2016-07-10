@@ -21,6 +21,13 @@ import static com.artemis.utils.reflect.ClassReflection.isAnnotationPresent;
  * @author Snorre E. Brekke
  */
 public class InjectionCache {
+	public static final ThreadLocal<InjectionCache> sharedCache = new ThreadLocal<InjectionCache>() {
+		@Override
+		protected InjectionCache initialValue() {
+			return new InjectionCache();
+		}
+	};
+
 	private final Map<Class<?>, CachedClass> classCache = new HashMap<Class<?>, CachedClass>();
 	private final Map<Class<?>, ClassType> fieldClassTypeCache = new HashMap<Class<?>, ClassType>();
 	private final Map<Field, CachedField> namedWireCache = new HashMap<Field, CachedField>();
@@ -128,6 +135,4 @@ public class InjectionCache {
 		}
 		return genericsType;
 	}
-
-
 }

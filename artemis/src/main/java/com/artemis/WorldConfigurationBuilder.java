@@ -29,7 +29,7 @@ public class WorldConfigurationBuilder {
 
 	public WorldConfigurationBuilder() {
 		reset();
-		cache = new InjectionCache();
+		cache = InjectionCache.sharedCache.get();
 	}
 
 	/**
@@ -76,7 +76,7 @@ public class WorldConfigurationBuilder {
 		if (fieldResolvers.size() > 0) {
 			Sort.instance().sort(fieldResolvers);
 			// instance default field handler
-			final FieldHandler fieldHandler = new FieldHandler(new InjectionCache());
+			final FieldHandler fieldHandler = new FieldHandler(InjectionCache.sharedCache.get());
 
 			for (ConfigurationElement<? extends FieldResolver> configurationElement : fieldResolvers) {
 				fieldHandler.addFieldResolver(configurationElement.item);

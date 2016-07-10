@@ -64,7 +64,9 @@ public final class WorldConfiguration {
 	 * @return This instance for chaining.
 	 */
 	public WorldConfiguration setInjector(Injector injector) {
-		if ( injector == null ) throw new NullPointerException();
+		if (injector == null)
+			throw new NullPointerException("Injector must not be null");
+
 		this.injector = injector;
 		return this;
 	}

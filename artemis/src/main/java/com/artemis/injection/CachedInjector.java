@@ -25,7 +25,7 @@ import java.util.Map;
  * @see com.artemis.injection.FieldHandler
  */
 public final class CachedInjector implements Injector {
-	private InjectionCache cache = new InjectionCache();
+	private InjectionCache cache = InjectionCache.sharedCache.get();
 	private FieldHandler fieldHandler;
 	private Map<String, Object> injectables;
 
@@ -178,5 +178,4 @@ public final class CachedInjector implements Injector {
 
 		return new MundaneWireException(error);
 	}
-
 }
