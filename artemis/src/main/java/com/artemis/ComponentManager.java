@@ -166,7 +166,7 @@ public class ComponentManager extends BaseSystem {
 	 * @param componentBits composition to fetch unique identifier for.
 	 * @return Unique identifier for passed composition.
 	 */
-	int compositionIdentity(BitSet componentBits) {
+	public int compositionIdentity(BitSet componentBits) {
 		int identity = identityResolver.getIdentity(componentBits);
 		if (identity == -1) {
 			identity = identityResolver.allocateIdentity(componentBits, this);

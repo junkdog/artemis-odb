@@ -10,6 +10,7 @@
     - `InvocationStrategy::updateEntityStates` must be called before processing the first system.
       Previously, the initial update was done by the world instance.
 
+- `ComponentManager::compositionIdentity(BitSet)` now public.
 - `@AspectDescriptor` now also valid on Archetypes.
 - `EntityLinkManager` fires events for initial entities when registering a LinkListener;
   toggleable in constructor.
