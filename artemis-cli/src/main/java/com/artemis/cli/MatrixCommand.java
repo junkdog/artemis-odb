@@ -37,7 +37,7 @@ public class MatrixCommand {
 	void execute() {
 		ComponentDependencyMatrix cdm =	new ComponentDependencyMatrix(
 				projectName,
-				Arrays.asList(classRoot.toURI()),
+				classRoot,
 				output);
 
 		cdm.process();
