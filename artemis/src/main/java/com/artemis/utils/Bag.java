@@ -388,7 +388,15 @@ public class Bag<E> implements ImmutableBag<E> {
 		if (o == null || getClass() != o.getClass()) return false;
 
 		Bag bag = (Bag) o;
-		return size == bag.size() && Arrays.equals(data, bag.data);
+		if (size != bag.size())
+			return false;
+
+		for (int i = 0; size > i; i++) {
+			if (data[i] != bag.data[i])
+				return false;
+		}
+
+		return true;
 	}
 
 	@Override

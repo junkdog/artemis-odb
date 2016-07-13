@@ -2,6 +2,7 @@
 
 
 #### Version: 2.0.0-SNAPSHOT
+- **Fix**: Bag and IntBag equals method would return false for identical bags with different capacities.
 
 
 #### Version: 2.0.0-RC4 - 2016-07-10

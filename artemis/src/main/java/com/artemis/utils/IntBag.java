@@ -283,7 +283,15 @@ public class IntBag {
 		if (o == null || getClass() != o.getClass()) return false;
 
 		IntBag intBag = (IntBag) o;
-		return size == intBag.size() && Arrays.equals(data, intBag.data);
+		if (size != intBag.size())
+			return false;
+
+		for (int i = 0; size > i; i++) {
+			if (data[i] != intBag.data[i])
+				return false;
+		}
+
+		return true;
 	}
 
 	@Override
