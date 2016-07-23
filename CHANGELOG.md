@@ -2,16 +2,22 @@
 
 
 #### Version: 2.0.0-SNAPSHOT
+
+
+#### Version: 2.0.0-RC5 - 2016-07-23
 - **BREAKING CHANGES**
   - All usage of BitSet replaced by [BitVector][bitvector].
 
-- **BitVector**
-  - [Optimized][bv-jmh] decoding of bits to integers, making all entity mutations more efficient.
-  - `unsafeGet`, `unsafeSet`, `unsafeClear` require that the `BitVector`
-  - `BitVector::ensureCapacity(int bits)` explicitly grows the bit vector. Typically used in
-    together with the `unsafe-` methods.
-  - `EntityManager::registerEntityStore(BitVector)` - when representing entity id:s as bits,
-    makes `unsafe-` methods safe - as the EntityManager grows the bit vector as necessary.
+- **BitVector**: custom bitset, generally faster than `java.util.BitSet`.
+  - [Optimized][bv-jmh] decoding of bits to integers, making all entity
+    mutations more efficient.
+  - `unsafeGet`, `unsafeSet`, `unsafeClear` require that the underlying
+    array can contain the bit index.
+  - `BitVector::ensureCapacity(int bits)` explicitly grows the bit vector.
+    Typically used together with the `unsafe-` methods.
+  - `EntityManager::registerEntityStore(BitVector)` - when representing
+    entity id:s as bits, makes `unsafe-` methods safe - as the `EntityManager`
+    grows the bit vector as necessary.
 - **Fix**: Bag and IntBag equals method would return false for identical bags with different capacities.
 
 [bv-jmh]: https://gist.github.com/junkdog/fa28b1b9a8602090ddb717f1e3c9ce37
