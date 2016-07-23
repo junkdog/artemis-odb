@@ -14,6 +14,9 @@
     makes `unsafe-` methods safe - as the EntityManager grows the bit vector as necessary.
 - **Fix**: Bag and IntBag equals method would return false for identical bags with different capacities.
 
+[bv-jmh]: https://gist.github.com/junkdog/fa28b1b9a8602090ddb717f1e3c9ce37
+[bitvector]: https://github.com/junkdog/artemis-odb/blob/master/artemis/src/main/java/com/artemis/utils/BitVector.java
+
 
 #### Version: 2.0.0-RC4 - 2016-07-10
 - **BREAKING CHANGES**
