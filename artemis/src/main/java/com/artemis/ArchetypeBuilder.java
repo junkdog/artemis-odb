@@ -1,6 +1,6 @@
 package com.artemis;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 
 import com.artemis.EntityTransmuter.TransmuteOperation;
 import com.artemis.utils.Bag;
@@ -118,8 +118,8 @@ public class ArchetypeBuilder {
 	}
 	
 	/** generate bitset mask of types. */
-	private static BitSet bitset(ComponentType[] types) {
-		BitSet bs = new BitSet();
+	private static BitVector bitset(ComponentType[] types) {
+		BitVector bs = new BitVector();
 		for (int i = 0; types.length > i; i++)
 			bs.set(types[i].getIndex());
 			

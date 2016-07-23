@@ -2,6 +2,7 @@ package com.artemis;
 
 import com.artemis.injection.Injector;
 import com.artemis.utils.Bag;
+import com.artemis.utils.BitVector;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.ReflectionException;
 
@@ -174,7 +175,7 @@ public final class WorldConfiguration {
 
 		initializeSystems(injector);
 
-		asm.processComponentIdentity(NO_COMPONENTS, new BitSet());
+		asm.processComponentIdentity(NO_COMPONENTS, new BitVector());
 
 		invocationStrategy.setSystems(systems);
 		invocationStrategy.initialize();

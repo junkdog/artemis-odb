@@ -4,9 +4,8 @@ import com.artemis.annotations.DelayedComponentRemoval;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 
-import static com.artemis.utils.ConverterUtil.toIntBag;
 
 /**
  * Maintains the list of entities matched by an aspect. Entity subscriptions
@@ -18,21 +17,26 @@ public class EntitySubscription {
 	final SubscriptionExtra extra;
 
 	private final IntBag entities;
-	private final BitSet activeEntityIds;
+	private final BitVector activeEntityIds;
 
-	private final BitSet insertedIds;
-	private final BitSet removedIds;
+	private final BitVector insertedIds;
+	private final BitVector removedIds;
 
-	final BitSet aspectCache = new BitSet();
+	final BitVector aspectCache = new BitVector();
 
 	EntitySubscription(World world, Aspect.Builder builder) {
 		extra = new SubscriptionExtra(builder.build(world), builder);
 
-		activeEntityIds = new BitSet();
+		activeEntityIds = new BitVector();
 		entities = new IntBag();
 
-		insertedIds = new BitSet();
-		removedIds = new BitSet();
+		insertedIds = new BitVector();
+		removedIds = new BitVector();
+
+		EntityManager em = world.getEntityManager();
+		em.registerEntityStore(activeEntityIds);
+		em.registerEntityStore(insertedIds);
+		em.registerEntityStore(removedIds);
 	}
 
 	/**
@@ -59,7 +63,7 @@ public class EntitySubscription {
 	 *
 	 * @return View of all active entities.
 	 */
-	public BitSet getActiveEntityIds() {
+	public BitVector getActiveEntityIds() {
 		return activeEntityIds;
 	}
 
@@ -81,26 +85,18 @@ public class EntitySubscription {
 	 * A new unique component composition detected, check if this
 	 * subscription's aspect is interested in it.
 	 */
-	void processComponentIdentity(int id, BitSet componentBits) {
+	void processComponentIdentity(int id, BitVector componentBits) {
+		aspectCache.ensureCapacity(id);
 		aspectCache.set(id, extra.aspect.isInterested(componentBits));
 	}
 
 	void rebuildCompressedActives() {
-		BitSet bs = activeEntityIds;
-		int size = bs.cardinality();
-		entities.setSize(size);
-		entities.ensureCapacity(size);
-
-		int[] activesArray = entities.getData();
-		for (int i = 0, id = -1, s = size; s > i; i++) {
-			id = bs.nextSetBit(id + 1);
-			activesArray[i] = id;
-		}
+		activeEntityIds.toIntBag(entities);
 	}
 
 	final void check(int id, int cid) {
-		boolean interested = aspectCache.get(cid);
-		boolean contains = activeEntityIds.get(id);
+		boolean interested = aspectCache.unsafeGet(cid);
+		boolean contains = activeEntityIds.unsafeGet(id);
 
 		if (interested && !contains) {
 			insert(id);
@@ -110,13 +106,13 @@ public class EntitySubscription {
 	}
 
 	private void remove(int entityId) {
-		activeEntityIds.clear(entityId);
-		removedIds.set(entityId);
+		activeEntityIds.unsafeClear(entityId);
+		removedIds.unsafeSet(entityId);
 	}
 
 	private void insert(int entityId) {
-		activeEntityIds.set(entityId);
-		insertedIds.set(entityId);
+		activeEntityIds.unsafeSet(entityId);
+		insertedIds.unsafeSet(entityId);
 	}
 
 	void process(IntBag changed, IntBag deleted) {
@@ -143,8 +139,8 @@ public class EntitySubscription {
 	}
 
 	private void transferBitsToInts(IntBag inserted, IntBag removed) {
-		toIntBag(insertedIds, inserted);
-		toIntBag(removedIds, removed);
+		insertedIds.toIntBag(inserted);
+		removedIds.toIntBag(removed);
 		insertedIds.clear();
 		removedIds.clear();
 	}
@@ -153,8 +149,8 @@ public class EntitySubscription {
 		int[] ids = entitiesWithCompositions.getData();
 		for (int i = 0, s = entitiesWithCompositions.size(); s > i; i += 2) {
 			int id = ids[i];
-			boolean interested = aspectCache.get(ids[i + 1]);
-			boolean contains = activeEntityIds.get(id);
+			boolean interested = aspectCache.unsafeGet(ids[i + 1]);
+			boolean contains = activeEntityIds.unsafeGet(id);
 
 			if (interested && !contains) {
 				insert(id);
@@ -168,7 +164,7 @@ public class EntitySubscription {
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			int id = ids[i];
-			if(activeEntityIds.get(id))
+			if(activeEntityIds.unsafeGet(id))
 				remove(id);
 		}
 	}
@@ -177,8 +173,8 @@ public class EntitySubscription {
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			int id = ids[i];
-			activeEntityIds.clear(id);
-			removedIds.set(id);
+			activeEntityIds.unsafeClear(id);
+			removedIds.unsafeSet(id);
 		}
 	}
 

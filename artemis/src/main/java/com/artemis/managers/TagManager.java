@@ -1,6 +1,6 @@
 package com.artemis.managers;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,7 @@ public class TagManager extends BaseSystem {
 	/** Tagged entities mapped to tags. */
 	private final Map<Entity, String> tagsByEntity;
 
-	private final BitSet registered;
+	private final BitVector registered;
 
 	/**
 	 * Creates a new TagManager.
@@ -35,7 +35,7 @@ public class TagManager extends BaseSystem {
 	public TagManager() {
 		entitiesByTag = new HashMap<String, Entity>();
 		tagsByEntity = new HashMap<Entity, String>();
-		registered = new BitSet();
+		registered = new BitVector();
 	}
 
 	@Override

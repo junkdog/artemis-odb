@@ -5,7 +5,7 @@ import com.artemis.annotations.LinkPolicy;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.Field;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 
 import static com.artemis.Aspect.all;
 import static com.artemis.annotations.LinkPolicy.Policy.CHECK_SOURCE_AND_TARGETS;
@@ -16,7 +16,7 @@ abstract class LinkSite implements EntitySubscription.SubscriptionListener {
 	protected final ComponentMapper<? extends Component> mapper;
 	protected final EntitySubscription subscription;
 	protected final LinkPolicy.Policy policy;
-	protected final BitSet activeEntityIds;
+	protected final BitVector activeEntityIds;
 	protected LinkListener listener;
 
 	protected LinkSite(World world,

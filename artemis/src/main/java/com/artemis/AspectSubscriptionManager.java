@@ -5,12 +5,11 @@ import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.artemis.Aspect.all;
-import static com.artemis.utils.ConverterUtil.toIntBag;
 
 /**
  * <p>Manages all instances of {@link EntitySubscription}.</p>
@@ -80,7 +79,7 @@ public class AspectSubscriptionManager extends BaseSystem {
 	 * @param changedBits Entities with changedBits composition or state.
 	 * @param deletedBits Entities removed from world.
 	 */
-	void process(BitSet changedBits, BitSet deletedBits) {
+	void process(BitVector changedBits, BitVector deletedBits) {
 		toEntityIntBags(changedBits, deletedBits);
 
 		// note: processAll != process
@@ -91,15 +90,15 @@ public class AspectSubscriptionManager extends BaseSystem {
 		}
 	}
 
-	private void toEntityIntBags(BitSet changed, BitSet deleted) {
-		toPaddedIntBag(changed, this.changed);
-		toIntBag(deleted, this.deleted);
+	private void toEntityIntBags(BitVector changed, BitVector deleted) {
+		changed.toIntBagIdCid(world.getComponentManager(), this.changed);
+		deleted.toIntBag(this.deleted);
 
 		changed.clear();
 		deleted.clear();
 	}
 
-	void processComponentIdentity(int id, BitSet componentBits) {
+	void processComponentIdentity(int id, BitVector componentBits) {
 		for (int i = 0, s = subscriptions.size(); s > i; i++) {
 			subscriptions.get(i).processComponentIdentity(id, componentBits);
 		}
@@ -113,26 +112,5 @@ public class AspectSubscriptionManager extends BaseSystem {
 	 */
 	public ImmutableBag<EntitySubscription> getSubscriptions() {
 		return subscriptions;
-	}
-
-	private IntBag toPaddedIntBag(BitSet bs, IntBag out) {
-		if (bs.isEmpty()) {
-			out.setSize(0);
-			return out;
-		}
-
-		int size = 2 * bs.cardinality();
-		out.setSize(size);
-		out.ensureCapacity(size);
-
-		ComponentManager cm = world.getComponentManager();
-		int[] activesArray = out.getData();
-		for (int i = bs.nextSetBit(0), index = 0; i >= 0; i = bs.nextSetBit(i + 1)) {
-			activesArray[index] = i;
-			activesArray[index + 1] = cm.getIdentity(i);
-			index += 2;
-		}
-
-		return out;
 	}
 }

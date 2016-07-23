@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import com.artemis.ComponentManager.ComponentIdentityResolver;
 import com.artemis.systems.IteratingSystem;
+import com.artemis.utils.BitVector;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -41,6 +42,7 @@ public class WorldTest
 		print(IteratingSystem.class);
 		print(SystemInvocationStrategy.class);
 		print(World.class);
+		print(BitVector.class);
 	}
 
 	protected void print(Class<?> klazz) {

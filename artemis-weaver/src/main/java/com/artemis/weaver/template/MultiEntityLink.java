@@ -26,7 +26,7 @@ public class MultiEntityLink extends Component {
 		public void validate(int sourceId, Bag<Entity> entities, LinkListener listener) {
 			for (int i = 0; entities.size() > i; i++) {
 				Entity e = entities.get(i);
-				if (!all.getActiveEntityIds().get(e.getId())) {
+				if (!all.getActiveEntityIds().unsafeGet(e.getId())) {
 					entities.remove(i--);
 					if (listener != null)
 						listener.onTargetDead(sourceId, e.getId());

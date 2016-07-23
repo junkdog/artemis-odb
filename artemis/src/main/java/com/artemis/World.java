@@ -177,7 +177,7 @@ public class World {
 	/**
 	 * Gets the <code>composition id</code> uniquely identifying the
 	 * component composition of an entity. Each composition identity maps
-	 * to one unique <code>BitSet</code>.
+	 * to one unique <code>BitVector</code>.
 	 *
 	 * @param entityId Entity for which to get the composition id
 	 * @return composition identity of entity
@@ -262,7 +262,7 @@ public class World {
 	 */
 	public Entity createEntity() {
 		Entity e = em.createEntityInstance();
-		batchProcessor.changed.set(e.getId());
+		batchProcessor.changed.unsafeSet(e.getId());
 		return e;
 	}
 
@@ -274,7 +274,7 @@ public class World {
 	 */
 	public int create() {
 		int entityId = em.create();
-		batchProcessor.changed.set(entityId);
+		batchProcessor.changed.unsafeSet(entityId);
 		return entityId;
 	}
 
@@ -302,7 +302,7 @@ public class World {
 		archetype.transmuter.perform(id);
 		cm.setIdentity(e.id, archetype.compositionId);
 
-		batchProcessor.changed.set(id);
+		batchProcessor.changed.unsafeSet(id);
 
 		return e;
 	}
@@ -325,7 +325,7 @@ public class World {
 		archetype.transmuter.perform(entityId);
 		cm.setIdentity(entityId, archetype.compositionId);
 
-		batchProcessor.changed.set(entityId);
+		batchProcessor.changed.unsafeSet(entityId);
 
 		return entityId;
 	}

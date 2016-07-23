@@ -1,24 +1,23 @@
 package com.artemis;
 
 import com.artemis.utils.Bag;
-import com.artemis.utils.ConverterUtil;
 import com.artemis.utils.IntBag;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 
 final class BatchChangeProcessor {
 	private final World world;
 	private final AspectSubscriptionManager asm;
 
-	final BitSet changed = new BitSet();
+	final BitVector changed = new BitVector();
 	final WildBag<ComponentRemover> purgatories = new WildBag<ComponentRemover>(ComponentRemover.class);
 
 	// marked for deletion, will be removed for entity subscriptions asap
-	private final BitSet deleted = new BitSet();
+	private final BitVector deleted = new BitVector();
 
 	// collected deleted entities during this {@link World#process()} round;
 	// cleaned at end of round.
-	private final BitSet pendingPurge = new BitSet();
+	private final BitVector pendingPurge = new BitVector();
 	private final IntBag toPurge = new IntBag();
 
 	private final Bag<EntityEdit> pool = new Bag<EntityEdit>();
@@ -27,18 +26,23 @@ final class BatchChangeProcessor {
 	BatchChangeProcessor(World world) {
 		this.world = world;
 		asm = world.getAspectSubscriptionManager();
+
+		EntityManager em = world.getEntityManager();
+		em.registerEntityStore(changed);
+		em.registerEntityStore(deleted);
+		em.registerEntityStore(pendingPurge);
 	}
 
 	boolean isDeleted(int entityId) {
-		return pendingPurge.get(entityId);
+		return pendingPurge.unsafeGet(entityId);
 	}
 
 	void delete(int entityId) {
-		deleted.set(entityId);
-		pendingPurge.set(entityId);
+		deleted.unsafeSet(entityId);
+		pendingPurge.unsafeSet(entityId);
 
 		// guarding against previous transmutations
-		changed.set(entityId, false);
+		changed.unsafeClear(entityId);
 	}
 
 	/**
@@ -84,7 +88,7 @@ final class BatchChangeProcessor {
 	}
 
 	IntBag getPendingPurge() {
-		ConverterUtil.toIntBag(pendingPurge, toPurge);
+		pendingPurge.toIntBag(toPurge);
 		pendingPurge.clear();
 		return toPurge;
 	}

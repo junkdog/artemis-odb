@@ -9,7 +9,7 @@ import com.artemis.systems.IteratingSystem;
 import com.artemis.utils.IntBag;
 import org.junit.Test;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -109,8 +109,8 @@ public class SubscriptionListenerTest {
 
 
 	private static class LeSystemPetite extends IteratingSystem {
-		private BitSet processedEntities = new BitSet();
-		private BitSet insertedEntities = new BitSet();
+		private BitVector processedEntities = new BitVector();
+		private BitVector insertedEntities = new BitVector();
 
 		public LeSystemPetite() {
 			super(Aspect.all(ComponentX.class, ComponentY.class));
@@ -133,8 +133,8 @@ public class SubscriptionListenerTest {
 	}
 
 	private static class LeSystemPetite2 extends EntityProcessingSystem {
-		private BitSet processedEntities = new BitSet();
-		private BitSet insertedEntities = new BitSet();
+		private BitVector processedEntities = new BitVector();
+		private BitVector insertedEntities = new BitVector();
 
 		public LeSystemPetite2() {
 			super(Aspect.all(ComponentY.class));

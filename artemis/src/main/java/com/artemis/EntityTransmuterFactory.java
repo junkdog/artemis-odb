@@ -1,6 +1,6 @@
 package com.artemis;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 
 /**
  * Builder for {@link EntityTransmuter}.
@@ -8,16 +8,16 @@ import java.util.BitSet;
  */
 public final class EntityTransmuterFactory {
 	private final ComponentTypeFactory types;
-	private final BitSet additions;
-	private final BitSet removals;
+	private final BitVector additions;
+	private final BitVector removals;
 	private final World world;
 
 	/** Prepare new builder. */
 	public EntityTransmuterFactory(World world) {
 		this.world = world;
 		types = world.getComponentManager().typeFactory;
-		additions = new BitSet();
-		removals = new BitSet();
+		additions = new BitVector();
+		removals = new BitVector();
 	}
 
 	/** Component to add upon transmutation. Overwrites and retires if component exists! */

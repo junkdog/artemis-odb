@@ -2,10 +2,10 @@ package com.artemis;
 
 import com.artemis.utils.Bag;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 
 class DelayedComponentRemover<A extends Component> extends ComponentRemover<A> {
-	final BitSet idBits = new BitSet();
+	final BitVector idBits = new BitVector();
 	final BatchChangeProcessor batchProcessor;
 
 	DelayedComponentRemover(Bag<A> components, ComponentPool pool, BatchChangeProcessor batchProcessor) {
@@ -24,7 +24,7 @@ class DelayedComponentRemover<A extends Component> extends ComponentRemover<A> {
 	@Override
 	boolean unmark(int entityId) {
 		if (idBits.get(entityId)) {
-			idBits.set(entityId, false);
+			idBits.clear(entityId);
 			if (pool != null) {
 				pool.free((PooledComponent) components.get(entityId));
 			}

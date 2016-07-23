@@ -2,7 +2,7 @@ package com.artemis;
 
 import com.artemis.utils.Bag;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 
 
 /**
@@ -57,11 +57,11 @@ public final class Entity {
 	}
 
 	/**
-	 * Returns a BitSet instance containing bits of the components the entity
+	 * Returns a BitVector instance containing bits of the components the entity
 	 * possesses.
-	 * @return a BitSet containing the entities component bits
+	 * @return a BitVector containing the entities component bits
 	 */
-	protected BitSet getComponentBits() {
+	protected BitVector getComponentBits() {
 		return world.getComponentManager().componentBits(id);
 	}
 

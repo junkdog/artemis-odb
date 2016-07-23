@@ -3,7 +3,7 @@ package com.artemis;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 
 /** Delegate for system invocation.
  *
@@ -21,7 +21,7 @@ public abstract class SystemInvocationStrategy {
 
 	/** World to operate on. */
 	protected World world;
-	protected final BitSet disabled = new BitSet();
+	protected final BitVector disabled = new BitVector();
 	protected Bag<BaseSystem> systems;
 
 	/** World to operate on. */
@@ -61,7 +61,7 @@ public abstract class SystemInvocationStrategy {
 		ImmutableBag<BaseSystem> systems = world.getSystems();
 		for (int i = 0; i < systems.size(); i++) {
 			if (target == systems.get(i).getClass())
-				return !disabled.get(i);
+				return !disabled.unsafeGet(i);
 		}
 
 		throw new RuntimeException("huh?");

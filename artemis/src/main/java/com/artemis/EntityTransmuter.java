@@ -3,7 +3,7 @@ package com.artemis;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ShortBag;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 
 /**
  * Fastest way of changing entity component compositions. Primarily useful when
@@ -31,10 +31,10 @@ public final class EntityTransmuter {
 	}
 
 	EntityTransmuter(World world, Aspect aspect) {
-		this(world, (BitSet) aspect.allSet.clone(), (BitSet) aspect.exclusionSet.clone());
+		this(world, new BitVector(aspect.allSet), new BitVector(aspect.exclusionSet));
 	}
 
-	EntityTransmuter(World world, BitSet additions, BitSet removals) {
+	EntityTransmuter(World world, BitVector additions, BitVector removals) {
 		em = world.getEntityManager();
 		entityToIdentity = world.getComponentManager().entityToIdentity;
 		batchProcessor = world.batchProcessor;
@@ -74,7 +74,7 @@ public final class EntityTransmuter {
 		if (batchProcessor.isDeleted(entityId))
 			return false;
 
-		batchProcessor.changed.set(entityId);
+		batchProcessor.changed.unsafeSet(entityId);
 
 		return true;
 	}
@@ -110,19 +110,19 @@ public final class EntityTransmuter {
 
 	static class Factory {
 		private final ComponentManager cm;
-		private final BitSet additions;
-		private final BitSet removals;
-		private final BitSet bs;
+		private final BitVector additions;
+		private final BitVector removals;
+		private final BitVector bs;
 
-		Factory(World world, BitSet additions, BitSet removals) {
+		Factory(World world, BitVector additions, BitVector removals) {
 			this.cm = world.getComponentManager();
 			this.additions = additions;
 			this.removals = removals;
-			this.bs = new BitSet();
+			this.bs = new BitVector();
 		}
 
 		TransmuteOperation createOperation(int entityId) {
-			BitSet componentBits = cm.componentBits(entityId);
+			BitVector componentBits = cm.componentBits(entityId);
 
 			bs.clear();
 			bs.or(componentBits);
@@ -133,7 +133,7 @@ public final class EntityTransmuter {
 				getAdditions(componentBits), getRemovals(componentBits));
 		}
 
-		private Bag<ComponentMapper> getAdditions(BitSet origin) {
+		private Bag<ComponentMapper> getAdditions(BitVector origin) {
 			ComponentTypeFactory tf = cm.typeFactory;
 			Bag<ComponentMapper> types = new Bag(ComponentMapper.class);
 			for (int i = additions.nextSetBit(0); i >= 0; i = additions.nextSetBit(i + 1)) {
@@ -144,7 +144,7 @@ public final class EntityTransmuter {
 			return types;
 		}
 
-		private Bag<ComponentMapper> getRemovals(BitSet origin) {
+		private Bag<ComponentMapper> getRemovals(BitVector origin) {
 			ComponentTypeFactory tf = cm.typeFactory;
 			Bag<ComponentMapper> types = new Bag(ComponentMapper.class);
 			for (int i = removals.nextSetBit(0); i >= 0; i = removals.nextSetBit(i + 1)) {

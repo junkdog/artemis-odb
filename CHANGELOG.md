@@ -2,6 +2,16 @@
 
 
 #### Version: 2.0.0-SNAPSHOT
+- **BREAKING CHANGES**
+  - All usage of BitSet replaced by [BitVector][bitvector].
+
+- **BitVector**
+  - [Optimized][bv-jmh] decoding of bits to integers, making all entity mutations more efficient.
+  - `unsafeGet`, `unsafeSet`, `unsafeClear` require that the `BitVector`
+  - `BitVector::ensureCapacity(int bits)` explicitly grows the bit vector. Typically used in
+    together with the `unsafe-` methods.
+  - `EntityManager::registerEntityStore(BitVector)` - when representing entity id:s as bits,
+    makes `unsafe-` methods safe - as the EntityManager grows the bit vector as necessary.
 - **Fix**: Bag and IntBag equals method would return false for identical bags with different capacities.
 
 

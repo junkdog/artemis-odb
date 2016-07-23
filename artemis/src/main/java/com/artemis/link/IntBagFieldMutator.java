@@ -17,7 +17,7 @@ class IntBagFieldMutator implements MultiFieldMutator<IntBag, Component> {
 	public void validate(int sourceId, IntBag ids, LinkListener listener) {
 		for (int i = 0; ids.size() > i; i++) {
 			int id = ids.get(i);
-			if (!all.getActiveEntityIds().get(id)) {
+			if (!all.getActiveEntityIds().unsafeGet(id)) {
 				ids.remove(i--);
 				if (listener != null)
 					listener.onTargetDead(sourceId, id);

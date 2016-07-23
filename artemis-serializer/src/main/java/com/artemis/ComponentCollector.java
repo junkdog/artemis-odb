@@ -2,6 +2,7 @@ package com.artemis;
 
 import com.artemis.annotations.Transient;
 import com.artemis.io.SaveFileFormat;
+import com.artemis.utils.BitVector;
 
 import java.util.*;
 
@@ -10,7 +11,7 @@ import java.util.*;
  * component types which aren't annotated with {@link Transient}.
  */
 public class ComponentCollector {
-	private BitSet componentIds = new BitSet();
+	private BitVector componentIds = new BitVector();
 	private Set<Class<Component>> referencedComponents = new HashSet<Class<Component>>();
 
 	private World world;
@@ -32,7 +33,7 @@ public class ComponentCollector {
 		Map<Class<? extends Component>, String> lookup = save.componentIdentifiers.typeToName;
 
 		Set<String> names = new HashSet<String>();
-		BitSet bs = componentIds;
+		BitVector bs = componentIds;
 		SaveFileFormat.ComponentIdentifiers identifiers = save.componentIdentifiers;
 		for (int i = bs.nextSetBit(0); i >= 0; i = bs.nextSetBit(i + 1)) {
 			Class<? extends Component> type = cm.typeFactory.getTypeFor(i).getType();

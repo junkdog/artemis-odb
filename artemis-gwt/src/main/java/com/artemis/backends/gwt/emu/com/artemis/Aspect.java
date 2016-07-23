@@ -90,8 +90,13 @@ public class Aspect {
 	 */
 	public boolean isInterested(BitVector componentBits){
 		// Check if the entity possesses ALL of the components defined in the aspect.
-		if(!allSet.isEmpty() && !componentBits.containsAll(allSet))
-			return false;
+		if(!allSet.isEmpty()) {
+			for (int i = allSet.nextSetBit(0); i >= 0; i = allSet.nextSetBit(i+1)) {
+				if(!componentBits.get(i)) {
+					return false;
+				}
+			}
+		}
 
 		// If we are STILL interested,
 		// Check if the entity possesses ANY of the exclusion components,

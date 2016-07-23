@@ -1,6 +1,6 @@
 package com.artemis;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 
 import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
@@ -149,7 +149,7 @@ public class ComponentManager extends BaseSystem {
 	}
 
 	/** Get component composition of entity. */
-	BitSet componentBits(int entityId) {
+	BitVector componentBits(int entityId) {
 		int identityIndex = entityToIdentity.get(entityId);
 		return identityResolver.compositionBits.get(identityIndex);
 	}
@@ -166,7 +166,7 @@ public class ComponentManager extends BaseSystem {
 	 * @param componentBits composition to fetch unique identifier for.
 	 * @return Unique identifier for passed composition.
 	 */
-	public int compositionIdentity(BitSet componentBits) {
+	public int compositionIdentity(BitVector componentBits) {
 		int identity = identityResolver.getIdentity(componentBits);
 		if (identity == -1) {
 			identity = identityResolver.allocateIdentity(componentBits, this);
@@ -186,7 +186,7 @@ public class ComponentManager extends BaseSystem {
 	 * @param entityId
 	 * @return composition identity.
 	 */
-	protected int getIdentity(int entityId) {
+	public int getIdentity(int entityId) {
 		return entityToIdentity.get(entityId);
 	}
 
@@ -196,9 +196,9 @@ public class ComponentManager extends BaseSystem {
 	 * @param es entity subscription to update.
 	 */
 	void synchronize(EntitySubscription es) {
-		Bag<BitSet> compositionBits = identityResolver.compositionBits;
+		Bag<BitVector> compositionBits = identityResolver.compositionBits;
 		for (int i = 1, s = compositionBits.size(); s > i; i++) {
-			BitSet componentBits = compositionBits.get(i);
+			BitVector componentBits = compositionBits.get(i);
 			es.processComponentIdentity(i, componentBits);
 		}
 
@@ -237,19 +237,19 @@ public class ComponentManager extends BaseSystem {
 
 	/** Tracks all unique component compositions. */
 	static final class ComponentIdentityResolver {
-		final Bag<BitSet> compositionBits;
+		final Bag<BitVector> compositionBits;
 		final Bag<Bag<ComponentMapper>> compositionMappers;
 
 		ComponentIdentityResolver() {
-			compositionBits = new Bag(BitSet.class);
-			compositionBits.add(new BitSet());
+			compositionBits = new Bag(BitVector.class);
+			compositionBits.add(new BitVector());
 			compositionMappers = new Bag<Bag<ComponentMapper>>();
 			compositionMappers.add(new Bag(ComponentMapper.class));
 		}
 
 		/** Fetch unique identity for passed composition. */
-		int getIdentity(BitSet components) {
-			BitSet[] bitsets = compositionBits.getData();
+		int getIdentity(BitVector components) {
+			BitVector[] bitsets = compositionBits.getData();
 			int size = compositionBits.size();
 			for (int i = NO_COMPONENTS; size > i; i++) { // want to start from 1 so that 0 can mean null
 				if (components.equals(bitsets[i]))
@@ -259,7 +259,7 @@ public class ComponentManager extends BaseSystem {
 			return -1;
 		}
 
-		int allocateIdentity(BitSet componentBits, ComponentManager cm) {
+		int allocateIdentity(BitVector componentBits, ComponentManager cm) {
 			Bag<ComponentMapper> mappers =
 				new Bag<ComponentMapper>(ComponentMapper.class, componentBits.cardinality());
 
@@ -269,7 +269,7 @@ public class ComponentManager extends BaseSystem {
 			}
 
 			compositionMappers.add(mappers);
-			compositionBits.add((BitSet)componentBits.clone());
+			compositionBits.add(new BitVector(componentBits));
 
 			return compositionBits.size() - 1;
 		}

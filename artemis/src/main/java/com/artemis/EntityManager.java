@@ -5,7 +5,7 @@ import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.IntDeque;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 
 import static com.artemis.Aspect.all;
 
@@ -19,15 +19,17 @@ import static com.artemis.Aspect.all;
 public class EntityManager extends BaseSystem {
 	/** Contains all entities in the manager. */
 	final Bag<Entity> entities;
-	private final BitSet recycled = new BitSet();
+	private final BitVector recycled = new BitVector();
 	private final IntDeque limbo = new IntDeque();
 	private int nextId;
+	private Bag<BitVector> entityBitVectors = new Bag<BitVector>(BitVector.class);
 
 	/**
 	 * Creates a new EntityManager Instance.
 	 */
 	protected EntityManager(int initialContainerSize) {
 		entities = new Bag<Entity>(initialContainerSize);
+		registerEntityStore(recycled);
 	}
 
 	@Override
@@ -59,7 +61,7 @@ public class EntityManager extends BaseSystem {
 			// this happens when an entity is deleted before
 			// it is added to the world, ie; created and deleted
 			// before World#process has been called
-			if (!recycled.get(id)) {
+			if (!recycled.unsafeGet(id)) {
 				free(id);
 			}
 		}
@@ -77,7 +79,12 @@ public class EntityManager extends BaseSystem {
 	 * @return true if active, false if not
 	 */
 	public boolean isActive(int entityId) {
-		return !recycled.get(entityId);
+		return !recycled.unsafeGet(entityId);
+	}
+
+	public void registerEntityStore(BitVector bv) {
+		bv.ensureCapacity(entities.getCapacity());
+		entityBitVectors.add(bv);
 	}
 
 	/**
@@ -129,10 +136,7 @@ public class EntityManager extends BaseSystem {
 	private Entity createEntity(int id) {
 		Entity e = new Entity(world, id);
 		if (e.id >= entities.getCapacity()) {
-			int newSize = 2 * entities.getCapacity();
-			entities.ensureCapacity(newSize);
-			ComponentManager cm = world.getComponentManager();
-			cm.ensureCapacity(newSize);
+			growEntityStores();
 		}
 
 		// can't use unsafe set, as we need to track highest id
@@ -143,18 +147,29 @@ public class EntityManager extends BaseSystem {
 		return e;
 	}
 
+	private void growEntityStores() {
+		int newSize = 2 * entities.getCapacity();
+		entities.ensureCapacity(newSize);
+		ComponentManager cm = world.getComponentManager();
+		cm.ensureCapacity(newSize);
+
+		for (int i = 0, s = entityBitVectors.size(); s > i; i++) {
+			entityBitVectors.get(i).ensureCapacity(newSize);
+		}
+	}
+
 	private Entity obtain() {
 		if (limbo.isEmpty()) {
 			return createEntity(nextId++);
 		} else {
 			int id = limbo.popFirst();
-			recycled.set(id, false);
+			recycled.unsafeClear(id);
 			return entities.get(id);
 		}
 	}
 
 	private void free(int entityId) {
 		limbo.add(entityId);
-		recycled.set(entityId);
+		recycled.unsafeSet(entityId);
 	}
 }

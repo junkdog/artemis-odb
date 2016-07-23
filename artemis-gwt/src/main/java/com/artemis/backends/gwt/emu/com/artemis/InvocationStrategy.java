@@ -1,7 +1,5 @@
 package com.artemis;
 
-import com.artemis.utils.Bag;
-
 /**
  * Simple sequential invocation strategy.
  * @see SystemInvocationStrategy
@@ -13,7 +11,7 @@ public class InvocationStrategy extends SystemInvocationStrategy {
 	protected void process() {
 		Object[] systemsData = systems.getData();
 		for (int i = 0, s = systems.size(); s > i; i++) {
-			if (disabled.get(i))
+			if (disabled.unsafeGet(i))
 				continue;
 
 			updateEntityStates();

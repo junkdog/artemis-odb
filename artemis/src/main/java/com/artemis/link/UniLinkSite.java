@@ -22,7 +22,7 @@ class UniLinkSite extends LinkSite {
 	protected void check(int id) {
 		// -1 == not linked
 		int target = fieldMutator.read(mapper.get(id), field);
-		if (target != -1 && !activeEntityIds.get(target)) {
+		if (target != -1 && !activeEntityIds.unsafeGet(target)) {
 			target = -1;
 			fieldMutator.write(target, mapper.get(id), field);
 		}

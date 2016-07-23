@@ -9,7 +9,7 @@ import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
 
-import java.util.BitSet;
+import com.artemis.utils.BitVector;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +22,7 @@ class ReferenceTracker {
 	private Set<Class<?>> referencingTypes = new HashSet<Class<?>>();
 	private Set<Field> referencingFields = new HashSet<Field>();
 
-	private BitSet entityIds = new BitSet();
+	private BitVector entityIds = new BitVector();
 	private World world;
 
 	ReferenceTracker(World world) {
@@ -113,10 +113,10 @@ class ReferenceTracker {
 	void preWrite(SaveFileFormat save) {
 		entityIds.clear();
 
-		ConverterUtil.toBitSet(save.entities, entityIds);
+		ConverterUtil.toBitVector(save.entities, entityIds);
 		boolean foundNew = true;
 
-		BitSet bs = entityIds;
+		BitVector bs = entityIds;
 
 		while (foundNew) {
 			foundNew = false;
@@ -127,10 +127,10 @@ class ReferenceTracker {
 			}
 		}
 
-		ConverterUtil.toIntBag(entityIds, save.entities);
+		entityIds.toIntBag(save.entities);
 	}
 
-	private boolean findReferences(int entityId, Field f, BitSet referencedIds) {
+	private boolean findReferences(int entityId, Field f, BitVector referencedIds) {
 		Component c = world.getEntity(entityId).getComponent(f.getDeclaringClass());
 		if (c == null)
 			return false;
@@ -153,7 +153,7 @@ class ReferenceTracker {
 		}
 	}
 
-	private boolean updateReferenced(Bag objects, BitSet referencedIds) {
+	private boolean updateReferenced(Bag objects, BitVector referencedIds) {
 		boolean updated = false;
 		for (int i = 0; i < objects.size(); i++) {
 			Object o = objects.get(i);
@@ -167,7 +167,7 @@ class ReferenceTracker {
 		return updated;
 	}
 
-	private boolean updateReferenced(IntBag ids, BitSet referencedIds) {
+	private boolean updateReferenced(IntBag ids, BitVector referencedIds) {
 		boolean updated = false;
 		for (int i = 0; i < ids.size(); i++)
 			updated |= updateReferenced(ids.get(i), referencedIds);
@@ -176,13 +176,13 @@ class ReferenceTracker {
 	}
 
 
-	private boolean updateReferenced(Entity e, BitSet referencedIds) {
+	private boolean updateReferenced(Entity e, BitVector referencedIds) {
 		return (e != null)
 			? updateReferenced(e.getId(), referencedIds)
 			: false;
 	}
 
-	private boolean updateReferenced(int entityId, BitSet referencedIds) {
+	private boolean updateReferenced(int entityId, BitVector referencedIds) {
 		if (entityId > -1 && !referencedIds.get(entityId)) {
 			referencedIds.set(entityId);
 			return true;

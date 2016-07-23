@@ -57,6 +57,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.WiredFieldResolver"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.AspectFieldResolver"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.PojoFieldResolver"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.utils.BitVector"/>
 
     <source path="">
         <exclude name="**/gen/**"/>
