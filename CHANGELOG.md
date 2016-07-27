@@ -2,6 +2,7 @@
 
 
 #### Version: 2.0.0-SNAPSHOT
+- **Fix**: Possible IOOB exception when registering more than 64 systems.
 
 
 #### Version: 2.0.0-RC5 - 2016-07-23

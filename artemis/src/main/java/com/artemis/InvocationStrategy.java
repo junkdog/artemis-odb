@@ -11,7 +11,7 @@ public class InvocationStrategy extends SystemInvocationStrategy {
 	protected void process() {
 		BaseSystem[] systemsData = systems.getData();
 		for (int i = 0, s = systems.size(); s > i; i++) {
-			if (disabled.unsafeGet(i))
+			if (disabled.get(i))
 				continue;
 
 			updateEntityStates();

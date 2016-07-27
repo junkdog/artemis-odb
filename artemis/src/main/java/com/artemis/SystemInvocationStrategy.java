@@ -61,7 +61,7 @@ public abstract class SystemInvocationStrategy {
 		ImmutableBag<BaseSystem> systems = world.getSystems();
 		for (int i = 0; i < systems.size(); i++) {
 			if (target == systems.get(i).getClass())
-				return !disabled.unsafeGet(i);
+				return !disabled.get(i);
 		}
 
 		throw new RuntimeException("huh?");
