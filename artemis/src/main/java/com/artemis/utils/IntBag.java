@@ -121,7 +121,7 @@ public class IntBag {
 	 */
 	public int get(int index) throws ArrayIndexOutOfBoundsException {
 		if (index >= size) {
-			String message = "tried accessing element " + index + "/" + data.length;
+			String message = "tried accessing element " + index + "/" + size;
 			throw new ArrayIndexOutOfBoundsException(message);
 		}
 

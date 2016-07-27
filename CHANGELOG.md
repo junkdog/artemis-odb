@@ -2,6 +2,7 @@
 
 
 #### Version: 2.0.0-SNAPSHOT
+- **Fix**: `IntBag::get(index)`, ArrayIndexOutOfBoundsException reported size of backing array, not logical size.
 - **Fix**: Possible IOOB exception when registering more than 64 systems.
 
 
