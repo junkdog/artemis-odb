@@ -10,7 +10,7 @@
 - **BREAKING CHANGES**
   - All usage of BitSet replaced by [BitVector][bitvector].
 
-- **BitVector**: custom bitset, generally faster than `java.util.BitSet`.
+- **BitVector**: custom bitset implementation, generally faster than `java.util.BitSet`.
   - [Optimized][bv-jmh] decoding of bits to integers, making all entity
     mutations more efficient.
   - `unsafeGet`, `unsafeSet`, `unsafeClear` require that the underlying
