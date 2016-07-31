@@ -98,9 +98,7 @@ public class EntityManagerTest {
 
 	@Test
 	public void reset_entity_cache() {
-		World w = new World(new WorldConfiguration()
-			.setSystem(TagManager.class)
-		);
+		World w = new World(new WorldConfiguration());
 		int[] ids = new int[] { w.create(), w.create(), w.create() };
 
 		assertArrayEquals(new int[] {0, 1, 2}, ids);
@@ -111,7 +109,9 @@ public class EntityManagerTest {
 		w.delete(1);
 		w.delete(0);
 
-		boolean successfullReset = world.getEntityManager().reset();
+		w.process();
+
+		boolean successfullReset = w.getEntityManager().reset();
 		assertTrue(successfullReset);
 
 		w.process();
