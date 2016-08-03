@@ -3,6 +3,8 @@ package com.artemis;
 import com.artemis.annotations.DelayedComponentRemoval;
 import com.artemis.utils.IntBag;
 
+import static com.artemis.utils.reflect.ReflectionUtil.implementsAnyObserver;
+
 /**
  * Tracks a subset of entities, but does not implement any sorting or iteration.
  *
@@ -37,7 +39,8 @@ public abstract class BaseEntitySystem extends BaseSystem
 		super.setWorld(world);
 
 		subscription = getSubscription();
-		subscription.addSubscriptionListener(this);
+		if (implementsAnyObserver(this))
+			subscription.addSubscriptionListener(this);
 	}
 
 	/**

@@ -44,7 +44,6 @@ public class IntervalEntitySystemTest {
 			// intervalSystem has 1 second interval
 			// so it will run processing round on each world step
 			intervalSystemTotalIntervalTime +=intervalSystem.getIntervalDelta();
-			System.out.println(intervalSystem.getIntervalDelta());
 		}
 
 		assertEquals(worldTotalTime, 2 * 4, ACC);
