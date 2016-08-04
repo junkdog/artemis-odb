@@ -25,25 +25,31 @@ public final class ReflectionUtil {
 		}
 	}
 
-	public static boolean implementsAnyObserver(BaseSystem owner) {
+	public static boolean implementsAnyObserver(BaseEntitySystem owner) {
 		if (isInstance(Manager.class, owner) || isInstance(EntitySystem.class, owner))
 			return true; // case handled by implementsObserver(owner, methodName)
 
+		// check parent chain for user-supplied implementations of
+		// inserted() and removed()
 		Class type = owner.getClass();
-		while (type != BaseSystem.class) {
+		while (type != BaseEntitySystem.class) {
 			for (Method m : ClassReflection.getDeclaredMethods(type)) {
-				String name = m.getName();
-				if ("inserted".equals(name) || "removed".equals(name)) {
-					Class[] types = m.getParameterTypes();
-					Class declarer = m.getDeclaringClass();
-					if (Arrays.equals(PARAM_ID, types) || Arrays.equals(PARAM_IDS, types)) {
-						if (!BaseEntitySystem.class.equals(declarer))
-							return true;
-					}
-				}
+				if (isObserver(m)) return true;
 			}
 
 			type = type.getSuperclass();
+		}
+
+		return false;
+	}
+
+	private static boolean isObserver(Method m) {
+		String name = m.getName();
+		if ("inserted".equals(name) || "removed".equals(name)) {
+			Class[] types = m.getParameterTypes();
+			if (Arrays.equals(PARAM_ID, types) || Arrays.equals(PARAM_IDS, types)) {
+				return true;
+			}
 		}
 
 		return false;
