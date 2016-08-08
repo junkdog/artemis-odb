@@ -15,6 +15,52 @@ import static org.junit.Assert.*;
 public class EntityLinkManagerTest {
 
 	@Test
+	public void unilink_kill_empty_link_test() {
+		World world = new World(new WorldConfiguration()
+			.setSystem(EntityLinkManager.class));
+
+		final int otherA = world.create();
+		final int e = world.create();
+
+		ComponentMapper<EntityLink> mapper = world.getMapper(EntityLink.class);
+
+		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
+		elm.register(EntityLink.class, "otherId", new EmptyLinkListener(e, otherA, -1));
+
+		// establish empty link
+		mapper.create(e);
+
+		world.process();
+
+		// kill link
+		world.delete(e);
+		world.process();
+	}
+
+	@Test
+	public void multilink_kill_empty_link_test() {
+		World world = new World(new WorldConfiguration()
+			.setSystem(EntityLinkManager.class));
+
+		final int otherA = world.create();
+		final int e = world.create();
+
+		ComponentMapper<MultiLinkCheckAll> mapper = world.getMapper(MultiLinkCheckAll.class);
+
+		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
+		elm.register(EntityLink.class, "otherId", new EmptyLinkListener(e, otherA, -1));
+
+		// establish empty link
+		mapper.create(e);
+
+		world.process();
+
+		// kill link
+		world.delete(e);
+		world.process();
+	}
+
+	@Test
 	public void unilink_explicit_field_int_test() {
 		World world = new World(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
@@ -417,7 +463,7 @@ public class EntityLinkManagerTest {
 
 	public static class EntityLink extends Component {
 		@EntityId
-		public int otherId;
+		public int otherId = -1;
 		public int nothingHere;
 	}
 
@@ -480,6 +526,43 @@ public class EntityLinkManagerTest {
 		public void onLinkKilled(int sourceId, int targetId) {
 			assertEquals(sourceId, e);
 			assertEquals(targetId, otherA);
+		}
+
+		@Override
+		public void onTargetDead(int sourceId, int deadTargetId) {
+			assertEquals(sourceId, e);
+			assertEquals(deadTargetId, otherB);
+		}
+
+		@Override
+		public void onTargetChanged(int sourceId, int targetId, int oldTargetId) {
+			assertEquals(sourceId, e);
+			assertEquals(targetId, otherB);
+			assertEquals(oldTargetId, otherA);
+		}
+	}
+
+	private static class EmptyLinkListener implements LinkListener {
+		private final int e;
+		private final int otherA;
+		private final int otherB;
+
+		public EmptyLinkListener(int e, int otherA, int otherB) {
+			this.e = e;
+			this.otherA = otherA;
+			this.otherB = otherB;
+		}
+
+		@Override
+		public void onLinkEstablished(int sourceId, int targetId) {
+			assertEquals(sourceId, e);
+			assertEquals(targetId, otherA);
+		}
+
+		@Override
+		public void onLinkKilled(int sourceId, int targetId) {
+			assertEquals(sourceId, e);
+			assertEquals(targetId, -1);
 		}
 
 		@Override
