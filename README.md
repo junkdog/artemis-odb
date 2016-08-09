@@ -12,9 +12,8 @@ It is mature, actively maintained, and a continuation of the popular [Artemis](h
 
 - Full Android, [HTML5](https://github.com/junkdog/artemis-odb/wiki/GWT), iOS support.
 - High performance, GC-friendly, [less boilerplate](https://github.com/junkdog/artemis-odb/wiki/@Wire)!
-- Compile-time [bytecode instrumentation](https://github.com/junkdog/artemis-odb/wiki/Bytecode weaving) offers opt-in [pooled](https://github.com/junkdog/artemis-odb/wiki/@PooledWeaver) components, and [hotspot optimization](https://github.com/junkdog/artemis-odb/wiki/Hotspot-Optimization).
+- Optionally [auto-pooled](https://github.com/junkdog/artemis-odb/wiki/@PooledWeaver) components, and [hotspot optimization](https://github.com/junkdog/artemis-odb/wiki/Hotspot-Optimization) via compile-time [bytecode instrumentation](https://github.com/junkdog/artemis-odb/wiki/Bytecode weaving).
 - Serialize to either [json](https://github.com/junkdog/artemis-odb/wiki/Json Serialization) or [binary](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization).
-- Convenient [dependency matrices](https://github.com/junkdog/artemis-odb/wiki/Component Dependency Matrix) for your components and systems.
 - Easy migration from Artemis clones.
 
 _See [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md) for more details_
@@ -80,7 +79,7 @@ Anticipating 2.0.0: minor API changes may still occur
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>2.0.0-RC5</version>
+	<version>2.0.0-RC6</version>
 </dependency>
 ```
 
@@ -99,7 +98,7 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 #### Gradle
 
 ```groovy
-  dependencies { compile "net.onedaybeard.artemis:artemis-odb:2.0.0-RC5" }
+  dependencies { compile "net.onedaybeard.artemis:artemis-odb:2.0.0-RC6" }
 ```
 or
 
@@ -109,6 +108,6 @@ or
 
 #### Manual Download
 
- - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/2.0.0-RC5/) 
- - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/2.0.0-RC5/)
+ - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/2.0.0-RC6/) 
+ - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/2.0.0-RC6/)
 
