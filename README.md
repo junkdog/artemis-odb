@@ -1,4 +1,4 @@
-## Artemis-odb
+-## Artemis-odb
 
 [![Join the chat at https://gitter.im/junkdog/artemis-odb](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/junkdog/artemis-odb?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Build Status](https://travis-ci.org/junkdog/artemis-odb.svg)](https://travis-ci.org/junkdog/artemis-odb)
@@ -12,7 +12,7 @@ It is mature, actively maintained, and a continuation of the popular [Artemis](h
 
 - Full Android, [HTML5](https://github.com/junkdog/artemis-odb/wiki/GWT), iOS support.
 - High performance, GC-friendly, [less boilerplate](https://github.com/junkdog/artemis-odb/wiki/@Wire)!
-- Optionally [auto-pooled](https://github.com/junkdog/artemis-odb/wiki/@PooledWeaver) components, and [hotspot optimization](https://github.com/junkdog/artemis-odb/wiki/Hotspot-Optimization) via compile-time [bytecode instrumentation](https://github.com/junkdog/artemis-odb/wiki/Bytecode weaving).
+- Optionally [auto-pooled](https://github.com/junkdog/artemis-odb/wiki/@PooledWeaver) components and [hotspot optimization](https://github.com/junkdog/artemis-odb/wiki/Hotspot-Optimization) via compile-time [bytecode instrumentation](https://github.com/junkdog/artemis-odb/wiki/Bytecode weaving).
 - Serialize to either [json](https://github.com/junkdog/artemis-odb/wiki/Json Serialization) or [binary](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization).
 - Easy migration from Artemis clones.
 
@@ -67,29 +67,14 @@ Share your thoughts and questions with us!
 
 - **[Gitter web chat](https://gitter.im/junkdog/artemis-odb)**
 - **[issues](https://github.com/junkdog/artemis-odb/issues)**
-- [Google groups](https://groups.google.com/forum/#!forum/artemis-odb)
-- [Slick forums](http://slick.ninjacave.com/forum/viewforum.php?f=28)
 
 #### Maven
 
-
-Anticipating 2.0.0: minor API changes may still occur
-
 ```xml
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>2.0.0-RC6</version>
-</dependency>
-```
-
-Or, the safe route:
-
-```xml
-<dependency>
-	<groupId>net.onedaybeard.artemis</groupId>
-	<artifactId>artemis-odb</artifactId>
-	<version>1.4.0</version>
+	<version>2.0.0</version>
 </dependency>
 ```
 
@@ -98,16 +83,11 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 #### Gradle
 
 ```groovy
-  dependencies { compile "net.onedaybeard.artemis:artemis-odb:2.0.0-RC6" }
-```
-or
-
-```groovy
-  dependencies { compile "net.onedaybeard.artemis:artemis-odb:1.4.0" }
+  dependencies { compile "net.onedaybeard.artemis:artemis-odb:2.0.0" }
 ```
 
 #### Manual Download
 
- - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/2.0.0-RC6/) 
- - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/2.0.0-RC6/)
+ - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/2.0.0/) 
+ - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/2.0.0/)
 

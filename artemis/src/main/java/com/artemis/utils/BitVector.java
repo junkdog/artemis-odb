@@ -353,9 +353,10 @@ public class BitVector {
 		int[] data = out.getData();
 		for (int i = 0, index = 0; count > index; i++) {
 			long bitset = words[i];
+			int wordBits = i << 6;
 			while (bitset != 0) {
 				long t = bitset & -bitset;
-				data[index] = (i << 6) + Long.bitCount(t - 1);
+				data[index] = wordBits + Long.bitCount(t - 1);
 				bitset ^= t;
 
 				index++;
@@ -385,9 +386,10 @@ public class BitVector {
 		int[] data = out.getData();
 		for (int i = 0, index = 0; count > index; i++) {
 			long bitset = words[i];
+			int wordBits = i << 6;
 			while (bitset != 0) {
 				long t = bitset & -bitset;
-				int id = (i << 6) + Long.bitCount(t - 1);
+				int id = wordBits + Long.bitCount(t - 1);
 				data[index] = id;
 				data[index + 1] = cm.getIdentity(id);
 				index += 2;

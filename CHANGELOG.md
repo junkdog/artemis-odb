@@ -4,6 +4,9 @@
 #### Version: 2.0.0-SNAPSHOT
 
 
+#### Version: 2.0.0 - 2016-08-15
+same as RC6
+
 #### Version: 2.0.0-RC6 - 2016-08-09
 - **Fix**: `IntBag::get(index)`, ArrayIndexOutOfBoundsException reported size of backing array, not logical size.
 - **Fix**: Possible IOOB exception when registering more than 64 systems.
