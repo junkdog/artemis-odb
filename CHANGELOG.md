@@ -1,7 +1,7 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 
-#### Version: 2.0.0-SNAPSHOT
+#### Version: 2.1.0-SNAPSHOT
 
 
 #### Version: 2.0.0 - 2016-08-15
@@ -36,7 +36,7 @@ same as RC6
 #### Version: 2.0.0-RC4 - 2016-07-10
 - **BREAKING CHANGES**
   - Removed previously deprecated code, see: [5de377d][5de377d].
-  - **InvocationStrategy**` - affectes custom implementations:
+  - **`InvocationStrategy`** - affectes custom implementations:
     - bag-of-systems now stored as a field, instead of being passed as a parameter
       to `InvocationStrategy::process`
     - `InvocationStrategy::updateEntityStates` must be called before processing the first system.

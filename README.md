@@ -8,15 +8,18 @@
 
 It is mature, actively maintained, and a continuation of the popular [Artemis](http://gamadu.com/artemis/).
 
+
 ### Highlights
 
 - Full Android, [HTML5](https://github.com/junkdog/artemis-odb/wiki/GWT), iOS support.
 - High performance, GC-friendly, [less boilerplate](https://github.com/junkdog/artemis-odb/wiki/@Wire)!
 - Optionally [auto-pooled](https://github.com/junkdog/artemis-odb/wiki/@PooledWeaver) components and [hotspot optimization](https://github.com/junkdog/artemis-odb/wiki/Hotspot-Optimization) via compile-time [bytecode instrumentation](https://github.com/junkdog/artemis-odb/wiki/Bytecode weaving).
 - Serialize to either [json](https://github.com/junkdog/artemis-odb/wiki/Json Serialization) or [binary](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization).
+- Automatic tracking, and maintenance of [entity relationships](https://github.com/junkdog/artemis-odb/wiki/EntityLinkManager).
 - Easy migration from Artemis clones.
 
 _See [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md) for more details_
+
 
 ### Fast!
 
@@ -40,6 +43,7 @@ Operations/second. Higher is better.
  [arc16k]: http://junkdog.github.io/images/ecs-bench/add_remove_components__16384_entities.png
  [arc64k]: http://junkdog.github.io/images/ecs-bench/add_remove_components__65536_entities.png 
 
+
 ### Learn from others!
 
 Dozens of games with source available in the [Game Gallery](https://github.com/junkdog/artemis-odb/wiki/Game-Gallery)!
@@ -48,9 +52,11 @@ Dozens of games with source available in the [Game Gallery](https://github.com/j
 <img src="http://tikotepadventure.com/files/tikotep/201507/monolith.gif" width="235">
 <img src="http://ludumdare.com/compo/wp-content/compo2//375043/22396-shot2.png-eq-900-500.jpg" width="235">
 
+
 ### Use it commercially!
 
 [Dog Sled Saga](http://www.dogsledsaga.com/)
+
 
 ### Expand your toolkit!
 
