@@ -9,6 +9,10 @@ import java.util.List;
  * Created by Daan on 10-9-2016.
  */
 public class ClassModel {
+
+    public String name = "unnamed";
+    public String packageName = "com.artemis";
+
     public List<MethodDescriptor> methods = new ArrayList<MethodDescriptor>();
 
     /** Add method to model. */

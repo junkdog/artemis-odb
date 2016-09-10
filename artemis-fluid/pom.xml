@@ -24,11 +24,19 @@
             <version>19.0</version>
         </dependency>
 
-        <!-- Source generator. -->
+        <!-- Source generator -->
         <dependency>
             <groupId>com.squareup</groupId>
             <artifactId>javapoet</artifactId>
             <version>1.7.0</version>
+        </dependency>
+
+        <!-- Source parser -->
+        <dependency>
+            <groupId>com.github.javaparser</groupId>
+            <artifactId>javaparser-core</artifactId>
+            <version>2.5.1</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- Test -->
@@ -36,6 +44,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

@@ -1,7 +1,6 @@
 package com.artemis.generator.strategy;
 
 import com.artemis.generator.model.ClassModel;
-import com.artemis.generator.strategy.common.StrategyTest;
 import com.artemis.generator.test.Flag;
 import org.junit.Test;
 
