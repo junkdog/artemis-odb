@@ -24,8 +24,13 @@ public class MethodBuilder {
         return this;
     }
 
-    public MethodBuilder mapper(ComponentDescriptor component, String argument) {
-        method.addStatement("getMapper("+ component.getClass()+")" + argument);
+    public MethodBuilder mapper(ComponentDescriptor component, String suffix) {
+        mapper("", component, suffix);
+        return this;
+    }
+
+    public MethodBuilder mapper(String prefix, ComponentDescriptor component, String suffix) {
+        method.addStatement(prefix + "getMapper("+ component.getClass()+")" + suffix);
         return this;
     }
 }

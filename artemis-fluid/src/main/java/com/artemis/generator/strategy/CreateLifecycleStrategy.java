@@ -7,21 +7,21 @@ import com.artemis.generator.model.MethodDescriptor;
 import com.artemis.generator.util.MethodBuilder;
 
 /**
- * Adds basic lifecycle methods to agnostic model.
+ * Add method: create method for component.
  *
  * Created by Daan on 10-9-2016.
  */
-public class AddCreateLifecycleStrategy extends IterativeModelStrategy {
+public class CreateLifecycleStrategy extends IterativeModelStrategy {
 
     @Override
     protected void apply(ComponentDescriptor component, ClassModel model) {
-        model.add(createCreateMethod(component));
+        model.add(createComponentMethod(component));
     }
 
     /**
      * T componentName() -> create new entity.
      */
-    private MethodDescriptor createCreateMethod(ComponentDescriptor component) {
+    private MethodDescriptor createComponentMethod(ComponentDescriptor component) {
         return
                 new MethodBuilder("E", component.getMethodPrefix())
                         .mapper(component, ".create();")

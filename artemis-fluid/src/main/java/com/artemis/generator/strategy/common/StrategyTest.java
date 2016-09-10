@@ -1,4 +1,4 @@
-package com.artemis.generator.strategy;
+package com.artemis.generator.strategy.common;
 
 import com.artemis.Component;
 import com.artemis.generator.common.BuilderModelStrategy;
