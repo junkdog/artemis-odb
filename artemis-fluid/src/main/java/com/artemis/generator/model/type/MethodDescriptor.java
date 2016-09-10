@@ -9,11 +9,12 @@ import java.util.List;
 public class MethodDescriptor {
 
     public String name;
-    public String returnType;
+    public Class returnType;
     public List<String> statements = new ArrayList<String>();
+    public List<ParameterDescriptor> parameters = new ArrayList<ParameterDescriptor>();
 
 
-    public MethodDescriptor(String returnType, String name) {
+    public MethodDescriptor(Class returnType, String name) {
         this.returnType = returnType;
         this.name = name;
     }
@@ -28,6 +29,10 @@ public class MethodDescriptor {
     }
 
     public String signature() {
-        return returnType + " " + name + "()";
+        return returnType.getCanonicalName() + " " + name + "()";
+    }
+
+    public void addParameter(ParameterDescriptor parameter) {
+        parameters.add(parameter);
     }
 }

@@ -12,6 +12,6 @@ public class CreateLifecycleStrategyTest extends StrategyTest {
     @Test
     public void When_component_Should_add_create_lifecycle_method() {
         TypeModel model = applyStrategy(CreateLifecycleStrategy.class, Flag.class);
-        assertHasMethod(model,"E flag()");
+        assertHasMethod(model,"com.artemis.E flag()");
     }
 }

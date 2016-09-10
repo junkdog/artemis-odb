@@ -53,7 +53,7 @@ public class PoetSourceGenerator implements SourceGenerator {
     private MethodSpec generateMethodSpec(MethodDescriptor method) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder(method.name)
                 .addModifiers(Modifier.PUBLIC)
-                .returns(asType(method.returnType));
+                .returns(method.returnType);
 
         for (String statement : method.statements) {
             builder.addStatement(statement);
@@ -62,21 +62,5 @@ public class PoetSourceGenerator implements SourceGenerator {
         return builder.build();
     }
 
-    private Type asType(String name) {
-        if ( "void".equals(name)) return void.class;
-        return new StringType(name);
-    }
 
-    private static class StringType implements Type {
-        private final String name;
-
-        public StringType(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
 }

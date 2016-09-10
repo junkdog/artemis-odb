@@ -12,6 +12,6 @@ public class DirectAccessorStrategyTest extends StrategyTest {
     @Test
     public void When_component_Should_add_create_lifecycle_method() {
         TypeModel model = applyStrategy(DirectAccessorStrategy.class, Flag.class);
-        assertHasMethod(model,"Flag _flag()");
+        assertHasMethod(model,"com.artemis.generator.test.Flag _flag()");
     }
 }

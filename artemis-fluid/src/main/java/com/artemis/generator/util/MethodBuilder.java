@@ -2,6 +2,7 @@ package com.artemis.generator.util;
 
 import com.artemis.generator.model.artemis.ComponentDescriptor;
 import com.artemis.generator.model.type.MethodDescriptor;
+import com.artemis.generator.model.type.ParameterDescriptor;
 
 /**
  * Created by Daan on 10-9-2016.
@@ -10,7 +11,7 @@ public class MethodBuilder {
 
     private final MethodDescriptor method;
 
-    public MethodBuilder(String returnType, String methodName) {
+    public MethodBuilder(Class returnType, String methodName) {
         method = new MethodDescriptor(returnType, methodName);
     }
 
@@ -31,6 +32,11 @@ public class MethodBuilder {
 
     public MethodBuilder mapper(String prefix, ComponentDescriptor component, String suffix) {
         method.addStatement(prefix + "getMapper("+ component.getClass()+")" + suffix);
+        return this;
+    }
+
+    public MethodBuilder parameter(Class type, String name) {
+        method.addParameter(new ParameterDescriptor(type, name));
         return this;
     }
 }

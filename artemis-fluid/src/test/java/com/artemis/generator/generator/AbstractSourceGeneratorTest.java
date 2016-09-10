@@ -37,7 +37,7 @@ public abstract class AbstractSourceGeneratorTest {
     @Test
     public void When_agnostic_model_has_method_Should_generate_valid_java_method() {
         TypeModel model = new TypeModel();
-        model.add(new MethodDescriptor("void","pos"));
+        model.add(new MethodDescriptor(void.class,"pos"));
 
         generate(model, new ParseTest() {
             @Override
@@ -50,7 +50,7 @@ public abstract class AbstractSourceGeneratorTest {
     @Test
     public void When_method_has_statements_Should_generate_valid_java_method_with_statements() {
         TypeModel model = new TypeModel();
-        MethodDescriptor method = new MethodDescriptor("void", "pos");
+        MethodDescriptor method = new MethodDescriptor(void.class, "pos");
         method.addStatement("int a=0;");
         model.add(method);
 

@@ -21,4 +21,8 @@ public class ComponentDescriptor {
     /** decapitalized class name. 'rocketFuel' */
     public String getMethodPrefix() { return Strings.decapitalizeString(type.getSimpleName()); };
 
+    public Class getComponentType() {
+        return type;
+    }
+
 }

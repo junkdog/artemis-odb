@@ -23,7 +23,7 @@ public class DirectAccessorStrategy extends IterativeModelStrategy {
      */
     private MethodDescriptor createGetComponentMethod(ComponentDescriptor component) {
         return
-                new MethodBuilder(component.getName(), "_"+component.getMethodPrefix())
+                new MethodBuilder(component.getComponentType(), "_"+component.getMethodPrefix())
                         .mapper("return ", component, ".get();")
                         .build();
     }
