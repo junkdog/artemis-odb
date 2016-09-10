@@ -1,8 +1,8 @@
 package com.artemis.generator.generator;
 
 import com.artemis.generator.common.SourceGenerator;
-import com.artemis.generator.model.ClassModel;
-import com.artemis.generator.model.MethodDescriptor;
+import com.artemis.generator.model.type.TypeModel;
+import com.artemis.generator.model.type.MethodDescriptor;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseException;
 import com.github.javaparser.ast.CompilationUnit;
@@ -13,17 +13,16 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.PrintStream;
 
 /**
  * Created by Daan on 10-9-2016.
  */
-public abstract class SourceGeneratorTest {
+public abstract class AbstractSourceGeneratorTest {
 
     @Test
     public void When_agnostic_model_empty_Should_Generate_valid_java_class() {
-        ClassModel model = new ClassModel();
+        TypeModel model = new TypeModel();
         model.name = "test";
 
         generate(model, new ParseTest() {
@@ -37,7 +36,7 @@ public abstract class SourceGeneratorTest {
 
     @Test
     public void When_agnostic_model_has_method_Should_generate_valid_java_method() {
-        ClassModel model = new ClassModel();
+        TypeModel model = new TypeModel();
         model.add(new MethodDescriptor("void","pos"));
 
         generate(model, new ParseTest() {
@@ -50,7 +49,7 @@ public abstract class SourceGeneratorTest {
 
     @Test
     public void When_method_has_statements_Should_generate_valid_java_method_with_statements() {
-        ClassModel model = new ClassModel();
+        TypeModel model = new TypeModel();
         MethodDescriptor method = new MethodDescriptor("void", "pos");
         method.addStatement("int a=0;");
         model.add(method);
@@ -63,7 +62,7 @@ public abstract class SourceGeneratorTest {
         } );
     }
 
-    private void generate(ClassModel model, ParseTest parseTest) {
+    private void generate(TypeModel model, ParseTest parseTest) {
         parseTest.test(getCompilationUnit(getBytes(model)));
     }
 
@@ -75,7 +74,7 @@ public abstract class SourceGeneratorTest {
         }
     }
 
-    private byte[] getBytes(ClassModel model) {
+    private byte[] getBytes(TypeModel model) {
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         final PrintStream stream = new PrintStream(outputStream);
         getSourceGenerator().generate(model, stream);

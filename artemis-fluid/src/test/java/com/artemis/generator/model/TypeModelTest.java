@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 /**
  * Created by Daan on 10-9-2016.
  */
-public class ClassModelTest {
+public class TypeModelTest {
 
     @Test
     public void When_unique_method_added_Should_succeed() {

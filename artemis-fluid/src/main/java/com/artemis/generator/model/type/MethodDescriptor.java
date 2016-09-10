@@ -1,4 +1,4 @@
-package com.artemis.generator.model;
+package com.artemis.generator.model.type;
 
 import java.util.ArrayList;
 import java.util.List;

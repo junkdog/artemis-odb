@@ -1,10 +1,9 @@
 package com.artemis.generator.common;
 
-import com.artemis.generator.model.ClassModel;
-import com.artemis.generator.model.ComponentDescriptor;
+import com.artemis.generator.model.type.TypeModel;
+import com.artemis.generator.model.artemis.ArtemisModel;
 import com.google.common.base.Preconditions;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,13 +24,13 @@ public class BuilderModelGenerator {
     }
 
     /** Generate a builder based on component model. */
-    public ClassModel generate(Collection<ComponentDescriptor> components) {
+    public TypeModel generate(ArtemisModel artemisModel) {
         Preconditions.checkArgument(!strategies.isEmpty(),"No strategies registered to generate model.");
 
-        ClassModel result = new ClassModel();
+        TypeModel result = new TypeModel();
 
         for (BuilderModelStrategy strategy : strategies) {
-            strategy.apply(components, result);
+            strategy.apply(artemisModel, result);
         }
 
         return result;

@@ -1,4 +1,4 @@
-package com.artemis.generator.model;
+package com.artemis.generator.model.type;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
  * <p>
  * Created by Daan on 10-9-2016.
  */
-public class ClassModel {
+public class TypeModel {
 
     public String name = "unnamed";
     public String packageName = "com.artemis";

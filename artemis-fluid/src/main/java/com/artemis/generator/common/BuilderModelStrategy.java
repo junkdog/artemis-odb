@@ -1,10 +1,7 @@
 package com.artemis.generator.common;
 
-import com.artemis.Component;
-import com.artemis.generator.model.ClassModel;
-import com.artemis.generator.model.ComponentDescriptor;
-
-import java.util.Collection;
+import com.artemis.generator.model.artemis.ArtemisModel;
+import com.artemis.generator.model.type.TypeModel;
 
 /**
  * Strategy for generating builder model from component set.
@@ -14,5 +11,5 @@ import java.util.Collection;
 public interface BuilderModelStrategy {
 
     /** Apply strategy to model, generating whatever methods needed. */
-    void apply(Collection<ComponentDescriptor> components, ClassModel model);
+    void apply(ArtemisModel artemisModel, TypeModel model);
 }

@@ -1,8 +1,8 @@
 package com.artemis.generator.generator;
 
 import com.artemis.generator.common.SourceGenerator;
-import com.artemis.generator.model.ClassModel;
-import com.artemis.generator.model.MethodDescriptor;
+import com.artemis.generator.model.type.TypeModel;
+import com.artemis.generator.model.type.MethodDescriptor;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.TypeSpec;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class PoetSourceGenerator implements SourceGenerator {
 
     @Override
-    public void generate(ClassModel model, Appendable out) {
+    public void generate(TypeModel model, Appendable out) {
         try {
             JavaFile javaFile
                     = JavaFile.builder(model.packageName, generateTypeSpec(model)).build();
@@ -34,14 +34,14 @@ public class PoetSourceGenerator implements SourceGenerator {
 
     }
 
-    private TypeSpec generateTypeSpec(ClassModel model) {
+    private TypeSpec generateTypeSpec(TypeModel model) {
         return TypeSpec
                 .classBuilder(model.name)
                 .addMethods(generateMethodSpecs(model))
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL).build();
     }
 
-    private Iterable<MethodSpec> generateMethodSpecs(ClassModel model) {
+    private Iterable<MethodSpec> generateMethodSpecs(TypeModel model) {
         ArrayList<MethodSpec> results = new ArrayList<MethodSpec>(16);
         for (MethodDescriptor method : model.methods) {
             results.add(generateMethodSpec(method));

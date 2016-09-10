@@ -1,4 +1,4 @@
-package com.artemis.generator.model;
+package com.artemis.generator.model.artemis;
 
 import com.artemis.Component;
 import com.artemis.generator.util.Strings;

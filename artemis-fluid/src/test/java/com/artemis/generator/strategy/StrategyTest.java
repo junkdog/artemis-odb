@@ -2,9 +2,10 @@ package com.artemis.generator.strategy;
 
 import com.artemis.Component;
 import com.artemis.generator.common.BuilderModelStrategy;
-import com.artemis.generator.model.ClassModel;
-import com.artemis.generator.model.ComponentDescriptor;
-import com.artemis.generator.model.MethodDescriptor;
+import com.artemis.generator.model.artemis.ArtemisModel;
+import com.artemis.generator.model.type.TypeModel;
+import com.artemis.generator.model.artemis.ComponentDescriptor;
+import com.artemis.generator.model.type.MethodDescriptor;
 import org.junit.Assert;
 
 import java.util.ArrayList;
@@ -19,10 +20,10 @@ import java.util.List;
 public abstract class StrategyTest {
 
     /** Run strategy on given components. */
-    protected ClassModel applyStrategy(Class<? extends BuilderModelStrategy> strategyClazz, Class<? extends Component>... components) {
-        final ClassModel model = new ClassModel();
+    protected TypeModel applyStrategy(Class<? extends BuilderModelStrategy> strategyClazz, Class<? extends Component>... components) {
+        final TypeModel model = new TypeModel();
         try {
-            (strategyClazz.newInstance()).apply(asDescriptorList(components), model);
+            (strategyClazz.newInstance()).apply(new ArtemisModel(asDescriptorList(components)), model);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -39,7 +40,7 @@ public abstract class StrategyTest {
     }
 
     /** Assert if model matches signature. If not found, display all known signatures. */
-    public void assertHasMethod(ClassModel model, String signature) {
+    public void assertHasMethod(TypeModel model, String signature) {
         Assert.assertNotNull("Expected '" +signature+"' but not found.\n\rMethods:\n\r"+methodCollation(model.methods), model.getMethodBySignature(signature));
     }
 

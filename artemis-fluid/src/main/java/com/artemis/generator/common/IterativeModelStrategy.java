@@ -1,10 +1,8 @@
 package com.artemis.generator.common;
 
-import com.artemis.Component;
-import com.artemis.generator.model.ClassModel;
-import com.artemis.generator.model.ComponentDescriptor;
-
-import java.util.Collection;
+import com.artemis.generator.model.artemis.ArtemisModel;
+import com.artemis.generator.model.type.TypeModel;
+import com.artemis.generator.model.artemis.ComponentDescriptor;
 
 /**
  * Implement for strategies that iterates over model.
@@ -14,12 +12,12 @@ import java.util.Collection;
 public abstract class IterativeModelStrategy implements BuilderModelStrategy {
 
     @Override
-    public void apply(Collection<ComponentDescriptor> components, ClassModel model) {
-        for (ComponentDescriptor component : components) {
+    public void apply(ArtemisModel artemisModel, TypeModel model) {
+        for (ComponentDescriptor component : artemisModel.components) {
             apply(component, model);
         }
     }
 
     /** Implementations should transform model based on component. */
-    protected abstract void apply(ComponentDescriptor component, ClassModel model);
+    protected abstract void apply(ComponentDescriptor component, TypeModel model);
 }

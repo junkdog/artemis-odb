@@ -1,7 +1,7 @@
 package com.artemis.generator.util;
 
-import com.artemis.generator.model.ComponentDescriptor;
-import com.artemis.generator.model.MethodDescriptor;
+import com.artemis.generator.model.artemis.ComponentDescriptor;
+import com.artemis.generator.model.type.MethodDescriptor;
 
 /**
  * Created by Daan on 10-9-2016.
