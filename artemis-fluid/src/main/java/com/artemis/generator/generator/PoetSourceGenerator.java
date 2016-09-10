@@ -13,7 +13,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
+ * Convert agnostic class model to java source using Javapoet.
+ *
  * Not a farting sound generator. Different kind of poet!
+ *
  * <p>
  * Created by Daan on 10-9-2016.
  */
