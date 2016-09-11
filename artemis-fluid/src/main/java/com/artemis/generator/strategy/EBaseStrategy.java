@@ -6,9 +6,11 @@ import com.artemis.generator.common.BuilderModelStrategy;
 import com.artemis.generator.model.artemis.ArtemisModel;
 import com.artemis.generator.model.type.FieldDescriptor;
 import com.artemis.generator.model.type.MethodDescriptor;
+import com.artemis.generator.model.type.ParameterizedTypeImpl;
 import com.artemis.generator.model.type.TypeModel;
 import com.artemis.generator.util.FieldBuilder;
 import com.artemis.generator.util.MethodBuilder;
+import com.artemis.utils.Bag;
 
 /**
  * Create static method to obtain instances of E.
@@ -23,18 +25,24 @@ public class EBaseStrategy implements BuilderModelStrategy {
         model.name = "E";
         model.packageName = "com.artemis";
         model.add(createMapperField());
+        model.add(createStaticMapperField());
         model.add(createEntityIdField());
-        model.add(createConstructor());
+        model.add(createInitMethod());
         model.add(createStaticInstancerMethod());
     }
 
-    private MethodDescriptor createConstructor() {
+    private FieldDescriptor createInstancePoolField() {
+        return new FieldDescriptor(new ParameterizedTypeImpl(Bag.class, E.class), "instances");
+    }
+
+    private MethodDescriptor createInitMethod() {
         return
-                new MethodBuilder(void.class, "init")
+                new MethodBuilder(E.class, "init")
                         .parameter(SuperMapper.class, "superMapper")
                         .parameter(int.class, "entityId")
                         .statement("this.superMapper = superMapper")
                         .statement("this.entityId = entityId")
+                        .returnFluid()
                         .build();
     }
 
@@ -46,6 +54,10 @@ public class EBaseStrategy implements BuilderModelStrategy {
         return new FieldBuilder(SuperMapper.class,"mappers").build();
     }
 
+    private FieldDescriptor createStaticMapperField() {
+        return new FieldBuilder(SuperMapper.class,"_processingMapper").setStatic(true).build();
+    }
+
     /**
      * E::E(int)
      */
@@ -54,9 +66,8 @@ public class EBaseStrategy implements BuilderModelStrategy {
                 new MethodBuilder(E.class, "E")
                         .setStatic(true)
                         .parameter(int.class, "entityId")
-                        .body(
-                                "return null\n"
-                        )
+                        .statement("if(_processingMapper==null) throw new RuntimeException(\"SuperMapper system must be registered before any systems using E().\");")
+                        .statement("return new E().init(_processingMapper,entityId)")
                         .build();
     }
 

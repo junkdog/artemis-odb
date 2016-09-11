@@ -1,5 +1,6 @@
 package com.artemis.generator.generator;
 
+import com.artemis.BaseSystem;
 import com.artemis.Main;
 import com.artemis.generator.common.SourceGenerator;
 import com.artemis.generator.model.type.FieldDescriptor;
@@ -37,11 +38,18 @@ public class PoetSourceGenerator implements SourceGenerator {
     }
 
     private TypeSpec generateTypeSpec(TypeModel model) {
-        return TypeSpec
+        TypeSpec.Builder builder = TypeSpec
                 .classBuilder(model.name)
                 .addFields(generateFieldSpecs(model))
                 .addMethods(generateMethodSpecs(model))
-                .addModifiers(Modifier.PUBLIC, Modifier.FINAL).build();
+                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
+
+        if ( model.superclass != null )
+        {
+            builder.superclass(model.superclass);
+        }
+
+        return builder.build();
     }
 
     private Iterable<FieldSpec> generateFieldSpecs(TypeModel model) {
@@ -57,6 +65,16 @@ public class PoetSourceGenerator implements SourceGenerator {
                 FieldSpec.builder(
                         field.type, field.name);
 
+        if ( field.isStatic() ) builder.addModifiers(Modifier.STATIC);
+
+        switch (field.getAccessLevel())
+        {
+            case PROTECTED: builder.addModifiers(Modifier.PROTECTED); break;
+            case PRIVATE: builder.addModifiers(Modifier.PRIVATE); break;
+            case PUBLIC: builder.addModifiers(Modifier.PUBLIC); break;
+            case UNSPECIFIED: break;
+        }
+
         return builder.build();
     }
 
@@ -71,10 +89,17 @@ public class PoetSourceGenerator implements SourceGenerator {
 
     private MethodSpec generateMethodSpec(MethodDescriptor method) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder(method.name)
-                .addModifiers(Modifier.PUBLIC)
                 .returns(method.returnType);
 
         if ( method.isStatic() ) builder.addModifiers(Modifier.STATIC);
+
+        switch (method.getAccessLevel())
+        {
+            case PROTECTED: builder.addModifiers(Modifier.PROTECTED); break;
+            case PRIVATE: builder.addModifiers(Modifier.PRIVATE); break;
+            case PUBLIC: builder.addModifiers(Modifier.PUBLIC); break;
+            case UNSPECIFIED: break;
+        }
 
         for (ParameterDescriptor parameter : method.parameters) {
             builder.addParameter(generateParameterSpecs(parameter));

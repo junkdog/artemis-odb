@@ -1,6 +1,7 @@
 package com.artemis.generator.util;
 
 import com.artemis.generator.model.artemis.ComponentDescriptor;
+import com.artemis.generator.model.type.AccessLevel;
 import com.artemis.generator.model.type.MethodDescriptor;
 import com.artemis.generator.model.type.ParameterDescriptor;
 
@@ -56,6 +57,11 @@ public class MethodBuilder {
 
     public MethodBuilder statement(String statement) {
         method.addStatement(statement);
+        return this;
+    }
+
+    public MethodBuilder accessLevel(AccessLevel level) {
+        method.setAccessLevel(level);
         return this;
     }
 }

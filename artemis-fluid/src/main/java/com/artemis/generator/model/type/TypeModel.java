@@ -1,5 +1,6 @@
 package com.artemis.generator.model.type;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class TypeModel {
 
     public List<MethodDescriptor> methods = new ArrayList<MethodDescriptor>();
     public List<FieldDescriptor> fields = new ArrayList<FieldDescriptor>();
+    public Type superclass;
 
     /** Add method to model. */
     public void add(MethodDescriptor method) {
