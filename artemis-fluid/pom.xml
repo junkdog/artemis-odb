@@ -13,6 +13,7 @@
     <modules>
         <module>artemis-fluid-core</module>
         <module>artemis-fluid-maven-plugin</module>
+        <module>artemis-fluid-gradle-plugin</module>
     </modules>
 
 </project>

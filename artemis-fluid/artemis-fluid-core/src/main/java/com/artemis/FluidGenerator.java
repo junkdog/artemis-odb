@@ -58,7 +58,7 @@ public class FluidGenerator {
                 if (Modifier.isAbstract(component.getModifiers())) {
                     // Skip abstract components.
                     log.info(".. Skipping abstract: " + component.toString());
-                } else if (component.equals(SerializationTag.class)) {
+                } else if (component.equals(SerializationTag.class) || component.getName().startsWith("com.artemis.weaver.")) {
                     // No reserved classes either.
                     log.info(".. Skipping reserved class: " + component.toString());
                 } else {
