@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Daan on 10-9-2016.
+ * @author Daan van Yperen
  */
 public class MethodDescriptor {
 
@@ -12,6 +12,7 @@ public class MethodDescriptor {
     public Class returnType;
     public List<String> statements = new ArrayList<String>();
     public List<ParameterDescriptor> parameters = new ArrayList<ParameterDescriptor>();
+    private boolean isStatic;
 
 
     public MethodDescriptor(Class returnType, String name) {
@@ -35,4 +36,13 @@ public class MethodDescriptor {
     public void addParameter(ParameterDescriptor parameter) {
         parameters.add(parameter);
     }
+
+    public void setStatic(boolean value) {
+        this.isStatic = value;
+    }
+
+    public boolean isStatic() {
+        return isStatic;
+    }
+
 }

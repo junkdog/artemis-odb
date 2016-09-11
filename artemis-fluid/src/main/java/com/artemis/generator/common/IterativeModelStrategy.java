@@ -7,7 +7,7 @@ import com.artemis.generator.model.artemis.ComponentDescriptor;
 /**
  * Implement for strategies that iterates over model.
  *
- * Created by Daan on 10-9-2016.
+ * @author Daan van Yperen
  */
 public abstract class IterativeModelStrategy implements BuilderModelStrategy {
 

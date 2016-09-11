@@ -5,7 +5,7 @@ import com.artemis.generator.test.Flag;
 import org.junit.Test;
 
 /**
- * Created by Daan on 10-9-2016.
+ * @author Daan van Yperen
  */
 public class CreateLifecycleStrategyTest extends StrategyTest {
 

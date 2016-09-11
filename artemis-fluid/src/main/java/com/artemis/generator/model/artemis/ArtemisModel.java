@@ -5,7 +5,7 @@ import java.util.Collection;
 /**
  * Describes the known artemis universe.
  *
- * Created by Daan on 11-9-2016.
+ * @author Daan van Yperen
  */
 public class ArtemisModel {
     public Collection<ComponentDescriptor> components;

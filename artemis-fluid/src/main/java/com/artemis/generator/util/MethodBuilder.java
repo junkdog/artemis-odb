@@ -5,7 +5,7 @@ import com.artemis.generator.model.type.MethodDescriptor;
 import com.artemis.generator.model.type.ParameterDescriptor;
 
 /**
- * Created by Daan on 10-9-2016.
+ * @author Daan van Yperen
  */
 public class MethodBuilder {
 
@@ -21,7 +21,7 @@ public class MethodBuilder {
     }
 
     public MethodBuilder returnFluid() {
-        method.addStatement("return this;");
+        method.addStatement("return this");
         return this;
     }
 
@@ -31,12 +31,31 @@ public class MethodBuilder {
     }
 
     public MethodBuilder mapper(String prefix, ComponentDescriptor component, String suffix) {
-        method.addStatement(prefix + "getMapper("+ component.getClass()+")" + suffix);
+        method.addStatement(prefix + "mappers.m"+component.getName() + suffix);
         return this;
     }
 
     public MethodBuilder parameter(Class type, String name) {
         method.addParameter(new ParameterDescriptor(type, name));
+        return this;
+    }
+
+    public MethodBuilder setStatic(boolean value) {
+        method.setStatic(value);
+        return this;
+    }
+
+    /** Add body, excluding outer brackets. */
+    public MethodBuilder body(String value) {
+        String[] split = value.split("\n");
+        for (String statement : split) {
+            method.addStatement(statement);
+        }
+        return this;
+    }
+
+    public MethodBuilder statement(String statement) {
+        method.addStatement(statement);
         return this;
     }
 }

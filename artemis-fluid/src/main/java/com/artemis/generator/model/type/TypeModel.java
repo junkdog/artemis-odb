@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Sourcecode generator agnostic model of class.
  * <p>
- * Created by Daan on 10-9-2016.
+ * @author Daan van Yperen
  */
 public class TypeModel {
 
@@ -14,6 +14,7 @@ public class TypeModel {
     public String packageName = "com.artemis";
 
     public List<MethodDescriptor> methods = new ArrayList<MethodDescriptor>();
+    public List<FieldDescriptor> fields = new ArrayList<FieldDescriptor>();
 
     /** Add method to model. */
     public void add(MethodDescriptor method) {
@@ -33,4 +34,7 @@ public class TypeModel {
         return null;
     }
 
+    public void add(FieldDescriptor field) {
+        fields.add(field);
+    }
 }

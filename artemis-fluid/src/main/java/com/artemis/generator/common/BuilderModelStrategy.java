@@ -6,7 +6,7 @@ import com.artemis.generator.model.type.TypeModel;
 /**
  * Strategy for generating builder model from component set.
  *
- * Created by Daan on 10-9-2016.
+ * @author Daan van Yperen
  */
 public interface BuilderModelStrategy {
 

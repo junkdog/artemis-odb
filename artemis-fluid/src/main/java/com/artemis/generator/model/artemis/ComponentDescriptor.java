@@ -6,7 +6,7 @@ import com.artemis.generator.util.Strings;
 /**
  * Describes an artemis component.
  *
- * Created by Daan on 10-9-2016.
+ * @author Daan van Yperen
  */
 public class ComponentDescriptor {
     public Class<? extends Component> type;

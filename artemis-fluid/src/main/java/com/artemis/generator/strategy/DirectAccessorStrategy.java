@@ -9,7 +9,7 @@ import com.artemis.generator.util.MethodBuilder;
 /**
  * Add method: direct accessor for components.
  *
- * Created by Daan on 10-9-2016.
+ * @author Daan van Yperen
  */
 public class DirectAccessorStrategy extends IterativeModelStrategy {
 
@@ -24,7 +24,7 @@ public class DirectAccessorStrategy extends IterativeModelStrategy {
     private MethodDescriptor createGetComponentMethod(ComponentDescriptor component) {
         return
                 new MethodBuilder(component.getComponentType(), "_"+component.getMethodPrefix())
-                        .mapper("return ", component, ".get();")
+                        .mapper("return ", component, ".get(entityId)")
                         .build();
     }
 }

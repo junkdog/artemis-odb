@@ -10,7 +10,7 @@ import com.artemis.generator.util.MethodBuilder;
 /**
  * Add method: create method for component.
  *
- * Created by Daan on 10-9-2016.
+ * @author Daan van Yperen
  */
 public class CreateLifecycleStrategy extends IterativeModelStrategy {
 
@@ -25,7 +25,7 @@ public class CreateLifecycleStrategy extends IterativeModelStrategy {
     private MethodDescriptor createComponentMethod(ComponentDescriptor component) {
         return
                 new MethodBuilder(E.class, component.getMethodPrefix())
-                        .mapper(component, ".create();")
+                        .mapper(component, ".create(entityId)")
                         .returnFluid()
                         .build();
     }

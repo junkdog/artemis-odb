@@ -1,7 +1,7 @@
 package com.artemis.generator.util;
 
 /**
- * Created by Daan on 10-9-2016.
+ * @author Daan van Yperen
  */
 public class Strings {
 

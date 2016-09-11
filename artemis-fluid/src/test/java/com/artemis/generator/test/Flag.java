@@ -3,7 +3,7 @@ package com.artemis.generator.test;
 import com.artemis.Component;
 
 /**
- * Created by Daan on 10-9-2016.
+ * @author Daan van Yperen
  */
 public class Flag extends Component {
 }
