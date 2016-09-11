@@ -38,9 +38,9 @@ public class EBaseStrategy implements BuilderModelStrategy {
     private MethodDescriptor createInitMethod() {
         return
                 new MethodBuilder(E.class, "init")
-                        .parameter(SuperMapper.class, "superMapper")
+                        .parameter(SuperMapper.class, "mappers")
                         .parameter(int.class, "entityId")
-                        .statement("this.superMapper = superMapper")
+                        .statement("this.mappers = mappers")
                         .statement("this.entityId = entityId")
                         .returnFluid()
                         .build();
