@@ -13,7 +13,7 @@ public class MethodDescriptor {
     public List<String> statements = new ArrayList<String>();
     public List<ParameterDescriptor> parameters = new ArrayList<ParameterDescriptor>();
     private boolean isStatic;
-    private AccessLevel accessLevel = AccessLevel.UNSPECIFIED;
+    private AccessLevel accessLevel = AccessLevel.PUBLIC;
 
 
     public MethodDescriptor(Class returnType, String name) {

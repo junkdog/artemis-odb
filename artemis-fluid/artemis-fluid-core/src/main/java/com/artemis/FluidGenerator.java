@@ -11,13 +11,14 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * @author Daan van Yperen
  */
 public class FluidGenerator {
 
-    public void generate( Class<? extends Component>[] components, File outputDirectory ) {
+    public void generate(Collection<Class<? extends Component>> components, File outputDirectory ) {
 
         ArtemisModel artemisModel = createArtemisModel(components);
 
@@ -42,7 +43,7 @@ public class FluidGenerator {
         }
     }
 
-    private ArtemisModel createArtemisModel(Class<? extends Component>[] components) {
+    private ArtemisModel createArtemisModel(Collection<Class<? extends Component>> components) {
         ArrayList<ComponentDescriptor> componentDescriptors = new ArrayList<ComponentDescriptor>();
         for (Class<? extends Component> component : components) {
             componentDescriptors.add(new ComponentDescriptor(component));
