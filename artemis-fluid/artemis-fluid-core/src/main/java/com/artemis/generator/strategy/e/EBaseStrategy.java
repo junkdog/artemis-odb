@@ -1,4 +1,4 @@
-package com.artemis.generator.strategy;
+package com.artemis.generator.strategy.e;
 
 import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.common.BuilderModelStrategy;

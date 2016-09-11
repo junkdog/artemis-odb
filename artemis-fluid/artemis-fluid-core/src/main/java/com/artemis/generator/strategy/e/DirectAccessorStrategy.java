@@ -1,4 +1,4 @@
-package com.artemis.generator.strategy;
+package com.artemis.generator.strategy.e;
 
 import com.artemis.generator.common.IterativeModelStrategy;
 import com.artemis.generator.model.type.TypeModel;
@@ -7,7 +7,7 @@ import com.artemis.generator.model.type.MethodDescriptor;
 import com.artemis.generator.util.MethodBuilder;
 
 /**
- * Add method: direct accessor for components.
+ * Generate direct accessor for each component.
  *
  * @author Daan van Yperen
  */

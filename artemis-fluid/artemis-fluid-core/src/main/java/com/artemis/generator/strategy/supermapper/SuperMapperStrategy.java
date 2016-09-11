@@ -1,4 +1,4 @@
-package com.artemis.generator.strategy;
+package com.artemis.generator.strategy.supermapper;
 
 import com.artemis.BaseSystem;
 import com.artemis.generator.common.BuilderModelStrategy;
@@ -10,7 +10,6 @@ import com.artemis.generator.util.MethodBuilder;
 
 /**
  * Generate basic scaffold for SuperMapper class.
- * <p>
  *
  * @author Daan van Yperen
  */

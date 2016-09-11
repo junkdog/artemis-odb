@@ -1,6 +1,7 @@
 package com.artemis.generator.strategy;
 
 import com.artemis.generator.model.type.TypeModel;
+import com.artemis.generator.strategy.e.CreateLifecycleStrategy;
 import com.artemis.generator.test.Flag;
 import org.junit.Test;
 

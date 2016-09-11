@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Describes method.
+ *
  * @author Daan van Yperen
  */
 public class MethodDescriptor {
 
     public String name;
+    /** optional */
     public Type returnType;
     public List<String> statements = new ArrayList<String>();
     public List<ParameterDescriptor> parameters = new ArrayList<ParameterDescriptor>();

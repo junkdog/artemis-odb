@@ -7,7 +7,11 @@ import com.artemis.generator.generator.PoetSourceGenerator;
 import com.artemis.generator.model.artemis.ArtemisModel;
 import com.artemis.generator.model.artemis.ComponentDescriptor;
 import com.artemis.generator.model.type.TypeModel;
-import com.artemis.generator.strategy.*;
+import com.artemis.generator.strategy.e.CreateLifecycleStrategy;
+import com.artemis.generator.strategy.e.DirectAccessorStrategy;
+import com.artemis.generator.strategy.e.EBaseStrategy;
+import com.artemis.generator.strategy.supermapper.ComponentMapperFieldsStrategy;
+import com.artemis.generator.strategy.supermapper.SuperMapperStrategy;
 import com.artemis.generator.util.Log;
 
 import java.io.File;

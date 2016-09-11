@@ -3,6 +3,8 @@ package com.artemis.generator.model.type;
 import java.lang.reflect.Type;
 
 /**
+ * Describes field.
+ *
  * @author Daan van Yperen
  */
 public class FieldDescriptor {

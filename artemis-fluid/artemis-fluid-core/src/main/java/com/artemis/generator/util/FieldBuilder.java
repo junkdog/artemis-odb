@@ -9,6 +9,8 @@ import com.artemis.generator.model.type.ParameterDescriptor;
 import java.lang.reflect.Type;
 
 /**
+ * Helper builder for FieldDescriptor.
+ *
  * @author Daan van Yperen
  */
 public class FieldBuilder {

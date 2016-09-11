@@ -1,4 +1,4 @@
-package com.artemis.generator.strategy;
+package com.artemis.generator.strategy.supermapper;
 
 import com.artemis.ComponentMapper;
 import com.artemis.generator.common.IterativeModelStrategy;
@@ -7,7 +7,7 @@ import com.artemis.generator.model.type.*;
 import com.artemis.generator.util.FieldBuilder;
 
 /**
- * Generates component mappers for all components.
+ * Generates component mappers for each component.
  *
  * @author Daan van Yperen
  */
