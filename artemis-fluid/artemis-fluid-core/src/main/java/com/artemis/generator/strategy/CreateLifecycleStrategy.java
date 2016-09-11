@@ -1,6 +1,6 @@
 package com.artemis.generator.strategy;
 
-import com.artemis.E;
+import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.common.IterativeModelStrategy;
 import com.artemis.generator.model.type.TypeModel;
 import com.artemis.generator.model.artemis.ComponentDescriptor;
@@ -8,7 +8,7 @@ import com.artemis.generator.model.type.MethodDescriptor;
 import com.artemis.generator.util.MethodBuilder;
 
 /**
- * Add method: create method for component.
+ * Generates create method for each component.
  *
  * @author Daan van Yperen
  */
@@ -24,7 +24,7 @@ public class CreateLifecycleStrategy extends IterativeModelStrategy {
      */
     private MethodDescriptor createComponentMethod(ComponentDescriptor component) {
         return
-                new MethodBuilder(E.class, component.getMethodPrefix())
+                new MethodBuilder(FluidTypes.E_TYPE, component.getMethodPrefix())
                         .mapper(component, ".create(entityId)")
                         .returnFluid()
                         .build();

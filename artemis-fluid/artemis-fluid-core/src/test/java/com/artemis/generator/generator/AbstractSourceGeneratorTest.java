@@ -1,6 +1,5 @@
 package com.artemis.generator.generator;
 
-import com.artemis.E;
 import com.artemis.generator.common.SourceGenerator;
 import com.artemis.generator.model.type.*;
 import com.github.javaparser.JavaParser;

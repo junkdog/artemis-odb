@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * Fluid api class generator.
+ *
  * @author Daan van Yperen
  */
 public class FluidGenerator {
@@ -28,6 +30,10 @@ public class FluidGenerator {
     /**
      * Generate fluid API files.
      * Finds all Component instances known to classloader using reflection.
+     *
+     * @param loader classloader to reflect over.
+     * @param outputDirectory source root.
+     * @param log output.
      */
     public void generate(ClassLoader loader, File outputDirectory, Log log ) {
         generate(new ReflectionComponentCollectStrategy().allComponents(loader), outputDirectory, log);
@@ -36,11 +42,22 @@ public class FluidGenerator {
     /**
      * Generate fluid API files.
      * Finds all Component instances at given urls using reflection.
+     *
+     * @param urls classpath urls to reflect over.
+     * @param outputDirectory source root.
+     * @param log output.
      */
     public void generate(Set<URL> urls, File outputDirectory, Log log ) {
         generate(new ReflectionComponentCollectStrategy().allComponents(urls), outputDirectory, log);
     }
 
+    /**
+     * Generate fluid API files.
+     *
+     * @param components components to consider.
+     * @param outputDirectory source root.
+     * @param log output.
+     */
     public void generate(Collection<Class<? extends Component>> components, File outputDirectory, Log log ) {
 
         ArtemisModel artemisModel = createArtemisModel(filterComponents(components, log));

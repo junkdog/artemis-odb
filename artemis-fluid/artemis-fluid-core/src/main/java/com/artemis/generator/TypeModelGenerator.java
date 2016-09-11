@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Write fluid class model.
+ * Transform artemis model to agnostic type model using strategy.
  *
  * @author Daan van Yperen
  */

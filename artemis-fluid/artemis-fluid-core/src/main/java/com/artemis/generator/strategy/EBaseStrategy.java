@@ -1,7 +1,6 @@
 package com.artemis.generator.strategy;
 
-import com.artemis.E;
-import com.artemis.SuperMapper;
+import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.common.BuilderModelStrategy;
 import com.artemis.generator.model.artemis.ArtemisModel;
 import com.artemis.generator.model.type.*;
@@ -10,8 +9,10 @@ import com.artemis.generator.util.MethodBuilder;
 import com.artemis.utils.Bag;
 
 /**
- * Create static method to obtain instances of E.
- * <p>
+ * Generate basic scaffold of E class.
+ *
+ * - basic class setup (fields, initialization).
+ * - static method to obtain instances of E.
  *
  * @author Daan van Yperen
  */
@@ -29,13 +30,13 @@ public class EBaseStrategy implements BuilderModelStrategy {
     }
 
     private FieldDescriptor createInstancePoolField() {
-        return new FieldDescriptor(new ParameterizedTypeImpl(Bag.class, E.class), "instances");
+        return new FieldDescriptor(new ParameterizedTypeImpl(Bag.class, FluidTypes.E_TYPE), "instances");
     }
 
     private MethodDescriptor createInitMethod() {
         return
-                new MethodBuilder(E.class, "init")
-                        .parameter(SuperMapper.class, "mappers")
+                new MethodBuilder(FluidTypes.E_TYPE, "init")
+                        .parameter(FluidTypes.SUPERMAPPER_TYPE, "mappers")
                         .parameter(int.class, "entityId")
                         .statement("this.mappers = mappers")
                         .statement("this.entityId = entityId")
@@ -48,11 +49,11 @@ public class EBaseStrategy implements BuilderModelStrategy {
     }
 
     private FieldDescriptor createMapperField() {
-        return new FieldBuilder(SuperMapper.class,"mappers").build();
+        return new FieldBuilder(FluidTypes.SUPERMAPPER_TYPE,"mappers").build();
     }
 
     private FieldDescriptor createStaticMapperField() {
-        return new FieldBuilder(SuperMapper.class,"_processingMapper").setStatic(true).build();
+        return new FieldBuilder(FluidTypes.SUPERMAPPER_TYPE,"_processingMapper").setStatic(true).build();
     }
 
     /**
@@ -60,7 +61,7 @@ public class EBaseStrategy implements BuilderModelStrategy {
      */
     private MethodDescriptor createStaticInstancerMethod() {
         return
-                new MethodBuilder(E.class, "E")
+                new MethodBuilder(FluidTypes.E_TYPE, "E")
                         .setStatic(true)
                         .parameter(int.class, "entityId")
                         .statement("if(_processingMapper==null) throw new RuntimeException(\"SuperMapper system must be registered before any systems using E().\");")

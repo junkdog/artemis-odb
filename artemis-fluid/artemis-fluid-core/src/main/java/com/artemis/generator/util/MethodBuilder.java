@@ -5,17 +5,24 @@ import com.artemis.generator.model.type.AccessLevel;
 import com.artemis.generator.model.type.MethodDescriptor;
 import com.artemis.generator.model.type.ParameterDescriptor;
 
+import java.lang.reflect.Type;
+
 /**
+ * Helper builder for MethodDescriptor.
+ *
  * @author Daan van Yperen
  */
 public class MethodBuilder {
 
     private final MethodDescriptor method;
 
-    public MethodBuilder(Class returnType, String methodName) {
+    public MethodBuilder(Type returnType, String methodName) {
         method = new MethodDescriptor(returnType, methodName);
     }
 
+    /**
+     * Prep method.
+     */
     public MethodDescriptor build()
     {
         return method;
@@ -36,7 +43,7 @@ public class MethodBuilder {
         return this;
     }
 
-    public MethodBuilder parameter(Class type, String name) {
+    public MethodBuilder parameter(Type type, String name) {
         method.addParameter(new ParameterDescriptor(type, name));
         return this;
     }

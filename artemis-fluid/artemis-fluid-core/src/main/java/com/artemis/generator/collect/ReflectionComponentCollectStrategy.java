@@ -20,6 +20,8 @@ public class ReflectionComponentCollectStrategy {
 
     /**
      * Collect all components on a classpath.
+     * @param classLoader context.
+     * @return Set of all components on classloader.
      */
     public Set<Class<? extends Component>> allComponents(ClassLoader classLoader) {
 
@@ -35,11 +37,16 @@ public class ReflectionComponentCollectStrategy {
         return reflections.getSubTypesOf(Component.class);
     }
 
-    /** Collect all components within a set of URLs */
+    /**
+     * Collect all components within a set of URLs
+     * @param urls context
+     * @return Set of all components on classloader.
+     */
     public Collection<Class<? extends Component>> allComponents(Set<URL> urls) {
         return allComponents(asClassloader(urls));
     }
 
+    /** Create classloader for URLS */
     private ClassLoader asClassloader(Set<URL> urls) {
         return URLClassLoader.newInstance(
                 urls.toArray(new URL[0]),

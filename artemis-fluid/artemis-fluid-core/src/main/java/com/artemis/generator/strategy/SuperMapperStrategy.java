@@ -1,7 +1,6 @@
 package com.artemis.generator.strategy;
 
 import com.artemis.BaseSystem;
-import com.artemis.E;
 import com.artemis.generator.common.BuilderModelStrategy;
 import com.artemis.generator.model.artemis.ArtemisModel;
 import com.artemis.generator.model.type.AccessLevel;
@@ -10,7 +9,7 @@ import com.artemis.generator.model.type.TypeModel;
 import com.artemis.generator.util.MethodBuilder;
 
 /**
- * Create static method to obtain instances of E.
+ * Generate basic scaffold for SuperMapper class.
  * <p>
  *
  * @author Daan van Yperen

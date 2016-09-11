@@ -1,14 +1,12 @@
 package com.artemis.generator.generator;
 
 import com.artemis.generator.common.SourceGenerator;
-import com.artemis.generator.model.type.FieldDescriptor;
-import com.artemis.generator.model.type.ParameterDescriptor;
-import com.artemis.generator.model.type.TypeModel;
-import com.artemis.generator.model.type.MethodDescriptor;
+import com.artemis.generator.model.type.*;
 import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
@@ -59,7 +57,7 @@ public class PoetSourceGenerator implements SourceGenerator {
     private FieldSpec generateFieldSpec(FieldDescriptor field) {
         FieldSpec.Builder builder =
                 FieldSpec.builder(
-                        field.type, field.name);
+                        getTypeName(field.type), field.name);
 
         if ( field.isStatic() ) builder.addModifiers(Modifier.STATIC);
 
@@ -85,7 +83,7 @@ public class PoetSourceGenerator implements SourceGenerator {
 
     private MethodSpec generateMethodSpec(MethodDescriptor method) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder(method.name)
-                .returns(method.returnType);
+                .returns(getTypeName(method.returnType));
 
         if ( method.isStatic() ) builder.addModifiers(Modifier.STATIC);
 
@@ -109,8 +107,15 @@ public class PoetSourceGenerator implements SourceGenerator {
         return builder.build();
     }
 
+    private TypeName getTypeName(Type type) {
+        if ( type instanceof TypeDescriptor) {
+            return ClassName.bestGuess(type.toString());
+        }
+        return TypeName.get(type);
+    }
+
     private ParameterSpec generateParameterSpecs(ParameterDescriptor parameter) {
-        return ParameterSpec.builder(parameter.type, parameter.name).build();
+        return ParameterSpec.builder(getTypeName(parameter.type), parameter.name).build();
     }
 
 

@@ -1,5 +1,6 @@
 package com.artemis.generator.model.type;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,15 +10,16 @@ import java.util.List;
 public class MethodDescriptor {
 
     public String name;
-    public Class returnType;
+    public Type returnType;
     public List<String> statements = new ArrayList<String>();
     public List<ParameterDescriptor> parameters = new ArrayList<ParameterDescriptor>();
     private boolean isStatic;
     private AccessLevel accessLevel = AccessLevel.PUBLIC;
 
 
-    public MethodDescriptor(Class returnType, String name) {
-        this.returnType = returnType;
+    public MethodDescriptor(Type returnType, String name) {
+        this.returnType = returnType
+        ;
         this.name = name;
     }
 
@@ -31,7 +33,8 @@ public class MethodDescriptor {
     }
 
     public String signature() {
-        return returnType.getCanonicalName() + " " + name + "()";
+        if ( returnType instanceof Class) return ((Class)returnType).getCanonicalName() + " " + name + "()";
+        return returnType.toString() + " " + name + "()";
     }
 
     public void addParameter(ParameterDescriptor parameter) {
