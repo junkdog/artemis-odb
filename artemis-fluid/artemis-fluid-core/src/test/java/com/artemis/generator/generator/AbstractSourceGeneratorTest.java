@@ -50,6 +50,21 @@ public abstract class AbstractSourceGeneratorTest {
     }
 
     @Test
+    public void When_agnostic_model_specifies_method_accesslevel_Should_generate_access_level_on_java_method() {
+        Assert.fail();
+    }
+
+    @Test
+    public void When_agnostic_model_specifies_method_accesslevel_Should_generate_access_level_on_java_field() {
+        Assert.fail();
+    }
+
+    @Test
+    public void When_specifying_superclass_Should_generate_valid_java_class_with_superclass() {
+        Assert.fail();
+    }
+
+    @Test
     public void When_agnostic_model_has_method_Should_generate_valid_java_method() {
         TypeModel model = new TypeModel();
         model.add(new MethodDescriptor(void.class,"pos"));

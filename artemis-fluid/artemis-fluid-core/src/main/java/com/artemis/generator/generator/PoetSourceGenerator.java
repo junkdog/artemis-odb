@@ -1,7 +1,5 @@
 package com.artemis.generator.generator;
 
-import com.artemis.BaseSystem;
-import com.artemis.Main;
 import com.artemis.generator.common.SourceGenerator;
 import com.artemis.generator.model.type.FieldDescriptor;
 import com.artemis.generator.model.type.ParameterDescriptor;
@@ -11,8 +9,6 @@ import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
