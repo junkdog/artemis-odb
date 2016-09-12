@@ -1,6 +1,8 @@
 package com.artemis.generator.generator;
 
+import com.artemis.Component;
 import com.artemis.generator.common.SourceGenerator;
+import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.model.type.*;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseException;
@@ -50,17 +52,45 @@ public abstract class AbstractSourceGeneratorTest {
 
     @Test
     public void When_agnostic_model_specifies_method_accesslevel_Should_generate_access_level_on_java_method() {
-        Assert.fail();
+        TypeModel model = new TypeModel();
+        MethodDescriptor method = new MethodDescriptor(void.class, "pos");
+        method.setAccessLevel(AccessLevel.PROTECTED);
+        model.add(method);
+
+        generate(model, new ParseTest() {
+            @Override
+            public void test(CompilationUnit cu) {
+                Assert.assertTrue(cu.getTypes().get(0).getMembers().toString().contains("protected void pos"));
+            }
+        } );
     }
 
     @Test
     public void When_agnostic_model_specifies_method_accesslevel_Should_generate_access_level_on_java_field() {
-        Assert.fail();
+        TypeModel model = new TypeModel();
+        FieldDescriptor field = new FieldDescriptor(int.class, "pos");
+        field.setAccessLevel(AccessLevel.PROTECTED);
+        model.add(field);
+
+        generate(model, new ParseTest() {
+            @Override
+            public void test(CompilationUnit cu) {
+                Assert.assertTrue(cu.getTypes().get(0).getMembers().toString().contains("protected int pos"));
+            }
+        } );
     }
 
     @Test
     public void When_specifying_superclass_Should_generate_valid_java_class_with_superclass() {
-        Assert.fail();
+        TypeModel model = new TypeModel();
+        model.superclass = Component.class;
+
+        generate(model, new ParseTest() {
+            @Override
+            public void test(CompilationUnit cu) {
+                Assert.assertTrue(cu.toString().contains("extends Component"));
+            }
+        } );
     }
 
     @Test

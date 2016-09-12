@@ -14,6 +14,6 @@ public class EBaseStrategyTest extends StrategyTest {
     @Test
     public void Should_add_create_instancer_method() {
         TypeModel model = applyStrategy(EBaseStrategy.class, Flag.class);
-        assertHasMethod(model,"com.artemis.E E()");
+        assertHasMethod(model,"com.artemis.E E(int entityId)");
     }
 }
