@@ -20,6 +20,7 @@ public class ComponentMapperFieldsStrategy extends IterativeModelStrategy {
 
     private FieldDescriptor createComponentMapper(ComponentDescriptor component) {
         return new FieldBuilder(new ParameterizedTypeImpl(ComponentMapper.class, component.getComponentType()), "m" + component.getName())
+                .debugNotes(component.getComponentType().getName())
                 .setAccessLevel(AccessLevel.PUBLIC)
                 .build();
     }

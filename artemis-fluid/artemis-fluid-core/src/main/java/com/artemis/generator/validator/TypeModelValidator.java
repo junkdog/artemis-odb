@@ -1,5 +1,6 @@
 package com.artemis.generator.validator;
 
+import com.artemis.generator.model.type.AmbiguousSignature;
 import com.artemis.generator.model.type.FieldDescriptor;
 import com.artemis.generator.model.type.MethodDescriptor;
 import com.artemis.generator.model.type.TypeModel;
@@ -13,9 +14,11 @@ import java.util.*;
 public class TypeModelValidator {
 
     private Log log;
+    private String context;
 
-    public TypeModelValidator(Log log) {
+    public TypeModelValidator(Log log, String context) {
         this.log = log;
+        this.context = context;
     }
 
     /**
@@ -26,42 +29,58 @@ public class TypeModelValidator {
      */
     public void validate(TypeModel model )
     {
-        validateMethods(model.methods);
-        validateFields(model.fields);
+        String errors="";
+        errors += validateFields(model.fields);
+        errors += validateMethods(model.methods);
+
+        if ( !errors.isEmpty() )
+        {
+            throw new TypeModelValidatorException("Ambiguous field(s) or method(s).\n" + errors);
+        }
     }
 
-    private void validateFields(List<FieldDescriptor> fields) {
-
-    }
-
-    private void validateMethods(List<MethodDescriptor> methods) {
-        Collection<MethodDescriptor> duplicates =
-                getDuplicateMethods(methods);
+    private String validateFields(List<FieldDescriptor> fields) {
+        Collection<FieldDescriptor> duplicates =
+                getDuplicates(fields);
 
         String s = "";
-        for (MethodDescriptor method : duplicates) {
-            String error = " .. [" + method.getDebugNotes() + "] causes ambiguous method " + method.signature(true, true);
+        for (FieldDescriptor field : duplicates) {
+            String error = " .. [" + field.getDebugNotes() + "] causes ambiguous field " + field.name + " in " + context;
             log.error(error);
             s = s + error +"\n";
         }
 
-        if (  duplicates.size() > 0 ) throw new TypeModelValidatorException("Ambiguous method(s).\n" + s);
+        return s;
+    }
+
+    private String validateMethods(List<MethodDescriptor> methods) {
+        Collection<MethodDescriptor> duplicates =
+                getDuplicates(methods);
+
+        String s = "";
+        for (MethodDescriptor method : duplicates) {
+            String error = " .. [" + method.getDebugNotes() + "] causes ambiguous method " + method.signature(true, true)+ " in " + context;
+            log.error(error);
+            s = s + error +"\n";
+        }
+
+        return s;
     }
 
 
-    public Collection<MethodDescriptor> getDuplicateMethods(List<MethodDescriptor> listContainingDuplicates)
+    public <T extends AmbiguousSignature> Collection<T> getDuplicates(List<T> listContainingDuplicates)
     {
-        final Map<String, MethodDescriptor> firstOccurances = new HashMap<String, MethodDescriptor>();
-        final List<MethodDescriptor> duplicates = new ArrayList<MethodDescriptor>(128);
+        final Map<String, T> firstOccurances = new HashMap<String, T>();
+        final List<T> duplicates = new ArrayList<T>(128);
         final Set<String> uniques = new HashSet<String>(128);
 
-        for (MethodDescriptor method : listContainingDuplicates)
+        for (T method : listContainingDuplicates)
         {
             // by ignoring parameter names and return types we pick up on more ambiguous cases.
-            final String signature = method.signature(false, false);
+            final String signature = method.ambiguousSignature();
             if (!uniques.add(signature))
             {
-                MethodDescriptor firstOccuranceMethod = firstOccurances.remove(signature);
+                T firstOccuranceMethod = firstOccurances.remove(signature);
                 if ( firstOccuranceMethod != null )
                 {
                     duplicates.add(firstOccuranceMethod);

@@ -35,4 +35,9 @@ public class FieldBuilder {
         field.setAccessLevel(value);
         return this;
     }
+
+    public FieldBuilder debugNotes(String s) {
+        field.setDebugNotes(s);
+        return this;
+    }
 }

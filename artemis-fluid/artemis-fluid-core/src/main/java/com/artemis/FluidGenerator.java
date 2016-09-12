@@ -74,8 +74,8 @@ public class FluidGenerator {
 
         new File(outputDirectory, "com/artemis/").mkdirs();
 
-        generateFile(artemisModel, createEGenerator(), new File(outputDirectory, "com/artemis/E.java"), log);
         generateFile(artemisModel, createSupermapperGenerator(), new File(outputDirectory, "com/artemis/SuperMapper.java"), log);
+        generateFile(artemisModel, createEGenerator(), new File(outputDirectory, "com/artemis/E.java"), log);
     }
 
     private Collection<Class<? extends Component>> filterComponents(Collection<Class<? extends Component>> unfilteredComponents, Log log) {
@@ -109,7 +109,7 @@ public class FluidGenerator {
             FileWriter fileWriter = new FileWriter(file);
             try {
                 TypeModel typeModel = createExampleTypeModel(generator, artemisModel);
-                new TypeModelValidator(log).validate(typeModel);
+                new TypeModelValidator(log,file.getName()).validate(typeModel);
                 new PoetSourceGenerator().generate(typeModel, fileWriter);
             } finally {
                 fileWriter.close();

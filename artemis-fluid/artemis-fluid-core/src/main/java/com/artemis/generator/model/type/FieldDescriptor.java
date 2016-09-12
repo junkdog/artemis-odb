@@ -7,11 +7,12 @@ import java.lang.reflect.Type;
  *
  * @author Daan van Yperen
  */
-public class FieldDescriptor {
+public class FieldDescriptor implements AmbiguousSignature {
     public Type type;
     public String name;
     private boolean isStatic;
     private AccessLevel accessLevel = AccessLevel.PROTECTED;
+    private String debugNotes;
 
     public FieldDescriptor(Type type, String name) {
         this.type = type;
@@ -32,5 +33,18 @@ public class FieldDescriptor {
 
     public AccessLevel getAccessLevel() {
         return accessLevel;
+    }
+
+    @Override
+    public String ambiguousSignature() {
+        return name;
+    }
+
+    public void setDebugNotes(String debugNotes) {
+        this.debugNotes = debugNotes;
+    }
+
+    public String getDebugNotes() {
+        return debugNotes;
     }
 }

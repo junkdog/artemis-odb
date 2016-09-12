@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @author Daan van Yperen
  */
-public class MethodDescriptor {
+public class MethodDescriptor implements AmbiguousSignature {
 
     public String name;
     /**
@@ -40,7 +40,7 @@ public class MethodDescriptor {
 
     public String signature(boolean variableNames, boolean returnType) {
         if (this.returnType instanceof Class)
-            return (returnType ? ((Class) this.returnType).getCanonicalName() + " " : "") + name + "()";
+            return (returnType ? ((Class) this.returnType).getCanonicalName() + " " : "") + name+ "(" + parameterSignature(variableNames) + ")";
         return (returnType ? (this.returnType.toString() + " ") : "") + name + "(" + parameterSignature(variableNames) + ")";
     }
 
@@ -78,5 +78,10 @@ public class MethodDescriptor {
 
     public String getDebugNotes() {
         return debugNotes;
+    }
+
+    @Override
+    public String ambiguousSignature() {
+        return signature(false,false);
     }
 }

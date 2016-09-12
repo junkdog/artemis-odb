@@ -29,10 +29,6 @@ public class EBaseStrategy implements BuilderModelStrategy {
         model.add(createStaticInstancerMethod());
     }
 
-    private FieldDescriptor createInstancePoolField() {
-        return new FieldDescriptor(new ParameterizedTypeImpl(Bag.class, FluidTypes.E_TYPE), "instances");
-    }
-
     private MethodDescriptor createInitMethod() {
         return
                 new MethodBuilder(FluidTypes.E_TYPE, "init")
@@ -45,15 +41,21 @@ public class EBaseStrategy implements BuilderModelStrategy {
     }
 
     private FieldDescriptor createEntityIdField() {
-        return new FieldBuilder(int.class,"entityId").build();
+        return new FieldBuilder(int.class,"entityId")
+                .debugNotes("Default entityId field.")
+                .build();
     }
 
     private FieldDescriptor createMapperField() {
-        return new FieldBuilder(FluidTypes.SUPERMAPPER_TYPE,"mappers").build();
+        return new FieldBuilder(FluidTypes.SUPERMAPPER_TYPE,"mappers")
+                .debugNotes("Default mappers field.")
+                .build();
     }
 
     private FieldDescriptor createStaticMapperField() {
-        return new FieldBuilder(FluidTypes.SUPERMAPPER_TYPE,"_processingMapper").setStatic(true).build();
+        return new FieldBuilder(FluidTypes.SUPERMAPPER_TYPE,"_processingMapper")
+                .debugNotes("Default _processingMapper field.")
+                .setStatic(true).build();
     }
 
     /**
