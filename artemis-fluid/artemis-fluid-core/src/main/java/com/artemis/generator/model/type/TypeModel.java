@@ -29,7 +29,7 @@ public class TypeModel {
      */
     public MethodDescriptor getMethodBySignature(String signature) {
         for (MethodDescriptor method : methods) {
-            if (signature.equals(method.signature(true))) {
+            if (signature.equals(method.signature(true, true))) {
                 return method;
             }
         }

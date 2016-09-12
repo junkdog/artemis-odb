@@ -40,7 +40,7 @@ public class TypeModelValidator {
 
         String s = "";
         for (MethodDescriptor method : duplicates) {
-            String error = " .. [" + method.getDebugNotes() + "] causes ambiguous method " + method.signature(true);
+            String error = " .. [" + method.getDebugNotes() + "] causes ambiguous method " + method.signature(true, true);
             log.error(error);
             s = s + error +"\n";
         }
@@ -57,7 +57,8 @@ public class TypeModelValidator {
 
         for (MethodDescriptor method : listContainingDuplicates)
         {
-            final String signature = method.signature(false);
+            // by ignoring parameter names and return types we pick up on more ambiguous cases.
+            final String signature = method.signature(false, false);
             if (!uniques.add(signature))
             {
                 MethodDescriptor firstOccuranceMethod = firstOccurances.remove(signature);

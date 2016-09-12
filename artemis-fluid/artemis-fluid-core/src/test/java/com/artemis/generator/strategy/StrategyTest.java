@@ -52,7 +52,7 @@ public abstract class StrategyTest {
     private String methodCollation(List<MethodDescriptor> methods) {
         String s ="";
         for (MethodDescriptor method : methods) {
-            s += method.signature(true) +"\n\r";
+            s += method.signature(true, true) +"\n\r";
         }
         return s;
     }

@@ -12,7 +12,9 @@ import java.util.List;
 public class MethodDescriptor {
 
     public String name;
-    /** optional */
+    /**
+     * optional
+     */
     public Type returnType;
     public List<String> statements = new ArrayList<String>();
     public List<ParameterDescriptor> parameters = new ArrayList<ParameterDescriptor>();
@@ -33,18 +35,19 @@ public class MethodDescriptor {
 
     @Override
     public String toString() {
-        return signature(true);
+        return signature(true, true);
     }
 
-    public String signature(boolean variableNames) {
-        if ( returnType instanceof Class) return ((Class)returnType).getCanonicalName() + " " + name + "()";
-        return returnType.toString() + " " + name + "("+parameterSignature(variableNames)+")";
+    public String signature(boolean variableNames, boolean returnType) {
+        if (this.returnType instanceof Class)
+            return (returnType ? ((Class) this.returnType).getCanonicalName() + " " : "") + name + "()";
+        return (returnType ? (this.returnType.toString() + " ") : "") + name + "(" + parameterSignature(variableNames) + ")";
     }
 
     private String parameterSignature(boolean variableNames) {
         String s = "";
         for (ParameterDescriptor parameter : parameters) {
-            s = s + ( !s.isEmpty() ? "," : "" ) + parameter.signature(variableNames);
+            s = s + (!s.isEmpty() ? "," : "") + parameter.signature(variableNames);
         }
         return s;
     }
