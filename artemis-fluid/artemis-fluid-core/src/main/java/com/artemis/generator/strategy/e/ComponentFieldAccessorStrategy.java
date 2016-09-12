@@ -9,10 +9,7 @@ import com.artemis.generator.model.type.TypeModel;
 import com.artemis.generator.util.MethodBuilder;
 import com.google.common.base.Preconditions;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.Set;
 
 import static org.reflections.ReflectionUtils.*;
@@ -41,28 +38,60 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
 
     private void exposeFields(ComponentDescriptor component, TypeModel model, Set<Field> fields) {
         for (Field field : fields) {
-            exposeOnFluidInterface(component,field, model);
+            exposeOnFluidInterface(component, field, model);
         }
     }
 
     private void exposeOnFluidInterface(ComponentDescriptor component, Method method, TypeModel model) {
+
+        if (void.class.equals(method.getReturnType()))
+        {
+            model.add(methodSetterMethod(component, method));
+        } else{
+            model.add(
+                    methodGetterMethod(component, method));
+        }
     }
 
 
     private void exposeOnFluidInterface(ComponentDescriptor component, Field field, TypeModel model) {
-        model.add(fieldSetterMethod(component,field));
-        model.add(fieldGetterMethod(component,field));
+        model.add(fieldSetterMethod(component, field));
+        model.add(fieldGetterMethod(component, field));
     }
 
+
+    private MethodDescriptor methodSetterMethod(ComponentDescriptor component, Method method) {
+        MethodBuilder builder = new MethodBuilder(FluidTypes.E_TYPE, component.getCompositeName(method.getName()));
+
+        int count = 0;
+        String arguments = "";
+        for (Class<?> parameterType : method.getParameterTypes()) {
+            builder.parameter(parameterType, "p" + count);
+            arguments = arguments + (arguments.isEmpty() ? "" : ", ") + "p" + count;
+            count++;
+        }
+
+        return builder
+                .mapper(component, ".get(entityId)." + method.getName() + "(" + arguments + ")")
+                .returnFluid()
+                .build();
+    }
+
+    private MethodDescriptor methodGetterMethod(ComponentDescriptor component, Method method) {
+        return new MethodBuilder(method.getGenericReturnType(), component.getCompositeName(method.getName()))
+                .mapper("return ", component, ".get(entityId)." + method.getName() +"()")
+                .build();
+    }
 
     /**
      * T componentName() -> create new entity.
      */
     private MethodDescriptor fieldGetterMethod(ComponentDescriptor component, Field field) {
         return new MethodBuilder(field.getGenericType(), component.getCompositeName(field.getName()))
-                .mapper("return ", component, ".get(entityId)."+field.getName())
+                .mapper("return ", component, ".get(entityId)." + field.getName())
                 .build();
     }
+
     /**
      * T componentName() -> create new entity.
      */
@@ -70,7 +99,7 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
         final String parameterName = field.getName();
         return new MethodBuilder(FluidTypes.E_TYPE, component.getCompositeName(parameterName))
                 .parameter(field.getGenericType(), parameterName)
-                .mapper(component, ".get(entityId)."+ parameterName +"="+ parameterName)
+                .mapper(component, ".get(entityId)." + parameterName + "=" + parameterName)
                 .returnFluid()
                 .build();
     }

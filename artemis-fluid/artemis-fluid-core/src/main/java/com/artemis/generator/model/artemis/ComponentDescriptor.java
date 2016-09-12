@@ -26,6 +26,9 @@ public class ComponentDescriptor {
     }
 
     public String getCompositeName(String suffix) {
+        if ( suffix.startsWith("get")
+                || suffix.startsWith("set") ) return
+                suffix.length() <= 3 ? getMethodPrefix() : getCompositeName(suffix.substring(3));
         return getMethodPrefix() + Strings.capitalizeString(suffix);
     }
 }

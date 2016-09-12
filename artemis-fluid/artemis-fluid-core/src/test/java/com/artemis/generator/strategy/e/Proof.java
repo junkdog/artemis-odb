@@ -14,4 +14,25 @@ public class Proof extends Component {
     int undef;
 
     public List<Object> gen;
+
+    public void clear() {}
+    public long clear2() { return 0;}
+    public void setDepth(long blaValue) {}
+    public long getDepth() { return 0; }
+    public void set(int pri, int prot, int pub) {}
+
+    private void clearP() {}
+    private void setDepthP(long blaValue) {}
+    private long getDepthP() { return 0; }
+    private void setP(int pri, int prot, int pub) {}
+
+    protected void clearPRO() {}
+    protected void setDepthPRO(long blaValue) {}
+    protected long getDepthPRO() { return 0; }
+    protected void setPRO(int pri, int prot, int pub) {}
+
+    void clearT() {}
+    void setDepthT(long blaValue) {}
+    long getDepthT() { return 0; }
+    void setT(int pri, int prot, int pub) {}
 }
