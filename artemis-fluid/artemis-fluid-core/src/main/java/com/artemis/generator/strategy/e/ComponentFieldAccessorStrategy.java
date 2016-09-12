@@ -21,12 +21,10 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
 
     @Override
     protected void apply(ComponentDescriptor component, TypeModel model) {
-        Class type = component.getComponentType();
-
-        Set<Field> fields = getAllFields(type, withModifier(Modifier.PUBLIC));
+        final Set<Field> fields = component.getAllPublicFields();
         exposeFields(component, model, fields);
 
-        Set<Method> methods = getAllMethods(type, withModifier(Modifier.PUBLIC));
+        final Set<Method> methods = component.getAllPublicMethods();
         exposeMethods(component, model, methods);
     }
 

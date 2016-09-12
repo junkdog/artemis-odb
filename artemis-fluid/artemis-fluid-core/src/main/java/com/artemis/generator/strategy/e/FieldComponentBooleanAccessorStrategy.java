@@ -13,7 +13,7 @@ import static org.reflections.ReflectionUtils.*;
 
 /**
  * Generate boolean accessors for flag components.
- *
+ * <p>
  * Flag components are all components with no public fields and methods.
  *
  * @author Daan van Yperen
@@ -24,8 +24,7 @@ public class FieldComponentBooleanAccessorStrategy extends IterativeModelStrateg
     protected void apply(ComponentDescriptor component, TypeModel model) {
         Class type = component.getComponentType();
 
-        if ( getAllFields(type, withModifier(Modifier.PUBLIC)).isEmpty() &&
-                getAllMethods(type, withModifier(Modifier.PUBLIC)).isEmpty() ) {
+        if (component.isFlagComponent()) {
             model.add(createCheckFlagComponentExistenceMethod(component));
             model.add(createFlagComponentToggleMethod(component));
         }
@@ -35,8 +34,8 @@ public class FieldComponentBooleanAccessorStrategy extends IterativeModelStrateg
         return
                 new MethodBuilder(FluidTypes.E_TYPE, component.getMethodPrefix())
                         .parameter(boolean.class, "value")
-                        .mapper("if (value) " , component, ".create(entityId)")
-                        .mapper("if (!value) " , component, ".remove(entityId)")
+                        .mapper("if (value) ", component, ".create(entityId)")
+                        .mapper("if (!value) ", component, ".remove(entityId)")
                         .debugNotes("flag component(=field/method-less) " + component.getComponentType().getName())
                         .returnFluid()
                         .build();
@@ -49,7 +48,7 @@ public class FieldComponentBooleanAccessorStrategy extends IterativeModelStrateg
         return
                 new MethodBuilder(boolean.class, "is" + component.getName())
                         .debugNotes("flag component(=field/method-less) " + component.getComponentType().getName())
-                        .mapper("return " , component, ".has(entityId)")
+                        .mapper("return ", component, ".has(entityId)")
                         .build();
     }
 }
