@@ -33,18 +33,18 @@ public class MethodDescriptor {
 
     @Override
     public String toString() {
-        return signature();
+        return signature(true);
     }
 
-    public String signature() {
+    public String signature(boolean variableNames) {
         if ( returnType instanceof Class) return ((Class)returnType).getCanonicalName() + " " + name + "()";
-        return returnType.toString() + " " + name + "("+parameterSignature()+")";
+        return returnType.toString() + " " + name + "("+parameterSignature(variableNames)+")";
     }
 
-    private String parameterSignature() {
+    private String parameterSignature(boolean variableNames) {
         String s = "";
         for (ParameterDescriptor parameter : parameters) {
-            s = s + ( !s.isEmpty() ? "," : "" ) + parameter.signature();
+            s = s + ( !s.isEmpty() ? "," : "" ) + parameter.signature(variableNames);
         }
         return s;
     }

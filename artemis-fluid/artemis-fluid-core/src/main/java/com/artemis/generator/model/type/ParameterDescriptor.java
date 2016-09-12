@@ -14,8 +14,14 @@ public class ParameterDescriptor {
         this.name = name;
     }
 
-    public String signature() {
-        if ( type instanceof Class) return ((Class)type).getCanonicalName() + " " + name;
-        return type.toString() + " " + name;
+    public String signature(boolean variableName) {
+
+        if (variableName) {
+            if (type instanceof Class) return ((Class) type).getCanonicalName() + " " + name;
+            return type.toString() + " " + name;
+        } else {
+            if (type instanceof Class) return ((Class) type).getCanonicalName();
+            return type.toString();
+        }
     }
 }
