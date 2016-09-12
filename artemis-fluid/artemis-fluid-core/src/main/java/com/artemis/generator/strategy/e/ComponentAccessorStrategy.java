@@ -24,6 +24,7 @@ public class ComponentAccessorStrategy extends IterativeModelStrategy {
     private MethodDescriptor createGetComponentMethod(ComponentDescriptor component) {
         return
                 new MethodBuilder(component.getComponentType(), "_"+component.getMethodPrefix())
+                        .debugNotes(component.getComponentType().getName())
                         .mapper("return ", component, ".get(entityId)")
                         .build();
     }

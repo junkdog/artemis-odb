@@ -73,6 +73,7 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
 
         return builder
                 .mapper(component, ".get(entityId)." + method.getName() + "(" + arguments + ")")
+                .debugNotes(method.toGenericString())
                 .returnFluid()
                 .build();
     }
@@ -80,6 +81,7 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
     private MethodDescriptor methodGetterMethod(ComponentDescriptor component, Method method) {
         return new MethodBuilder(method.getGenericReturnType(), component.getCompositeName(method.getName()))
                 .mapper("return ", component, ".get(entityId)." + method.getName() +"()")
+                .debugNotes(method.toGenericString())
                 .build();
     }
 
@@ -89,6 +91,7 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
     private MethodDescriptor fieldGetterMethod(ComponentDescriptor component, Field field) {
         return new MethodBuilder(field.getGenericType(), component.getCompositeName(field.getName()))
                 .mapper("return ", component, ".get(entityId)." + field.getName())
+                .debugNotes(field.toGenericString())
                 .build();
     }
 
@@ -100,6 +103,7 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
         return new MethodBuilder(FluidTypes.E_TYPE, component.getCompositeName(parameterName))
                 .parameter(field.getGenericType(), parameterName)
                 .mapper(component, ".get(entityId)." + parameterName + "=" + parameterName)
+                .debugNotes(field.toGenericString())
                 .returnFluid()
                 .build();
     }

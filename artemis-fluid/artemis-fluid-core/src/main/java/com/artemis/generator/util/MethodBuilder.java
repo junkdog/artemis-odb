@@ -71,4 +71,9 @@ public class MethodBuilder {
         method.setAccessLevel(level);
         return this;
     }
+
+    public MethodBuilder debugNotes(String message) {
+        method.setDebugNotes(message);
+        return this;
+    }
 }

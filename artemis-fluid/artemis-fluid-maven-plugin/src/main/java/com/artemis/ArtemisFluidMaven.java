@@ -67,6 +67,10 @@ public class ArtemisFluidMaven extends AbstractMojo {
             public void info(String msg) {
                 log.info(msg);
             }
+            @Override
+            public void error(String msg) {
+                log.error(msg);
+            }
         };
     }
 

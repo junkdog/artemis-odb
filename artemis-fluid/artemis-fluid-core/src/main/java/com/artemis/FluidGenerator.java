@@ -14,6 +14,8 @@ import com.artemis.generator.strategy.e.EBaseStrategy;
 import com.artemis.generator.strategy.supermapper.ComponentMapperFieldsStrategy;
 import com.artemis.generator.strategy.supermapper.SuperMapperStrategy;
 import com.artemis.generator.util.Log;
+import com.artemis.generator.validator.TypeModelValidator;
+import com.artemis.generator.validator.TypeModelValidatorException;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -39,6 +41,7 @@ public class FluidGenerator {
      * @param loader classloader to reflect over.
      * @param outputDirectory source root.
      * @param log output.
+     * @throws com.artemis.generator.validator.TypeModelValidatorException
      */
     public void generate(ClassLoader loader, File outputDirectory, Log log ) {
         generate(new ReflectionComponentCollectStrategy().allComponents(loader), outputDirectory, log);
@@ -51,6 +54,7 @@ public class FluidGenerator {
      * @param urls classpath urls to reflect over.
      * @param outputDirectory source root.
      * @param log output.
+     * @throws com.artemis.generator.validator.TypeModelValidatorException
      */
     public void generate(Set<URL> urls, File outputDirectory, Log log ) {
         generate(new ReflectionComponentCollectStrategy().allComponents(urls), outputDirectory, log);
@@ -62,6 +66,7 @@ public class FluidGenerator {
      * @param components components to consider.
      * @param outputDirectory source root.
      * @param log output.
+     * @throws com.artemis.generator.validator.TypeModelValidatorException
      */
     public void generate(Collection<Class<? extends Component>> components, File outputDirectory, Log log ) {
 
@@ -69,8 +74,8 @@ public class FluidGenerator {
 
         new File(outputDirectory, "com/artemis/").mkdirs();
 
-        generateFile(artemisModel, createEGenerator(), new File(outputDirectory, "com/artemis/E.java"));
-        generateFile(artemisModel, createSupermapperGenerator(), new File(outputDirectory, "com/artemis/SuperMapper.java"));
+        generateFile(artemisModel, createEGenerator(), new File(outputDirectory, "com/artemis/E.java"), log);
+        generateFile(artemisModel, createSupermapperGenerator(), new File(outputDirectory, "com/artemis/SuperMapper.java"), log);
     }
 
     private Collection<Class<? extends Component>> filterComponents(Collection<Class<? extends Component>> unfilteredComponents, Log log) {
@@ -92,18 +97,28 @@ public class FluidGenerator {
             return components;
     }
 
-    private void generateFile(ArtemisModel artemisModel, TypeModelGenerator generator, File file) {
+    /**
+     * @param artemisModel
+     * @param generator
+     * @param file
+     * @param log
+     * @throws com.artemis.generator.validator.TypeModelValidatorException
+     */
+    private void generateFile(ArtemisModel artemisModel, TypeModelGenerator generator, File file, Log log) {
         try {
             FileWriter fileWriter = new FileWriter(file);
             try {
                 TypeModel typeModel = createExampleTypeModel(generator, artemisModel);
+                new TypeModelValidator(log).validate(typeModel);
                 new PoetSourceGenerator().generate(typeModel, fileWriter);
             } finally {
                 fileWriter.close();
             }
 
+        } catch(TypeModelValidatorException e) {
+            throw new RuntimeException("Fluid API generation aborted, duplicate components, component field or component method names might be to blame.\n", e);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

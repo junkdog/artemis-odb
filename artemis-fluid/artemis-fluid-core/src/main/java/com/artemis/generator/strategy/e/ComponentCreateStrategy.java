@@ -25,6 +25,7 @@ public class ComponentCreateStrategy extends IterativeModelStrategy {
     private MethodDescriptor createComponentMethod(ComponentDescriptor component) {
         return
                 new MethodBuilder(FluidTypes.E_TYPE, component.getMethodPrefix())
+                        .debugNotes(component.getComponentType().getName())
                         .mapper(component, ".create(entityId)")
                         .returnFluid()
                         .build();

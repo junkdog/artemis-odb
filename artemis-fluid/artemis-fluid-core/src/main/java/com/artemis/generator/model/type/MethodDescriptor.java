@@ -18,6 +18,7 @@ public class MethodDescriptor {
     public List<ParameterDescriptor> parameters = new ArrayList<ParameterDescriptor>();
     private boolean isStatic;
     private AccessLevel accessLevel = AccessLevel.PUBLIC;
+    private String debugNotes;
 
 
     public MethodDescriptor(Type returnType, String name) {
@@ -66,5 +67,13 @@ public class MethodDescriptor {
 
     public AccessLevel getAccessLevel() {
         return accessLevel;
+    }
+
+    public void setDebugNotes(String debugNotes) {
+        this.debugNotes = debugNotes;
+    }
+
+    public String getDebugNotes() {
+        return debugNotes;
     }
 }

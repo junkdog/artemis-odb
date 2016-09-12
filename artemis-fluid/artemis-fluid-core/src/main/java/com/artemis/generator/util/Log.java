@@ -6,4 +6,6 @@ package com.artemis.generator.util;
 public interface Log {
 
     void info( String msg );
+
+    void error(String msg);
 }

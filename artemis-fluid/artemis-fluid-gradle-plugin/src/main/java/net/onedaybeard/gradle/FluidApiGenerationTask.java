@@ -58,6 +58,10 @@ public class FluidApiGenerationTask extends DefaultTask {
 			public void info(String msg) {
 				log.info(msg);
 			}
+			@Override
+			public void error(String msg) {
+				log.error(msg);
+			}
 		};
 	}
 
