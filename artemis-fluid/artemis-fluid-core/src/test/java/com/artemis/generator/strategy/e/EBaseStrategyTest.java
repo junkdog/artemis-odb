@@ -1,6 +1,7 @@
-package com.artemis.generator.strategy;
+package com.artemis.generator.strategy.e;
 
 import com.artemis.generator.model.type.TypeModel;
+import com.artemis.generator.strategy.StrategyTest;
 import com.artemis.generator.strategy.e.EBaseStrategy;
 import com.artemis.generator.test.Flag;
 import org.junit.Test;
@@ -8,7 +9,7 @@ import org.junit.Test;
 /**
   * @author Daan van Yperen
  */
-public class EInstancerStrategyTest extends StrategyTest {
+public class EBaseStrategyTest extends StrategyTest {
 
     @Test
     public void Should_add_create_instancer_method() {

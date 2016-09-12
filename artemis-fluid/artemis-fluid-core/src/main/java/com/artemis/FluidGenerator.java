@@ -7,8 +7,9 @@ import com.artemis.generator.generator.PoetSourceGenerator;
 import com.artemis.generator.model.artemis.ArtemisModel;
 import com.artemis.generator.model.artemis.ComponentDescriptor;
 import com.artemis.generator.model.type.TypeModel;
-import com.artemis.generator.strategy.e.CreateLifecycleStrategy;
-import com.artemis.generator.strategy.e.DirectAccessorStrategy;
+import com.artemis.generator.strategy.e.ComponentCreateStrategy;
+import com.artemis.generator.strategy.e.ComponentAccessorStrategy;
+import com.artemis.generator.strategy.e.ComponentFieldAccessorStrategy;
 import com.artemis.generator.strategy.e.EBaseStrategy;
 import com.artemis.generator.strategy.supermapper.ComponentMapperFieldsStrategy;
 import com.artemis.generator.strategy.supermapper.SuperMapperStrategy;
@@ -122,8 +123,9 @@ public class FluidGenerator {
     private static TypeModelGenerator createEGenerator() {
         TypeModelGenerator generator = new TypeModelGenerator();
         generator.addStrategy(new EBaseStrategy());
-        generator.addStrategy(new CreateLifecycleStrategy());
-        generator.addStrategy(new DirectAccessorStrategy());
+        generator.addStrategy(new ComponentCreateStrategy());
+        generator.addStrategy(new ComponentAccessorStrategy());
+        generator.addStrategy(new ComponentFieldAccessorStrategy());
         return generator;
     }
 

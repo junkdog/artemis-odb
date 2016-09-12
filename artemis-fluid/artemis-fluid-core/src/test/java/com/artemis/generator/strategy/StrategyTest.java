@@ -44,6 +44,11 @@ public abstract class StrategyTest {
         Assert.assertNotNull("Expected '" +signature+"' but not found.\n\rMethods:\n\r"+methodCollation(model.methods), model.getMethodBySignature(signature));
     }
 
+    /** Assert if model matches signature. If not found, display all known signatures. */
+    public void assertNoMethod(TypeModel model, String signature) {
+        Assert.assertNull("Expected '" +signature+"' but not found.\n\rMethods:\n\r"+methodCollation(model.methods), model.getMethodBySignature(signature));
+    }
+
     private String methodCollation(List<MethodDescriptor> methods) {
         String s ="";
         for (MethodDescriptor method : methods) {

@@ -12,7 +12,7 @@ import com.artemis.generator.util.MethodBuilder;
  *
  * @author Daan van Yperen
  */
-public class CreateLifecycleStrategy extends IterativeModelStrategy {
+public class ComponentCreateStrategy extends IterativeModelStrategy {
 
     @Override
     protected void apply(ComponentDescriptor component, TypeModel model) {

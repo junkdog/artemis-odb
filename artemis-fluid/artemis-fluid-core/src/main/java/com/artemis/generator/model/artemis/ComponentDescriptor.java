@@ -25,4 +25,7 @@ public class ComponentDescriptor {
         return type;
     }
 
+    public String getCompositeName(String suffix) {
+        return getMethodPrefix() + Strings.capitalizeString(suffix);
+    }
 }

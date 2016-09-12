@@ -13,4 +13,9 @@ public class ParameterDescriptor {
         this.type = type;
         this.name = name;
     }
+
+    public String signature() {
+        if ( type instanceof Class) return ((Class)type).getCanonicalName() + " " + name;
+        return type.toString() + " " + name;
+    }
 }

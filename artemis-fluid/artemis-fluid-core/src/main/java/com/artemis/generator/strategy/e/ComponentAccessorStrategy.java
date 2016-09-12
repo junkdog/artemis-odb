@@ -11,7 +11,7 @@ import com.artemis.generator.util.MethodBuilder;
  *
  * @author Daan van Yperen
  */
-public class DirectAccessorStrategy extends IterativeModelStrategy {
+public class ComponentAccessorStrategy extends IterativeModelStrategy {
 
     @Override
     protected void apply(ComponentDescriptor component, TypeModel model) {

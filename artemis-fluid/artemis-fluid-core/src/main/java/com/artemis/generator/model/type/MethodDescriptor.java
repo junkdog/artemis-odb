@@ -37,7 +37,15 @@ public class MethodDescriptor {
 
     public String signature() {
         if ( returnType instanceof Class) return ((Class)returnType).getCanonicalName() + " " + name + "()";
-        return returnType.toString() + " " + name + "()";
+        return returnType.toString() + " " + name + "("+parameterSignature()+")";
+    }
+
+    private String parameterSignature() {
+        String s = "";
+        for (ParameterDescriptor parameter : parameters) {
+            s = s + ( !s.isEmpty() ? "," : "" ) + parameter.signature();
+        }
+        return s;
     }
 
     public void addParameter(ParameterDescriptor parameter) {
