@@ -34,8 +34,7 @@ public class FieldComponentBooleanAccessorStrategy extends IterativeModelStrateg
         return
                 new MethodBuilder(FluidTypes.E_TYPE, component.getMethodPrefix())
                         .parameter(boolean.class, "value")
-                        .mapper("if (value) ", component, ".create(entityId)")
-                        .mapper("if (!value) ", component, ".remove(entityId)")
+                        .mapper(component, ".set(entityId, value)")
                         .debugNotes("flag component(=field/method-less) " + component.getComponentType().getName())
                         .returnFluid()
                         .build();
