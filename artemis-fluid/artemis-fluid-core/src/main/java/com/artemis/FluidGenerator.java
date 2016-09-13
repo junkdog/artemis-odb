@@ -136,11 +136,12 @@ public class FluidGenerator {
         TypeModelGenerator generator = new TypeModelGenerator();
         generator.addStrategy(new EBaseStrategy());
         generator.addStrategy(new ComponentCreateStrategy());
+        generator.addStrategy(new ComponentTagStrategy());
+        generator.addStrategy(new ComponentGroupStrategy());
         generator.addStrategy(new ComponentRemoveStrategy());
         generator.addStrategy(new ComponentAccessorStrategy());
         generator.addStrategy(new ComponentFieldAccessorStrategy());
         generator.addStrategy(new FieldComponentBooleanAccessorStrategy());
-        generator.addStrategy(new ComponentTagStrategy());
         return generator;
     }
 

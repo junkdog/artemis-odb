@@ -21,6 +21,7 @@ public class MethodDescriptor implements AmbiguousSignature {
     private boolean isStatic;
     private AccessLevel accessLevel = AccessLevel.PUBLIC;
     private String debugNotes;
+    private boolean varargs;
 
 
     public MethodDescriptor(Type returnType, String name) {
@@ -83,5 +84,13 @@ public class MethodDescriptor implements AmbiguousSignature {
     @Override
     public String ambiguousSignature() {
         return signature(false,false);
+    }
+
+    public void setVarargs(boolean varargs) {
+        this.varargs = varargs;
+    }
+
+    public boolean isVarargs() {
+        return varargs;
     }
 }

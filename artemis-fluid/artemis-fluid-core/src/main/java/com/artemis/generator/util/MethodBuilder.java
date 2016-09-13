@@ -76,4 +76,9 @@ public class MethodBuilder {
         method.setDebugNotes(message);
         return this;
     }
+
+    public MethodBuilder varArgs(boolean varargs) {
+        method.setVarargs(varargs);
+        return this;
+    }
 }

@@ -86,6 +86,7 @@ public class PoetSourceGenerator implements SourceGenerator {
                 .returns(getTypeName(method.returnType));
 
         if ( method.isStatic() ) builder.addModifiers(Modifier.STATIC);
+        if ( method.isVarargs() ) builder.varargs(true);
 
         switch (method.getAccessLevel())
         {
