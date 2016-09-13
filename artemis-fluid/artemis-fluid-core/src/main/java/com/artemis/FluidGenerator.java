@@ -140,6 +140,7 @@ public class FluidGenerator {
         generator.addStrategy(new ComponentAccessorStrategy());
         generator.addStrategy(new ComponentFieldAccessorStrategy());
         generator.addStrategy(new FieldComponentBooleanAccessorStrategy());
+        generator.addStrategy(new ComponentTagStrategy());
         return generator;
     }
 
