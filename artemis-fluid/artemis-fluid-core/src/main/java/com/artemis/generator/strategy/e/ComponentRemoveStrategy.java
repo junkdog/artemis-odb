@@ -1,32 +1,32 @@
 package com.artemis.generator.strategy.e;
 
-import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.common.IterativeModelStrategy;
-import com.artemis.generator.model.type.TypeModel;
+import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.model.artemis.ComponentDescriptor;
 import com.artemis.generator.model.type.MethodDescriptor;
+import com.artemis.generator.model.type.TypeModel;
 import com.artemis.generator.util.MethodBuilder;
 
 /**
- * Generates create method for each component type.
+ * Generates remove method for each component type.
  *
  * @author Daan van Yperen
  */
-public class ComponentCreateStrategy extends IterativeModelStrategy {
+public class ComponentRemoveStrategy extends IterativeModelStrategy {
 
     @Override
     protected void apply(ComponentDescriptor component, TypeModel model) {
-        model.add(createComponentMethod(component));
+        model.add(removeComponentStrategy(component));
     }
 
     /**
      * T componentName() -> create new entity.
      */
-    private MethodDescriptor createComponentMethod(ComponentDescriptor component) {
+    private MethodDescriptor removeComponentStrategy(ComponentDescriptor component) {
         return
-                new MethodBuilder(FluidTypes.E_TYPE, component.getMethodPrefix())
+                new MethodBuilder(FluidTypes.E_TYPE, "remove" + component.getName())
                         .debugNotes(component.getComponentType().getName())
-                        .mapper(component, ".create(entityId)")
+                        .mapper(component, ".remove(entityId)")
                         .returnFluid()
                         .build();
     }
