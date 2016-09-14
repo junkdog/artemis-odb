@@ -53,7 +53,7 @@ public class ComponentFieldAccessorStrategyTest extends StrategyTest {
     @Test
     public void When_public_void_parameterized_method_with_own_component_type_as_return_type_Should_expose_as_setter() {
         TypeModel model = applyStrategy(ComponentFieldAccessorStrategy.class, Proof.class);
-        assertHasMethod(model,"com.artemis.E proofFluid(com.artemis.generator.strategy.e.Proof p0)");
+        assertHasMethod(model,"com.artemis.generator.strategy.e.Proof proofFluid(com.artemis.generator.strategy.e.Proof p0)");
     }
 
     @Test

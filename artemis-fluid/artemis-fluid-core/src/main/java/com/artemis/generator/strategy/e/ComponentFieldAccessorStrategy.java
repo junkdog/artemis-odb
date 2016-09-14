@@ -42,17 +42,10 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
 
     private void exposeOnFluidInterface(ComponentDescriptor component, Method method, TypeModel model) {
 
-        if (component.getComponentType().equals(method.getReturnType())) {
-            // Component methods returning own types are considered fluid interfaces.
-            model.add(methodSetterMethod(component, method));
-        } else if (void.class.equals(method.getReturnType())) {
+        if (void.class.equals(method.getReturnType())) {
             model.add(methodSetterMethod(component, method));
         } else {
-            if (method.getParameterTypes().length == 0) {
-                // only create getters for methods with no arguments.
-                model.add(
-                        methodGetterMethod(component, method));
-            }
+            model.add(methodGetterMethod(component, method));
         }
     }
 
@@ -66,13 +59,7 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
     private MethodDescriptor methodSetterMethod(ComponentDescriptor component, Method method) {
         MethodBuilder builder = new MethodBuilder(FluidTypes.E_TYPE, component.getCompositeName(method.getName()));
 
-        int count = 0;
-        String arguments = "";
-        for (Class<?> parameterType : method.getParameterTypes()) {
-            builder.parameter(parameterType, "p" + count);
-            arguments = arguments + (arguments.isEmpty() ? "" : ", ") + "p" + count;
-            count++;
-        }
+        String arguments = appendParameters(method, builder);
 
         return builder
                 .mapper(component, ".get(entityId)." + method.getName() + "(" + arguments + ")")
@@ -81,9 +68,25 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
                 .build();
     }
 
+    private String appendParameters(Method method, MethodBuilder builder) {
+        int count = 0;
+        String arguments = "";
+        for (Class<?> parameterType : method.getParameterTypes()) {
+            builder.parameter(parameterType, "p" + count);
+            arguments = arguments + (arguments.isEmpty() ? "" : ", ") + "p" + count;
+            count++;
+        }
+        return arguments;
+    }
+
     private MethodDescriptor methodGetterMethod(ComponentDescriptor component, Method method) {
-        return new MethodBuilder(method.getGenericReturnType(), component.getCompositeName(method.getName()))
-                .mapper("return ", component, ".get(entityId)." + method.getName() + "()")
+
+        MethodBuilder builder = new MethodBuilder(method.getGenericReturnType(), component.getCompositeName(method.getName()));
+
+        String arguments = appendParameters(method, builder);
+
+        return builder
+                .mapper("return ", component, ".get(entityId)." + method.getName() + "(" + arguments+ ")")
                 .debugNotes(method.toGenericString())
                 .build();
     }
