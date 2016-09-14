@@ -1,10 +1,12 @@
 package com.artemis.generator.model.artemis;
 
 import com.artemis.Component;
+import com.artemis.FluidGeneratorPreferences;
 import com.artemis.annotations.Fluid;
 import com.artemis.generator.util.ExtendedTypeReflection;
 import com.artemis.generator.util.Strings;
 import org.reflections.ReflectionUtils;
+import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -17,15 +19,16 @@ import java.util.Set;
  * @author Daan van Yperen
  */
 public class ComponentDescriptor {
-    public Class<? extends Component> type;
+    public final Class<? extends Component> type;
+    private final String methodPrefix;
+    private final String name;
+    private final FluidGeneratorPreferences preferences;
 
-    private String methodPrefix;
-    private String name;
-
-    private ComponentDescriptor(Class<? extends Component> type, String methodPrefix, String name) {
+    private ComponentDescriptor(Class<? extends Component> type, String methodPrefix, String name, FluidGeneratorPreferences preferences) {
         this.type = type;
         this.methodPrefix = methodPrefix;
         this.name = name;
+        this.preferences = preferences;
     }
 
     /**
@@ -44,8 +47,6 @@ public class ComponentDescriptor {
 
         return methodPrefix;
     }
-
-    ;
 
     public Class getComponentType() {
         return type;
@@ -71,12 +72,18 @@ public class ComponentDescriptor {
         return ExtendedTypeReflection.isFlagComponent(type);
     }
 
+    public FluidGeneratorPreferences getPreferences() {
+        return preferences;
+    }
+
     /** Create descriptor for passed type. */
     public static ComponentDescriptor create(Class<? extends Component> type) {
 
         String methodPrefix = Strings.decapitalizeString(type.getSimpleName());
         String name = type.getSimpleName();
+        FluidGeneratorPreferences preferences = new FluidGeneratorPreferences();
 
+        // @todo make sure this is processed from least to most pressing.
         for (Annotation annotation : ExtendedTypeReflection.getAllAnnotations(type)) {
             if (annotation instanceof Fluid) {
                 final Fluid fluid = (Fluid) annotation;
@@ -84,9 +91,10 @@ public class ComponentDescriptor {
                     methodPrefix = fluid.name();
                     name = Strings.capitalizeString(fluid.name());
                 }
+                preferences.apply(fluid);
             }
         }
 
-        return new ComponentDescriptor(type, methodPrefix, name );
+        return new ComponentDescriptor(type, methodPrefix, name, preferences );
     }
 }

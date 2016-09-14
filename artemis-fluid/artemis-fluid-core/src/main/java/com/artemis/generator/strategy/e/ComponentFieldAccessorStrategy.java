@@ -42,11 +42,22 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
 
     private void exposeOnFluidInterface(ComponentDescriptor component, Method method, TypeModel model) {
 
-        if (void.class.equals(method.getReturnType())) {
+        if (isSetter(method)) {
             model.add(methodSetterMethod(component, method));
-        } else {
+        } else if (component.getPreferences().swallowGettersWithParameters && isGetterWithParameters(method)) {
+            // by preference, call getters and swallow the returned value, instead returning the fluid interface.
+            model.add(methodSetterMethod(component, method));
+        } else
+            // return the return type.
             model.add(methodGetterMethod(component, method));
-        }
+    }
+
+    private boolean isGetterWithParameters(Method method) {
+        return !isSetter(method) && method.getParameterTypes().length > 0;
+    }
+
+    private boolean isSetter(Method method) {
+        return void.class.equals(method.getReturnType());
     }
 
 
@@ -86,7 +97,7 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
         String arguments = appendParameters(method, builder);
 
         return builder
-                .mapper("return ", component, ".get(entityId)." + method.getName() + "(" + arguments+ ")")
+                .mapper("return ", component, ".get(entityId)." + method.getName() + "(" + arguments + ")")
                 .debugNotes(method.toGenericString())
                 .build();
     }

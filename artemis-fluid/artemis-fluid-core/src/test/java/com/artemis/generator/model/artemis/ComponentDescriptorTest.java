@@ -12,11 +12,26 @@ import org.junit.Test;
  */
 public class ComponentDescriptorTest {
 
-    @Fluid(name = "oneTwo")
-    private class ValidNamed extends Component {}
+    @Fluid(name = "overridden", swallowGettersWithParameters = false)
+    public class ValidNamedSub extends ValidNamed {}
+
+    @Fluid(name = "oneTwo", swallowGettersWithParameters = true)
+    public class ValidNamed extends Component {}
 
     @Fluid()
-    private class EmptyNamed extends Component {}
+    public class EmptyNamed extends Component {}
+
+    @Test
+    public void When_subclassing_Should_give_precedence_to_subclass_annotation_name() {
+        ComponentDescriptor descriptor = ComponentDescriptor.create(ValidNamedSub.class);
+        Assert.assertEquals("overridden", descriptor.getMethodPrefix());
+    }
+
+    @Test
+    public void When_subclassing_Should_give_precedence_to_subclass_annotation() {
+        ComponentDescriptor descriptor = ComponentDescriptor.create(ValidNamedSub.class);
+        Assert.assertFalse(descriptor.getPreferences().swallowGettersWithParameters);
+    }
 
     @Test
     public void When_component_has_type_annotation_ComponentDescriptor_Should_use_specified_name()
