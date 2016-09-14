@@ -73,7 +73,7 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
         String arguments = appendParameters(method, builder);
 
         return builder
-                .mapper(component, ".get(entityId)." + method.getName() + "(" + arguments + ")")
+                .mapper(component, ".create(entityId)." + method.getName() + "(" + arguments + ")")
                 .debugNotes(method.toGenericString())
                 .returnFluid()
                 .build();
@@ -97,7 +97,7 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
         String arguments = appendParameters(method, builder);
 
         return builder
-                .mapper("return ", component, ".get(entityId)." + method.getName() + "(" + arguments + ")")
+                .mapper("return ", component, ".create(entityId)." + method.getName() + "(" + arguments + ")")
                 .debugNotes(method.toGenericString())
                 .build();
     }
@@ -107,7 +107,7 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
      */
     private MethodDescriptor fieldGetterMethod(ComponentDescriptor component, Field field) {
         return new MethodBuilder(field.getGenericType(), component.getCompositeName(field.getName()))
-                .mapper("return ", component, ".get(entityId)." + field.getName())
+                .mapper("return ", component, ".create(entityId)." + field.getName())
                 .debugNotes(field.toGenericString())
                 .build();
     }
@@ -119,7 +119,7 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
         final String parameterName = field.getName();
         return new MethodBuilder(FluidTypes.E_TYPE, component.getCompositeName(parameterName))
                 .parameter(field.getGenericType(), parameterName)
-                .mapper(component, ".get(entityId)." + parameterName + "=" + parameterName)
+                .mapper(component, ".create(entityId)." + parameterName + "=" + parameterName)
                 .debugNotes(field.toGenericString())
                 .returnFluid()
                 .build();
