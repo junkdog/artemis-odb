@@ -13,6 +13,7 @@ public class FieldDescriptor implements AmbiguousSignature {
     private boolean isStatic;
     private AccessLevel accessLevel = AccessLevel.PROTECTED;
     private String debugNotes;
+    public String initializer;
 
     public FieldDescriptor(Type type, String name) {
         this.type = type;
@@ -46,5 +47,13 @@ public class FieldDescriptor implements AmbiguousSignature {
 
     public String getDebugNotes() {
         return debugNotes;
+    }
+
+    public String getInitializer() {
+        return initializer;
+    }
+
+    public void setInitializer(String initializer) {
+        this.initializer = initializer;
     }
 }

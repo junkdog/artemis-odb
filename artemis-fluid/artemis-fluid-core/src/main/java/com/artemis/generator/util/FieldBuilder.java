@@ -40,4 +40,9 @@ public class FieldBuilder {
         field.setDebugNotes(s);
         return this;
     }
+
+    public FieldBuilder initializer(String value) {
+        field.setInitializer(value);
+        return this;
+    }
 }

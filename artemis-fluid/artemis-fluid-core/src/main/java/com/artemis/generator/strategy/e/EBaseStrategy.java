@@ -72,7 +72,7 @@ public class EBaseStrategy implements BuilderModelStrategy {
                         .setStatic(true)
                         .parameter(int.class, "entityId")
                         .statement("if(_processingMapper==null) throw new RuntimeException(\"SuperMapper system must be registered before any systems using E().\");")
-                        .statement("return new E().init(_processingMapper,entityId)")
+                        .statement("return _processingMapper.getE(entityId)")
                         .build();
     }
 

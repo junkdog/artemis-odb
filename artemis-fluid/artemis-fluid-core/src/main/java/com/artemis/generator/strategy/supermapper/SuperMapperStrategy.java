@@ -1,12 +1,14 @@
 package com.artemis.generator.strategy.supermapper;
 
 import com.artemis.BaseSystem;
+import com.artemis.Entity;
 import com.artemis.generator.common.BuilderModelStrategy;
+import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.model.artemis.ArtemisModel;
-import com.artemis.generator.model.type.AccessLevel;
-import com.artemis.generator.model.type.MethodDescriptor;
-import com.artemis.generator.model.type.TypeModel;
+import com.artemis.generator.model.type.*;
+import com.artemis.generator.util.FieldBuilder;
 import com.artemis.generator.util.MethodBuilder;
+import com.artemis.utils.Bag;
 
 /**
  * Generate basic scaffold for SuperMapper class.
@@ -22,6 +24,9 @@ public class SuperMapperStrategy implements BuilderModelStrategy {
         model.superclass = BaseSystem.class;
         model.add(createInitializationMethod());
         model.add(createProcessingMethod());
+        model.add(createEInstancingMethod());
+        model.add(createEPoolingSet());
+
     }
 
     private MethodDescriptor createProcessingMethod() {
@@ -38,4 +43,21 @@ public class SuperMapperStrategy implements BuilderModelStrategy {
                 .build();
     }
 
+    /**
+     * SuperMapper::getE(entityId)
+     */
+    private MethodDescriptor createEInstancingMethod() {
+        return new MethodBuilder(FluidTypes.E_TYPE, "getE")
+                .accessLevel(AccessLevel.UNSPECIFIED) // package local.
+                .parameter(int.class, "entityId")
+                .statement("E e = (E) es.safeGet(entityId)")
+                .statement("if ( e == null ) { e = new E().init(this,entityId); es.set(entityId, e); }")
+                .statement("return e")
+                .build();
+    }
+
+    private FieldDescriptor createEPoolingSet() {
+        return
+                new FieldBuilder(Bag.class, "es").initializer("new Bag(128)").build();
+    }
 }

@@ -61,6 +61,10 @@ public class PoetSourceGenerator implements SourceGenerator {
 
         if ( field.isStatic() ) builder.addModifiers(Modifier.STATIC);
 
+        if ( field.getInitializer() != null ) {
+            builder.initializer(field.getInitializer());
+        }
+
         switch (field.getAccessLevel())
         {
             case PROTECTED: builder.addModifiers(Modifier.PROTECTED); break;
