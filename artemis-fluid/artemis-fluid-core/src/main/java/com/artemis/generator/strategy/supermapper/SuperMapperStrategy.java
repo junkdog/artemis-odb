@@ -21,11 +21,19 @@ public class SuperMapperStrategy implements BuilderModelStrategy {
         model.packageName = "com.artemis";
         model.superclass = BaseSystem.class;
         model.add(createInitializationMethod());
+        model.add(createProcessingMethod());
+    }
+
+    private MethodDescriptor createProcessingMethod() {
+        return new MethodBuilder(void.class, "processSystem")
+                .accessLevel(AccessLevel.PUBLIC)
+                .statement("E._processingMapper=this")
+                .build();
     }
 
     private MethodDescriptor createInitializationMethod() {
-        return new MethodBuilder(void.class, "processSystem")
-                .accessLevel(AccessLevel.PUBLIC)
+        return new MethodBuilder(void.class, "initialize")
+                .accessLevel(AccessLevel.PROTECTED)
                 .statement("E._processingMapper=this")
                 .build();
     }
