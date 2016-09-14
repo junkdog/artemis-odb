@@ -1,12 +1,12 @@
 package com.artemis.generator.strategy.e;
 
+import com.artemis.Entity;
 import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.common.BuilderModelStrategy;
 import com.artemis.generator.model.artemis.ArtemisModel;
 import com.artemis.generator.model.type.*;
 import com.artemis.generator.util.FieldBuilder;
 import com.artemis.generator.util.MethodBuilder;
-import com.artemis.utils.Bag;
 
 /**
  * Generate basic scaffold of E class.
@@ -26,7 +26,8 @@ public class EBaseStrategy implements BuilderModelStrategy {
         model.add(createStaticMapperField());
         model.add(createEntityIdField());
         model.add(createInitMethod());
-        model.add(createStaticInstancerMethod());
+        model.add(createStaticInstancerMethodByInt());
+        model.add(createStaticInstancerMethodByEntity());
     }
 
     private MethodDescriptor createInitMethod() {
@@ -61,13 +62,25 @@ public class EBaseStrategy implements BuilderModelStrategy {
     /**
      * E::E(int)
      */
-    private MethodDescriptor createStaticInstancerMethod() {
+    private MethodDescriptor createStaticInstancerMethodByInt() {
         return
                 new MethodBuilder(FluidTypes.E_TYPE, "E")
                         .setStatic(true)
                         .parameter(int.class, "entityId")
                         .statement("if(_processingMapper==null) throw new RuntimeException(\"SuperMapper system must be registered before any systems using E().\");")
                         .statement("return new E().init(_processingMapper,entityId)")
+                        .build();
+    }
+
+    /**
+     * E::E(int)
+     */
+    private MethodDescriptor createStaticInstancerMethodByEntity() {
+        return
+                new MethodBuilder(FluidTypes.E_TYPE, "E")
+                        .setStatic(true)
+                        .parameter(Entity.class, "entity")
+                        .statement("return E(entity.getId())")
                         .build();
     }
 

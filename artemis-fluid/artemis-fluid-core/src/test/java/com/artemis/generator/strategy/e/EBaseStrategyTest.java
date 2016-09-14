@@ -12,8 +12,14 @@ import org.junit.Test;
 public class EBaseStrategyTest extends StrategyTest {
 
     @Test
-    public void Should_add_create_instancer_method() {
+    public void Should_add_create_int_instancer_method() {
         TypeModel model = applyStrategy(EBaseStrategy.class, Flag.class);
         assertHasMethod(model,"com.artemis.E E(int entityId)");
+    }
+
+    @Test
+    public void Should_add_create_entity_instancer_method() {
+        TypeModel model = applyStrategy(EBaseStrategy.class, Flag.class);
+        assertHasMethod(model,"com.artemis.E E(com.artemis.Entity entity)");
     }
 }
