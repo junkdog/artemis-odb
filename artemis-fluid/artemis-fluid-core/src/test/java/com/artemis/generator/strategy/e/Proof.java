@@ -20,6 +20,7 @@ public class Proof extends Component {
     public void setDepth(long blaValue) {}
     public long getDepth() { return 0; }
     public void set(int pri, int prot, int pub) {}
+    public Proof rocket(Proof p) { return null;}
 
     private void clearP() {}
     private void setDepthP(long blaValue) {}

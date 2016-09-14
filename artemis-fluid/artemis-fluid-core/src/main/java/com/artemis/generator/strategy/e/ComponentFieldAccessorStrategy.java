@@ -42,12 +42,14 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
 
     private void exposeOnFluidInterface(ComponentDescriptor component, Method method, TypeModel model) {
 
-        if (void.class.equals(method.getReturnType()))
-        {
+        if (void.class.equals(method.getReturnType())) {
             model.add(methodSetterMethod(component, method));
-        } else{
-            model.add(
-                    methodGetterMethod(component, method));
+        } else {
+            if (method.getParameterTypes().length == 0) {
+                // only create getters for methods with no arguments.
+                model.add(
+                        methodGetterMethod(component, method));
+            }
         }
     }
 
@@ -78,7 +80,7 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
 
     private MethodDescriptor methodGetterMethod(ComponentDescriptor component, Method method) {
         return new MethodBuilder(method.getGenericReturnType(), component.getCompositeName(method.getName()))
-                .mapper("return ", component, ".get(entityId)." + method.getName() +"()")
+                .mapper("return ", component, ".get(entityId)." + method.getName() + "()")
                 .debugNotes(method.toGenericString())
                 .build();
     }

@@ -45,6 +45,12 @@ public class ComponentFieldAccessorStrategyTest extends StrategyTest {
     }
 
     @Test
+    public void When_public_void_parameterized_method_with_return_type_Should_not_expose() {
+        TypeModel model = applyStrategy(ComponentFieldAccessorStrategy.class, Proof.class);
+        assertNoMethod(model,"com.artemis.generator.strategy.e.Proof rocket(com.artemis.generator.strategy.e.Proof p0)");
+    }
+
+    @Test
     public void When_public_field_Should_expose_as_getter_method() {
         TypeModel model = applyStrategy(ComponentFieldAccessorStrategy.class, Proof.class);
         assertHasMethod(model,"int proofPub()");

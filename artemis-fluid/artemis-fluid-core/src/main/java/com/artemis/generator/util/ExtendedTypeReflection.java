@@ -35,12 +35,14 @@ public abstract class ExtendedTypeReflection {
 
     /**
      * Get all public fields of this type, cached.
+     *
+     * Excludes static.
      */
     @SuppressWarnings("unchecked")
     public static Set<Field> getAllPublicFields(Class type) {
         Set<Field> result = allPublicFields.get(type);
         if (result == null) {
-            result = getAllFields(type, withModifier(Modifier.PUBLIC));
+            result = getAllFields(type, withModifier(Modifier.PUBLIC), withoutModifier(Modifier.STATIC));
             allPublicFields.put(type, result);
         }
         return result;
@@ -61,12 +63,14 @@ public abstract class ExtendedTypeReflection {
 
     /**
      * Get all public methods of type, cached.
+     *
+     * Excludes static, abstract.
      */
     @SuppressWarnings("unchecked")
     public static Set<Method> getAllPublicMethods(Class type) {
         Set<Method> result = allPublicMethods.get(type);
         if (result == null) {
-            result = getAllMethods(type, withModifier(Modifier.PUBLIC), withoutModifier(Modifier.ABSTRACT));
+            result = getAllMethods(type, withModifier(Modifier.PUBLIC), withoutModifier(Modifier.ABSTRACT), withoutModifier(Modifier.STATIC));
             allPublicMethods.put(type, result);
         }
         return result;
