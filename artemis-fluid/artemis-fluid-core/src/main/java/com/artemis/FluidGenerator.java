@@ -122,7 +122,8 @@ public class FluidGenerator {
     private ArtemisModel createArtemisModel(Collection<Class<? extends Component>> components) {
         ArrayList<ComponentDescriptor> componentDescriptors = new ArrayList<ComponentDescriptor>();
         for (Class<? extends Component> component : components) {
-            componentDescriptors.add(new ComponentDescriptor(component));
+            ComponentDescriptor descriptor = ComponentDescriptor.create(component);
+            componentDescriptors.add(descriptor);
         }
         return new ArtemisModel(componentDescriptors);
     }

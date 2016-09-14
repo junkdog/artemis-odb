@@ -1,16 +1,15 @@
 package com.artemis.generator.model.artemis;
 
 import com.artemis.Component;
+import com.artemis.annotations.Fluid;
+import com.artemis.generator.util.ExtendedTypeReflection;
 import com.artemis.generator.util.Strings;
+import org.reflections.ReflectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.Set;
-
-import static org.reflections.ReflectionUtils.getAllFields;
-import static org.reflections.ReflectionUtils.getAllMethods;
-import static org.reflections.ReflectionUtils.withModifier;
 
 /**
  * Describes an artemis component.
@@ -20,57 +19,74 @@ import static org.reflections.ReflectionUtils.withModifier;
 public class ComponentDescriptor {
     public Class<? extends Component> type;
 
-    private Set<Field> allPublicFields;
-    private Set<Method> allPublicMethods;
+    private String methodPrefix;
+    private String name;
 
-    public ComponentDescriptor(Class<? extends Component> type) {
+    private ComponentDescriptor(Class<? extends Component> type, String methodPrefix, String name) {
         this.type = type;
+        this.methodPrefix = methodPrefix;
+        this.name = name;
     }
 
-    /** simple class name. 'RocketFuel' */
-    public String getName() { return type.getSimpleName(); };
+    /**
+     * simple class name. 'RocketFuel'
+     */
+    public String getName() {
+        return name;
+    }
 
-    /** decapitalized class name. 'rocketFuel' */
-    public String getMethodPrefix() { return Strings.decapitalizeString(type.getSimpleName()); };
+    ;
+
+    /**
+     * decapitalized class name. 'rocketFuel'
+     */
+    public String getMethodPrefix() {
+
+        return methodPrefix;
+    }
+
+    ;
 
     public Class getComponentType() {
         return type;
     }
 
     public String getCompositeName(String suffix) {
-        if ( suffix.startsWith("get")
-                || suffix.startsWith("set") ) return
+        if (suffix.startsWith("get")
+                || suffix.startsWith("set")) return
                 suffix.length() <= 3 ? getMethodPrefix() : getCompositeName(suffix.substring(3));
         return getMethodPrefix() + Strings.capitalizeString(suffix);
     }
 
-    /**
-     * Get if component is a flag component.
-     * @return {@code true} is simple flag, {@code false} if it is a data container.
-     */
-    public boolean isFlagComponent()
-    {
-         return getAllPublicFields().isEmpty() &&
-                     getAllPublicMethods().isEmpty();
-    }
 
-
-    /** Get all public fields on this component, cached. */
-    @SuppressWarnings("unchecked")
     public Set<Field> getAllPublicFields() {
-        if ( allPublicFields == null )
-        {
-            allPublicFields = getAllFields(type, withModifier(Modifier.PUBLIC));
-        }
-        return allPublicFields;
+        return ExtendedTypeReflection.getAllPublicFields(type);
     }
 
-    /** Get all public methods on this component, cached. */
-    @SuppressWarnings("unchecked")
     public Set<Method> getAllPublicMethods() {
-        if ( allPublicMethods == null ) {
-            allPublicMethods = getAllMethods(type, withModifier(Modifier.PUBLIC));
+        return ExtendedTypeReflection.getAllPublicMethods(type);
+    }
+
+    public boolean isFlagComponent() {
+        return ExtendedTypeReflection.isFlagComponent(type);
+    }
+
+    /** Create descriptor for passed type. */
+    public static ComponentDescriptor create(Class<? extends Component> type) {
+
+        String methodPrefix = Strings.decapitalizeString(type.getSimpleName());
+        String name = type.getSimpleName();
+
+        for (Annotation annotation : ExtendedTypeReflection.getAllAnnotations(type)) {
+            if (annotation instanceof Fluid) {
+                final Fluid fluid = (Fluid) annotation;
+                if (!fluid.name().isEmpty()) {
+                    methodPrefix = fluid.name();
+                    name = Strings.capitalizeString(fluid.name());
+                }
+            }
         }
-        return allPublicMethods;
+
+        return new ComponentDescriptor(type, methodPrefix, name );
     }
 }

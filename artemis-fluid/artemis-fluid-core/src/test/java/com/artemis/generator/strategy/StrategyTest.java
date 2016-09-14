@@ -34,7 +34,7 @@ public abstract class StrategyTest {
     protected Collection<ComponentDescriptor> asDescriptorList(Class<? extends Component>[] components) {
         final ArrayList<ComponentDescriptor> results = new ArrayList<ComponentDescriptor>();
         for (Class<? extends Component> component : components) {
-            results.add(new ComponentDescriptor(component));
+            results.add(ComponentDescriptor.create(component));
         }
         return results;
     }
