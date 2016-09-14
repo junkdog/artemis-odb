@@ -1,12 +1,11 @@
 package com.artemis.generator.util;
 
+import com.google.common.base.Predicate;
 import org.reflections.ReflectionUtils;
 
+import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
+import java.lang.reflect.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -67,9 +66,18 @@ public abstract class ExtendedTypeReflection {
     public static Set<Method> getAllPublicMethods(Class type) {
         Set<Method> result = allPublicMethods.get(type);
         if (result == null) {
-            result = getAllMethods(type, withModifier(Modifier.PUBLIC));
+            result = getAllMethods(type, withModifier(Modifier.PUBLIC), withoutModifier(Modifier.ABSTRACT));
             allPublicMethods.put(type, result);
         }
         return result;
     }
+
+    public static <T extends Member> Predicate<T> withoutModifier(final int mod) {
+        return new Predicate<T>() {
+            public boolean apply(@Nullable T input) {
+                return input != null && (input.getModifiers() & mod) == 0;
+            }
+        };
+    }
+
 }

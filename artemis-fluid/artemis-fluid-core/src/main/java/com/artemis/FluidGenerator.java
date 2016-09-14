@@ -79,9 +79,9 @@ public class FluidGenerator {
             final List<Class<? extends Component>> components = new ArrayList<Class<? extends Component>>();
             for (Class<? extends Component> component : unfilteredComponents) {
 
-                if (Modifier.isAbstract(component.getModifiers())) {
+                if (Modifier.isAbstract(component.getModifiers()) || Modifier.isInterface(component.getModifiers())) {
                     // Skip abstract components.
-                    log.info(".. Skipping abstract: " + component.toString());
+                    log.info(".. Skipping abstract/interface: " + component.toString());
                 } else if (component.equals(SerializationTag.class) || component.getName().startsWith("com.artemis.weaver.")) {
                     // No reserved classes either.
                     log.info(".. Skipping reserved class: " + component.toString());
