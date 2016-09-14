@@ -42,7 +42,10 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
 
     private void exposeOnFluidInterface(ComponentDescriptor component, Method method, TypeModel model) {
 
-        if (void.class.equals(method.getReturnType())) {
+        if (component.getComponentType().equals(method.getReturnType())) {
+            // Component methods returning own types are considered fluid interfaces.
+            model.add(methodSetterMethod(component, method));
+        } else if (void.class.equals(method.getReturnType())) {
             model.add(methodSetterMethod(component, method));
         } else {
             if (method.getParameterTypes().length == 0) {
