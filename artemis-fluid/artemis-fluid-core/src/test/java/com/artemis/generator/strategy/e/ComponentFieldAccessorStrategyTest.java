@@ -45,9 +45,15 @@ public class ComponentFieldAccessorStrategyTest extends StrategyTest {
     }
 
     @Test
-    public void When_public_void_parameterized_method_with_return_type_Should_not_expose() {
+    public void When_public_void_parameterized_method_with_other_return_type_Should_not_expose() {
         TypeModel model = applyStrategy(ComponentFieldAccessorStrategy.class, Proof.class);
-        assertNoMethod(model,"com.artemis.generator.strategy.e.Proof rocket(com.artemis.generator.strategy.e.Proof p0)");
+        assertNoMethod(model,"java.lang.int proofStrange(com.artemis.generator.strategy.e.Proof p0)");
+    }
+
+    @Test
+    public void When_public_void_parameterized_method_with_own_component_type_as_return_type_Should_expose_as_setter() {
+        TypeModel model = applyStrategy(ComponentFieldAccessorStrategy.class, Proof.class);
+        assertHasMethod(model,"com.artemis.E proofFluid(com.artemis.generator.strategy.e.Proof p0)");
     }
 
     @Test
