@@ -28,6 +28,10 @@ public class EBaseStrategy implements BuilderModelStrategy {
         model.add(createInitMethod());
         model.add(createStaticInstancerMethodByInt());
         model.add(createStaticInstancerMethodByEntity());
+        model.add(createStaticInstancerMethodNewEntity());
+
+        model.add(createEntityIdGetter());
+        model.add(createEntityGetter());
     }
 
     private MethodDescriptor createInitMethod() {
@@ -60,7 +64,7 @@ public class EBaseStrategy implements BuilderModelStrategy {
     }
 
     /**
-     * E::E(int)
+     * static E::E(entityId)
      */
     private MethodDescriptor createStaticInstancerMethodByInt() {
         return
@@ -73,7 +77,7 @@ public class EBaseStrategy implements BuilderModelStrategy {
     }
 
     /**
-     * E::E(int)
+     * static E::E(entity)
      */
     private MethodDescriptor createStaticInstancerMethodByEntity() {
         return
@@ -81,6 +85,37 @@ public class EBaseStrategy implements BuilderModelStrategy {
                         .setStatic(true)
                         .parameter(Entity.class, "entity")
                         .statement("return E(entity.getId())")
+                        .build();
+    }
+
+    /**
+     * static E::E() Create a new entity.
+     */
+    private MethodDescriptor createStaticInstancerMethodNewEntity() {
+        return
+                new MethodBuilder(FluidTypes.E_TYPE, "E")
+                        .setStatic(true)
+                        .statement("return E(_processingMapper.getWorld().create())")
+                        .build();
+    }
+
+    /**
+     * Getter Entity E::entity()
+     */
+    private MethodDescriptor createEntityGetter() {
+        return
+                new MethodBuilder(Entity.class, "entity")
+                        .statement("return mappers.getWorld().getEntity(entityId)")
+                        .build();
+    }
+
+    /**
+     * Getter Entity E::id()
+     */
+    private MethodDescriptor createEntityIdGetter() {
+        return
+                new MethodBuilder(int.class, "id")
+                        .statement("return entityId")
                         .build();
     }
 
