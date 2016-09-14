@@ -56,6 +56,13 @@ public class ComponentFieldAccessorStrategyTest extends StrategyTest {
         assertHasMethod(model,"com.artemis.generator.strategy.e.Proof proofFluid(com.artemis.generator.strategy.e.Proof p0)");
     }
 
+
+    @Test
+    public void When_interface_on_component_Should_ignore() {
+        TypeModel model = applyStrategy(ComponentFieldAccessorStrategy.class, Proof.class);
+        assertNoMethod(model,"java.lang.Object proofPancake(java.lang.Object p0)");
+    }
+
     @Test
     public void When_public_field_Should_expose_as_getter_method() {
         TypeModel model = applyStrategy(ComponentFieldAccessorStrategy.class, Proof.class);

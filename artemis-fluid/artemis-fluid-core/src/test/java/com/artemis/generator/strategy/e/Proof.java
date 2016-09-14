@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author Daan van Yperen
  */
-public class Proof extends Component {
+public class Proof extends Component implements ProofInterface<Proof> {
     private int pri;
     protected int prot;
     public int pub;
@@ -37,4 +37,9 @@ public class Proof extends Component {
     void setDepthT(long blaValue) {}
     long getDepthT() { return 0; }
     void setT(int pri, int prot, int pub) {}
+
+    @Override
+    public Proof pancake(Proof proof) {
+        return null;
+    }
 }

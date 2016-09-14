@@ -10,9 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static org.reflections.ReflectionUtils.getAllFields;
-import static org.reflections.ReflectionUtils.getAllMethods;
-import static org.reflections.ReflectionUtils.withModifier;
+import static org.reflections.ReflectionUtils.*;
 
 /**
  * @author Daan van Yperen
@@ -70,7 +68,7 @@ public abstract class ExtendedTypeReflection {
     public static Set<Method> getAllPublicMethods(Class type) {
         Set<Method> result = allPublicMethods.get(type);
         if (result == null) {
-            result = getAllMethods(type, withModifier(Modifier.PUBLIC), withoutModifier(Modifier.ABSTRACT), withoutModifier(Modifier.STATIC));
+            result = getAllMethods(type, withModifier(Modifier.PUBLIC), withoutModifier(Modifier.ABSTRACT), withoutModifier(Modifier.STATIC), withoutModifier(Modifier.VOLATILE));
             allPublicMethods.put(type, result);
         }
         return result;
