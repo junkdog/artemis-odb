@@ -5,6 +5,7 @@ import com.artemis.generator.model.artemis.ComponentDescriptor;
 import com.artemis.generator.model.type.MethodDescriptor;
 import com.artemis.generator.model.type.TypeModel;
 import com.artemis.generator.util.MethodBuilder;
+import com.artemis.generator.util.Strings;
 
 /**
  * Generate direct accessor for each component.
@@ -23,7 +24,9 @@ public class ComponentExistStrategy extends IterativeModelStrategy {
      */
     private MethodDescriptor createHasComponentMethod(ComponentDescriptor component) {
         return
-                new MethodBuilder(boolean.class, "has"+component.getName())
+                new MethodBuilder(boolean.class,
+
+                        Strings.assembleMethodName(component.getPreferences().getPrefixComponentHas(),component.getName()))
                         .debugNotes(component.getComponentType().getName())
                         .mapper("return ", component, ".has(entityId)")
                         .build();

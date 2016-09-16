@@ -74,8 +74,8 @@ public class FluidGenerator {
 
         new File(outputDirectory, "com/artemis/").mkdirs();
 
-        generateFile(artemisModel, createSupermapperGenerator(), new File(outputDirectory, "com/artemis/SuperMapper.java"), log);
-        generateFile(artemisModel, createEGenerator(), new File(outputDirectory, "com/artemis/E.java"), log);
+        generateFile(artemisModel, createSupermapperGenerator(globalPreferences), new File(outputDirectory, "com/artemis/SuperMapper.java"), log);
+        generateFile(artemisModel, createEGenerator(globalPreferences), new File(outputDirectory, "com/artemis/E.java"), log);
     }
 
     private Collection<Class<? extends Component>> filterComponents(Collection<Class<? extends Component>> unfilteredComponents, Log log) {
@@ -136,21 +136,21 @@ public class FluidGenerator {
         return generator.generate(artemisModel);
     }
 
-    private static TypeModelGenerator createEGenerator() {
+    private static TypeModelGenerator createEGenerator(FluidGeneratorPreferences globalPreferences) {
         TypeModelGenerator generator = new TypeModelGenerator();
         generator.addStrategy(new EBaseStrategy());
         generator.addStrategy(new ComponentExistStrategy());
         generator.addStrategy(new ComponentCreateStrategy());
-        generator.addStrategy(new ComponentTagStrategy());
-        generator.addStrategy(new ComponentGroupStrategy());
+        if ( globalPreferences.isGenerateTagMethods() ) generator.addStrategy(new ComponentTagStrategy());
+        if ( globalPreferences.isGenerateGroupMethods() ) generator.addStrategy(new ComponentGroupStrategy());
         generator.addStrategy(new ComponentRemoveStrategy());
         generator.addStrategy(new ComponentAccessorStrategy());
         generator.addStrategy(new ComponentFieldAccessorStrategy());
-        generator.addStrategy(new FieldComponentBooleanAccessorStrategy());
+        if ( globalPreferences.isGenerateBooleanComponentAccessors() ) generator.addStrategy(new FieldComponentBooleanAccessorStrategy());
         return generator;
     }
 
-    private static TypeModelGenerator createSupermapperGenerator() {
+    private static TypeModelGenerator createSupermapperGenerator(FluidGeneratorPreferences globalPreferences) {
         TypeModelGenerator generator = new TypeModelGenerator();
         generator.addStrategy(new SuperMapperStrategy());
         generator.addStrategy(new ComponentMapperFieldsStrategy());
