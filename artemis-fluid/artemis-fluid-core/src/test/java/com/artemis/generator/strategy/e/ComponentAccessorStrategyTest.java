@@ -14,6 +14,6 @@ public class ComponentAccessorStrategyTest extends StrategyTest {
     @Test
     public void When_component_Should_add_create_lifecycle_method() {
         TypeModel model = applyStrategy(ComponentAccessorStrategy.class, Flag.class);
-        assertHasMethod(model,"com.artemis.generator.test.Flag _flag()");
+        assertHasMethod(model,"com.artemis.generator.test.Flag getFlag()");
     }
 }

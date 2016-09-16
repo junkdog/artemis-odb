@@ -76,12 +76,17 @@ public class ComponentDescriptor {
         return preferences;
     }
 
-    /** Create descriptor for passed type. */
     public static ComponentDescriptor create(Class<? extends Component> type) {
+        return create(type, new FluidGeneratorPreferences());
+    }
+
+    /** Create descriptor for passed type. */
+    public static ComponentDescriptor create(Class<? extends Component> type, FluidGeneratorPreferences globalPreferences) {
 
         String methodPrefix = Strings.decapitalizeString(type.getSimpleName());
         String name = type.getSimpleName();
         FluidGeneratorPreferences preferences = new FluidGeneratorPreferences();
+        preferences.mirror(globalPreferences);
 
         // @todo make sure this is processed from least to most pressing.
         for (Annotation annotation : ExtendedTypeReflection.getAllAnnotations(type)) {

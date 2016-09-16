@@ -38,10 +38,11 @@ public class FluidGenerator {
      * @param loader classloader to reflect over.
      * @param outputDirectory source root.
      * @param log output.
+     * @param globalPreferences
      * @throws com.artemis.generator.validator.TypeModelValidatorException
      */
-    public void generate(ClassLoader loader, File outputDirectory, Log log ) {
-        generate(new ReflectionComponentCollectStrategy().allComponents(loader), outputDirectory, log);
+    public void generate(ClassLoader loader, File outputDirectory, Log log, FluidGeneratorPreferences globalPreferences) {
+        generate(new ReflectionComponentCollectStrategy().allComponents(loader), outputDirectory, log, globalPreferences);
     }
 
     /**
@@ -51,10 +52,11 @@ public class FluidGenerator {
      * @param urls classpath urls to reflect over.
      * @param outputDirectory source root.
      * @param log output.
+     * @param globalPreferences
      * @throws com.artemis.generator.validator.TypeModelValidatorException
      */
-    public void generate(Set<URL> urls, File outputDirectory, Log log ) {
-        generate(new ReflectionComponentCollectStrategy().allComponents(urls), outputDirectory, log);
+    public void generate(Set<URL> urls, File outputDirectory, Log log, FluidGeneratorPreferences globalPreferences) {
+        generate(new ReflectionComponentCollectStrategy().allComponents(urls), outputDirectory, log, globalPreferences);
     }
 
     /**
@@ -63,11 +65,12 @@ public class FluidGenerator {
      * @param components components to consider.
      * @param outputDirectory source root.
      * @param log output.
+     * @param globalPreferences
      * @throws com.artemis.generator.validator.TypeModelValidatorException
      */
-    public void generate(Collection<Class<? extends Component>> components, File outputDirectory, Log log ) {
+    public void generate(Collection<Class<? extends Component>> components, File outputDirectory, Log log, FluidGeneratorPreferences globalPreferences) {
 
-        ArtemisModel artemisModel = createArtemisModel(filterComponents(components, log));
+        ArtemisModel artemisModel = createArtemisModel(filterComponents(components, log), globalPreferences);
 
         new File(outputDirectory, "com/artemis/").mkdirs();
 
@@ -119,10 +122,10 @@ public class FluidGenerator {
         }
     }
 
-    private ArtemisModel createArtemisModel(Collection<Class<? extends Component>> components) {
+    private ArtemisModel createArtemisModel(Collection<Class<? extends Component>> components, FluidGeneratorPreferences globalPreferences) {
         ArrayList<ComponentDescriptor> componentDescriptors = new ArrayList<ComponentDescriptor>();
         for (Class<? extends Component> component : components) {
-            ComponentDescriptor descriptor = ComponentDescriptor.create(component);
+            ComponentDescriptor descriptor = ComponentDescriptor.create(component, globalPreferences);
             componentDescriptors.add(descriptor);
         }
         return new ArtemisModel(componentDescriptors);

@@ -1,22 +1,18 @@
 package net.onedaybeard.gradle;
 
 import com.artemis.FluidGenerator;
-import com.artemis.Weaver;
-import com.artemis.WeaverLog;
+import com.artemis.FluidGeneratorPreferences;
 
 import org.gradle.api.DefaultTask;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -34,6 +30,9 @@ public class FluidApiGenerationTask extends DefaultTask {
 	@Input
 	private FileCollection classpath;
 
+	@Input
+	public FluidGeneratorPreferences preferences = new FluidGeneratorPreferences();
+
 	private Logger log = getLogger();
 
 	@TaskAction
@@ -46,7 +45,7 @@ public class FluidApiGenerationTask extends DefaultTask {
 
 		new FluidGenerator().generate(
 				classpathAsUrls(),
-				generatedSourcesDirectory, createLogAdapter());
+				generatedSourcesDirectory, createLogAdapter(), preferences);
 	}
 
 	/**

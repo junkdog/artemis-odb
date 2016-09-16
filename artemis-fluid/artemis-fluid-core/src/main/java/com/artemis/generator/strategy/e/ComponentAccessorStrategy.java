@@ -5,6 +5,7 @@ import com.artemis.generator.model.type.TypeModel;
 import com.artemis.generator.model.artemis.ComponentDescriptor;
 import com.artemis.generator.model.type.MethodDescriptor;
 import com.artemis.generator.util.MethodBuilder;
+import com.artemis.generator.util.Strings;
 
 /**
  * Generate direct accessor for each component.
@@ -23,7 +24,7 @@ public class ComponentAccessorStrategy extends IterativeModelStrategy {
      */
     private MethodDescriptor createGetComponentMethod(ComponentDescriptor component) {
         return
-                new MethodBuilder(component.getComponentType(), "_"+component.getMethodPrefix())
+                new MethodBuilder(component.getComponentType(), Strings.assembleMethodName(component.getPreferences().getPrefixComponentGetter(),component.getMethodPrefix()))
                         .debugNotes(component.getComponentType().getName())
                         .mapper("return ", component, ".get(entityId)")
                         .build();

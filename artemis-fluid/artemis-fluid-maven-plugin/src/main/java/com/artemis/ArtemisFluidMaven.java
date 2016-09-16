@@ -47,6 +47,9 @@ public class ArtemisFluidMaven extends AbstractMojo {
     @Parameter(required = true, property = "project")
     private MavenProject project;
 
+    @Parameter(property = "preferences")
+    private MavenFluidGeneratorPreferences preferences = new MavenFluidGeneratorPreferences();
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
 
@@ -55,7 +58,7 @@ public class ArtemisFluidMaven extends AbstractMojo {
 
         new FluidGenerator().generate(
                 classpathAsUrls(),
-                generatedSourcesDirectory(), createLogAdapter());
+                generatedSourcesDirectory(), createLogAdapter(), preferences);
     }
 
     /**
