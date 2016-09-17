@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.onedaybeard.artemis</groupId>
+        <artifactId>artemis-fluid-maven-integration-test</artifactId>
+        <version>2.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>artemis-fluid-maven-integration-test-systems</artifactId>
+    <version>2.1.0-SNAPSHOT</version>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>artemis-odb</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>net.onedaybeard.artemis</groupId>
+            <artifactId>artemis-fluid-maven-integration-test-components</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+
+        <plugins>
+            <plugin>
+                <groupId>net.onedaybeard.artemis</groupId>
+                <artifactId>artemis-fluid-maven-plugin</artifactId>
+                <version>2.1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <preferences>
+                        <!-- prefix for Pos E::[get]pos() -->
+                        <prefixComponentGetter>_</prefixComponentGetter>
+                        <!-- prefix for E E::[]pos() -->
+                        <prefixComponentCreate></prefixComponentCreate>
+                        <!-- prefix for boolean E::[has]Pos() -->
+                        <prefixComponentHas>has</prefixComponentHas>
+                        <!-- prefix for E E::[remove]Pos() -->
+                        <prefixComponentRemove>remove</prefixComponentRemove>
+                        <!-- add tag convenience methods to E -->
+                        <generateTagMethods>true</generateTagMethods>
+                        <!-- add group convenience methods to E -->
+                        <generateGroupMethods>true</generateGroupMethods>
+                        <!--  Generate boolean accessors for flag components? -->
+                        <generateBooleanComponentAccessors>true</generateBooleanComponentAccessors>
+                        <!-- global setting. overridden by @Fluid annotation. -->
+                        <swallowGettersWithParameters>false</swallowGettersWithParameters>
+                    </preferences>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
