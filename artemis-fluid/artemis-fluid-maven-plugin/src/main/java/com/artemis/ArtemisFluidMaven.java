@@ -1,5 +1,6 @@
 package com.artemis;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -13,7 +14,6 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURCES;
@@ -23,8 +23,8 @@ import static org.apache.maven.plugins.annotations.LifecyclePhase.GENERATE_SOURC
  * and related classes.
  */
 @Mojo(name = "generate", defaultPhase = GENERATE_SOURCES,
-        requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME,
-        requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
+        requiresDependencyResolution = ResolutionScope.COMPILE,
+        requiresDependencyCollection = ResolutionScope.COMPILE)
 public class ArtemisFluidMaven extends AbstractMojo {
 
     /**
@@ -41,8 +41,8 @@ public class ArtemisFluidMaven extends AbstractMojo {
 
     private Log log = getLog();
 
-    @Parameter(property = "project.compileClasspathElements", required = true, readonly = true)
-    private List<String> classpathElements;
+    @Parameter(property = "project.artifacts", required = true, readonly = true)
+    private Set<Artifact> artifacts;
 
     @Parameter(required = true, property = "project")
     private MavenProject project;
@@ -97,11 +97,15 @@ public class ArtemisFluidMaven extends AbstractMojo {
     private Set<URL> classpathAsUrls(MavenFluidGeneratorPreferences preferences) {
         try {
             Set<URL> urls = new HashSet<URL>();
-            for (String element : classpathElements) {
-                URL url = new File(element).toURI().toURL();
-                if (!preferences.matchesIgnoredClasspath(url.toString())) {
-                    urls.add(url);
-                    log.info("Including: " + url);
+            for (Artifact artifact : artifacts) {
+                final URL url = artifact.getFile().toURI().toURL();
+                if ( artifact.getFile().exists() ) {
+                    if (!preferences.matchesIgnoredClasspath(url.toString())) {
+                        urls.add(url);
+                        log.info("Including: " + url);
+                    }
+                } else {
+                    log.info("Skipping missing: " + url);
                 }
             }
             return urls;
