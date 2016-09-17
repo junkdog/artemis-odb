@@ -33,7 +33,11 @@ public class CodeCoverageHack extends AbstractStrategyIntegrationTest {
                 E().removeRename2();
                 E().isRename2();
                 E().rename2(true);
-
+                
+                E().paraGetter();
+                E().hasParaGetter();
+                E().getParaGetter();
+                E().removeParaGetter();
             }
         }
 

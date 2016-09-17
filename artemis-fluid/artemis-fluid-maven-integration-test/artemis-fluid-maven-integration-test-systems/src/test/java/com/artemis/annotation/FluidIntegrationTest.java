@@ -49,4 +49,20 @@ public class FluidIntegrationTest extends AbstractStrategyIntegrationTest {
 
         runFluidWorld(new TestSystem());
     }
+
+    @Test
+    public void When_swallowing_parameterized_getters_Should_return_fluid_instead_of_parameterized_getter_return_value() throws Exception {
+
+        class TestSystem extends BaseSystem {
+            @Override
+            protected void processSystem() {
+                E e = E();
+                Assert.assertEquals(e, e.paraGetterCustom("test2"));
+            }
+        }
+
+        runFluidWorld(new TestSystem());
+    }
+
+
 }
