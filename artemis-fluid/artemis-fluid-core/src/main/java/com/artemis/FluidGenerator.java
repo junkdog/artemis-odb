@@ -134,6 +134,7 @@ public class FluidGenerator {
         generator.addStrategy(new ComponentRemoveStrategy());
         generator.addStrategy(new ComponentAccessorStrategy());
         generator.addStrategy(new ComponentFieldAccessorStrategy());
+        generator.addStrategy(new DeleteFromWorldStrategy());
         if ( globalPreferences.isGenerateBooleanComponentAccessors() ) generator.addStrategy(new FieldComponentBooleanAccessorStrategy());
         return generator;
     }
