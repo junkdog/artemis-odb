@@ -22,7 +22,6 @@ public class DeleteFromWorldIntegrationTest extends AbstractStrategyIntegrationT
             protected void processSystem() {
                 entityId = world.create();
                 E.E(entityId).deleteFromWorld();
-                world.getEntityManager().isActive(entityId);
             }
         }
 
