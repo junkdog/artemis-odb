@@ -2,7 +2,6 @@ package com.artemis.generator.strategy.e;
 
 import com.artemis.BaseSystem;
 import com.artemis.E;
-import com.artemis.Entity;
 import org.junit.Assert;
 import org.junit.Test;
 
