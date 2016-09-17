@@ -29,4 +29,9 @@ public @interface Fluid {
      * set this to true.
      */
     boolean swallowGettersWithParameters() default false;
+
+    /**
+     * Exclude class from fluid interface.
+     */
+    boolean exclude() default false;
 }

@@ -26,7 +26,8 @@ public class FluidGeneratorPreferences {
     private String prefixComponentRemove = "remove";
     private boolean generateBooleanComponentAccessors = true;
     private List<String> excludeFromClasspath = new ArrayList<String>();
-    
+    private boolean excludeFromGeneration = false;
+
     {
         excludeFromClasspath.add("-sources.jar"); // exclude sources
         excludeFromClasspath.add("gwt-user-2.6.1"); // exclude gwt.
@@ -37,6 +38,7 @@ public class FluidGeneratorPreferences {
 
     public void apply(Fluid fluid) {
         this.swallowGettersWithParameters = fluid.swallowGettersWithParameters();
+        this.excludeFromGeneration = fluid.exclude();
     }
 
     /** Get prefix for component getters. Default "get". */
@@ -135,5 +137,13 @@ public class FluidGeneratorPreferences {
             }
         }
         return false;
+    }
+
+    public boolean isExcludeFromGeneration() {
+        return excludeFromGeneration;
+    }
+
+    public void setExcludeFromGeneration(boolean excludeFromGeneration) {
+        this.excludeFromGeneration = excludeFromGeneration;
     }
 }

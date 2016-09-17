@@ -59,7 +59,7 @@ public class FluidGenerator {
      */
     public void generate(Collection<Class<? extends Component>> components, File outputDirectory, Log log, FluidGeneratorPreferences globalPreferences) {
 
-        ArtemisModel artemisModel = createArtemisModel(filterComponents(components, log), globalPreferences);
+        ArtemisModel artemisModel = createArtemisModel(filterComponents(components, log), globalPreferences, log);
 
         new File(outputDirectory, "com/artemis/").mkdirs();
 
@@ -73,13 +73,12 @@ public class FluidGenerator {
 
                 if (Modifier.isAbstract(component.getModifiers()) || Modifier.isInterface(component.getModifiers())) {
                     // Skip abstract components.
-                    log.info(".. Skipping abstract/interface: " + component.toString());
+                    log.info(".. Skipping abstract/interface: " + component.getName());
                 } else if (component.equals(SerializationTag.class) || component.getName().startsWith("com.artemis.weaver.")) {
                     // No reserved classes either.
-                    log.info(".. Skipping reserved class: " + component.toString());
+                    log.info(".. Skipping reserved class: " + component.getName());
                 } else {
                     // Include!
-                    log.info(".. Including: " + component.toString());
                     components.add(component);
                 }
             }
@@ -111,11 +110,16 @@ public class FluidGenerator {
         }
     }
 
-    private ArtemisModel createArtemisModel(Collection<Class<? extends Component>> components, FluidGeneratorPreferences globalPreferences) {
+    private ArtemisModel createArtemisModel(Collection<Class<? extends Component>> components, FluidGeneratorPreferences globalPreferences, Log log) {
         ArrayList<ComponentDescriptor> componentDescriptors = new ArrayList<ComponentDescriptor>();
         for (Class<? extends Component> component : components) {
             ComponentDescriptor descriptor = ComponentDescriptor.create(component, globalPreferences);
-            componentDescriptors.add(descriptor);
+            if ( !descriptor.getPreferences().isExcludeFromGeneration()) {
+                log.info(".. Including: " + component.getName());
+                componentDescriptors.add(descriptor);
+            } else {
+                log.info(".. Excluded by annotation: " + component.getName());
+            }
         }
         return new ArtemisModel(componentDescriptors);
     }
