@@ -2,7 +2,7 @@ package com.artemis;
 
 import com.artemis.components.SerializationTag;
 import com.artemis.generator.TypeModelGenerator;
-import com.artemis.generator.collect.ReflectionComponentCollectStrategy;
+import com.artemis.generator.collect.ReflectionsComponentCollectStrategy;
 import com.artemis.generator.generator.PoetSourceGenerator;
 import com.artemis.generator.model.artemis.ArtemisModel;
 import com.artemis.generator.model.artemis.ComponentDescriptor;
@@ -39,7 +39,7 @@ public class FluidGenerator {
      * @throws com.artemis.generator.validator.TypeModelValidatorException
      */
     public void generate(ClassLoader loader, File outputDirectory, Log log, FluidGeneratorPreferences globalPreferences) {
-        generate(new ReflectionComponentCollectStrategy().allComponents(loader), outputDirectory, log, globalPreferences);
+        generate(new ReflectionsComponentCollectStrategy().allComponents(loader), outputDirectory, log, globalPreferences);
     }
 
     /**
@@ -53,7 +53,7 @@ public class FluidGenerator {
      * @throws com.artemis.generator.validator.TypeModelValidatorException
      */
     public void generate(Set<URL> urls, File outputDirectory, Log log, FluidGeneratorPreferences globalPreferences) {
-        generate(new ReflectionComponentCollectStrategy().allComponents(urls), outputDirectory, log, globalPreferences);
+        generate(new ReflectionsComponentCollectStrategy().allComponents(urls), outputDirectory, log, globalPreferences);
     }
 
     /**

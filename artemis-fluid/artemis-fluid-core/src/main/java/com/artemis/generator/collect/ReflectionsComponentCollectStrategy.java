@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
  *
  * @author Daan van Yperen
  */
-public class ReflectionComponentCollectStrategy {
+public class ReflectionsComponentCollectStrategy {
 
     /**
      * Collect all components on a classpath.
