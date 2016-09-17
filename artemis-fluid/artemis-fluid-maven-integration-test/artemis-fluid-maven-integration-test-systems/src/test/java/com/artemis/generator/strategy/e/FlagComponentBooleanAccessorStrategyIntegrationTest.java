@@ -21,6 +21,13 @@ public class FlagComponentBooleanAccessorStrategyIntegrationTest extends Abstrac
             @Override
             protected void processSystem() {
                 E e = E();
+
+                // code coverage since we're testing this elsewhere.
+                E().flag();
+                E().hasFlag();
+                E().getFlag();
+                E().removeFlag();
+
                 Assert.assertTrue(e.flag(true).isFlag());
                 Assert.assertFalse(e.flag(false).isFlag());
             }
