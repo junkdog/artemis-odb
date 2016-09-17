@@ -2,6 +2,7 @@ package com.artemis.generator.strategy.e;
 
 import com.artemis.BaseSystem;
 import com.artemis.E;
+import com.artemis.managers.GroupManager;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -20,20 +21,21 @@ public class DeleteFromWorldIntegrationTest extends AbstractStrategyIntegrationT
             @Override
             protected void processSystem() {
                 entityId = world.create();
-                E.E(entityId).deleteFromWorld();
+                E.E(entityId).group("test").deleteFromWorld();
             }
         }
 
         class TestSystem2 extends BaseSystem {
+            public int entityId;
 
-            TestSystem testSystem;
+            GroupManager groupManager;
 
             @Override
             protected void processSystem() {
-                Assert.assertFalse(world.getEntityManager().isActive(testSystem.entityId));
+                Assert.assertTrue(groupManager.getEntities("test").isEmpty());
             }
         }
 
-        runFluidWorld(new TestSystem(), new TestSystem2());
+        runFluidWorld(new GroupManager(), new TestSystem(), new TestSystem2());
     }
 }
