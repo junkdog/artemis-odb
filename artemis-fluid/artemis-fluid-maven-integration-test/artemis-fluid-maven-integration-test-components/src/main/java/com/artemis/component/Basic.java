@@ -7,4 +7,6 @@ import com.artemis.Component;
  */
 public class Basic extends Component {
     public int x;
+    public Basic o;
+    public String s;
 }

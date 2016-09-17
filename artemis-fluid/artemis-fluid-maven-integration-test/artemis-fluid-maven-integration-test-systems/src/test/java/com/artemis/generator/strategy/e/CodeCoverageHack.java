@@ -2,7 +2,6 @@ package com.artemis.generator.strategy.e;
 
 import com.artemis.BaseSystem;
 import com.artemis.E;
-import com.artemis.component.Basic;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,7 +10,7 @@ import static com.artemis.E.E;
 /**
  * @author Daan van Yperen
  */
-public class FlagComponentBooleanAccessorStrategyIntegrationTest extends AbstractStrategyIntegrationTest {
+public class CodeCoverageHack extends AbstractStrategyIntegrationTest {
 
 
     @Test
@@ -22,8 +21,19 @@ public class FlagComponentBooleanAccessorStrategyIntegrationTest extends Abstrac
             protected void processSystem() {
                 E e = E();
 
-                Assert.assertTrue(e.flag(true).isFlag());
-                Assert.assertFalse(e.flag(false).isFlag());
+                // code coverage since we don't need to test this for each class.
+                E().flag();
+                E().hasFlag();
+                E().getFlag();
+                E().removeFlag();
+
+                E().rename2();
+                E().hasRename2();
+                E().getRename2();
+                E().removeRename2();
+                E().isRename2();
+                E().rename2(true);
+
             }
         }
 

@@ -10,11 +10,11 @@ import com.artemis.WorldConfigurationBuilder;
  */
 public abstract class AbstractStrategyIntegrationTest {
 
-    void runFluidWorld(BaseSystem... system) {
+    protected void runFluidWorld(BaseSystem... system) {
         createFluidWorld(system).process();
     }
 
-    World createFluidWorld(BaseSystem... systems) {
+    protected World createFluidWorld(BaseSystem... systems) {
         WorldConfigurationBuilder worldConfigurationBuilder = new WorldConfigurationBuilder()
                 .with(new SuperMapper());
         worldConfigurationBuilder.with(systems);
