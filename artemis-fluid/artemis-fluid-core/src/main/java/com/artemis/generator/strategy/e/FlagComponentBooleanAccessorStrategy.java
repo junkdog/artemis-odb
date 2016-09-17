@@ -19,7 +19,7 @@ import static org.reflections.ReflectionUtils.*;
  *
  * @author Daan van Yperen
  */
-public class FieldComponentBooleanAccessorStrategy extends IterativeModelStrategy {
+public class FlagComponentBooleanAccessorStrategy extends IterativeModelStrategy {
 
     @Override
     protected void apply(ComponentDescriptor component, TypeModel model) {

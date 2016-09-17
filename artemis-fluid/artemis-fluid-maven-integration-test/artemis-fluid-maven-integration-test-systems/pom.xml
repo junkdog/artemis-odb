@@ -43,22 +43,22 @@
                 </executions>
                 <configuration>
                     <preferences>
-                        <!-- prefix for Pos E::[get]pos() -->
-                        <prefixComponentGetter>_</prefixComponentGetter>
-                        <!-- prefix for E E::[]pos() -->
-                        <prefixComponentCreate></prefixComponentCreate>
-                        <!-- prefix for boolean E::[has]Pos() -->
-                        <prefixComponentHas>has</prefixComponentHas>
-                        <!-- prefix for E E::[remove]Pos() -->
-                        <prefixComponentRemove>remove</prefixComponentRemove>
-                        <!-- add tag convenience methods to E -->
-                        <generateTagMethods>true</generateTagMethods>
-                        <!-- add group convenience methods to E -->
-                        <generateGroupMethods>true</generateGroupMethods>
-                        <!--  Generate boolean accessors for flag components? -->
-                        <generateBooleanComponentAccessors>true</generateBooleanComponentAccessors>
-                        <!-- global setting. overridden by @Fluid annotation. -->
-                        <swallowGettersWithParameters>false</swallowGettersWithParameters>
+                        <!--&lt;!&ndash; prefix for Pos E::[get]pos() &ndash;&gt;-->
+                        <!--<prefixComponentGetter>_</prefixComponentGetter>-->
+                        <!--&lt;!&ndash; prefix for E E::[]pos() &ndash;&gt;-->
+                        <!--<prefixComponentCreate></prefixComponentCreate>-->
+                        <!--&lt;!&ndash; prefix for boolean E::[has]Pos() &ndash;&gt;-->
+                        <!--<prefixComponentHas>has</prefixComponentHas>-->
+                        <!--&lt;!&ndash; prefix for E E::[remove]Pos() &ndash;&gt;-->
+                        <!--<prefixComponentRemove>remove</prefixComponentRemove>-->
+                        <!--&lt;!&ndash; add tag convenience methods to E &ndash;&gt;-->
+                        <!--<generateTagMethods>true</generateTagMethods>-->
+                        <!--&lt;!&ndash; add group convenience methods to E &ndash;&gt;-->
+                        <!--<generateGroupMethods>true</generateGroupMethods>-->
+                        <!--&lt;!&ndash;  Generate boolean accessors for flag components? &ndash;&gt;-->
+                        <!--<generateBooleanComponentAccessors>true</generateBooleanComponentAccessors>-->
+                        <!--&lt;!&ndash; global setting. overridden by @Fluid annotation. &ndash;&gt;-->
+                        <!--<swallowGettersWithParameters>false</swallowGettersWithParameters>-->
                     </preferences>
                 </configuration>
             </plugin>
