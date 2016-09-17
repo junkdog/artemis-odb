@@ -2,6 +2,7 @@ package com.artemis;
 
 import com.artemis.components.SerializationTag;
 import com.artemis.generator.TypeModelGenerator;
+import com.artemis.generator.collect.AbstractComponentCollectStrategy;
 import com.artemis.generator.collect.ReflectionsComponentCollectStrategy;
 import com.artemis.generator.generator.PoetSourceGenerator;
 import com.artemis.generator.model.artemis.ArtemisModel;
@@ -30,20 +31,6 @@ public class FluidGenerator {
 
     /**
      * Generate fluid API files.
-     * Finds all Component instances known to classloader using reflection.
-     *
-     * @param loader classloader to reflect over.
-     * @param outputDirectory source root.
-     * @param log output.
-     * @param globalPreferences
-     * @throws com.artemis.generator.validator.TypeModelValidatorException
-     */
-    public void generate(ClassLoader loader, File outputDirectory, Log log, FluidGeneratorPreferences globalPreferences) {
-        generate(new ReflectionsComponentCollectStrategy().allComponents(loader), outputDirectory, log, globalPreferences);
-    }
-
-    /**
-     * Generate fluid API files.
      * Finds all Component instances at given urls using reflection.
      *
      * @param urls classpath urls to reflect over.
@@ -53,7 +40,12 @@ public class FluidGenerator {
      * @throws com.artemis.generator.validator.TypeModelValidatorException
      */
     public void generate(Set<URL> urls, File outputDirectory, Log log, FluidGeneratorPreferences globalPreferences) {
-        generate(new ReflectionsComponentCollectStrategy().allComponents(urls), outputDirectory, log, globalPreferences);
+        generate(collectStrategy().allComponents(urls), outputDirectory, log, globalPreferences);
+    }
+
+
+    private AbstractComponentCollectStrategy collectStrategy() {
+        return new ReflectionsComponentCollectStrategy();
     }
 
     /**

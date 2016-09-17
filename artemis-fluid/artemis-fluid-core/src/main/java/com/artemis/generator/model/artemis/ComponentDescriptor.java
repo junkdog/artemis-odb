@@ -90,7 +90,7 @@ public class ComponentDescriptor {
 
         // @todo make sure this is processed from least to most pressing.
         for (Annotation annotation : ExtendedTypeReflection.getAllAnnotations(type)) {
-            if (annotation instanceof Fluid) {
+            if (annotation.annotationType().equals(Fluid.class)) {
                 final Fluid fluid = (Fluid) annotation;
                 if (!fluid.name().isEmpty()) {
                     methodPrefix = fluid.name();

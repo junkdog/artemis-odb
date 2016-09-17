@@ -13,27 +13,28 @@ import java.util.Set;
 import java.util.concurrent.Executors;
 
 /**
- * Collect components using reflection.
+ * Collect components using reflections framework.
  *
  * @author Daan van Yperen
  */
-public class ReflectionsComponentCollectStrategy {
+public class ReflectionsComponentCollectStrategy extends AbstractComponentCollectStrategy {
 
     /**
      * Collect all components on a classpath.
+     *
      * @param classLoader context.
      * @return Set of all components on classloader.
      */
-    public Set<Class<? extends Component>> allComponents(ClassLoader classLoader) {
+    public Set<Class<? extends Component>> allComponents(ClassLoader classLoader,Set<URL> urls) {
 
-        // Set the context ClassLoader for this Thread.
+        // Set the context ClassLoader for this Thread to include all classes.
         // if we don't do this Reflections gets confused and fetches only a subset
         // of components. probably because duplicate entries of Component.class?
         Thread.currentThread().setContextClassLoader(classLoader);
 
         // reflect over components.
         Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .setUrls(ClasspathHelper.forClassLoader(classLoader))
+                .setUrls(urls)
                 .setScanners(new SubTypesScanner(true))
                 .setExecutorService(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()))
         );
@@ -42,18 +43,19 @@ public class ReflectionsComponentCollectStrategy {
 
     /**
      * Collect all components within a set of URLs
+     *
      * @param urls context
      * @return Set of all components on classloader.
      */
+    @Override
     public Collection<Class<? extends Component>> allComponents(Set<URL> urls) {
-        return allComponents(asClassloader(urls));
+        return allComponents(asClassloader(urls),urls);
     }
 
-    /** Create classloader for URLS */
+    /**
+     * Create classloader for URLS
+     */
     private ClassLoader asClassloader(Set<URL> urls) {
-        return URLClassLoader.newInstance(
-                urls.toArray(new URL[0]),
-                Thread.currentThread().getContextClassLoader());
+        return URLClassLoader.newInstance(urls.toArray(new URL[0]), Thread.currentThread().getContextClassLoader());
     }
-
 }
