@@ -24,90 +24,92 @@ import java.util.Set;
 public class FluidApiGenerationTask extends DefaultTask {
 
 
-	@Input
-	private File generatedSourcesDirectory;
+    @Input
+    private File generatedSourcesDirectory;
 
-	@Input
-	private FileCollection classpath;
+    @Input
+    private FileCollection classpath;
 
-	@Input
-	public FluidGeneratorPreferences preferences = new FluidGeneratorPreferences();
+    @Input
+    public FluidGeneratorPreferences preferences = new FluidGeneratorPreferences();
 
-	private Logger log = getLogger();
+    private Logger log = getLogger();
 
-	@TaskAction
-	public void fluid() {
-		log.info("Artemis Fluid api plugin started.");
+    @TaskAction
+    public void fluid() {
+        log.info("Artemis Fluid api plugin started.");
 
 
-		prepareGeneratedSourcesFolder();
-		includeGeneratedSourcesInCompilation();
+        prepareGeneratedSourcesFolder();
+        includeGeneratedSourcesInCompilation();
 
-		new FluidGenerator().generate(
-				classpathAsUrls(),
-				generatedSourcesDirectory, createLogAdapter(), preferences);
-	}
+        new FluidGenerator().generate(
+                classpathAsUrls(preferences),
+                generatedSourcesDirectory, createLogAdapter(), preferences);
+    }
 
-	/**
-	 * bridge maven/internal logging.
-	 */
-	private com.artemis.generator.util.Log createLogAdapter() {
-		return new com.artemis.generator.util.Log() {
-			@Override
-			public void info(String msg) {
-				log.info(msg);
-			}
-			@Override
-			public void error(String msg) {
-				log.error(msg);
-			}
-		};
-	}
+    /**
+     * bridge maven/internal logging.
+     */
+    private com.artemis.generator.util.Log createLogAdapter() {
+        return new com.artemis.generator.util.Log() {
+            @Override
+            public void info(String msg) {
+                log.info(msg);
+            }
 
-	/**
-	 * Setup generated sources folder if missing.
-	 */
-	private void prepareGeneratedSourcesFolder() {
-		if (!generatedSourcesDirectory.exists() && !generatedSourcesDirectory.mkdirs()) {
-			log.error("Could not create " + generatedSourcesDirectory);
-		}
-	}
+            @Override
+            public void error(String msg) {
+                log.error(msg);
+            }
+        };
+    }
 
-	/**
-	 * Must include manually, or maven buids will fail.
-	 */
-	private void includeGeneratedSourcesInCompilation() {
+    /**
+     * Setup generated sources folder if missing.
+     */
+    private void prepareGeneratedSourcesFolder() {
+        if (!generatedSourcesDirectory.exists() && !generatedSourcesDirectory.mkdirs()) {
+            log.error("Could not create " + generatedSourcesDirectory);
+        }
+    }
+
+    /**
+     * Must include manually, or maven buids will fail.
+     */
+    private void includeGeneratedSourcesInCompilation() {
 //		getProject().addCompileSourceRoot(generatedSourcesDirectory().getPath());
-	}
+    }
 
-	private Set<URL> classpathAsUrls() {
-		try {
-			Set<URL> urls = new HashSet<URL>();
-			for (File element : classpath) {
-				URL url;
-				url = element.toURI().toURL();
-				urls.add(url);
-				log.info("Including: " + url);
-			}
-			return urls;
-		} catch (MalformedURLException e) {
-			throw new RuntimeException("failed to complete classpathAsUrls.", e);
-		}
-	}
+    private Set<URL> classpathAsUrls(FluidGeneratorPreferences preferences) {
+        try {
+            Set<URL> urls = new HashSet<URL>();
+            for (File element : classpath) {
+                URL url = element.toURI().toURL();
+                if (!preferences.matchesIgnoredClasspath(url.toString())) {
+                    urls.add(url);
+                    log.info("Including: " + url);
+                }
+            }
+            return urls;
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("failed to complete classpathAsUrls.", e);
+        }
+    }
 
-	public File getGeneratedSourcesDirectory() {
-		return generatedSourcesDirectory;
-	}
+    public File getGeneratedSourcesDirectory() {
+        return generatedSourcesDirectory;
+    }
 
-	public void setGeneratedSourcesDirectory(File generatedSourcesDirectory) {
-		this.generatedSourcesDirectory = generatedSourcesDirectory;
-	}
+    public void setGeneratedSourcesDirectory(File generatedSourcesDirectory) {
+        this.generatedSourcesDirectory = generatedSourcesDirectory;
+    }
 
-	public FileCollection getClasspath() {
-		return classpath;
-	}
+    public FileCollection getClasspath() {
+        return classpath;
+    }
 
-	public void setClasspath(FileCollection classpath) {
-		this.classpath = classpath;
-	}
+    public void setClasspath(FileCollection classpath) {
+        this.classpath = classpath;
+    }
 }

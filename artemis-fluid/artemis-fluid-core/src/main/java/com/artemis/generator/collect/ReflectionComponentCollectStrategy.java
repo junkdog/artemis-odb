@@ -10,6 +10,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 /**
  * Collect components using reflection.
@@ -33,7 +34,9 @@ public class ReflectionComponentCollectStrategy {
         // reflect over components.
         Reflections reflections = new Reflections(new ConfigurationBuilder()
                 .setUrls(ClasspathHelper.forClassLoader(classLoader))
-                .setScanners(new SubTypesScanner(false)));
+                .setScanners(new SubTypesScanner(true))
+                .setExecutorService(Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors()))
+        );
         return reflections.getSubTypesOf(Component.class);
     }
 

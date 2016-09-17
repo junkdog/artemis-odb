@@ -19,10 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Fluid api class generator.
@@ -132,7 +129,6 @@ public class FluidGenerator {
     }
 
     private static TypeModel createExampleTypeModel(TypeModelGenerator generator, ArtemisModel artemisModel) {
-        ArrayList<ComponentDescriptor> components = new ArrayList<ComponentDescriptor>();
         return generator.generate(artemisModel);
     }
 

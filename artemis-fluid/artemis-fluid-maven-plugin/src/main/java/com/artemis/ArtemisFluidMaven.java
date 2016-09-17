@@ -57,7 +57,7 @@ public class ArtemisFluidMaven extends AbstractMojo {
         includeGeneratedSourcesInCompilation();
 
         new FluidGenerator().generate(
-                classpathAsUrls(),
+                classpathAsUrls(preferences),
                 generatedSourcesDirectory(), createLogAdapter(), preferences);
     }
 
@@ -70,6 +70,7 @@ public class ArtemisFluidMaven extends AbstractMojo {
             public void info(String msg) {
                 log.info(msg);
             }
+
             @Override
             public void error(String msg) {
                 log.error(msg);
@@ -93,14 +94,15 @@ public class ArtemisFluidMaven extends AbstractMojo {
         this.project.addCompileSourceRoot(generatedSourcesDirectory().getPath());
     }
 
-    private Set<URL> classpathAsUrls() {
+    private Set<URL> classpathAsUrls(MavenFluidGeneratorPreferences preferences) {
         try {
             Set<URL> urls = new HashSet<URL>();
             for (String element : classpathElements) {
-                URL url;
-                url = new File(element).toURI().toURL();
-                urls.add(url);
-                log.info("Including: " + url);
+                URL url = new File(element).toURI().toURL();
+                if (!preferences.matchesIgnoredClasspath(url.toString())) {
+                    urls.add(url);
+                    log.info("Including: " + url);
+                }
             }
             return urls;
         } catch (MalformedURLException e) {

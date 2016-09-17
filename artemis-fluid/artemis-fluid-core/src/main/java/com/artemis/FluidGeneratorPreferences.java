@@ -2,6 +2,13 @@ package com.artemis;
 
 import com.artemis.annotations.Fluid;
 
+import java.io.File;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author Daan van Yperen
  */
@@ -18,6 +25,12 @@ public class FluidGeneratorPreferences {
     private boolean generateGroupMethods = true;
     private String prefixComponentRemove = "remove";
     private boolean generateBooleanComponentAccessors = true;
+    private List<String> excludeFromClasspath = new ArrayList<String>();
+    
+    {
+        excludeFromClasspath.add("-sources.jar"); // exclude sources
+        excludeFromClasspath.add("gwt-user-2.6.1"); // exclude gwt.
+    }
 
     public FluidGeneratorPreferences() {
     }
@@ -48,6 +61,7 @@ public class FluidGeneratorPreferences {
         this.generateTagMethods = source.generateTagMethods;
         this.generateGroupMethods = source.generateGroupMethods;
         this.generateBooleanComponentAccessors = source.generateBooleanComponentAccessors;
+        this.excludeFromClasspath = new ArrayList<String>(source.excludeFromClasspath);
     }
 
     public boolean isSwallowGettersWithParameters() {
@@ -104,5 +118,22 @@ public class FluidGeneratorPreferences {
 
     public void setGenerateBooleanComponentAccessors(boolean generateBooleanComponentAccessors) {
         this.generateBooleanComponentAccessors = generateBooleanComponentAccessors;
+    }
+
+    public List<String> getExcludeFromClasspath() {
+        return excludeFromClasspath;
+    }
+
+    public void setExcludeFromClasspath(List<String> excludeFromClasspath) {
+        this.excludeFromClasspath = excludeFromClasspath;
+    }
+
+    public boolean matchesIgnoredClasspath(String element) {
+        for (String segment : excludeFromClasspath) {
+            if ( element.contains(segment)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
