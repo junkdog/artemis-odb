@@ -2,8 +2,9 @@ package com.artemis;
 
 import com.artemis.io.SaveFileFormat;
 import com.artemis.managers.WorldSerializationManager;
+import com.artemis.managers.WorldSerializationManager.ArtemisSerializer;
 
-public abstract class BasePrefab<DATA, SERIALIZER extends WorldSerializationManager.ArtemisSerializer> {
+public abstract class BasePrefab<DATA, SERIALIZER extends ArtemisSerializer> {
 	protected final World world;
 	protected final DATA data;
 
