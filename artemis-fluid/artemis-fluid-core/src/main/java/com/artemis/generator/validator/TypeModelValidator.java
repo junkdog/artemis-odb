@@ -27,14 +27,12 @@ public class TypeModelValidator {
      * @param model
      * @throws TypeModelValidatorException if ambiguous methods.
      */
-    public void validate(TypeModel model )
-    {
-        String errors="";
+    public void validate(TypeModel model) {
+        String errors = "";
         errors += validateFields(model.fields);
         errors += validateMethods(model.methods);
 
-        if ( !errors.isEmpty() )
-        {
+        if (!errors.isEmpty()) {
             throw new TypeModelValidatorException("Ambiguous field(s) or method(s).\n" + errors);
         }
     }
@@ -47,7 +45,7 @@ public class TypeModelValidator {
         for (FieldDescriptor field : duplicates) {
             String error = " .. [" + field.getDebugNotes() + "] causes ambiguous field " + field.name + " in " + context;
             log.error(error);
-            s = s + error +"\n";
+            s = s + error + "\n";
         }
 
         return s;
@@ -59,30 +57,51 @@ public class TypeModelValidator {
 
         String s = "";
         for (MethodDescriptor method : duplicates) {
-            String error = " .. [" + method.getDebugNotes() + "] causes ambiguous method " + method.signature(true, true)+ " in " + context;
+            String error = " .. [" + method.getDebugNotes() + "] causes ambiguous method " + method.signature(true, true) + " in " + context;
             log.error(error);
-            s = s + error +"\n";
+            s = s + error + "\n";
+        }
+
+        for (MethodDescriptor method : methods) {
+            if (isReservedKeyword(method.name)) {
+                String error = " .. [" + method.getDebugNotes() + "] causes illegal method name " + method.signature(true, true) + " in " + context + ". '"+method.name+"' is a reserved keyword in java. Override name with @Fluid annotation.";
+                log.error(error);
+                s = s + error + "\n";
+            }
         }
 
         return s;
     }
 
 
-    public <T extends AmbiguousSignature> Collection<T> getDuplicates(List<T> listContainingDuplicates)
-    {
+    Set<String> reservedKeywords = new HashSet<String>(Arrays.asList(new String[]{
+            "abstract", "continue", "for", "new", "switch",
+            "assert", "default", "goto*", "package", "synchronized",
+            "boolean", "do", "if", "private", "this",
+            "break", "double", "implements", "protected", "throw",
+            "byte", "else", "import", "public", "throws",
+            "case", "enum", "instanceof", "return", "transient",
+            "catch", "extends", "int", "short", "try",
+            "char", "final", "interface", "static", "void",
+            "class", "finally", "long", "strictfp", "volatile",
+            "const", "float", "native", "super", "while"}));
+
+    private boolean isReservedKeyword(String name) {
+        return reservedKeywords.contains(name);
+    }
+
+
+    public <T extends AmbiguousSignature> Collection<T> getDuplicates(List<T> listContainingDuplicates) {
         final Map<String, T> firstOccurances = new HashMap<String, T>();
         final List<T> duplicates = new ArrayList<T>(128);
         final Set<String> uniques = new HashSet<String>(128);
 
-        for (T method : listContainingDuplicates)
-        {
+        for (T method : listContainingDuplicates) {
             // by ignoring parameter names and return types we pick up on more ambiguous cases.
             final String signature = method.ambiguousSignature();
-            if (!uniques.add(signature))
-            {
+            if (!uniques.add(signature)) {
                 T firstOccuranceMethod = firstOccurances.remove(signature);
-                if ( firstOccuranceMethod != null )
-                {
+                if (firstOccuranceMethod != null) {
                     duplicates.add(firstOccuranceMethod);
                 }
                 duplicates.add(method);
