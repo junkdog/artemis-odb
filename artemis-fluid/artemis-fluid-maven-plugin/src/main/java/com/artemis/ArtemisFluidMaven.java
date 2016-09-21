@@ -59,6 +59,9 @@ public class ArtemisFluidMaven extends AbstractMojo {
         new FluidGenerator().generate(
                 classpathAsUrls(preferences),
                 generatedSourcesDirectory(), createLogAdapter(), preferences);
+
+        System.out.flush();
+        System.err.flush();
     }
 
     /**
