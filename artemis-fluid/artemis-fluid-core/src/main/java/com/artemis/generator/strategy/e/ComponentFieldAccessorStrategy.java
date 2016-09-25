@@ -62,8 +62,10 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
 
 
     private void exposeOnFluidInterface(ComponentDescriptor component, Field field, TypeModel model) {
-        model.add(fieldSetterMethod(component, field));
-        model.add(fieldGetterMethod(component, field));
+        if (0 == (Modifier.FINAL & field.getModifiers()))
+	        model.add(fieldSetterMethod(component, field));
+
+	    model.add(fieldGetterMethod(component, field));
     }
 
 
