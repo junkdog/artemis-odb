@@ -10,7 +10,8 @@ import java.util.UUID;
  * Non-reusable entity creation helper for rapid prototyping.
  *
  * Discouraged for use other than rapid prototyping and simple games.
- * Use {@link ComponentMapper} instead.
+ * Use {@link ComponentMapper} instead, or check out the Fluid Entity
+ * interface.
  *
  * Example: new Builder(world)
  * .with(Pos.class, Anim.class)
@@ -25,8 +26,8 @@ import java.util.UUID;
  */
 public class EntityBuilder {
 
-	private final World world;
-	private final EntityEdit edit;
+	protected final World world;
+	protected final EntityEdit edit;
 
 	/** Begin building new entity.*/
 	public EntityBuilder(World world) {
