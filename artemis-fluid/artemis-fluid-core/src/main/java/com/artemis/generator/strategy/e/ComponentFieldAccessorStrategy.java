@@ -121,7 +121,7 @@ public class ComponentFieldAccessorStrategy extends IterativeModelStrategy {
         final String parameterName = field.getName();
         return new MethodBuilder(FluidTypes.E_TYPE, component.getCompositeName(parameterName))
                 .parameter(field.getGenericType(), parameterName)
-                .mapper(component, ".create(entityId)." + parameterName + "=" + parameterName)
+                .mapper(component, ".create(this.entityId)." + parameterName + "=" + parameterName)
                 .debugNotes(field.toGenericString())
                 .returnFluid()
                 .build();
