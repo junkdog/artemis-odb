@@ -187,6 +187,15 @@ public class EntitySubscription {
 		extra.listeners.add(listener);
 	}
 
+	/**
+	 * Remove previously registered listener.
+	 *
+	 * @param listener listener to remove.
+	 */
+	public void removeSubscriptionListener(SubscriptionListener listener) {
+		extra.listeners.remove(listener);
+	}
+
 	@Override
 	public String toString() {
 		return "EntitySubscription[" + getAspectBuilder() + "]";
