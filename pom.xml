@@ -101,6 +101,7 @@
 
 	<modules>
 		<module>artemis</module>
+		<module>artemis-fluid</module>
 		<module>artemis-serializer</module>
 		<module>artemis-json</module>
 		<module>artemis-json-libgdx</module>
