@@ -48,7 +48,6 @@ public class WorldSerializationManager extends BaseSystem {
 					baos.write(buf, 0, read);
 				}
 				is = new ByteArrayInputStream(baos.toByteArray());
-				baos.close();
 			} catch (IOException e) {
 				throw new RuntimeException("Error copying inputstream", e);
 			}

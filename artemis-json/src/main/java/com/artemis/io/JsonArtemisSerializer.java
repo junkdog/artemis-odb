@@ -114,6 +114,9 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	}
 
 	private <T extends SaveFileFormat> T newInstance(Class<T> format) {
+		if (format.getClass().equals(SaveFileFormat.class))
+			return (T) new SaveFileFormat();
+
 		try {
 			Constructor ctor = ClassReflection.getDeclaredConstructor(format);
 			ctor.setAccessible(true);
