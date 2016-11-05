@@ -1,0 +1,68 @@
+{
+	"metadata": {
+		"version": 1
+	},
+	"componentIdentifiers": {
+		"com.artemis.component.ComponentX": "ComponentX",
+		"com.artemis.component.NameComponent": "NameComponent",
+		"com.artemis.component.ComponentY": "ComponentY",
+		"com.artemis.component.ReusedComponent": "ReusedComponent"
+	},
+	"entities": {
+		"0": {
+			"archetype": 1,
+			"components": {
+				"ComponentX": {
+					"text": "hello"
+				},
+				"ComponentY": {
+					"text": "whatever"
+				}
+			}
+		},
+		"1": {
+			"archetype": 2,
+			"components": {
+				"ComponentX": {
+					"text": "hello 2"
+				},
+				"ComponentY": {
+					"text": "whatever 2"
+				},
+				"NameComponent": {
+					"name": "do i work?"
+				}
+			}
+		},
+		"2": {
+			"archetype": 4,
+			"key": "whatever",
+			"components": {
+				"ComponentX": {
+					"text": "hello 3"
+				},
+				"ComponentY": {
+					"text": "whatever 3"
+				}
+			}
+		}
+	},
+	"archetypes": {
+		"1": [
+			"ComponentX",
+			"ComponentY",
+			"ReusedComponent"
+		],
+		"2": [
+			"ComponentX",
+			"ComponentY",
+			"ReusedComponent",
+			"NameComponent"
+		],
+		"4": [
+			"ComponentX",
+			"ComponentY",
+			"ReusedComponent"
+		]
+	}
+}

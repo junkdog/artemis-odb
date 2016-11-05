@@ -14,11 +14,12 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
+import static com.artemis.utils.SerializationUtil.save;
 import static org.junit.Assert.*;
 
 @Wire(failOnNull = false)
 public class JsonWorldSerializationManagerTest {
-	private WorldSerializationManager manger;
+	private WorldSerializationManager wsm;
 	private AspectSubscriptionManager subscriptions;
 	private TagManager tags;
 	private GroupManager groups;
@@ -61,14 +62,14 @@ public class JsonWorldSerializationManagerTest {
 		world.inject(this);
 		JsonArtemisSerializer backend = new JsonArtemisSerializer(world);
 		backend.prettyPrint(true);
-		manger.setSerializer(backend);
+		wsm.setSerializer(backend);
 
 		allEntities = subscriptions.get(Aspect.all());
 	}
 
 	@Test
 	public void serializer_save_load_std_format_new_world() throws Exception {
-		String json = save(allEntities);
+		String json = save(allEntities, wsm);
 
 		deleteAll();
 		assertEquals(0, allEntities.getEntities().size());
@@ -80,12 +81,12 @@ public class JsonWorldSerializationManagerTest {
 
 		allEntities = subscriptions.get(Aspect.all());
 
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 
 		world.process();
 		assertEquals(3, allEntities.getEntities().size());
 
-		String json2 = save(allEntities);
+		String json2 = save(allEntities, wsm);
 
 		deleteAll();
 		assertEquals(0, allEntities.getEntities().size());
@@ -93,7 +94,7 @@ public class JsonWorldSerializationManagerTest {
 
 	@Test
 	public void serializer_save_to_file_and_load_std_format_new_world() throws Exception {
-		String json = save(allEntities);
+		String json = save(allEntities, wsm);
 		PrintWriter writer = new PrintWriter("save_temp.json", "UTF-8");
 		writer.append(json);
 		writer.close();
@@ -107,13 +108,13 @@ public class JsonWorldSerializationManagerTest {
 
 		allEntities = subscriptions.get(Aspect.all());
 
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 		file.delete();
 
 		world.process();
 		assertEquals(3, allEntities.getEntities().size());
 
-		String json2 = save(allEntities);
+		String json2 = save(allEntities, wsm);
 
 		deleteAll();
 		assertEquals(0, allEntities.getEntities().size());
@@ -124,13 +125,13 @@ public class JsonWorldSerializationManagerTest {
 	public void serializer_save_load_with_keys() throws Exception {
 		setKeys();
 
-		String json = save(allEntities);
+		String json = save(allEntities, wsm);
 
 		deleteAll();
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
 				json.getBytes(StandardCharsets.UTF_8));
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 		world.process();
 
 		assertEquals(3, allEntities.getEntities().size());
@@ -142,13 +143,13 @@ public class JsonWorldSerializationManagerTest {
 	public void serializer_save_load_with_tags() throws Exception {
 		setTags();
 
-		String json = save(allEntities);
+		String json = save(allEntities, wsm);
 
 		deleteAll();
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
 				json.getBytes(StandardCharsets.UTF_8));
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 		world.process();
 
 		assertEquals(3, allEntities.getEntities().size());
@@ -159,7 +160,7 @@ public class JsonWorldSerializationManagerTest {
 	public void serializer_save_load_with_groups() throws Exception {
 		setGroups();
 
-		String json = save(allEntities);
+		String json = save(allEntities, wsm);
 
 		deleteAll();
 
@@ -168,7 +169,7 @@ public class JsonWorldSerializationManagerTest {
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
 				json.getBytes(StandardCharsets.UTF_8));
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 		world.process();
 
 		assertEquals(3, allEntities.getEntities().size());
@@ -180,13 +181,13 @@ public class JsonWorldSerializationManagerTest {
 		setTags();
 		setGroups();
 
-		String json = save(allEntities);
+		String json = save(allEntities, wsm);
 
 		deleteAll();
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
 				json.getBytes(StandardCharsets.UTF_8));
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 		world.process();
 
 		assertEquals(3, allEntities.getEntities().size());
@@ -201,13 +202,13 @@ public class JsonWorldSerializationManagerTest {
 		setTags();
 		setGroups();
 
-		String json = save(allEntities);
+		String json = save(allEntities, wsm);
 
 		deleteAll();
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
 				json.getBytes(StandardCharsets.UTF_8));
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 		world.process();
 
 		assertEquals(3, allEntities.getEntities().size());
@@ -231,11 +232,11 @@ public class JsonWorldSerializationManagerTest {
 
 		world.process();
 
-		String json = save(allEntities);
+		String json = save(allEntities, wsm);
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
 				json.getBytes(StandardCharsets.UTF_8));
-		manger.load(is, SaveFileFormat.class);
+		wsm.load(is, SaveFileFormat.class);
 
 		world.process();
 
@@ -267,11 +268,11 @@ public class JsonWorldSerializationManagerTest {
 
 		world.process();
 
-		String json = save(allEntities);
+		String json = save(allEntities, wsm);
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
 				json.getBytes(StandardCharsets.UTF_8));
-		manger.load(is, SaveFileFormat.class);
+		wsm.load(is, SaveFileFormat.class);
 
 		world.process();
 
@@ -303,11 +304,11 @@ public class JsonWorldSerializationManagerTest {
 
 		world.process();
 
-		String json = save(allEntities);
+		String json = save(allEntities, wsm);
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
 				json.getBytes(StandardCharsets.UTF_8));
-		manger.load(is, SaveFileFormat.class);
+		wsm.load(is, SaveFileFormat.class);
 
 		world.process();
 
@@ -337,13 +338,13 @@ public class JsonWorldSerializationManagerTest {
 
 		world.process();
 
-		String json = save(allEntities);
+		String json = save(allEntities, wsm);
 
 		deleteAll();
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
 			json.getBytes(StandardCharsets.UTF_8));
-		SaveFileFormat l = manger.load(is, SaveFileFormat.class);
+		SaveFileFormat l = wsm.load(is, SaveFileFormat.class);
 
 		world.process();
 
@@ -366,11 +367,11 @@ public class JsonWorldSerializationManagerTest {
 
 		world.process();
 
-		String json = save(allEntities);
+		String json = save(allEntities, wsm);
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
 			json.getBytes(StandardCharsets.UTF_8));
-		manger.load(is, SaveFileFormat.class);
+		wsm.load(is, SaveFileFormat.class);
 
 		world.process();
 
@@ -385,7 +386,7 @@ public class JsonWorldSerializationManagerTest {
 
 	@Test
 	public void loaded_entities_id_order_matches_json_layout() throws Exception {
-		String json = save(allEntities);
+		String json = save(allEntities, wsm);
 
 		world.delete(2);
 		world.process();
@@ -397,7 +398,7 @@ public class JsonWorldSerializationManagerTest {
 		ByteArrayInputStream is = new ByteArrayInputStream(
 			json.getBytes(StandardCharsets.UTF_8));
 
-		SaveFileFormat load = manger.load(is, SaveFileFormat.class);
+		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 		world.process();
 
 		assertEquals(3, allEntities.getEntities().size());
@@ -429,7 +430,7 @@ public class JsonWorldSerializationManagerTest {
 
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
 		SaveFileFormat save = new SaveFileFormat(toSave);
-		manger.save(baos, save);
+		wsm.save(baos, save);
 
 		// only saving 2nd entity, need to make sure the archetype for
 		// id1 is pulled in too
@@ -470,18 +471,6 @@ public class JsonWorldSerializationManagerTest {
 		groups.add(world.getEntity(entities.get(0)), "group1");
 		groups.add(world.getEntity(entities.get(0)), "group2");
 		groups.add(world.getEntity(entities.get(2)), "group1");
-	}
-
-	private String save(EntitySubscription subscription) throws Exception {
-		return save(subscription.getEntities());
-	}
-
-	private String save(IntBag entities) throws Exception {
-
-		SaveFileFormat save = new SaveFileFormat(entities);
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
-		manger.save(baos, save);
-		return baos.toString(StandardCharsets.UTF_8.name());
 	}
 
 	private int deleteAll() {
