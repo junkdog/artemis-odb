@@ -10,9 +10,12 @@ import com.artemis.utils.IntBag;
 import java.io.*;
 
 public class WorldSerializationManager extends BaseSystem {
-	private static final String TAG = WorldSerializationManager.class.getSimpleName();
 	private ArtemisSerializer<?> backend;
 	public boolean alwaysLoadStreamMemory = true;
+
+	// both fields re-used by load()
+	private byte[] bytes;
+	private ByteArrayOutputStream baos;
 
 
 	@Override
@@ -38,8 +41,8 @@ public class WorldSerializationManager extends BaseSystem {
 	public <T extends SaveFileFormat> T load(InputStream is, Class<T> format) {
 		if (alwaysLoadStreamMemory || !InputStreamHelper.isMarkSupported(is)) {
 			try {
-				byte[] buf = new byte[32768];
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				byte[] buf = byteBuffer();
+				ByteArrayOutputStream baos = byteArrayOutputStream();
 				int read;
 				while ((read = is.read(buf)) != -1) {
 					baos.write(buf, 0, read);
@@ -60,6 +63,23 @@ public class WorldSerializationManager extends BaseSystem {
 
 		world.inject(format);
 		backend.save(out, format);
+	}
+
+	private ByteArrayOutputStream byteArrayOutputStream() {
+		if (baos == null) {
+			baos = new ByteArrayOutputStream();
+		} else {
+			baos.reset();
+		}
+
+		return baos;
+	}
+
+	private byte[] byteBuffer() {
+		if (bytes == null)
+			bytes = new byte[32768];
+
+		return bytes;
 	}
 
 	/**
