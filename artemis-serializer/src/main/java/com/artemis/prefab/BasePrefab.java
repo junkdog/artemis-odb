@@ -44,7 +44,7 @@ public abstract class BasePrefab<DATA, SERIALIZER extends ArtemisSerializer> {
 		}
 	}
 
-	protected final SaveFileFormat create() {
+	public final SaveFileFormat create() {
 		SERIALIZER serializer = serializationManager.getSerializer();
 		return create(serializer, data.getData(), saveFileFormat());
 	}
