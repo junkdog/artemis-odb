@@ -51,4 +51,9 @@ public class PrefabTest {
 
 		world.process();
 	}
+
+	@Test(expected = MissingPrefabDataException.class)
+	public void missing_annotation() {
+		new NoAnnotationPrefab(world, new ClasspathFileHandleResolver());
+	}
 }
