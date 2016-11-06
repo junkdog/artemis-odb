@@ -4,7 +4,6 @@ import com.artemis.MundaneWireException;
 import com.artemis.World;
 import com.artemis.annotations.PrefabData;
 import com.artemis.io.SaveFileFormat;
-import com.artemis.io.SerializationException;
 import com.artemis.managers.WorldSerializationManager;
 import com.artemis.managers.WorldSerializationManager.ArtemisSerializer;
 import com.artemis.utils.reflect.ClassReflection;
@@ -55,23 +54,5 @@ public abstract class BasePrefab<DATA, SERIALIZER extends ArtemisSerializer> {
 
 	protected Class<SaveFileFormat> saveFileFormat() {
 		return SaveFileFormat.class;
-	}
-
-
-	public static class MissingPrefabDataException extends SerializationException {
-		public MissingPrefabDataException() {
-		}
-
-		public MissingPrefabDataException(String message) {
-			super(message);
-		}
-
-		public MissingPrefabDataException(String message, Throwable cause) {
-			super(message, cause);
-		}
-
-		public MissingPrefabDataException(Throwable cause) {
-			super(cause);
-		}
 	}
 }
