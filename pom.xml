@@ -102,10 +102,7 @@
 	<modules>
 		<module>artemis</module>
 		<module>artemis-fluid</module>
-		<module>artemis-serializer</module>
-		<module>artemis-json</module>
-		<module>artemis-json-libgdx</module>
-		<module>artemis-kryo</module>
+		<module>artemis-serialization</module>
 		<module>artemis-weaver</module>
 		<module>artemis-maven</module>
 		<module>artemis-gradle</module>

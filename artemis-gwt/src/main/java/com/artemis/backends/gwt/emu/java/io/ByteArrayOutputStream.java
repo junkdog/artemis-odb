@@ -19,10 +19,6 @@
 
 package java.io;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-
 /**
  * A specialized {@link OutputStream} for class for writing content to an
  * (internal) byte array. As bytes are written to this stream, the byte array
