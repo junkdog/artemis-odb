@@ -9,6 +9,13 @@ import com.artemis.managers.WorldSerializationManager.ArtemisSerializer;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.ReflectionException;
 
+/**
+ * Shared functionality for prefabs. {@link #create()} is expected to be wrapped
+ * by concrete prefab implementations, e.g. inside <code>PlayerPrefab::create(color, x, y)</code>.
+ *
+ * @param <DATA> Data source
+ * @param <SERIALIZER> Serializer, one of libgdx's or json-beans.
+ */
 public abstract class BasePrefab<DATA, SERIALIZER extends ArtemisSerializer> {
 	protected final World world;
 	private final PrefabReader<DATA> data;
@@ -24,8 +31,7 @@ public abstract class BasePrefab<DATA, SERIALIZER extends ArtemisSerializer> {
 
 		world.inject(this);
 
-		// TODO: check if compiled representation exists, else
-		// default to current initialization
+		// TODO: #439 - generate .class  from .json
 		data.initialize(getPrefabDataPath());
 	}
 
