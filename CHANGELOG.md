@@ -2,6 +2,12 @@
 
 
 #### Version: 2.1.0-SNAPSHOT
+- Opt-in [Fluid Entities API][fluid], convenient way to assemble and interact with
+  your entities, making code less verbose, improving readability.
+- Entity templates using [Prefabs](https://github.com/junkdog/artemis-odb/wiki/Prefabs)
+- Added `EntitySubscription::removeSubscriptionListener`
+
+[fluid]: https://github.com/junkdog/artemis-odb/wiki/Fluid-Entities
 
 
 #### Version: 2.0.0 - 2016-08-15
