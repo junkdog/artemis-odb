@@ -14,6 +14,7 @@
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.utils.IntBag"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.manager.TypedEntityFactory"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.io"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.prefab"/>
 
 	<extend-configuration-property name="artemis.reflect.include" value="com.badlogic.gdx.scenes.scene2d" />
 	<extend-configuration-property name="artemis.reflect.include" value="com.badlogic.gdx.math" />
@@ -49,5 +50,6 @@
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.utils.IntBag"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.manager.TypedEntityFactory"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.io"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.prefab"/>
 
 </module>
