@@ -1,12 +1,16 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 
-#### Version: 2.1.0-SNAPSHOT
+#### Version: 2.2.0-SNAPSHOT
+
+
+#### Version: 2.1.0 - 2016-12-09
 - Opt-in [Fluid Entities API][fluid], convenient way to assemble and interact with
   your entities, making code less verbose, improving readability.
 - Entity templates using [Prefabs](https://github.com/junkdog/artemis-odb/wiki/Prefabs).
 - Wasteful memory allocation during deserialization under control.
 - Added `EntitySubscription::removeSubscriptionListener`.
+- **Fix**: IOException when serializing to json and prettyPrint is `false`
 
 [fluid]: https://github.com/junkdog/artemis-odb/wiki/Fluid-Entities
 

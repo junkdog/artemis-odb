@@ -13,6 +13,8 @@ import java.io.*;
 @Wire(injectInherited = false)
 public class JsonWorldSerializationManagerTest extends GWTTestCase {
 
+	private JsonArtemisSerializer backend;
+
 	private static class StandardCharsets {
 		public static final String UTF_8 = "UTF-8";
 	}
@@ -62,9 +64,14 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 				.setSystem(WorldSerializationManager.class));
 
 		world.inject(this);
-		JsonArtemisSerializer backend = new JsonArtemisSerializer(world);
+		backend = new JsonArtemisSerializer(world);
 		backend.prettyPrint(true);
 		manger.setSerializer(backend);
+	}
+
+	public void test_save_compact_json() throws Exception {
+		backend.prettyPrint(false);
+		save(allEntities);
 	}
 
 	public void test_serializer_save_load_std_format_new_world() throws Exception {

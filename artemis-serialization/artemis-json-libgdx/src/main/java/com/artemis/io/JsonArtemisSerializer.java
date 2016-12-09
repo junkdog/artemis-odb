@@ -78,6 +78,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 			save.componentIdentifiers.build();
 			if (prettyPrint) {
 				writer.append(json.prettyPrint(save));
+				writer.flush();
 			} else {
 				json.toJson(save, writer);
 			}
@@ -88,13 +89,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 
 	@Override
 	protected void save(OutputStream out, SaveFileFormat save) throws SerializationException {
-		try {
-			OutputStreamWriter osw = new OutputStreamWriter(out);
-			save(osw, save);
-			osw.flush();
-		} catch (IOException e) {
-			throw new SerializationException(e);
-		}
+		save(new OutputStreamWriter(out), save);
 	}
 
 	@Override

@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 import static com.artemis.utils.SerializationUtil.save;
@@ -27,6 +26,7 @@ public class JsonWorldSerializationManagerTest {
 	private EntitySubscription allEntities;
 
 	private ComponentMapper<SerializationTag> serializationTagMapper;
+	private JsonArtemisSerializer backend;
 
 	@Before
 	public void setup() {
@@ -60,11 +60,18 @@ public class JsonWorldSerializationManagerTest {
 				.setSystem(WorldSerializationManager.class));
 
 		world.inject(this);
-		JsonArtemisSerializer backend = new JsonArtemisSerializer(world);
+		backend = new JsonArtemisSerializer(world);
 		backend.prettyPrint(true);
 		wsm.setSerializer(backend);
 
 		allEntities = subscriptions.get(Aspect.all());
+	}
+
+
+	@Test /* https://github.com/junkdog/artemis-odb/issues/452 */
+	public void save_compact_json() throws Exception {
+		backend.prettyPrint(false);
+		save(allEntities, wsm);
 	}
 
 	@Test
@@ -75,7 +82,7 @@ public class JsonWorldSerializationManagerTest {
 		assertEquals(0, allEntities.getEntities().size());
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
+				json.getBytes("UTF-8"));
 
 		setupWorld();
 
@@ -130,7 +137,7 @@ public class JsonWorldSerializationManagerTest {
 		deleteAll();
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
+				json.getBytes("UTF-8"));
 		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 		world.process();
 
@@ -148,7 +155,7 @@ public class JsonWorldSerializationManagerTest {
 		deleteAll();
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
+				json.getBytes("UTF-8"));
 		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 		world.process();
 
@@ -168,7 +175,7 @@ public class JsonWorldSerializationManagerTest {
 		assertEquals(0, groups.getEntities("group2").size());
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
+				json.getBytes("UTF-8"));
 		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 		world.process();
 
@@ -186,7 +193,7 @@ public class JsonWorldSerializationManagerTest {
 		deleteAll();
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
+				json.getBytes("UTF-8"));
 		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 		world.process();
 
@@ -207,7 +214,7 @@ public class JsonWorldSerializationManagerTest {
 		deleteAll();
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
+				json.getBytes("UTF-8"));
 		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 		world.process();
 
@@ -235,7 +242,7 @@ public class JsonWorldSerializationManagerTest {
 		String json = save(allEntities, wsm);
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
+				json.getBytes("UTF-8"));
 		wsm.load(is, SaveFileFormat.class);
 
 		world.process();
@@ -271,7 +278,7 @@ public class JsonWorldSerializationManagerTest {
 		String json = save(allEntities, wsm);
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
+				json.getBytes("UTF-8"));
 		wsm.load(is, SaveFileFormat.class);
 
 		world.process();
@@ -307,7 +314,7 @@ public class JsonWorldSerializationManagerTest {
 		String json = save(allEntities, wsm);
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
-				json.getBytes(StandardCharsets.UTF_8));
+				json.getBytes("UTF-8"));
 		wsm.load(is, SaveFileFormat.class);
 
 		world.process();
@@ -343,7 +350,7 @@ public class JsonWorldSerializationManagerTest {
 		deleteAll();
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
-			json.getBytes(StandardCharsets.UTF_8));
+			json.getBytes("UTF-8"));
 		SaveFileFormat l = wsm.load(is, SaveFileFormat.class);
 
 		world.process();
@@ -370,7 +377,7 @@ public class JsonWorldSerializationManagerTest {
 		String json = save(allEntities, wsm);
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
-			json.getBytes(StandardCharsets.UTF_8));
+			json.getBytes("UTF-8"));
 		wsm.load(is, SaveFileFormat.class);
 
 		world.process();
@@ -396,7 +403,7 @@ public class JsonWorldSerializationManagerTest {
 		assertEquals(0, allEntities.getEntities().size());
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
-			json.getBytes(StandardCharsets.UTF_8));
+			json.getBytes("UTF-8"));
 
 		SaveFileFormat load = wsm.load(is, SaveFileFormat.class);
 		world.process();
