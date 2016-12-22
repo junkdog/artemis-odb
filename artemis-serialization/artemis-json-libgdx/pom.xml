@@ -28,13 +28,13 @@
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
-			<version>[1.6.0, 2.0.0)</version>
+			<version>[1.9.5, 2.0.0)</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx-backend-headless</artifactId>
-			<version>[1.6.0, 2.0.0)</version>
+			<version>[1.9.5, 2.0.0)</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
