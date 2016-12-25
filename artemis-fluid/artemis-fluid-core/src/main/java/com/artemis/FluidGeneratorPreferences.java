@@ -30,7 +30,7 @@ public class FluidGeneratorPreferences {
 
     {
         excludeFromClasspath.add("-sources.jar"); // exclude sources
-        excludeFromClasspath.add("gwt-user-2.6.1"); // exclude gwt.
+        excludeFromClasspath.add("gwt-user-"); // exclude gwt.
     }
 
     public FluidGeneratorPreferences() {
