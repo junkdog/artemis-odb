@@ -80,6 +80,10 @@ public class GroupManager extends BaseSystem {
 		if (!groups.contains(group)) groups.add(group);
 	}
 	
+	public void add(int entityId, String group) {
+		add(world.getEntity(entityId), group);
+	}
+	
 	/**
 	 * Remove the entity from the specified group.
 	 *
@@ -100,6 +104,10 @@ public class GroupManager extends BaseSystem {
 			if (groups.size() == 0) groupsByEntity.remove(e);
 		}
 	}
+	
+	public void remove(int entityId, String group) {
+		remove(world.getEntity(entityId), group);
+	}
 
 	/**
 	 * Remove the entity from all groups.
@@ -117,6 +125,10 @@ public class GroupManager extends BaseSystem {
 			}
 		}
 		groupsByEntity.remove(e);
+	}
+	
+	public void removeFromAllGroups(int entityId) {
+		removeFromAllGroups(world.getEntity(entityId));
 	}
 	
 	/**
@@ -162,6 +174,10 @@ public class GroupManager extends BaseSystem {
 		return getGroups(e).size() > 0;
 	}
 	
+	public boolean isInAnyGroup(int entityId) {
+		isInAnyGroup(world.getEntity(entityId));
+	}
+	
 	/**
 	 * Check if the entity is in the supplied group.
 	 *
@@ -186,6 +202,10 @@ public class GroupManager extends BaseSystem {
 			}
 		}
 		return false;
+	}
+	
+	public boolean isInGroup(int entityId, String group) {
+		isInGroup(world.getEntity(entityId), group);
 	}
 
 	void deleted(IntBag entities) {
