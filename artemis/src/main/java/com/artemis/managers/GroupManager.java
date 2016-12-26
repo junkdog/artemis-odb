@@ -79,7 +79,58 @@ public class GroupManager extends BaseSystem {
 		}
 		if (!groups.contains(group)) groups.add(group);
 	}
-	
+
+	/**
+	 * Set the group of the entity.
+	 *
+	 * @param g1
+	 *			group to add the entity into
+	 * @param g2
+	 *			group to add the entity into
+	 * @param e
+	 *			entity to add into the group
+	 */
+
+	public void add(Entity e, String g1, String g2) {
+		add(e, g1);
+		add(e, g2);
+	}
+
+	/**
+	 * Set the group of the entity.
+	 *
+	 * @param g1
+	 *			group to add the entity into
+	 * @param g2
+	 *			group to add the entity into
+	 * @param g3
+	 *			group to add the entity into
+	 * @param e
+	 *			entity to add into the group
+	 */
+
+	public void add(Entity e, String g1, String g2, String g3) {
+		add(e, g1);
+		add(e, g2);
+		add(e, g3);
+	}
+
+	/**
+	 * Set the group of the entity.
+	 *
+	 * @param groups
+	 *			groups to add the entity into
+	 * @param e
+	 *			entity to add into the group
+	 */
+
+
+	public void add(Entity e, String ...groups) {
+		for (String group: groups) {
+			add(e, group);
+		}
+	}
+
 	/**
 	 * Remove the entity from the specified group.
 	 *
@@ -98,6 +149,56 @@ public class GroupManager extends BaseSystem {
 		if(groups != null) {
 			groups.remove(group);
 			if (groups.size() == 0) groupsByEntity.remove(e);
+		}
+	}
+
+	/**
+	 * Removes the entity from the specified groups.
+	 *
+	 * @param e
+	 * 			entity to remove from group
+	 * @param g1
+	 * 			group to remove the entity from
+	 * @param g2
+	 * 			group to remove the entity from
+	 */
+
+	public void remove(Entity e, String g1, String g2) {
+		remove(e, g1);
+		remove(e, g2);
+	}
+
+	/**
+	 * Removes the entity from the specified groups.
+	 *
+	 * @param e
+	 * 			entity to remove from group
+	 * @param g1
+	 * 			group to remove the entity from
+	 * @param g2
+	 * 			group to remove the entity from
+	 * @param g3
+	 * 			group to remove the entity from
+	 */
+
+	public void remove(Entity e, String g1, String g2, String g3) {
+		remove(e, g1);
+		remove(e, g2);
+		remove(e, g3);
+	}
+
+	/**
+	 * Removes the entity from the specified groups
+	 *
+	 * @param e
+	 * 			entity to remove from group
+	 * @param groups
+	 * 			groups to remove the entity from
+	 */
+
+	public void remove(Entity e, String ...groups) {
+		for (String group: groups) {
+			remove(e, group);
 		}
 	}
 
