@@ -1,15 +1,15 @@
 package com.artemis;
 
-import com.artemis.annotations.SkipWire;
-import com.artemis.utils.Bag;
-import com.artemis.utils.ImmutableBag;
-import com.artemis.utils.IntBag;
+import static com.artemis.Aspect.all;
 
-import com.artemis.utils.BitVector;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.artemis.Aspect.all;
+import com.artemis.annotations.SkipWire;
+import com.artemis.utils.Bag;
+import com.artemis.utils.BitVector;
+import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.IntBag;
 
 /**
  * <p>Manages all instances of {@link EntitySubscription}.</p>
@@ -37,8 +37,10 @@ public class AspectSubscriptionManager extends BaseSystem {
 	protected void processSystem() {}
 
 	@Override
-	protected void initialize() {
-		// making sure subscription 1 matches all entities
+	protected void setWorld(World world) {
+		super.setWorld(world);
+
+		// making sure the first subscription matches all entities
 		get(all());
 	}
 
@@ -65,16 +67,13 @@ public class AspectSubscriptionManager extends BaseSystem {
 
 	/**
 	 * Informs all listeners of added, changedBits and deletedBits changes.
+	 * 
+	 * Order of {@link EntitySubscription.SubscriptionListener} can vary
+	 * (typically ordinal, except for subscriptions created in process,
+	 * initialize instead of setWorld).
 	 *
-	 * Two types of listeners:
-	 * {@see EntityObserver} implementations are guaranteed to be called back in order of system registration.
-	 * {@see com.artemis.EntitySubscription.SubscriptionListener}, where order can vary (typically ordinal, except
-	 * for subscriptions created in process, initialize instead of setWorld).
-     *
 	 * {@link com.artemis.EntitySubscription.SubscriptionListener#inserted(IntBag)}
 	 * {@link com.artemis.EntitySubscription.SubscriptionListener#removed(IntBag)}
-	 *
-	 * Observers are called before Subscriptions, which means managerial tasks get artificial priority.
 	 *
 	 * @param changedBits Entities with changedBits composition or state.
 	 * @param deletedBits Entities removed from world.

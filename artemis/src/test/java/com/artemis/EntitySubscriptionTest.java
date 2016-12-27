@@ -4,6 +4,7 @@ import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
 import com.artemis.systems.IteratingSystem;
 import com.artemis.utils.IntBag;
+
 import org.junit.Test;
 
 import static com.artemis.Aspect.all;
@@ -214,6 +215,54 @@ public class EntitySubscriptionTest {
 		entity.deleteFromWorld();
 		world.process();
 	}
+	
+	@Test
+	public void ensure_entity_subscription_integrity() {
+		CompXCounterSystem counterX = new CompXCounterSystem();
+		
+		WorldConfiguration config = new WorldConfiguration();
+		config.setSystem(counterX);
+		
+		World world = new World(config);
+		
+		ComponentMapper<ComponentX> mapperX = world.getMapper(ComponentX.class);
+		ComponentMapper<ComponentY> mapperY = world.getMapper(ComponentY.class);
+		
+		assertEquals(0, counterX.insertedEntities);
+		
+		Entity entityX = world.createEntity();
+		mapperX.create(entityX);
+		
+		world.process();
+		assertEquals(1, counterX.insertedEntities);
+		
+		Entity entityY = world.createEntity();
+		mapperY.create(entityY);
+
+		world.process();
+		assertEquals(1, counterX.insertedEntities);
+		
+		Entity entityXY = world.createEntity();
+		mapperX.create(entityXY);
+		mapperY.create(entityXY);
+
+		world.process();
+		assertEquals(2, counterX.insertedEntities);
+
+		assertEquals(0, counterX.removedEntities);
+		
+		entityX.deleteFromWorld();
+		world.process();
+		assertEquals(1, counterX.removedEntities);
+		
+		entityY.deleteFromWorld();
+		world.process();
+		assertEquals(1, counterX.removedEntities);
+		
+		entityXY.deleteFromWorld();
+		world.process();
+		assertEquals(2, counterX.removedEntities);
+	}
 
 	static class SubscribingManager extends Manager
 			implements  EntitySubscription.SubscriptionListener {
@@ -279,4 +328,29 @@ public class EntitySubscriptionTest {
 				});
 			}
 		}
+	
+	static class CompXCounterSystem extends EntitySystem {
+		
+		public int insertedEntities = 0;
+		public int removedEntities = 0;
+		
+		public CompXCounterSystem()	{
+			super(Aspect.all(ComponentX.class));
+		}
+
+		@Override
+		protected void processSystem() {}
+		
+		@Override
+		public void inserted(Entity entity) {
+			insertedEntities++;
+		}
+		
+		@Override
+		public void removed(Entity entity) {
+			removedEntities++;
+		}
+
+	}
+
 }
