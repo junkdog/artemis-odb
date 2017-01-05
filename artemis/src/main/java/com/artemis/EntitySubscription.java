@@ -2,10 +2,8 @@ package com.artemis;
 
 import com.artemis.annotations.DelayedComponentRemoval;
 import com.artemis.utils.Bag;
-import com.artemis.utils.IntBag;
-
 import com.artemis.utils.BitVector;
-
+import com.artemis.utils.IntBag;
 
 /**
  * Maintains the list of entities matched by an aspect. Entity subscriptions
@@ -40,8 +38,7 @@ public class EntitySubscription {
 	}
 
 	/**
-	 * Returns a reference to the bag holding all matched
-	 * entities.
+	 * Returns a reference to the bag holding all matched entities.
 	 *
 	 * <p><b>Warning: </b> Never remove elements from the bag, as this
 	 * will lead to undefined behavior.</p>
@@ -164,7 +161,7 @@ public class EntitySubscription {
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			int id = ids[i];
-			if(activeEntityIds.unsafeGet(id))
+			if (activeEntityIds.unsafeGet(id))
 				remove(id);
 		}
 	}
