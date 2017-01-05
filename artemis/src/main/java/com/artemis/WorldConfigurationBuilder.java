@@ -236,21 +236,6 @@ public class WorldConfigurationBuilder {
 	}
 
 	/**
-	 * Register passive systems.
-	 * Only one instance of each class is allowed.
-	 * Use {@link #dependsOn} from within plugins.
-	 *
-	 * @param systems  systems to add, order is preserved.
-	 * @param priority priority of added systems, higher priority are added before lower priority.
-	 * @return this
-	 * @throws WorldConfigurationException if type is added more than once.
-	 */
-	public WorldConfigurationBuilder withPassive(int priority, BaseSystem... systems) {
-		addSystems(priority, systems);
-		return this;
-	}
-
-	/**
 	 * helper to queue systems for registration.
 	 */
 	private void addSystems(int priority, BaseSystem[] systems) {

@@ -375,7 +375,7 @@ public class World {
 	}
 
 	/**
-	 * Process all non-passive systems.
+	 * Process all systems.
 	 * @see InvocationStrategy to control and extend how systems are invoked.
 	 */
 	public void process() {
