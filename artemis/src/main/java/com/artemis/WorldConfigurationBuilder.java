@@ -240,11 +240,14 @@ public class WorldConfigurationBuilder {
 	 * Only one instance of each class is allowed.
 	 * Use {@link #dependsOn} from within plugins.
 	 *
+	 * @deprecated passive systems are pre-1.0.
+	 * @see #with(int, BaseSystem...)
 	 * @param systems  systems to add, order is preserved.
 	 * @param priority priority of added systems, higher priority are added before lower priority.
 	 * @return this
 	 * @throws WorldConfigurationException if type is added more than once.
 	 */
+	@Deprecated
 	public WorldConfigurationBuilder withPassive(int priority, BaseSystem... systems) {
 		addSystems(priority, systems);
 		return this;
