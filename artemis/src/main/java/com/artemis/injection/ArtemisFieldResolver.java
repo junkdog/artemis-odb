@@ -10,7 +10,7 @@ import java.util.IdentityHashMap;
 import java.util.Map;
 
 /**
- * Can resolve {@link com.artemis.ComponentMapper}, {@link com.artemis.BaseSystem} and
+ * Can resolve {@link com.artemis.World}, {@link com.artemis.ComponentMapper}, {@link com.artemis.BaseSystem} and
  * {@link com.artemis.Manager} types registered in the {@link World}
  *
  * @author Snorre E. Brekke
@@ -48,6 +48,8 @@ public class ArtemisFieldResolver implements FieldResolver, UseInjectionCache {
 				return getComponentMapper(field);
 			case SYSTEM:
 				return world.getSystem((Class<BaseSystem>) systems.get(fieldType));
+			case WORLD:
+				return world;
 			default:
 				return null;
 

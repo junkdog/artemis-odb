@@ -214,6 +214,8 @@ public class WireTest {
 		world.inject(st);
 
 		assertNotNull(st.tagManager);
+		assertNotNull(st.world1);
+		assertNotNull(st.world2);
 		assertEquals("n1", st.helloN1);
 		assertEquals("world", st.hello);
 		assertEquals("n2", st.helloN2);
@@ -265,6 +267,8 @@ public class WireTest {
 		@Wire(name="hupp", failOnNull=false) private String helloN1;
 		@Wire private String hello;
 		@Wire(name="blergh", failOnNull=false) private String helloN2;
+		@Wire World world1;
+		World world2;
 		
 		private TagManager tagManager;
 	}

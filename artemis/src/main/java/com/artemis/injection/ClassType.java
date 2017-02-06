@@ -15,6 +15,10 @@ public enum ClassType {
 	 */
 	SYSTEM,
 	/**
+	 * Used for (sub)classes of {@link com.artemis.World}
+	 */
+	WORLD,
+	/**
 	 * Used for everything else.
 	 */
 	CUSTOM
