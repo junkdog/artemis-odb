@@ -51,18 +51,7 @@ public class ArtemisFieldResolver implements FieldResolver, UseInjectionCache {
 			case SYSTEM:
 				return world.getSystem((Class<BaseSystem>) systems.get(fieldType));
 			case WORLD:
-				try {
-					field.setAccessible(true);
-					// we don't want to override world fields if they ware @Wired in or set in manually before injection
-					Object current = field.get(target);
-					if (current == null) {
-						return world;
-					} else {
-						return current;
-					}
-				} catch (ReflectionException e) {
-					return null;
-				}
+				return world;
 			default:
 				return null;
 

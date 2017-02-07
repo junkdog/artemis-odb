@@ -2,6 +2,7 @@ package com.artemis.io;
 
 import com.artemis.Entity;
 import com.artemis.World;
+import com.artemis.annotations.SkipWire;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
@@ -9,7 +10,7 @@ import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 
 public class IntBagEntitySerializer implements Json.Serializer<IntBag> {
-	private final World world;
+	@SkipWire private final World world;
 	private final Bag<Entity> translatedIds = new Bag<Entity>();
 
 	private int recursionLevel;

@@ -39,14 +39,9 @@ public class WiredFieldResolver implements UseInjectionCache, PojoFieldResolver 
 					key = field.getType().getName();
 				}
 
-				if (!pojos.containsKey(key)) {
-					// hack to wire in world even if it is not registered
-					if (field.getType() == World.class && world != null) {
-						return world;
-					} else if (cachedField.failOnNull) {
-						String err = "Not registered: " + key + "=" + fieldType;
-						throw new MundaneWireException(err);
-					}
+				if (!pojos.containsKey(key) && cachedField.failOnNull) {
+					String err = "Not registered: " + key + "=" + fieldType;
+					throw new MundaneWireException(err);
 				}
 
 				return pojos.get(key);

@@ -1,6 +1,7 @@
 package com.artemis.managers;
 
 import com.artemis.*;
+import com.artemis.annotations.SkipWire;
 import com.artemis.annotations.Wire;
 import com.artemis.io.JsonArtemisSerializer;
 import com.artemis.io.SaveFileFormat;
@@ -22,7 +23,7 @@ public class CustomJsonWorldSerializationManagerTest {
 	private WorldSerializationManager manger;
 	private AspectSubscriptionManager subscriptions;
 	private SerializedSystem serializedSystem;
-	private World world;
+	@SkipWire private World world;
 	private EntitySubscription allEntities;
 
 	@Before

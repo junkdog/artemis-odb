@@ -1,6 +1,7 @@
 package com.artemis.io;
 
 import com.artemis.*;
+import com.artemis.annotations.SkipWire;
 import com.artemis.annotations.Wire;
 import com.artemis.components.SerializationTag;
 import com.artemis.managers.GroupManager;
@@ -17,7 +18,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 
 	private final Bag<Component> components = new Bag<Component>();
 	private final ComponentNameComparator comparator = new ComponentNameComparator();
-	private final World world;
+	@SkipWire private final World world;
 	private final ReferenceTracker referenceTracker;
 	private final DefaultObjectStore defaultValues;
 	final EntityPoolFactory factory;

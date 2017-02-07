@@ -3,6 +3,7 @@ package com.artemis;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+import com.artemis.annotations.SkipWire;
 import org.junit.Test;
 
 import com.artemis.component.ComponentX;
@@ -53,6 +54,7 @@ public class MultiWorldTest
 	public static class InnerWorldProcessingSystem
 			extends VoidEntitySystem {
 
+		@SkipWire
 		private final World inner;
 
 		public InnerWorldProcessingSystem(World inner) {

@@ -2,13 +2,14 @@ package com.artemis.io;
 
 import com.artemis.Entity;
 import com.artemis.World;
+import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
 import com.esotericsoftware.jsonbeans.Json;
 import com.esotericsoftware.jsonbeans.JsonSerializer;
 import com.esotericsoftware.jsonbeans.JsonValue;
 
 public class EntityBagSerializer implements JsonSerializer<Bag> {
-	private final World world;
+	@SkipWire private final World world;
 
 	public EntityBagSerializer(World world) {
 		this.world = world;
