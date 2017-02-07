@@ -79,7 +79,7 @@ public class PojoFieldResolverTest {
 		}
 
 		@Override
-		public Object resolve(Class<?> fieldType, Field field) {
+		public Object resolve(Object target, Class<?> fieldType, Field field) {
 			return null;
 		}
 	}

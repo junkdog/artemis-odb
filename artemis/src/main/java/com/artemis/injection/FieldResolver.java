@@ -17,5 +17,5 @@ public interface FieldResolver {
 	 */
 	void initialize(World world);
 
-	Object resolve(Class<?> fieldType, Field field);
+	Object resolve(Object target, Class<?> fieldType, Field field);
 }

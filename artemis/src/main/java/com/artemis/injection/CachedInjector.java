@@ -156,7 +156,7 @@ public final class CachedInjector implements Injector {
 			return;
 		}
 
-		Object resolve = fieldHandler.resolve(fieldType, field);
+		Object resolve = fieldHandler.resolve(target, fieldType, field);
 		if (resolve != null) {
 			setField(target, field, resolve);
 		}

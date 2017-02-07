@@ -12,11 +12,11 @@ import java.util.Map;
  * FieldHandler provides dependency-values to an {@link com.artemis.injection.Injector}
  * by sequentially iterating over a list of registered {@link FieldResolver}.
  * <p>
- * The method {@link #resolve(Class, Field)} will return the first non-null value provided by
- * {@link FieldResolver#resolve(Class, Field)}, or null if no resolver returned a valid value.
+ * The method {@link #resolve(Object, Class, Field)} will return the first non-null value provided by
+ * {@link FieldResolver#resolve(Object, Class, Field)}, or null if no resolver returned a valid value.
  * </p>
  * <p>
- * During {@link World} construction, after systems and managers have been created, {@link #initialize(World)}
+ * During {@link World} construction, after systems and managers have been created, {@link #initialize(World, Map)}
  * will be called for each registered {@link FieldResolver}
  * </p>
  * <p>
@@ -61,13 +61,14 @@ public class FieldHandler {
 	public FieldHandler(InjectionCache cache) {
 		this.fieldResolvers = new Bag(FieldResolver.class);
 		this.cache = cache;
+		// the order FieldResolvers are added is relevant, we want to prioritize @Wired fields
+		addFieldResolver(new WiredFieldResolver());
 		addFieldResolver(new ArtemisFieldResolver());
 		addFieldResolver(new AspectFieldResolver());
-		addFieldResolver(new WiredFieldResolver());
 	}
 
 	/**
-	 * During {@link World} construction, after systems and managers have been created, {@link #initialize(World)}
+	 * During {@link World} construction, after systems and managers have been created, {@link #initialize(World, Map)}
 	 * will be called for each registered {@link FieldResolver}
 	 * </p>
 	 * <p/>
@@ -104,16 +105,16 @@ public class FieldHandler {
 
 	/**
 	 * Returns the first non-null value provided by
-	 * {@link FieldResolver#resolve(Class, Field)}, or null if no resolver returned a valid value.
+	 * {@link FieldResolver#resolve(Object, Class, Field)}, or null if no resolver returned a valid value.
 	 *
 	 * @param fieldType class of the field
 	 * @param field     field for which a value should be resolved
 	 * @return a non-null value if any {@link FieldResolver} could provide an instance
 	 * for the {@code field}, null if the {@code field} could not be resolved
 	 */
-	public Object resolve(Class<?> fieldType, Field field) {
+	public Object resolve(Object target, Class<?> fieldType, Field field) {
 		for (int i = 0, s = fieldResolvers.size(); i < s; i++) {
-			Object resolved = fieldResolvers.get(i).resolve(fieldType, field);
+			Object resolved = fieldResolvers.get(i).resolve(target, fieldType, field);
 			if (resolved != null) {
 				return resolved;
 			}

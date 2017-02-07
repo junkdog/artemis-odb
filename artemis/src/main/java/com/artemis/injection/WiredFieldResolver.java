@@ -17,28 +17,36 @@ public class WiredFieldResolver implements UseInjectionCache, PojoFieldResolver 
 	private InjectionCache cache;
 
 	private Map<String, Object> pojos = new HashMap<String, Object>();
+	private World world;
 
 	public WiredFieldResolver() {
 	}
 
 	@Override
-	public void initialize(World world) {}
+	public void initialize(World world) {
+		this.world = world;
+	}
 
 	@Override
-	public Object resolve(Class<?> fieldType, Field field) {
+	public Object resolve(Object target, Class<?> fieldType, Field field) {
 		ClassType injectionType = cache.getFieldClassType(fieldType);
 		CachedField cachedField = cache.getCachedField(field);
 
-		if (injectionType == ClassType.CUSTOM) {
+		if (injectionType == ClassType.CUSTOM || injectionType == ClassType.WORLD) {
 			if (cachedField.wireType == WireType.WIRE) {
 				String key = cachedField.name;
 				if ("".equals(key)) {
 					key = field.getType().getName();
 				}
 
-				if (!pojos.containsKey(key) && cachedField.failOnNull) {
-					String err = "Not registered: " + key + "=" + fieldType;
-					throw new MundaneWireException(err);
+				if (!pojos.containsKey(key)) {
+					// hack to wire in world even if it is not registered
+					if (field.getType() == World.class && world != null) {
+						return world;
+					} else if (cachedField.failOnNull) {
+						String err = "Not registered: " + key + "=" + fieldType;
+						throw new MundaneWireException(err);
+					}
 				}
 
 				return pojos.get(key);

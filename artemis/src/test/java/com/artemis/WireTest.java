@@ -222,6 +222,20 @@ public class WireTest {
 	}
 
 	@Test
+	public void inject_wired_world_and_notwired_world_into_everything() {
+		World wiredWorld = new World(new WorldConfiguration());
+		World world = new World(new WorldConfiguration()
+				.register(wiredWorld));
+
+		WiredNotWiredWorldThing wt = new WiredNotWiredWorldThing();
+		world.inject(wt);
+
+		assertNotNull(wt.worldWired);
+		assertNotNull(wt.worldNotWired);
+		assertNotEquals(wt.worldWired, wt.worldNotWired);
+	}
+
+	@Test
 	public void try_inject_on_wired_object_mirrors_inject_behaviour() {
 		World world = new World(new WorldConfiguration().register("world").setSystem(TagManager.class));
 		SomeThing st = new SomeThing();
@@ -277,6 +291,11 @@ public class WireTest {
 		private ComponentMapper<ComponentX> componentXMapper;
 		private TagManager tagManager;
 		private MappedSystem mappedSystem;
+	}
+
+	private static class WiredNotWiredWorldThing {
+		@Wire World worldWired;
+		World worldNotWired;
 	}
 	
 	private static class MappedSystemAll extends EntityProcessingSystem {

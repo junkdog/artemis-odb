@@ -4,7 +4,9 @@ import com.artemis.BaseSystem;
 import com.artemis.Component;
 import com.artemis.ComponentMapper;
 import com.artemis.World;
+import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
+import com.artemis.utils.reflect.ReflectionException;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
@@ -41,7 +43,7 @@ public class ArtemisFieldResolver implements FieldResolver, UseInjectionCache {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Object resolve(Class<?> fieldType, Field field) {
+	public Object resolve(Object target, Class<?> fieldType, Field field) {
 		ClassType injectionType = cache.getFieldClassType(fieldType);
 		switch (injectionType) {
 			case MAPPER:
@@ -49,7 +51,18 @@ public class ArtemisFieldResolver implements FieldResolver, UseInjectionCache {
 			case SYSTEM:
 				return world.getSystem((Class<BaseSystem>) systems.get(fieldType));
 			case WORLD:
-				return world;
+				try {
+					field.setAccessible(true);
+					// we don't want to override world fields if they ware @Wired in or set in manually before injection
+					Object current = field.get(target);
+					if (current == null) {
+						return world;
+					} else {
+						return current;
+					}
+				} catch (ReflectionException e) {
+					return null;
+				}
 			default:
 				return null;
 

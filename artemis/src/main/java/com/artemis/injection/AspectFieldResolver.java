@@ -34,7 +34,7 @@ public class AspectFieldResolver implements FieldResolver {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Object resolve(Class<?> fieldType, Field field) {
+	public Object resolve(Object target, Class<?> fieldType, Field field) {
 		Aspect.Builder aspect = aspect(field);
 		if (aspect == null)
 			return null;
