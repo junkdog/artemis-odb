@@ -8,6 +8,8 @@
     use bitmap fonts, use 1.9.6-SNAPSHOT or later, bitmap fonts in 1.9.5 are currently broken
     on web target. see https://github.com/libgdx/libgdx/pull/4475)
 
+- `World` instances can now inject themselves (`World::inject`)
+
 
 #### Version: 2.1.0 - 2016-12-09
 - Opt-in [Fluid Entities API][fluid], convenient way to assemble and interact with
