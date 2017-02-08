@@ -17,19 +17,22 @@ public class WiredFieldResolver implements UseInjectionCache, PojoFieldResolver 
 	private InjectionCache cache;
 
 	private Map<String, Object> pojos = new HashMap<String, Object>();
+	private World world;
 
 	public WiredFieldResolver() {
 	}
 
 	@Override
-	public void initialize(World world) {}
+	public void initialize(World world) {
+		this.world = world;
+	}
 
 	@Override
-	public Object resolve(Class<?> fieldType, Field field) {
+	public Object resolve(Object target, Class<?> fieldType, Field field) {
 		ClassType injectionType = cache.getFieldClassType(fieldType);
 		CachedField cachedField = cache.getCachedField(field);
 
-		if (injectionType == ClassType.CUSTOM) {
+		if (injectionType == ClassType.CUSTOM || injectionType == ClassType.WORLD) {
 			if (cachedField.wireType == WireType.WIRE) {
 				String key = cachedField.name;
 				if ("".equals(key)) {

@@ -50,6 +50,22 @@ public class FieldHandlerTest {
         assertNotNull(objectsInjected.string);
     }
 
+    @Test
+    public void default_field_handler_injects_world_fields() throws Exception {
+        WorldConfiguration worldConfiguration = new WorldConfiguration();
+        World world = new World(worldConfiguration);
+
+        CustomObjectWithWorldField withWorldField = new CustomObjectWithWorldField();
+
+        world.inject(withWorldField);
+
+        assertNotNull(withWorldField.world);
+    }
+
+    private static class CustomObjectWithWorldField {
+        private World world;
+    }
+
     private static class ObjectWithNoArgsConstructorFields{
         private Object object;
         private String string;
@@ -82,7 +98,7 @@ public class FieldHandlerTest {
         }
 
         @Override
-        public Object resolve(Class<?> fieldType, Field field) {
+        public Object resolve(Object target, Class<?> fieldType, Field field) {
             try {
                 return ClassReflection.newInstance(fieldType);
             } catch (ReflectionException e) {

@@ -1,5 +1,6 @@
 package com.artemis;
 
+import com.artemis.annotations.SkipWire;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -214,9 +215,39 @@ public class WireTest {
 		world.inject(st);
 
 		assertNotNull(st.tagManager);
+		assertNotNull(st.world);
 		assertEquals("n1", st.helloN1);
 		assertEquals("world", st.hello);
 		assertEquals("n2", st.helloN2);
+	}
+
+	@Test
+	public void inject_wired_world_and_notwired_world_into_everything() {
+		World wiredWorld = new World(new WorldConfiguration());
+		World setWorld = new World(new WorldConfiguration());
+		World world = new World(new WorldConfiguration()
+			.register(wiredWorld));
+
+		WiredNotWiredWorldThing wt = new WiredNotWiredWorldThing();
+		wt.worldSet = setWorld;
+		world.inject(wt);
+
+		assertNotNull(wt.worldWired);
+		assertNotNull(wt.worldNotWired);
+		assertNotNull(wt.worldSet);
+		assertNotEquals(wt.worldWired, wt.worldNotWired);
+		assertNotEquals(wt.worldWired, wt.worldSet);
+		assertNotEquals(wt.worldNotWired, wt.worldSet);
+	}
+
+	@Test(expected = MundaneWireException.class)
+	public void inject_wired_world_missing() {
+		World world = new World(new WorldConfiguration());
+
+		WiredNotWiredWorldThing wt = new WiredNotWiredWorldThing();
+		world.inject(wt);
+
+		assertTrue("Should fail!", true);
 	}
 
 	@Test
@@ -265,6 +296,7 @@ public class WireTest {
 		@Wire(name="hupp", failOnNull=false) private String helloN1;
 		@Wire private String hello;
 		@Wire(name="blergh", failOnNull=false) private String helloN2;
+		World world;
 		
 		private TagManager tagManager;
 	}
@@ -273,6 +305,12 @@ public class WireTest {
 		private ComponentMapper<ComponentX> componentXMapper;
 		private TagManager tagManager;
 		private MappedSystem mappedSystem;
+	}
+
+	private static class WiredNotWiredWorldThing {
+		@Wire World worldWired;
+		World worldNotWired;
+		@SkipWire World worldSet;
 	}
 	
 	private static class MappedSystemAll extends EntityProcessingSystem {

@@ -2,6 +2,7 @@ package com.artemis.injection;
 
 import com.artemis.BaseSystem;
 import com.artemis.ComponentMapper;
+import com.artemis.World;
 import com.artemis.annotations.SkipWire;
 import com.artemis.annotations.Wire;
 import com.artemis.utils.reflect.ClassReflection;
@@ -114,6 +115,8 @@ public class InjectionCache {
 				injectionType = ClassType.MAPPER;
 			} else if (ClassReflection.isAssignableFrom(BaseSystem.class, fieldType)) {
 				injectionType = ClassType.SYSTEM;
+			} else if (ClassReflection.isAssignableFrom(World.class, fieldType)) {
+				injectionType = ClassType.WORLD;
 			} else {
 				injectionType = ClassType.CUSTOM;
 			}

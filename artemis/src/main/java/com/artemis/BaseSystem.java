@@ -1,5 +1,7 @@
 package com.artemis;
 
+import com.artemis.annotations.SkipWire;
+
 /**
  * Most basic system.
  *
@@ -15,6 +17,7 @@ package com.artemis;
  */
 public abstract class BaseSystem {
 	/** The world this system belongs to. */
+	@SkipWire
 	protected World world;
 
 	public BaseSystem() {}

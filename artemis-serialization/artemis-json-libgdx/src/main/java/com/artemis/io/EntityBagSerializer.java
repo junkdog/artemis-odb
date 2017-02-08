@@ -2,12 +2,13 @@ package com.artemis.io;
 
 import com.artemis.Entity;
 import com.artemis.World;
+import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
 import com.badlogic.gdx.utils.Json;
 import com.badlogic.gdx.utils.JsonValue;
 
 public class EntityBagSerializer implements Json.Serializer<Bag> {
-	private final World world;
+	@SkipWire private final World world;
 
 	public EntityBagSerializer(World world) {
 		this.world = world;

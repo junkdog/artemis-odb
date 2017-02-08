@@ -4,13 +4,15 @@ import com.artemis.BaseSystem;
 import com.artemis.Component;
 import com.artemis.ComponentMapper;
 import com.artemis.World;
+import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
+import com.artemis.utils.reflect.ReflectionException;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
 
 /**
- * Can resolve {@link com.artemis.ComponentMapper}, {@link com.artemis.BaseSystem} and
+ * Can resolve {@link com.artemis.World}, {@link com.artemis.ComponentMapper}, {@link com.artemis.BaseSystem} and
  * {@link com.artemis.Manager} types registered in the {@link World}
  *
  * @author Snorre E. Brekke
@@ -41,13 +43,15 @@ public class ArtemisFieldResolver implements FieldResolver, UseInjectionCache {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public Object resolve(Class<?> fieldType, Field field) {
+	public Object resolve(Object target, Class<?> fieldType, Field field) {
 		ClassType injectionType = cache.getFieldClassType(fieldType);
 		switch (injectionType) {
 			case MAPPER:
 				return getComponentMapper(field);
 			case SYSTEM:
 				return world.getSystem((Class<BaseSystem>) systems.get(fieldType));
+			case WORLD:
+				return world;
 			default:
 				return null;
 
