@@ -28,7 +28,14 @@ class IntBagFieldMutator implements MultiFieldMutator<IntBag, Component> {
 	@Override
 	public IntBag read(Component c, Field f) {
 		try {
+			final boolean isNotAccessible = !f.isAccessible();
+			if (isNotAccessible) {
+				f.setAccessible(true);
+			}
 			IntBag e = (IntBag) f.get(c);
+			if (isNotAccessible) {
+				f.setAccessible(false);
+			}
 			return (e != null) ? e : empty;
 		} catch (ReflectionException exc) {
 			throw new RuntimeException(exc);
