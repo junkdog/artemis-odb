@@ -3,13 +3,10 @@ package com.artemis;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.artemis.managers.TagManager;
-import com.artemis.utils.IntBag;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.artemis.component.ComponentX;
-import sun.security.krb5.internal.ccache.Tag;
 
 import static org.junit.Assert.*;
 

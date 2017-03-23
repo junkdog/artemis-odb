@@ -4,9 +4,7 @@ import com.artemis.BaseSystem;
 import com.artemis.Component;
 import com.artemis.ComponentMapper;
 import com.artemis.World;
-import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.Field;
-import com.artemis.utils.reflect.ReflectionException;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
