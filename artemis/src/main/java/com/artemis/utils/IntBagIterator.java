@@ -15,15 +15,22 @@ import java.util.NoSuchElementException;
  *
  * or
  * 
- * for (final IntIterator it = iterate(ids); it.hasNext();)
+ * for (final IntBagIterator it = new IntBagIterator(ids); it.hasNext();)
  *    doSomething(it.next());
  *  
  */
 public class IntBagIterator {
 
+    protected static enum State {
+        INIT,
+        NEXT_CALLED,
+        REMOVE_CALLED,
+    }
+
 	protected final IntBag intBag;
 	protected int index;
-	protected boolean isNextCall;
+	protected int size;
+	protected State state;
 
 	/**
 	 * Create iterator for IntBag
@@ -31,8 +38,10 @@ public class IntBagIterator {
 	 */
 	public IntBagIterator(final IntBag intBag) {
 		this.intBag = intBag;
-		index = -1;
-		isNextCall = false;
+		this.index = -1;
+		this.size = intBag != null ? intBag.size() : 0;
+		assert this.size >= 0;
+		this.state = State.INIT;
 	}
 	
 	/**
@@ -41,7 +50,38 @@ public class IntBagIterator {
 	 */
 	public IntBagIterator(final IntBag intBag, final int indexBegin) {
 		this.intBag = intBag;
-		index = indexBegin - 1;
+		assert indexBegin >= 0;
+		this.index = indexBegin - 1;
+		this.size = intBag != null ? intBag.size() : 0;
+		assert this.size >= 0;
+		this.state = State.INIT;
+	}
+	
+	/**
+	 * Create iterator for IntBag
+	 * @return true if the iteration has more elements
+	 */
+	public IntBagIterator(final IntBag intBag, final int indexBegin, final int size) {
+		this.intBag = intBag;
+		assert indexBegin >= 0;
+		this.index = indexBegin - 1;
+		this.size = intBag != null ? (size < intBag.size() ? size : intBag.size()) : 0;
+		assert this.size >= 0;
+		this.state = State.INIT;
+	}
+	
+	/**
+	 * return current index
+	 * This method can be called only per call to next().
+	 * This method can not be called after call remove().
+	 * 
+	 * @throws IllegalStateException - if the next() method has not yet been called
+	 */
+	public int getCurrentIndex() {
+		if (this.state == State.NEXT_CALLED && index < size && size <= intBag.size()) {
+			return index;
+		}
+		throw new IllegalStateException();
 	}
 
 	/**
@@ -49,7 +89,7 @@ public class IntBagIterator {
 	 * @return true if the iteration has more elements
 	 */
 	public boolean hasNext() {
-		return intBag != null && index < intBag.size() - 1;
+		return ((state != State.INIT && index < size - 1) || (state == State.INIT && index < size)) && size <= intBag.size();
 	}
 
 	/**
@@ -59,7 +99,7 @@ public class IntBagIterator {
 	public int next() {
 		if (hasNext()) {
 			index++;
-			isNextCall = true;
+			this.state = State.NEXT_CALLED;
 			return intBag.get(index);
 		}
 		throw new NoSuchElementException();
@@ -70,12 +110,14 @@ public class IntBagIterator {
 	 * This method can be called only once per call to next().
 	 * The behavior of an iterator is unspecified if the underlying collection is modified while the iteration is in progress in any way other than by calling this method.
 	 * 
-	 * @throws IllegalStateException - if the next method has not yet been called, or the remove method has already been called after the last call to the next method
+	 * @throws IllegalStateException - if the next() method has not yet been called, or the remove() method has already been called after the last call to the next() method
 	 */
 	public void remove() {
-		if (isNextCall && index < intBag.size()) {
+		if (this.state == State.NEXT_CALLED && index < size && size <= intBag.size()) {
 			intBag.remove(index);
 			index--;
+			size--;
+			assert index < size;
 		}
 		throw new IllegalStateException();
 	}
