@@ -29,7 +29,7 @@ public class IntBagIterator {
 
 	protected final IntBag intBag;
 	protected int index;
-	protected int size;
+	protected int indexEnd;
 	protected State state;
 
 	/**
@@ -39,8 +39,8 @@ public class IntBagIterator {
 	public IntBagIterator(final IntBag intBag) {
 		this.intBag = intBag;
 		index = -1;
-		size = intBag != null ? intBag.size() : 0;
-		assert size >= 0;
+		indexEnd = intBag != null ? intBag.size() : 0;
+		assert indexEnd >= 0;
 		state = State.INIT;
 	}
 	
@@ -52,8 +52,8 @@ public class IntBagIterator {
 		this.intBag = intBag;
 		assert indexBegin >= 0;
 		this.index = indexBegin - 1;
-		size = intBag != null ? intBag.size() : 0;
-		assert size >= 0;
+		indexEnd = intBag != null ? intBag.size() : 0;
+		assert indexEnd >= 0;
 		state = State.INIT;
 	}
 	
@@ -65,8 +65,9 @@ public class IntBagIterator {
 		this.intBag = intBag;
 		assert indexBegin >= 0;
 		this.index = indexBegin - 1;
-		this.size = intBag != null ? (size < intBag.size() ? size : intBag.size()) : 0;
-		assert this.size >= 0;
+		indexEnd = intBag != null ? (size < intBag.size() ? size : intBag.size()) : 0;
+		indexEnd += indexBegin;
+		assert indexEnd >= 0;
 		state = State.INIT;
 	}
 	
@@ -78,7 +79,7 @@ public class IntBagIterator {
 	 * @throws IllegalStateException - if the next() method has not yet been called
 	 */
 	public int getCurrentIndex() {
-		if (state == State.NEXT_CALLED && index < size && size <= intBag.size()) {
+		if (state == State.NEXT_CALLED && index < indexEnd && indexEnd <= intBag.size()) {
 			return index;
 		}
 		throw new IllegalStateException(getErrorMessage(index));
@@ -89,7 +90,7 @@ public class IntBagIterator {
 	 * @return true if the iteration has more elements
 	 */
 	public boolean hasNext() {
-		return index + 1 < size && size <= intBag.size();
+		return index + 1 < indexEnd && indexEnd <= intBag.size();
 	}
 
 	/**
@@ -101,7 +102,7 @@ public class IntBagIterator {
 	public int next() {
 		final int newIndex = index + 1;
 
-		if (newIndex < size && size <= intBag.size()) {
+		if (newIndex < indexEnd && indexEnd <= intBag.size()) {
 			index = newIndex;
 			state = State.NEXT_CALLED;
 			return intBag.getData()[index];
@@ -118,11 +119,11 @@ public class IntBagIterator {
 	 * @throws IllegalStateException - if the next() method has not yet been called, or the remove() method has already been called after the last call to the next() method
 	 */
 	public void remove() {
-		if (state == State.NEXT_CALLED && index < size && size <= intBag.size()) {
+		if (state == State.NEXT_CALLED && index < indexEnd && indexEnd <= intBag.size()) {
 			intBag.remove(index);
 			index--;
-			size--;
-			assert index < size;
+			indexEnd--;
+			assert index < indexEnd;
 		}
 		throw new NoSuchElementException(getErrorMessage(index));
 	}
@@ -131,7 +132,7 @@ public class IntBagIterator {
 	 * generate error message
 	 */
 	private String getErrorMessage(final int indexVal) {
-		final String message = "Tried accessing element: " + indexVal + "/" + size + "/" + intBag.size() + "/" + state.name();
+		final String message = "Tried accessing element: " + indexVal + "/" + indexEnd + "/" + intBag.size() + "/" + state.name();
 		return message;
 	}
 	
