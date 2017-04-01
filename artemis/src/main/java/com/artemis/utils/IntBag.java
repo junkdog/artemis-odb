@@ -25,26 +25,6 @@ public class IntBag {
 	public IntBag() {
 		this(64);
 	}
-	
-	/**
-	 * return data array with actual size
-	 * use for for-each iterate in code not required performance
-	 * 
-	 * 
-	 * IntBag bag;
-	 * ...
-	 * for(final int value : bag.getActualData()) {
-	 *     ...
-	 * }
-	 */
-	public int[] getActualData() {
-		if (data.length == size) {
-			return data;
-		}
-        final int[] ret = new int[size];
-        System.arraycopy(data, 0, ret, 0, size);
-        return ret;
-	}
 
 	/**
 	 * Constructs an empty Bag with the specified initial capacity.
@@ -236,7 +216,6 @@ public class IntBag {
 		data[index] = value;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
 		int[] oldData = data;
 		data = new int[newCapacity];
