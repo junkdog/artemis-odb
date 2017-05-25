@@ -11,7 +11,6 @@
 	<name>artemis-odb-integration-test</name>
 	
 	<properties>
-		<artemis.ideFriendlyPacking>false</artemis.ideFriendlyPacking>
 		<artemis.enableArtemisPlugin>true</artemis.enableArtemisPlugin>
 	</properties>
 	
@@ -54,7 +53,6 @@
 							<goal>artemis</goal>
 						</goals>
 						<configuration>
-							<ideFriendlyPacking>${artemis.ideFriendlyPacking}</ideFriendlyPacking>
 							<enableArtemisPlugin>${artemis.enableArtemisPlugin}</enableArtemisPlugin>
 						</configuration>
 					</execution>
