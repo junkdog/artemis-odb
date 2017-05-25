@@ -7,8 +7,9 @@
     </parent>
     <packaging>pom</packaging>
 
-    <artifactId>artemis-fluid</artifactId>
+    <artifactId>artemis-fluid-root</artifactId>
     <description>fluid entity api.</description>
+    <name>artemis-fluid-root</name>
 
     <modules>
         <module>artemis-fluid-core</module>

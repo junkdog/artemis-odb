@@ -100,24 +100,14 @@
 	</developers>
 
 	<modules>
-		<module>artemis</module>
-		<module>artemis-fluid</module>
+		<module>artemis-core</module>
+		<module>artemis-build-tools</module>
 		<module>artemis-serialization</module>
-		<module>artemis-weaver</module>
-		<module>artemis-maven</module>
-		<module>artemis-gradle</module>
-		<module>artemis-test</module>
-		<module>artemis-cli</module>
-		<module>artemis-gwt</module>
+		<module>artemis-fluid</module>
+		<module>artemis-backend-gwt</module>
 	</modules>
 
 	<profiles>
-		<profile>
-			<id>gwttest</id>
-			<modules>
-				<module>artemis-gwt-test</module>
-			</modules>
-		</profile>
 		<profile>
 			<id>doclint-java8-disable</id>
 			<activation>

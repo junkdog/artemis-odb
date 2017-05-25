@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>artemis-odb-serializer</artifactId>
 	<packaging>jar</packaging>
-	<name>artemis-odb-serializer (core)</name>
+	<name>artemis-odb-serializer-core</name>
 	
 	<description>Fork of Artemis Entity System Framework.</description>
 	<url>https://github.com/junkdog/artemis-odb</url>
