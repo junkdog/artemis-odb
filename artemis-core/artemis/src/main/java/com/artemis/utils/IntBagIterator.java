@@ -17,7 +17,7 @@ import java.util.NoSuchElementException;
  * 
  * for (final IntBagIterator it = new IntBagIterator(ids); it.hasNext();)
  *    doSomething(it.next());
- *  
+ * @author nicolaichuk
  */
 public class IntBagIterator {
 
