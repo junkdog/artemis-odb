@@ -216,7 +216,6 @@ public class IntBag {
 		data[index] = value;
 	}
 
-	@SuppressWarnings("unchecked")
 	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
 		int[] oldData = data;
 		data = new int[newCapacity];

@@ -1,7 +1,6 @@
 package com.artemis.utils;
 
 import com.artemis.utils.reflect.ArrayReflection;
-import com.artemis.utils.reflect.ClassReflection;
 
 import java.util.Arrays;
 import java.util.Comparator;

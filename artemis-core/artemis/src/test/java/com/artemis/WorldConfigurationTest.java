@@ -2,7 +2,6 @@ package com.artemis;
 
 import com.artemis.injection.CachedInjector;
 import com.artemis.injection.Injector;
-import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import org.junit.Assert;
 import org.junit.Test;

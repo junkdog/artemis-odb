@@ -13,7 +13,6 @@ import com.artemis.component.ComponentY;
 import com.artemis.systems.DelayedEntityProcessingSystem;
 import com.artemis.systems.EntityProcessingSystem;
 import com.artemis.utils.Bag;
-import org.mockito.asm.util.ASMifiable;
 import org.openjdk.jol.info.ClassLayout;
 import org.openjdk.jol.vm.VM;
 
