@@ -17,7 +17,7 @@ import com.artemis.utils.IntBag;
 public abstract class IteratingSystem extends BaseEntitySystem {
 
 	/**
-	 * Creates a new EntityProcessingSystem.
+	 * Creates a new IteratingSystem.
 	 *
 	 * @param aspect
 	 *			the aspect to match entities
