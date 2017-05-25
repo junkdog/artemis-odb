@@ -52,7 +52,7 @@ public class IntBagIteratorTest {
         IntBagIterator intBagIterator = new IntBagIterator(bag);
         intBagIterator.next();
         intBagIterator.remove();
-        Assert.assertEquals(2, bag.size());
+        Assert.assertEquals(0, bag.size());
     }
 
     @Test(expected = IllegalStateException.class)
