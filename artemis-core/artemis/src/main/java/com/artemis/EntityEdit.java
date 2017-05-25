@@ -19,7 +19,7 @@ package com.artemis;
  * - {@link com.artemis.EntityTransmuterFactory} Fastest but rigid way of changing entity component compositions.
  * - {@link com.artemis.Archetype} Fastest, low level, no parameterized components.
  */
-public final class EntityEdit {
+public class EntityEdit {
 
 	int entityId;
 	private ComponentManager cm;
@@ -76,15 +76,6 @@ public final class EntityEdit {
 		mapper.components.getData()[entityId] =  component;
 
 		return this;
-	}
-
-	/**
-	 * Get target entity of entity edits.
-	 *
-	 * @return Entity this EntityEdit operates on.
-	 */
-	public Entity getEntity() {
-		return cm.world.getEntity(entityId);
 	}
 
 	/**

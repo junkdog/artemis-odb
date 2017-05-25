@@ -1,7 +1,7 @@
 package com.artemis.link;
 
 import com.artemis.Entity;
-import com.artemis.World;
+import com.artemis.EntityWorld;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.ClassReflection;
@@ -35,7 +35,7 @@ public class FieldMutatorTest {
 
 	@Test
 	public void read_entity() throws Exception {
-		World w = new World();
+		EntityWorld w = new EntityWorld();
 		w.create();
 		w.create();
 		Entity e = w.createEntity();
@@ -50,7 +50,7 @@ public class FieldMutatorTest {
 
 	@Test
 	public void write_entity() throws Exception {
-		World w = new World();
+		EntityWorld w = new EntityWorld();
 		w.create();
 		w.create();
 		Entity e = w.createEntity();
@@ -73,7 +73,7 @@ public class FieldMutatorTest {
 
 	@Test
 	public void read_int_bag() throws Exception {
-		World w = new World();
+		EntityWorld w = new EntityWorld();
 		LinkFactoryTest.LttIntBag c = new LinkFactoryTest.LttIntBag();
 		c.ids.add(20);
 		c.ids.add(30);
@@ -94,7 +94,7 @@ public class FieldMutatorTest {
 
 	@Test
 	public void read_entity_bag() throws Exception {
-		World w = new World();
+		EntityWorld w = new EntityWorld();
 		LinkFactoryTest.LttBagEntity c = new LinkFactoryTest.LttBagEntity();
 		c.entities.add(w.createEntity());
 		c.entities.add(w.createEntity());

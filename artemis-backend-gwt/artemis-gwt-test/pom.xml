@@ -26,7 +26,21 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>artemis-odb-cosplay</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>artemis-odb</artifactId>
+			<version>${project.version}</version>
+			<classifier>sources</classifier>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>artemis-odb-cosplay</artifactId>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 			<scope>test</scope>

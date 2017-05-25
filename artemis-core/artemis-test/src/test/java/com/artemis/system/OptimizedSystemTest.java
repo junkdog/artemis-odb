@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.artemis.Entity;
 import com.artemis.EntitySystem;
-import com.artemis.World;
+import com.artemis.EntityWorld;
 
 @SuppressWarnings("static-method")
 public class OptimizedSystemTest {
@@ -42,7 +42,7 @@ public class OptimizedSystemTest {
 		Method m = processMethod(OptimizedSystemAdditional.class);
 		assertEquals(PRIVATE, m.getModifiers() & PRIVATE);
 
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 				.setSystem(new OptimizedSystemAdditional()));
 
 		world.process();

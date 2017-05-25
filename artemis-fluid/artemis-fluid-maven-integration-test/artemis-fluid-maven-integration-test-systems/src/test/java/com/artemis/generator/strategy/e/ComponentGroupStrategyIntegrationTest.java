@@ -19,8 +19,7 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
             public GroupManager groupManager;
             @Override
             protected void processSystem() {
-                Entity entity = E.E().group("test").entity();
-                Assert.assertTrue(groupManager.isInGroup(entity, "test"));
+                Assert.assertTrue(groupManager.isInGroup(E.E().group("test").id(), "test"));
             }
         }
 
@@ -34,7 +33,7 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
             public GroupManager groupManager;
             @Override
             protected void processSystem() {
-                Entity entity = E.E().groups("a","b").entity();
+                int entity = E.E().groups("a","b").id();
                 Assert.assertTrue(groupManager.isInGroup(entity, "a"));
                 Assert.assertTrue(groupManager.isInGroup(entity, "b"));
             }
@@ -50,7 +49,7 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
             public GroupManager groupManager;
             @Override
             protected void processSystem() {
-                Entity entity = E.E().groups("a","b", "c").removeGroup("b").entity();
+                int entity = E.E().groups("a","b", "c").removeGroup("b").id();
                 Assert.assertTrue(groupManager.isInGroup(entity, "a"));
                 Assert.assertFalse(groupManager.isInGroup(entity, "b"));
                 Assert.assertTrue(groupManager.isInGroup(entity, "c"));
@@ -68,7 +67,7 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
             public GroupManager groupManager;
             @Override
             protected void processSystem() {
-                Entity entity = E.E().groups("a","b", "c").removeGroups("b", "c").entity();
+                int entity = E.E().groups("a","b", "c").removeGroups("b", "c").id();
                 Assert.assertTrue(groupManager.isInGroup(entity, "a"));
                 Assert.assertFalse(groupManager.isInGroup(entity, "b"));
                 Assert.assertFalse(groupManager.isInGroup(entity, "c"));
@@ -86,7 +85,7 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
             public GroupManager groupManager;
             @Override
             protected void processSystem() {
-                Entity entity = E.E().groups("a","b", "c").removeGroups().entity();
+                int entity = E.E().groups("a","b", "c").removeGroups().id();
                 Assert.assertFalse(groupManager.isInGroup(entity, "a"));
                 Assert.assertFalse(groupManager.isInGroup(entity, "b"));
                 Assert.assertFalse(groupManager.isInGroup(entity, "c"));

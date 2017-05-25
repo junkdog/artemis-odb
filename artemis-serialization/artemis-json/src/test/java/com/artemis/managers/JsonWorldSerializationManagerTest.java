@@ -22,7 +22,7 @@ public class JsonWorldSerializationManagerTest {
 	private AspectSubscriptionManager subscriptions;
 	private TagManager tags;
 	private GroupManager groups;
-	private World world;
+	private EntityWorld world;
 	private EntitySubscription allEntities;
 
 	private ComponentMapper<SerializationTag> serializationTagMapper;
@@ -54,7 +54,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	private void setupWorld() {
-		world = new World(new WorldConfiguration()
+		world = new EntityWorld(new WorldConfiguration()
 				.setSystem(GroupManager.class)
 				.setSystem(TagManager.class)
 				.setSystem(WorldSerializationManager.class));
@@ -234,8 +234,8 @@ public class JsonWorldSerializationManagerTest {
 		holder.entity = tags.getEntity("tag1");
 		holder.entityId = tags.getEntity("tag3").getId();
 
-		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("entity-holder", ee1.getEntityId());
+		int entityHolderId = ee1.getEntityId();
 
 		world.process();
 
@@ -264,14 +264,14 @@ public class JsonWorldSerializationManagerTest {
 
 		EntityEdit ee2 = world.createEntity().edit();
 		EntityHolder holder2 = ee2.create(EntityHolder.class);
-		holder2.entity = ee2.getEntity();
+		holder2.entity = world.getEntity(ee2.getEntityId());
 		holder2.entityId = ee2.getEntityId();
 
-		tags.register("ee1", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("ee1",world.getEntity(ee1.getEntityId()));
+		int entityHolderId = ee1.getEntityId();
 
-		tags.register("ee2", ee2.getEntity());
-		int entityHolderId2 = ee2.getEntity().getId();
+		tags.register("ee2", world.getEntity(ee2.getEntityId()));
+		int entityHolderId2 = ee2.getEntityId();
 
 		world.process();
 
@@ -306,8 +306,8 @@ public class JsonWorldSerializationManagerTest {
 		holder.entities.add(tags.getEntity("tag1"));
 		holder.entities.add(tags.getEntity("tag3"));
 
-		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("entity-holder", ee1.getEntityId());
+		int entityHolderId = ee1.getEntityId();
 
 		world.process();
 
@@ -369,8 +369,8 @@ public class JsonWorldSerializationManagerTest {
 		holder.entities.add(tags.getEntity("tag1").getId());
 		holder.entities.add(tags.getEntity("tag3").getId());
 
-		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("entity-holder", ee1.getEntityId());
+		int entityHolderId = ee1.getEntityId();
 
 		world.process();
 

@@ -1,6 +1,7 @@
 package com.artemis.generator.strategy.supermapper;
 
 import com.artemis.BaseSystem;
+import com.artemis.CosplayBaseSystem;
 import com.artemis.Entity;
 import com.artemis.generator.common.BuilderModelStrategy;
 import com.artemis.generator.model.FluidTypes;

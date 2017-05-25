@@ -13,7 +13,7 @@ public class ReferenceTrackerTest {
 	@Test
 	public void intercept_component_with_entity_references() {
 		World w = new World();
-		EntityEdit ee = w.createEntity().edit();
+		EntityEdit ee = w.edit(w.create());
 		ee.create(ComponentX.class); // not referenced
 		ee.create(EntityHolder.class);
 		ee.create(ComponentY.class); // not referenced

@@ -22,6 +22,6 @@ class SystemY extends EntityProcessingSystem {
 	protected void process(Entity e)
 	{
 		Assert.assertNotNull(ym);
-		ym.get(e);
+		ym.get(e.getId());
 	}
 }

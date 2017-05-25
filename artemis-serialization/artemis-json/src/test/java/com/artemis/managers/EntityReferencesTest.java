@@ -36,9 +36,9 @@ public class EntityReferencesTest {
 		assertNotNull(base);
 		assertNotNull(star1);
 
-		assertEquals(base.getId(), parentedPositionMapper.get(star1).origin);
+		assertEquals(base.getId(), parentedPositionMapper.get(star1.getId()).origin);
 
-		LevelState state = levelStateMapper.get(base);
+		LevelState state = levelStateMapper.get(base.getId());
 		assertEquals(star1.getId(), state.starId1);
 	}
 
@@ -60,11 +60,11 @@ public class EntityReferencesTest {
 		assertNotNull(star3);
 		assertNotNull(shadow);
 
-		assertEquals(base.getId(), parentedPositionMapper.get(star1).origin);
-		assertEquals(base.getId(), parentedPositionMapper.get(star2).origin);
-		assertEquals(base.getId(), parentedPositionMapper.get(star3).origin);
+		assertEquals(base.getId(), parentedPositionMapper.get(star1.getId()).origin);
+		assertEquals(base.getId(), parentedPositionMapper.get(star2.getId()).origin);
+		assertEquals(base.getId(), parentedPositionMapper.get(star3.getId()).origin);
 
-		LevelState state = levelStateMapper.get(base);
+		LevelState state = levelStateMapper.get(base.getId());
 		assertEquals(star1.getId(), state.starId1);
 		assertEquals(star2.getId(), state.starId2);
 		assertEquals(star3.getId(), state.starId3);

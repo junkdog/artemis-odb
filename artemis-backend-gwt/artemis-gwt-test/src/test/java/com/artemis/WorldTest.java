@@ -17,10 +17,10 @@ public class WorldTest extends GWTTestCase {
 		return "com.ArtemisTest";
 	}
 
-	private World world;
+	private EntityWorld world;
 
 	public void test_get_component_should_not_throw_exception() {
-		world = new World();
+		world = new EntityWorld();
 
 		for (int i = 0; i < 100; i++) {
 			Entity e = world.createEntity();
@@ -36,7 +36,7 @@ public class WorldTest extends GWTTestCase {
 	}
 
 	public void test_access_component_after_deletion_in_previous_system() {
-		world = new World(new WorldConfiguration()
+		world = new EntityWorld(new WorldConfiguration()
 				.setSystem(new SystemComponentXRemover())
 				.setSystem(new SystemB()));
 
@@ -48,7 +48,7 @@ public class WorldTest extends GWTTestCase {
 	
 	public void test_delayed_entity_procesing_ensure_entities_processed() {
 		ExpirationSystem es = new ExpirationSystem();
-		world = new World(new WorldConfiguration()
+		world = new EntityWorld(new WorldConfiguration()
 			.setSystem(es));
 
 		Entity e1 = createEntity();

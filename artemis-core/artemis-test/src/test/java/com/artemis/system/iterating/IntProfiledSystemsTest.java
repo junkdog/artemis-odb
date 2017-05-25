@@ -1,6 +1,6 @@
 package com.artemis.system.iterating;
 
-import com.artemis.World;
+import com.artemis.EntityWorld;
 import com.artemis.WorldConfiguration;
 import com.artemis.annotations.Profile;
 import com.artemis.system.ProfiledSystem;
@@ -14,7 +14,7 @@ public class IntProfiledSystemsTest {
 	
 	@Test
 	public void plain_profiled_system_invoked_during_process() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 				.setSystem(IntProfiledSystem.class));
 
 		Assert.assertNull(

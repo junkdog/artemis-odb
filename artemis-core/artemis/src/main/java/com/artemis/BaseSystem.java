@@ -16,7 +16,11 @@ import com.artemis.annotations.SkipWire;
  * @see com.artemis.annotations.Wire
  */
 public abstract class BaseSystem {
-	/** The world this system belongs to. */
+
+	static final int FLAG_INSERTED = 1;
+    static final int FLAG_REMOVED = 1 << 1;
+
+    /** The world this system belongs to. */
 	@SkipWire
 	protected World world;
 

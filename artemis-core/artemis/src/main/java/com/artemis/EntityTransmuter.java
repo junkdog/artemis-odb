@@ -79,17 +79,6 @@ public final class EntityTransmuter {
 		return true;
 	}
 
-	/**
-	 * Apply on target entity.
-	 *
-	 * Transmuter will add components by replacing and retire pre-existing components.
-	 *
-	 * @param e target entity.
-	 */
-	public void transmute(Entity e) {
-		transmute(e.id);
-	}
-
 	TransmuteOperation getOperation(int entityId) {
 		return operation(entityId, entityToIdentity.get(entityId));
 	}

@@ -23,7 +23,7 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 	private AspectSubscriptionManager subscriptions;
 	private TagManager tags;
 	private GroupManager groups;
-	private World world;
+	private EntityWorld world;
 	private EntitySubscription allEntities;
 
 	@Override
@@ -58,7 +58,7 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 	}
 
 	private void setupWorld() {
-		world = new World(new WorldConfiguration()
+		world = new EntityWorld(new WorldConfiguration()
 				.setSystem(GroupManager.class)
 				.setSystem(TagManager.class)
 				.setSystem(WorldSerializationManager.class));
@@ -189,8 +189,8 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 		holder.entity = tags.getEntity("tag1");
 		holder.entityId = tags.getEntity("tag3").getId();
 
-		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("entity-holder", ee1.getEntityId());
+		int entityHolderId = ee1.getEntityId();
 
 		world.process();
 
@@ -218,8 +218,8 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 		holder.entities.add(tags.getEntity("tag1"));
 		holder.entities.add(tags.getEntity("tag3"));
 
-		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("entity-holder", ee1.getEntityId());
+		int entityHolderId = ee1.getEntityId();
 
 		world.process();
 
@@ -256,8 +256,8 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 		holder.entities.add(tags.getEntity("tag1").getId());
 		holder.entities.add(tags.getEntity("tag3").getId());
 
-		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("entity-holder", ee1.getEntityId());
+		int entityHolderId = ee1.getEntityId();
 
 		world.process();
 

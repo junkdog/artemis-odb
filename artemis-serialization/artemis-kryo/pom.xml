@@ -16,6 +16,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.onedaybeard.artemis</groupId>
+			<artifactId>artemis-odb-cosplay</artifactId>
+			<version>${project.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId>
 			<artifactId>artemis-odb</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>

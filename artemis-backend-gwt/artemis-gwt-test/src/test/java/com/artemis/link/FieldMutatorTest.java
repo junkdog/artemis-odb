@@ -1,7 +1,7 @@
 package com.artemis.link;
 
 import com.artemis.Entity;
-import com.artemis.World;
+import com.artemis.EntityWorld;
 import com.artemis.component.LttBagEntity;
 import com.artemis.component.LttEntity;
 import com.artemis.component.LttEntityId;
@@ -38,7 +38,7 @@ public class FieldMutatorTest extends GWTTestCase {
 	}
 
 	public void test_read_entity() throws Exception {
-		World w = new World();
+		EntityWorld w = new EntityWorld();
 		w.create();
 		w.create();
 		Entity e = w.createEntity();
@@ -52,7 +52,7 @@ public class FieldMutatorTest extends GWTTestCase {
 	}
 
 	public void test_read_int_bag() throws Exception {
-		World w = new World();
+		EntityWorld w = new EntityWorld();
 		LttIntBag c = new LttIntBag();
 		c.ids.add(20);
 		c.ids.add(30);
@@ -73,7 +73,7 @@ public class FieldMutatorTest extends GWTTestCase {
 
 
 	public void test_write_entity() throws Exception {
-		World w = new World();
+		EntityWorld w = new EntityWorld();
 		w.create();
 		w.create();
 		Entity e = w.createEntity();
@@ -94,7 +94,7 @@ public class FieldMutatorTest extends GWTTestCase {
 	}
 
 	public void test_read_entity_bag() throws Exception {
-		World w = new World();
+		EntityWorld w = new EntityWorld();
 		LttBagEntity c = new LttBagEntity();
 		c.entities.add(w.createEntity());
 		c.entities.add(w.createEntity());

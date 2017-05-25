@@ -38,7 +38,7 @@ public class IntOptimizedSystemTest {
 		Method m = processMethod(IntOptimizedSystemAdditional.class);
 		assertEquals(PRIVATE, m.getModifiers() & PRIVATE);
 
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 				.setSystem(new IntOptimizedSystemAdditional()));
 
 		world.process();

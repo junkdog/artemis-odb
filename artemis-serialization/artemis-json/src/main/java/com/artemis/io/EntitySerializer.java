@@ -120,8 +120,8 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 	}
 
 	private void writeKeyTag(Json json, Entity e) {
-		if (saveTagMapper.has(e)) {
-			String key = saveTagMapper.get(e).tag;
+		if (saveTagMapper.has(e.getId())) {
+			String key = saveTagMapper.get(e.getId()).tag;
 			if (key != null)
 				json.writeValue("key", key);
 		}
@@ -254,7 +254,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 		if ("key".equals(jsonData.name)) {
 			String key = jsonData.asString();
 			keyTracker.register(key, e);
-			saveTagMapper.create(e).tag = key;
+			saveTagMapper.create(e.getId()).tag = key;
 			jsonData = jsonData.next;
 		}
 

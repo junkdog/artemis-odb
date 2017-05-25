@@ -27,11 +27,9 @@ public class EBaseStrategy implements BuilderModelStrategy {
         model.add(createEntityIdField());
         model.add(createInitMethod());
         model.add(createStaticInstancerMethodByInt());
-        model.add(createStaticInstancerMethodByEntity());
         model.add(createStaticInstancerMethodNewEntity());
 
         model.add(createEntityIdGetter());
-        model.add(createEntityGetter());
     }
 
     private MethodDescriptor createInitMethod() {
@@ -77,18 +75,6 @@ public class EBaseStrategy implements BuilderModelStrategy {
     }
 
     /**
-     * static E::E(entity)
-     */
-    private MethodDescriptor createStaticInstancerMethodByEntity() {
-        return
-                new MethodBuilder(FluidTypes.E_TYPE, "E")
-                        .setStatic(true)
-                        .parameter(Entity.class, "entity")
-                        .statement("return E(entity.getId())")
-                        .build();
-    }
-
-    /**
      * static E::E() Create a new entity.
      */
     private MethodDescriptor createStaticInstancerMethodNewEntity() {
@@ -96,16 +82,6 @@ public class EBaseStrategy implements BuilderModelStrategy {
                 new MethodBuilder(FluidTypes.E_TYPE, "E")
                         .setStatic(true)
                         .statement("return E(_processingMapper.getWorld().create())")
-                        .build();
-    }
-
-    /**
-     * Getter Entity E::entity()
-     */
-    private MethodDescriptor createEntityGetter() {
-        return
-                new MethodBuilder(Entity.class, "entity")
-                        .statement("return mappers.getWorld().getEntity(entityId)")
                         .build();
     }
 

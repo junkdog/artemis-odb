@@ -2,6 +2,7 @@ package com.artemis;
 
 import com.artemis.injection.CachedInjector;
 import com.artemis.injection.Injector;
+import com.artemis.link.*;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
 import com.artemis.utils.IntBag;
@@ -25,10 +26,10 @@ import static com.artemis.WorldConfiguration.ENTITY_MANAGER_IDX;
 public class World {
 
 	/** Manages all entities for the world. */
-	private final EntityManager em;
+	protected final EntityManager em;
 
 	/** Manages all component-entity associations for the world. */
-	private final ComponentManager cm;
+	protected final ComponentManager cm;
 
 	/** Pool of entity edits. */
 	final BatchChangeProcessor batchProcessor;
@@ -45,6 +46,7 @@ public class World {
 
 	/** The time passed since the last update. */
 	public float delta;
+	private LinkFactory.ReflexiveMutators reflextiveMutators;
 
 	/**
 	 * Creates a world without custom systems.
@@ -231,16 +233,6 @@ public class World {
 
 	/**
 	 * Delete the entity from the world.
-	 * @param e
-	 * 		the entity to delete
-	 * @see #delete(int) recommended alternative.
-	 */
-	public void deleteEntity(Entity e) {
-		delete(e.id);
-	}
-
-	/**
-	 * Delete the entity from the world.
 	 *
 	 * The entity is considered to be in a final state once invoked;
 	 * adding or removing components from an entity scheduled for
@@ -251,19 +243,6 @@ public class World {
 	 */
 	public void delete(int entityId) {
 		batchProcessor.delete(entityId);
-	}
-
-	/**
-	 * Create and return a new or reused entity instance. Entity is
-	 * automatically added to the world.
-	 *
-	 * @return entity
-	 * @see #create() recommended alternative.
-	 */
-	public Entity createEntity() {
-		Entity e = em.createEntityInstance();
-		batchProcessor.changed.unsafeSet(e.getId());
-		return e;
 	}
 
 	/**
@@ -279,39 +258,10 @@ public class World {
 	}
 
 	/**
-	 * Create and return an {@link Entity} wrapping a new or reused entity instance.
+	 * Create and return a new or reused entity.
 	 * Entity is automatically added to the world.
 	 *
-	 * Use {@link Entity#edit()} to set up your newly created entity.
-	 *
-	 * You can also create entities using:
-	 * <ul>
-	 *   <li>{@link com.artemis.utils.EntityBuilder} Convenient entity creation. Not useful when pooling.</li>
-	 *   <li>{@link com.artemis.Archetype} Fastest, low level, no parameterized components.</li>
-	 *   <li><a href="https://github.com/junkdog/artemis-odb/wiki/Serialization">Serialization</a>,
-	 *        with a simple prefab-like class to parameterize the entities.</li>
-	 * </ul>
-	 *
-	 * @see #create() recommended alternative.
-	 * @return entity
-	 */
-	public Entity createEntity(Archetype archetype) {
-		Entity e = em.createEntityInstance();
-
-		int id = e.getId();
-		archetype.transmuter.perform(id);
-		cm.setIdentity(e.id, archetype.compositionId);
-
-		batchProcessor.changed.unsafeSet(id);
-
-		return e;
-	}
-
-	/**
-	 * Create and return an {@link Entity} wrapping a new or reused entity instance.
-	 * Entity is automatically added to the world.
-	 *
-	 * Use {@link Entity#edit()} to set up your newly created entity.
+	 * Use {@link #edit(int)} to add components to your entity.
 	 *
 	 * You can also create entities using:
 	 * - {@link com.artemis.utils.EntityBuilder} Convenient entity creation. Not useful when pooling.
@@ -328,21 +278,6 @@ public class World {
 		batchProcessor.changed.unsafeSet(entityId);
 
 		return entityId;
-	}
-
-	/**
-	 * Get entity with the specified id.
-	 *
-	 * Resolves entity id to the unique entity instance. <em>This method may
-	 * return an entity even if it isn't active in the world.</em> Make sure to
-	 * not retain id's of deleted entities.
-	 *
-	 * @param entityId
-	 * 		the entities id
-	 * @return the specific entity
-	 */
-	public Entity getEntity(int entityId) {
-		return em.getEntity(entityId);
 	}
 
 	/**
@@ -420,6 +355,61 @@ public class World {
 	public <T extends SystemInvocationStrategy> T getInvocationStrategy() {
 		return (T) invocationStrategy;
 	}
+
+	// TODO: refactor out of odb-core.
+	public Class getEntityClass() {
+		return null;
+	}
+
+	public LinkFactory.ReflexiveMutators getReflextiveMutators() {
+
+		class IntWorldReflexiveMutators implements LinkFactory.ReflexiveMutators {
+			private final IntFieldMutator intField;
+			private final IntBagFieldMutator intBagField;
+			private final World world;
+
+			private IntWorldReflexiveMutators(World world) {
+				this.world = world;
+
+				intField = new IntFieldMutator();
+				intField.setWorld(world);
+
+				intBagField = new IntBagFieldMutator();
+				intBagField.setWorld(world);
+			}
+
+			public UniLinkSite withMutator(UniLinkSite linkSite) {
+				if (linkSite.fieldMutator != null)
+					return linkSite;
+
+				Class type = linkSite.field.getType();
+				if (int.class == type) {
+					linkSite.fieldMutator = intField;
+				} else {
+					throw new RuntimeException("unexpected '" + type + "', on " + linkSite.type);
+				}
+
+				return linkSite;
+			}
+
+			public MultiLinkSite withMutator(MultiLinkSite linkSite) {
+				if (linkSite.fieldMutator != null)
+					return linkSite;
+
+				Class type = linkSite.field.getType();
+				if (IntBag.class == type) {
+					linkSite.fieldMutator = intBagField;
+				} else {
+					throw new RuntimeException("unexpected '" + type + "', on " + linkSite.type);
+				}
+
+				return linkSite;
+			}
+		}
+
+		return new IntWorldReflexiveMutators(this);
+	}
+
 
 	static class WorldSegment {
 		/** Contains all systems and systems classes mapped. */

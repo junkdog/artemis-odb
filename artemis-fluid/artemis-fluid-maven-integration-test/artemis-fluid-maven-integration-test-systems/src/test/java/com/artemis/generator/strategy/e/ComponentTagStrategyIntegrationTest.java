@@ -20,7 +20,7 @@ public class ComponentTagStrategyIntegrationTest extends AbstractStrategyIntegra
             public TagManager tagManager;
             @Override
             protected void processSystem() {
-                Entity entity = E.E().tag("test").entity();
+                int entity = E.E().tag("test").id();
                 Assert.assertEquals("test",tagManager.getTag(entity));
             }
         }

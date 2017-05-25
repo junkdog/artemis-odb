@@ -22,7 +22,7 @@ public class JsonWorldSerializationManagerTest {
 	private AspectSubscriptionManager subscriptions;
 	private TagManager tags;
 	private GroupManager groups;
-	private World world;
+	private EntityWorld world;
 	private EntitySubscription allEntities;
 
 	private ComponentMapper<SerializationTag> serializationTagMapper;
@@ -32,18 +32,18 @@ public class JsonWorldSerializationManagerTest {
 	public void setup() {
 		setupWorld();
 
-		EntityEdit ee = world.createEntity().edit();
+		EntityEdit ee = world.edit(world.create());
 		ee.create(ComponentX.class).text = "hello";
 		ee.create(ComponentY.class).text = "whatever";
 		ee.create(ReusedComponent.class);
 
-		EntityEdit ee2 = world.createEntity().edit();
+		EntityEdit ee2 = world.edit(world.create());
 		ee2.create(ComponentX.class).text = "hello 2";
 		ee2.create(NameComponent.class).name = "do i work?";
 		ee2.create(ComponentY.class).text = "whatever 2";
 		ee2.create(ReusedComponent.class);
 
-		EntityEdit ee3 = world.createEntity().edit();
+		EntityEdit ee3 = world.edit(world.create());
 		ee3.create(ComponentX.class).text = "hello 3";
 		ee3.create(ComponentY.class).text = "whatever 3";
 		ee3.create(ReusedComponent.class);
@@ -54,7 +54,7 @@ public class JsonWorldSerializationManagerTest {
 	}
 
 	private void setupWorld() {
-		world = new World(new WorldConfiguration()
+		world = new EntityWorld(new WorldConfiguration()
 				.setSystem(GroupManager.class)
 				.setSystem(TagManager.class)
 				.setSystem(WorldSerializationManager.class));
@@ -229,13 +229,13 @@ public class JsonWorldSerializationManagerTest {
 	public void save_load_entity_references() throws Exception {
 		setTags();
 
-		EntityEdit ee1 = world.createEntity().edit();
+		EntityEdit ee1 = world.edit(world.create());
 		EntityHolder holder = ee1.create(EntityHolder.class);
 		holder.entity = tags.getEntity("tag1");
 		holder.entityId = tags.getEntity("tag3").getId();
 
-		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("entity-holder", ee1.getEntityId());
+		int entityHolderId = ee1.getEntityId();
 
 		world.process();
 
@@ -257,21 +257,21 @@ public class JsonWorldSerializationManagerTest {
 
 	@Test
 	public void save_load_entity_reference_with_null() throws Exception {
-		EntityEdit ee1 = world.createEntity().edit();
+		EntityEdit ee1 = world.edit(world.create());
 		EntityHolder holder = ee1.create(EntityHolder.class);
 		holder.entity = null;
 		holder.entityId = -1;
 
-		EntityEdit ee2 = world.createEntity().edit();
+		EntityEdit ee2 = world.edit(world.create());
 		EntityHolder holder2 = ee2.create(EntityHolder.class);
-		holder2.entity = ee2.getEntity();
+		holder2.entity = world.getEntity(ee2.getEntityId());
 		holder2.entityId = ee2.getEntityId();
 
-		tags.register("ee1", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("ee1", ee1.getEntityId());
+		int entityHolderId = ee1.getEntityId();
 
-		tags.register("ee2", ee2.getEntity());
-		int entityHolderId2 = ee2.getEntity().getId();
+		tags.register("ee2", ee2.getEntityId());
+		int entityHolderId2 = ee2.getEntityId();
 
 		world.process();
 
@@ -306,8 +306,8 @@ public class JsonWorldSerializationManagerTest {
 		holder.entities.add(tags.getEntity("tag1"));
 		holder.entities.add(tags.getEntity("tag3"));
 
-		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("entity-holder", ee1.getEntityId());
+		int entityHolderId = ee1.getEntityId();
 
 		world.process();
 
@@ -369,8 +369,8 @@ public class JsonWorldSerializationManagerTest {
 		holder.entities.add(tags.getEntity("tag1").getId());
 		holder.entities.add(tags.getEntity("tag3").getId());
 
-		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("entity-holder", ee1.getEntityId());
+		int entityHolderId = ee1.getEntityId();
 
 		world.process();
 

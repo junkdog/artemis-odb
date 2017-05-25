@@ -22,7 +22,7 @@ public class EntitySubscriptionTest extends GWTTestCase {
 	}
 
 	public void test_entity_subscriptions_are_reused_when_appropriate_test() {
-		World world = new World();
+		EntityWorld world = new EntityWorld();
 
 		AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
 		EntitySubscription subscription = asm.get(all(ComponentX.class));
@@ -32,7 +32,7 @@ public class EntitySubscriptionTest extends GWTTestCase {
 	}
 
 	public void test_deleted_entities_retain_components() {
-		World world = new World();
+		EntityWorld world = new EntityWorld();
 
 		final ComponentMapper<ComponentY> mapper = world.getMapper(ComponentY.class);
 
@@ -56,7 +56,7 @@ public class EntitySubscriptionTest extends GWTTestCase {
 	}
 
 	public void test_removed_component_retained_in_remove() {
-		World world = new World();
+		EntityWorld world = new EntityWorld();
 
 		final ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
 
@@ -79,7 +79,7 @@ public class EntitySubscriptionTest extends GWTTestCase {
 	}
 
 	public void test_removed_component_not_retained_in_remove() {
-		World world = new World();
+		EntityWorld world = new EntityWorld();
 
 		final ComponentMapper<ComponentY> mapper = world.getMapper(ComponentY.class);
 
@@ -103,7 +103,7 @@ public class EntitySubscriptionTest extends GWTTestCase {
 
 	public void test_manager_entity_subscription_test() {
 		SubscribingManager sm = new SubscribingManager();
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 				.setSystem(sm));
 
 		assertEquals(0, sm.inserted);
@@ -133,7 +133,7 @@ public class EntitySubscriptionTest extends GWTTestCase {
 	public void test_subscription_remove_id_matches_entity() {
 		WorldConfiguration config = new WorldConfiguration();
 		config.setSystem(new TestManager());
-		World world = new World(config);
+		EntityWorld world = new EntityWorld(config);
 
 		Entity entity = world.createEntity();
 		world.process();
@@ -181,7 +181,7 @@ public class EntitySubscriptionTest extends GWTTestCase {
 			protected void initialize() {
 				EntitySubscription subscription = subscriptionManager.get(all());
 
-				subscription.addSubscriptionListener(new MySubscriptionListener(world));
+				subscription.addSubscriptionListener(new MySubscriptionListener((EntityWorld)world));
 			}
 
 	}
@@ -244,9 +244,9 @@ public class EntitySubscriptionTest extends GWTTestCase {
 	}
 
 	public static class MySubscriptionListener implements EntitySubscription.SubscriptionListener {
-		private World world;
+		private EntityWorld world;
 
-		public MySubscriptionListener(World world) {
+		public MySubscriptionListener(EntityWorld world) {
 			this.world = world;
 		}
 

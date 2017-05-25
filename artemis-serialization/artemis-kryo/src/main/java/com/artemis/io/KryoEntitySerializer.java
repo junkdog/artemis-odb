@@ -92,8 +92,8 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 		}
 
 		// write key tag
-		if (saveTagMapper.has(e)) {
-			String key = saveTagMapper.get(e).tag;
+		if (saveTagMapper.has(e.getId())) {
+			String key = saveTagMapper.get(e.getId()).tag;
 			output.writeString(key);
 		} else {
 			output.writeString(null);
@@ -178,7 +178,7 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 		String keyTag = input.readString();
 		if (keyTag != null) {
 			keyTracker.register(keyTag, e);
-			saveTagMapper.create(e).tag = keyTag;
+			saveTagMapper.create(e.getId()).tag = keyTag;
 		}
 		// read groups
 		int groupCount = input.readInt();

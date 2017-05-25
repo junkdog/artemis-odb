@@ -16,7 +16,7 @@ public class EntityLinkManagerTest {
 
 	@Test
 	public void unilink_kill_empty_link_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int otherA = world.create();
@@ -39,7 +39,7 @@ public class EntityLinkManagerTest {
 
 	@Test
 	public void multilink_kill_empty_link_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int otherA = world.create();
@@ -62,7 +62,7 @@ public class EntityLinkManagerTest {
 
 	@Test
 	public void unilink_explicit_field_int_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -101,7 +101,7 @@ public class EntityLinkManagerTest {
 
 	@Test
 	public void unilink_automatic_field_entity_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -139,7 +139,7 @@ public class EntityLinkManagerTest {
 
 	@Test
 	public void unilink_automatic_field_entity_check_source_policy_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -199,7 +199,7 @@ public class EntityLinkManagerTest {
 
 	@Test
 	public void unilink_automatic_field_entity_skip_policy_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -257,7 +257,7 @@ public class EntityLinkManagerTest {
 
 	@Test
 	public void multilink_automatic_field_bag_skip_all_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -311,7 +311,7 @@ public class EntityLinkManagerTest {
 
 	@Test
 	public void multilink_automatic_field_bag_skip_target_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -367,7 +367,7 @@ public class EntityLinkManagerTest {
 
 	@Test
 	public void multilink_automatic_field_bag_check_all_target_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -425,7 +425,7 @@ public class EntityLinkManagerTest {
 
 	@Test
 	public void mulltilink_explicit_field_int_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();

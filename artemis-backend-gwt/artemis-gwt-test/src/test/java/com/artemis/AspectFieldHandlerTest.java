@@ -20,7 +20,7 @@ public class AspectFieldHandlerTest extends GWTTestCase {
 		WorldConfiguration worldConfiguration = new WorldConfiguration()
 			.setSystem(new AspectDescriptorSystem())
 			.register(new Object());
-		World world = new World(worldConfiguration);
+		EntityWorld world = new EntityWorld(worldConfiguration);
 
 		AspectDescriptorPojo withAspectFields = new AspectDescriptorPojo();
 		world.inject(withAspectFields);
@@ -38,7 +38,7 @@ public class AspectFieldHandlerTest extends GWTTestCase {
 		WorldConfiguration worldConfiguration = new WorldConfiguration()
 			.setSystem(new AspectDescriptorSystem())
 			.register(new Object());
-		World world = new World(worldConfiguration);
+		EntityWorld world = new EntityWorld(worldConfiguration);
 
 		AspectDescriptorSystem withAspectFields = world.getSystem(AspectDescriptorSystem.class);
 
@@ -50,7 +50,7 @@ public class AspectFieldHandlerTest extends GWTTestCase {
 		checkArchetype(world, withAspectFields.archetype);
 	}
 
-	private static void checkArchetype(World world, Archetype archetype) {
+	private static void checkArchetype(EntityWorld world, Archetype archetype) {
 		Entity e = world.getEntity(world.create(archetype));
 		assertNotNull(e.getComponent(ComponentX.class));
 		assertNotNull(e.getComponent(ReusedComponent.class));

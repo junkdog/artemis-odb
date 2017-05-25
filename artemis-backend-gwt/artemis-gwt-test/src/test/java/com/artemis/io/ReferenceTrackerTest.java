@@ -1,7 +1,7 @@
 package com.artemis.io;
 
 import com.artemis.EntityEdit;
-import com.artemis.World;
+import com.artemis.EntityWorld;
 import com.artemis.annotations.Wire;
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
@@ -18,7 +18,7 @@ public class ReferenceTrackerTest extends GWTTestCase {
 	}
 
 	public void test_intercept_component_with_entity_references() {
-		World w = new World();
+		EntityWorld w = new EntityWorld();
 		EntityEdit ee = w.createEntity().edit();
 		ee.create(ComponentX.class); // not referenced
 		ee.create(EntityHolder.class);

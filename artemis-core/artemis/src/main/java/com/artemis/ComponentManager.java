@@ -202,8 +202,9 @@ public class ComponentManager extends BaseSystem {
 			es.processComponentIdentity(i, componentBits);
 		}
 
-		for (Entity e : world.getEntityManager().entities) {
-			if (e != null) es.check(e.id, getIdentity(e.id));
+		final BitVector active = world.getEntityManager().active;
+		for (int id = 1, s = active.length(); s > id; id++) {
+			if ( active.unsafeGet(id)) es.check(id, getIdentity(id));
 		}
 
 		es.informEntityChanges();

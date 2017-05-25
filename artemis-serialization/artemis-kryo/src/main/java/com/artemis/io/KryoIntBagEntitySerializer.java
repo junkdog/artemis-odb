@@ -1,5 +1,6 @@
 package com.artemis.io;
 
+import com.artemis.CosplayWorld;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.utils.Bag;
@@ -27,7 +28,7 @@ public class KryoIntBagEntitySerializer extends Serializer<IntBag> {
 		output.writeInt(entities.size());
 		if (recursionLevel == 1) {
 			for (int i = 0, s = entities.size(); s > i; i++) {
-				Entity e = world.getEntity(entities.get(i));
+				Entity e = ((CosplayWorld)world).getEntity(entities.get(i));
 				output.writeInt(e.getId());
 				kryo.writeObject(output, e);
 			}
