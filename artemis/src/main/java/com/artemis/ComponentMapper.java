@@ -44,14 +44,18 @@ public class ComponentMapper<A extends Component> extends BaseComponentMapper<A>
 
 	/**
 	 * Fast but unsafe retrieval of a component for this entity.
-	 * <p>
-	 * No bounding checks, so this could throw an
-	 * {@link ArrayIndexOutOfBoundsException}, however in most scenarios you
-	 * already know the entity possesses this component.
-	 * </p>
+	 *
+	 * This method trades performance for safety.
+	 *
+	 * User is expected to avoid calling this method on recently (in same system) removed components
+	 * or invalid entity ids. Might return null, throw {@link ArrayIndexOutOfBoundsException}
+	 * or a partially recycled component if called on in-system removed components.
+	 *
+	 * Only exception are components marked with {@link DelayedComponentRemoval}, when calling
+	 * this method from within a subscription listener.
 	 *
 	 * @param entityId the entity that should possess the component
-	 * @return the instance of the component
+	 * @return the instance of the component.
 	 * @throws ArrayIndexOutOfBoundsException
 	 */
 	@Override
