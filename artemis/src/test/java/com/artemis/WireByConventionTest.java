@@ -94,4 +94,40 @@ public class WireByConventionTest {
 		Assert.assertNotNull(explicitlyWired.y);
 		Assert.assertNull(explicitlyWired.x);
 	}
+
+	@Test
+	public void When_implicit_wire_Then_inject_into_superclasses() {
+
+		class TestSystem extends BaseSystem {
+			@Override
+			protected void processSystem() {
+			}
+		}
+
+		class SuperSystem extends BaseSystem {
+
+			TestSystem x;
+
+			@Override
+			protected void processSystem() {
+			}
+		}
+
+		class ImplicitlyWired extends SuperSystem {
+
+			TestSystem y;
+
+			@Override
+			protected void processSystem() {
+			}
+		}
+
+		ImplicitlyWired implicitlyWired = new ImplicitlyWired();
+		new World(new WorldConfiguration()
+				.setSystem(implicitlyWired)
+				.setSystem(new TestSystem()));
+
+		Assert.assertNotNull(implicitlyWired.y);
+		Assert.assertNotNull(implicitlyWired.x);
+	}
 }
