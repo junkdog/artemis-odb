@@ -6,7 +6,13 @@ package com.artemis;
  */
 public class InvocationStrategy extends SystemInvocationStrategy {
 
-	/** Processes all systems in order. */
+	/**
+	 * Processes all systems in order.
+	 *
+	 * Should guarantee artemis is in a sane state using calls to #updateEntityStates
+     * before each call to a system, and after the last system has been called, or if no
+     * systems have been called at all.
+     */
 	@Override
 	protected void process() {
 		Object[] systemsData = systems.getData();
