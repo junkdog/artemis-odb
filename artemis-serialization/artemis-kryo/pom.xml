@@ -18,7 +18,7 @@
 			<groupId>net.onedaybeard.artemis</groupId>
 			<artifactId>artemis-odb-cosplay</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.onedaybeard.artemis</groupId>

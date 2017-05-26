@@ -31,7 +31,7 @@ public class GroupManagerTest {
 		gm.add(entity, GROUPIE);
 		gm.add(entity, GROUPIE);
 
-		assertEquals(1, gm.getEntities(GROUPIE).size());
+		assertEquals(1, gm.getEntityIds(GROUPIE).size());
 	}
 	
 	@Test
@@ -39,11 +39,11 @@ public class GroupManagerTest {
 		Entity entity = world.createEntity();
 		gm.add(entity, GROUPIE);
 
-		assertEquals(1, gm.getEntities(GROUPIE).size());
+		assertEquals(1, gm.getEntityIds(GROUPIE).size());
 
 		entity.deleteFromWorld();
 		world.process();
-		assertEquals(0, gm.getEntities(GROUPIE).size());
+		assertEquals(0, gm.getEntityIds(GROUPIE).size());
 		assertFalse(gm.isInAnyGroup(entity));
 	}
 	
@@ -53,14 +53,14 @@ public class GroupManagerTest {
 		gm.add(entity, GROUPIE);
 		gm.add(entity, GROUPIE2);
 		
-		assertEquals(1, gm.getEntities(GROUPIE).size());
-		assertEquals(1, gm.getEntities(GROUPIE2).size());
+		assertEquals(1, gm.getEntityIds(GROUPIE).size());
+		assertEquals(1, gm.getEntityIds(GROUPIE2).size());
 		
 		entity.deleteFromWorld();
 		world.process();
 		
-		assertEquals(0, gm.getEntities(GROUPIE).size());
-		assertEquals(0, gm.getEntities(GROUPIE2).size());
+		assertEquals(0, gm.getEntityIds(GROUPIE).size());
+		assertEquals(0, gm.getEntityIds(GROUPIE2).size());
 		assertFalse(gm.isInAnyGroup(entity));
 	}
 }

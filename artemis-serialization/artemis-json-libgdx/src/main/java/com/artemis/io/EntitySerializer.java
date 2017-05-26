@@ -112,7 +112,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 
 	private void writeTag(Json json, Entity e) {
 		for (String tag : registeredTags) {
-			if (tagManager.getEntity(tag) != e)
+			if (tagManager.getEntityId(tag) != e.getId())
 				continue;
 
 			json.writeValue("tag", tag);

@@ -81,7 +81,7 @@ public class KryoEntitySerializer extends Serializer<Entity> {
 		// write tag
 		boolean hasTag = false;
 		for (String tag : registeredTags) {
-			if (tagManager.getEntity(tag) != e)
+			if (tagManager.getEntityId(tag) != e.getId())
 				continue;
 			output.writeString(tag);
 			hasTag = true;

@@ -19,18 +19,17 @@ public class TagManagerTest {
 		tags.register("tag", id1);
 		w.process();
 
-		assertEquals(id1, tags.getEntity("tag").getId());
+		assertEquals(id1, tags.getEntityId("tag"));
 
 		int id2 = w.create();
 		tags.register("tag", id2);
 		w.process();
 
-		assertEquals(id2, tags.getEntity("tag").getId());
+		assertEquals(id2, tags.getEntityId("tag"));
 
 		w.delete(id1);
 		w.process();
 
-		assertNotNull(tags.getEntity("tag"));
-		assertEquals(id2, tags.getEntity("tag").getId());
+		assertEquals(id2, tags.getEntityId("tag"));
 	}
 }
