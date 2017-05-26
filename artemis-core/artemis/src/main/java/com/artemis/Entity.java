@@ -181,4 +181,17 @@ public class Entity {
 	public int hashCode() {
 		return id;
 	}
+
+	/**
+	 * <p>Apply transmuter on this entity. Does nothing if entity has been scheduled for
+	 * deletion.</p>
+	 *
+	 * <p>Transmuter will add components by replacing and retire pre-existing components.</p>
+	 *
+	 * @param transmuter Transmuter to apply.
+	 * TODO: Does this add value?
+	 */
+	public void transmute( EntityTransmuter transmuter ) {
+		transmuter.transmute(id);
+	}
 }
