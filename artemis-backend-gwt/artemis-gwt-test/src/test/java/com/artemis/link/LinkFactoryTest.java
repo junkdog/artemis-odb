@@ -95,7 +95,7 @@ public class LinkFactoryTest extends GWTTestCase {
 	}
 
 	public void test_create_single_link_site() {
-		World w = new World();
+		World w = new EntityWorld();
 		ComponentTypeFactory typeFactory = w.getComponentManager().getTypeFactory();
 		ComponentType ct = typeFactory.getTypeFor(LttEntity.class);
 
@@ -109,7 +109,7 @@ public class LinkFactoryTest extends GWTTestCase {
 	}
 
 	public void test_create_multi_link_site() {
-		World w = new World();
+		World w = new EntityWorld();
 		ComponentTypeFactory typeFactory = w.getComponentManager().getTypeFactory();
 		ComponentType ct = typeFactory.getTypeFor(LttEntity.class);
 
@@ -123,7 +123,7 @@ public class LinkFactoryTest extends GWTTestCase {
 	}
 
 	public void test_create_zero_link_site() {
-		World w = new World();
+		World w = new EntityWorld();
 		ComponentTypeFactory typeFactory = w.getComponentManager().getTypeFactory();
 		ComponentType ct = typeFactory.getTypeFor(LttMulti.class);
 

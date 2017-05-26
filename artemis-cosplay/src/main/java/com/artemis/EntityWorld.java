@@ -1,7 +1,5 @@
 package com.artemis;
 
-import com.artemis.annotations.SkipWire;
-
 import static com.artemis.WorldConfiguration.ENTITY_MANAGER_IDX;
 
 /**
@@ -17,20 +15,11 @@ public class EntityWorld extends CosplayWorld<Entity> {
         super(createConfiguration(configuration));
     }
 
+    ;
+
     private static WorldConfiguration createConfiguration(WorldConfiguration configuration) {
         WorldConfiguration config = configuration
                 .setEntityType(Entity.class);
-        @SkipWire
-        class EntityEntityManager extends CosplayEntityManager<Entity> {
-            public EntityEntityManager(int initialContainerSize) {
-                super(initialContainerSize);
-            }
-
-            @Override
-            protected Entity createInstance(World world, int id) {
-                return new Entity(world, id);
-            }
-        };
         // TODO: move to configuration.
         config.systems.set(ENTITY_MANAGER_IDX, new EntityEntityManager(config.expectedEntityCount));
         return config;
