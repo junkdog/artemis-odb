@@ -27,6 +27,7 @@ public class CosplayComponentMapper<A extends Component, T extends Entity> exten
      * @return the instance of the component.
      * @throws ArrayIndexOutOfBoundsException
      */
+    @Override
     public A get(Entity e) throws ArrayIndexOutOfBoundsException {
         return get(e.getId());
     }
@@ -37,6 +38,7 @@ public class CosplayComponentMapper<A extends Component, T extends Entity> exten
      * @param e the entity to check
      * @return true if the entity has this component type, false if it doesn't
      */
+    @Override
     public boolean has(Entity e) throws ArrayIndexOutOfBoundsException {
         return has(e.getId());
     }
@@ -48,6 +50,7 @@ public class CosplayComponentMapper<A extends Component, T extends Entity> exten
      * @param entity the entity that should possess the component
      * @return the instance of the component.
      */
+    @Override
     public A create(Entity entity) {
         return create(entity.getId());
     }
@@ -58,6 +61,7 @@ public class CosplayComponentMapper<A extends Component, T extends Entity> exten
      *
      * @param entity entity to remove.
      */
+    @Override
     public void remove(Entity entity) {
         remove(entity.getId());
     }
@@ -71,6 +75,7 @@ public class CosplayComponentMapper<A extends Component, T extends Entity> exten
      * @param value  {@code true} to create component (if missing), {@code false} to remove (if exists).
      * @return the instance of the component, or {@code null} if removed.
      */
+    @Override
     public A set(Entity entity, boolean value) {
         return set(entity.getId(), value);
     }
@@ -83,6 +88,7 @@ public class CosplayComponentMapper<A extends Component, T extends Entity> exten
      * @param fallback fallback component to return, or {@code null} to return null.
      * @return the instance of the component
      */
+    @Override
     public A getSafe(Entity entity, A fallback) {
         return getSafe(entity.getId(), fallback);
     }
