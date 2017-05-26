@@ -55,7 +55,7 @@ public class PlayerManager<T extends Entity> extends Manager<T> {
 	}
 
 	public void setPlayer(int id, String player) {
-		setPlayer(worldTyped.getEntity(id), player);
+		setPlayer(world.getEntity(id), player);
 	}
 
 		/**

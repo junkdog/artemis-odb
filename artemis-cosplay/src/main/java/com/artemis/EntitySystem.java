@@ -44,7 +44,7 @@ public abstract class EntitySystem<T extends Entity> extends CosplayBaseEntitySy
      */
     @Override
     @SuppressWarnings("unchecked")
-    protected void setWorld(World world) {
+    protected void setWorld(CosplayWorld<T> world) {
         super.setWorld(world);
         entities = new WildBag<T>(world.getEntityClass());
         if (implementsObserver("inserted"))
@@ -63,7 +63,7 @@ public abstract class EntitySystem<T extends Entity> extends CosplayBaseEntitySy
 
     @Override
     protected final void inserted(int entityId) {
-        inserted(worldTyped.getEntity(entityId));
+        inserted(world.getEntity(entityId));
     }
 
     @Override
@@ -76,7 +76,7 @@ public abstract class EntitySystem<T extends Entity> extends CosplayBaseEntitySy
 
     @Override
     protected final void removed(int entityId) {
-        removed(worldTyped.getEntity(entityId));
+        removed(world.getEntity(entityId));
     }
 
     /**
@@ -118,7 +118,7 @@ public abstract class EntitySystem<T extends Entity> extends CosplayBaseEntitySy
             IntBag entityIds = subscription.getEntities();
             int[] ids = entityIds.getData();
             for (int i = 0; i < entityIds.size(); i++) {
-                entities.add(worldTyped.getEntity(ids[i]));
+                entities.add(world.getEntity(ids[i]));
             }
 
             if (oldSize > entities.size()) {

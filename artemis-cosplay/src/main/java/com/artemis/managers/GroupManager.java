@@ -5,7 +5,6 @@ import static com.artemis.Aspect.all;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.artemis.BaseSystem;
 import com.artemis.CosplayBaseSystem;
 import com.artemis.Entity;
 import com.artemis.EntitySubscription;
@@ -87,7 +86,7 @@ public class GroupManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 
 	public void add(final int entityId, String group) {
-		final T e = worldTyped.getEntity(entityId);
+		final T e = world.getEntity(entityId);
 		add(e, group);
 	}
 
@@ -108,7 +107,7 @@ public class GroupManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 
 	public void add(final int entityId, String g1, String g2) {
-		final T e = worldTyped.getEntity(entityId);
+		final T e = world.getEntity(entityId);
 		add(e, g1, g2);
 	}
 
@@ -132,7 +131,7 @@ public class GroupManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 
 	public void add(final int entityId, String g1, String g2, String g3) {
-		final T e = worldTyped.getEntity(entityId);
+		final T e = world.getEntity(entityId);
 		add(e, g1, g2, g3);
 	}
 
@@ -152,7 +151,7 @@ public class GroupManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 
 	public void add(final int entityId, String... groups) {
-		final T e = worldTyped.getEntity(entityId);
+		final T e = world.getEntity(entityId);
 		add(e, groups);
 	}
 
@@ -179,7 +178,7 @@ public class GroupManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 
 	public void remove(final int entityId, String group) {
-		final T e = worldTyped.getEntity(entityId);
+		final T e = world.getEntity(entityId);
 		remove(e, group);
 	}
 
@@ -200,7 +199,7 @@ public class GroupManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 
 	public void remove(final int entityId, String g1, String g2) {
-		final T e = worldTyped.getEntity(entityId);
+		final T e = world.getEntity(entityId);
 		remove(e, g1, g2);
 	}
 
@@ -224,7 +223,7 @@ public class GroupManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 
 	public void remove(final int entityId, String g1, String g2, String g3) {
-		final T e = worldTyped.getEntity(entityId);
+		final T e = world.getEntity(entityId);
 		remove(e, g1, g2, g3);
 	}
 
@@ -244,7 +243,7 @@ public class GroupManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 
 	public void remove(final int entityId, String... groups) {
-		final T e = worldTyped.getEntity(entityId);
+		final T e = world.getEntity(entityId);
 		remove(e, groups);
 	}
 
@@ -268,7 +267,7 @@ public class GroupManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 
 	public void removeFromAllGroups(final int entityId) {
-		final T e = worldTyped.getEntity(entityId);
+		final T e = world.getEntity(entityId);
 		removeFromAllGroups(e);
 	}
 
@@ -314,7 +313,7 @@ public class GroupManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 	
 	public ImmutableBag<String> getGroups(final int entityId) {
-		final T e = worldTyped.getEntity(entityId);
+		final T e = world.getEntity(entityId);
 		return getGroups(e);
 	}
 
@@ -331,7 +330,7 @@ public class GroupManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 	
 	public boolean isInAnyGroup(final int entityId) {
-		final T e = worldTyped.getEntity(entityId);
+		final T e = world.getEntity(entityId);
 		return isInAnyGroup(e);
 	}
 
@@ -362,14 +361,14 @@ public class GroupManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 	
 	public boolean isInGroup(final int entityId, String group) {
-		final T e = worldTyped.getEntity(entityId);
+		final T e = world.getEntity(entityId);
 		return isInGroup(e, group);
 	}
 
 	void deleted(IntBag entities) {
 		int[] ids = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			removeFromAllGroups(worldTyped.getEntity(ids[i]));
+			removeFromAllGroups(world.getEntity(ids[i]));
 		}
 	}
 }

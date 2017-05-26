@@ -1,38 +1,23 @@
-
-
-## Functionality changes:
-- Split World with CosplayWorld<T>
-- Split EntityManager with CosplayEntityManager<T>
-- Split BaseComponentMapper with CosplayComponentMapper<T>
-
-## Deprecated
-- removed EntityEdit#getEntity -> @todo merge with example EntityImpl
-- removed EntityTransmuter#transmute -> @todo merge with example EntityImpl.
-- EntityBuilder#build() returns id now -> @todo merge with example EntityImpl.
-
-## TODO
-- Port the whole fluid API to cosplay.
-- Port LinkFactory
-- Reintegrate EntityFieldMutator
-- Reintegrate EntityBagFieldMutator
-- Integrate dangling CosplayComponentMapper
-- Pull back into core:
--- TagManager
--- GroupManager
--- EntityBuilder
-- can we flatten EntitySystem, Manager and BaseEntitySystem? There seems to be some leaking regarding subscriptions.
-- serializer still depends on odb-cosplay.
-
-## Blocking points
-- Need for a separate ComponentMapper class to expose Entity object specific methods is a bit of a step back.
--- add ComponentMapper generic to World!?
-
-## To test
--- managers are now initialized alongside systems using Initialize, instead of special method.
-
-## Cleanup
-- World vs worldTyped in CosplayBaseSystem -> Generic on BaseSystem?
-- public LinkFactory.ReflexiveMutators getReflextiveMutators() bit messy visibility of things.
-- We have some duplicate tests!?
-
-Perhaps best to store Entity on odb-core to simplify serialization.
+Proof of Concept
+- [x] Create a high performance int based core module `artemis-odb, and an optional `Entity` driven module `artemis-odb-cosplay` (placeholder).
+- [x] Everything builds.
+- [x] All tests succeed.
+- [x] managers initialized alongside systems using Initialize, instead of special method.
+- [x] `artemis-odb-cosplay` -> Open up `World` and `Entity` for subclassing.
+- [ ] `artemis-odb-cosplay` -> Expose System hierarchy using generics, see `CosplayBaseSystem<T>`, `CosplayComponentMapper<T>`, `CosplayWorld<T>`.
+- [ ] Expose `EntityEdit` on `Entity`
+- [ ] Expose `EntityTransmuter#transmute` on `Entity`
+- [ ] Migrate `fluid API` to use `artemis-odb-cosplay`
+- [ ] Reintegrate and cleanup `EntityFieldMutator`, `EntityBagFieldMutator`.
+- [ ] Implement clean solution for ComponentMapper. (do we just forget about the `Entity` related methods? `NotImplementedException` when in int-mode and accept Entity subclasses? Force users to supply a specific type (ie. `EntityComponentMapper<>`?)
+- [ ] generics for `world.getMapper()` possible?
+- [ ] Sever serialization `artemis-odb-cosplay` dependency (json, kryo, json-libgdx). Perhaps move `Entity` itself and some basic classes in `odb-core` to achieve this.
+- [ ] Move `ComponentMapperFactory` and custom `EntityManager` to configuration. 
+- [ ] Attempt to move (int-only) versions of TagManager, GroupManager, EntityBuilder back into `artemis-odb-core`.
+- [ ] Right now we have both `World world` and `CosplayWorld<T> worldTyped` as fields in `CosplayBaseSystem`. Consider using generics to simplify to a single field.
+- [ ] can we cleanup hierarchy of `EntitySystem`, `Manager` and `BaseEntitySystem`? There seems to be some leaking regarding subscriptions.
+- [ ] cleanup hack job on public LinkFactory.ReflexiveMutators getReflextiveMutators() bit messy visibility of things.
+- [ ] Why so many duplicate tests for serialization modules!?
+- [ ] @junkdog review EntityManager changes (performance).
+- [ ] Update documentation.
+- [ ] Migration guide.

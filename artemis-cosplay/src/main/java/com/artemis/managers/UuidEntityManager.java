@@ -8,13 +8,13 @@ import com.artemis.Entity;
 import com.artemis.Manager;
 import com.artemis.utils.Bag;
 
-public class UuidEntityManager extends Manager {
+public class UuidEntityManager<T extends Entity> extends Manager<T> {
 	private final Map<UUID, Entity> uuidToEntity;
 	private final Bag<UUID> entityToUuid;
 
 	public UuidEntityManager() {
-		this.uuidToEntity = new HashMap<UUID, Entity>();
-		this.entityToUuid = new Bag<UUID>();
+		this.uuidToEntity = new HashMap<>();
+		this.entityToUuid = new Bag<>();
 	}
 
 	@Override
@@ -49,7 +49,7 @@ public class UuidEntityManager extends Manager {
 	}
 
 	public void setUuid(int id, UUID newUuid) {
-		setUuid(worldTyped.getEntity(id), newUuid);
+		setUuid(world.getEntity(id), newUuid);
 	}
 
 	public void setUuid(Entity e, UUID newUuid) {

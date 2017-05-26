@@ -39,7 +39,7 @@ public abstract class Manager<T extends Entity> extends CosplayBaseSystem<T> {
      * @param world the world to set
      */
     @Override
-    protected void setWorld(World world) {
+    protected void setWorld(CosplayWorld<T> world) {
         super.setWorld(world);
         if (implementsObserver("added"))
             methodFlags |= FLAG_INSERTED;
@@ -72,7 +72,7 @@ public abstract class Manager<T extends Entity> extends CosplayBaseSystem<T> {
 
         final int[] ids = entities.getData();
         for (int i = 0, s = entities.size(); s > i; i++) {
-            added(worldTyped.getEntity(ids[i]));
+            added(world.getEntity(ids[i]));
         }
     }
 
@@ -83,7 +83,7 @@ public abstract class Manager<T extends Entity> extends CosplayBaseSystem<T> {
 
         final int[] ids = entities.getData();
         for (int i = 0, s = entities.size(); s > i; i++) {
-            deleted(worldTyped.getEntity(ids[i]));
+            deleted(world.getEntity(ids[i]));
         }
     }
 

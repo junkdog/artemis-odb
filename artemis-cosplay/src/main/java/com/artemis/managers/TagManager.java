@@ -61,7 +61,7 @@ public class TagManager<T extends Entity> extends CosplayBaseSystem<T> {
 		for (int i = 0, s = entities.size(); s > i; i++) {
 			int id = ids[i];
 			if (registered.get(id)) {
-				String removedTag = tagsByEntity.remove(worldTyped.getEntity(id));
+				String removedTag = tagsByEntity.remove(world.getEntity(id));
 				entitiesByTag.remove(removedTag);
 				registered.clear(id);
 			}
@@ -91,7 +91,7 @@ public class TagManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 
 	public void register(String tag, int entityId) {
-		register(tag, worldTyped.getEntity(entityId));
+		register(tag, world.getEntity(entityId));
 	}
 
 	/**
@@ -150,7 +150,7 @@ public class TagManager<T extends Entity> extends CosplayBaseSystem<T> {
 	}
 
 	public String getTag(int entityId) {
-		return getTag(worldTyped.getEntity(entityId));
+		return getTag(world.getEntity(entityId));
 	}
 
 	/**
