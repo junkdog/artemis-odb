@@ -3,6 +3,7 @@ package com.artemis.managers;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.artemis.Entity;
 import com.artemis.Manager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.ImmutableBag;
@@ -19,7 +20,7 @@ import com.artemis.utils.ImmutableBag;
  * 
  * @author Arni Arent
  */
-public class TeamManager extends Manager {
+public class TeamManager<T extends Entity> extends Manager<T> {
 
 	/** Teams mapped to their players. */
 	private final Map<String, Bag<String>> playersByTeam;

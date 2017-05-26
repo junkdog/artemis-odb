@@ -6,7 +6,7 @@ import com.artemis.annotations.PreserveProcessVisiblity;
 import com.artemis.systems.EntityProcessingSystem;
 
 @PreserveProcessVisiblity
-public class OptimizedSystemSafe extends EntityProcessingSystem {
+public class OptimizedSystemSafe extends EntityProcessingSystem<Entity> {
 
 	public OptimizedSystemSafe() {
 		super(null);

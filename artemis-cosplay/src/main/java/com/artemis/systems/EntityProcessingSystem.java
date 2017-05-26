@@ -21,7 +21,7 @@ import com.artemis.utils.Bag;
  * @author Arni Arent
  * @author Adrian Papari
  */
-public abstract class EntityProcessingSystem extends EntitySystem {
+public abstract class EntityProcessingSystem<T extends Entity> extends EntitySystem<T> {
 	/**
 	 * Creates a new EntityProcessingSystem.
 	 * @param aspect
@@ -40,11 +40,12 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 
 	/** @inheritDoc */
 	@Override
+	@SuppressWarnings("unchecked")
 	protected final void processSystem() {
-		Bag<Entity> entities = getEntities();
+		Bag<T> entities = getEntities();
 		Object[] array = entities.getData();
 		for (int i = 0, s = entities.size(); s > i; i++) {
-			process((Entity) array[i]);
+			process((T) array[i]);
 		}
 	}
 }

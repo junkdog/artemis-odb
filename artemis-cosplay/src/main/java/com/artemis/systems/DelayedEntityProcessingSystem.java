@@ -27,7 +27,7 @@ import com.artemis.utils.Bag;
  *
  * @author Arni Arent
  */
-public abstract class DelayedEntityProcessingSystem extends EntitySystem {
+public abstract class DelayedEntityProcessingSystem<T extends Entity> extends EntitySystem<T> {
 
 	/** The time until an entity should be processed. */
 	private float delay;
@@ -47,8 +47,9 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 	}
 
 	@Override
+	@SuppressWarnings("unchecked")
 	protected final void processSystem() {
-		Bag<Entity> entities = getEntities();
+		Bag<T> entities = getEntities();
 		int processed = entities.size();
 		if (processed == 0) {
 			stop();
@@ -58,7 +59,7 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 		delay = Float.MAX_VALUE;
 		Object[] array = entities.getData();
 		for (int i = 0; processed > i; i++) {
-			Entity e = (Entity) array[i];
+			T e = (T) array[i];
 			processDelta(e, acc);
 			float remaining = getRemainingDelay(e);
 			if(remaining <= 0) {
