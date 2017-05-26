@@ -20,17 +20,17 @@ public class IntBag {
 	protected int size = 0;
 
 	/**
-	 * Constructs an empty Bag with an initial capacity of 64.
+	 * Constructs an empty Bag with an initial desiredCapacity of 64.
 	 */
 	public IntBag() {
 		this(64);
 	}
 
 	/**
-	 * Constructs an empty Bag with the specified initial capacity.
+	 * Constructs an empty Bag with the specified initial desiredCapacity.
 	 * 
 	 * @param capacity
-	 *			the initial capacity of Bag
+	 *			the initial desiredCapacity of Bag
 	 */
 	public IntBag(int capacity) {
 		data = new int[capacity];
@@ -170,14 +170,14 @@ public class IntBag {
 	/**
 	 * Adds the specified element to the end of this bag.
 	 * <p>
-	 * If required, it also increases the capacity of the bag.
+	 * If required, it also increases the desiredCapacity of the bag.
 	 * </p>
 	 * 
 	 * @param value
 	 *			element to be added to this list
 	 */
 	public void add(int value) {
-		// is size greater than capacity increase capacity
+		// is size greater than desiredCapacity increase desiredCapacity
 		if (size == data.length)
 			grow(2 * data.length);
 
@@ -187,7 +187,7 @@ public class IntBag {
 	/**
 	 * Adds the specified elements to the end of this bag.
 	 * <p>
-	 * If required, it also increases the capacity of the bag.
+	 * If required, it also increases the desiredCapacity of the bag.
 	 * </p>
 	 *
 	 * @param other
@@ -225,7 +225,7 @@ public class IntBag {
 	/**
 	 * Check if an item, if added at the given item will fit into the bag.
 	 * <p>
-	 * If not, the bag capacity will be increased to hold an item at the index.
+	 * If not, the bag desiredCapacity will be increased to hold an item at the index.
 	 * </p>
 	 *
 	 * @param index

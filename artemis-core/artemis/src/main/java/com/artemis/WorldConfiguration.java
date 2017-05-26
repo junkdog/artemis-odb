@@ -35,6 +35,7 @@ public final class WorldConfiguration {
 	protected SystemInvocationStrategy invocationStrategy;
 
 	private Set<Class<? extends BaseSystem>> registered = new HashSet<Class<? extends BaseSystem>>();
+	private Class entityType;
 
 	public WorldConfiguration() {
 		// reserving space for core managers
@@ -118,6 +119,11 @@ public final class WorldConfiguration {
 		return this;
 	}
 
+	public WorldConfiguration setEntityType( Class entityType ) {
+		this.entityType = entityType;
+		return this;
+	}
+
 	/**
 	 * Adds a system to this world that will be processed by
 	 * {@link World#process()}.
@@ -157,6 +163,7 @@ public final class WorldConfiguration {
 
 		invocationStrategy.setWorld(world);
 
+		world.setEntityClass( entityType );
 		world.invocationStrategy = invocationStrategy;
 
 		systems.set(COMPONENT_MANAGER_IDX, world.getComponentManager());

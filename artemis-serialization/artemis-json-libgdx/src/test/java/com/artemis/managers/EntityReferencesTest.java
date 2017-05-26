@@ -1,9 +1,6 @@
 package com.artemis.managers;
 
-import com.artemis.ComponentMapper;
-import com.artemis.Entity;
-import com.artemis.World;
-import com.artemis.WorldConfiguration;
+import com.artemis.*;
 import com.artemis.annotations.Wire;
 import com.artemis.component.LevelState;
 import com.artemis.component.ParentedPosition;
@@ -71,7 +68,7 @@ public class EntityReferencesTest {
 	}
 
 	private SaveFileFormat loadWorld() {
-		world = new World(new WorldConfiguration()
+		world = new EntityWorld(new WorldConfiguration()
 				.setSystem(TagManager.class)
 				.setSystem(WorldSerializationManager.class));
 

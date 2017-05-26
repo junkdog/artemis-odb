@@ -30,24 +30,24 @@ public class Bag<E> implements ImmutableBag<E> {
 
 
 	/**
-	 * Constructs an empty Bag with an initial capacity of 64.
+	 * Constructs an empty Bag with an initial desiredCapacity of 64.
 	 */
 	public Bag() {
 		this(64);
 	}
 
 	/**
-	 * Constructs an empty Bag with an initial capacity of 64.
+	 * Constructs an empty Bag with an initial desiredCapacity of 64.
 	 */
 	public Bag(Class<E> type) {
 		this(type, 64);
 	}
 
 	/**
-	 * Constructs an empty Bag with the specified initial capacity.
+	 * Constructs an empty Bag with the specified initial desiredCapacity.
 	 *
 	 * @param capacity
-	 *			the initial capacity of Bag
+	 *			the initial desiredCapacity of Bag
 	 */
 	@SuppressWarnings("unchecked")
 	public Bag(int capacity) {
@@ -256,14 +256,14 @@ public class Bag<E> implements ImmutableBag<E> {
 	/**
 	 * Adds the specified element to the end of this bag.
 	 * <p>
-	 * If required, it also increases the capacity of the bag.
+	 * If required, it also increases the desiredCapacity of the bag.
 	 * </p>
 	 *
 	 * @param e
 	 *			element to be added to this list
 	 */
 	public void add(E e) {
-		// is size greater than capacity increase capacity
+		// is size greater than desiredCapacity increase desiredCapacity
 		if (size == data.length)
 			grow(data.length * 2);
 
@@ -307,7 +307,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	/**
 	 * Check if an item, if added at the given item will fit into the bag.
 	 * <p>
-	 * If not, the bag capacity will be increased to hold an item at the index.
+	 * If not, the bag desiredCapacity will be increased to hold an item at the index.
 	 * </p>
 	 *
 	 * <p>yeah, sorry, it's weird, but we don't want to change existing change behavior</p>

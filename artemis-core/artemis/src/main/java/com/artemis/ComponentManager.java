@@ -31,13 +31,15 @@ public class ComponentManager extends BaseSystem {
 	private final ComponentIdentityResolver identityResolver = new ComponentIdentityResolver();
 	final ShortBag entityToIdentity;
 	protected final ComponentTypeFactory typeFactory;
+	private final ComponentMapperFactory componentMapperFactory;
 
 	/**
 	 * Creates a new instance of {@link ComponentManager}.
 	 */
-	protected ComponentManager(int entityContainerSize) {
+	protected ComponentManager(int entityContainerSize, ComponentMapperFactory componentMapperFactory) {
 		entityToIdentity = new ShortBag(entityContainerSize);
 		typeFactory = new ComponentTypeFactory(this, entityContainerSize);
+		this.componentMapperFactory = componentMapperFactory;
 	}
 
 	@Override
@@ -60,7 +62,7 @@ public class ComponentManager extends BaseSystem {
 
 	void registerComponentType(ComponentType ct, int capacity) {
 		int index = ct.getIndex();
-		ComponentMapper mapper = new ComponentMapper(ct.getType(), world);
+		ComponentMapper mapper = componentMapperFactory.instance(ct.getType(),world);
 		mapper.components.ensureCapacity(capacity);
 		mappers.set(index, mapper);
 	}
@@ -203,7 +205,7 @@ public class ComponentManager extends BaseSystem {
 		}
 
 		final BitVector active = world.getEntityManager().active;
-		for (int id = 1, s = active.length(); s > id; id++) {
+		for (int id = 0, s = active.length(); s > id; id++) {
 			if ( active.unsafeGet(id)) es.check(id, getIdentity(id));
 		}
 

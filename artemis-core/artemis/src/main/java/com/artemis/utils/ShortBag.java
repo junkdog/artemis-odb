@@ -18,17 +18,17 @@ public class ShortBag {
 	protected int size = 0;
 
 	/**
-	 * Constructs an empty Bag with an initial capacity of 64.
+	 * Constructs an empty Bag with an initial desiredCapacity of 64.
 	 */
 	public ShortBag() {
 		this(64);
 	}
 
 	/**
-	 * Constructs an empty Bag with the specified initial capacity.
+	 * Constructs an empty Bag with the specified initial desiredCapacity.
 	 *
 	 * @param capacity
-	 *			the initial capacity of Bag
+	 *			the initial desiredCapacity of Bag
 	 */
 	public ShortBag(int capacity) {
 		data = new short[capacity];
@@ -151,14 +151,14 @@ public class ShortBag {
 	/**
 	 * Adds the specified element to the end of this bag.
 	 * <p>
-	 * If required, it also increases the capacity of the bag.
+	 * If required, it also increases the desiredCapacity of the bag.
 	 * </p>
 	 * 
 	 * @param value
 	 *			element to be added to this list
 	 */
 	public void add(short value) {
-		// is size greater than capacity increase capacity
+		// is size greater than desiredCapacity increase desiredCapacity
 		if (size == data.length) {
 			grow();
 		}
@@ -169,7 +169,7 @@ public class ShortBag {
 	/**
 	 * Adds the specified elements to the end of this bag.
 	 * <p>
-	 * If required, it also increases the capacity of the bag.
+	 * If required, it also increases the desiredCapacity of the bag.
 	 * </p>
 	 *
 	 * @param other
@@ -202,9 +202,9 @@ public class ShortBag {
 	}
 
 	/**
-	 * Increase the capacity of the bag.
+	 * Increase the desiredCapacity of the bag.
 	 * <p>
-	 * Capacity will increase by (3/2)*capacity + 1.
+	 * Capacity will increase by (3/2)*desiredCapacity + 1.
 	 * </p>
 	 */
 	private void grow() {
@@ -213,12 +213,12 @@ public class ShortBag {
 	}
 
 	/**
-	 * Increase the capacity of the bag.
+	 * Increase the desiredCapacity of the bag.
 	 *
 	 * @param newCapacity
-	 *			new capacity to grow to
+	 *			new desiredCapacity to grow to
 	 *
-	 * @throws ArrayIndexOutOfBoundsException if new capacity is smaller than old
+	 * @throws ArrayIndexOutOfBoundsException if new desiredCapacity is smaller than old
 	 */
 	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
 		short[] oldData = data;
@@ -229,7 +229,7 @@ public class ShortBag {
 	/**
 	 * Check if an item, if added at the given item will fit into the bag.
 	 * <p>
-	 * If not, the bag capacity will be increased to hold an item at the index.
+	 * If not, the bag desiredCapacity will be increased to hold an item at the index.
 	 * </p>
 	 *
 	 * @param index

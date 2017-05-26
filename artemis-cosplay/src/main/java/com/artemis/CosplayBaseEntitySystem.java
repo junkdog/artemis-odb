@@ -2,6 +2,10 @@ package com.artemis;
 
 import com.artemis.annotations.DelayedComponentRemoval;
 import com.artemis.utils.IntBag;
+import com.artemis.utils.reflect.ClassReflection;
+import com.artemis.utils.reflect.Method;
+
+import java.util.Arrays;
 
 import static com.artemis.utils.reflect.ReflectionUtil.implementsAnyObserver;
 
@@ -38,6 +42,7 @@ public abstract class CosplayBaseEntitySystem<T extends Entity> extends CosplayB
 	protected void setWorld(World world) {
 		super.setWorld(world);
 		subscription = getSubscription();
+	   	subscription.addSubscriptionListener(this);
 	}
 
 	/**

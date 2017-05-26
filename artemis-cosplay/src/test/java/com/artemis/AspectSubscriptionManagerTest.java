@@ -19,7 +19,8 @@ public class AspectSubscriptionManagerTest {
 		world = new EntityWorld();
 	}
 
-	private void entity(Class<? extends Component>... components) {
+	@SafeVarargs
+	private final void entity(Class<? extends Component>... components) {
 		EntityEdit ee = world.createEntity().edit();
 		for (Class<? extends Component> c : components) {
 			ee.create(c);

@@ -21,12 +21,14 @@ public class EntityManager extends BaseSystem {
     private final BitVector recycled = new BitVector();
     private final IntDeque limbo = new IntDeque();
     private int nextId;
+    protected int desiredCapacity;
     private Bag<BitVector> entityBitVectors = new Bag<BitVector>(BitVector.class);
 
     /**
      * Creates a new EntityManager Instance.
      */
     protected EntityManager(int initialContainerSize) {
+        desiredCapacity =initialContainerSize;
         registerEntityStore(recycled);
         registerEntityStore(active);
     }
@@ -44,10 +46,12 @@ public class EntityManager extends BaseSystem {
         if (limbo.isEmpty()) {
             final int id = nextId++;
             active.set(id);
+            if ( desiredCapacity < id ) { desiredCapacity = id; growEntityStores(); }
             return id;
         } else {
             int id = limbo.popFirst();
             recycled.unsafeClear(id);
+            if ( desiredCapacity < id ) { desiredCapacity = id; growEntityStores(); }
             active.set(id);
             return id;
         }
@@ -82,7 +86,7 @@ public class EntityManager extends BaseSystem {
     }
 
     public void registerEntityStore(BitVector bv) {
-        bv.ensureCapacity(active.length());
+        bv.ensureCapacity(desiredCapacity);
         entityBitVectors.add(bv);
     }
 
@@ -116,12 +120,12 @@ public class EntityManager extends BaseSystem {
     }
 
     protected void growEntityStores() {
-        int newSize = 2 * active.length();
+        desiredCapacity = 2 * desiredCapacity;
         ComponentManager cm = world.getComponentManager();
-        cm.ensureCapacity(newSize);
+        cm.ensureCapacity(desiredCapacity);
 
         for (int i = 0, s = entityBitVectors.size(); s > i; i++) {
-            entityBitVectors.get(i).ensureCapacity(newSize);
+            entityBitVectors.get(i).ensureCapacity(desiredCapacity);
         }
     }
 

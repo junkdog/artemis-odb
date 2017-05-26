@@ -1,6 +1,7 @@
 package com.artemis.prefab;
 
 
+import com.artemis.EntityWorld;
 import com.artemis.World;
 import com.artemis.WorldConfiguration;
 import com.artemis.component.ComponentX;
@@ -29,7 +30,7 @@ public class PrefabTest {
 
 	@Before
 	public void setup() {
-		world = new World(new WorldConfiguration()
+		world = new EntityWorld(new WorldConfiguration()
 			.setSystem(GroupManager.class)
 			.setSystem(TagManager.class)
 			.setSystem(WorldSerializationManager.class));

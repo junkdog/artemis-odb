@@ -177,9 +177,10 @@ public class EntityLinkManagerTest {
 		// establish link
 		mapper.create(e).other = world.getEntity(otherA);
 		world.process();
-
+		assertNotNull(otherB + " is null", world.getEntity(otherB));
 		// target change
 		mapper.get(e).other = world.getEntity(otherB);
+		assertNotNull(mapper.get(e).other); // because only checking source
 		world.process();
 
 		// target dead

@@ -9,11 +9,8 @@ import com.artemis.utils.IntBag;
  */
 public class CosplayWorld<T extends Entity> extends World {
 
-    private final Class<T> entityClass;
-
-    public CosplayWorld(WorldConfiguration configuration, Class<T> entityClass ) {
+    public CosplayWorld(WorldConfiguration configuration) {
         super(configuration);
-        this.entityClass = entityClass;
     }
 
     /**
@@ -74,8 +71,14 @@ public class CosplayWorld<T extends Entity> extends World {
     }
 
     @Override
-    public Class getEntityClass() {
-        return entityClass;
+    protected ComponentMapperFactory getComponentMapperFactory() {
+        return new ComponentMapperFactory() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public ComponentMapper instance(Class<? extends Component> type, World world) {
+                return new CosplayComponentMapper(type, world);
+            }
+        };
     }
 
     @Override

@@ -70,7 +70,7 @@ public class KryoEntityReferencesTest {
 	}
 
 	private SaveFileFormat loadWorld() {
-		world = new World(new WorldConfiguration()
+		world = new EntityWorld(new WorldConfiguration()
 				.setSystem(TagManager.class)
 				.setSystem(WorldSerializationManager.class));
 

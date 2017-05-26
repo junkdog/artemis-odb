@@ -47,6 +47,7 @@ public class World {
 	/** The time passed since the last update. */
 	public float delta;
 	private LinkFactory.ReflexiveMutators reflextiveMutators;
+	private Class entityClass;
 
 	/**
 	 * Creates a world without custom systems.
@@ -80,12 +81,21 @@ public class World {
 		final AspectSubscriptionManager lasm =
 			(AspectSubscriptionManager) systemsBag.get(ASPECT_SUBSCRIPTION_MANAGER_IDX);
 
-		cm = lcm == null ? new ComponentManager(configuration.expectedEntityCount()) : lcm;
+		cm = lcm == null ? new ComponentManager(configuration.expectedEntityCount(), getComponentMapperFactory()) : lcm;
 		em = lem == null ? new EntityManager(configuration.expectedEntityCount()) : lem;
 		asm = lasm == null ? new AspectSubscriptionManager() : lasm;
 		batchProcessor = new BatchChangeProcessor(this);
 
 		configuration.initialize(this, partition.injector, asm);
+	}
+
+	protected ComponentMapperFactory getComponentMapperFactory() {
+		return new ComponentMapperFactory() {
+			@Override
+			public ComponentMapper instance(Class<? extends Component> type, World world) {
+				return new ComponentMapper(type, world);
+			}
+		};
 	}
 
 	/**
@@ -358,7 +368,7 @@ public class World {
 
 	// TODO: refactor out of odb-core.
 	public Class getEntityClass() {
-		return null;
+		return entityClass;
 	}
 
 	public LinkFactory.ReflexiveMutators getReflextiveMutators() {
@@ -410,6 +420,9 @@ public class World {
 		return new IntWorldReflexiveMutators(this);
 	}
 
+	protected void setEntityClass(Class entityClass) {
+		this.entityClass = entityClass;
+	}
 
 	static class WorldSegment {
 		/** Contains all systems and systems classes mapped. */

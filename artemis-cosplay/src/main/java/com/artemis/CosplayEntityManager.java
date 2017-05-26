@@ -1,20 +1,21 @@
 package com.artemis;
 
+import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
 
 /**
  * @author Daan van Yperen
  */
+@SkipWire
 public abstract class CosplayEntityManager<T extends Entity> extends EntityManager {
     /**
      * Contains all entities in the manager.
      */
     final Bag<T> entities;
 
-    public CosplayEntityManager(int initialContainerSize, Bag<T> entities) {
+    public CosplayEntityManager(int initialContainerSize) {
         super(initialContainerSize);
         entities = new Bag<>(initialContainerSize);
-        this.entities = entities;
     }
 
     /**
@@ -23,7 +24,7 @@ public abstract class CosplayEntityManager<T extends Entity> extends EntityManag
      * @return a new entity
      */
     protected T createEntityInstance() {
-        return obtain();
+        return obtain(super.create());
     }
 
     /**
@@ -44,6 +45,11 @@ public abstract class CosplayEntityManager<T extends Entity> extends EntityManag
         entities.clear();
     }
 
+    @Override
+    protected int create() {
+        return obtain(super.create()).id;
+    }
+
     /**
      * Instantiates an Entity without registering it into the world.
      *
@@ -51,9 +57,6 @@ public abstract class CosplayEntityManager<T extends Entity> extends EntityManag
      */
     private T createEntity(int id) {
         T e = createInstance(world, id);
-        if (e.id >= entities.getCapacity()) {
-            growEntityStores();
-        }
 
         // can't use unsafe set, as we need to track highest id
         // for faster iteration when syncing up new subscriptions
@@ -63,18 +66,21 @@ public abstract class CosplayEntityManager<T extends Entity> extends EntityManag
         return e;
     }
 
-    /** @return new Entity(world, id); */
+    /**
+     * @return new Entity(world, id);
+     */
     protected abstract T createInstance(World world, int id);
 
     @Override
     protected void growEntityStores() {
         super.growEntityStores();
-        int newSize = 2 * entities.getCapacity();
-        entities.ensureCapacity(newSize);
+        entities.ensureCapacity(desiredCapacity);
     }
 
-    private T obtain() {
-        final int i = create();
+    private T obtain(int i) {
+        if (i >= entities.getCapacity()) {
+            growEntityStores();
+        }
         final T result = entities.get(i);
         if (result == null) {
             return createEntity(i);
