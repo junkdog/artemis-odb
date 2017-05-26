@@ -10,7 +10,7 @@ import com.artemis.generator.model.artemis.ComponentDescriptor;
 import com.artemis.generator.model.type.TypeModel;
 import com.artemis.generator.strategy.e.*;
 import com.artemis.generator.strategy.supermapper.ComponentMapperFieldsStrategy;
-import com.artemis.generator.strategy.supermapper.SuperMapperStrategy;
+import com.artemis.generator.strategy.supermapper.FluidWorldStrategy;
 import com.artemis.generator.util.Log;
 import com.artemis.generator.validator.TypeModelValidator;
 import com.artemis.generator.validator.TypeModelValidatorException;
@@ -63,7 +63,7 @@ public class FluidGenerator {
 
         new File(outputDirectory, "com/artemis/").mkdirs();
 
-        generateFile(artemisModel, createSupermapperGenerator(globalPreferences), new File(outputDirectory, "com/artemis/SuperMapper.java"), log);
+        generateFile(artemisModel, createSupermapperGenerator(globalPreferences), new File(outputDirectory, "com/artemis/FluidWorld.java"), log);
         generateFile(artemisModel, createEGenerator(globalPreferences), new File(outputDirectory, "com/artemis/E.java"), log);
     }
 
@@ -138,14 +138,13 @@ public class FluidGenerator {
         generator.addStrategy(new ComponentRemoveStrategy());
         generator.addStrategy(new ComponentAccessorStrategy());
         generator.addStrategy(new ComponentFieldAccessorStrategy());
-        generator.addStrategy(new DeleteFromWorldStrategy());
         if ( globalPreferences.isGenerateBooleanComponentAccessors() ) generator.addStrategy(new FlagComponentBooleanAccessorStrategy());
         return generator;
     }
 
     private static TypeModelGenerator createSupermapperGenerator(FluidGeneratorPreferences globalPreferences) {
         TypeModelGenerator generator = new TypeModelGenerator();
-        generator.addStrategy(new SuperMapperStrategy());
+        generator.addStrategy(new FluidWorldStrategy());
         generator.addStrategy(new ComponentMapperFieldsStrategy());
         return generator;
     }

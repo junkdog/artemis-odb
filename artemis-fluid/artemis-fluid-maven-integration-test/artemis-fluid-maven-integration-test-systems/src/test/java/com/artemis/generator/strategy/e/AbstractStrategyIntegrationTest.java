@@ -12,9 +12,8 @@ public abstract class AbstractStrategyIntegrationTest {
     }
 
     protected World createFluidWorld(BaseSystem... systems) {
-        WorldConfigurationBuilder worldConfigurationBuilder = new WorldConfigurationBuilder()
-                .with(new SuperMapper());
+        WorldConfigurationBuilder worldConfigurationBuilder = new WorldConfigurationBuilder();
         worldConfigurationBuilder.with(systems);
-        return new EntityWorld(worldConfigurationBuilder.build());
+        return new FluidWorld(worldConfigurationBuilder.build());
     }
 }

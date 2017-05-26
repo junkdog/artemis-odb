@@ -238,7 +238,7 @@ public class EntityTransmuterTest {
 	}
 
 	private static class ES2 extends EntityProcessingSystem {
-		EntityComponentMapper<ComponentX> xMapper;
+		ComponentMapper<ComponentX> xMapper;
 		private EntityTransmuter addX;
 		private EntityTransmuter removeX;
 

@@ -11,11 +11,11 @@ public class EBaseStrategyIntegrationTest extends AbstractStrategyIntegrationTes
 
     @Test
     public void When_instancing_fluid_interface_by_entity_id_Should_create_valid_E() {
-        class TestSystem extends BaseSystem {
+        class TestSystem extends CosplayBaseSystem<E> {
             @Override
             protected void processSystem() {
                 int entityId = world.create();
-                Assert.assertEquals(entityId, E.E(entityId).id());
+                Assert.assertEquals(entityId, E(entityId).id());
             }
         }
 
@@ -24,10 +24,10 @@ public class EBaseStrategyIntegrationTest extends AbstractStrategyIntegrationTes
 
     @Test
     public void When_creating_new_entity_with_fluid_interface_by_entity_Should_create_valid_Entity() {
-        class TestSystem extends BaseSystem {
+        class TestSystem extends CosplayBaseSystem<E> {
             @Override
             protected void processSystem() {
-                int id = E.E().id();
+                int id = E().id();
                 Assert.assertTrue(world.getEntityManager().isActive(id));
             }
         }

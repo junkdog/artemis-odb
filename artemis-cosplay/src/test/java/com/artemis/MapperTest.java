@@ -52,8 +52,8 @@ public class MapperTest {
 	}
 	
 	private static class MappedSystem extends EntityProcessingSystem {
-		private EntityComponentMapper<ComponentX> x;
-		private EntityComponentMapper<ComponentY> y;
+		private ComponentMapper<ComponentX> x;
+		private ComponentMapper<ComponentY> y;
 		
 		@SuppressWarnings("unchecked")
 		public MappedSystem() {
@@ -66,8 +66,8 @@ public class MapperTest {
 	}
 	
 	private static class MappedManager extends Manager {
-		private EntityComponentMapper<ComponentX> x;
-		private EntityComponentMapper<ComponentY> y;
+		private ComponentMapper<ComponentX> x;
+		private ComponentMapper<ComponentY> y;
 		
 		@Override
 		protected void initialize() {}

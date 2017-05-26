@@ -28,7 +28,7 @@ public class ComponentCreateStrategy extends IterativeModelStrategy {
                 new MethodBuilder(FluidTypes.E_TYPE,
                         Strings.assembleMethodName(component.getPreferences().getPrefixComponentCreate(),component.getMethodPrefix()))
                         .debugNotes(component.getComponentType().getName())
-                        .mapper(component, ".create(entityId)")
+                        .mapper(component, ".create(id)")
                         .returnFluid()
                         .build();
     }

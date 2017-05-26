@@ -124,7 +124,7 @@ public class AspectSubscriptionManagerTest {
 	}
 
 	public static class CreateInremoveSystem extends IteratingSystem {
-		private EntityComponentMapper<ComponentX> componentXMapper;
+		private ComponentMapper<ComponentX> componentXMapper;
 
 		int replacedEntityId = -1;
 		int deleteCount = 0;
@@ -164,7 +164,7 @@ public class AspectSubscriptionManagerTest {
 	}
 
 	private static class BootstrappingManager extends Manager {
-		private EntityComponentMapper<ComponentX> componentXMapper;
+		private ComponentMapper<ComponentX> componentXMapper;
 
 		@Override
 		public void added(Entity entityId) {

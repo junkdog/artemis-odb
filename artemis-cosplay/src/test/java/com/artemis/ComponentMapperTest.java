@@ -40,7 +40,7 @@ public class ComponentMapperTest {
             super(Aspect.all(TestMarker.class));
         }
 
-        protected EntityComponentMapper<Pos> mPos;
+        protected ComponentMapper<Pos> mPos;
 
         @Override
         protected void process(Entity e) {

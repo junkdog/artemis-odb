@@ -99,8 +99,8 @@ public class ArchetypeTest {
 	public void testEntityCreationMod() throws Exception {
 		EntityWorld world = new EntityWorld();
 
-		EntityComponentMapper<ComponentX> xMapper = (EntityComponentMapper<ComponentX>) world.getMapper(ComponentX.class);
-		EntityComponentMapper<ComponentY> yMapper = (EntityComponentMapper<ComponentY>) world.getMapper(ComponentY.class);
+		ComponentMapper<ComponentX> xMapper = world.getMapper(ComponentX.class);
+		ComponentMapper<ComponentY> yMapper = world.getMapper(ComponentY.class);
 
 		ArchetypeBuilder builder = new ArchetypeBuilder().add(ComponentX.class);
 		Archetype archetype = builder.build(world);
@@ -124,7 +124,7 @@ public class ArchetypeTest {
 
 	private static class Es1 extends EntityProcessingSystem {
 
-		private EntityComponentMapper<ComponentX> componentXMapper;
+		private ComponentMapper<ComponentX> componentXMapper;
 
 		@SuppressWarnings("unchecked")
 		public Es1() {
@@ -139,7 +139,7 @@ public class ArchetypeTest {
 
 	private static class Es2 extends EntityProcessingSystem {
 
-		private EntityComponentMapper<ComponentX> componentXMapper;
+		private ComponentMapper<ComponentX> componentXMapper;
 
 		@SuppressWarnings("unchecked")
 		public Es2() {

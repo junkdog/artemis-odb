@@ -77,7 +77,7 @@ public class ArchetypeSystemTest {
 	
 	private static class Es1 extends EntityProcessingSystem {
 
-		private EntityComponentMapper<ComponentX> componentXMapper;
+		private ComponentMapper<ComponentX> componentXMapper;
 		
 		@SuppressWarnings("unchecked")
 		public Es1() {
@@ -92,7 +92,7 @@ public class ArchetypeSystemTest {
 	
 	private static class Es2 extends EntityProcessingSystem {
 		
-		private EntityComponentMapper<ComponentX> componentXMapper;
+		private ComponentMapper<ComponentX> componentXMapper;
 		
 		@SuppressWarnings("unchecked")
 		public Es2() {

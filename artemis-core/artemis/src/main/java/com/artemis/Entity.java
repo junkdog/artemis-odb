@@ -21,12 +21,12 @@ import com.artemis.utils.BitVector;
  * @author Arni Arent
  * @author Adrian Papari
  */
-public class Entity {
+public class Entity<W extends World> {
 
 	/** The entities identifier in the world. */
 	int id;
 	/** The world this entity belongs to. */
-	private final World world;
+	protected final W world;
 
 	/**
 	 * Creates a new {@link Entity} instance in the given world.
@@ -39,7 +39,7 @@ public class Entity {
 	 * @param id
 	 * 		the id to set
 	 */
-	protected Entity(World world, int id) {
+	protected Entity(W world, int id) {
 		this.world = world;
 		this.id = id;
 	}
@@ -149,7 +149,7 @@ public class Entity {
 	 * Returns the world this entity belongs to.
 	 * @return world of entity.
 	 */
-	public World getWorld() {
+	public W getWorld() {
 		return world;
 	}
 

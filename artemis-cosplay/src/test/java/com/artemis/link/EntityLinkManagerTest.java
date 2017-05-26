@@ -22,7 +22,7 @@ public class EntityLinkManagerTest {
 		final int otherA = world.create();
 		final int e = world.create();
 
-		EntityComponentMapper<EntityLink> mapper = (EntityComponentMapper<EntityLink>) world.getMapper(EntityLink.class);
+		ComponentMapper<EntityLink> mapper = world.getMapper(EntityLink.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
 		elm.register(EntityLink.class, "otherId", new EmptyLinkListener(e, otherA, -1));
@@ -45,7 +45,7 @@ public class EntityLinkManagerTest {
 		final int otherA = world.create();
 		final int e = world.create();
 
-		EntityComponentMapper<MultiLinkCheckAll> mapper = (EntityComponentMapper<MultiLinkCheckAll>) world.getMapper(MultiLinkCheckAll.class);
+		ComponentMapper<MultiLinkCheckAll> mapper = world.getMapper(MultiLinkCheckAll.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
 		elm.register(EntityLink.class, "otherId", new EmptyLinkListener(e, otherA, -1));
@@ -70,7 +70,7 @@ public class EntityLinkManagerTest {
 		final int otherB = world.create();
 		final int e = world.create();
 
-		EntityComponentMapper<EntityLink> mapper = (EntityComponentMapper<EntityLink>) world.getMapper(EntityLink.class);
+		ComponentMapper<EntityLink> mapper = world.getMapper(EntityLink.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
 		elm.register(EntityLink.class, "otherId", new MyLinkListener(e, otherA, otherB));
@@ -109,7 +109,7 @@ public class EntityLinkManagerTest {
 		final int otherB = world.create();
 		final int e = world.create();
 
-		EntityComponentMapper<EntityLinkB> mapper = (EntityComponentMapper<EntityLinkB>) world.getMapper(EntityLinkB.class);
+		ComponentMapper<EntityLinkB> mapper = world.getMapper(EntityLinkB.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
 		elm.register(EntityLinkB.class, new MyLinkListener(e, otherA, otherB));
@@ -147,7 +147,7 @@ public class EntityLinkManagerTest {
 		final int otherB = world.create();
 		final int e = world.create();
 
-		EntityComponentMapper<EntityLinkC> mapper = (EntityComponentMapper<EntityLinkC>) world.getMapper(EntityLinkC.class);
+		ComponentMapper<EntityLinkC> mapper = world.getMapper(EntityLinkC.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
 		elm.register(EntityLinkC.class, new LinkListener() {
@@ -208,7 +208,7 @@ public class EntityLinkManagerTest {
 		final int otherB = world.create();
 		final int e = world.create();
 
-		EntityComponentMapper<EntityLinkSkip> mapper = (EntityComponentMapper<EntityLinkSkip>) world.getMapper(EntityLinkSkip.class);
+		ComponentMapper<EntityLinkSkip> mapper = world.getMapper(EntityLinkSkip.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
 		elm.register(EntityLinkSkip.class, new LinkListener() {
@@ -266,7 +266,7 @@ public class EntityLinkManagerTest {
 		final int otherB = world.create();
 		final int e = world.create();
 
-		EntityComponentMapper<MultiLinkSkip> mapper = (EntityComponentMapper<MultiLinkSkip>) world.getMapper(MultiLinkSkip.class);
+		ComponentMapper<MultiLinkSkip> mapper = world.getMapper(MultiLinkSkip.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
 		elm.register(MultiLinkSkip.class, new LinkListener() {
@@ -320,7 +320,7 @@ public class EntityLinkManagerTest {
 		final int otherB = world.create();
 		final int e = world.create();
 
-		EntityComponentMapper<MultiLinkSkipTargetCheck> mapper = (EntityComponentMapper<MultiLinkSkipTargetCheck>) world.getMapper(MultiLinkSkipTargetCheck.class);
+		ComponentMapper<MultiLinkSkipTargetCheck> mapper = world.getMapper(MultiLinkSkipTargetCheck.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
 		elm.register(MultiLinkSkipTargetCheck.class, new LinkListener() {
@@ -376,7 +376,7 @@ public class EntityLinkManagerTest {
 		final int otherB = world.create();
 		final int e = world.create();
 
-		EntityComponentMapper<MultiLinkCheckAll> mapper = (EntityComponentMapper<MultiLinkCheckAll>) world.getMapper(MultiLinkCheckAll.class);
+		ComponentMapper<MultiLinkCheckAll> mapper = world.getMapper(MultiLinkCheckAll.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
 		elm.register(MultiLinkCheckAll.class, new LinkListener() {
@@ -434,7 +434,7 @@ public class EntityLinkManagerTest {
 		final int otherB = world.create();
 		final int e = world.create();
 
-		EntityComponentMapper<MuchOfEverything> mapper = (EntityComponentMapper<MuchOfEverything>) world.getMapper(MuchOfEverything.class);
+		ComponentMapper<MuchOfEverything> mapper = world.getMapper(MuchOfEverything.class);
 
 		EntityLinkManager elm = world.getSystem(EntityLinkManager.class);
 		elm.register(MuchOfEverything.class, "otherId", new MyLinkListener(e, otherA, otherB));

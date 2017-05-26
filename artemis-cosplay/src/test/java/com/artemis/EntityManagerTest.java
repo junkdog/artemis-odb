@@ -61,7 +61,7 @@ public class EntityManagerTest {
 	
 	@Test
 	public void recycled_entities_behave_nicely_with_components() {
-		EntityComponentMapper<ComponentX> mapper = (EntityComponentMapper<ComponentX>) world.getMapper(ComponentX.class);
+		ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
 		
 		Entity e1 = world.createEntity();
 		e1.edit().add(new ComponentX());
@@ -78,7 +78,7 @@ public class EntityManagerTest {
 	
 	@Test
 	public void should_recycle_entities_after_one_round() {
-		EntityComponentMapper<ComponentX> mapper = (EntityComponentMapper<ComponentX>) world.getMapper(ComponentX.class);
+		ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
 		
 		Entity e1 = world.createEntity();
 		e1.edit().add(new ComponentX());

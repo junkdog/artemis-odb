@@ -41,11 +41,11 @@ public class SmarterWireTest {
 	}
 	
 	abstract class AbstractEntityFactory extends Manager {
-		protected EntityComponentMapper<ComponentX> x;
+		protected ComponentMapper<ComponentX> x;
 	}
 	
 	class EntityFactory extends AbstractEntityFactory {
-		private EntityComponentMapper<ComponentY> y;
+		private ComponentMapper<ComponentY> y;
 	}
 	
 	class TiledMapSystem extends VoidEntitySystem {

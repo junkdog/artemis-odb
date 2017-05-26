@@ -66,7 +66,7 @@ public class Issue357SystemTest {
 	}
 
 	public static class TestSystemWithDelete extends EntityProcessingSystem {
-		private EntityComponentMapper<TestComponent> mapper;
+		private ComponentMapper<TestComponent> mapper;
 
 		public TestSystemWithDelete() {
 			super(Aspect.all(TestComponent.class));
@@ -81,7 +81,7 @@ public class Issue357SystemTest {
 	}
 
 	public static class TestSystemWithoutDelete extends EntityProcessingSystem {
-		private EntityComponentMapper<TestComponent> mapper;
+		private ComponentMapper<TestComponent> mapper;
 
 		public TestSystemWithoutDelete() {
 			super(Aspect.all(TestComponent.class));

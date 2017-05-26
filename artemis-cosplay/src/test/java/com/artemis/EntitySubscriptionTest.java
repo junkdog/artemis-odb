@@ -35,7 +35,7 @@ public class EntitySubscriptionTest {
 	public void deleted_entities_retain_components() {
 		EntityWorld world = new EntityWorld();
 
-		final EntityComponentMapper<ComponentY> mapper = (EntityComponentMapper<ComponentY>) world.getMapper(ComponentY.class);
+		final ComponentMapper<ComponentY> mapper = world.getMapper(ComponentY.class);
 
 		world.getAspectSubscriptionManager()
 			.get(all(ComponentY.class))
@@ -71,7 +71,7 @@ public class EntitySubscriptionTest {
 	public void removed_component_retained_in_remove() {
 		EntityWorld world = new EntityWorld();
 
-		final EntityComponentMapper<ComponentX> mapper = (EntityComponentMapper<ComponentX>) world.getMapper(ComponentX.class);
+		final ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
 
 		world.getAspectSubscriptionManager()
 			.get(all(ComponentX.class))
@@ -106,7 +106,7 @@ public class EntitySubscriptionTest {
 	public void removed_and_create_cancels_removed() {
 		final EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(new IteratingSystem(all(ComponentX.class)) {
-				private EntityComponentMapper<ComponentX> xMapper;
+				private ComponentMapper<ComponentX> xMapper;
 
 				@Override
 				protected void process(int entityId) {
@@ -114,7 +114,7 @@ public class EntitySubscriptionTest {
 				}
 			}));
 
-		final EntityComponentMapper<ComponentX> mapper = (EntityComponentMapper<ComponentX>) world.getMapper(ComponentX.class);
+		final ComponentMapper<ComponentX> mapper = world.getMapper(ComponentX.class);
 
 		world.getAspectSubscriptionManager()
 			.get(all(ComponentY.class).exclude(ComponentX.class))
@@ -143,7 +143,7 @@ public class EntitySubscriptionTest {
 	public void removed_component_not_retained_in_remove() {
 		EntityWorld world = new EntityWorld();
 
-		final EntityComponentMapper<ComponentY> mapper = (EntityComponentMapper<ComponentY>) world.getMapper(ComponentY.class);
+		final ComponentMapper<ComponentY> mapper = world.getMapper(ComponentY.class);
 
 		world.getAspectSubscriptionManager()
 			.get(all(ComponentY.class))
@@ -224,9 +224,9 @@ public class EntitySubscriptionTest {
 		config.setSystem(counterX);
 		
 		EntityWorld world = new EntityWorld(config);
-		
-		EntityComponentMapper<ComponentX> mapperX = (EntityComponentMapper<ComponentX>) world.getMapper(ComponentX.class);
-		EntityComponentMapper<ComponentY> mapperY = (EntityComponentMapper<ComponentY>) world.getMapper(ComponentY.class);
+
+		ComponentMapper<ComponentX> mapperX = world.getMapper(ComponentX.class);
+		ComponentMapper<ComponentY> mapperY = world.getMapper(ComponentY.class);
 		
 		assertEquals(0, counterX.insertedEntities);
 		

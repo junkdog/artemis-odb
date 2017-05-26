@@ -4,13 +4,24 @@ import com.artemis.link.*;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
 
+import static com.artemis.WorldConfiguration.ENTITY_MANAGER_IDX;
+
 /**
  * @author Daan van Yperen
  */
 public class CosplayWorld<T extends Entity> extends World {
 
-    public CosplayWorld(WorldConfiguration configuration) {
-        super(configuration);
+    public CosplayWorld(WorldConfiguration configuration,EntityFactory<? extends World, T> entityFactory, Class<? extends T> entityType) {
+        super(appendConfiguration(configuration, entityFactory, entityType));
+    }
+
+    /** Enrich configuration with custom entity manager that will instance the entity correctly. */
+    protected static <W extends World, T extends Entity> WorldConfiguration appendConfiguration(WorldConfiguration configuration, EntityFactory<W, T> entityFactory, Class<? extends Entity> entityType) {
+        WorldConfiguration config = configuration
+                .setEntityType(entityType);
+        // TODO: move to configuration.
+        config.systems.set(ENTITY_MANAGER_IDX, new CosplayEntityManager<>(config.expectedEntityCount, entityFactory));
+        return config;
     }
 
     /**

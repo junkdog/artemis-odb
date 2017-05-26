@@ -60,7 +60,7 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.utils.BitVector"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntityWorld"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.CosplayWorld"/>
-    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntityEntityManager"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.CosplayEntityManager"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.CosplayBaseEntitySystem"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.CosplayBaseSystem"/>
 

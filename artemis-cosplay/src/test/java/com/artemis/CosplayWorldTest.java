@@ -27,7 +27,7 @@ public class CosplayWorldTest
 		print(BatchChangeProcessor.class);
 		print(ComponentIdentityResolver.class);
 		print(BaseComponentMapper.class);
-		print(EntityComponentMapper.class);
+		print(ComponentMapper.class);
 		print(ComponentType.class);
 		print(ComponentPool.class);
 		print(ComponentManager.class);
@@ -135,7 +135,7 @@ public class CosplayWorldTest
 
 	static class SystemB extends EntityProcessingSystem
 	{
-		EntityComponentMapper<ComponentX> xm;
+		ComponentMapper<ComponentX> xm;
 
 		@SuppressWarnings("unchecked")
 		public SystemB()
@@ -152,7 +152,7 @@ public class CosplayWorldTest
 	
 	static class SystemY extends EntityProcessingSystem
 	{
-		EntityComponentMapper<ComponentY> ym;
+		ComponentMapper<ComponentY> ym;
 		
 		@SuppressWarnings("unchecked")
 		public SystemY()

@@ -174,7 +174,7 @@ public class SubscriptionListenerTest {
 
 
 	private static class Es2 extends BaseSystem implements SubscriptionListener {
-		private EntityComponentMapper<MyComponent> mapper;
+		private ComponentMapper<MyComponent> mapper;
 		private boolean hasInserted;
 
 		@Override

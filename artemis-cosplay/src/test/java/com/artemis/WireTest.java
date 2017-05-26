@@ -374,7 +374,7 @@ public class WireTest {
     }
 
     private static class PojoWireNoWorld {
-        private EntityComponentMapper<ComponentX> componentXMapper;
+        private ComponentMapper<ComponentX> componentXMapper;
         private TagManager tagManager;
         private MappedSystem mappedSystem;
     }
@@ -388,8 +388,8 @@ public class WireTest {
     }
 
     private static class MappedSystemAll extends EntityProcessingSystem {
-        private EntityComponentMapper<ComponentX> x;
-        private EntityComponentMapper<ComponentY> y;
+        private ComponentMapper<ComponentX> x;
+        private ComponentMapper<ComponentY> y;
         private TagManager tagManager;
         private MappedSystem mappedSystem;
 
@@ -405,9 +405,9 @@ public class WireTest {
 
     private static class MappedSystem extends EntityProcessingSystem {
         @Wire
-        private EntityComponentMapper<ComponentX> x;
+        private ComponentMapper<ComponentX> x;
         @Wire
-        private EntityComponentMapper<ComponentY> y;
+        private ComponentMapper<ComponentY> y;
         @Wire
         private TagManager tagManager;
         @Wire
@@ -427,14 +427,14 @@ public class WireTest {
     }
 
     private static class ManagerWithStaticField extends Manager {
-        static EntityComponentMapper<ComponentX> mapper;
+        static ComponentMapper<ComponentX> mapper;
     }
 
     private static class MappedManager extends Manager {
         @Wire
-        private EntityComponentMapper<ComponentX> x;
+        private ComponentMapper<ComponentX> x;
         @Wire
-        private EntityComponentMapper<ComponentY> y;
+        private ComponentMapper<ComponentY> y;
         @Wire
         private MappedSystem mappedSystem;
         @Wire
@@ -442,31 +442,31 @@ public class WireTest {
     }
 
     private static class MappedManagerAll extends Manager {
-        private EntityComponentMapper<ComponentX> x;
-        private EntityComponentMapper<ComponentY> y;
+        private ComponentMapper<ComponentX> x;
+        private ComponentMapper<ComponentY> y;
         private MappedSystem mappedSystem;
         private TagManager tagManager;
     }
 
     private static class BaseManager extends Manager {
-        protected EntityComponentMapper<ComponentX> x;
+        protected ComponentMapper<ComponentX> x;
     }
 
     private static class ExtendedManager extends BaseManager {
-        private EntityComponentMapper<ComponentY> y;
+        private ComponentMapper<ComponentY> y;
     }
 
     private static class FailingManager extends BaseManager {
         @SuppressWarnings("unused")
-        private EntityComponentMapper<ComponentY> y;
+        private ComponentMapper<ComponentY> y;
     }
 
     private static abstract class BaseSystem extends VoidEntitySystem {
-        protected EntityComponentMapper<ComponentX> x;
+        protected ComponentMapper<ComponentX> x;
     }
 
     private static class ExtendedSystem extends BaseSystem {
-        private EntityComponentMapper<ComponentY> y;
+        private ComponentMapper<ComponentY> y;
 
         @Override
         protected void processSystem() {

@@ -151,7 +151,7 @@ public class DelayedIteratingSystemTest
 	{
 		public int expiredLastRound;
 
-		EntityComponentMapper<Expiration> em;
+		ComponentMapper<Expiration> em;
 
 		@SuppressWarnings("unchecked")
 		public ExpirationSystem() {

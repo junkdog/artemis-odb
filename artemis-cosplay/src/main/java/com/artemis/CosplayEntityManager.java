@@ -7,33 +7,44 @@ import com.artemis.utils.Bag;
  * @author Daan van Yperen
  */
 @SkipWire
-public abstract class CosplayEntityManager<T extends Entity> extends EntityManager {
+public class CosplayEntityManager<T extends Entity> extends EntityManager {
     /**
      * Contains all entities in the manager.
      */
     final Bag<T> entities;
+    private final EntityFactory entityFactory;
 
-    public CosplayEntityManager(int initialContainerSize) {
+    public CosplayEntityManager(int initialContainerSize, EntityFactory<? extends World, T> entityFactory) {
         super(initialContainerSize);
         entities = new Bag<>(initialContainerSize);
+        this.entityFactory = entityFactory;
     }
 
     /**
-     * Create a new entity.
+     * Method to create and return a new or reused entity instance.
      *
-     * @return a new entity
+     * Entity is automatically added to the world.
+     * <p>
+     * @return new entity of type T.
      */
     protected T createEntityInstance() {
         return obtain(super.create());
     }
 
     /**
-     * Resolves entity id to the unique entity instance. <em>This method may
-     * return an entity even if it isn't active in the world, </em> use
-     * {@link #isActive(int)} if you need to check whether the entity is active or not.
+     * Fast but unsafe retrieval of a reference object for this entity id.
      *
-     * @param entityId the entities id
-     * @return the entity
+     * This method trades performance for safety.
+     *
+     * User is expected to avoid calling this method on recently (in same system) removed or
+     * retired entity ids. Might return null, throw {@link ArrayIndexOutOfBoundsException}
+     * or a partially recycled entity if called on removed or non-existent ids.
+     *
+     * use {@link #isActive(int)} if you need to check whether the entity is active or not.
+     *
+     * @param entityId the entity id to fetch
+     * @return the entity of type T
+     * @throws java.lang.ArrayIndexOutOfBoundsException
      */
     protected T getEntity(int entityId) {
         return entities.get(entityId);
@@ -45,6 +56,14 @@ public abstract class CosplayEntityManager<T extends Entity> extends EntityManag
         entities.clear();
     }
 
+    /**
+     * Method to create and return a new or reused entity id.
+     *
+     * Entity is automatically added to the world. Creates reference entity
+     * as well so provides no performance benefit.
+     *
+     * @return new entity id.
+     */
     @Override
     protected int create() {
         return obtain(super.create()).id;
@@ -69,7 +88,10 @@ public abstract class CosplayEntityManager<T extends Entity> extends EntityManag
     /**
      * @return new Entity(world, id);
      */
-    protected abstract T createInstance(World world, int id);
+    @SuppressWarnings("unchecked")
+    protected T createInstance(World world, int id) {
+        return (T) entityFactory.instance(world, id);
+    }
 
     @Override
     protected void growEntityStores() {

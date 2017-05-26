@@ -72,7 +72,7 @@ public class FieldHandlerTest {
     }
 
     private static class ObjectWithCoreFields{
-        private EntityComponentMapper<SomeComponent> cm;
+        private ComponentMapper<SomeComponent> cm;
         private SomeSystem system;
         private SomeManager manager;
         @Wire private Object injectedObject;
