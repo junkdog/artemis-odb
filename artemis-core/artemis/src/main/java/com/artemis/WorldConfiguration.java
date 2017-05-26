@@ -176,6 +176,7 @@ public final class WorldConfiguration {
 		}
 
 		injector.initialize(world, injectables);
+		injector.inject(world);
 
 		initializeSystems(injector);
 

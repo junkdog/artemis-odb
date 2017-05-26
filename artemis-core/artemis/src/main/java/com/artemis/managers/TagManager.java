@@ -131,12 +131,8 @@ public class TagManager<T extends Entity> extends BaseSystem {
      *
      * @return all used tags as collection
      */
-    public Collection<String> getRegisteredTags() {
+    public IntMap.Values<String> getRegisteredTags() {
         // @TODO Cleanup crew!
-        Collection<String> result = new ArrayList<>();
-        while (tagsByEntity.values().hasNext()) {
-            result.add(tagsByEntity.values().next());
-        }
-        return result;
+        return tagsByEntity.values();
     }
 }

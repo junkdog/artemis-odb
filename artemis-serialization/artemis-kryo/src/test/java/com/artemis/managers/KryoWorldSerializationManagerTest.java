@@ -171,8 +171,8 @@ public class KryoWorldSerializationManagerTest {
 
 		deleteAll();
 
-		assertEquals(0, groups.getEntities("group1").size());
-		assertEquals(0, groups.getEntities("group2").size());
+		assertEquals(0, groups.getEntityIds("group1").size());
+		assertEquals(0, groups.getEntityIds("group2").size());
 
 		ByteArrayInputStream bais = new ByteArrayInputStream(save);
 		SaveFileFormat load = manger.load(bais, SaveFileFormat.class);
@@ -228,8 +228,8 @@ public class KryoWorldSerializationManagerTest {
 
 		EntityEdit ee1 = world.createEntity().edit();
 		EntityHolder holder = ee1.create(EntityHolder.class);
-		holder.entity = tags.getEntity("tag1");
-		holder.entityId = tags.getEntity("tag3").getId();
+		holder.entity = world.getEntity(tags.getEntityId("tag1"));
+		holder.entityId = world.getEntity(tags.getEntityId("tag3")).getId();
 
 		tags.register("entity-holder", ee1.getEntityId());
 		int entityHolderId = ee1.getEntityId();
@@ -243,7 +243,7 @@ public class KryoWorldSerializationManagerTest {
 
 		world.process();
 
-		Entity entityHolder = tags.getEntity("entity-holder");
+		Entity entityHolder = world.getEntity(tags.getEntityId("entity-holder"));
 		EntityHolder holder2 = entityHolder.getComponent(EntityHolder.class);
 		assertNotEquals(entityHolder.getId(), entityHolderId);
 		assertNotNull(holder2.entity);
@@ -278,13 +278,13 @@ public class KryoWorldSerializationManagerTest {
 
 		world.process();
 
-		Entity entityHolder1 = tags.getEntity("ee1");
+		Entity entityHolder1 = world.getEntity(tags.getEntityId("ee1"));
 		EntityHolder holder1b = entityHolder1.getComponent(EntityHolder.class);
 		assertNotEquals(entityHolder1.getId(), entityHolderId);
 		assertNull(holder1b.entity);
 		assertEquals(-1, holder1b.entityId);
 
-		Entity entityHolder2 = tags.getEntity("ee2");
+		Entity entityHolder2 = world.getEntity(tags.getEntityId("ee2"));
 		EntityHolder holder2b = entityHolder2.getComponent(EntityHolder.class);
 		assertNotEquals(entityHolder1.getId(), entityHolderId2);
 		assertNotNull(holder2b.entity);
@@ -298,8 +298,8 @@ public class KryoWorldSerializationManagerTest {
 
 		EntityEdit ee1 = world.createEntity().edit();
 		EntityBagHolder holder = ee1.create(EntityBagHolder.class);
-		holder.entities.add(tags.getEntity("tag1"));
-		holder.entities.add(tags.getEntity("tag3"));
+		holder.entities.add(world.getEntity(tags.getEntityId("tag1")));
+		holder.entities.add(world.getEntity(tags.getEntityId("tag3")));
 
 		tags.register("entity-holder", ee1.getEntityId());
 		int entityHolderId = ee1.getEntityId();
@@ -313,13 +313,13 @@ public class KryoWorldSerializationManagerTest {
 
 		world.process();
 
-		Entity entityHolder = tags.getEntity("entity-holder");
+		Entity entityHolder = world.getEntity(tags.getEntityId("entity-holder"));
 		EntityBagHolder holder2 = entityHolder.getComponent(EntityBagHolder.class);
 		assertNotEquals(entityHolder.getId(), entityHolderId);
 		assertNotNull(holder2.entities);
 		assertEquals(2, holder2.entities.size());
-		assertEquals(tags.getEntity("tag1"), holder2.entities.get(0));
-		assertEquals(tags.getEntity("tag3"), holder2.entities.get(1));
+		assertEquals(world.getEntity(tags.getEntityId("tag1")), holder2.entities.get(0));
+		assertEquals(world.getEntity(tags.getEntityId("tag3")), holder2.entities.get(1));
 	}
 
 	@Test
@@ -349,7 +349,7 @@ public class KryoWorldSerializationManagerTest {
 		world.process();
 
 		assertEquals(5, allEntities.getEntities().size());
-		assertEquals(tags.getEntity("tag3").getCompositionId(), l.get("one").getCompositionId());
+		assertEquals(world.getEntity(tags.getEntityId("tag3")).getCompositionId(), l.get("one").getCompositionId());
 		assertEquals(l.get("one").getCompositionId(), l.get("two").getCompositionId());
 	}
 
@@ -359,8 +359,8 @@ public class KryoWorldSerializationManagerTest {
 
 		EntityEdit ee1 = world.createEntity().edit();
 		EntityIntBagHolder holder = ee1.create(EntityIntBagHolder.class);
-		holder.entities.add(tags.getEntity("tag1").getId());
-		holder.entities.add(tags.getEntity("tag3").getId());
+		holder.entities.add(world.getEntity(tags.getEntityId("tag1")).getId());
+		holder.entities.add(world.getEntity(tags.getEntityId("tag3")).getId());
 
 		tags.register("entity-holder", ee1.getEntityId());
 		int entityHolderId = ee1.getEntityId();
@@ -374,13 +374,13 @@ public class KryoWorldSerializationManagerTest {
 
 		world.process();
 
-		Entity entityHolder = tags.getEntity("entity-holder");
+		Entity entityHolder = world.getEntity(tags.getEntityId("entity-holder"));
 		EntityIntBagHolder holder2 = entityHolder.getComponent(EntityIntBagHolder.class);
 		assertNotEquals(entityHolder.getId(), entityHolderId);
 		assertNotNull(holder2.entities);
 		assertEquals(2, holder2.entities.size());
-		assertEquals(tags.getEntity("tag1"), world.getEntity(holder2.entities.get(0)));
-		assertEquals(tags.getEntity("tag3"), world.getEntity(holder2.entities.get(1)));
+		assertEquals(world.getEntity(tags.getEntityId("tag1")), world.getEntity(holder2.entities.get(0)));
+		assertEquals(world.getEntity(tags.getEntityId("tag3")), world.getEntity(holder2.entities.get(1)));
 	}
 
 	@Test
@@ -509,7 +509,7 @@ public class KryoWorldSerializationManagerTest {
 
 		world.process();
 
-		Entity entity = tags.getEntity("reused-tag");
+		Entity entity = world.getEntity(tags.getEntityId("reused-tag"));
 		NotEntityBagHolder holder2 = entity.getComponent(NotEntityBagHolder.class);
 		assertEquals(holder.strings.size(), holder2.strings.size());
 		assertEquals(holder.strings.get(0), holder2.strings.get(0));
@@ -530,8 +530,8 @@ public class KryoWorldSerializationManagerTest {
 
 	private void assertTags() {
 		IntBag entities = allEntities.getEntities();
-		assertNotNull(entities.toString(), tags.getEntity("tag1"));
-		assertNotNull(entities.toString(), tags.getEntity("tag3"));
+		assertNotNull(entities.toString(), world.getEntity(tags.getEntityId("tag1")));
+		assertNotNull(entities.toString(), world.getEntity(tags.getEntityId("tag3")));
 	}
 
 	private void assertKeys(SaveFileFormat loaded) {
@@ -541,8 +541,8 @@ public class KryoWorldSerializationManagerTest {
 	}
 
 	private void assertGroups() {
-		assertEquals(2, groups.getEntities("group1").size());
-		assertEquals(1, groups.getEntities("group2").size());
+		assertEquals(2, groups.getEntityIds("group1").size());
+		assertEquals(1, groups.getEntityIds("group2").size());
 	}
 
 	private void setGroups() {

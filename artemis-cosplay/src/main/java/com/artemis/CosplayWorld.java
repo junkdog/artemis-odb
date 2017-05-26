@@ -9,7 +9,7 @@ import static com.artemis.WorldConfiguration.ENTITY_MANAGER_IDX;
 /**
  * @author Daan van Yperen
  */
-public class CosplayWorld<T extends Entity> extends World {
+public class CosplayWorld<T extends Entity> extends World implements SerializationEntityProvider<T> {
 
     public CosplayWorld(WorldConfiguration configuration,EntityFactory<? extends World, T> entityFactory, Class<? extends T> entityType) {
         super(appendConfiguration(configuration, entityFactory, entityType));

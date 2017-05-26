@@ -13,6 +13,7 @@ import org.junit.Test;
 import java.io.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class KryoEntityReferencesTest {
@@ -27,46 +28,46 @@ public class KryoEntityReferencesTest {
 	public void load_before_save() throws Exception {
 		SaveFileFormat load = loadWorld();
 
-		Entity base = tags.getEntity("level");
-		Entity star1 = tags.getEntity("star1");
+		int base = tags.getEntityId("level");
+		int star1 = tags.getEntityId("star1");
 
 		assertEquals(5, load.entities.size());
 
-		assertNotNull(base);
-		assertNotNull(star1);
+		assertNotEquals(-1, base);
+		assertNotEquals(-1,star1);
 
-		assertEquals(base.getId(), parentedPositionMapper.get(star1.getId()).origin);
+		assertEquals(base, parentedPositionMapper.get(star1).origin);
 
-		LevelState state = levelStateMapper.get(base.getId());
-		assertEquals(star1.getId(), state.starId1);
+		LevelState state = levelStateMapper.get(base);
+		assertEquals(star1, state.starId1);
 	}
 
 		@Test
 	public void load_entity_with_references() throws Exception {
 		SaveFileFormat load = loadWorld();
 
-		Entity base = tags.getEntity("level");
-		Entity star1 = tags.getEntity("star1");
-		Entity star2 = tags.getEntity("star2");
-		Entity star3 = tags.getEntity("star3");
-		Entity shadow = tags.getEntity("shadow");
+		int base = tags.getEntityId("level");
+		int star1 = tags.getEntityId("star1");
+		int star2 = tags.getEntityId("star2");
+		int star3 = tags.getEntityId("star3");
+		int shadow = tags.getEntityId("shadow");
 
 		assertEquals(5, load.entities.size());
 
-		assertNotNull(base);
-		assertNotNull(star1);
-		assertNotNull(star2);
-		assertNotNull(star3);
-		assertNotNull(shadow);
+			assertNotEquals(-1,base);
+			assertNotEquals(-1,star1);
+			assertNotEquals(-1,star2);
+			assertNotEquals(-1,star3);
+			assertNotEquals(-1,shadow);
 
-		assertEquals(base.getId(), parentedPositionMapper.get(star1.getId()).origin);
-		assertEquals(base.getId(), parentedPositionMapper.get(star2.getId()).origin);
-		assertEquals(base.getId(), parentedPositionMapper.get(star3.getId()).origin);
+		assertEquals(base, parentedPositionMapper.get(star1).origin);
+		assertEquals(base, parentedPositionMapper.get(star2).origin);
+		assertEquals(base, parentedPositionMapper.get(star3).origin);
 
-		LevelState state = levelStateMapper.get(base.getId());
-		assertEquals(star1.getId(), state.starId1);
-		assertEquals(star2.getId(), state.starId2);
-		assertEquals(star3.getId(), state.starId3);
+		LevelState state = levelStateMapper.get(base);
+		assertEquals(star1, state.starId1);
+		assertEquals(star2, state.starId2);
+		assertEquals(star3, state.starId3);
 	}
 
 	private SaveFileFormat loadWorld() {

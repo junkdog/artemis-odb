@@ -1,5 +1,6 @@
 package com.artemis;
 
+import com.artemis.annotations.SkipWire;
 import com.artemis.injection.CachedInjector;
 import com.artemis.injection.Injector;
 import com.artemis.link.*;
@@ -23,6 +24,7 @@ import static com.artemis.WorldConfiguration.ENTITY_MANAGER_IDX;
  * @author Arni Arent
  * @author junkdog
  */
+@SkipWire
 public class World {
 
 	/** Manages all entities for the world. */

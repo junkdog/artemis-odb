@@ -1,7 +1,7 @@
 package com.artemis.io;
 
-import com.artemis.CosplayWorld;
 import com.artemis.Entity;
+import com.artemis.SerializationEntityProvider;
 import com.artemis.World;
 import com.artemis.annotations.SkipWire;
 import com.artemis.utils.Bag;
@@ -28,7 +28,7 @@ public class IntBagEntitySerializer implements JsonSerializer<IntBag> {
 		if (recursionLevel == 1) {
 			json.writeObjectStart();
 			for (int i = 0, s = entities.size(); s > i; i++) {
-				Entity e = ((CosplayWorld)world).getEntity(entities.get(i));
+				Entity e = ((SerializationEntityProvider)world).getEntity(entities.get(i));
 				json.writeValue(Integer.toString(e.getId()), e);
 			}
 			json.writeObjectEnd();

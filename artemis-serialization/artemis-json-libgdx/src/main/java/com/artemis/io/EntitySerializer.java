@@ -3,6 +3,7 @@ package com.artemis.io;
 import com.artemis.*;
 import com.artemis.annotations.SkipWire;
 import com.artemis.annotations.Wire;
+import com.artemis.borrowed.IntMap;
 import com.artemis.components.SerializationTag;
 import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
@@ -25,7 +26,6 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 
 	private GroupManager groupManager;
 	private TagManager tagManager;
-	private final Collection<String> registeredTags;
 
 	private Archetype emptyEntity;
 	private boolean isSerializingEntity;
@@ -45,10 +45,6 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		defaultValues = new DefaultObjectStore();
 		factory = new EntityPoolFactory(world);
 		world.inject(this);
-
-		registeredTags = (tagManager != null)
-			? tagManager.getRegisteredTags()
-			: Collections.<String>emptyList();
 	}
 
 	void setUsePrototypes(boolean usePrototypes) {
@@ -111,12 +107,15 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 	}
 
 	private void writeTag(Json json, Entity e) {
-		for (String tag : registeredTags) {
-			if (tagManager.getEntityId(tag) != e.getId())
-				continue;
+		if (tagManager != null) {
+			final IntMap.Values<String> registeredTags = tagManager.getRegisteredTags();
+			for (String tag : registeredTags) {
+				if (tagManager.getEntityId(tag) != e.getId())
+					continue;
 
-			json.writeValue("tag", tag);
-			break;
+				json.writeValue("tag", tag);
+				break;
+			}
 		}
 	}
 

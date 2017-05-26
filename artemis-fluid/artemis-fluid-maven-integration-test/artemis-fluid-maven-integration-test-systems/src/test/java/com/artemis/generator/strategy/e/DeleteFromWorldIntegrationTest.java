@@ -33,7 +33,7 @@ public class DeleteFromWorldIntegrationTest extends AbstractStrategyIntegrationT
 
             @Override
             protected void processSystem() {
-                Assert.assertTrue(groupManager.getEntities("test").isEmpty());
+                Assert.assertTrue(groupManager.getEntityIds("test").isEmpty());
             }
         }
 

@@ -33,6 +33,6 @@ class EntityPoolFactory {
 	}
 
 	Entity createEntity() {
-		return ((CosplayWorld)world).getEntity(pool.getData()[poolIndex++]);
+		return ((SerializationEntityProvider)world).getEntity(pool.getData()[poolIndex++]);
 	}
 }
