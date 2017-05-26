@@ -39,7 +39,7 @@ public class MethodBuilder {
     }
 
     public MethodBuilder mapper(String prefix, ComponentDescriptor component, String suffix) {
-        method.addStatement(prefix + "world.m"+component.getName() + suffix);
+        method.addStatement(prefix + "((FluidWorld)world).m"+component.getName() + suffix);
         return this;
     }
 

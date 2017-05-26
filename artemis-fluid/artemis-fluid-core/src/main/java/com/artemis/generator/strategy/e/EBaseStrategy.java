@@ -1,5 +1,6 @@
 package com.artemis.generator.strategy.e;
 
+import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.common.BuilderModelStrategy;
@@ -22,8 +23,7 @@ public class EBaseStrategy implements BuilderModelStrategy {
     public void apply(ArtemisModel artemisModel, TypeModel model) {
         model.name = "E";
         model.packageName = "com.artemis";
-        model.superclass =
-                new ParTypeWorkaround(new TypeDescriptor("com.artemis.Entity"), FluidTypes.FLUIDWORLD_TYPE);
+        model.superclass = Entity.class;
 
         model.add(createStaticMapperField());
         model.add(createInitMethod());

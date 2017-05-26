@@ -21,12 +21,12 @@ import com.artemis.utils.BitVector;
  * @author Arni Arent
  * @author Adrian Papari
  */
-public class Entity<W extends World> {
+public class Entity {
 
 	/** The entities identifier in the world. */
 	int id;
 	/** The world this entity belongs to. */
-	protected final W world;
+	protected final World world;
 
 	/**
 	 * Creates a new {@link Entity} instance in the given world.
@@ -39,7 +39,7 @@ public class Entity<W extends World> {
 	 * @param id
 	 * 		the id to set
 	 */
-	protected Entity(W world, int id) {
+	protected Entity(World world, int id) {
 		this.world = world;
 		this.id = id;
 	}
@@ -110,16 +110,16 @@ public class Entity<W extends World> {
 	 * <p>
 	 * Minimize usage of this. Use {@link ComponentMapper} instead.
 	 * </p>
-	 * @param <T>
+	 * @param <C>
 	 * 		the expected return component class type
 	 * @param type
 	 * 		the expected return component class type
 	 * @return component that matches, or {@code null} if none is found
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Component> T getComponent(Class<T> type) {
+	public <C extends Component> C getComponent(Class<C> type) {
 		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-		return (T) getComponent(tf.getTypeFor(type));
+		return (C) getComponent(tf.getTypeFor(type));
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class Entity<W extends World> {
 	 * Returns the world this entity belongs to.
 	 * @return world of entity.
 	 */
-	public W getWorld() {
+	public World getWorld() {
 		return world;
 	}
 
