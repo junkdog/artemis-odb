@@ -21,7 +21,7 @@ import com.artemis.utils.BitVector;
  * @author Arni Arent
  * @author Adrian Papari
  */
-public final class Entity {
+public class Entity {
 
 	/** The entities identifier in the world. */
 	int id;
