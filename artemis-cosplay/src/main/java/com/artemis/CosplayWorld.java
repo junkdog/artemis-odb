@@ -7,21 +7,64 @@ import com.artemis.utils.IntBag;
 import static com.artemis.WorldConfiguration.ENTITY_MANAGER_IDX;
 
 /**
+ * Abstract class for World implementations that supports object references.
+ *
+ * Allows you to build a world with a subclass of {@link Entity}.
+ * See {@link EntityWorld} for example implementation. Fluid API also
+ * extends this world.
+ *
+ * Supports referencing to entities by {@code int} and T.
+ *
+ * If you want to reference entities by {@code int} only use {@link World},
+ * or if you want to subclass {@link Entity} extend {@link CosplayWorld}.
+ *
+ * @param <T> Entity class to be used in systems.
+ * @see World for more information on usage.
  * @author Daan van Yperen
  */
-public class CosplayWorld<T extends Entity> extends World implements SerializationEntityProvider<T> {
+public abstract class CosplayWorld<T extends Entity> extends World implements SerializationEntityProvider<T> {
 
-    public CosplayWorld(WorldConfiguration configuration,EntityFactory<? extends World, T> entityFactory, Class<? extends T> entityType) {
+    /**
+     * Instance world with both {@code int} and object reference support.
+     *
+     * @param configuration Configuration to base world upon.
+     * @param entityFactory Factory to create instances of T.
+     * @param entityType T.class (for example, Entity.class)
+     */
+    protected CosplayWorld(WorldConfiguration configuration, EntityFactory<? extends World, T> entityFactory, Class<? extends T> entityType) {
         super(appendConfiguration(configuration, entityFactory, entityType));
     }
 
-    /** Enrich configuration with custom entity manager that will instance the entity correctly. */
+    /**
+     * Enrich configuration with custom entity manager that will instance the entity correctly.
+     */
     protected static <W extends World, T extends Entity> WorldConfiguration appendConfiguration(WorldConfiguration configuration, EntityFactory<W, T> entityFactory, Class<? extends Entity> entityType) {
-        WorldConfiguration config = configuration
-                .setEntityType(entityType);
+        if ( entityType == null ) {
+            throw new NullPointerException("Please supply class of Entity.");
+        }
+        if ( entityFactory == null ) {
+            throw new NullPointerException("EntityFactory is required to create instances of " + entityType);
+        }
+        WorldConfiguration config = configuration.setEntityType(entityType);
+
+        // provide component mapper factory if none specified by the user.
+        if (config.getComponentMapperFactory() == null) {
+            config.setComponentMapperFactory(createCosplayComponentMapperFactory());
+        }
+
         // TODO: move to configuration.
         config.systems.set(ENTITY_MANAGER_IDX, new CosplayEntityManager<>(config.expectedEntityCount, entityFactory));
         return config;
+    }
+
+    private static ComponentMapperFactory createCosplayComponentMapperFactory() {
+        return new ComponentMapperFactory() {
+            @Override
+            @SuppressWarnings("unchecked")
+            public ComponentMapper instance(Class<? extends Component> type, World world) {
+                return new CosplayComponentMapper(type, world);
+            }
+        };
     }
 
     /**
@@ -79,17 +122,6 @@ public class CosplayWorld<T extends Entity> extends World implements Serializati
     @SuppressWarnings("unchecked")
     private CosplayEntityManager<T> getEntityManagerTyped() {
         return (CosplayEntityManager<T>) em;
-    }
-
-    @Override
-    protected ComponentMapperFactory getComponentMapperFactory() {
-        return new ComponentMapperFactory() {
-            @Override
-            @SuppressWarnings("unchecked")
-            public ComponentMapper instance(Class<? extends Component> type, World world) {
-                return new CosplayComponentMapper(type, world);
-            }
-        };
     }
 
     @Override
