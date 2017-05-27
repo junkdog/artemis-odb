@@ -21,6 +21,12 @@
         </dependency>
         <dependency>
             <groupId>net.onedaybeard.artemis</groupId>
+            <artifactId>artemis-odb-cosplay</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.onedaybeard.artemis</groupId>
             <artifactId>artemis-odb-serializer</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
@@ -48,6 +54,7 @@
                 <executions>
                     <execution>
                         <id>attach-test-sources</id>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>test-jar-no-fork</goal>
                         </goals>

@@ -1,10 +1,11 @@
 package com.artemis.managers;
 
-import com.artemis.*;
-import com.artemis.annotations.Wire;
+import com.artemis.ComponentMapper;
+import com.artemis.EntityWorld;
+import com.artemis.World;
+import com.artemis.WorldConfiguration;
 import com.artemis.component.LevelState;
 import com.artemis.component.ParentedPosition;
-import com.artemis.io.JsonArtemisSerializer;
 import com.artemis.io.SaveFileFormat;
 import org.junit.Test;
 
@@ -12,15 +13,21 @@ import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 
-public class EntityReferencesTest {
-    private World world;
-    private WorldSerializationManager manger;
-    private TagManager tags;
+/**
+ * @author Daan van Yperen
+ */
+public abstract class AbstractEntityReferencesTest {
+    protected World world;
+    protected WorldSerializationManager manger;
+    protected TagManager tags;
+    protected ComponentMapper<ParentedPosition> parentedPositionMapper;
+    protected ComponentMapper<LevelState> levelStateMapper;
+    private String filename;
 
-    private ComponentMapper<ParentedPosition> parentedPositionMapper;
-    private ComponentMapper<LevelState> levelStateMapper;
+    public AbstractEntityReferencesTest(String filename) {
+        this.filename = filename;
+    }
 
     @Test
     public void load_before_save() throws Exception {
@@ -68,21 +75,17 @@ public class EntityReferencesTest {
         assertEquals(star3, state.starId3);
     }
 
-    private SaveFileFormat loadWorld() {
+    protected SaveFileFormat loadWorld() {
         world = new EntityWorld(new WorldConfiguration()
                 .setSystem(TagManager.class)
                 .setSystem(WorldSerializationManager.class));
-
         world.inject(this);
-        JsonArtemisSerializer backend = new JsonArtemisSerializer(world);
-        backend.prettyPrint(true);
-        manger.setSerializer(backend);
-
-        InputStream is = EntityReferencesTest.class.getResourceAsStream("/level_3.json");
+        manger.setSerializer(createBackend(world));
+        InputStream is = AbstractEntityReferencesTest.class.getResourceAsStream(filename);
         SaveFileFormat load = manger.load(is, SaveFileFormat.class);
-
         world.process();
-
         return load;
     }
+
+    protected abstract WorldSerializationManager.ArtemisSerializer<?> createBackend(World world);
 }
