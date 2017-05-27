@@ -11,7 +11,7 @@ public class UniEntityLink extends Component {
 	public Entity field;
 
 	public static class Mutator<T extends Entity> implements UniFieldMutator {
-		private World world;
+		private CosplayWorld<T> world;
 
 		@Override
 		@SuppressWarnings("unchecked")
@@ -23,13 +23,14 @@ public class UniEntityLink extends Component {
 		@Override
 		@SuppressWarnings("unchecked")
 		public void write(int value, Component c, Field f) {
-			T e = (value != -1) ? ((CosplayWorld<T>)world).getEntity(value) : null;
+			T e = (value != -1) ? world.getEntity(value) : null;
 			((UniEntityLink) c).field = e;
 		}
 
 		@Override
+		@SuppressWarnings("unchecked")
 		public void setWorld(World world) {
-			this.world = world;
+			this.world = (CosplayWorld<T>)world;
 		}
 	}
 }
