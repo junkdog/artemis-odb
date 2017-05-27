@@ -1,11 +1,11 @@
 package com.artemis.component;
 
 import com.artemis.Component;
-import com.artemis.util.Vec2f;
+import com.artemis.utils.Vector2;
 
 public class Complex extends Component {
-	public Vec2f pos = new Vec2f(0, 0);
-	public Vec2f vel = new Vec2f(0, 0);
+	public Vector2 pos = new Vector2(0, 0);
+	public Vector2 vel = new Vector2(0, 0);
 
 	public void pos(float x, float y) {
 		pos.x = x;

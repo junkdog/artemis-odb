@@ -1,10 +1,15 @@
-package com.artemis.util;
+package com.artemis.utils;
 
-
-public class Vec2f {
+public class Vector2 {
 	public float x, y;
 
-	public Vec2f(float x, float y) {
+	public Vector2() {}
+	public Vector2(float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	public void set(float x, float y) {
 		this.x = x;
 		this.y = y;
 	}

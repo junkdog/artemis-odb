@@ -63,6 +63,22 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
+			<artifactId>artemis-odb-serializer-test-suite</artifactId>
+			<version>${project.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>artemis-odb-serializer-test-suite</artifactId>
+			<version>${project.version}</version>
+			<classifier>test-sources</classifier>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>artemis-odb-serializer</artifactId>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
