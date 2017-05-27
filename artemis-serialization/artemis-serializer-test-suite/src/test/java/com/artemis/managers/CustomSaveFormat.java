@@ -9,12 +9,12 @@ import com.artemis.utils.IntBag;
  * @author Daan van Yperen
  */
 public class CustomSaveFormat extends SaveFileFormat {
-	public CustomJsonWorldSerializationManagerTest.SerializedSystem serialized;
-	public CustomJsonWorldSerializationManagerTest.DummySegment noSerializer;
+	public AbstractCustomWorldSerializationManagerTest.SerializedSystem serialized;
+	public AbstractCustomWorldSerializationManagerTest.DummySegment noSerializer;
 
 	public CustomSaveFormat(EntitySubscription es, String dummyString, int dummyNumber) {
 		super(es);
-		noSerializer = new CustomJsonWorldSerializationManagerTest.DummySegment(dummyString, dummyNumber);
+		noSerializer = new AbstractCustomWorldSerializationManagerTest.DummySegment(dummyString, dummyNumber);
 	}
 
 	public CustomSaveFormat() {

@@ -1,20 +1,9 @@
 package com.artemis.managers;
 
-import com.artemis.*;
+import com.artemis.World;
 import com.artemis.annotations.Wire;
-import com.artemis.component.*;
-import com.artemis.components.SerializationTag;
 import com.artemis.io.JsonArtemisSerializer;
-import com.artemis.io.SaveFileFormat;
-import com.artemis.utils.IntBag;
-import org.junit.Before;
 import org.junit.Test;
-
-import java.io.*;
-import java.util.Arrays;
-
-import static com.artemis.utils.SerializationUtil.save;
-import static org.junit.Assert.*;
 
 @Wire(failOnNull = false, injectInherited = true)
 public class JsonWorldSerializationManagerTest extends AbstractWorldSerializationManagerTest {

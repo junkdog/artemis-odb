@@ -54,7 +54,7 @@
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Velocity"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.io"/>
 
-	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.managers.CustomJsonWorldSerializationManagerTest" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.managers.CustomJsonLibGdxWorldSerializationManagerTest" />
 
 	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
 	<set-property name="user.agent" value="safari"/>

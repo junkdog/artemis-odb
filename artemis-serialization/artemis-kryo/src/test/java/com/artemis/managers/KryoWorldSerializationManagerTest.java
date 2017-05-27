@@ -1,24 +1,21 @@
 package com.artemis.managers;
 
-import com.artemis.*;
+import com.artemis.Entity;
+import com.artemis.EntityEdit;
+import com.artemis.World;
 import com.artemis.annotations.Wire;
 import com.artemis.component.*;
-import com.artemis.components.SerializationTag;
 import com.artemis.io.KryoArtemisSerializer;
 import com.artemis.io.KryoEntitySerializer;
 import com.artemis.io.SaveFileFormat;
-import com.artemis.utils.IntBag;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.*;
-import java.util.Arrays;
+import java.io.ByteArrayInputStream;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 @Wire(failOnNull = false,injectInherited = true)
 public class KryoWorldSerializationManagerTest extends AbstractWorldSerializationManagerTest {
