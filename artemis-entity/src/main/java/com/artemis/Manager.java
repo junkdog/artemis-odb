@@ -39,7 +39,7 @@ public abstract class Manager<T extends Entity> extends CosplayBaseSystem<T> {
      * @param world the world to set
      */
     @Override
-    protected void setWorld(CosplayWorld<T> world) {
+    protected void setWorld(AbstractEntityWorld<T> world) {
         super.setWorld(world);
         if (implementsObserver("added"))
             methodFlags |= FLAG_INSERTED;

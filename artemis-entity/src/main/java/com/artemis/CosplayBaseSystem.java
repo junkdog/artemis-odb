@@ -1,6 +1,5 @@
 package com.artemis;
 
-import com.artemis.annotations.SkipWire;
 import com.artemis.utils.reflect.Method;
 import com.artemis.utils.reflect.ReflectionException;
 
@@ -9,7 +8,7 @@ import static com.artemis.utils.reflect.ClassReflection.getMethod;
 /**
  * @author Daan van Yperen
  */
-public abstract class CosplayBaseSystem<T extends Entity> extends BaseSystem<CosplayWorld<T>> {
+public abstract class CosplayBaseSystem<T extends Entity> extends BaseSystem<AbstractEntityWorld<T>> {
 
     protected boolean implementsObserver(String methodName) {
         try {

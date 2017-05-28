@@ -3,15 +3,15 @@ package com.artemis;
 /**
  * EntityWorld is a {@link World} with {@link Entity} support.
  *
- * Use this if you want to referencee entities by {@link Entity} (and/or {@code int}).
+ * Use this if you want to reference entities by {@link Entity} (and/or {@code int}).
  *
  * If you want to reference entities by {@code int} only use {@link World},
- * or if you want to subclass {@link Entity} extend {@link CosplayWorld}.
+ * or if you want to subclass {@link Entity} extend {@link AbstractEntityWorld}.
  *
  * @see World for more information on usage.
  * @author Daan van Yperen
  */
-public class EntityWorld extends CosplayWorld<Entity> {
+public class EntityWorld extends AbstractEntityWorld<Entity> {
 
     /**
      * Creates a world with {@link Entity} support and without custom systems.

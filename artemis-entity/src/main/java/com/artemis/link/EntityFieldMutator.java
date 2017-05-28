@@ -1,14 +1,14 @@
 package com.artemis.link;
 
+import com.artemis.AbstractEntityWorld;
 import com.artemis.Component;
-import com.artemis.CosplayWorld;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
 
 public class EntityFieldMutator<T extends Entity> implements UniFieldMutator {
-    private CosplayWorld<T> world;
+    private AbstractEntityWorld<T> world;
 
     @Override
     public int read(Component c, Field f) {
@@ -33,6 +33,6 @@ public class EntityFieldMutator<T extends Entity> implements UniFieldMutator {
     @Override
     @SuppressWarnings("unchecked")
     public void setWorld(World world) {
-        this.world = (CosplayWorld<T>) world;
+        this.world = (AbstractEntityWorld<T>) world;
     }
 }

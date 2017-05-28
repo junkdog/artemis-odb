@@ -26,7 +26,7 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>artemis-odb-cosplay</artifactId>
+			<artifactId>artemis-odb-entity</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
@@ -40,7 +40,7 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>artemis-odb-cosplay</artifactId>
+			<artifactId>artemis-odb-entity</artifactId>
 			<version>${project.version}</version>
 			<classifier>sources</classifier>
 			<scope>test</scope>

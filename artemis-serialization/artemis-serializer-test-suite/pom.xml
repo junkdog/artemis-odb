@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>net.onedaybeard.artemis</groupId>
-            <artifactId>artemis-odb-cosplay</artifactId>
+            <artifactId>artemis-odb-entity</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

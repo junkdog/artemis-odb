@@ -44,7 +44,7 @@ public abstract class EntitySystem<T extends Entity> extends CosplayBaseEntitySy
      */
     @Override
     @SuppressWarnings("unchecked")
-    protected void setWorld(CosplayWorld<T> world) {
+    protected void setWorld(AbstractEntityWorld<T> world) {
         super.setWorld(world);
         entities = new WildBag<T>(world.getEntityClass());
         if (implementsObserver("inserted"))

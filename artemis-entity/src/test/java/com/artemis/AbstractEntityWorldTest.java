@@ -16,7 +16,7 @@ import com.artemis.utils.Bag;
 import org.openjdk.jol.info.ClassLayout;
 import org.openjdk.jol.vm.VM;
 
-public class CosplayWorldTest
+public class AbstractEntityWorldTest
 {
 	@Test
 	public void sandbox() {

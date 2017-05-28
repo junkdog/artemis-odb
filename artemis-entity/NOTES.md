@@ -1,17 +1,17 @@
 Proof of Concept
-- [x] Create a high performance int based core module `artemis-odb, and an optional `Entity` driven module `artemis-odb-cosplay` (placeholder).
+- [x] Create a high performance int based core module `artemis-odb, and an optional `Entity` driven module `artemis-odb-entity` (placeholder).
 - [x] Everything builds.
 - [x] All tests succeed.
 - [x] managers initialized alongside systems using Initialize, instead of special method.
-- [x] `artemis-odb-cosplay` -> Open up `World` and `Entity` for subclassing.
-- [ ] `artemis-odb-cosplay` -> Expose System hierarchy using generics, see `CosplayBaseSystem<T>`, `CosplayComponentMapper<T>`, `CosplayWorld<T>`.
+- [x] `artemis-odb-entity` -> Open up `World` and `Entity` for subclassing.
+- [ ] `artemis-odb-entity` -> Expose System hierarchy using generics, see `CosplayBaseSystem<T>`, `CosplayComponentMapper<T>`, `CosplayWorld<T>`.
 - [ ] Expose `EntityEdit` on `Entity`
 - [ ] Expose `EntityTransmuter#transmute` on `Entity`
-- [ ] Migrate `fluid API` to use `artemis-odb-cosplay`
+- [ ] Migrate `fluid API` to use `artemis-odb-entity`
 - [ ] Reintegrate and cleanup `EntityFieldMutator`, `EntityBagFieldMutator`.
 - [ ] Implement clean solution for ComponentMapper. (do we just forget about the `Entity` related methods? `NotImplementedException` when in int-mode and accept Entity subclasses? Force users to supply a specific type (ie. `EntityComponentMapper<>`?)
 - [ ] generics for `world.getMapper()` possible?
-- [ ] Sever serialization `artemis-odb-cosplay` dependency (json, kryo, json-libgdx). Perhaps move `Entity` itself and some basic classes in `odb-core` to achieve this.
+- [ ] Sever serialization `artemis-odb-entity` dependency (json, kryo, json-libgdx). Perhaps move `Entity` itself and some basic classes in `odb-core` to achieve this.
 - [ ] Move `ComponentMapperFactory` and custom `EntityManager` to configuration. 
 - [ ] Attempt to move (int-only) versions of TagManager, GroupManager, EntityBuilder back into `artemis-odb-core`.
 - [ ] Right now we have both `World world` and `CosplayWorld<T> worldTyped` as fields in `CosplayBaseSystem`. Consider using generics to simplify to a single field.

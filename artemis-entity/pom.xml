@@ -7,9 +7,9 @@
         <artifactId>artemis-parent</artifactId>
         <version>2.2.0-SNAPSHOT</version>
     </parent>
-    <artifactId>artemis-odb-cosplay</artifactId>
+    <artifactId>artemis-odb-entity</artifactId>
     <packaging>jar</packaging>
-    <name>artemis-cosplay</name>
+    <name>artemis-entity</name>
 
     <description>Facade your int entities with an object of your choosing.</description>
     <url>https://github.com/junkdog/artemis-odb</url>

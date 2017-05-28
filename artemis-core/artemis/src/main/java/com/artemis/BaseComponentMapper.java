@@ -3,7 +3,7 @@ package com.artemis;
 import com.artemis.annotations.DelayedComponentRemoval;
 
 public abstract class BaseComponentMapper<A extends Component> {
-	public static final String MSG_TYPES_NOT_SUPPORTED_BY_CORE = "Entity type operations not supported. Make sure your World is of the correct type (EntityWorld / CosplayWorld) and you are using artemis-odb-cosplay.";
+	public static final String MSG_TYPES_NOT_SUPPORTED_BY_CORE = "Entity type operations not supported. Make sure your World is of the correct type (EntityWorld / CosplayWorld) and you are using artemis-odb-entity.";
 	/** The type of components this mapper handles. */
 	public final ComponentType type;
 

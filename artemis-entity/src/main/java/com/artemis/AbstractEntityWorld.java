@@ -16,13 +16,13 @@ import static com.artemis.WorldConfiguration.ENTITY_MANAGER_IDX;
  * Supports referencing to entities by {@code int} and T.
  *
  * If you want to reference entities by {@code int} only use {@link World},
- * or if you want to subclass {@link Entity} extend {@link CosplayWorld}.
+ * or if you want to subclass {@link Entity} extend {@link AbstractEntityWorld}.
  *
  * @param <T> Entity class to be used in systems.
  * @see World for more information on usage.
  * @author Daan van Yperen
  */
-public abstract class CosplayWorld<T extends Entity> extends World implements SerializationEntityProvider<T> {
+public abstract class AbstractEntityWorld<T extends Entity> extends World implements SerializationEntityProvider<T> {
 
     /**
      * Instance world with both {@code int} and object reference support.
@@ -31,7 +31,7 @@ public abstract class CosplayWorld<T extends Entity> extends World implements Se
      * @param entityFactory Factory to create instances of T.
      * @param entityType T.class (for example, Entity.class)
      */
-    protected CosplayWorld(WorldConfiguration configuration, EntityFactory<? extends World, T> entityFactory, Class<? extends T> entityType) {
+    protected AbstractEntityWorld(WorldConfiguration configuration, EntityFactory<? extends World, T> entityFactory, Class<? extends T> entityType) {
         super(appendConfiguration(configuration, entityFactory, entityType));
     }
 
@@ -49,7 +49,7 @@ public abstract class CosplayWorld<T extends Entity> extends World implements Se
 
         // provide component mapper factory if none specified by the user.
         if (config.getComponentMapperFactory() == null) {
-            config.setComponentMapperFactory(createCosplayComponentMapperFactory());
+            config.setComponentMapperFactory(createAbstractEntityComponentMapperFactory());
         }
 
         // TODO: move to configuration.
@@ -57,7 +57,7 @@ public abstract class CosplayWorld<T extends Entity> extends World implements Se
         return config;
     }
 
-    private static ComponentMapperFactory createCosplayComponentMapperFactory() {
+    private static ComponentMapperFactory createAbstractEntityComponentMapperFactory() {
         return new ComponentMapperFactory() {
             @Override
             @SuppressWarnings("unchecked")

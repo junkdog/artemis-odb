@@ -101,7 +101,7 @@
 
 	<modules>
 		<module>artemis-core</module>
-		<module>artemis-cosplay</module>
+		<module>artemis-entity</module>
 		<module>artemis-build-tools</module>
 		<module>artemis-serialization</module>
 		<module>artemis-fluid</module>

@@ -19,7 +19,7 @@
 
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>artemis-odb-cosplay</artifactId>
+            <artifactId>artemis-odb-entity</artifactId>
             <version>${project.version}</version>
         </dependency>
 

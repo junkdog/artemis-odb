@@ -10,5 +10,5 @@ import java.lang.reflect.Type;
 public class FluidTypes {
     public static final Type FLUIDWORLD_TYPE = new TypeDescriptor("com.artemis.FluidWorld");
     public static final Type E_TYPE = new TypeDescriptor("com.artemis.E");
-    public static final Type COSPLAYWORLD_TYPE = new TypeDescriptor("com.artemis.CosplayWorld");
+    public static final Type COSPLAYWORLD_TYPE = new TypeDescriptor("com.artemis.AbstractEntityWorld");
 }

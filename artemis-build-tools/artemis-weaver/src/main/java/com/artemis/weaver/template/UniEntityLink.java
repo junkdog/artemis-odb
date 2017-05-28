@@ -1,7 +1,7 @@
 package com.artemis.weaver.template;
 
+import com.artemis.AbstractEntityWorld;
 import com.artemis.Component;
-import com.artemis.CosplayWorld;
 import com.artemis.Entity;
 import com.artemis.World;
 import com.artemis.link.UniFieldMutator;
@@ -11,7 +11,7 @@ public class UniEntityLink extends Component {
 	public Entity field;
 
 	public static class Mutator<T extends Entity> implements UniFieldMutator {
-		private CosplayWorld<T> world;
+		private AbstractEntityWorld<T> world;
 
 		@Override
 		@SuppressWarnings("unchecked")
@@ -30,7 +30,7 @@ public class UniEntityLink extends Component {
 		@Override
 		@SuppressWarnings("unchecked")
 		public void setWorld(World world) {
-			this.world = (CosplayWorld<T>)world;
+			this.world = (AbstractEntityWorld<T>)world;
 		}
 	}
 }

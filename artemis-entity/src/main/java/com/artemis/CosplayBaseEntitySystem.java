@@ -33,7 +33,7 @@ public abstract class CosplayBaseEntitySystem<T extends Entity> extends CosplayB
 		aspectConfiguration = aspect;
 	}
 
-	protected void setWorld(CosplayWorld<T> world) {
+	protected void setWorld(AbstractEntityWorld<T> world) {
 		super.setWorld(world);
 		subscription = getSubscription();
 	   	subscription.addSubscriptionListener(this);
