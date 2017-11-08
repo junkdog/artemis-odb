@@ -2,10 +2,9 @@ package com.artemis.generator.generator;
 
 import com.artemis.Component;
 import com.artemis.generator.common.SourceGenerator;
-import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.model.type.*;
 import com.github.javaparser.JavaParser;
-import com.github.javaparser.ParseException;
+import com.github.javaparser.ParseProblemException;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.visitor.VoidVisitorAdapter;
@@ -30,7 +29,7 @@ public abstract class AbstractSourceGeneratorTest {
             @Override
             public void test(CompilationUnit cu) {
                 assertParses(cu);
-                Assert.assertEquals("test", cu.getTypes().get(0).getName());
+                Assert.assertEquals("test", cu.getTypes().get(0).getNameAsString());
             }
         } );
     }
@@ -172,7 +171,7 @@ public abstract class AbstractSourceGeneratorTest {
     private CompilationUnit getCompilationUnit(byte[] bytes) {
         try {
             return JavaParser.parse(new ByteArrayInputStream(bytes));
-        } catch (ParseException e) {
+        } catch (ParseProblemException e) {
             return null;
         }
     }
@@ -201,7 +200,7 @@ public abstract class AbstractSourceGeneratorTest {
         Assert.assertTrue("No matching methods found.",  asserter.matchingMethods==1);
     }
 
-    private class HasMethodAsserter extends VoidVisitorAdapter {
+    private class HasMethodAsserter extends VoidVisitorAdapter<Void> {
 
         private final int parameterCount;
         private final String methodName;
@@ -215,8 +214,8 @@ public abstract class AbstractSourceGeneratorTest {
         }
 
         @Override
-        public void visit(MethodDeclaration n, Object arg) {
-            if ( n.getName().equals(methodName) && n.getType().toString().equals(returnType) && n.getParameters().size()== parameterCount) matchingMethods++;
+        public void visit(MethodDeclaration n, Void arg) {
+            if ( n.getNameAsString().equals(methodName) && n.getType().asString().equals(returnType) && n.getParameters().size()== parameterCount) matchingMethods++;
         }
     }
 }
