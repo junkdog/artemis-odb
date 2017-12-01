@@ -3,6 +3,7 @@ package com.artemis.io;
 import com.artemis.*;
 import com.artemis.annotations.SkipWire;
 import com.artemis.annotations.Wire;
+import com.artemis.borrowed.IntMap;
 import com.artemis.components.SerializationTag;
 import com.artemis.managers.GroupManager;
 import com.artemis.managers.TagManager;
@@ -25,7 +26,6 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 
 	private GroupManager groupManager;
 	private TagManager tagManager;
-	private final Collection<String> registeredTags;
 
 	private Archetype emptyEntity;
 	private boolean isSerializingEntity;
@@ -45,10 +45,6 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		defaultValues = new DefaultObjectStore();
 		factory = new EntityPoolFactory(world);
 		world.inject(this);
-
-		registeredTags = (tagManager != null)
-			? tagManager.getRegisteredTags()
-			: Collections.<String>emptyList();
 	}
 
 	void setUsePrototypes(boolean usePrototypes) {
@@ -111,18 +107,21 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 	}
 
 	private void writeTag(Json json, Entity e) {
-		for (String tag : registeredTags) {
-			if (tagManager.getEntity(tag) != e)
-				continue;
+		if (tagManager != null) {
+			final IntMap.Values<String> registeredTags = tagManager.getRegisteredTags();
+			for (String tag : registeredTags) {
+				if (tagManager.getEntityId(tag) != e.getId())
+					continue;
 
-			json.writeValue("tag", tag);
-			break;
+				json.writeValue("tag", tag);
+				break;
+			}
 		}
 	}
 
 	private void writeKeyTag(Json json, Entity e) {
-		if (saveTagMapper.has(e)) {
-			String key = saveTagMapper.get(e).tag;
+		if (saveTagMapper.has(e.getId())) {
+			String key = saveTagMapper.get(e.getId()).tag;
 			if (key != null)
 				json.writeValue("key", key);
 		}
@@ -255,7 +254,7 @@ public class EntitySerializer implements Json.Serializer<Entity> {
 		if ("key".equals(jsonData.name)) {
 			String key = jsonData.asString();
 			keyTracker.register(key, e);
-			saveTagMapper.create(e).tag = key;
+			saveTagMapper.create(e.getId()).tag = key;
 			jsonData = jsonData.next;
 		}
 

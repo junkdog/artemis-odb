@@ -19,8 +19,9 @@ public class LinkFactoryTest extends GWTTestCase {
 		Field[] fields = ClassReflection.getDeclaredFields(LttEmpty.class);
 		Field found = null;
 
+		EntityWorld world = new EntityWorld();
 		for (Field field : fields) {
-			if (getReferenceTypeId(field) > 0) {
+			if (getReferenceTypeId(world, field) > 0) {
 				found = field;
 			}
 		}
@@ -33,8 +34,9 @@ public class LinkFactoryTest extends GWTTestCase {
 		Field[] fields = ClassReflection.getDeclaredFields(LttEntity.class);
 		Field found = null;
 
+		EntityWorld world = new EntityWorld();
 		for (Field field : fields) {
-			if (getReferenceTypeId(field) > 0) {
+			if (getReferenceTypeId(world, field) > 0) {
 				found = field;
 				break;
 			}
@@ -48,8 +50,9 @@ public class LinkFactoryTest extends GWTTestCase {
 		Field[] fields = ClassReflection.getDeclaredFields(LttEntityId.class);
 		Field found = null;
 
+		EntityWorld world = new EntityWorld();
 		for (Field field : fields) {
-			if (getReferenceTypeId(field) > 0) {
+			if (getReferenceTypeId(world,field) > 0) {
 				found = field;
 				break;
 			}
@@ -63,8 +66,9 @@ public class LinkFactoryTest extends GWTTestCase {
 		Field[] fields = ClassReflection.getDeclaredFields(LttBagEntity.class);
 		Field found = null;
 
+		EntityWorld world = new EntityWorld();
 		for (Field field : fields) {
-			if (getReferenceTypeId(field) > 0) {
+			if (getReferenceTypeId(world, field) > 0) {
 				found = field;
 				break;
 			}
@@ -78,8 +82,9 @@ public class LinkFactoryTest extends GWTTestCase {
 		Field[] fields = ClassReflection.getDeclaredFields(LttIntBag.class);
 		Field found = null;
 
+		EntityWorld world = new EntityWorld();
 		for (Field field : fields) {
-			if (getReferenceTypeId(field) > 0) {
+			if (getReferenceTypeId(world, field) > 0) {
 				found = field;
 				break;
 			}
@@ -90,7 +95,7 @@ public class LinkFactoryTest extends GWTTestCase {
 	}
 
 	public void test_create_single_link_site() {
-		World w = new World();
+		World w = new EntityWorld();
 		ComponentTypeFactory typeFactory = w.getComponentManager().getTypeFactory();
 		ComponentType ct = typeFactory.getTypeFor(LttEntity.class);
 
@@ -104,7 +109,7 @@ public class LinkFactoryTest extends GWTTestCase {
 	}
 
 	public void test_create_multi_link_site() {
-		World w = new World();
+		World w = new EntityWorld();
 		ComponentTypeFactory typeFactory = w.getComponentManager().getTypeFactory();
 		ComponentType ct = typeFactory.getTypeFor(LttEntity.class);
 
@@ -118,7 +123,7 @@ public class LinkFactoryTest extends GWTTestCase {
 	}
 
 	public void test_create_zero_link_site() {
-		World w = new World();
+		World w = new EntityWorld();
 		ComponentTypeFactory typeFactory = w.getComponentManager().getTypeFactory();
 		ComponentType ct = typeFactory.getTypeFor(LttMulti.class);
 

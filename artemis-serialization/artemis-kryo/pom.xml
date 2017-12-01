@@ -16,6 +16,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>net.onedaybeard.artemis</groupId>
+			<artifactId>artemis-odb-entity</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId>
 			<artifactId>artemis-odb</artifactId>
 			<version>${project.version}</version>
 			<scope>provided</scope>
@@ -41,6 +47,13 @@
 			<artifactId>artemis-odb-serializer-json-libgdx</artifactId>
 			<version>${project.version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId>
+			<artifactId>artemis-odb-serializer-test-suite</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+			<type>test-jar</type>
 		</dependency>
 	</dependencies>
 

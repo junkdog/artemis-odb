@@ -19,7 +19,7 @@ public class ComponentTagStrategy implements BuilderModelStrategy {
                 new MethodBuilder(FluidTypes.E_TYPE, "tag")
                         .parameter(String.class, "tag")
                         .debugNotes("default tag setter")
-                        .statement("mappers.getWorld().getSystem(com.artemis.managers.TagManager.class).register(tag, entityId)")
+                        .statement("world.getSystem(com.artemis.managers.TagManager.class).register(tag, id)")
                         .returnFluid()
                         .build();
     }
@@ -28,7 +28,7 @@ public class ComponentTagStrategy implements BuilderModelStrategy {
         return
                 new MethodBuilder(String.class, "tag")
                         .debugNotes("default tag getter")
-                        .statement("return mappers.getWorld().getSystem(com.artemis.managers.TagManager.class).getTag(entityId)")
+                        .statement("return world.getSystem(com.artemis.managers.TagManager.class).getTag(id)")
                         .build();
     }
 

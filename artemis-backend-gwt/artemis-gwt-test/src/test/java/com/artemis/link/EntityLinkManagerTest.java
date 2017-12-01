@@ -12,7 +12,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 	}
 
 	public void test_unilink_kill_empty_link() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int otherA = world.create();
@@ -34,7 +34,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 	}
 
 	public void test_multilink_kill_empty_link() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int otherA = world.create();
@@ -56,7 +56,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 	}
 
 	public void test_unilink_explicit_field_int_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -94,7 +94,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 
 
 	public void test_unilink_automatic_field_entity_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -131,7 +131,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 	}
 
 	public void test_unilink_automatic_field_entity_check_source_policy_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -168,7 +168,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 	}
 
 	public void test_unilink_automatic_field_entity_skip_policy_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -205,7 +205,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 	}
 
 	public void test_multilink_automatic_field_bag_skip_all_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -238,7 +238,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 	}
 
 	public void test_multilink_automatic_field_bag_skip_target_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -271,7 +271,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 	}
 
 	public void test_multilink_automatic_field_bag_check_all_target_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();
@@ -305,7 +305,7 @@ public class EntityLinkManagerTest extends GWTTestCase {
 	}
 
 	public void test_mulltilink_explicit_field_int_test() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 			.setSystem(EntityLinkManager.class));
 
 		final int padding = world.create();

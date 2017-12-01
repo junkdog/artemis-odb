@@ -58,6 +58,12 @@
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.AspectFieldResolver"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.injection.PojoFieldResolver"/>
     <extend-configuration-property name="artemis.reflect.include" value="com.artemis.utils.BitVector"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntityWorld"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.AbstractEntityWorld"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.CosplayEntityManager"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.CosplayBaseEntitySystem"/>
+    <extend-configuration-property name="artemis.reflect.include" value="com.artemis.CosplayBaseSystem"/>
+
 
     <source path="">
         <exclude name="**/gen/**"/>

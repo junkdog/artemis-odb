@@ -22,8 +22,7 @@ public class ComponentGroupStrategy implements BuilderModelStrategy {
                 new MethodBuilder(FluidTypes.E_TYPE, "group")
                         .parameter(String.class, "group")
                         .debugNotes("default group setter")
-                        .statement("World w = mappers.getWorld()")
-                        .statement("w.getSystem(com.artemis.managers.GroupManager.class).add(w.getEntity(entityId), group)")
+                        .statement("world.getSystem(com.artemis.managers.GroupManager.class).add(id, group)")
                         .returnFluid()
                         .build();
     }
@@ -45,8 +44,7 @@ public class ComponentGroupStrategy implements BuilderModelStrategy {
                 new MethodBuilder(FluidTypes.E_TYPE, "removeGroup")
                         .parameter(String.class, "group")
                         .debugNotes("default group remover")
-                        .statement("World w = mappers.getWorld()")
-                        .statement("w.getSystem(com.artemis.managers.GroupManager.class).remove(w.getEntity(entityId), group)")
+                        .statement("world.getSystem(com.artemis.managers.GroupManager.class).remove(id, group)")
                         .returnFluid()
                         .build();
     }
@@ -67,8 +65,7 @@ public class ComponentGroupStrategy implements BuilderModelStrategy {
         return
                 new MethodBuilder(FluidTypes.E_TYPE, "removeGroups")
                         .debugNotes("default groups remover")
-                        .statement("World w = mappers.getWorld()")
-                        .statement("w.getSystem(com.artemis.managers.GroupManager.class).removeFromAllGroups(w.getEntity(entityId))")
+                        .statement("world.getSystem(com.artemis.managers.GroupManager.class).removeFromAllGroups(id)")
                         .returnFluid()
                         .build();
     }
@@ -77,8 +74,7 @@ public class ComponentGroupStrategy implements BuilderModelStrategy {
         return
                 new MethodBuilder(new ParameterizedTypeImpl(ImmutableBag.class, String.class), "groups")
                         .debugNotes("default groups getter")
-                        .statement("World w = mappers.getWorld()")
-                        .statement("return w.getSystem(com.artemis.managers.GroupManager.class).getGroups(w.getEntity(entityId))")
+                        .statement("return world.getSystem(com.artemis.managers.GroupManager.class).getGroups(id)")
                         .build();
     }
 
@@ -89,8 +85,7 @@ public class ComponentGroupStrategy implements BuilderModelStrategy {
                 new MethodBuilder(boolean.class, "isInGroup")
                         .parameter(String.class, "group")
                         .debugNotes("default group setter")
-                        .statement("World w = mappers.getWorld()")
-                        .statement("return w.getSystem(com.artemis.managers.GroupManager.class).isInGroup(w.getEntity(entityId), group)")
+                        .statement("return world.getSystem(com.artemis.managers.GroupManager.class).isInGroup(id, group)")
                         .build();
     }
 

@@ -26,7 +26,7 @@ public class ArchetypeMapper {
 		Bag<Class<? extends Component>> types = new Bag<Class<? extends Component>>();
 
 		for (int i = 0, s = toSave.size(); s > i; i++) {
-			int compositionId = world.getEntity(ids[i]).getCompositionId();
+			int compositionId = world.compositionId(ids[i]);
 			if (!compositionIdMapper.containsKey(compositionId)) {
 				components.clear();
 				types.clear();
@@ -84,7 +84,7 @@ public class ArchetypeMapper {
 				transmuter = factory.build();
 			}
 
-			transmuter.transmute(e);
+			transmuter.transmute(e.getId());
 		}
 	}
 }

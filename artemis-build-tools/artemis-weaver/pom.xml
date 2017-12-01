@@ -47,6 +47,11 @@
 			<artifactId>artemis-odb</artifactId>
 			<version>${project.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>artemis-odb-entity</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 	</dependencies>
 
 

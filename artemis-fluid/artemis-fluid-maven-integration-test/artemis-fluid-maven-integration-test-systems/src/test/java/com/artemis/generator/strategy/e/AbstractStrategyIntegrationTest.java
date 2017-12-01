@@ -1,9 +1,6 @@
 package com.artemis.generator.strategy.e;
 
-import com.artemis.BaseSystem;
-import com.artemis.SuperMapper;
-import com.artemis.World;
-import com.artemis.WorldConfigurationBuilder;
+import com.artemis.*;
 
 /**
  * @author Daan van Yperen
@@ -15,9 +12,8 @@ public abstract class AbstractStrategyIntegrationTest {
     }
 
     protected World createFluidWorld(BaseSystem... systems) {
-        WorldConfigurationBuilder worldConfigurationBuilder = new WorldConfigurationBuilder()
-                .with(new SuperMapper());
+        WorldConfigurationBuilder worldConfigurationBuilder = new WorldConfigurationBuilder();
         worldConfigurationBuilder.with(systems);
-        return new World(worldConfigurationBuilder.build());
+        return new FluidWorld(worldConfigurationBuilder.build());
     }
 }

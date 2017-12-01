@@ -28,7 +28,7 @@ public class ComponentExistStrategy extends IterativeModelStrategy {
 
                         Strings.assembleMethodName(component.getPreferences().getPrefixComponentHas(),component.getName()))
                         .debugNotes(component.getComponentType().getName())
-                        .mapper("return ", component, ".has(entityId)")
+                        .mapper("return ", component, ".has(id)")
                         .build();
     }
 }

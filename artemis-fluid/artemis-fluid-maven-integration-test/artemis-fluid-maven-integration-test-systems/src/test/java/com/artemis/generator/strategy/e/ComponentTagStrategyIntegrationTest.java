@@ -1,6 +1,7 @@
 package com.artemis.generator.strategy.e;
 
 import com.artemis.BaseSystem;
+import com.artemis.CosplayBaseSystem;
 import com.artemis.E;
 import com.artemis.Entity;
 import com.artemis.managers.GroupManager;
@@ -16,11 +17,11 @@ public class ComponentTagStrategyIntegrationTest extends AbstractStrategyIntegra
     @Test
     public void When_fluid_set_tag_Should_set_tag() throws Exception {
 
-        class TestSystem extends BaseSystem {
+        class TestSystem extends CosplayBaseSystem<E> {
             public TagManager tagManager;
             @Override
             protected void processSystem() {
-                Entity entity = E.E().tag("test").entity();
+                int entity = E().tag("test").id();
                 Assert.assertEquals("test",tagManager.getTag(entity));
             }
         }
@@ -32,10 +33,10 @@ public class ComponentTagStrategyIntegrationTest extends AbstractStrategyIntegra
     @Test
     public void When_fluid_get_tag_Should_get_tag() throws Exception {
 
-        class TestSystem extends BaseSystem {
+        class TestSystem extends CosplayBaseSystem<E> {
             @Override
             protected void processSystem() {
-                Assert.assertEquals("test",E.E().tag("test").tag());
+                Assert.assertEquals("test",E().tag("test").tag());
             }
         }
 

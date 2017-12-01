@@ -54,6 +54,7 @@
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Velocity"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.io"/>
 
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.managers.CustomJsonLibGdxWorldSerializationManagerTest" />
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.managers.CustomJsonWorldSerializationManagerTest" />
 
 	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>

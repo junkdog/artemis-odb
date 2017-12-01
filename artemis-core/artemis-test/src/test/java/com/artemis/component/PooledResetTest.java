@@ -10,15 +10,15 @@ import org.junit.Test;
 
 import com.artemis.Entity;
 import com.artemis.PooledComponent;
-import com.artemis.World;
+import com.artemis.EntityWorld;
 
 public class PooledResetTest {
 	
-	private World world;
+	private EntityWorld world;
 
 	@Before
 	public void setup() {
-		world = new World();
+		world = new EntityWorld();
 	}
 	
 	@Test

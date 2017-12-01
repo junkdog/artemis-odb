@@ -21,12 +21,12 @@ import com.artemis.utils.BitVector;
  * @author Arni Arent
  * @author Adrian Papari
  */
-public final class Entity {
+public class Entity {
 
 	/** The entities identifier in the world. */
 	int id;
 	/** The world this entity belongs to. */
-	private final World world;
+	protected final World world;
 
 	/**
 	 * Creates a new {@link Entity} instance in the given world.
@@ -110,16 +110,16 @@ public final class Entity {
 	 * <p>
 	 * Minimize usage of this. Use {@link ComponentMapper} instead.
 	 * </p>
-	 * @param <T>
+	 * @param <C>
 	 * 		the expected return component class type
 	 * @param type
 	 * 		the expected return component class type
 	 * @return component that matches, or {@code null} if none is found
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends Component> T getComponent(Class<T> type) {
+	public <C extends Component> C getComponent(Class<C> type) {
 		ComponentTypeFactory tf = world.getComponentManager().typeFactory;
-		return (T) getComponent(tf.getTypeFor(type));
+		return (C) getComponent(tf.getTypeFor(type));
 	}
 
 	/**
@@ -180,5 +180,18 @@ public final class Entity {
 	@Override
 	public int hashCode() {
 		return id;
+	}
+
+	/**
+	 * <p>Apply transmuter on this entity. Does nothing if entity has been scheduled for
+	 * deletion.</p>
+	 *
+	 * <p>Transmuter will add components by replacing and retire pre-existing components.</p>
+	 *
+	 * @param transmuter Transmuter to apply.
+	 * TODO: Does this add value?
+	 */
+	public void transmute( EntityTransmuter transmuter ) {
+		transmuter.transmute(id);
 	}
 }

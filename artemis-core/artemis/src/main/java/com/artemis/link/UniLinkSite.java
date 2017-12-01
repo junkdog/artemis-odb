@@ -6,8 +6,8 @@ import com.artemis.annotations.LinkPolicy;
 import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.Field;
 
-class UniLinkSite extends LinkSite {
-	UniFieldMutator fieldMutator;
+public class UniLinkSite extends LinkSite {
+	public UniFieldMutator fieldMutator;
 
 	private final IntBag sourceToTarget = new IntBag();
 

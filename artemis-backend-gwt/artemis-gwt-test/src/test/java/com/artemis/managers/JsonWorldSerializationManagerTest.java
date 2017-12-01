@@ -23,7 +23,7 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 	private AspectSubscriptionManager subscriptions;
 	private TagManager tags;
 	private GroupManager groups;
-	private World world;
+	private EntityWorld world;
 	private EntitySubscription allEntities;
 
 	@Override
@@ -58,7 +58,7 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 	}
 
 	private void setupWorld() {
-		world = new World(new WorldConfiguration()
+		world = new EntityWorld(new WorldConfiguration()
 				.setSystem(GroupManager.class)
 				.setSystem(TagManager.class)
 				.setSystem(WorldSerializationManager.class));
@@ -150,8 +150,8 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 
 		deleteAll();
 
-		assertEquals(0, groups.getEntities("group1").size());
-		assertEquals(0, groups.getEntities("group2").size());
+		assertEquals(0, groups.getEntityIds("group1").size());
+		assertEquals(0, groups.getEntityIds("group2").size());
 
 		ByteArrayInputStream is = new ByteArrayInputStream(
 				json.getBytes(StandardCharsets.UTF_8));
@@ -186,11 +186,11 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 
 		EntityEdit ee1 = world.createEntity().edit();
 		EntityHolder holder = ee1.create(EntityHolder.class);
-		holder.entity = tags.getEntity("tag1");
-		holder.entityId = tags.getEntity("tag3").getId();
+		holder.entity = world.getEntity(tags.getEntityId("tag1"));
+		holder.entityId = world.getEntity(tags.getEntityId("tag3")).getId();
 
-		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("entity-holder", ee1.getEntityId());
+		int entityHolderId = ee1.getEntityId();
 
 		world.process();
 
@@ -202,7 +202,7 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 
 		world.process();
 
-		Entity entityHolder = tags.getEntity("entity-holder");
+		Entity entityHolder = world.getEntity(tags.getEntityId("entity-holder"));
 		EntityHolder holder2 = entityHolder.getComponent(EntityHolder.class);
 		assertNotEquals(entityHolder.getId(), entityHolderId);
 		assertNotNull(holder2.entity);
@@ -215,11 +215,11 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 
 		EntityEdit ee1 = world.createEntity().edit();
 		EntityBagHolder holder = ee1.create(EntityBagHolder.class);
-		holder.entities.add(tags.getEntity("tag1"));
-		holder.entities.add(tags.getEntity("tag3"));
+		holder.entities.add(world.getEntity(tags.getEntityId("tag1")));
+		holder.entities.add(world.getEntity(tags.getEntityId("tag3")));
 
-		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("entity-holder", ee1.getEntityId());
+		int entityHolderId = ee1.getEntityId();
 
 		world.process();
 
@@ -231,13 +231,13 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 
 		world.process();
 
-		Entity entityHolder = tags.getEntity("entity-holder");
+		Entity entityHolder = world.getEntity(tags.getEntityId("entity-holder"));
 		EntityBagHolder holder2 = entityHolder.getComponent(EntityBagHolder.class);
 		assertNotEquals(entityHolder.getId(), entityHolderId);
 		assertNotNull(holder2.entities);
 		assertEquals(2, holder2.entities.size());
-		assertEquals(tags.getEntity("tag1"), holder2.entities.get(0));
-		assertEquals(tags.getEntity("tag3"), holder2.entities.get(1));
+		assertEquals(world.getEntity(tags.getEntityId("tag1")), holder2.entities.get(0));
+		assertEquals(world.getEntity(tags.getEntityId("tag3")), holder2.entities.get(1));
 	}
 
 	private void assertNotEquals(int v, int v2) {
@@ -253,11 +253,11 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 
 		EntityEdit ee1 = world.createEntity().edit();
 		EntityIntBagHolder holder = ee1.create(EntityIntBagHolder.class);
-		holder.entities.add(tags.getEntity("tag1").getId());
-		holder.entities.add(tags.getEntity("tag3").getId());
+		holder.entities.add(world.getEntity(tags.getEntityId("tag1")).getId());
+		holder.entities.add(world.getEntity(tags.getEntityId("tag3")).getId());
 
-		tags.register("entity-holder", ee1.getEntity());
-		int entityHolderId = ee1.getEntity().getId();
+		tags.register("entity-holder", ee1.getEntityId());
+		int entityHolderId = ee1.getEntityId();
 
 		world.process();
 
@@ -269,13 +269,13 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 
 		world.process();
 
-		Entity entityHolder = tags.getEntity("entity-holder");
+		Entity entityHolder = world.getEntity(tags.getEntityId("entity-holder"));
 		EntityIntBagHolder holder2 = entityHolder.getComponent(EntityIntBagHolder.class);
 		assertNotEquals(entityHolder.getId(), entityHolderId);
 		assertNotNull(holder2.entities);
 		assertEquals(2, holder2.entities.size());
-		assertEquals(tags.getEntity("tag1"), world.getEntity(holder2.entities.get(0)));
-		assertEquals(tags.getEntity("tag3"), world.getEntity(holder2.entities.get(1)));
+		assertEquals(world.getEntity(tags.getEntityId("tag1")), world.getEntity(holder2.entities.get(0)));
+		assertEquals(world.getEntity(tags.getEntityId("tag3")), world.getEntity(holder2.entities.get(1)));
 	}
 
 
@@ -287,13 +287,13 @@ public class JsonWorldSerializationManagerTest extends GWTTestCase {
 
 	private void assertTags() {
 		IntBag entities = allEntities.getEntities();
-		assertNotNull(entities.toString(), tags.getEntity("tag1"));
-		assertNotNull(entities.toString(), tags.getEntity("tag3"));
+		assertNotNull(entities.toString(), world.getEntity(tags.getEntityId("tag1")));
+		assertNotNull(entities.toString(), world.getEntity(tags.getEntityId("tag3")));
 	}
 
 	private void assertGroups() {
-		assertEquals(2, groups.getEntities("group1").size());
-		assertEquals(1, groups.getEntities("group2").size());
+		assertEquals(2, groups.getEntityIds("group1").size());
+		assertEquals(1, groups.getEntityIds("group2").size());
 	}
 
 	private void setGroups() {

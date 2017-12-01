@@ -19,6 +19,6 @@ public class SystemB extends EntityProcessingSystem {
 	@Override
 	protected void process(Entity e)
 	{
-		xm.get(e);
+		xm.get(e.getId());
 	}
 }

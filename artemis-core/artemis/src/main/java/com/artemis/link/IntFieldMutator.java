@@ -5,7 +5,7 @@ import com.artemis.World;
 import com.artemis.utils.reflect.Field;
 import com.artemis.utils.reflect.ReflectionException;
 
-class IntFieldMutator implements UniFieldMutator {
+public class IntFieldMutator implements UniFieldMutator {
 	@Override
 	public int read(Component c, Field f) {
 		try {

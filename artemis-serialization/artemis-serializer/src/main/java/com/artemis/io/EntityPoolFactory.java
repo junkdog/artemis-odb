@@ -1,15 +1,12 @@
 package com.artemis.io;
 
-import com.artemis.Archetype;
-import com.artemis.ArchetypeBuilder;
-import com.artemis.Entity;
-import com.artemis.World;
+import com.artemis.*;
 import com.artemis.utils.IntBag;
 
 import java.util.Arrays;
 
 /**
- * Maintains the pool of entities to be laoded; ensures that the
+ * Maintains the pool of entities to be loaded; ensures that the
  * entity id order matches the order in the json.
  */
 class EntityPoolFactory {
@@ -36,6 +33,6 @@ class EntityPoolFactory {
 	}
 
 	Entity createEntity() {
-		return world.getEntity(pool.getData()[poolIndex++]);
+		return ((SerializationEntityProvider)world).getEntity(pool.getData()[poolIndex++]);
 	}
 }

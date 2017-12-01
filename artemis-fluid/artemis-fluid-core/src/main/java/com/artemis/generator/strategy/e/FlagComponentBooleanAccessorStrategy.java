@@ -35,7 +35,7 @@ public class FlagComponentBooleanAccessorStrategy extends IterativeModelStrategy
         return
                 new MethodBuilder(FluidTypes.E_TYPE, component.getMethodPrefix())
                         .parameter(boolean.class, "value")
-                        .mapper(component, ".set(entityId, value)")
+                        .mapper(component, ".set(id, value)")
                         .debugNotes("flag component(=field/method-less) " + component.getComponentType().getName())
                         .returnFluid()
                         .build();
@@ -48,7 +48,7 @@ public class FlagComponentBooleanAccessorStrategy extends IterativeModelStrategy
         return
                 new MethodBuilder(boolean.class, "is" + component.getName())
                         .debugNotes("flag component(=field/method-less) " + component.getComponentType().getName())
-                        .mapper("return ", component, ".has(entityId)")
+                        .mapper("return ", component, ".has(id)")
                         .build();
     }
 }

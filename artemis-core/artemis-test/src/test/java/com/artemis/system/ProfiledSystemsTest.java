@@ -4,7 +4,7 @@ import com.artemis.WorldConfiguration;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.artemis.World;
+import com.artemis.EntityWorld;
 import com.artemis.annotations.Profile;
 import com.artemis.util.SimpleProfiler;
 
@@ -13,7 +13,7 @@ public class ProfiledSystemsTest {
 	
 	@Test
 	public void plain_profiled_system_invoked_during_process() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 				.setSystem(new ProfiledSystem()));
 
 		Assert.assertNull(
@@ -37,7 +37,7 @@ public class ProfiledSystemsTest {
 	
 	@Test
 	public void multiple_exit_points_profiled_system() {
-		World world = new World(new WorldConfiguration()
+		EntityWorld world = new EntityWorld(new WorldConfiguration()
 				.setSystem(new ProfiledSystemB()));
 
 		Assert.assertNull(

@@ -16,8 +16,8 @@
 
 package com.artemis.utils;
 
-import com.artemis.ComponentManager;
 import com.artemis.World;
+import com.artemis.ComponentManager;
 import com.artemis.utils.reflect.ClassReflection;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayInteger;

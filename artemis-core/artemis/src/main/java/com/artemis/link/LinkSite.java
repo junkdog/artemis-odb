@@ -10,9 +10,9 @@ import com.artemis.utils.BitVector;
 import static com.artemis.Aspect.all;
 import static com.artemis.annotations.LinkPolicy.Policy.CHECK_SOURCE_AND_TARGETS;
 
-abstract class LinkSite implements EntitySubscription.SubscriptionListener {
-	protected final ComponentType type;
-	protected final Field field;
+public abstract class LinkSite implements EntitySubscription.SubscriptionListener {
+	public final ComponentType type;
+	public final Field field;
 	protected final ComponentMapper<? extends Component> mapper;
 	protected final EntitySubscription subscription;
 	protected final LinkPolicy.Policy policy;

@@ -131,7 +131,7 @@ class ReferenceTracker {
 	}
 
 	private boolean findReferences(int entityId, Field f, BitVector referencedIds) {
-		Component c = world.getEntity(entityId).getComponent(f.getDeclaringClass());
+		Component c = world.getMapper(f.getDeclaringClass()).get(entityId);
 		if (c == null)
 			return false;
 

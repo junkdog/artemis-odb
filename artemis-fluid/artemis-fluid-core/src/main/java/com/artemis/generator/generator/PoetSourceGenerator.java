@@ -40,7 +40,7 @@ public class PoetSourceGenerator implements SourceGenerator {
 
         if ( model.superclass != null )
         {
-            builder.superclass(model.superclass);
+            builder.superclass(getTypeName(model.superclass));
         }
 
         return builder.build();
@@ -86,8 +86,11 @@ public class PoetSourceGenerator implements SourceGenerator {
     }
 
     private MethodSpec generateMethodSpec(MethodDescriptor method) {
-        MethodSpec.Builder builder = MethodSpec.methodBuilder(method.name)
-                .returns(getTypeName(method.returnType));
+        MethodSpec.Builder builder = MethodSpec.methodBuilder(method.name);
+
+        if (method.returnType != null ) {
+                builder.returns(getTypeName(method.returnType));
+        }
 
         if ( method.isStatic() ) builder.addModifiers(Modifier.STATIC);
         if ( method.isVarargs() ) builder.varargs(true);
@@ -112,7 +115,17 @@ public class PoetSourceGenerator implements SourceGenerator {
         return builder.build();
     }
 
-    private TypeName getTypeName(Type type) {
+    public static TypeName getTypeName(Type type) {
+        // TODO Cleanup this hack.
+        if  (type instanceof ParTypeWorkaround) {
+            Type[] arguments = ((ParTypeWorkaround) type).getActualTypeArguments();
+            TypeName[] argumentTypeNames = new TypeName[arguments.length];
+            int i=0;
+            for (Type argument : arguments) {
+                argumentTypeNames[i] = getTypeName(arguments[i]);
+            }
+            return ParameterizedTypeName.get(ClassName.bestGuess(((ParTypeWorkaround) type).getRawType().toString()),argumentTypeNames);
+        }
         if ( type instanceof TypeDescriptor) {
             return ClassName.bestGuess(type.toString());
         }

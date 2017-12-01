@@ -5,8 +5,8 @@ import com.artemis.World;
 import com.artemis.annotations.LinkPolicy;
 import com.artemis.utils.reflect.Field;
 
-class MultiLinkSite extends LinkSite {
-	MultiFieldMutator fieldMutator;
+public class MultiLinkSite extends LinkSite {
+	public MultiFieldMutator fieldMutator;
 
 	protected MultiLinkSite(World world,
 	                        ComponentType type,

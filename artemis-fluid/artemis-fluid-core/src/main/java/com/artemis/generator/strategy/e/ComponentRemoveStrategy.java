@@ -28,7 +28,7 @@ public class ComponentRemoveStrategy extends IterativeModelStrategy {
                 new MethodBuilder(FluidTypes.E_TYPE,
                         Strings.assembleMethodName(component.getPreferences().getPrefixComponentRemove(),component.getName()))
                         .debugNotes(component.getComponentType().getName())
-                        .mapper(component, ".remove(entityId)")
+                        .mapper(component, ".remove(id)")
                         .returnFluid()
                         .build();
     }

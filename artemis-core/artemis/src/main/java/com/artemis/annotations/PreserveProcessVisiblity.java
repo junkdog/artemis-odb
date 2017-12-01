@@ -6,8 +6,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import com.artemis.systems.EntityProcessingSystem;
-
 /**
  * When optimizing an {@link EntityProcessingSystem}, don't reduce the visibility
  * of {@link EntityProcessingSystem#process()}.

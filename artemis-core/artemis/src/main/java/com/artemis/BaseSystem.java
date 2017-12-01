@@ -12,13 +12,17 @@ import com.artemis.annotations.SkipWire;
  * {@link #begin()} - Called before the entities are processed.
  * {@link #processSystem()} - Called once per cycle.
  * {@link #end()} - Called after the entities have been processed.
- * 
+ * @param <W> World type to expose. Don't supply for World.
  * @see com.artemis.annotations.Wire
  */
-public abstract class BaseSystem {
-	/** The world this system belongs to. */
+public abstract class BaseSystem<W extends World> {
+
+	static final int FLAG_INSERTED = 1;
+    static final int FLAG_REMOVED = 1 << 1;
+
+    /** The world this system belongs to. */
 	@SkipWire
-	protected World world;
+	protected W world;
 
 	public BaseSystem() {}
 
@@ -115,7 +119,7 @@ public abstract class BaseSystem {
 	 * @param world
 	 *			the world to set
 	 */
-	protected void setWorld(World world) {
+	protected void setWorld(W world) {
 		this.world = world;
 	}
 
@@ -124,7 +128,7 @@ public abstract class BaseSystem {
 	 *
 	 * @return the associated world
 	 */
-	protected World getWorld() {
+	protected W getWorld() {
 		return world;
 	}
 

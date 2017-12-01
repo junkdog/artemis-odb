@@ -17,6 +17,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>artemis-odb-entity</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- Utility -->
         <dependency>
             <groupId>com.google.guava</groupId>

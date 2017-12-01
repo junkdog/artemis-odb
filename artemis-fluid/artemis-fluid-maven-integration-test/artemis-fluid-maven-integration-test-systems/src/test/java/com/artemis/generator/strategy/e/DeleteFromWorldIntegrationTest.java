@@ -1,6 +1,7 @@
 package com.artemis.generator.strategy.e;
 
 import com.artemis.BaseSystem;
+import com.artemis.CosplayBaseSystem;
 import com.artemis.E;
 import com.artemis.managers.GroupManager;
 import org.junit.Assert;
@@ -15,13 +16,13 @@ public class DeleteFromWorldIntegrationTest extends AbstractStrategyIntegrationT
     @Test
     public void When_fluid_deleteFromWorld_Should_delete_from_world() throws Exception {
 
-        class TestSystem extends BaseSystem {
+        class TestSystem extends CosplayBaseSystem<E> {
             public int entityId;
 
             @Override
             protected void processSystem() {
                 entityId = world.create();
-                E.E(entityId).group("test").deleteFromWorld();
+                E(entityId).group("test").deleteFromWorld();
             }
         }
 
@@ -32,7 +33,7 @@ public class DeleteFromWorldIntegrationTest extends AbstractStrategyIntegrationT
 
             @Override
             protected void processSystem() {
-                Assert.assertTrue(groupManager.getEntities("test").isEmpty());
+                Assert.assertTrue(groupManager.getEntityIds("test").isEmpty());
             }
         }
 

@@ -1,6 +1,5 @@
 package com.artemis.annotations;
 
-import com.artemis.Entity;
 import com.artemis.link.EntityLinkManager;
 import com.artemis.utils.Bag;
 import com.artemis.utils.IntBag;
@@ -19,8 +18,7 @@ import java.lang.annotation.Target;
  *         is registed with the world.</li>
  * </ul>
  *
- * <p>Annotation has no effect on {@link Bag}-of-entities and plain {@link Entity}
- * fields.</p>
+ * <p>Annotation has no effect on {@link Bag}-of-entities and plain entity fields.</p>
  *
  * @see <a href="https://github.com/junkdog/artemis-odb/wiki/Entity-References-and-Serialization">Entity References and Serialization</a>
  */

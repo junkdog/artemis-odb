@@ -10,13 +10,13 @@ import org.junit.Test;
 
 import com.artemis.Entity;
 import com.artemis.PooledComponent;
-import com.artemis.World;
+import com.artemis.EntityWorld;
 
 public class PooledAllFieldsTest {
 
 	@Test @SuppressWarnings("static-method")
 	public void pooled_class_transformation() throws Exception {
-		World world = new World();
+		EntityWorld world = new EntityWorld();
 
 		Entity e = world.createEntity();
 		PooledAllFields pooled = e.edit().create(PooledAllFields.class);

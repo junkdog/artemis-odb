@@ -79,13 +79,6 @@ public class Aspect {
 	}
 
 	/**
-	 * Returns whether this Aspect would accept the given Entity.
-	 */
-	public boolean isInterested(Entity e){
-		return isInterested(e.getComponentBits());
-	}
-
-	/**
 	 * Returns whether this Aspect would accept the given set.
 	 */
 	public boolean isInterested(BitVector componentBits){

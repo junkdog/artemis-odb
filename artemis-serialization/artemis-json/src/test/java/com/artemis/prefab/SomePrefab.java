@@ -16,7 +16,7 @@ public class SomePrefab extends Prefab {
 
 	public SaveFileFormat create(String text) {
 		SaveFileFormat l = create();
-		componentXMapper.get(l.get("whatever")).text = text;
+		componentXMapper.get(l.get("whatever").getId()).text = text;
 
 		return l;
 	}

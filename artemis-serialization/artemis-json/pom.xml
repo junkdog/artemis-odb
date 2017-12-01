@@ -22,6 +22,12 @@
 		</dependency>
 		<dependency>
 			<groupId>net.onedaybeard.artemis</groupId>
+			<artifactId>artemis-odb-entity</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId>
 			<artifactId>artemis-odb-serializer</artifactId>
 			<version>${project.version}</version>
 		</dependency>
@@ -29,6 +35,13 @@
 			<groupId>com.esotericsoftware</groupId>
 			<artifactId>jsonbeans</artifactId>
 			<version>0.7</version>
+		</dependency>
+		<dependency>
+			<groupId>net.onedaybeard.artemis</groupId>
+			<artifactId>artemis-odb-serializer-test-suite</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+			<type>test-jar</type>
 		</dependency>
 	</dependencies>
 
