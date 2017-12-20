@@ -13,8 +13,8 @@ It is mature, actively maintained, and a continuation of the popular [Artemis](h
 
 - Full Android, [HTML5](https://github.com/junkdog/artemis-odb/wiki/GWT), iOS support.
 - High performance, GC-friendly, [less boilerplate](https://github.com/junkdog/artemis-odb/wiki/@Wire)!
-- Optionally [auto-pooled](https://github.com/junkdog/artemis-odb/wiki/@PooledWeaver) components and [hotspot optimization](https://github.com/junkdog/artemis-odb/wiki/Hotspot-Optimization) via compile-time [bytecode instrumentation](https://github.com/junkdog/artemis-odb/wiki/Bytecode weaving).
-- Serialize to either [json](https://github.com/junkdog/artemis-odb/wiki/Json Serialization) or [binary](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization).
+- Optionally [auto-pooled](https://github.com/junkdog/artemis-odb/wiki/@PooledWeavers) components and [hotspot optimization](https://github.com/junkdog/artemis-odb/wiki/Hotspot-Optimization) via compile-time [bytecode instrumentation](https://github.com/junkdog/artemis-odb/wiki/Bytecode-weaving).
+- Serialize to either [json](https://github.com/junkdog/artemis-odb/wiki/libgdx-json) or [binary](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization).
 - Automatic tracking, and maintenance of [entity relationships](https://github.com/junkdog/artemis-odb/wiki/EntityLinkManager).
 - Easy migration from Artemis clones.
 
@@ -94,6 +94,6 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 
 #### Manual Download
 
- - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/2.1.0/) 
- - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/2.1.0/)
+ - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/) 
+ - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/)
 
