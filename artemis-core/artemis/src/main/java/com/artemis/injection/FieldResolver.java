@@ -17,5 +17,8 @@ public interface FieldResolver {
 	 */
 	void initialize(World world);
 
+	/**
+	 * @param target object which should have dependencies injected.
+	 */
 	Object resolve(Object target, Class<?> fieldType, Field field);
 }
