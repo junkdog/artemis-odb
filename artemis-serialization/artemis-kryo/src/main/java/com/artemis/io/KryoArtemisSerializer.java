@@ -14,7 +14,10 @@ import java.io.*;
 /**
  * {@link com.artemis.managers.WorldSerializationManager.ArtemisSerializer} implementation with {@link Kryo} as a backend.
  *
- * {@link Kryo#setRegistrationRequired(boolean)} is set to {@code true} by default for security purposes. It can be changed by accessing Kryo instance via {@link #getKryo()}
+ * {@link Kryo#setRegistrationRequired(boolean)} is set to {@code false} by default. This means when Kryo encounters an
+ * unregistered class, its fully qualified class name will be serialized and the default serializer for the class used
+ * to serialize the object. Subsequent appearances of the class within the same object graph are serialized as an int
+ * id. You can change this by accessing the Kryo backend directly using {@link #getKryo()}.
  *
  * All custom {@link Component} serializers must extend {@link com.artemis.io.KryoEntitySerializer.ComponentFieldSerializer}
  * All {@link IntBag}s are treated as annotated with {@link com.artemis.annotations.EntityId}, if component has IntBag for other purpose, custom serializer is required.
