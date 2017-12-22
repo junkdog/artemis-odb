@@ -71,13 +71,17 @@ public class FluidGenerator {
         generateFile(artemisModel, createSupermapperGenerator(globalPreferences), new File(outputArtemisModuleDirectory, "SuperMapper.java"), log);
         generateFile(artemisModel, createEGenerator(globalPreferences), new File(outputArtemisModuleDirectory, "E.java"), log);
 
-        // deploy static utility classes that depend on E and/or SuperMapper.
-        copyResource(getClass().getResource(FLUID_UTILITY_SOURCES_DIR + "/FluidEntityPlugin.java"), new File(outputArtemisModuleDirectory, "FluidEntityPlugin.java"));
+        // deploy static utility classes that depend on E and/or SuperMapper. Do a clean when changing files!
+        copyResourceIfMissing(getClass().getResource(FLUID_UTILITY_SOURCES_DIR + "/FluidEntityPlugin.java"), new File(outputArtemisModuleDirectory, "FluidEntityPlugin.java"));
+        copyResourceIfMissing(getClass().getResource(FLUID_UTILITY_SOURCES_DIR + "/EBag.java"), new File(outputArtemisModuleDirectory, "EBag.java"));
+        copyResourceIfMissing(getClass().getResource(FLUID_UTILITY_SOURCES_DIR + "/FluidIteratingSystem.java"), new File(outputArtemisModuleDirectory, "FluidIteratingSystem.java"));
     }
 
-    private void copyResource(URL source, File destination) {
+    private void copyResourceIfMissing(URL source, File destination) {
         try {
-            FileUtils.copyURLToFile(source, destination);
+            if ( !destination.exists()) {
+                FileUtils.copyURLToFile(source, destination);
+            }
         } catch (IOException e) {
             throw new RuntimeException("Fluid API generation aborted, could not copy FluidEntityPlugin.java to " + destination + ".\n", e);
         }

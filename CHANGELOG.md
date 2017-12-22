@@ -8,7 +8,9 @@
   - To enable fluid entities in your world, best practice register `FluidEntityPlugin` instead of `SuperMapper`.
 
 - `World` instances can now inject themselves (`World::inject`)
-- `FluidEntityPlugin` generated as part of the fluid generation process.
+- Fluid entities quality of life changes.
+  - `FluidEntityPlugin` generated as part of the fluid generation process.
+  - Added `FluidIteratingSystem`.
 
 #### Version: 2.1.0 - 2016-12-09
 - Opt-in [Fluid Entities API][fluid], convenient way to assemble and interact with
