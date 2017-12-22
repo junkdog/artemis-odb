@@ -16,6 +16,7 @@ It is mature, actively maintained, and a continuation of the popular [Artemis](h
 - Optionally [auto-pooled](https://github.com/junkdog/artemis-odb/wiki/%40PooledWeaver) components and [hotspot optimization](https://github.com/junkdog/artemis-odb/wiki/Hotspot-Optimization) via compile-time [bytecode instrumentation](https://github.com/junkdog/artemis-odb/wiki/Bytecode-weaving).
 - Serialize to either [json](https://github.com/junkdog/artemis-odb/wiki/libgdx-json) or [binary](https://github.com/junkdog/artemis-odb/wiki/Kryo-Serialization).
 - Automatic tracking, and maintenance of [entity relationships](https://github.com/junkdog/artemis-odb/wiki/EntityLinkManager).
+- Fast prototyping with [fluid interfaces](https://github.com/junkdog/artemis-odb/wiki/Fluid-Entities) (optional).
 - Easy migration from Artemis clones.
 
 _See [CHANGELOG.md](https://github.com/junkdog/artemis-odb/blob/master/CHANGELOG.md) for more details_
