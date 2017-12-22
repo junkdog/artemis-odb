@@ -3,13 +3,12 @@
 
 #### Version: 2.2.0-SNAPSHOT
 - **BREAKING CHANGES**
-  - Web backend upgraded to GWT 2.8.0
-  - Serialization modules that depend on libGDX now require 1.9.5. (Note: If you (plan to)
-    use bitmap fonts, use 1.9.6-SNAPSHOT or later, bitmap fonts in 1.9.5 are currently broken
-    on web target. see https://github.com/libgdx/libgdx/pull/4475)
+  - Web backend upgraded to GWT `2.8.0`
+  - Serialization modules that depend on libGDX now require `1.9.8`.
+  - To enable fluid entities in your world, best practice register `FluidEntityPlugin` instead of `SuperMapper`.
 
 - `World` instances can now inject themselves (`World::inject`)
-
+- `FluidEntityPlugin` generated as part of the fluid generation process.
 
 #### Version: 2.1.0 - 2016-12-09
 - Opt-in [Fluid Entities API][fluid], convenient way to assemble and interact with

@@ -12,6 +12,7 @@
     <name>artemis-fluid-root</name>
 
     <modules>
+        <module>artemis-fluid-core-utility-sources</module>
         <module>artemis-fluid-core</module>
         <module>artemis-fluid-maven-plugin</module>
         <module>artemis-fluid-gradle-plugin</module>

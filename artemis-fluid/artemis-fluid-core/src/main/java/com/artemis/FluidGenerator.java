@@ -14,6 +14,7 @@ import com.artemis.generator.strategy.supermapper.SuperMapperStrategy;
 import com.artemis.generator.util.Log;
 import com.artemis.generator.validator.TypeModelValidator;
 import com.artemis.generator.validator.TypeModelValidatorException;
+import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -29,13 +30,16 @@ import java.util.*;
  */
 public class FluidGenerator {
 
+    private static final String FLUID_UTILITY_SOURCES_DIR = "/fluid-utility-sources";
+    private static final String COM_ARTEMIS_MODULE_DIR = "com/artemis/";
+
     /**
      * Generate fluid API files.
      * Finds all Component instances at given urls using reflection.
      *
-     * @param urls classpath urls to reflect over.
-     * @param outputDirectory source root.
-     * @param log output.
+     * @param urls              classpath urls to reflect over.
+     * @param outputDirectory   source root.
+     * @param log               output.
      * @param globalPreferences
      * @throws com.artemis.generator.validator.TypeModelValidatorException
      */
@@ -51,9 +55,9 @@ public class FluidGenerator {
     /**
      * Generate fluid API files.
      *
-     * @param components components to consider.
-     * @param outputDirectory source root.
-     * @param log output.
+     * @param components        components to consider.
+     * @param outputDirectory   source root.
+     * @param log               output.
      * @param globalPreferences
      * @throws com.artemis.generator.validator.TypeModelValidatorException
      */
@@ -61,28 +65,40 @@ public class FluidGenerator {
 
         ArtemisModel artemisModel = createArtemisModel(filterComponents(components, log), globalPreferences, log);
 
-        new File(outputDirectory, "com/artemis/").mkdirs();
+        File outputArtemisModuleDirectory = new File(outputDirectory, COM_ARTEMIS_MODULE_DIR);
+        outputArtemisModuleDirectory.mkdirs();
 
-        generateFile(artemisModel, createSupermapperGenerator(globalPreferences), new File(outputDirectory, "com/artemis/SuperMapper.java"), log);
-        generateFile(artemisModel, createEGenerator(globalPreferences), new File(outputDirectory, "com/artemis/E.java"), log);
+        generateFile(artemisModel, createSupermapperGenerator(globalPreferences), new File(outputArtemisModuleDirectory, "SuperMapper.java"), log);
+        generateFile(artemisModel, createEGenerator(globalPreferences), new File(outputArtemisModuleDirectory, "E.java"), log);
+
+        // deploy static utility classes that depend on E and/or SuperMapper.
+        copyResource(getClass().getResource(FLUID_UTILITY_SOURCES_DIR + "/FluidEntityPlugin.java"), new File(outputArtemisModuleDirectory, "FluidEntityPlugin.java"));
+    }
+
+    private void copyResource(URL source, File destination) {
+        try {
+            FileUtils.copyURLToFile(source, destination);
+        } catch (IOException e) {
+            throw new RuntimeException("Fluid API generation aborted, could not copy FluidEntityPlugin.java to " + destination + ".\n", e);
+        }
     }
 
     private Collection<Class<? extends Component>> filterComponents(Collection<Class<? extends Component>> unfilteredComponents, Log log) {
-            final List<Class<? extends Component>> components = new ArrayList<Class<? extends Component>>();
-            for (Class<? extends Component> component : unfilteredComponents) {
+        final List<Class<? extends Component>> components = new ArrayList<Class<? extends Component>>();
+        for (Class<? extends Component> component : unfilteredComponents) {
 
-                if (Modifier.isAbstract(component.getModifiers()) || Modifier.isInterface(component.getModifiers())) {
-                    // Skip abstract components.
-                    log.info(".. Skipping abstract/interface: " + component.getName());
-                } else if (component.equals(SerializationTag.class) || component.getName().startsWith("com.artemis.weaver.")) {
-                    // No reserved classes either.
-                    log.info(".. Skipping reserved class: " + component.getName());
-                } else {
-                    // Include!
-                    components.add(component);
-                }
+            if (Modifier.isAbstract(component.getModifiers()) || Modifier.isInterface(component.getModifiers())) {
+                // Skip abstract components.
+                log.info(".. Skipping abstract/interface: " + component.getName());
+            } else if (component.equals(SerializationTag.class) || component.getName().startsWith("com.artemis.weaver.")) {
+                // No reserved classes either.
+                log.info(".. Skipping reserved class: " + component.getName());
+            } else {
+                // Include!
+                components.add(component);
             }
-            return components;
+        }
+        return components;
     }
 
     /**
@@ -97,13 +113,13 @@ public class FluidGenerator {
             FileWriter fileWriter = new FileWriter(file);
             try {
                 TypeModel typeModel = createExampleTypeModel(generator, artemisModel);
-                new TypeModelValidator(log,file.getName()).validate(typeModel);
+                new TypeModelValidator(log, file.getName()).validate(typeModel);
                 new PoetSourceGenerator().generate(typeModel, fileWriter);
             } finally {
                 fileWriter.close();
             }
 
-        } catch(TypeModelValidatorException e) {
+        } catch (TypeModelValidatorException e) {
             throw new RuntimeException("Fluid API generation aborted, duplicate components, component field or component method names might be to blame.\n", e);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -114,7 +130,7 @@ public class FluidGenerator {
         ArrayList<ComponentDescriptor> componentDescriptors = new ArrayList<ComponentDescriptor>();
         for (Class<? extends Component> component : components) {
             ComponentDescriptor descriptor = ComponentDescriptor.create(component, globalPreferences);
-            if ( !descriptor.getPreferences().isExcludeFromGeneration()) {
+            if (!descriptor.getPreferences().isExcludeFromGeneration()) {
                 log.info(".. Including: " + component.getName());
                 componentDescriptors.add(descriptor);
             } else {
@@ -128,26 +144,26 @@ public class FluidGenerator {
         return generator.generate(artemisModel);
     }
 
-    private static TypeModelGenerator createEGenerator(FluidGeneratorPreferences globalPreferences) {
+    private static TypeModelGenerator createEGenerator(FluidGeneratorPreferences preferences) {
         TypeModelGenerator generator = new TypeModelGenerator();
         generator.addStrategy(new EBaseStrategy());
         generator.addStrategy(new ComponentExistStrategy());
         generator.addStrategy(new ComponentCreateStrategy());
-        if ( globalPreferences.isGenerateTagMethods() ) generator.addStrategy(new ComponentTagStrategy());
-        if ( globalPreferences.isGenerateGroupMethods() ) generator.addStrategy(new ComponentGroupStrategy());
+        if (preferences.isGenerateTagMethods()) generator.addStrategy(new ComponentTagStrategy());
+        if (preferences.isGenerateGroupMethods()) generator.addStrategy(new ComponentGroupStrategy());
         generator.addStrategy(new ComponentRemoveStrategy());
         generator.addStrategy(new ComponentAccessorStrategy());
         generator.addStrategy(new ComponentFieldAccessorStrategy());
         generator.addStrategy(new DeleteFromWorldStrategy());
-        if ( globalPreferences.isGenerateBooleanComponentAccessors() ) generator.addStrategy(new FlagComponentBooleanAccessorStrategy());
+        if (preferences.isGenerateBooleanComponentAccessors())
+            generator.addStrategy(new FlagComponentBooleanAccessorStrategy());
         return generator;
     }
 
-    private static TypeModelGenerator createSupermapperGenerator(FluidGeneratorPreferences globalPreferences) {
+    private static TypeModelGenerator createSupermapperGenerator(FluidGeneratorPreferences preferences) {
         TypeModelGenerator generator = new TypeModelGenerator();
         generator.addStrategy(new SuperMapperStrategy());
         generator.addStrategy(new ComponentMapperFieldsStrategy());
         return generator;
     }
-
 }

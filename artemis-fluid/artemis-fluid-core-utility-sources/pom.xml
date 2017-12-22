@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>net.onedaybeard.artemis</groupId>
+        <artifactId>artemis-fluid-root</artifactId>
+        <version>2.2.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>artemis-fluid-core-utility-sources</artifactId>
+    <description>
+        Provides a testing framework for support classes that are generated when using fluid entities.
+        Since E.class and SuperMapper.class are not available at this point we resort to a bit of trickery
+        so we can at least test the utility classes.
+
+        fluid-core will pick up /src/test/java/com/artemis/ as resources (see /target/classes/fluid-entity-sources/)
+        FluidGenerator can be made to deploy these while generating E and SuperMapper. See fluid-core pom which files
+        are packaged as resources. Add new files to be deployed to FluidGenerator.generate manually!
+    </description>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>artemis-odb</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+</project>
