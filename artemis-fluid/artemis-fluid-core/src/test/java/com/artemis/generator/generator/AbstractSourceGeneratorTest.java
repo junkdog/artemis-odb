@@ -1,5 +1,6 @@
 package com.artemis.generator.generator;
 
+import com.artemis.ArtemisPlugin;
 import com.artemis.Component;
 import com.artemis.generator.common.SourceGenerator;
 import com.artemis.generator.model.type.*;
@@ -88,6 +89,19 @@ public abstract class AbstractSourceGeneratorTest {
             @Override
             public void test(CompilationUnit cu) {
                 Assert.assertTrue(cu.toString().contains("extends Component"));
+            }
+        } );
+    }
+
+    @Test
+    public void When_specifying_interface_Should_generate_valid_java_class_with_superinterface() {
+        TypeModel model = new TypeModel();
+        model.superinterface = ArtemisPlugin.class;
+
+        generate(model, new ParseTest() {
+            @Override
+            public void test(CompilationUnit cu) {
+                Assert.assertTrue(cu.toString().contains("implements ArtemisPlugin"));
             }
         } );
     }

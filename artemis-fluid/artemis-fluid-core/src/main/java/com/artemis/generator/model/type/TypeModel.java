@@ -17,6 +17,7 @@ public class TypeModel {
     public List<MethodDescriptor> methods = new ArrayList<MethodDescriptor>();
     public List<FieldDescriptor> fields = new ArrayList<FieldDescriptor>();
     public Type superclass;
+    public Type superinterface; // currently supports only 1 interface.
 
     /** Add method to model. */
     public void add(MethodDescriptor method) {

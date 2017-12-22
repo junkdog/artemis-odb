@@ -11,10 +11,11 @@ import java.util.ArrayList;
 
 /**
  * Convert agnostic class model to java source using Javapoet.
- *
- * Not a farting sound generator. Different kind of poet!
- *
  * <p>
+ * Not a farting sound generator. Different kind of poet!
+ * Dutch joke please ignore.
+ * <p>
+ *
  * @author Daan van Yperen
  */
 public class PoetSourceGenerator implements SourceGenerator {
@@ -38,9 +39,12 @@ public class PoetSourceGenerator implements SourceGenerator {
                 .addMethods(generateMethodSpecs(model))
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
 
-        if ( model.superclass != null )
-        {
+        if (model.superclass != null) {
             builder.superclass(model.superclass);
+        }
+
+        if (model.superinterface != null) {
+            builder.addSuperinterface(model.superinterface);
         }
 
         return builder.build();
@@ -59,18 +63,24 @@ public class PoetSourceGenerator implements SourceGenerator {
                 FieldSpec.builder(
                         getTypeName(field.type), field.name);
 
-        if ( field.isStatic() ) builder.addModifiers(Modifier.STATIC);
+        if (field.isStatic()) builder.addModifiers(Modifier.STATIC);
 
-        if ( field.getInitializer() != null ) {
+        if (field.getInitializer() != null) {
             builder.initializer(field.getInitializer());
         }
 
-        switch (field.getAccessLevel())
-        {
-            case PROTECTED: builder.addModifiers(Modifier.PROTECTED); break;
-            case PRIVATE: builder.addModifiers(Modifier.PRIVATE); break;
-            case PUBLIC: builder.addModifiers(Modifier.PUBLIC); break;
-            case UNSPECIFIED: break;
+        switch (field.getAccessLevel()) {
+            case PROTECTED:
+                builder.addModifiers(Modifier.PROTECTED);
+                break;
+            case PRIVATE:
+                builder.addModifiers(Modifier.PRIVATE);
+                break;
+            case PUBLIC:
+                builder.addModifiers(Modifier.PUBLIC);
+                break;
+            case UNSPECIFIED:
+                break;
         }
 
         return builder.build();
@@ -89,15 +99,21 @@ public class PoetSourceGenerator implements SourceGenerator {
         MethodSpec.Builder builder = MethodSpec.methodBuilder(method.name)
                 .returns(getTypeName(method.returnType));
 
-        if ( method.isStatic() ) builder.addModifiers(Modifier.STATIC);
-        if ( method.isVarargs() ) builder.varargs(true);
+        if (method.isStatic()) builder.addModifiers(Modifier.STATIC);
+        if (method.isVarargs()) builder.varargs(true);
 
-        switch (method.getAccessLevel())
-        {
-            case PROTECTED: builder.addModifiers(Modifier.PROTECTED); break;
-            case PRIVATE: builder.addModifiers(Modifier.PRIVATE); break;
-            case PUBLIC: builder.addModifiers(Modifier.PUBLIC); break;
-            case UNSPECIFIED: break;
+        switch (method.getAccessLevel()) {
+            case PROTECTED:
+                builder.addModifiers(Modifier.PROTECTED);
+                break;
+            case PRIVATE:
+                builder.addModifiers(Modifier.PRIVATE);
+                break;
+            case PUBLIC:
+                builder.addModifiers(Modifier.PUBLIC);
+                break;
+            case UNSPECIFIED:
+                break;
         }
 
         for (ParameterDescriptor parameter : method.parameters) {
@@ -113,7 +129,7 @@ public class PoetSourceGenerator implements SourceGenerator {
     }
 
     private TypeName getTypeName(Type type) {
-        if ( type instanceof TypeDescriptor) {
+        if (type instanceof TypeDescriptor) {
             return ClassName.bestGuess(type.toString());
         }
         return TypeName.get(type);
