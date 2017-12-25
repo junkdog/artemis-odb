@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 /**
  * Specify the required components on an entity for the annotated system.
  *
- * @author Daan van Yperen
+ * @author Felix Bridault
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})
