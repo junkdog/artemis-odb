@@ -63,6 +63,7 @@ public class PoetSourceGenerator implements SourceGenerator {
                 FieldSpec.builder(
                         getTypeName(field.type), field.name);
 
+        if (field.isFinal()) builder.addModifiers(Modifier.FINAL);
         if (field.isStatic()) builder.addModifiers(Modifier.STATIC);
 
         if (field.getInitializer() != null) {

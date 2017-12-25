@@ -11,6 +11,8 @@
 - Fluid entities quality of life changes.
   - `FluidEntityPlugin` generated as part of the fluid generation process.
   - Added `FluidIteratingSystem`.
+  - Annotation driven aspects. Add @All, @Exclude, @One to BaseEntitySystem subclass to use.
+  - Generate class C containing all fluid component class literals. (not usable in annotations, sorry). 
 
 #### Version: 2.1.0 - 2016-12-09
 - Opt-in [Fluid Entities API][fluid], convenient way to assemble and interact with

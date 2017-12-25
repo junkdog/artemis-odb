@@ -8,6 +8,8 @@ import com.artemis.generator.generator.PoetSourceGenerator;
 import com.artemis.generator.model.artemis.ArtemisModel;
 import com.artemis.generator.model.artemis.ComponentDescriptor;
 import com.artemis.generator.model.type.TypeModel;
+import com.artemis.generator.strategy.components.ComponentsBaseStrategy;
+import com.artemis.generator.strategy.components.ComponentsClassLibraryStrategy;
 import com.artemis.generator.strategy.e.*;
 import com.artemis.generator.strategy.supermapper.ComponentMapperFieldsStrategy;
 import com.artemis.generator.strategy.supermapper.SuperMapperStrategy;
@@ -70,6 +72,7 @@ public class FluidGenerator {
 
         generateFile(artemisModel, createSupermapperGenerator(globalPreferences), new File(outputArtemisModuleDirectory, "SuperMapper.java"), log);
         generateFile(artemisModel, createEGenerator(globalPreferences), new File(outputArtemisModuleDirectory, "E.java"), log);
+        generateFile(artemisModel, createComponentsGenerator(globalPreferences), new File(outputArtemisModuleDirectory, "C.java"), log);
 
         // deploy static utility classes that depend on E and/or SuperMapper. Do a clean when changing files!
         copyResourceIfMissing(getClass().getResource(FLUID_UTILITY_SOURCES_DIR + "/FluidEntityPlugin.java"), new File(outputArtemisModuleDirectory, "FluidEntityPlugin.java"));
@@ -79,7 +82,7 @@ public class FluidGenerator {
 
     private void copyResourceIfMissing(URL source, File destination) {
         try {
-            if ( !destination.exists()) {
+            if (!destination.exists()) {
                 FileUtils.copyURLToFile(source, destination);
             }
         } catch (IOException e) {
@@ -141,6 +144,7 @@ public class FluidGenerator {
                 log.info(".. Excluded by annotation: " + component.getName());
             }
         }
+        Collections.sort(componentDescriptors);
         return new ArtemisModel(componentDescriptors);
     }
 
@@ -161,6 +165,13 @@ public class FluidGenerator {
         generator.addStrategy(new DeleteFromWorldStrategy());
         if (preferences.isGenerateBooleanComponentAccessors())
             generator.addStrategy(new FlagComponentBooleanAccessorStrategy());
+        return generator;
+    }
+
+    private static TypeModelGenerator createComponentsGenerator(FluidGeneratorPreferences preferences) {
+        TypeModelGenerator generator = new TypeModelGenerator();
+        generator.addStrategy(new ComponentsBaseStrategy());
+        generator.addStrategy(new ComponentsClassLibraryStrategy());
         return generator;
     }
 
