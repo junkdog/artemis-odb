@@ -20,6 +20,9 @@ public abstract class FluidIteratingSystem extends IteratingSystem {
         super(aspect);
     }
 
+    public FluidIteratingSystem() {
+    }
+
     @Override
     protected void process(int id) {
         process(E.E(id));

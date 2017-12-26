@@ -18,6 +18,10 @@ public abstract class BaseEntitySystem extends BaseSystem
     private final Aspect.Builder aspectConfiguration;
     protected EntitySubscription subscription;
 
+    public BaseEntitySystem() {
+        this(null);
+    }
+
     /**
      * Creates an entity system that uses the specified aspect as a matcher
      * against entities.
@@ -25,7 +29,6 @@ public abstract class BaseEntitySystem extends BaseSystem
      * @param aspect to match against entities
      */
     public BaseEntitySystem(Aspect.Builder aspect) {
-        super();
         if (aspect == null) {
             aspect = new SystemMetadata(getClass()).getAspect();
             if (aspect == null) {
