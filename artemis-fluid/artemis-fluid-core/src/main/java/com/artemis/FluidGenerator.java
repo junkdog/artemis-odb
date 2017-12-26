@@ -155,6 +155,7 @@ public class FluidGenerator {
     private static TypeModelGenerator createEGenerator(FluidGeneratorPreferences preferences) {
         TypeModelGenerator generator = new TypeModelGenerator();
         generator.addStrategy(new EBaseStrategy());
+        generator.addStrategy(new EQueryExtensionsStrategy());
         generator.addStrategy(new ComponentExistStrategy());
         generator.addStrategy(new ComponentCreateStrategy());
         if (preferences.isGenerateTagMethods()) generator.addStrategy(new ComponentTagStrategy());

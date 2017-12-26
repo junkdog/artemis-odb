@@ -29,20 +29,4 @@ public abstract class FluidIteratingSystem extends IteratingSystem {
     }
 
     protected abstract void process(E e);
-
-    /**
-     * Return all entities matching aspect.
-     * Calling the aspect builder is relatively expensive but should be fine outside tight loops.
-     */
-    protected EBag allEntitiesMatching(Aspect.Builder scope) {
-        return new EBag(world.getAspectSubscriptionManager().get(scope).getEntities());
-    }
-
-    /**
-     * Return all entities matching a class.
-     * Calling the aspect builder is relatively expensive but should be fine outside tight loops.
-     */
-    protected EBag allEntitiesWith(Class<? extends Component> scope) {
-        return new EBag(world.getAspectSubscriptionManager().get(Aspect.all(scope)).getEntities());
-    }
 }
