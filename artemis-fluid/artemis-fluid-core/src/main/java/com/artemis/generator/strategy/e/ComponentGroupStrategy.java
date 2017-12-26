@@ -1,6 +1,5 @@
 package com.artemis.generator.strategy.e;
 
-import com.artemis.ComponentMapper;
 import com.artemis.generator.common.BuilderModelStrategy;
 import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.model.artemis.ArtemisModel;
@@ -96,6 +95,19 @@ public class ComponentGroupStrategy implements BuilderModelStrategy {
 
 
 
+    /**
+     * static EBag E::withGroup(groupName)
+     */
+    private MethodDescriptor createStaticWithGroup() {
+        return
+                new MethodBuilder(FluidTypes.EBAG_TYPE, "withGroup")
+                        .setStatic(true)
+                        .parameter(String.class, "groupName")
+                        .statement("if(_processingMapper==null) throw new RuntimeException(\"SuperMapper system must be registered before any systems using E().\");")
+                        .statement("return new EBag((com.artemis.utils.IntBag)_processingMapper.getWorld().getSystem(com.artemis.managers.GroupManager.class).getEntityIds(groupName))")
+                        .build();
+    }
+
     @Override
     public void apply(ArtemisModel artemisModel, TypeModel model) {
         model.add(createGroupSetter());
@@ -105,5 +117,6 @@ public class ComponentGroupStrategy implements BuilderModelStrategy {
         model.add(createAllGroupRemover());
         model.add(createGroupsGetter());
         model.add(createIsInGroup());
+        model.add(createStaticWithGroup());
     }
 }

@@ -128,4 +128,38 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
 
         runFluidWorld(new TestSystem(), new GroupManager());
     }
+
+
+
+    @Test
+    public void When_fetching_entities_in_group_Should_properly_resolve_group_members() throws Exception {
+        class TestSystem extends BaseSystem {
+            public GroupManager groupManager;
+            @Override
+            protected void processSystem() {
+                for (int i = 0; i < 10; i++) {
+                    E.E().groups("a");
+                }
+                Assert.assertEquals(10,E.withGroup("a").size());
+            }
+        }
+
+        runFluidWorld(new TestSystem(), new GroupManager());
+    }
+
+
+
+
+    @Test
+    public void When_fetching_entities_in_empty_group_Should_return_empty_group() throws Exception {
+        class TestSystem extends BaseSystem {
+            public GroupManager groupManager;
+            @Override
+            protected void processSystem() {
+                Assert.assertEquals(0,E.withGroup("a").size());
+            }
+        }
+
+        runFluidWorld(new TestSystem(), new GroupManager());
+    }
 }
