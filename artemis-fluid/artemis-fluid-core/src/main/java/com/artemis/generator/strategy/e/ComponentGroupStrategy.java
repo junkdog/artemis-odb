@@ -103,6 +103,7 @@ public class ComponentGroupStrategy implements BuilderModelStrategy {
                 new MethodBuilder(FluidTypes.EBAG_TYPE, "withGroup")
                         .setStatic(true)
                         .parameter(String.class, "groupName")
+                        .javaDoc("Get entities in group..\n@return {@code EBag} of entities in group. Returns empty bag if group contains no entities.")
                         .statement("if(_processingMapper==null) throw new RuntimeException(\"SuperMapper system must be registered before any systems using E().\");")
                         .statement("return new EBag((com.artemis.utils.IntBag)_processingMapper.getWorld().getSystem(com.artemis.managers.GroupManager.class).getEntityIds(groupName))")
                         .build();

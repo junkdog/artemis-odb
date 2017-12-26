@@ -45,13 +45,4 @@ public abstract class FluidIteratingSystem extends IteratingSystem {
     protected EBag allEntitiesWith(Class<? extends Component> scope) {
         return new EBag(world.getAspectSubscriptionManager().get(Aspect.all(scope)).getEntities());
     }
-
-    /**
-     * @param tag tag to match. Requires TagManager.
-     * @return Entity matching tag, or {@code null} if missing.
-     */
-    protected E entityWithTag(String tag) {
-        final Entity entity = world.getSystem(TagManager.class).getEntity(tag);
-        return entity != null ? E.E(entity) : null;
-    }
 }

@@ -81,4 +81,9 @@ public class MethodBuilder {
         method.setVarargs(varargs);
         return this;
     }
+
+    public MethodBuilder javaDoc(String javadoc) {
+        method.setJavadoc(javadoc);
+        return this;
+    }
 }

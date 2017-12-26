@@ -117,6 +117,10 @@ public class PoetSourceGenerator implements SourceGenerator {
                 break;
         }
 
+        if ( method.getJavadoc() != null ) {
+            builder.addJavadoc(method.getJavadoc());
+        }
+
         for (ParameterDescriptor parameter : method.parameters) {
             builder.addParameter(generateParameterSpecs(parameter));
         }
