@@ -2,8 +2,8 @@ package com.artemis;
 
 import com.artemis.components.SerializationTag;
 import com.artemis.generator.TypeModelGenerator;
-import com.artemis.generator.collect.AbstractComponentCollectStrategy;
-import com.artemis.generator.collect.ReflectionsComponentCollectStrategy;
+import com.artemis.generator.collect.AbstractClassCollectStrategy;
+import com.artemis.generator.collect.ReflectionsClassCollectStrategy;
 import com.artemis.generator.generator.PoetSourceGenerator;
 import com.artemis.generator.model.artemis.ArtemisModel;
 import com.artemis.generator.model.artemis.ComponentDescriptor;
@@ -34,6 +34,14 @@ public class FluidGenerator {
 
     private static final String FLUID_UTILITY_SOURCES_DIR = "/fluid-utility-sources";
     private static final String COM_ARTEMIS_MODULE_DIR = "com/artemis/";
+    private static final Comparator<FieldProxyStrategy> SORT_BY_PRIORITY_DESC_FALLBACK_ON_NAME = new Comparator<FieldProxyStrategy>() {
+        @Override
+        public int compare(FieldProxyStrategy o1, FieldProxyStrategy o2) {
+            final int p1 = o1.priority();
+            final int p2 = o2.priority();
+            return (p1 < p2) ? 1 : ((p1 > p2) ? -1 : o1.getClass().getName().compareTo(o2.getClass().getName()));
+        }
+    };
 
     /**
      * Generate fluid API files.
@@ -46,26 +54,28 @@ public class FluidGenerator {
      * @throws com.artemis.generator.validator.TypeModelValidatorException
      */
     public void generate(Set<URL> urls, File outputDirectory, Log log, FluidGeneratorPreferences globalPreferences) {
-        generate(collectStrategy().allComponents(urls), outputDirectory, log, globalPreferences);
+        final AbstractClassCollectStrategy collectStrategy = collectStrategy(urls);
+        generate(collectStrategy.allComponents(), collectStrategy.allFieldProxyStrategies(), outputDirectory, log, globalPreferences);
     }
 
 
-    private AbstractComponentCollectStrategy collectStrategy() {
-        return new ReflectionsComponentCollectStrategy();
+    private AbstractClassCollectStrategy collectStrategy(Set<URL> urls) {
+        return new ReflectionsClassCollectStrategy(urls);
     }
 
     /**
      * Generate fluid API files.
      *
-     * @param components        components to consider.
-     * @param outputDirectory   source root.
-     * @param log               output.
+     * @param components           components to consider.
+     * @param fieldProxyStrategies field proxy strategies to apply
+     * @param outputDirectory      source root.
+     * @param log                  output.
      * @param globalPreferences
      * @throws com.artemis.generator.validator.TypeModelValidatorException
      */
-    public void generate(Collection<Class<? extends Component>> components, File outputDirectory, Log log, FluidGeneratorPreferences globalPreferences) {
+    public void generate(Collection<Class<? extends Component>> components, Collection<Class<? extends FieldProxyStrategy>> fieldProxyStrategies, File outputDirectory, Log log, FluidGeneratorPreferences globalPreferences) {
 
-        ArtemisModel artemisModel = createArtemisModel(filterComponents(components, log), globalPreferences, log);
+        final ArtemisModel artemisModel = createArtemisModel(filterComponents(components, log), fieldProxyStrategies, globalPreferences, log);
 
         File outputArtemisModuleDirectory = new File(outputDirectory, COM_ARTEMIS_MODULE_DIR);
         outputArtemisModuleDirectory.mkdirs();
@@ -133,19 +143,40 @@ public class FluidGenerator {
         }
     }
 
-    private ArtemisModel createArtemisModel(Collection<Class<? extends Component>> components, FluidGeneratorPreferences globalPreferences, Log log) {
-        ArrayList<ComponentDescriptor> componentDescriptors = new ArrayList<ComponentDescriptor>();
+    private ArtemisModel createArtemisModel(Collection<Class<? extends Component>> components, Collection<Class<? extends FieldProxyStrategy>> fieldProxyStrategiesClasses, FluidGeneratorPreferences globalPreferences, Log log) {
+        return new ArtemisModel(
+                createComponentDescriptors(components, globalPreferences, log),
+                createFieldProxyStrategies(fieldProxyStrategiesClasses, log));
+    }
+
+    private ArrayList<ComponentDescriptor> createComponentDescriptors(Collection<Class<? extends Component>> components, FluidGeneratorPreferences globalPreferences, Log log) {
+        ArrayList<ComponentDescriptor> results = new ArrayList<ComponentDescriptor>();
         for (Class<? extends Component> component : components) {
             ComponentDescriptor descriptor = ComponentDescriptor.create(component, globalPreferences);
             if (!descriptor.getPreferences().isExcludeFromGeneration()) {
                 log.info(".. Including: " + component.getName());
-                componentDescriptors.add(descriptor);
+                results.add(descriptor);
             } else {
                 log.info(".. Excluded by annotation: " + component.getName());
             }
         }
-        Collections.sort(componentDescriptors);
-        return new ArtemisModel(componentDescriptors);
+        Collections.sort(results);
+        return results;
+    }
+
+    private ArrayList<FieldProxyStrategy> createFieldProxyStrategies(Collection<Class<? extends FieldProxyStrategy>> fieldProxyStrategiesClasses, Log log) {
+        ArrayList<FieldProxyStrategy> results = new ArrayList<>();
+        for (Class<? extends FieldProxyStrategy> clazz : fieldProxyStrategiesClasses) {
+            try {
+                log.info(".. Registering field handler: " + clazz.getName());
+                results.add(clazz.newInstance());
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException("Failed to instance " + clazz.getName() + ".", e);
+            }
+        }
+        Collections.sort(results, SORT_BY_PRIORITY_DESC_FALLBACK_ON_NAME);
+        log.info("Default:" + results.get(0));
+        return results;
     }
 
     private static TypeModel createExampleTypeModel(TypeModelGenerator generator, ArtemisModel artemisModel) {

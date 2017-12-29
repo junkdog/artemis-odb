@@ -18,6 +18,9 @@
     - by tag `E player = E.withTag("player");`
     - by aspect `for ( E e : E.withAspect(Aspect.all(Pickup.class, Pos.class)) ) { .. }`
     - by component `for ( E e : E.withComponent(Pickup.class) ) { .. }`
+  - Allow plugins for fluid interface generation.
+    - Override type handling via FieldProxyStrategy. (Want extra methods for LibGDX's `Pos2`? Now you can!)
+   
 
 #### Version: 2.1.0 - 2016-12-09
 - Opt-in [Fluid Entities API][fluid], convenient way to assemble and interact with
