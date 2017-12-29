@@ -71,7 +71,7 @@ public class FluidGenerator {
         outputArtemisModuleDirectory.mkdirs();
 
         generateFile(artemisModel, createSupermapperGenerator(globalPreferences), new File(outputArtemisModuleDirectory, "SuperMapper.java"), log);
-        generateFile(artemisModel, createEGenerator(globalPreferences), new File(outputArtemisModuleDirectory, "E.java"), log);
+        generateFile(artemisModel, createFluidInterfaceGenerator(globalPreferences), new File(outputArtemisModuleDirectory, "E.java"), log);
         generateFile(artemisModel, createComponentsGenerator(globalPreferences), new File(outputArtemisModuleDirectory, "C.java"), log);
 
         // deploy static utility classes that depend on E and/or SuperMapper. Do a clean when changing files!
@@ -152,20 +152,26 @@ public class FluidGenerator {
         return generator.generate(artemisModel);
     }
 
-    private static TypeModelGenerator createEGenerator(FluidGeneratorPreferences preferences) {
+    private static TypeModelGenerator createFluidInterfaceGenerator(FluidGeneratorPreferences preferences) {
         TypeModelGenerator generator = new TypeModelGenerator();
         generator.addStrategy(new EBaseStrategy());
         generator.addStrategy(new EQueryExtensionsStrategy());
         generator.addStrategy(new ComponentExistStrategy());
         generator.addStrategy(new ComponentCreateStrategy());
-        if (preferences.isGenerateTagMethods()) generator.addStrategy(new ComponentTagStrategy());
-        if (preferences.isGenerateGroupMethods()) generator.addStrategy(new ComponentGroupStrategy());
+        if (preferences.isGenerateTagMethods()) {
+            generator.addStrategy(new ComponentTagStrategy());
+        }
+        if (preferences.isGenerateGroupMethods()) {
+            generator.addStrategy(new ComponentGroupStrategy());
+        }
         generator.addStrategy(new ComponentRemoveStrategy());
         generator.addStrategy(new ComponentAccessorStrategy());
         generator.addStrategy(new ComponentFieldAccessorStrategy());
+        generator.addStrategy(new ComponentMethodProxyStrategy());
         generator.addStrategy(new DeleteFromWorldStrategy());
-        if (preferences.isGenerateBooleanComponentAccessors())
+        if (preferences.isGenerateBooleanComponentAccessors()) {
             generator.addStrategy(new FlagComponentBooleanAccessorStrategy());
+        }
         return generator;
     }
 

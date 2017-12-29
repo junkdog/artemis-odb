@@ -7,7 +7,7 @@ import com.artemis.generator.model.type.TypeModel;
 import com.artemis.generator.util.MethodBuilder;
 
 /**
- * Generates deleteFromWorld()
+ * Adds deleteFromWorld() to fluid interface.
  *
  * @author Daan van Yperen
  */

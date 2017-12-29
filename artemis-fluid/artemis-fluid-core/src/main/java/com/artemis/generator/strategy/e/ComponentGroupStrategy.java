@@ -10,7 +10,7 @@ import com.artemis.generator.util.MethodBuilder;
 import com.artemis.utils.ImmutableBag;
 
 /**
- * Generates group setters for E.
+ * Adds methods to access entities groups, and find entities by group.
  *
  * @author Daan van Yperen
  */

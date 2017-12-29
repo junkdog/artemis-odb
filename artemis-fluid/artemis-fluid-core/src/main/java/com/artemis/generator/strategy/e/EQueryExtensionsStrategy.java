@@ -13,7 +13,7 @@ import com.artemis.generator.util.MethodBuilder;
 import java.lang.reflect.Type;
 
 /**
- * Strategy with additional ways to find entities.
+ * Adds methods to locate entities by aspect or component.
  *
  * @author Daan van Yperen
  */

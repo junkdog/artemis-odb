@@ -8,7 +8,7 @@ import com.artemis.generator.model.type.TypeModel;
 import com.artemis.generator.util.MethodBuilder;
 
 /**
- * Generates tag accessor for E.
+ * Adds convenience methods for accessing entities tag, and finding entity by tag.
  *
  * @author Daan van Yperen
  */
