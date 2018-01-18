@@ -147,6 +147,19 @@ public class Aspect {
 	}
 
 	/**
+	 * Returns an aspect where an entity must possess all of the provided
+	 * component types.
+	 *
+	 * @param provider
+	 *			provider of required component type
+	 *
+	 * @return an aspect that can be matched against entities
+	 */
+	public static Aspect.Builder all(ComponentTypeProvider provider) {
+		return new Builder().all(provider);
+	}
+
+	/**
 	 * Excludes all of the specified component types from the aspect.
 	 * <p>
 	 * A system will not be interested in an entity that possesses one of the
@@ -181,6 +194,22 @@ public class Aspect {
 	}
 
 	/**
+	 * Excludes all of the provided component types from the aspect.
+	 * <p>
+	 * A system will not be interested in an entity that possesses one of the
+	 * specified exclusion component types.
+	 * </p>
+	 *
+	 * @param provider
+	 *			provider of component type to exclude
+	 *
+	 * @return an aspect that can be matched against entities
+	 */
+	public static Aspect.Builder exclude(ComponentTypeProvider provider) {
+		return new Builder().exclude(provider);
+	}
+
+	/**
 	 * Returns an aspect where an entity must possess one of the specified
 	 * component types.
 	 *
@@ -205,6 +234,19 @@ public class Aspect {
 	 */
 	public static Aspect.Builder one(Collection<Class<? extends Component>> types) {
 		return new Builder().one(types);
+	}
+
+	/**
+	 * Returns an aspect where an entity must possess one of the provided
+	 * component types.
+	 *
+	 * @param provider
+	 *			provider of one of the types the entity must possess
+	 *
+	 * @return an aspect that can be matched against entities
+	 */
+	public static Aspect.Builder one(ComponentTypeProvider provider) {
+		return new Builder().one(provider);
 	}
 
 	/**
@@ -267,6 +309,19 @@ public class Aspect {
 		}
 
 		/**
+		 * Returns an aspect where an entity must possess all of the component
+		 * types returned by specified ComponentTypeProvider.
+		 *
+		 * @param provider
+		 *			provider of required component types
+		 *
+		 * @return an aspect that can be matched against entities
+		 */
+		public Builder all(ComponentTypeProvider provider) {
+			return all(provider.getComponents());
+		}
+
+		/**
 		 * Returns an aspect where an entity must possess one of the specified
 		 * component types.
 		 *
@@ -283,6 +338,7 @@ public class Aspect {
 			return this;
 		}
 
+
 		/**
 		 * Returns an aspect where an entity must possess one of the specified
 		 * component types.
@@ -297,6 +353,20 @@ public class Aspect {
 				oneTypes.add(t);
 
 			return this;
+		}
+
+		/**
+		 * Returns an aspect where an entity must possess one of the provided
+		 * component types.
+		 *
+		 * @param provider
+		 *			provides type entity must contain
+		 *
+		 * @return an aspect that can be matched against entities
+		 */
+
+		public final Builder one(ComponentTypeProvider provider) {
+			return one(provider.getComponents());
 		}
 
 
@@ -319,6 +389,22 @@ public class Aspect {
 			return this;
 		}
 
+
+		/**
+		 * Excludes all of the provided component types from the aspect.
+		 * <p>
+		 * A system will not be interested in an entity that possesses one of the
+		 * specified exclusion component types.
+		 * </p>
+		 *
+		 * @param provider
+		 *			provides component type to exclude
+		 *
+		 * @return an aspect that can be matched against entities
+		 */
+		public Builder exclude(ComponentTypeProvider provider) {
+			return exclude(provider.getComponents());
+		}
 
 		/**
 		 * Excludes all of the specified component types from the aspect.
