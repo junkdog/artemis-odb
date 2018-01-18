@@ -155,7 +155,7 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	public static Aspect.Builder all(ComponentTypeProvider provider) {
+	public static Aspect.Builder all(ComponentClassProvider provider) {
 		return new Builder().all(provider);
 	}
 
@@ -205,7 +205,7 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	public static Aspect.Builder exclude(ComponentTypeProvider provider) {
+	public static Aspect.Builder exclude(ComponentClassProvider provider) {
 		return new Builder().exclude(provider);
 	}
 
@@ -245,7 +245,7 @@ public class Aspect {
 	 *
 	 * @return an aspect that can be matched against entities
 	 */
-	public static Aspect.Builder one(ComponentTypeProvider provider) {
+	public static Aspect.Builder one(ComponentClassProvider provider) {
 		return new Builder().one(provider);
 	}
 
@@ -310,14 +310,14 @@ public class Aspect {
 
 		/**
 		 * Returns an aspect where an entity must possess all of the component
-		 * types returned by specified ComponentTypeProvider.
+		 * types returned by specified ComponentClassProvider.
 		 *
 		 * @param provider
 		 *			provider of required component types
 		 *
 		 * @return an aspect that can be matched against entities
 		 */
-		public Builder all(ComponentTypeProvider provider) {
+		public Builder all(ComponentClassProvider provider) {
 			return all(provider.getComponents());
 		}
 
@@ -365,7 +365,7 @@ public class Aspect {
 		 * @return an aspect that can be matched against entities
 		 */
 
-		public final Builder one(ComponentTypeProvider provider) {
+		public final Builder one(ComponentClassProvider provider) {
 			return one(provider.getComponents());
 		}
 
@@ -402,7 +402,7 @@ public class Aspect {
 		 *
 		 * @return an aspect that can be matched against entities
 		 */
-		public Builder exclude(ComponentTypeProvider provider) {
+		public Builder exclude(ComponentClassProvider provider) {
 			return exclude(provider.getComponents());
 		}
 
