@@ -6,7 +6,10 @@ import java.util.List;
 @SuppressWarnings("serial")
 public class ArtemisMultiException extends RuntimeException {
 	private final List<Throwable> exceptions = new ArrayList<Throwable>();
-	
+
+	/** required constructor for serialization */
+	public ArtemisMultiException() {}
+
 	public ArtemisMultiException(List<Throwable> exceptions) {
 		super();
 		this.exceptions.addAll(exceptions);
