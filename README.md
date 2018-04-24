@@ -48,10 +48,7 @@ Operations/second. Higher is better.
 
 Dozens of games with source available in the [Game Gallery](https://github.com/junkdog/artemis-odb/wiki/Game-Gallery)!
 
-<img src="http://i.imgur.com/DHy5k6h.png" width="235">
-<img src="http://tikotepadventure.com/files/tikotep/201507/monolith.gif" width="235">
-<img src="http://ludumdare.com/compo/wp-content/compo2//375043/22396-shot2.png-eq-900-500.jpg" width="235">
-
+<img src="https://static.jam.vg/raw/64d/z/1275f.gif" width="450">
 
 ### Use it commercially!
 
