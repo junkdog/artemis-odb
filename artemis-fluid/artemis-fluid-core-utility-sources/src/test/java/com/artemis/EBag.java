@@ -1,6 +1,7 @@
 package com.artemis;
 
 import com.artemis.utils.ImmutableBag;
+import com.artemis.utils.ImmutableIntBag;
 import com.artemis.utils.IntBag;
 
 import java.util.Iterator;

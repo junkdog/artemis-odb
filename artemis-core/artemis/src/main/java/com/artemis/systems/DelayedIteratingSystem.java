@@ -46,6 +46,9 @@ public abstract class DelayedIteratingSystem extends BaseEntitySystem {
 		super(aspect);
 	}
 
+	public DelayedIteratingSystem() {
+	}
+
 	@Override
 	protected final void processSystem() {
 		IntBag entities = subscription.getEntities();

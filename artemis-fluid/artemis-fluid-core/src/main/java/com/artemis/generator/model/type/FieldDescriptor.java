@@ -11,6 +11,7 @@ public class FieldDescriptor implements AmbiguousSignature {
     public Type type;
     public String name;
     private boolean isStatic;
+    private boolean isFinal;
     private AccessLevel accessLevel = AccessLevel.PROTECTED;
     private String debugNotes;
     public String initializer;
@@ -26,6 +27,14 @@ public class FieldDescriptor implements AmbiguousSignature {
 
     public boolean isStatic() {
         return isStatic;
+    }
+
+    public void setFinal(boolean value) {
+        this.isFinal = value;
+    }
+
+    public boolean isFinal() {
+        return isFinal;
     }
 
     public void setAccessLevel(AccessLevel accessLevel) {

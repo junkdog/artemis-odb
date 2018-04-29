@@ -8,7 +8,7 @@ import com.artemis.generator.util.MethodBuilder;
 import com.artemis.generator.util.Strings;
 
 /**
- * Generate direct accessor for each component.
+ * Adds methods to check if entity has a component.
  *
  * @author Daan van Yperen
  */

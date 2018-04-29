@@ -22,6 +22,7 @@ import com.artemis.utils.Bag;
  * @author Adrian Papari
  */
 public abstract class EntityProcessingSystem extends EntitySystem {
+
 	/**
 	 * Creates a new EntityProcessingSystem.
 	 * @param aspect
@@ -29,6 +30,9 @@ public abstract class EntityProcessingSystem extends EntitySystem {
 	 */
 	public EntityProcessingSystem(Aspect.Builder aspect) {
 		super(aspect);
+	}
+
+	public EntityProcessingSystem() {
 	}
 
 	/**

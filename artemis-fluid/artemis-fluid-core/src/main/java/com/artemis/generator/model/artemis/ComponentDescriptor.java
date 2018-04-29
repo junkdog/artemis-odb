@@ -18,7 +18,7 @@ import java.util.Set;
  *
  * @author Daan van Yperen
  */
-public class ComponentDescriptor {
+public class ComponentDescriptor implements Comparable<ComponentDescriptor> {
     public final Class<? extends Component> type;
     private final String methodPrefix;
     private final String name;
@@ -101,5 +101,10 @@ public class ComponentDescriptor {
         }
 
         return new ComponentDescriptor(type, methodPrefix, name, preferences );
+    }
+
+    @Override
+    public int compareTo(ComponentDescriptor o) {
+        return name.compareTo(o.name);
     }
 }

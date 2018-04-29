@@ -26,7 +26,6 @@ public class SuperMapperStrategy implements BuilderModelStrategy {
         model.add(createProcessingMethod());
         model.add(createEInstancingMethod());
         model.add(createEPoolingSet());
-
     }
 
     private MethodDescriptor createProcessingMethod() {

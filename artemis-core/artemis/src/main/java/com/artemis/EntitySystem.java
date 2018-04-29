@@ -43,6 +43,8 @@ public abstract class EntitySystem extends BaseEntitySystem
 		super(aspect);
 	}
 
+	public EntitySystem() { }
+
 	/**
 	 * Set the world this system works on.
 	 *

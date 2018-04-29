@@ -12,7 +12,7 @@ import static java.lang.Math.max;
  *
  * @author original Bag by Arni Arent
  */
-public class IntBag {
+public class IntBag implements ImmutableIntBag {
 
 	/** The backing array. */
 	private int[] data;

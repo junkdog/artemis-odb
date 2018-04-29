@@ -33,8 +33,8 @@ public class TagManager extends BaseSystem {
 	 * Creates a new TagManager.
 	 */
 	public TagManager() {
-		entitiesByTag = new HashMap<String, Entity>();
-		tagsByEntity = new HashMap<Entity, String>();
+		entitiesByTag = new HashMap<>();
+		tagsByEntity = new HashMap<>();
 		registered = new BitVector();
 	}
 

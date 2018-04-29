@@ -26,6 +26,9 @@ public abstract class IteratingSystem extends BaseEntitySystem {
 		super(aspect);
 	}
 
+	public IteratingSystem() {
+	}
+
 	/**
 	 * Process a entity this system is interested in.
 	 *
