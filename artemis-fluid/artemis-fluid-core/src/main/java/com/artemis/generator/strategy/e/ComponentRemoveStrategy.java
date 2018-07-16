@@ -9,7 +9,7 @@ import com.artemis.generator.util.MethodBuilder;
 import com.artemis.generator.util.Strings;
 
 /**
- * Generates remove method for each component type.
+ * Adds methods to remove components from entity.
  *
  * @author Daan van Yperen
  */

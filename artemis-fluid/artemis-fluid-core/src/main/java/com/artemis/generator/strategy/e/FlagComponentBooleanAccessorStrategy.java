@@ -13,7 +13,8 @@ import java.lang.reflect.Modifier;
 import static org.reflections.ReflectionUtils.*;
 
 /**
- * Generate boolean accessors for flag components.
+ * Adds boolean accessors for flag components.
+ *
  * <p>
  * Flag components are all components with no public fields and methods.
  *

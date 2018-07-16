@@ -33,6 +33,10 @@ public abstract class IntervalEntitySystem extends EntitySystem {
 		this.interval = interval;
 	}
 
+	public IntervalEntitySystem(float interval) {
+		this.interval = interval;
+	}
+
 	@Override
 	protected boolean checkProcessing() {
 		if (intervalDelta > 0 && acc == 0)

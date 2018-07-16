@@ -46,6 +46,9 @@ public abstract class DelayedEntityProcessingSystem extends EntitySystem {
 		super(aspect);
 	}
 
+	public DelayedEntityProcessingSystem() {
+	}
+
 	@Override
 	protected final void processSystem() {
 		Bag<Entity> entities = getEntities();

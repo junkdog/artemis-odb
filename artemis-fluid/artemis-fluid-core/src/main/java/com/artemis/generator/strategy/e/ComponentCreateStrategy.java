@@ -9,7 +9,7 @@ import com.artemis.generator.util.MethodBuilder;
 import com.artemis.generator.util.Strings;
 
 /**
- * Generates create method for each component type.
+ * Adds methods to create component (if missing).
  *
  * @author Daan van Yperen
  */
@@ -21,7 +21,7 @@ public class ComponentCreateStrategy extends IterativeModelStrategy {
     }
 
     /**
-     * T componentName() -> create new entity.
+     * T componentName() -> create new component.
      */
     private MethodDescriptor createComponentMethod(ComponentDescriptor component) {
         return

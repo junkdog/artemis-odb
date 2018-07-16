@@ -8,7 +8,7 @@ import com.artemis.generator.model.type.TypeModel;
 import com.artemis.generator.util.MethodBuilder;
 
 /**
- * Generates tag accessor for E.
+ * Adds convenience methods for accessing entities tag, and finding entity by tag.
  *
  * @author Daan van Yperen
  */
@@ -32,9 +32,26 @@ public class ComponentTagStrategy implements BuilderModelStrategy {
                         .build();
     }
 
+    /**
+     * static EBag E::withGroup(groupName)
+     */
+    private MethodDescriptor createStaticWithTag() {
+        return
+                new MethodBuilder(FluidTypes.E_TYPE, "withTag")
+                        .setStatic(true)
+                        .parameter(String.class, "tag")
+                        .javaDoc("Get entity by tag.\n@return {@code E}, or {@code null} if no such tag.")
+                        .statement("if(_processingMapper==null) throw new RuntimeException(\"SuperMapper system must be registered before any systems using E().\");")
+                        .statement("int id=_processingMapper.getWorld().getSystem(com.artemis.managers.TagManager.class).getEntityId(tag)")
+                        .statement("return id != -1 ? E(id) : null")
+                        .build();
+    }
+
+
     @Override
     public void apply(ArtemisModel artemisModel, TypeModel model) {
         model.add(createTagMethodSetter());
         model.add(createTagMethodGetter());
+        model.add(createStaticWithTag());
     }
 }

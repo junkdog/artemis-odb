@@ -63,6 +63,7 @@ public class PoetSourceGenerator implements SourceGenerator {
                 FieldSpec.builder(
                         getTypeName(field.type), field.name);
 
+        if (field.isFinal()) builder.addModifiers(Modifier.FINAL);
         if (field.isStatic()) builder.addModifiers(Modifier.STATIC);
 
         if (field.getInitializer() != null) {
@@ -114,6 +115,10 @@ public class PoetSourceGenerator implements SourceGenerator {
                 break;
             case UNSPECIFIED:
                 break;
+        }
+
+        if ( method.getJavadoc() != null ) {
+            builder.addJavadoc(method.getJavadoc());
         }
 
         for (ParameterDescriptor parameter : method.parameters) {

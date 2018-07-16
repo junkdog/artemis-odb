@@ -31,6 +31,11 @@ public class FieldBuilder {
         return this;
     }
 
+    public FieldBuilder setFinal(boolean value) {
+        field.setFinal(value);
+        return this;
+    }
+
     public FieldBuilder setAccessLevel(AccessLevel value) {
         field.setAccessLevel(value);
         return this;

@@ -41,4 +41,29 @@ public class ComponentTagStrategyIntegrationTest extends AbstractStrategyIntegra
 
         runFluidWorld(new TestSystem(), new TagManager());
     }
+
+    @Test
+    public void When_find_entity_by_tag_Should_get_entity_by_tag() throws Exception {
+        class TestSystem extends BaseSystem {
+            @Override
+            protected void processSystem() {
+                E e = E.E().tag("test");
+                Assert.assertEquals(e,E.withTag("test"));
+            }
+        }
+        runFluidWorld(new TestSystem(), new TagManager());
+    }
+
+
+
+    @Test
+    public void When_find_entity_by_invalid_tag_Should_get_null() throws Exception {
+        class TestSystem extends BaseSystem {
+            @Override
+            protected void processSystem() {
+                Assert.assertNull(E.withTag("test"));
+            }
+        }
+        runFluidWorld(new TestSystem(), new TagManager());
+    }
 }

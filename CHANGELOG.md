@@ -11,6 +11,16 @@
 - Fluid entities quality of life changes.
   - `FluidEntityPlugin` generated as part of the fluid generation process.
   - Added `FluidIteratingSystem`.
+  - Annotation driven aspects. Add @All, @Exclude, @One to BaseEntitySystem subclass to use.
+  - Generate class C containing all fluid component class literals. (not usable in annotations, sorry).
+  - Convenience methods to find entities:
+    - by group `for ( E e : E.withGroup("enemy") ) { .. }`
+    - by tag `E player = E.withTag("player");`
+    - by aspect `for ( E e : E.withAspect(Aspect.all(Pickup.class, Pos.class)) ) { .. }`
+    - by component `for ( E e : E.withComponent(Pickup.class) ) { .. }`
+  - Allow plugins for fluid interface generation.
+    - Override type handling via FieldProxyStrategy. (Want extra methods for LibGDX's `Pos2`? Now you can!)
+   
 
 #### Version: 2.1.0 - 2016-12-09
 - Opt-in [Fluid Entities API][fluid], convenient way to assemble and interact with

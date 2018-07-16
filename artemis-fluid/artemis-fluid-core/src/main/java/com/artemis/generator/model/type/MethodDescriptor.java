@@ -22,6 +22,7 @@ public class MethodDescriptor implements AmbiguousSignature {
     private AccessLevel accessLevel = AccessLevel.PUBLIC;
     private String debugNotes;
     private boolean varargs;
+    private String javadoc;
 
 
     public MethodDescriptor(Type returnType, String name) {
@@ -92,5 +93,13 @@ public class MethodDescriptor implements AmbiguousSignature {
 
     public boolean isVarargs() {
         return varargs;
+    }
+
+    public String getJavadoc() {
+        return javadoc;
+    }
+
+    public void setJavadoc(String javadoc) {
+        this.javadoc = javadoc;
     }
 }
