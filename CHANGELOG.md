@@ -1,14 +1,9 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
+#### Version: 3.0.0-SNAPSHOT
 
-#### Version: 2.2.0-SNAPSHOT
-- **BREAKING CHANGES**
-  - Web backend upgraded to GWT `2.8.0`
-  - Serialization modules that depend on libGDX now require `1.9.8`.
-  - To enable fluid entities in your world, best practice register `FluidEntityPlugin` instead of `SuperMapper`.
-
-- `World` instances can now inject themselves (`World::inject`)
 - Fluid entities quality of life changes.
+  - To enable fluid entities in your world, best practice register `FluidEntityPlugin` instead of `SuperMapper`.
   - `FluidEntityPlugin` generated as part of the fluid generation process.
   - Added `FluidIteratingSystem`.
   - Annotation driven aspects. Add @All, @Exclude, @One to BaseEntitySystem subclass to use.
@@ -20,8 +15,14 @@
     - by component `for ( E e : E.withComponent(Pickup.class) ) { .. }`
   - Allow plugins for fluid interface generation.
     - Override type handling via FieldProxyStrategy. (Want extra methods for LibGDX's `Pos2`? Now you can!)
-   
 
+#### Version: 2.2.0-SNAPSHOT
+- **BREAKING CHANGES**
+  - Web backend upgraded to GWT `2.8.0`
+  - Serialization modules that depend on libGDX now require `1.9.8`.
+
+- `World` instances can now inject themselves (`World::inject`)
+  
 #### Version: 2.1.0 - 2016-12-09
 - Opt-in [Fluid Entities API][fluid], convenient way to assemble and interact with
   your entities, making code less verbose, improving readability.
