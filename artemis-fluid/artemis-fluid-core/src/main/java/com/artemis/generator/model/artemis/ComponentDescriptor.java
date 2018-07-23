@@ -5,8 +5,6 @@ import com.artemis.FluidGeneratorPreferences;
 import com.artemis.annotations.Fluid;
 import com.artemis.generator.util.ExtendedTypeReflection;
 import com.artemis.generator.util.Strings;
-import org.reflections.ReflectionUtils;
-import org.reflections.Reflections;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

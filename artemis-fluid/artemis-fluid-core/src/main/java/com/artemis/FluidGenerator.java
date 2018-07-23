@@ -175,7 +175,7 @@ public class FluidGenerator {
             }
         }
         Collections.sort(results, SORT_BY_PRIORITY_DESC_FALLBACK_ON_NAME);
-        log.info("Default:" + results.get(0));
+        log.info("Default:" + (!results.isEmpty() ? results.get(0) : "missing"));
         return results;
     }
 

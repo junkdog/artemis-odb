@@ -4,7 +4,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 import org.reflections.ReflectionUtils;
 
-import javax.annotation.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.lang.reflect.Field;
@@ -98,7 +97,7 @@ public abstract class ExtendedTypeReflection {
 
     public static <T extends Member> Predicate<T> withoutModifier(final int mod) {
         return new Predicate<T>() {
-            public boolean apply(@Nullable T input) {
+            public boolean apply(T input) {
                 return input != null && (input.getModifiers() & mod) == 0;
             }
         };
