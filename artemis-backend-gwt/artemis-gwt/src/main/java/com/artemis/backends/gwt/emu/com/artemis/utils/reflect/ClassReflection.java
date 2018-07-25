@@ -69,6 +69,11 @@ public final class ClassReflection {
 		return ReflectionCache.getType(c).isStatic();
 	}
 
+	/** Returns true if the class or interface represented by the supplied Class is an abstract class. */
+	static public boolean isAbstractClass (Class c) {
+		return ReflectionCache.getType(c).isAbstract();
+	}
+
 	/** Creates a new instance of the class represented by the supplied Class. */
 	static public <T> T newInstance (Class<T> c) throws ReflectionException {
 		try {

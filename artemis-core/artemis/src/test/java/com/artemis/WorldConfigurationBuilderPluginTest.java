@@ -16,76 +16,95 @@ import static org.mockito.Mockito.verify;
  */
 public class WorldConfigurationBuilderPluginTest {
 
-	private WorldConfigurationBuilder builder;
-	private ArtemisPlugin plugin;
+    private WorldConfigurationBuilder builder;
+    private ArtemisPlugin plugin;
 
-	@Before
-	public void setUp() throws Exception {
-		builder = new WorldConfigurationBuilder();
-		plugin = mock(ArtemisPlugin.class);
-	}
-
-
-	@Test
-	public void should_register_plugins() {
-		builder.with(plugin).build();
-		verify(plugin).setup(any(WorldConfigurationBuilder.class));
-	}
+    @Before
+    public void setUp() throws Exception {
+        builder = new WorldConfigurationBuilder();
+        plugin = mock(ArtemisPlugin.class);
+    }
 
 
-	@Test
-	public void should_register_last_minute_nested_plugins() {
+    @Test
+    public void should_register_plugins() {
+        builder.with(plugin).build();
+        verify(plugin).setup(any(WorldConfigurationBuilder.class));
+    }
 
-		final ArtemisPlugin parentPlugin = new ArtemisPlugin() {
-			@Override
-			public void setup(WorldConfigurationBuilder b) {
-				b.with(plugin);
-			}
-		};
 
-		builder.with(parentPlugin).build();
+    @Test
+    public void should_register_last_minute_nested_plugins() {
 
-		verify(plugin).setup(any(WorldConfigurationBuilder.class));
-	}
+        final ArtemisPlugin parentPlugin = new ArtemisPlugin() {
+            @Override
+            public void setup(WorldConfigurationBuilder b) {
+                b.with(plugin);
+            }
+        };
 
-	@Test(expected = WorldConfigurationException.class)
-	public void should_ignore_double_plugins() {
+        builder.with(parentPlugin).build();
 
-		final ArtemisPlugin parentPlugin = new ArtemisPlugin() {
-			@Override
-			public void setup(WorldConfigurationBuilder b) {
-				b.with(plugin, plugin);
-				b.with(plugin);
-			}
-		};
+        verify(plugin).setup(any(WorldConfigurationBuilder.class));
+    }
 
-		builder.with(parentPlugin).build();
-	}
+    @Test(expected = WorldConfigurationException.class)
+    public void should_ignore_double_plugins() {
 
-	@Test
-	public void should_register_plugins_by_class() {
-		builder.dependsOn(TestPluginA.class).build();
-	}
+        final ArtemisPlugin parentPlugin = new ArtemisPlugin() {
+            @Override
+            public void setup(WorldConfigurationBuilder b) {
+                b.with(plugin, plugin);
+                b.with(plugin);
+            }
+        };
 
-	@Test
-	public void should_support_multiple_dependencies_on_plugin() {
-		builder.dependsOn(TestPluginBDependentOnA.class, TestPluginCDependentOnA.class).build();
-	}
+        builder.with(parentPlugin).build();
+    }
 
-	@Test(expected = WorldConfigurationException.class)
-	public void should_refuse_plugins_with_priority() {
-		builder.dependsOn(WorldConfigurationBuilder.Priority.HIGH, TestEntitySystemA.class,TestPluginBDependentOnA.class).build();
-	}
+    @Test
+    public void should_register_plugins_by_class() {
+        builder.dependsOn(TestPluginA.class).build();
+    }
 
-	@Test(expected = WorldConfigurationException.class)
-	public void should_avoid_cyclic_dependencies() {
-		final ArtemisPlugin parentPlugin = new ArtemisPlugin() {
-			@Override
-			public void setup(WorldConfigurationBuilder b) {
-				b.with(this);
-			}
-		};
-		builder.with(parentPlugin).build();
-		// will get stuck in loop if failed.
-	}
+    @Test
+    public void should_support_multiple_dependencies_on_plugin() {
+        builder.dependsOn(TestPluginBDependentOnA.class, TestPluginCDependentOnA.class).build();
+    }
+
+    @Test(expected = WorldConfigurationException.class)
+    public void should_refuse_plugins_with_priority() {
+        builder.dependsOn(WorldConfigurationBuilder.Priority.HIGH, TestEntitySystemA.class, TestPluginBDependentOnA.class).build();
+    }
+
+    @Test(expected = WorldConfigurationException.class)
+    public void should_avoid_cyclic_dependencies() {
+        final ArtemisPlugin parentPlugin = new ArtemisPlugin() {
+            @Override
+            public void setup(WorldConfigurationBuilder b) {
+                b.with(this);
+            }
+        };
+        builder.with(parentPlugin).build();
+        // will get stuck in loop if failed.
+    }
+
+    public static abstract class AbstractPlugin implements ArtemisPlugin {
+    }
+
+    public static class AbstractPluginImpl extends AbstractPlugin {
+        @Override
+        public void setup(WorldConfigurationBuilder b) {
+        }
+    }
+
+    @Test(expected = WorldConfigurationException.class)
+    public void Should_report_missing_dependency_on_abstract_plugin() {
+        builder.dependsOn(AbstractPlugin.class).build();
+    }
+
+    @Test
+    public void Should_accept_implementation_to_abstract_dependency() {
+        builder.dependsOn(AbstractPluginImpl.class).dependsOn(AbstractPlugin.class).build();
+    }
 }
