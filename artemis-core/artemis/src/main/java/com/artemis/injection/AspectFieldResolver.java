@@ -1,7 +1,7 @@
 package com.artemis.injection;
 
 import com.artemis.*;
-import com.artemis.annotations.AspectDescriptor;
+import com.artemis.annotations.*;
 import com.artemis.utils.reflect.Annotation;
 import com.artemis.utils.reflect.Field;
 
@@ -22,6 +22,8 @@ import static com.artemis.Aspect.all;
  * @author Adrian Papari
  */
 public class AspectFieldResolver implements FieldResolver {
+
+	private static final Class<? extends Component>[] EMPTY_COMPONENT_CLASS_ARRAY = new Class[0];
 
 	private World world;
 
@@ -50,7 +52,7 @@ public class AspectFieldResolver implements FieldResolver {
 			return world.getAspectSubscriptionManager().get(aspect);
 		} else if (Archetype.class == type) {
 			return new ArchetypeBuilder()
-				.add(descriptor(field).all())
+				.add(allComponents(field))
 				.build(world);
 		}
 
@@ -64,11 +66,19 @@ public class AspectFieldResolver implements FieldResolver {
 			if (descriptor != null) {
 				fields.put(field, toAspect(descriptor));
 			} else {
-				fields.put(field, null);
+				All all = field.getAnnotation(All.class);
+				One one = field.getAnnotation(One.class);
+				Exclude exclude = field.getAnnotation(Exclude.class);
+				
+				if (all != null || one != null || exclude != null) {
+					fields.put(field, toAspect(all, one, exclude));
+				} else {
+					fields.put(field, null);
+				}
 			}
 		}
 
-		return  fields.get(field);
+		return fields.get(field);
 	}
 
 	private AspectDescriptor descriptor(Field field) {
@@ -81,4 +91,27 @@ public class AspectFieldResolver implements FieldResolver {
 	private Aspect.Builder toAspect(AspectDescriptor ad) {
 		return all(ad.all()).one(ad.one()).exclude(ad.exclude());
 	}
+
+	private Aspect.Builder toAspect(All all, One one, Exclude exclude) {
+		return all(all != null ? all.value() : EMPTY_COMPONENT_CLASS_ARRAY)
+				.one(one != null ? one.value() : EMPTY_COMPONENT_CLASS_ARRAY)
+				.exclude(exclude != null ? exclude.value() : EMPTY_COMPONENT_CLASS_ARRAY);
+	}
+	
+	private Class<? extends Component>[] allComponents(Field field) {
+		AspectDescriptor descriptor = descriptor(field);
+		
+		if (descriptor != null) {
+			return descriptor.all();
+		} else {
+			All all = field.getAnnotation(All.class);
+			
+			if (all != null) {
+				return all.value();
+			}
+		}
+		
+		return null;
+	}
+
 }
