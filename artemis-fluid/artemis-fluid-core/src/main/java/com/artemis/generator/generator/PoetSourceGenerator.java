@@ -6,7 +6,6 @@ import com.squareup.javapoet.*;
 
 import javax.lang.model.element.Modifier;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 /**
@@ -19,6 +18,8 @@ import java.util.ArrayList;
  * @author Daan van Yperen
  */
 public class PoetSourceGenerator implements SourceGenerator {
+
+    private final PoetTypeNameResolver typeNameResolver = new PoetTypeNameResolver();
 
     @Override
     public void generate(TypeModel model, Appendable out) {
@@ -61,7 +62,7 @@ public class PoetSourceGenerator implements SourceGenerator {
     private FieldSpec generateFieldSpec(FieldDescriptor field) {
         FieldSpec.Builder builder =
                 FieldSpec.builder(
-                        getTypeName(field.type), field.name);
+                        typeNameResolver.get(field.type), field.name);
 
         if (field.isFinal()) builder.addModifiers(Modifier.FINAL);
         if (field.isStatic()) builder.addModifiers(Modifier.STATIC);
@@ -98,7 +99,7 @@ public class PoetSourceGenerator implements SourceGenerator {
 
     private MethodSpec generateMethodSpec(MethodDescriptor method) {
         MethodSpec.Builder builder = MethodSpec.methodBuilder(method.name)
-                .returns(getTypeName(method.returnType));
+                .returns(typeNameResolver.get(method.returnType));
 
         if (method.isStatic()) builder.addModifiers(Modifier.STATIC);
         if (method.isVarargs()) builder.varargs(true);
@@ -117,7 +118,7 @@ public class PoetSourceGenerator implements SourceGenerator {
                 break;
         }
 
-        if ( method.getJavadoc() != null ) {
+        if (method.getJavadoc() != null) {
             builder.addJavadoc(method.getJavadoc());
         }
 
@@ -133,16 +134,7 @@ public class PoetSourceGenerator implements SourceGenerator {
         return builder.build();
     }
 
-    private TypeName getTypeName(Type type) {
-        if (type instanceof TypeDescriptor) {
-            return ClassName.bestGuess(type.toString());
-        }
-        return TypeName.get(type);
-    }
-
     private ParameterSpec generateParameterSpecs(ParameterDescriptor parameter) {
-        return ParameterSpec.builder(getTypeName(parameter.type), parameter.name).build();
+        return ParameterSpec.builder(typeNameResolver.get(parameter.type), parameter.name).build();
     }
-
-
 }

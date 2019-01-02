@@ -5,6 +5,9 @@ import java.lang.reflect.Type;
 /**
  * Fake type.
  *
+ * Bit of a hack, we need this to refer to types that have not been generated yet, like SuperMapper and E.
+ *
+ * @todo is there an idiomatic solution?
  * @author Daan van Yperen
  */
 public class TypeDescriptor implements Type {

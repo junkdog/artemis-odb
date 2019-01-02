@@ -1,7 +1,6 @@
 package com.artemis.generator.strategy.supermapper;
 
 import com.artemis.BaseSystem;
-import com.artemis.Entity;
 import com.artemis.generator.common.BuilderModelStrategy;
 import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.model.artemis.ArtemisModel;
@@ -57,6 +56,6 @@ public class SuperMapperStrategy implements BuilderModelStrategy {
 
     private FieldDescriptor createEPoolingSet() {
         return
-                new FieldBuilder(Bag.class, "es").initializer("new Bag(128)").build();
+                new FieldBuilder(new ParameterizedTypeImpl(Bag.class, FluidTypes.E_TYPE), "es").initializer("new Bag<>(128)").build();
     }
 }
