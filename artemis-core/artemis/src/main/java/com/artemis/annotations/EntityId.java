@@ -19,6 +19,8 @@ import java.lang.annotation.Target;
  *         is registed with the world.</li>
  * </ul>
  *
+ * Only supports public fields. Kotlin requires fields with this annotation to also be annotated with {@code @JvmField}.
+ *
  * <p>Annotation has no effect on {@link Bag}-of-entities and plain {@link Entity}
  * fields.</p>
  *
