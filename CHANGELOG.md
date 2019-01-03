@@ -6,7 +6,6 @@
   - To enable fluid entities in your world, best practice register `FluidEntityPlugin` instead of `SuperMapper`.
   - `FluidEntityPlugin` generated as part of the fluid generation process.
   - Added `FluidIteratingSystem`.
-  - Annotation driven aspects. Add @All, @Exclude, @One to BaseEntitySystem subclass to use.
   - Generate class C containing all fluid component class literals. (not usable in annotations, sorry).
   - Convenience methods to find entities:
     - by group `for ( E e : E.withGroup("enemy") ) { .. }`
@@ -15,6 +14,14 @@
     - by component `for ( E e : E.withComponent(Pickup.class) ) { .. }`
   - Allow plugins for fluid interface generation.
     - Override type handling via FieldProxyStrategy. (Want extra methods for LibGDX's `Pos2`? Now you can!)
+- Annotation driven aspects (`@All`, `@Exclude`, `@One`).
+  - Annotate BaseEntitySystem subclass, alternative to constructor argument.
+  - Adds DI of `Archetype`, `Aspect`, `Aspect.Builder` and `EntitySubscription` fields.
+- Support for plugins with multiple possible implementations.
+      For example, a logging plugin might have multiple implementations (TinyLog, SLF4J+??, LibGDX). 
+      As a plugin developer, we want to be able to refer to the generic facade (LoggingPlugin) and 
+      throw a warning when no specific implementation has been registered.
+- **Fix**: Unchecked warning in `SuperMapper`.
 
 #### Version: 2.2.0-SNAPSHOT
 - **BREAKING CHANGES**

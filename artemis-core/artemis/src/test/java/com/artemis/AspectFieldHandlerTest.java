@@ -1,6 +1,9 @@
 package com.artemis;
 
+import com.artemis.annotations.All;
 import com.artemis.annotations.AspectDescriptor;
+import com.artemis.annotations.Exclude;
+import com.artemis.annotations.One;
 import com.artemis.component.*;
 import org.junit.Test;
 
@@ -30,6 +33,13 @@ public class AspectFieldHandlerTest {
 		assertNotNull(withAspectFields.transmuter);
 
 		checkArchetype(world, withAspectFields.archetype);
+        
+        assertEquals(reference, withAspectFields.abAllOneExclude);
+        assertNotNull(withAspectFields.aspectAllOneExclude);
+        assertEquals(reference, withAspectFields.subAllOneExclude.getAspectBuilder());
+        assertNotNull(withAspectFields.transmuterAllOneExclude);
+        
+		checkArchetype(world, withAspectFields.archetypeAll);
 	}
 
 	@Test
@@ -48,7 +58,7 @@ public class AspectFieldHandlerTest {
 
 		checkArchetype(world, withAspectFields.archetype);
 	}
-
+	
 	private static void checkArchetype(World world, Archetype archetype) {
 		Entity e = world.getEntity(world.create(archetype));
 		assertNotNull(e.getComponent(ComponentX.class));
@@ -57,7 +67,6 @@ public class AspectFieldHandlerTest {
 	}
 
 	private static class ObjectAspectFields {
-
 		@AspectDescriptor(
 			all = {ComponentX.class, ComponentY.class},
 			exclude = PooledString.class,
@@ -85,6 +94,29 @@ public class AspectFieldHandlerTest {
 		@AspectDescriptor(
 			all = {ComponentX.class, ReusedComponent.class})
 		public Archetype archetype;
+
+		@All({ ComponentX.class, ComponentY.class })
+		@Exclude(PooledString.class)
+		@One({ ReusedComponent.class, EntityHolder.class })
+		public EntitySubscription subAllOneExclude;
+
+		@All({ ComponentX.class, ComponentY.class })
+		@Exclude(PooledString.class)
+		@One({ ReusedComponent.class, EntityHolder.class })
+		public EntityTransmuter transmuterAllOneExclude;
+
+		@All({ ComponentX.class, ComponentY.class })
+		@Exclude(PooledString.class)
+		@One({ ReusedComponent.class, EntityHolder.class })
+		public Aspect aspectAllOneExclude;
+
+		@All({ ComponentX.class, ComponentY.class })
+		@Exclude(PooledString.class)
+		@One({ ReusedComponent.class, EntityHolder.class })
+		public Aspect.Builder abAllOneExclude;
+
+		@All({ ComponentX.class, ReusedComponent.class })
+		public Archetype archetypeAll;
 	}
 
 	private static class SomeSystem extends BaseSystem {
@@ -115,8 +147,32 @@ public class AspectFieldHandlerTest {
 		@AspectDescriptor(
 			all = {ComponentX.class, ReusedComponent.class})
 		public Archetype archetype;
+		
+		@All({ ComponentX.class, ComponentY.class })
+		@Exclude(PooledString.class)
+		@One({ ReusedComponent.class, EntityHolder.class })
+		public EntitySubscription subAllOneExclude;
+
+		@All({ ComponentX.class, ComponentY.class })
+		@Exclude(PooledString.class)
+		@One({ ReusedComponent.class, EntityHolder.class })
+		public EntityTransmuter transmuterAllOneExclude;
+
+		@All({ ComponentX.class, ComponentY.class })
+		@Exclude(PooledString.class)
+		@One({ ReusedComponent.class, EntityHolder.class })
+		public Aspect aspectAllOneExclude;
+
+		@All({ ComponentX.class, ComponentY.class })
+		@Exclude(PooledString.class)
+		@One({ ReusedComponent.class, EntityHolder.class })
+		public Aspect.Builder abAllOneExclude;
+
+		@All({ ComponentX.class, ReusedComponent.class })
+		public Archetype archetypeAll;
 
 		@Override
 		protected void processSystem() {}
 	}
+	
 }
