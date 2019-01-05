@@ -2,6 +2,9 @@ package com.artemis;
 
 import com.artemis.annotations.All;
 import com.artemis.common.LifecycleComponent;
+import com.artemis.common.NotExplicitlyDelayedComponent;
+import com.artemis.component.ComponentX;
+import com.artemis.utils.IntBag;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -258,10 +261,170 @@ public class EntityComponentLifecycleIntegrationTest {
         });
     }
 
+
+    // Edge cases ///////////////////////////////////////////////////////////////////////////////////////////
+
+    @Test
+    public void When_replacing_a_component_Should_not_call_subscriptions() {
+
+        // when replacing a component within a system by succession of remove/create it should not trigger the subscription.
+
+        execute(new LifecycleTestingSystem() {
+            private int entityId;
+            private int inserted;
+            private int removed;
+
+            @Override
+            protected void processSystem() {
+                if (timesProcessed == 0) {
+
+                    subLife.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+                        @Override
+                        public void inserted(IntBag entities) {
+                            inserted++;
+                        }
+
+                        @Override
+                        public void removed(IntBag entities) {
+                            removed++;
+                        }
+                    });
+
+                    entityId = world.create();
+                    LifecycleComponent id1 = mLife.create(entityId);
+                    mLife.remove(entityId);
+                    Assert.assertNotEquals(id1, mLife.create(entityId));
+                }
+                if (timesProcessed == 1) {
+                    Assert.assertEquals(1, inserted);
+                    Assert.assertEquals(0, removed);
+                    done = true;
+                }
+            }
+        });
+    }
+
+
+    @Test
+    public void When_replacing_a_delayed_component_Should_not_call_subscriptions() {
+
+        // when replacing a deletion-delayed component within a system by succession of remove/create it
+        // should not trigger the subscription.
+
+        execute(new LifecycleTestingSystem() {
+            private int entityId;
+            private int inserted;
+            private int removed;
+
+            @Override
+            protected void processSystem() {
+                if (timesProcessed == 0) {
+                    subDelayed.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+                        @Override
+                        public void inserted(IntBag entities) {
+                            inserted++;
+                        }
+
+                        @Override
+                        public void removed(IntBag entities) {
+                            removed++;
+                        }
+                    });
+
+                    entityId = world.create();
+                    Component id1 = mDelayed.create(entityId);
+                    mDelayed.remove(entityId);
+                    Assert.assertNotEquals(id1, mDelayed.create(entityId));
+                }
+                if (timesProcessed == 1) {
+                    Assert.assertEquals(1, inserted);
+                    Assert.assertEquals(0, removed);
+                    done = true;
+                }
+            }
+        });
+    }
+
+    @Test
+    public void When_flash_in_the_pan_component_Should_not_trigger_subscription() {
+
+        // Flash in the pan components should not reach subscriptions.
+
+        execute(new LifecycleTestingSystem() {
+            private int entityId;
+            private int inserted;
+            private int removed;
+
+            @Override
+            protected void processSystem() {
+                if (timesProcessed == 0) {
+                    subLife.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+                        @Override
+                        public void inserted(IntBag entities) {
+                            inserted++;
+                        }
+
+                        @Override
+                        public void removed(IntBag entities) {
+                            removed++;
+                        }
+                    });
+                    entityId = world.create();
+                    LifecycleComponent id1 = mLife.create(entityId);
+                    mLife.remove(entityId);
+                }
+                if (timesProcessed == 1) {
+                    Assert.assertEquals(0, inserted);
+                    Assert.assertEquals(0, removed);
+                    done = true;
+                }
+            }
+        });
+    }
+
+    @Test
+    public void When_flash_in_the_pan_entity_Should_still_trigger_remove_subscription() {
+
+        // Trigger 'remove' listeners for entities that did not survive birth.
+        // Current behaviour. Bit weird but since this is probably fairly
+        // uncommon usecase to spend much energy on just keeping the test for consistency sake.
+
+        execute(new LifecycleTestingSystem() {
+            private int entityId;
+            private int inserted;
+            private int removed;
+
+            @Override
+            protected void processSystem() {
+                if (timesProcessed == 0) {
+                    subAll.addSubscriptionListener(new EntitySubscription.SubscriptionListener() {
+                        @Override
+                        public void inserted(IntBag entities) {
+                            inserted++;
+                        }
+
+                        @Override
+                        public void removed(IntBag entities) {
+                            removed++;
+                        }
+                    });
+                    entityId = world.create();
+                    Entity entity = world.getEntity(entityId);
+                    entity.deleteFromWorld();
+                }
+                if (timesProcessed == 1) {
+                    Assert.assertEquals(0, inserted);
+                    Assert.assertEquals(1, removed);
+                    done = true;
+                }
+            }
+        });
+    }
     // Utility stuff ///////////////////////////////////////////////////////////////////////////////////////////
 
     private static abstract class LifecycleTestingSystem extends BaseEntitySystem {
         protected ComponentMapper<LifecycleComponent> mLife;
+        protected ComponentMapper<ComponentX> mDelayed;
         public int timesProcessed;
         public boolean done = false;
 
@@ -270,6 +433,9 @@ public class EntityComponentLifecycleIntegrationTest {
 
         @All(LifecycleComponent.class)
         EntitySubscription subLife;
+
+        @All(ComponentX.class)
+        EntitySubscription subDelayed;
 
         public LifecycleTestingSystem(Class<? extends Component>... components) {
             super(Aspect.all(components));
@@ -287,6 +453,10 @@ public class EntityComponentLifecycleIntegrationTest {
 
         public int lifeMembers() {
             return subLife.getEntities().size();
+        }
+
+        public int delayedMembers() {
+            return subDelayed.getEntities().size();
         }
     }
 

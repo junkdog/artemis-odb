@@ -76,14 +76,17 @@ public abstract class BaseEntitySystem extends BaseSystem
     }
 
     /**
-     * Called if entity has come into scope for this system, e.g
-     * created or a component was added to it.
+     * Called if entity has come into scope for this system, e.g created or a component was added to it.
+     *
+     * Triggers right after any system finishes processing. Adding and immediately removing a component
+     * does not count as a permanently change and will prevent this method from being called.
+     *
+     * Not triggered for entities that have been destroyed immediately after being created (within a system).
      *
      * @param entityId the entity that was added to this system
      */
     protected void inserted(int entityId) {
     }
-
 
     /**
      * <p>Called if entity has gone out of scope of this system, e.g deleted
@@ -116,6 +119,8 @@ public abstract class BaseEntitySystem extends BaseSystem
      * for a small performance hit.
      * <p>
      * {@link ComponentMapper#has(int)} always returns {@code false}, even for DelayedComponentRemoval components.
+     *
+     * Can trigger for entities that have been destroyed immediately after being created (within a system).
      *
      * @param entityId the entity that was removed from this system
      */

@@ -201,16 +201,31 @@ public class EntitySubscription {
     /**
      * <p>This interfaces reports entities inserted or
      * removed when matched against their {@link com.artemis.EntitySubscription}</p>
+     *
+     * Listeners are only triggered after a system finishes processing and the entity composition has changed.
+     *
+     * Replacing a component with another of the same type does not permanently change the composition and does not
+     * count as a composition change, neither does adding and immediately removing a component.
      */
     public interface SubscriptionListener {
         /**
-         * Called after entities have been matched and inserted into an
-         * EntitySubscription.
+         * Called after entities match an {@link EntitySubscription}.
+         *
+         * Triggers right after a system finishes processing. Adding and immediately removing a component does not
+         * permanently change the composition and will prevent this method from being called.
+         *
+         * Not triggered for entities that have been destroyed immediately after being created (within a system).
          */
         void inserted(IntBag entities);
 
         /**
-         * <p>Called after entities have been removed from an EntitySubscription.</p>
+         * <p>Called after entities no longer match an EntitySubscription.</p>
+         *
+         * Triggers right after a system finishes processing. Replacing a component with another of the same type
+         * within a system does not count as a composition change and will prevent this method from being called.
+         *
+         * Can trigger for entities that have been destroyed immediately after being created (within a system).
+         *
          * <p>
          * Important note on accessing components:
          * Using {@link ComponentMapper#get(int)} to retrieve a component is unsafe, unless:
