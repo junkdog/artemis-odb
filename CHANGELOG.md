@@ -1,8 +1,17 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
-#### Version: 3.0.0-SNAPSHOT
+#### Version: 2.2.0-SNAPSHOT
 
-- Fluid entities quality of life changes.
+- **BREAKING CHANGES**
+  - Web backend upgraded to GWT `2.8.0`
+  - Serialization modules that depend on libGDX now require `1.9.8`.
+
+- **Global option to delay component removal until all subscriptions have been notified.**
+    `new WorldConfigurationBuilder().alwaysDelayComponentRemoval(true)` 
+- **Annotation driven aspects** (`@All`, `@Exclude`, `@One`).
+  - Annotate BaseEntitySystem subclass, alternative to constructor argument.
+  - Adds DI of `Archetype`, `Aspect`, `Aspect.Builder` and `EntitySubscription` fields.
+- **Fluid entities** quality of life changes.
   - To enable fluid entities in your world, best practice register `FluidEntityPlugin` instead of `SuperMapper`.
   - `FluidEntityPlugin` generated as part of the fluid generation process.
   - Added `FluidIteratingSystem`.
@@ -14,20 +23,11 @@
     - by component `for ( E e : E.withComponent(Pickup.class) ) { .. }`
   - Allow plugins for fluid interface generation.
     - Override type handling via FieldProxyStrategy. (Want extra methods for LibGDX's `Pos2`? Now you can!)
-- Annotation driven aspects (`@All`, `@Exclude`, `@One`).
-  - Annotate BaseEntitySystem subclass, alternative to constructor argument.
-  - Adds DI of `Archetype`, `Aspect`, `Aspect.Builder` and `EntitySubscription` fields.
-- Support for plugins with multiple possible implementations.
+- **Support for abstract plugins** with multiple possible implementations.
       For example, a logging plugin might have multiple implementations (TinyLog, SLF4J+??, LibGDX). 
       As a plugin developer, we want to be able to refer to the generic facade (LoggingPlugin) and 
-      throw a warning when no specific implementation has been registered.
+      throw a warning when no specific implementation has been registered.      
 - **Fix**: Unchecked warning in `SuperMapper`.
-
-#### Version: 2.2.0-SNAPSHOT
-- **BREAKING CHANGES**
-  - Web backend upgraded to GWT `2.8.0`
-  - Serialization modules that depend on libGDX now require `1.9.8`.
-
 - `World` instances can now inject themselves (`World::inject`)
   
 #### Version: 2.1.0 - 2016-12-09

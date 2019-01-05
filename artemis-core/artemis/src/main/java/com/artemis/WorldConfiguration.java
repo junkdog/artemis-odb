@@ -1,8 +1,10 @@
 package com.artemis;
 
+import com.artemis.annotations.UnstableApi;
 import com.artemis.injection.Injector;
 import com.artemis.utils.Bag;
 import com.artemis.utils.BitVector;
+import com.artemis.utils.IntBag;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.ReflectionException;
 
@@ -25,7 +27,7 @@ public final class WorldConfiguration {
 	public static final int COMPONENT_MANAGER_IDX = 0;
 	public static final int ENTITY_MANAGER_IDX = 1;
 	public static final int ASPECT_SUBSCRIPTION_MANAGER_IDX = 2;
-	
+
 	final Bag<BaseSystem> systems = new Bag<BaseSystem>(BaseSystem.class);
 
 	protected int expectedEntityCount = 128;
@@ -34,6 +36,7 @@ public final class WorldConfiguration {
 	protected Injector injector;
 	protected SystemInvocationStrategy invocationStrategy;
 
+	private boolean alwaysDelayComponentRemoval = false;
 	private Set<Class<? extends BaseSystem>> registered = new HashSet<Class<? extends BaseSystem>>();
 
 	public WorldConfiguration() {
@@ -49,7 +52,7 @@ public final class WorldConfiguration {
 
 	/**
 	 * Initializes array type containers with the value supplied.
-	 * 
+	 *
 	 * @param expectedEntityCount count of expected entities.
 	 * @return This instance for chaining.
 	 */
@@ -191,5 +194,32 @@ public final class WorldConfiguration {
 			BaseSystem system = systems.get(i);
 			system.initialize();
 		}
+	}
+
+	/**
+	 * Delay component removal until all subscriptions have been notified.
+	 *
+	 * Extends the lifecycle of ALL component types, ensuring removed instances are retrievable until
+	 * all {@link EntitySubscription.SubscriptionListener#removed(IntBag) listeners} have been notified - regardless
+	 * of removal method.
+	 */
+	public boolean isAlwaysDelayComponentRemoval() {
+		return alwaysDelayComponentRemoval;
+	}
+
+	/**
+	 * Delay component removal until all subscriptions have been notified.
+	 *
+	 * Extends the lifecycle of ALL component types, ensuring removed instances are retrievable until
+	 * all {@link EntitySubscription.SubscriptionListener#removed(IntBag) listeners} have been notified - regardless
+	 * of removal method.
+	 *
+	 * Has a slight performance cost.
+	 *
+	 * @param value When {@code true}, component removal for all components will be delayed.
+	 *
+	 */
+	public void setAlwaysDelayComponentRemoval(boolean value) {
+		this.alwaysDelayComponentRemoval = value;
 	}
 }

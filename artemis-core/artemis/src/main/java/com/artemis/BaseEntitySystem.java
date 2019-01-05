@@ -84,6 +84,19 @@ public abstract class BaseEntitySystem extends BaseSystem
     protected void inserted(int entityId) {
     }
 
+
+    /**
+     * <p>Called if entity has gone out of scope of this system, e.g deleted
+     * or had one of it's components removed.</p>
+     * <p>
+     * <p>Explicitly removed components are only retrievable at this point
+     * if annotated with {@link DelayedComponentRemoval}.</p>
+     * <p>
+     * <p>Deleted entities retain all their components - until all listeners
+     * have been informed.</p>
+     *
+     * @param entities entities removed from this system.
+     */
     @Override
     public void removed(IntBag entities) {
         int[] ids = entities.getData();

@@ -46,6 +46,8 @@ public class World {
 	/** The time passed since the last update. */
 	public float delta;
 
+	final boolean alwaysDelayComponentRemoval;
+
 	/**
 	 * Creates a world without custom systems.
 	 * <p>
@@ -82,6 +84,7 @@ public class World {
 		em = lem == null ? new EntityManager(configuration.expectedEntityCount()) : lem;
 		asm = lasm == null ? new AspectSubscriptionManager() : lasm;
 		batchProcessor = new BatchChangeProcessor(this);
+		alwaysDelayComponentRemoval = configuration.isAlwaysDelayComponentRemoval();
 
 		configuration.initialize(this, partition.injector, asm);
 	}
@@ -435,4 +438,14 @@ public class World {
 				: new CachedInjector();
 		}
 	}
+
+    /**
+     * When true, component removal is delayed for all components until all subscriptions have been notified.
+	 *
+	 * @see WorldConfiguration#setAlwaysDelayComponentRemoval(boolean)
+	 * @see WorldConfigurationBuilder#alwaysDelayComponentRemoval(boolean)
+     */
+    public boolean isAlwaysDelayComponentRemoval() {
+        return alwaysDelayComponentRemoval;
+    }
 }

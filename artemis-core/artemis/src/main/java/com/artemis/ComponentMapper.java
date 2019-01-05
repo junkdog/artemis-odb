@@ -25,18 +25,19 @@ public class ComponentMapper<A extends Component> extends BaseComponentMapper<A>
 	private final ComponentRemover<A> purgatory;
 
 
+	@SuppressWarnings("unchecked")
 	public ComponentMapper(Class<A> type, World world) {
 		super(world.getComponentManager().typeFactory.getTypeFor(type));
-		components = new Bag<A>(type);
+		components = new Bag<>(type);
 
 		pool = (this.type.isPooled)
 			? new ComponentPool(type)
 			: null;
 
-		if (isAnnotationPresent(type, DelayedComponentRemoval.class))
-			purgatory = new DelayedComponentRemover<A>(components, pool, world.batchProcessor);
+		if (world.isAlwaysDelayComponentRemoval() || isAnnotationPresent(type, DelayedComponentRemoval.class))
+			purgatory = new DelayedComponentRemover<>(components, pool, world.batchProcessor);
 		else
-			purgatory = new ImmediateComponentRemover<A>(components, pool);
+			purgatory = new ImmediateComponentRemover<>(components, pool);
 
 		createTransmuter = new EntityTransmuterFactory(world).add(type).build();
 		removeTransmuter = new EntityTransmuterFactory(world).remove(type).build();

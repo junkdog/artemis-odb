@@ -6,6 +6,7 @@ import com.artemis.injection.FieldHandler;
 import com.artemis.injection.FieldResolver;
 import com.artemis.injection.InjectionCache;
 import com.artemis.utils.Bag;
+import com.artemis.utils.IntBag;
 import com.artemis.utils.Sort;
 import com.artemis.utils.reflect.ClassReflection;
 import com.artemis.utils.reflect.ReflectionException;
@@ -22,6 +23,7 @@ public class WorldConfigurationBuilder {
     private Bag<ConfigurationElement<? extends BaseSystem>> systems;
     private Bag<ConfigurationElement<? extends FieldResolver>> fieldResolvers;
     private Bag<ConfigurationElement<? extends ArtemisPlugin>> plugins;
+    private boolean alwaysDelayComponentRemoval = false;
 
     private ArtemisPlugin activePlugin;
     private final InjectionCache cache;
@@ -43,6 +45,7 @@ public class WorldConfigurationBuilder {
         registerSystems(config);
         registerFieldResolvers(config);
         registerInvocationStrategies(config);
+        config.setAlwaysDelayComponentRemoval(alwaysDelayComponentRemoval);
         reset();
         return config;
     }
@@ -101,9 +104,28 @@ public class WorldConfigurationBuilder {
      */
     private void reset() {
         invocationStrategy = null;
-        systems = new Bag<ConfigurationElement<? extends BaseSystem>>();
-        fieldResolvers = new Bag<ConfigurationElement<? extends FieldResolver>>();
-        plugins = new Bag<ConfigurationElement<? extends ArtemisPlugin>>();
+        systems = new Bag<>();
+        fieldResolvers = new Bag<>();
+        plugins = new Bag<>();
+        alwaysDelayComponentRemoval = false;
+    }
+
+    /**
+     * Delay component removal until all subscriptions have been notified.
+     * <p>
+     * Extends the lifecycle of ALL component types, ensuring removed instances are retrievable until
+     * all {@link EntitySubscription.SubscriptionListener#removed(IntBag) listeners} have been notified - regardless
+     * of removal method.
+     * <p>
+     * Has a slight performance cost.
+     *
+     * @param value When {@code true}, component removal for all components will be delayed until all subscriptions
+     *              have been notified. When {@code false}, only components with {@code @DelayedComponentRemoval}
+     *              will be delayed. Components without the annotation will not be retrievable in listeners.
+     */
+    public WorldConfigurationBuilder alwaysDelayComponentRemoval(boolean value) {
+        this.alwaysDelayComponentRemoval = value;
+        return this;
     }
 
     /**
@@ -134,9 +156,9 @@ public class WorldConfigurationBuilder {
      * Specify dependency on systems/plugins.
      * <p/>
      * Managers track priority separate from system priority, and are always added before systems.
-     *
-     * 	Artemis will consider abstract plugin dependencies fulfilled when a concrete subclass has been registered
-     * 	beforehand.
+     * <p>
+     * Artemis will consider abstract plugin dependencies fulfilled when a concrete subclass has been registered
+     * beforehand.
      *
      * @param types required systems.
      * @return this
