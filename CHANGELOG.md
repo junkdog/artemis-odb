@@ -26,7 +26,8 @@
 - **Support for abstract plugins** with multiple possible implementations.
       For example, a logging plugin might have multiple implementations (TinyLog, SLF4J+??, LibGDX). 
       As a plugin developer, we want to be able to refer to the generic facade (LoggingPlugin) and 
-      throw a warning when no specific implementation has been registered.      
+      throw a warning when no specific implementation has been registered.
+- **Fix**: Better document side effects of ComponentMapper and EntitySubscription.      
 - **Fix**: Unchecked warning in `SuperMapper`.
 - `World` instances can now inject themselves (`World::inject`)
   

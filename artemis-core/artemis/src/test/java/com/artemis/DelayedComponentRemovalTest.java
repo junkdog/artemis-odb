@@ -36,7 +36,8 @@ public class DelayedComponentRemovalTest {
         DelayedRemovalTestSystem delayedRemovalTestSystem = new DelayedRemovalTestSystem();
         World world = new World(builder.with(delayedRemovalTestSystem).alwaysDelayComponentRemoval(true).build());
         world.process();
-        Assert.assertTrue(delayedRemovalTestSystem.availableAtRemoval);
+        Assert.assertFalse(delayedRemovalTestSystem.hasAtRemoval);
+        Assert.assertTrue(delayedRemovalTestSystem.gettableAtRemoval);
     }
 
 
@@ -45,13 +46,15 @@ public class DelayedComponentRemovalTest {
         DelayedRemovalTestSystem delayedRemovalTestSystem = new DelayedRemovalTestSystem();
         World world = new World(builder.with(delayedRemovalTestSystem).alwaysDelayComponentRemoval(false).build());
         world.process();
-        Assert.assertFalse(delayedRemovalTestSystem.availableAtRemoval);
+        Assert.assertFalse(delayedRemovalTestSystem.hasAtRemoval);
+        Assert.assertFalse(delayedRemovalTestSystem.gettableAtRemoval);
     }
 
     @All(NotExplicitlyDelayedComponent.class)
     private static class DelayedRemovalTestSystem extends BaseEntitySystem {
 
-        boolean availableAtRemoval = false;
+        boolean gettableAtRemoval = false;
+        private boolean hasAtRemoval = false;
         ComponentMapper<NotExplicitlyDelayedComponent> m;
         private Entity e;
 
@@ -65,7 +68,8 @@ public class DelayedComponentRemovalTest {
         @Override
         protected void removed(int entityId) {
             super.removed(entityId);
-            availableAtRemoval = m.get(entityId) != null;
+            hasAtRemoval = m.has(entityId);
+            gettableAtRemoval = m.get(entityId) != null;
         }
 
         @Override

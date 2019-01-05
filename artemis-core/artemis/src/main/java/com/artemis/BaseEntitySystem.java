@@ -109,11 +109,13 @@ public abstract class BaseEntitySystem extends BaseSystem
      * <p>Called if entity has gone out of scope of this system, e.g deleted
      * or had one of it's components removed.</p>
      * <p>
-     * <p>Explicitly removed components are only retrievable at this point
-     * if annotated with {@link DelayedComponentRemoval}.</p>
+     * Important note on accessing components:
+     * Using {@link ComponentMapper#get(int)} to retrieve a component is unsafe, unless:
+     * - You annotate the component with {@link DelayedComponentRemoval}.
+     * - {@link World#isAlwaysDelayComponentRemoval} is enabled to make accessing all components safe,
+     * for a small performance hit.
      * <p>
-     * <p>Deleted entities retain all their components - until all listeners
-     * have been informed.</p>
+     * {@link ComponentMapper#has(int)} always returns {@code false}, even for DelayedComponentRemoval components.
      *
      * @param entityId the entity that was removed from this system
      */
