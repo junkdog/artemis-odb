@@ -48,6 +48,14 @@ public class AspectSubscriptionManager extends BaseSystem {
 	 * <p>Gets the entity subscription for the {@link Aspect}.
 	 * Subscriptions are only created once per aspect.</p>
 	 *
+	 * Be careful when calling this within {@link BaseSystem#processSystem()}.
+     * If the subscription does not exist yet, the newly created subscription
+     * will reflect all the chances made by the currently processing system,
+     * NOT the state before the system started processing. This might cause
+     * the system to behave differently when run the first time (as
+     * subsequent calls won't have this issue).
+     * See https://github.com/junkdog/artemis-odb/issues/551
+	 *
 	 * @param builder Aspect to match.
 	 * @return {@link EntitySubscription} for aspect.
 	 */
