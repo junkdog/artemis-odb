@@ -12,9 +12,10 @@ import com.artemis.utils.IntBag;
  * Any {@link com.artemis.EntitySubscription.SubscriptionListener listeners}
  * are informed when entities are added or removed.
  *
- * Be careful! Subscriptions do not immediately reflect any changes by the
- * active system. Subscriptions only guarantee its entities matched before
- * the current system started changing things. Use them defensively.
+ * Be careful! Subscriptions do not immediately reflect changes by the
+ * active system. Subscriptions only guarantee contained entities matched
+ * before the current system started processing. Access entities and
+ * components defensively.
  */
 public class EntitySubscription {
     final SubscriptionExtra extra;
