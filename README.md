@@ -78,7 +78,7 @@ Share your thoughts and questions with us!
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>2.2.0-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -87,7 +87,7 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 #### Gradle
 
 ```groovy
-  dependencies { compile "net.onedaybeard.artemis:artemis-odb:3.0.0-SNAPSHOT" }
+  dependencies { compile "net.onedaybeard.artemis:artemis-odb:2.2.0-SNAPSHOT" }
 ```
 
 #### Manual Download

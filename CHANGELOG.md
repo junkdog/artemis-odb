@@ -3,7 +3,7 @@
 #### Version: 2.2.0-SNAPSHOT
 
 - **BREAKING CHANGES**
-  - Web backend upgraded to GWT `2.8.0`
+  - Web backend upgraded to GWT `2.8.0` (LibGDX is blocking `2.8.2`).
   - Serialization modules that depend on libGDX now require `1.9.8`.
 
 - **Global option to delay component removal until all subscriptions have been notified.**
