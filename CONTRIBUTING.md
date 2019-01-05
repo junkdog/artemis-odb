@@ -57,21 +57,20 @@ or way too much of a burden for such a contribution.
 
 To contribute code:
 
-* Set up the project.
+* Set up the project (see below)
 * Make any necessary changes to the source code.
 * Include any [additional documentation](#contribute-documentation) the changes might need.
-* Write tests that verify that your contribution works as expected.
+* Write tests that verify that your contribution works as expected. If you need help with this, just ask!
 * Write clear, concise commit message(s) that describe the change.
 * Go to https://github.com/junkdog/artemis-odb and open a new pull request with your changes.
 * If your PR is connected to an open issue, add a line in your PR's description that says `Fixes: #123`, where `#123` is the number of the issue you're fixing.
 
 Once you've filed the PR:
 
-* Barring special circumstances, maintainers will not review PRs until all checks pass (Travis, AppVeyor, etc).
-* One or more maintainers will use GitHub's review feature to review your PR.
+* One or more maintainers will review your PR.
 * If the maintainer asks for any changes, edit your changes, push, and ask for another review.
 * If the maintainer decides to pass on your PR, they will thank you for the contribution and explain why they won't be accepting the changes. 
-* If your PR gets accepted, it will be marked as such, and merged soon after. Your contribution will be distributed to the masses next time the maintainers [tag a release](#tag-a-release)
+* If your PR gets accepted, it will be marked as such, and merged soon after.
 
 ### Project Setup
 
@@ -100,11 +99,6 @@ In order to help other folks out with their questions:
 * Read through the list until you find something that you're familiar enough with to give an answer to.
 * Respond to the issue with whatever details are needed to clarify the question, or get more details about what's going on.
 * Once the discussion wraps up and things are clarified, either close the issue, or ask the original issue filer (or a maintainer) to close it for you.
-
-Some notes on picking up support issues:
-
-* Avoid responding to issues you don't know you can answer accurately.
-* As much as possible, try to refer to past issues with accepted answers. Link to them from your replies with the `#123` format.
 
 ## Join the Project Team
 
