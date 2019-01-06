@@ -29,6 +29,7 @@
       throw a warning when no specific implementation has been registered.
 - **Fix**: Better document side effects of ComponentMapper and EntitySubscription.      
 - **Fix**: Unchecked warning in `SuperMapper`.
+- **Fix**: ArtemisMultiException was missing no-args ctor (req by serializaion)
 - `World` instances can now inject themselves (`World::inject`)
   
 #### Version: 2.1.0 - 2016-12-09
