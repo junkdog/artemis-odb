@@ -75,6 +75,16 @@ public class FluidGenerator {
      */
     public void generate(Collection<Class<? extends Component>> components, Collection<Class<? extends FieldProxyStrategy>> fieldProxyStrategies, File outputDirectory, Log log, FluidGeneratorPreferences globalPreferences) {
 
+        if (fieldProxyStrategies == null || fieldProxyStrategies.isEmpty()) {
+            log.error("Fluid API: No field proxy strategies found on class path, unable to add components fields to fluid interface!");
+            log.error("Fluid API: Make sure net.onedaybeard.artemis:artemis-fluid-core is on your compile classpath for the plugin to find.");
+        }
+
+        if (components == null || components.isEmpty()) {
+            log.error("Fluid API generation aborted, no components found on class path!");
+            return;
+        }
+
         final ArtemisModel artemisModel = createArtemisModel(filterComponents(components, log), fieldProxyStrategies, globalPreferences, log);
 
         File outputArtemisModuleDirectory = new File(outputDirectory, COM_ARTEMIS_MODULE_DIR);
