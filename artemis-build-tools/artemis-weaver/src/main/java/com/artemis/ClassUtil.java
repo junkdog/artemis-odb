@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -55,6 +56,10 @@ public final class ClassUtil implements Opcodes
 		CheckClassAdapter.verify(new ClassReader(writer.toByteArray()), false, printer);
 
 		return sw.toString();
+	}
+
+	public static List<File> find(File root) {
+		return find(Collections.singleton(root));
 	}
 	
 	public static List<File> find(Set<File> roots) {
