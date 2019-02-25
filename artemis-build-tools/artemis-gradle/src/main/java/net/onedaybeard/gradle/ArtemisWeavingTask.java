@@ -4,8 +4,11 @@ import com.artemis.Weaver;
 import com.artemis.WeaverLog;
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.file.FileCollection;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.Optional;
+import org.gradle.api.tasks.OutputDirectories;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 
@@ -21,9 +24,20 @@ public class ArtemisWeavingTask extends DefaultTask {
 
 	/**
 	 * Root folder for class files.
+	 *
+	 * @deprecated use classesDirs
 	 */
+	@Optional
+	@Deprecated
 	@OutputDirectory
 	private File classesDir;
+
+	/**
+	 * Root directories for class files.
+	 */
+	@Optional
+	@OutputDirectories
+	private FileCollection classesDirs;
 
 	/**
 	 * Enabled weaving of pooled components (more viable on Android than JVM).
@@ -61,21 +75,30 @@ public class ArtemisWeavingTask extends DefaultTask {
 		//if (context != null && !context.hasDelta(sourceDirectory)) return;
 
 		Logger log = getLogger();
-		
+
 //		log.info("");
 		log.info("CONFIGURATION");
 		log.info(WeaverLog.LINE.replaceAll("\n", ""));
 		log.info(WeaverLog.format("enablePooledWeaving", enablePooledWeaving));
 		log.info(WeaverLog.format("generateLinkMutators", generateLinkMutators));
 		log.info(WeaverLog.format("optimizeEntitySystems", optimizeEntitySystems));
-		log.info(WeaverLog.format("outputDirectory",  classesDir));
+		if (classesDirs != null && !classesDirs.isEmpty()) {
+			log.info(WeaverLog.format("outputDirectories", classesDirs.getFiles()));
+		} else {
+			log.info(WeaverLog.format("outputDirectory", classesDir));
+		}
 		log.info(WeaverLog.LINE.replaceAll("\n", ""));
 		
 		Weaver.enablePooledWeaving(enablePooledWeaving);
 		Weaver.generateLinkMutators(generateLinkMutators);
 		Weaver.optimizeEntitySystems(optimizeEntitySystems);
 
-		Weaver weaver = new Weaver(classesDir);
+		Weaver weaver;
+		if (classesDirs != null && !classesDirs.isEmpty()) {
+			weaver = new Weaver(classesDirs.getFiles());
+		} else {
+			weaver = new Weaver(classesDir);
+		}
 		WeaverLog processed = weaver.execute();
 		for (String s : processed.getFormattedLog().split("\n")) {
 			log.info(s);
@@ -120,5 +143,13 @@ public class ArtemisWeavingTask extends DefaultTask {
 
 	public void setClassesDir(File classesDir) {
 		this.classesDir = classesDir;
+	}
+
+	public FileCollection getClassesDirs() {
+		return classesDirs;
+	}
+
+	public void setClassesDirs(FileCollection classesDirs) {
+		this.classesDirs = classesDirs;
 	}
 }
