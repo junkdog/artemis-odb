@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassReader;
@@ -55,18 +57,21 @@ public final class ClassUtil implements Opcodes
 
 		return sw.toString();
 	}
-	
-	public static List<File> find(String root) {
-		return find(new File(root));
+
+	public static List<File> find(File root) {
+		return find(Collections.singleton(root));
 	}
 	
-	public static List<File> find(File root) {
-		if (!root.isDirectory())
-			throw new IllegalAccessError(root + " must be a folder.");
-		
-		List<File> klazzes = new ArrayList<File>();
-		addFiles(klazzes, root);
-			
+	public static List<File> find(Set<File> roots) {
+		List<File> klazzes = new ArrayList<>();
+
+		for (File root : roots) {
+			if (!root.isDirectory())
+				throw new IllegalAccessError(root + " must be a folder.");
+
+			addFiles(klazzes, root);
+		}
+
 		return klazzes;
 	}
 	

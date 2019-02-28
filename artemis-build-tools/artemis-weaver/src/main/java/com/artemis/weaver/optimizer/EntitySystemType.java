@@ -24,7 +24,7 @@ public enum EntitySystemType {
 
 	public static EntitySystemType resolve(String owner) {
 		for (EntitySystemType type : EntitySystemType.values()) {
-			if (owner.equals(type.superName))
+			if (type.superName.equals(owner))
 				return type;
 		}
 

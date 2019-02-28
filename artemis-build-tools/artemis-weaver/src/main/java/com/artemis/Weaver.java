@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -29,17 +30,21 @@ public class Weaver {
 	public static final String POOLED_ANNOTATION = "Lcom/artemis/annotations/PooledWeaver;";
 	public static final String WOVEN_ANNOTATION = "Lcom/artemis/annotations/internal/Transmuted";
 	public static final String PRESERVE_VISIBILITY_ANNOTATION = "Lcom/artemis/annotations/PreserveProcessVisiblity;";
-	
-	private final File targetClasses;
-	
+
+	private Set<File> classesDirs;
+
 	public Weaver(File outputDirectory) {
-		this.targetClasses = outputDirectory;
+		this.classesDirs = Collections.singleton(outputDirectory);
 	}
-	
+
+	public Weaver(Set<File> outputDirectories) {
+		this.classesDirs = outputDirectories;
+	}
+
 	public WeaverLog execute() {
 		WeaverLog log = new WeaverLog();
-		
-		List<File> classes = ClassUtil.find(targetClasses);
+
+		List<File> classes = ClassUtil.find(classesDirs);
 		rewriteComponents(classes, log);
 		generateLinkMutators(classes, log);
 		rewriteProfilers(classes);

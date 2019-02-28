@@ -10,9 +10,9 @@
 	<artifactId>artemis-odb-weaver</artifactId>
 	<packaging>jar</packaging>
 	<name>artemis-odb-component-weaver</name>
-	
+
 	<properties>
-		<asm.version>5.0.4</asm.version>
+		<asm.version>7.0</asm.version>
 		<mainClass>net.onedaybeard.agrotera.ProcessArtemis</mainClass>
 	</properties>
 
