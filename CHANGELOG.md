@@ -4,7 +4,7 @@
 - Gradle plugin now supports `classesDirs`, deprecated `classesDir.
 - **FIX**: Avoiding an NPE in optimizer.EntitySystemType if meta.superClass is null.
 - **FIX**: ObjectWeb ASM updated to 7.0 to avoid choking on more modern bytecode.
-
+- Improve flexibility of logic behind annotations dependency injection. (no user impact). 
 
 #### Version: 2.2.0 - 2019-01-06
 
