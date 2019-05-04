@@ -98,6 +98,7 @@ public class FluidGenerator {
         // deploy static utility classes that depend on E and/or SuperMapper. Do a clean when changing files!
         copyResourceIfMissing(getClass().getResource(FLUID_UTILITY_SOURCES_DIR + "/FluidEntityPlugin.java"), new File(outputArtemisModuleDirectory, "FluidEntityPlugin.java"));
         copyResourceIfMissing(getClass().getResource(FLUID_UTILITY_SOURCES_DIR + "/EBag.java"), new File(outputArtemisModuleDirectory, "EBag.java"));
+        copyResourceIfMissing(getClass().getResource(FLUID_UTILITY_SOURCES_DIR + "/ESubscription.java"), new File(outputArtemisModuleDirectory, "ESubscription.java"));
         copyResourceIfMissing(getClass().getResource(FLUID_UTILITY_SOURCES_DIR + "/FluidIteratingSystem.java"), new File(outputArtemisModuleDirectory, "FluidIteratingSystem.java"));
     }
 
