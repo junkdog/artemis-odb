@@ -16,6 +16,12 @@ public class ComponentMethodProxyStrategyTest extends StrategyTest {
     }
 
     @Test
+    public void When_explicitly_excluded_method_Should_explicitly_exclude() {
+        TypeModel model = applyStrategy(ComponentMethodProxyStrategy.class, Proof.class);
+        assertNoMethod(model,"long exclude()");
+    }
+
+    @Test
     public void When_public_getter_method_Should_expose_as_getter_method_without_get_prefix() {
         TypeModel model = applyStrategy(ComponentMethodProxyStrategy.class, Proof.class);
         assertHasMethod(model,"long proofDepth()");

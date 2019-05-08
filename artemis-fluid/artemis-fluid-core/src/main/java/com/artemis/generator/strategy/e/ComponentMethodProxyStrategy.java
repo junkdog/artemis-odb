@@ -1,5 +1,7 @@
 package com.artemis.generator.strategy.e;
 
+import com.artemis.annotations.Fluid;
+import com.artemis.annotations.FluidMethod;
 import com.artemis.generator.common.IterativeModelStrategy;
 import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.model.artemis.ComponentDescriptor;
@@ -12,10 +14,10 @@ import java.util.Set;
 
 /**
  * Adds methods that proxy component methods.
- *
+ * <p>
  * Exposes all public methods, using some naming conventions. Generally methods called {@ode get} and {@code set} are
  * collapsed into the component name for convenience. {@link ComponentDescriptor#getCompositeName(String)}.
- *
+ * <p>
  * In case of methods that have both parameters and a return value, user preference defines if the fluid interface
  * or the parameter will be returned.
  *
@@ -37,13 +39,15 @@ public class ComponentMethodProxyStrategy extends IterativeModelStrategy {
 
     private void exposeOnFluidInterface(ComponentDescriptor component, Method method, TypeModel model) {
 
+        FluidMethod methodAnnotation = method.getAnnotation(FluidMethod.class);
+        if (methodAnnotation != null && methodAnnotation.exclude()) return;
+
         if (isSetter(method)) {
             model.add(methodProxyReturnFluidMethod(component, method));
         } else if (component.getPreferences().swallowGettersWithParameters && isGetterWithParameters(method)) {
             // by preference, call getters and swallow the returned value, instead returning the fluid interface.
             model.add(methodProxyReturnFluidMethod(component, method));
-        } else
-        {
+        } else {
             // return the fluid interface.
             model.add(methodProxyMethod(component, method));
         }

@@ -1,6 +1,7 @@
 package com.artemis.generator.strategy.e;
 
 import com.artemis.Component;
+import com.artemis.annotations.FluidMethod;
 
 import java.util.List;
 
@@ -14,6 +15,9 @@ public class Proof extends Component implements ProofInterface<Proof> {
     int undef;
 
     public List<Object> gen;
+
+    @FluidMethod(exclude = true)
+    public long exclude() { return 0;}
 
     public void clear() {}
     public long clear2() { return 0;}
