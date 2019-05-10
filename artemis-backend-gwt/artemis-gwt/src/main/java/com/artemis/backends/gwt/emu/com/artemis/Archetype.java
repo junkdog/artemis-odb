@@ -9,7 +9,7 @@ package com.artemis;
  */
 public final class Archetype {
 	final EntityTransmuter.TransmuteOperation transmuter;
-	final int compositionId;
+	public final int compositionId;
 
 	/**
 	 * @param transmuter Desired composition of derived components.
