@@ -8,7 +8,8 @@
 - **Fluid entities** quality of life changes.
   - New `EntitySubscription` facade `ESubscription`, for convenient `E` iteration. 
   - Annotation driven aspects allow DI of `ESubscription` (requires registered `FluidEntityPlugin`)
-  - Ability to exclude specific component methods from the fluid API. `@FluidMethod(exclude=true)`   
+  - Ability to exclude specific component methods from the fluid API. `@FluidMethod(exclude=true)`
+  - `E` toString now reports entity id for easier debugging. ie: `E{id=10}`.    
 - Gradle plugin now supports `classesDirs`, deprecated `classesDir.
 - Improve flexibility of logic behind annotations dependency injection. (no user impact).
 - **FIX**: Avoiding an NPE in optimizer.EntitySystemType if meta.superClass is null.

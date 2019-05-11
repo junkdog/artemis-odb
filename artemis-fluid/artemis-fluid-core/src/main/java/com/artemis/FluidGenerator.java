@@ -212,6 +212,7 @@ public class FluidGenerator {
         generator.addStrategy(new ComponentFieldAccessorStrategy());
         generator.addStrategy(new ComponentMethodProxyStrategy());
         generator.addStrategy(new DeleteFromWorldStrategy());
+        generator.addStrategy(new EToStringStrategy());
         if (preferences.isGenerateBooleanComponentAccessors()) {
             generator.addStrategy(new FlagComponentBooleanAccessorStrategy());
         }
