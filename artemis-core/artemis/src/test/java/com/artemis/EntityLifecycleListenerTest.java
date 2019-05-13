@@ -23,6 +23,28 @@ public class EntityLifecycleListenerTest {
         w.delete(id);
         Assert.assertEquals(1,system.created);
         Assert.assertEquals(1,system.deleted);
+        Assert.assertEquals(0,system.notFound);
+    }
+
+    @Test
+    public void When_get_invalid_entity_Should_call_listener() {
+        final MyListenerSystem system = new MyListenerSystem();
+        final World w = run(system);
+        int id = w.create();
+        try {
+            w.getEntity(id + 100);
+        } catch ( Exception e ) {}
+        Assert.assertEquals(1,system.notFound);
+    }
+
+
+    @Test
+    public void When_get_valid_entity_Should_not_call_listener() {
+        final MyListenerSystem system = new MyListenerSystem();
+        final World w = run(system);
+        int id = w.create();
+        w.getEntity(id);
+        Assert.assertEquals(0,system.notFound);
     }
 
     @Test
@@ -84,6 +106,7 @@ public class EntityLifecycleListenerTest {
 
         int deleted;
         int created;
+        int notFound;
 
         @Override
         public void onEntityDeleteIssued(int entityId) {
@@ -94,6 +117,12 @@ public class EntityLifecycleListenerTest {
         public void onEntityCreated(int entityId) {
             created++;
         }
+
+        @Override
+        public void onEntityNotFoundException(int entityId) {
+            notFound++;
+        }
+
 
         @Override
         protected void processSystem() {

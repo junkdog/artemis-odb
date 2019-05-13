@@ -31,4 +31,11 @@ public interface EntityLifecycleListener {
      * @param entityId Id of created Entity.
      */
     void onEntityCreated(int entityId);
+
+    /**
+     * Intercept invalid entity exception. Happens when user requests an entity that does not exist.
+     *
+     * @param entityId Id of the entity that could not be found.
+     */
+    void onEntityNotFoundException(int entityId);
 }

@@ -31,4 +31,11 @@ class EntityLifecycleListenerMultiplexer implements EntityLifecycleListener {
             listeners[i].onEntityCreated(entityId);
         }
     }
+
+    @Override
+    public void onEntityNotFoundException(int entityId) {
+        for (int i = 0; i < listeners.length; i++) {
+            listeners[i].onEntityNotFoundException(entityId);
+        }
+    }
 }

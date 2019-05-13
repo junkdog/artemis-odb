@@ -6,6 +6,7 @@ import com.artemis.utils.IntBag;
 import com.artemis.utils.IntDeque;
 
 import com.artemis.utils.BitVector;
+import jdk.nashorn.internal.runtime.arrays.ArrayIndex;
 
 import static com.artemis.Aspect.all;
 
@@ -106,9 +107,22 @@ public class EntityManager extends BaseSystem {
      *
      * @param entityId the entities id
      * @return the entity
+     * @throws EntityNotFoundException when entity can not be found (effectively fatal).
      */
     protected Entity getEntity(int entityId) {
-        return entities.get(entityId);
+        try {
+            final Entity entity = entities.get(entityId);
+            if (entity == null) {
+                throw new ArrayIndexOutOfBoundsException(); // bag can be null in the middle. all needs to pass the same error handling.
+            }
+            return entity;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            if (entityLifecycleListener != null) {
+                // callback on failed get.
+                entityLifecycleListener.onEntityNotFoundException(entityId);
+            }
+            throw new EntityNotFoundException("Entity with id " + entityId + " does not exist. Deleted?");
+        }
     }
 
     /**
