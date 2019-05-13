@@ -12,7 +12,6 @@ public class EntityLifecycleListenerTest {
     public void When_no_register_registered_Should_not_explode() {
         World w = new World();
         int i = w.create();
-        w.getEntity(i);
         w.delete(i);
     }
 
@@ -21,11 +20,9 @@ public class EntityLifecycleListenerTest {
         final MyListenerSystem system = new MyListenerSystem();
         final World w = run(system);
         int id = w.create();
-        w.getEntity(id);
         w.delete(id);
         Assert.assertEquals(1,system.created);
         Assert.assertEquals(1,system.deleted);
-        Assert.assertEquals(1,system.got);
     }
 
     @Test
@@ -41,7 +38,6 @@ public class EntityLifecycleListenerTest {
         final World w = run(system);
         Assert.assertEquals(1,system.created);
         Assert.assertEquals(1,system.deleted);
-        Assert.assertEquals(1,system.got);
     }
 
     @Test
@@ -88,7 +84,6 @@ public class EntityLifecycleListenerTest {
 
         int deleted;
         int created;
-        int got;
 
         @Override
         public void onEntityDeleteIssued(int entityId) {
@@ -98,11 +93,6 @@ public class EntityLifecycleListenerTest {
         @Override
         public void onEntityCreated(int entityId) {
             created++;
-        }
-
-        @Override
-        public void onEntityGet(int entityId) {
-            got++;
         }
 
         @Override

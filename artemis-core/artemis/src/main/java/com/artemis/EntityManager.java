@@ -108,10 +108,6 @@ public class EntityManager extends BaseSystem {
      * @return the entity
      */
     protected Entity getEntity(int entityId) {
-        if (entityLifecycleListener != null) {
-            // callback PRE get.
-            entityLifecycleListener.onEntityGet(entityId);
-        }
         return entities.get(entityId);
     }
 

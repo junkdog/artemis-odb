@@ -31,14 +31,4 @@ public interface EntityLifecycleListener {
      * @param entityId Id of created Entity.
      */
     void onEntityCreated(int entityId);
-
-    /**
-     * Intercept entity pre get.
-     *
-     * Triggers when {@code EntityManager.getEntity} is called, just before
-     * actually resolving the entity. The entity is not guaranteed to exist.
-     *
-     * @param entityId id of the entity to get.
-     */
-    void onEntityGet(int entityId);
 }

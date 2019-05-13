@@ -31,11 +31,4 @@ class EntityLifecycleListenerMultiplexer implements EntityLifecycleListener {
             listeners[i].onEntityCreated(entityId);
         }
     }
-
-    @Override
-    public void onEntityGet(int entityId) {
-        for (int i = 0; i < listeners.length; i++) {
-            listeners[i].onEntityGet(entityId);
-        }
-    }
 }
