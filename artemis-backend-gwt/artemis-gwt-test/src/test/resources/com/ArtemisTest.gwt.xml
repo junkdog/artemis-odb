@@ -26,6 +26,8 @@
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Sprite"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component.Velocity"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.link.MyLinkListener"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntityLifecycleListener"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.EntityLifecycleListenerMultiplexer"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.AspectDescriptorSystem"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.SystemComponentXRemover"/>
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.ExpirationSystem"/>
@@ -49,6 +51,8 @@
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.PooledString"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.ReusedComponent"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.link.MyLinkListener"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.EntityLifecycleListener"/>
+	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.EntityLifecycleListenerMultiplexer"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Size"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Sprite"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.Velocity"/>

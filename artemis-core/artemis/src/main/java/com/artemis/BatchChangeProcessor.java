@@ -22,6 +22,7 @@ final class BatchChangeProcessor {
 
 	private final Bag<EntityEdit> pool = new Bag<EntityEdit>();
 	private final WildBag<EntityEdit> edited = new WildBag(EntityEdit.class);
+	private EntityLifecycleListener entityLifecycleListener = null;
 
 	BatchChangeProcessor(World world) {
 		this.world = world;
@@ -38,6 +39,10 @@ final class BatchChangeProcessor {
 	}
 
 	void delete(int entityId) {
+		if (entityLifecycleListener != null) {
+			// callback PRE remove.
+			entityLifecycleListener.onEntityDeleteIssued(entityId);
+		}
 		deleted.unsafeSet(entityId);
 		pendingPurge.unsafeSet(entityId);
 
@@ -105,5 +110,9 @@ final class BatchChangeProcessor {
 		edited.setSize(0);
 
 		return true;
+	}
+
+	void setEntityLifecycleListener(EntityLifecycleListener listener) {
+		this.entityLifecycleListener = listener;
 	}
 }
