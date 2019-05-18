@@ -1,6 +1,5 @@
 package com.artemis;
 
-import com.artemis.annotations.UnstableApi;
 import com.artemis.injection.Injector;
 import com.artemis.utils.Bag;
 import com.artemis.utils.BitVector;
@@ -35,6 +34,7 @@ public final class WorldConfiguration {
 
 	protected Injector injector;
 	protected SystemInvocationStrategy invocationStrategy;
+	protected InternalFactory internalFactory = new InternalFactoryImpl();
 
 	private boolean alwaysDelayComponentRemoval = false;
 	private Set<Class<? extends BaseSystem>> registered = new HashSet<Class<? extends BaseSystem>>();
@@ -75,6 +75,8 @@ public final class WorldConfiguration {
 		return this;
 	}
 
+
+
 	/**
 	 * Set strategy for invoking systems on {@link World#process()}.
 	 * @param invocationStrategy Strategy that will invoke systems.
@@ -102,6 +104,24 @@ public final class WorldConfiguration {
 	 */
 	public WorldConfiguration register(Object o) {
 		return register(o.getClass().getName(), o);
+	}
+
+    /**
+     * Get the factory for internal odb classes.
+     */
+	InternalFactory getInternalFactory() {
+		return internalFactory;
+	}
+
+    /**
+     * Replace the default factory for internal odb classes with your own.
+     *
+     * This is meant for extensions like debuggers and editors that need
+     * to hook into odb's implementation lifecycle. As such is very
+     * volatile. Avoid using this for games!
+     */
+	void setInternalFactory(InternalFactory internalFactory) {
+		this.internalFactory = internalFactory;
 	}
 
 	/**

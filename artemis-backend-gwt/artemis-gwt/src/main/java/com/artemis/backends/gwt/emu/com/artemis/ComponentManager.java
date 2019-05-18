@@ -59,12 +59,15 @@ public class ComponentManager extends BaseSystem {
 
 	void registerComponentType(ComponentType ct, int capacity) {
 		int index = ct.getIndex();
-		ComponentMapper mapper = new ComponentMapper(ct.getType(), world);
+		ComponentMapper mapper = instanceOfComponentMapper(ct.getType());
 		mapper.components.ensureCapacity(capacity);
 		mappers.set(index, mapper);
 	}
 
-	@SuppressWarnings("unchecked")
+	protected <T extends Component> ComponentMapper<T> instanceOfComponentMapper(Class<T> type) {
+		return new ComponentMapper<>(type, world);
+	}
+
 	static <T extends Component> T newInstance(Class<T> componentClass) {
 		try {
 			return ClassReflection.newInstance(componentClass);

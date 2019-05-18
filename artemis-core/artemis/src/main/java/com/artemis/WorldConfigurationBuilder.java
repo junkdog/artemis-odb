@@ -28,6 +28,7 @@ public class WorldConfigurationBuilder {
     private ArtemisPlugin activePlugin;
     private final InjectionCache cache;
     private SystemInvocationStrategy invocationStrategy;
+    private InternalFactory internalFactory;
 
     public WorldConfigurationBuilder() {
         reset();
@@ -45,9 +46,17 @@ public class WorldConfigurationBuilder {
         registerSystems(config);
         registerFieldResolvers(config);
         registerInvocationStrategies(config);
+        registerInternalFactory(config);
         config.setAlwaysDelayComponentRemoval(alwaysDelayComponentRemoval);
         reset();
         return config;
+    }
+
+    /** Registers a custom internal factory for core (internal) classes of the engine. */
+    private void registerInternalFactory(WorldConfiguration config) {
+        if (internalFactory != null) {
+            config.setInternalFactory(internalFactory);
+        }
     }
 
     private void registerInvocationStrategies(WorldConfiguration config) {
@@ -108,6 +117,18 @@ public class WorldConfigurationBuilder {
         fieldResolvers = new Bag<>();
         plugins = new Bag<>();
         alwaysDelayComponentRemoval = false;
+    }
+
+    /**
+     * Replace the default factory for internal odb classes with your own.
+     *
+     * This is meant for extensions like debuggers and editors that need
+     * to hook into odb's implementation lifecycle. As such is very
+     * volatile. Avoid using this for games!
+     */
+    WorldConfigurationBuilder register(InternalFactory internalFactory) {
+        this.internalFactory = internalFactory;
+        return this;
     }
 
     /**

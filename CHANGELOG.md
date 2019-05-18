@@ -9,9 +9,12 @@
   - New `EntitySubscription` facade `ESubscription`, for convenient `E` iteration. 
   - Annotation driven aspects allow DI of `ESubscription` (requires registered `FluidEntityPlugin`)
   - Ability to exclude specific component methods from the fluid API. `@FluidMethod(exclude=true)`
-  - `E` toString now reports entity id for easier debugging. ie: `E{id=10}`.    
-- Gradle plugin now supports `classesDirs`, deprecated `classesDir.
-- Improve flexibility of logic behind annotations dependency injection. (no user impact).
+  - `E` toString now reports entity id for easier debugging. ie: `E{id=10}`.
+- Other    
+  - Improve flexibility of logic behind annotations dependency injection. (no user impact).
+  - New extension point for debuggers and editors. (`InternalFactory`)
+  - New lifecycle phase listener for debuggers and editors.  
+  - Gradle plugin now supports `classesDirs`, deprecated `classesDir.
 - **FIX**: Avoiding an NPE in optimizer.EntitySystemType if meta.superClass is null.
 - **FIX**: ObjectWeb ASM updated to 7.0 to avoid choking on more modern bytecode.
 

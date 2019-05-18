@@ -5,7 +5,7 @@ import com.artemis.utils.IntBag;
 
 import com.artemis.utils.BitVector;
 
-final class BatchChangeProcessor {
+class BatchChangeProcessor {
 	private final World world;
 	private final AspectSubscriptionManager asm;
 
