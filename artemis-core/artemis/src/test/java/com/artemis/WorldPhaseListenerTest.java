@@ -7,6 +7,7 @@ import org.mockito.*;
 
 import java.util.Arrays;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 
 /**
@@ -37,7 +38,7 @@ public class WorldPhaseListenerTest {
         world.process();
         world.dispose();
 
-        Mockito.verify(phaseTestSystem, times(4)).onPhase(phaseCaptor.capture());
+        Mockito.verify(phaseTestSystem, times(4)).onPhase(any(World.class), phaseCaptor.capture());
 
         Assert.assertEquals(
                 Arrays.asList(ArtemisPhaseListener.Phase.PRE_INITIALIZE,

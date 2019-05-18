@@ -119,7 +119,7 @@ public class World {
     private void dispatchPhaseEvent(ArtemisPhaseListener.Phase phase) {
         if ( phaseListeners != null ) {
             for (ArtemisPhaseListener listener : phaseListeners) {
-                listener.onPhase(phase);
+                listener.onPhase(this, phase);
             }
         }
     }

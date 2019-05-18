@@ -14,5 +14,5 @@ public interface ArtemisPhaseListener {
         POST_DISPOSE;
     }
 
-    void onPhase(Phase phase);
+    void onPhase(World w, Phase phase);
 }
