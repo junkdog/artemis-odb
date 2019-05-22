@@ -4,8 +4,10 @@ import com.artemis.FluidGenerator;
 import com.artemis.FluidGeneratorPreferences;
 
 import org.gradle.api.DefaultTask;
+import org.gradle.api.Task;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.logging.Logger;
+import org.gradle.api.logging.Logging;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.TaskAction;
 
@@ -23,7 +25,6 @@ import java.util.Set;
  */
 public class FluidApiGenerationTask extends DefaultTask {
 
-
     @Input
     private File generatedSourcesDirectory;
 
@@ -33,12 +34,9 @@ public class FluidApiGenerationTask extends DefaultTask {
     @Input
     public FluidGeneratorPreferences preferences = new FluidGeneratorPreferences();
 
-    private Logger log = getLogger();
-
     @TaskAction
     public void fluid() {
-        log.info("Artemis Fluid api plugin started.");
-
+        getLogger().info("Artemis Fluid api plugin started.");
 
         prepareGeneratedSourcesFolder();
         includeGeneratedSourcesInCompilation();
@@ -55,12 +53,12 @@ public class FluidApiGenerationTask extends DefaultTask {
         return new com.artemis.generator.util.Log() {
             @Override
             public void info(String msg) {
-                log.info(msg);
+                getLogger().info(msg);
             }
 
             @Override
             public void error(String msg) {
-                log.error(msg);
+                getLogger().error(msg);
             }
         };
     }
@@ -70,7 +68,7 @@ public class FluidApiGenerationTask extends DefaultTask {
      */
     private void prepareGeneratedSourcesFolder() {
         if (!generatedSourcesDirectory.exists() && !generatedSourcesDirectory.mkdirs()) {
-            log.error("Could not create " + generatedSourcesDirectory);
+            getLogger().error("Could not create " + generatedSourcesDirectory);
         }
     }
 
@@ -88,7 +86,7 @@ public class FluidApiGenerationTask extends DefaultTask {
                 URL url = element.toURI().toURL();
                 if (!preferences.matchesIgnoredClasspath(url.toString())) {
                     urls.add(url);
-                    log.info("Including: " + url);
+                    getLogger().info("Including: " + url);
                 }
             }
             return urls;
