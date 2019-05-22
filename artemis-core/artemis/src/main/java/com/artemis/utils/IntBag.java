@@ -49,9 +49,32 @@ public class IntBag implements ImmutableIntBag {
 	public boolean removeValue(int value) throws ArrayIndexOutOfBoundsException {
 		int index = indexOf(value);
 		if (index > -1)
-			remove(index);
+			removeIndex(index);
 
 		return index > -1;
+	}
+
+	/**
+	 * Removes the element at the specified position in this Bag.
+	 * <p>
+	 * It does this by overwriting it was last element then removing last
+	 * element
+	 * </p>
+	 *
+	 * @param index
+	 *			the index of element to be removed
+	 *
+	 * @return element that was removed from the Bag
+	 * @deprecated Call {@link #removeIndex(int)} instead. {@link #remove(int)} will be removed in 3.0 due to ambiguity.
+	 *
+	 * @throws ArrayIndexOutOfBoundsException
+	 */
+	@Deprecated
+	public int remove(int index) throws ArrayIndexOutOfBoundsException {
+		int e = data[index]; // make copy of element to remove so it can be returned
+		data[index] = data[--size]; // overwrite item to remove with last element
+		data[size] = 0; // null last element, so gc can do its work
+		return e;
 	}
 
 	/**
@@ -68,7 +91,7 @@ public class IntBag implements ImmutableIntBag {
 	 *
 	 * @throws ArrayIndexOutOfBoundsException
 	 */
-	public int remove(int index) throws ArrayIndexOutOfBoundsException {
+	public int removeIndex(int index) throws ArrayIndexOutOfBoundsException {
 		int e = data[index]; // make copy of element to remove so it can be returned
 		data[index] = data[--size]; // overwrite item to remove with last element
 		data[size] = 0; // null last element, so gc can do its work

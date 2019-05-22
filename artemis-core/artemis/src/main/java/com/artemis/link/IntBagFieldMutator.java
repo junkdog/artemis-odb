@@ -18,7 +18,7 @@ class IntBagFieldMutator implements MultiFieldMutator<IntBag, Component> {
 		for (int i = 0; ids.size() > i; i++) {
 			int id = ids.get(i);
 			if (!all.getActiveEntityIds().unsafeGet(id)) {
-				ids.remove(i--);
+				ids.removeIndex(i--);
 				if (listener != null)
 					listener.onTargetDead(sourceId, id);
 			}

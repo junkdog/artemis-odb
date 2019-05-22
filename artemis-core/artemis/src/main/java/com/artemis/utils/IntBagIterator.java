@@ -127,7 +127,7 @@ public class IntBagIterator {
     public void remove() {
         if (state == State.NEXT_CALLED && index < indexEnd && indexEnd <= intBag.size()) {
             state = State.REMOVE_CALLED;
-            intBag.remove(index);
+            intBag.removeIndex(index);
             index--;
             indexEnd--;
             assert index < indexEnd;

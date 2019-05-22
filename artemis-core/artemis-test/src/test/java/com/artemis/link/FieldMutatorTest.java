@@ -86,8 +86,8 @@ public class FieldMutatorTest {
 		mutator.setWorld(w);
 		assertEquals(ids, mutator.read(c, field(c, "ids")));
 
-		c.ids.remove(1);
-		ids.remove(1);
+		c.ids.removeIndex(1);
+		ids.removeIndex(1);
 
 		assertEquals(ids, mutator.read(c, field(c, "ids")));
 	}
