@@ -22,7 +22,6 @@ import java.util.Arrays;
 
 import com.artemis.gwtref.client.Parameter;
 import com.artemis.utils.reflect.ReflectionException;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /** Provides information about, and access to, a single method on a class or interface.
  * @author nexsoftware */
