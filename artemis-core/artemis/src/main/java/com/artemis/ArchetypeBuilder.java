@@ -102,6 +102,17 @@ public class ArchetypeBuilder {
 	 * @return new Archetype based on current state
 	 */
 	public Archetype build(World world) {
+		return build(world, null);
+	}
+
+	/**
+	 * Create a new world specific instance of Archetype based on the current state.
+	 *
+	 * @param world applicable domain of the Archetype.
+	 * @param name  uniquely identifies Archetype by name. If null or empty == compisitionId
+	 * @return new Archetype based on current state
+	 */
+	public Archetype build(World world, String name) {
 		ComponentType[] types = resolveTypes(world);
 
 		ComponentManager cm = world.getComponentManager();
@@ -111,10 +122,13 @@ public class ArchetypeBuilder {
 		}
 
 		int compositionId = cm.compositionIdentity(bitset(types));
+		if(name == null || name.isEmpty()){
+			name = String.valueOf(compositionId);
+		}
 		TransmuteOperation operation =
 			new TransmuteOperation(compositionId, mappers, new ComponentMapper[0]);
 
-		return new Archetype(operation, compositionId);
+		return new Archetype(operation, compositionId, name);
 	}
 	
 	/** generate bitset mask of types. */
