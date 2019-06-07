@@ -11,13 +11,16 @@ package com.artemis;
 public final class Archetype {
     final EntityTransmuter.TransmuteOperation transmuter;
     public final int compositionId;
+    public final String name;
 
     /**
      * @param transmuter    Desired composition of derived components.
      * @param compositionId uniquely identifies component composition.
+     * @param name          uniquely identifies Archetype by name.
      */
-    Archetype(EntityTransmuter.TransmuteOperation transmuter, int compositionId) {
+    Archetype(EntityTransmuter.TransmuteOperation transmuter, int compositionId, String name) {
         this.transmuter = transmuter;
         this.compositionId = compositionId;
+        this.name = name;
     }
 }
