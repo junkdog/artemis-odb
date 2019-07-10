@@ -25,7 +25,7 @@ pipeline {
         }
         stage ('Build and Test') {
             steps {
-                sh 'mvn integration-test'
+                sh 'mvn integration-test -Pgwttest'
             }
             post {
                 always {
