@@ -13,6 +13,10 @@
 
 	<url>https://github.com/junkdog/artemis-odb</url>
 
+    <properties>
+        <gdx.version>1.9.10</gdx.version>
+    </properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>net.onedaybeard.artemis</groupId>
@@ -28,13 +32,13 @@
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx</artifactId>
-			<version>1.9.9</version>
+			<version>${gdx.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.badlogicgames.gdx</groupId>
 			<artifactId>gdx-backend-headless</artifactId>
-			<version>1.9.9</version>
+			<version>${gdx.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
