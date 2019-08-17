@@ -58,10 +58,10 @@ public class ComponentMapper<A extends Component> extends BaseComponentMapper<A>
      *
      * @param entityId the entity that should possess the component
      * @return the instance of the component.
-     * @throws ArrayIndexOutOfBoundsException
+     * @throws ArrayIndexOutOfBoundsException if the component was removed or never existed
      */
     @Override
-    public A get(int entityId) throws ArrayIndexOutOfBoundsException {
+    public A get(int entityId) {
         return components.get(entityId);
     }
 
@@ -73,6 +73,7 @@ public class ComponentMapper<A extends Component> extends BaseComponentMapper<A>
      *
      * @param entityId the id of entity to check
      * @return {@code true} if the entity has this component type, {@code false} if it doesn't (or if it is scheduled for delayed removal).
+     * @throws ArrayIndexOutOfBoundsException if the component was removed or never existed
      */
     @Override
     public boolean has(int entityId) {

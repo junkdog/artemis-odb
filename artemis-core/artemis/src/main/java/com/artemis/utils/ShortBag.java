@@ -44,7 +44,7 @@ public class ShortBag {
 	 *
 	 * @return true, if value was removed
 	 */
-	public boolean removeValue(short value) throws ArrayIndexOutOfBoundsException {
+	public boolean removeValue(short value) {
 		int index = indexOf(value);
 		if (index > -1)
 			remove(index);
@@ -64,9 +64,10 @@ public class ShortBag {
 	 *
 	 * @return element that was removed from the Bag
 	 *
-	 * @throws ArrayIndexOutOfBoundsException
+	 * @throws ArrayIndexOutOfBoundsException if the index is out of range
+	 *         ({@code index < 0 || index >= size()})
 	 */
-	public int remove(int index) throws ArrayIndexOutOfBoundsException {
+	public int remove(int index) {
 		int e = data[index]; // make copy of element to remove so it can be returned
 		data[index] = data[--size]; // overwrite item to remove with last element
 		data[size] = 0; // null last element, so gc can do its work
@@ -115,9 +116,10 @@ public class ShortBag {
 	 *
 	 * @return the element at the specified position in bag
 	 *
-	 * @throws ArrayIndexOutOfBoundsException
+	 * @throws ArrayIndexOutOfBoundsException if the index is out of range
+	 *         ({@code index < 0 || index >= size()})
 	 */
-	public short get(int index) throws ArrayIndexOutOfBoundsException {
+	public short get(int index) {
 		return data[index];
 	}
 	
@@ -220,7 +222,7 @@ public class ShortBag {
 	 *
 	 * @throws ArrayIndexOutOfBoundsException if new capacity is smaller than old
 	 */
-	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
+	private void grow(int newCapacity) {
 		short[] oldData = data;
 		data = new short[newCapacity];
 		System.arraycopy(oldData, 0, data, 0, oldData.length);

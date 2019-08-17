@@ -55,9 +55,10 @@ public class IntDeque {
 	 *
 	 * @return the element at the specified position in bag
 	 *
-	 * @throws ArrayIndexOutOfBoundsException
+	 * @throws ArrayIndexOutOfBoundsException if the index is out of range
+	 *         ({@code index < 0 || index >= size()})
 	 */
-	public int get(int index) throws ArrayIndexOutOfBoundsException {
+	public int get(int index) {
 		return elements[index(index)];
 	}
 	
@@ -132,7 +133,7 @@ public class IntDeque {
 	 *
 	 * @throws ArrayIndexOutOfBoundsException if new capacity is smaller than old
 	 */
-	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
+	private void grow(int newCapacity) {
 		int[] newElements = new int[newCapacity];
 		for (int i = 0; i < size; i++)
 			newElements[i] = get(i);

@@ -71,9 +71,10 @@ public class Bag<E> implements ImmutableBag<E> {
 	 *
 	 * @return element that was removed from the Bag
 	 *
-	 * @throws ArrayIndexOutOfBoundsException
+	 * @throws ArrayIndexOutOfBoundsException if the index is out of range
+	 *         ({@code index < 0 || index >= size()})
 	 */
-	public E remove(int index) throws ArrayIndexOutOfBoundsException {
+	public E remove(int index) {
 		E e = data[index]; // make copy of element to remove so it can be returned
 		data[index] = data[--size]; // overwrite item to remove with last element
 		data[size] = null; // null last element, so gc can do its work
@@ -187,10 +188,11 @@ public class Bag<E> implements ImmutableBag<E> {
 	 *
 	 * @return the element at the specified position in bag
 	 *
-	 * @throws ArrayIndexOutOfBoundsException
+	 * @throws ArrayIndexOutOfBoundsException if the index is out of range
+	 *         ({@code index < 0 || index >= size()})
 	 */
 	@Override
-	public E get(int index) throws ArrayIndexOutOfBoundsException {
+	public E get(int index) {
 		return data[index];
 	}
 
@@ -300,7 +302,7 @@ public class Bag<E> implements ImmutableBag<E> {
 		unsafeSet(index, e);
 	}
 
-	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
+	private void grow(int newCapacity) {
 		data = Arrays.copyOf(data, newCapacity);
 	}
 
