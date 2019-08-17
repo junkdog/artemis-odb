@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 public class TagManagerTest {
 
 	@Test
-	public void test_overwriting_tag() throws Exception {
+	public void test_overwriting_tag() {
 		World w = new World(new WorldConfiguration()
 			.setSystem(TagManager.class));
 

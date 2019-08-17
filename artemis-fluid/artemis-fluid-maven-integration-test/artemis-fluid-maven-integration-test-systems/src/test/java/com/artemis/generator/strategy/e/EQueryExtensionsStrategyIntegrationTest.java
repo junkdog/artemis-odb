@@ -17,7 +17,7 @@ public class EQueryExtensionsStrategyIntegrationTest extends AbstractStrategyInt
     private static final Aspect.Builder BASIC_FLAG_ASPECT = Aspect.all(Basic.class, Flag.class);
 
     @Test
-    public void When_fetching_entities_by_aspect_Should_return_matching_entities() throws Exception {
+    public void When_fetching_entities_by_aspect_Should_return_matching_entities() {
         class TestSystem extends BaseSystem {
             @Override
             protected void processSystem() {
@@ -32,7 +32,7 @@ public class EQueryExtensionsStrategyIntegrationTest extends AbstractStrategyInt
     }
 
     @Test
-    public void When_fetching_entities_by_component_Should_return_matching_entities() throws Exception {
+    public void When_fetching_entities_by_component_Should_return_matching_entities() {
         class TestSystem extends BaseSystem {
             @Override
             protected void processSystem() {
@@ -47,7 +47,7 @@ public class EQueryExtensionsStrategyIntegrationTest extends AbstractStrategyInt
 
     }
     @Test
-    public void When_no_entities_with_aspect_Should_return_empty_ebag() throws Exception {
+    public void When_no_entities_with_aspect_Should_return_empty_ebag() {
         class TestSystem extends BaseSystem {
             @Override
             protected void processSystem() {
@@ -59,7 +59,7 @@ public class EQueryExtensionsStrategyIntegrationTest extends AbstractStrategyInt
     }
 
     @Test
-    public void When_no_entities_with_component_Should_return_empty_bag() throws Exception {
+    public void When_no_entities_with_component_Should_return_empty_bag() {
         class TestSystem extends BaseSystem {
             @Override
             protected void processSystem() {

@@ -8,7 +8,6 @@ import com.artemis.weaver.transplant.ClassTransplantVisitor;
 import com.artemis.weaver.transplant.MethodBodyTransplanter;
 import org.objectweb.asm.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,7 @@ public class EntityLinkGenerator extends CallableTransmuter<Void> implements Opc
 	}
 	
 	@Override
-	protected Void process(String file) throws IOException {
+	protected Void process(String file) {
 		final List<FieldDescriptor> mutators = new ArrayList<FieldDescriptor>();
 		for (FieldDescriptor fd : meta.fields()) {
 			if (fd.entityLinkMutator != null) {

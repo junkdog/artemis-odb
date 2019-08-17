@@ -53,7 +53,7 @@ public class EntitySystemOptimizerTest {
 	}
 
 	@Test
-	public void detect_preserve_process_visibility_test() throws Exception {
+	public void detect_preserve_process_visibility_test() {
 		assertEquals(SAFE, scan(SafeOptimizeSystem.class).sysetemOptimizable);
 		assertEquals(SAFE, scan(IteratingSafeOptimizeSystem.class).sysetemOptimizable);
 	}

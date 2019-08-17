@@ -1,7 +1,5 @@
 package com.artemis.weaver;
 
-import java.io.IOException;
-
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -25,7 +23,7 @@ public class ComponentTypeTransmuter extends CallableTransmuter<Void> implements
 	}
 	
 	@Override
-	protected Void process(String file) throws IOException {
+	protected Void process(String file) {
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		ClassVisitor cv = cw;
 		

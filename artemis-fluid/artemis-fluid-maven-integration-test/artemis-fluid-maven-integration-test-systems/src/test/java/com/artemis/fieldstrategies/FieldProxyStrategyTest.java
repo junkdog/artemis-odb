@@ -11,7 +11,7 @@ import org.junit.Test;
  */
 public class FieldProxyStrategyTest extends AbstractStrategyIntegrationTest {
     @Test
-    public void When_two_proxy_strategies_match_same_class_Should_follow_priority() throws Exception {
+    public void When_two_proxy_strategies_match_same_class_Should_follow_priority() {
 
         class TestSystem extends BaseSystem {
             @Override

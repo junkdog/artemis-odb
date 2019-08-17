@@ -51,7 +51,7 @@ public class ArtemisFluidMaven extends AbstractMojo {
     private MavenFluidGeneratorPreferences preferences = new MavenFluidGeneratorPreferences();
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() {
 
         prepareGeneratedSourcesFolder();
         includeGeneratedSourcesInCompilation();

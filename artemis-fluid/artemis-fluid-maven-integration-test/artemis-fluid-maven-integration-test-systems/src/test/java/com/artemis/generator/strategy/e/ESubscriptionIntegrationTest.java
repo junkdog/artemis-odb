@@ -15,7 +15,7 @@ import org.junit.Test;
 public class ESubscriptionIntegrationTest extends AbstractStrategyIntegrationTest {
 
     @Test
-    public void When_ESubscription_And_Aspect_Annotations_Should_inject() throws Exception {
+    public void When_ESubscription_And_Aspect_Annotations_Should_inject() {
         class TestSystem extends BaseSystem {
 
             @All(Basic.class)

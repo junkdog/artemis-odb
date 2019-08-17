@@ -60,7 +60,7 @@ public class ArtemisMaven extends AbstractMojo {
 	private Log log = getLog();
 
 	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
+	public void execute() {
 		if (!enableArtemisPlugin) {
 			getLog().info("Plugin disabled via 'enableArtemisPlugin' set to false.");
 			return;

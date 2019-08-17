@@ -39,7 +39,7 @@ public class ComponentMatrix extends AbstractMojo {
 	private String name;
 	
 	@Override
-	public void execute() throws MojoExecutionException {
+	public void execute() {
 		List<URI> files = new ArrayList<URI>();
 		files.add(classDirectory.toURI());
 

@@ -48,7 +48,7 @@ public class CustomKryoWorldSerializationManagerTest {
 	}
 
 	@Test
-	public void custom_save_format_save_load() throws Exception {
+	public void custom_save_format_save_load() {
 		serializedSystem.serializeMe = "dog";
 
 		byte[] save = save(allEntities, "a string", 420);
@@ -67,9 +67,7 @@ public class CustomKryoWorldSerializationManagerTest {
 		assertEquals(420, load.noSerializer.number);
 	}
 
-	private byte[] save(EntitySubscription subscription, String s, int i)
-			throws Exception {
-
+	private byte[] save(EntitySubscription subscription, String s, int i) {
 		SaveFileFormat save = new CustomSaveFormat(subscription, s, i);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
 		manger.save(baos, save);

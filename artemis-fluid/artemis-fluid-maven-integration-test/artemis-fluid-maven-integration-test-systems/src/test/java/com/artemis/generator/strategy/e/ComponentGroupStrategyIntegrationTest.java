@@ -13,7 +13,7 @@ import org.junit.Test;
 public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyIntegrationTest {
 
     @Test
-    public void When_fluid_set_group_Should_set_group() throws Exception {
+    public void When_fluid_set_group_Should_set_group() {
 
         class TestSystem extends BaseSystem {
             public GroupManager groupManager;
@@ -28,7 +28,7 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
     }
 
     @Test
-    public void When_fluid_set_groups_Should_set_groups() throws Exception {
+    public void When_fluid_set_groups_Should_set_groups() {
 
         class TestSystem extends BaseSystem {
             public GroupManager groupManager;
@@ -44,7 +44,7 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
     }
 
     @Test
-    public void When_fluid_remove_group_Should_remove_group() throws Exception {
+    public void When_fluid_remove_group_Should_remove_group() {
 
         class TestSystem extends BaseSystem {
             public GroupManager groupManager;
@@ -62,7 +62,7 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
 
 
     @Test
-    public void When_fluid_remove_groups_Should_remove_groups() throws Exception {
+    public void When_fluid_remove_groups_Should_remove_groups() {
 
         class TestSystem extends BaseSystem {
             public GroupManager groupManager;
@@ -80,7 +80,7 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
 
 
     @Test
-    public void When_fluid_remove_all_groups_Should_remove_all_groups() throws Exception {
+    public void When_fluid_remove_all_groups_Should_remove_all_groups() {
 
         class TestSystem extends BaseSystem {
             public GroupManager groupManager;
@@ -98,7 +98,7 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
 
 
     @Test
-    public void When_fluid_check_in_group_Should_report_group_membership() throws Exception {
+    public void When_fluid_check_in_group_Should_report_group_membership() {
 
         class TestSystem extends BaseSystem {
             public GroupManager groupManager;
@@ -114,7 +114,7 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
 
 
     @Test
-    public void When_fluid_check_groups_Should_return_groups() throws Exception {
+    public void When_fluid_check_groups_Should_return_groups() {
 
         class TestSystem extends BaseSystem {
             public GroupManager groupManager;
@@ -132,7 +132,7 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
 
 
     @Test
-    public void When_fetching_entities_in_group_Should_properly_resolve_group_members() throws Exception {
+    public void When_fetching_entities_in_group_Should_properly_resolve_group_members() {
         class TestSystem extends BaseSystem {
             public GroupManager groupManager;
             @Override
@@ -151,7 +151,7 @@ public class ComponentGroupStrategyIntegrationTest extends AbstractStrategyInteg
 
 
     @Test
-    public void When_fetching_entities_in_empty_group_Should_return_empty_group() throws Exception {
+    public void When_fetching_entities_in_empty_group_Should_return_empty_group() {
         class TestSystem extends BaseSystem {
             public GroupManager groupManager;
             @Override

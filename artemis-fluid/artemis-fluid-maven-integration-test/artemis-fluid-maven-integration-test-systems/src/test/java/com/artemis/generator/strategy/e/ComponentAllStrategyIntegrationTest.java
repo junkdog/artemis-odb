@@ -17,7 +17,7 @@ public class ComponentAllStrategyIntegrationTest extends AbstractStrategyIntegra
 
 
     @Test
-    public void When_fluid_create_component_Should_create_component_and_return_fluid() throws Exception {
+    public void When_fluid_create_component_Should_create_component_and_return_fluid() {
 
         class TestSystem extends BaseSystem {
             @Override
@@ -30,7 +30,7 @@ public class ComponentAllStrategyIntegrationTest extends AbstractStrategyIntegra
     }
 
     @Test
-    public void When_fluid_remove_component_Should_remove_component_and_return_fluid() throws Exception {
+    public void When_fluid_remove_component_Should_remove_component_and_return_fluid() {
 
         class TestSystem extends BaseSystem {
             @Override
@@ -43,7 +43,7 @@ public class ComponentAllStrategyIntegrationTest extends AbstractStrategyIntegra
     }
 
     @Test
-    public void When_fluid_fetch_component_Should_return_component() throws Exception {
+    public void When_fluid_fetch_component_Should_return_component() {
 
         class TestSystem extends BaseSystem {
             @Override

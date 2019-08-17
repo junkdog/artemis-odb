@@ -11,8 +11,7 @@ public class ComponentPoolTest
 {
 	@SuppressWarnings("static-method")
 	@Test
-	public void reuse_pooled_components() throws Exception
-	{
+	public void reuse_pooled_components() {
 
 		ComponentType type = new ComponentType(SimplePooled.class, 0);
 		ComponentPool<SimplePooled> pool = new ComponentPool<SimplePooled>(SimplePooled.class);

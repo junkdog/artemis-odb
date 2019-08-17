@@ -25,7 +25,7 @@ public class EntityReferencesTest {
 	private ComponentMapper<LevelState> levelStateMapper;
 
 	@Test
-	public void load_before_save() throws Exception {
+	public void load_before_save() {
 		SaveFileFormat load = loadWorld();
 
 		Entity base = tags.getEntity("level");
@@ -43,7 +43,7 @@ public class EntityReferencesTest {
 	}
 
 		@Test
-	public void load_entity_with_references() throws Exception {
+	public void load_entity_with_references() {
 		SaveFileFormat load = loadWorld();
 
 		Entity base = tags.getEntity("level");

@@ -15,7 +15,7 @@ public class WorldConfigurationBuilderManagerTest {
 	private WorldConfigurationBuilder builder;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		builder = new WorldConfigurationBuilder();
 	}
 

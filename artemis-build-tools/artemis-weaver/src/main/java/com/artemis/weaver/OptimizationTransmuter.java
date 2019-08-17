@@ -9,8 +9,6 @@ import com.artemis.weaver.optimizer.OptimizingSystemWeaver;
 import com.artemis.weaver.transplant.ClassMethodTransplantAdapter;
 import org.objectweb.asm.*;
 
-import java.io.IOException;
-
 public class OptimizationTransmuter extends CallableTransmuter<Void> implements Opcodes {
 	private ClassMetadata meta;
 	private ClassReader cr;
@@ -23,7 +21,7 @@ public class OptimizationTransmuter extends CallableTransmuter<Void> implements 
 	}
 
 	@Override
-	protected Void process(String file) throws IOException {
+	protected Void process(String file) {
 		cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
 		ClassVisitor cv = cw;
 

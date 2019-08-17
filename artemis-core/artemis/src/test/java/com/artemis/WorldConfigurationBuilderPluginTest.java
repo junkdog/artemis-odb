@@ -20,7 +20,7 @@ public class WorldConfigurationBuilderPluginTest {
     private ArtemisPlugin plugin;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         builder = new WorldConfigurationBuilder();
         plugin = mock(ArtemisPlugin.class);
     }
