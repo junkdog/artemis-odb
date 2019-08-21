@@ -74,7 +74,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 *
 	 * @throws ArrayIndexOutOfBoundsException
 	 */
-	public E remove(int index) throws ArrayIndexOutOfBoundsException {
+	public E remove(int index) {
 		E e = data[index]; // make copy of element to remove so it can be returned
 		data[index] = data[--size]; // overwrite item to remove with last element
 		data[size] = null; // null last element, so gc can do its work
@@ -191,7 +191,7 @@ public class Bag<E> implements ImmutableBag<E> {
 	 * @throws ArrayIndexOutOfBoundsException
 	 */
 	@Override
-	public E get(int index) throws ArrayIndexOutOfBoundsException {
+	public E get(int index) {
 		return data[index];
 	}
 	
@@ -311,7 +311,7 @@ public class Bag<E> implements ImmutableBag<E> {
 		grow(data.length * 2);
 	}
 
-	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
+	private void grow(int newCapacity) {
 		E[] oldData = data;
 		data = (E[])new Object[newCapacity];
 		System.arraycopy(oldData, 0, data, 0, oldData.length);
