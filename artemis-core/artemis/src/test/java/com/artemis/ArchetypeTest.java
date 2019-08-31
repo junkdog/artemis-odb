@@ -40,14 +40,14 @@ public class ArchetypeTest {
 	}
 
 	@Test
-	public void test_composition_id() throws Exception {
+	public void test_composition_id() {
 		assertEquals(0, arch1.transmuter.compositionId);
 		assertEquals(1, arch2.transmuter.compositionId);
 		assertEquals(2, arch3.transmuter.compositionId);
 	}
 
 	@Test
-	public void test_inherited_archetypes_and_composition_resolution() throws Exception {
+	public void test_inherited_archetypes_and_composition_resolution() {
 		Archetype arch4 = new ArchetypeBuilder(arch2).build(world);
 		Archetype arch5 = new ArchetypeBuilder(arch2).remove(ComponentY.class).build(world);
 		Archetype arch6 = new ArchetypeBuilder(arch2).remove(ComponentX.class).build(world);
@@ -96,7 +96,7 @@ public class ArchetypeTest {
 	}
 
 	@Test
-	public void testEntityCreationMod() throws Exception {
+	public void testEntityCreationMod() {
 		World world = new World();
 
 		ComponentMapper<ComponentX> xMapper = world.getMapper(ComponentX.class);

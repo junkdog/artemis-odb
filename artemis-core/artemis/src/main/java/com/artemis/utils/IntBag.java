@@ -46,7 +46,7 @@ public class IntBag implements ImmutableIntBag {
 	 *
 	 * @return true, if value was removed
 	 */
-	public boolean removeValue(int value) throws ArrayIndexOutOfBoundsException {
+	public boolean removeValue(int value) {
 		int index = indexOf(value);
 		if (index > -1)
 			removeIndex(index);
@@ -67,10 +67,11 @@ public class IntBag implements ImmutableIntBag {
 	 * @return element that was removed from the Bag
 	 * @deprecated Call {@link #removeIndex(int)} instead. {@link #remove(int)} will be removed in 3.0 due to ambiguity.
 	 *
-	 * @throws ArrayIndexOutOfBoundsException
+	 * @throws ArrayIndexOutOfBoundsException if the index is out of range
+	 *         ({@code index < 0 || index >= size()})
 	 */
 	@Deprecated
-	public int remove(int index) throws ArrayIndexOutOfBoundsException {
+	public int remove(int index) {
 		int e = data[index]; // make copy of element to remove so it can be returned
 		data[index] = data[--size]; // overwrite item to remove with last element
 		data[size] = 0; // null last element, so gc can do its work
@@ -89,9 +90,10 @@ public class IntBag implements ImmutableIntBag {
 	 *
 	 * @return element that was removed from the Bag
 	 *
-	 * @throws ArrayIndexOutOfBoundsException
+	 * @throws ArrayIndexOutOfBoundsException if the index is out of range
+	 *         ({@code index < 0 || index >= size()})
 	 */
-	public int removeIndex(int index) throws ArrayIndexOutOfBoundsException {
+	public int removeIndex(int index) {
 		int e = data[index]; // make copy of element to remove so it can be returned
 		data[index] = data[--size]; // overwrite item to remove with last element
 		data[size] = 0; // null last element, so gc can do its work
@@ -140,9 +142,10 @@ public class IntBag implements ImmutableIntBag {
 	 *
 	 * @return the element at the specified position in bag
 	 *
-	 * @throws ArrayIndexOutOfBoundsException
+	 * @throws ArrayIndexOutOfBoundsException if the index is out of range
+	 *         ({@code index < 0 || index >= size()})
 	 */
-	public int get(int index) throws ArrayIndexOutOfBoundsException {
+	public int get(int index) {
 		if (index >= size) {
 			String message = "tried accessing element " + index + "/" + size;
 			throw new ArrayIndexOutOfBoundsException(message);
@@ -239,7 +242,7 @@ public class IntBag implements ImmutableIntBag {
 		data[index] = value;
 	}
 
-	private void grow(int newCapacity) throws ArrayIndexOutOfBoundsException {
+	private void grow(int newCapacity) {
 		int[] oldData = data;
 		data = new int[newCapacity];
 		System.arraycopy(oldData, 0, data, 0, oldData.length);

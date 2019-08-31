@@ -18,7 +18,7 @@ public class AspectFieldHandlerTest {
 		.exclude(PooledString.class);
 
 	@Test
-	public void inject_aspect_fields_pojo() throws Exception {
+	public void inject_aspect_fields_pojo() {
 		WorldConfiguration worldConfiguration = new WorldConfiguration()
 			.setSystem(new SomeSystem())
 			.register(new Object());
@@ -43,7 +43,7 @@ public class AspectFieldHandlerTest {
 	}
 
 	@Test
-	public void inject_aspect_fields_system() throws Exception {
+	public void inject_aspect_fields_system() {
 		WorldConfiguration worldConfiguration = new WorldConfiguration()
 			.setSystem(new SomeSystem())
 			.register(new Object());

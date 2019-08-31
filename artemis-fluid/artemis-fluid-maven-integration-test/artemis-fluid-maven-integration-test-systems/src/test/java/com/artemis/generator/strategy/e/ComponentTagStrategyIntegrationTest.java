@@ -14,7 +14,7 @@ import org.junit.Test;
 public class ComponentTagStrategyIntegrationTest extends AbstractStrategyIntegrationTest {
 
     @Test
-    public void When_fluid_set_tag_Should_set_tag() throws Exception {
+    public void When_fluid_set_tag_Should_set_tag() {
 
         class TestSystem extends BaseSystem {
             public TagManager tagManager;
@@ -30,7 +30,7 @@ public class ComponentTagStrategyIntegrationTest extends AbstractStrategyIntegra
 
 
     @Test
-    public void When_fluid_get_tag_Should_get_tag() throws Exception {
+    public void When_fluid_get_tag_Should_get_tag() {
 
         class TestSystem extends BaseSystem {
             @Override
@@ -43,7 +43,7 @@ public class ComponentTagStrategyIntegrationTest extends AbstractStrategyIntegra
     }
 
     @Test
-    public void When_find_entity_by_tag_Should_get_entity_by_tag() throws Exception {
+    public void When_find_entity_by_tag_Should_get_entity_by_tag() {
         class TestSystem extends BaseSystem {
             @Override
             protected void processSystem() {
@@ -57,7 +57,7 @@ public class ComponentTagStrategyIntegrationTest extends AbstractStrategyIntegra
 
 
     @Test
-    public void When_find_entity_by_invalid_tag_Should_get_null() throws Exception {
+    public void When_find_entity_by_invalid_tag_Should_get_null() {
         class TestSystem extends BaseSystem {
             @Override
             protected void processSystem() {

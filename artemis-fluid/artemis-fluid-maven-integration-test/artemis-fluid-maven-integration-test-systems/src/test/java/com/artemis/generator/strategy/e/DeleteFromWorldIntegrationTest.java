@@ -13,7 +13,7 @@ public class DeleteFromWorldIntegrationTest extends AbstractStrategyIntegrationT
 
 
     @Test
-    public void When_fluid_deleteFromWorld_Should_delete_from_world() throws Exception {
+    public void When_fluid_deleteFromWorld_Should_delete_from_world() {
 
         class TestSystem extends BaseSystem {
             public int entityId;

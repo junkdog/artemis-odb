@@ -556,7 +556,7 @@ public class KryoWorldSerializationManagerTest {
 		return save(subscription.getEntities());
 	}
 
-	private byte[] save(IntBag entities) throws Exception {
+	private byte[] save(IntBag entities) {
 		SaveFileFormat save = new SaveFileFormat(entities);
 		ByteArrayOutputStream baos = new ByteArrayOutputStream(256);
 		manger.save(baos, save);

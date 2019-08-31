@@ -36,18 +36,13 @@ public abstract class BasePrefab<DATA, SERIALIZER extends ArtemisSerializer> {
 	}
 
 	private String getPrefabDataPath() {
-		try {
-			PrefabData pd = ClassReflection.getAnnotation(getClass(), PrefabData.class);
-			if (pd != null) {
-				return pd.value();
-			} else {
-
-				String annotation = PrefabData.class.getSimpleName();
-				String message = getClass().getName() + " must be annotated with @" + annotation;
-				throw new MissingPrefabDataException(message);
-			}
-		} catch (ReflectionException e) {
-			throw new MissingPrefabDataException(e);
+		PrefabData pd = ClassReflection.getAnnotation(getClass(), PrefabData.class);
+		if (pd != null) {
+			return pd.value();
+		} else {
+			String annotation = PrefabData.class.getSimpleName();
+			String message = getClass().getName() + " must be annotated with @" + annotation;
+			throw new MissingPrefabDataException(message);
 		}
 	}
 

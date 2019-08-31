@@ -11,7 +11,7 @@ import com.artemis.World;
 public class PolyConstructorTest {
 	
 	@Test @SuppressWarnings("static-method")
-	public void pooled_class_with_many_constructors() throws Exception {
+	public void pooled_class_with_many_constructors() {
 		World world = new World();
 
 		Entity e1 = world.createEntity();

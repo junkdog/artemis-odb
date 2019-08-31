@@ -14,7 +14,7 @@ import static com.artemis.E.E;
 public class FluidIntegrationTest extends AbstractStrategyIntegrationTest {
 
     @Test
-    public void When_excluding_component_Should_exclude_component() throws Exception {
+    public void When_excluding_component_Should_exclude_component() {
 
         class TestSystem extends BaseSystem {
             @Override
@@ -33,7 +33,7 @@ public class FluidIntegrationTest extends AbstractStrategyIntegrationTest {
     }
 
     @Test
-    public void When_specified_name_Should_apply_name_on_component() throws Exception {
+    public void When_specified_name_Should_apply_name_on_component() {
 
         class TestSystem extends BaseSystem {
             @Override
@@ -51,7 +51,7 @@ public class FluidIntegrationTest extends AbstractStrategyIntegrationTest {
     }
 
     @Test
-    public void When_swallowing_parameterized_getters_Should_return_fluid_instead_of_parameterized_getter_return_value() throws Exception {
+    public void When_swallowing_parameterized_getters_Should_return_fluid_instead_of_parameterized_getter_return_value() {
 
         class TestSystem extends BaseSystem {
             @Override

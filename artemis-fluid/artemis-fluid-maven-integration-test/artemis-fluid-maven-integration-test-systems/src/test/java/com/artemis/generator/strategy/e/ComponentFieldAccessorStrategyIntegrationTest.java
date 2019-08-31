@@ -15,7 +15,7 @@ public class ComponentFieldAccessorStrategyIntegrationTest extends AbstractStrat
 
 
     @Test
-    public void When_fluid_setget_component_field_Should_setget_component_field_value() throws Exception {
+    public void When_fluid_setget_component_field_Should_setget_component_field_value() {
 
         class TestSystem extends BaseSystem {
             @Override
@@ -31,7 +31,7 @@ public class ComponentFieldAccessorStrategyIntegrationTest extends AbstractStrat
     }
 
     @Test
-    public void When_fluid_set_method_Should_fluid_expose_method() throws Exception {
+    public void When_fluid_set_method_Should_fluid_expose_method() {
 
         class TestSystem extends BaseSystem {
             @Override
@@ -46,7 +46,7 @@ public class ComponentFieldAccessorStrategyIntegrationTest extends AbstractStrat
     }
 
     @Test
-    public void When_fluid_custom_getter_Should_expose_without_fluid_return_value() throws Exception {
+    public void When_fluid_custom_getter_Should_expose_without_fluid_return_value() {
 
         class TestSystem extends BaseSystem {
             @Override
@@ -59,7 +59,7 @@ public class ComponentFieldAccessorStrategyIntegrationTest extends AbstractStrat
     }
 
     @Test
-    public void When_fluid_parameterized_getter_Should_expose_without_fluid_return_value_by_default() throws Exception {
+    public void When_fluid_parameterized_getter_Should_expose_without_fluid_return_value_by_default() {
 
         class TestSystem extends BaseSystem {
             @Override

@@ -15,7 +15,7 @@ public class FlagComponentBooleanAccessorStrategyIntegrationTest extends Abstrac
 
 
     @Test
-    public void When_fluid_toggle_flag_component_Should_affect_component_and_return_fluid() throws Exception {
+    public void When_fluid_toggle_flag_component_Should_affect_component_and_return_fluid() {
 
         class TestSystem extends BaseSystem {
             @Override

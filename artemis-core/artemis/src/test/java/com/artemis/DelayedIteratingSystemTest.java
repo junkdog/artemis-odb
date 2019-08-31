@@ -15,8 +15,7 @@ public class DelayedIteratingSystemTest
 	private ExpirationSystem es;
 
 	@Before
-	public void setUp() throws Exception
-	{
+	public void setUp() {
 		world = new World(new WorldConfiguration()
 				.setSystem(new ExpirationSystem()));
 		world.inject(this);

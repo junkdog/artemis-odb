@@ -18,7 +18,7 @@ public class GroupManagerTest {
 	private GroupManager gm;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		gm = new GroupManager();
 		world = new World(new WorldConfiguration()
 				.setSystem(gm));

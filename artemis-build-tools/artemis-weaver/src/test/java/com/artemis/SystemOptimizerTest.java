@@ -38,7 +38,7 @@ public class SystemOptimizerTest {
 	}
 	
 	@Test
-	public void detect_preserve_process_visibility_test() throws Exception {
+	public void detect_preserve_process_visibility_test() {
 		ClassMetadata meta = scan(IteratingSafeOptimizeSystem.class);
 		assertEquals(SAFE, meta.sysetemOptimizable); 
 	}

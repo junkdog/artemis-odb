@@ -85,7 +85,7 @@ public class JsonArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	}
 
 	@Override
-	protected void save(OutputStream out, SaveFileFormat save) throws SerializationException {
+	protected void save(OutputStream out, SaveFileFormat save) {
 		save(new OutputStreamWriter(out), save);
 	}
 

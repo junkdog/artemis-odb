@@ -10,7 +10,7 @@ import static org.junit.Assert.assertNotNull;
  */
 public class Issue357SystemTest {
 	@Test
-	public void test_two_systems_in_world_delete_during_process() throws Exception {
+	public void test_two_systems_in_world_delete_during_process() {
 		World world = new World(new WorldConfiguration().setSystem(TestSystemWithDelete.class)
 				.setSystem(AnyOldeBaseSystem.class));
 		world.createEntity().edit().create(TestComponent.class);
@@ -22,7 +22,7 @@ public class Issue357SystemTest {
 	}
 
 	@Test
-	public void test_one_system_in_world_delete_during_process() throws Exception {
+	public void test_one_system_in_world_delete_during_process() {
 		World world = new World(new WorldConfiguration().setSystem(TestSystemWithDelete.class));
 		world.createEntity().edit().create(TestComponent.class);
 		world.process();
@@ -33,7 +33,7 @@ public class Issue357SystemTest {
 	}
 
 	@Test
-	public void test_two_systems_in_world_delete_after_process() throws Exception {
+	public void test_two_systems_in_world_delete_after_process() {
 		World world = new World(new WorldConfiguration().setSystem(TestSystemWithoutDelete.class)
 				.setSystem(AnyOldeBaseSystem.class));
 		Entity entity = world.createEntity();
@@ -50,7 +50,7 @@ public class Issue357SystemTest {
 	}
 
 	@Test
-	public void test_two_systems_in_world_delete_before_process() throws Exception {
+	public void test_two_systems_in_world_delete_before_process() {
 		World world = new World(new WorldConfiguration()
 			.setSystem(TestSystemWithoutDelete.class)
 			.setSystem(AnyOldeBaseSystem.class));

@@ -16,7 +16,7 @@ import static org.junit.Assert.assertNull;
  */
 public class FieldHandlerTest {
     @Test
-    public void default_field_handler_injects_correct_core_fields() throws Exception {
+    public void default_field_handler_injects_correct_core_fields() {
         WorldConfiguration worldConfiguration = new WorldConfiguration()
                 .setSystem(new SomeSystem())
                 .setSystem(new SomeManager())
@@ -36,7 +36,7 @@ public class FieldHandlerTest {
 
 
     @Test
-    public void custom_field_resolver_injects_fields() throws Exception {
+    public void custom_field_resolver_injects_fields() {
         FieldHandler fieldHandler = new FieldHandler(new InjectionCache());
         fieldHandler.addFieldResolver(new AllFieldsResolver());
 
@@ -51,7 +51,7 @@ public class FieldHandlerTest {
     }
 
     @Test
-    public void default_field_handler_injects_world_fields() throws Exception {
+    public void default_field_handler_injects_world_fields() {
         WorldConfiguration worldConfiguration = new WorldConfiguration();
         World world = new World(worldConfiguration);
 

@@ -1,6 +1,5 @@
 package com.artemis.weaver;
 
-import java.io.IOException;
 import java.util.concurrent.Callable;
 
 abstract class CallableTransmuter<T> implements Callable<T> {
@@ -10,7 +9,7 @@ abstract class CallableTransmuter<T> implements Callable<T> {
 		this.file = file;
 	}
 
-	protected abstract T process(String file) throws IOException;
+	protected abstract T process(String file);
 
 	@Override
 	public final T call() throws Exception {

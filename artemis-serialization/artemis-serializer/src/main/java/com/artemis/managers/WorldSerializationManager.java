@@ -55,9 +55,12 @@ public class WorldSerializationManager extends BaseSystem {
 		return backend.load(is, format);
 	}
 
-	public void save(OutputStream out, SaveFileFormat format) throws SerializationException {
+	/**
+	 * @throws SerializationException if {@link ArtemisSerializer} was not set
+	 */
+	public void save(OutputStream out, SaveFileFormat format) {
 		if (backend == null) {
-			throw new RuntimeException("Missing ArtemisSerializer, see #setBackend.");
+			throw new SerializationException("Missing ArtemisSerializer, see #setSerializer.");
 		}
 
 		world.inject(format);
@@ -107,8 +110,7 @@ public class WorldSerializationManager extends BaseSystem {
 		 */
 		public abstract ArtemisSerializer register(Class<?> type, T serializer);
 
-		protected abstract void save(OutputStream out, SaveFileFormat format)
-			throws SerializationException;
+		protected abstract void save(OutputStream out, SaveFileFormat format);
 		
 		/**
 		 * Deserializes data (usually a file) of a known class to a SaveFileFormat.

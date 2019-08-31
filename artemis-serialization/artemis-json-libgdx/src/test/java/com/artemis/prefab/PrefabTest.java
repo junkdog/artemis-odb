@@ -42,7 +42,7 @@ public class PrefabTest {
 	}
 
 	@Test
-	public void load_prefab() throws Exception {
+	public void load_prefab() {
 		SomePrefab prefab = new SomePrefab(world, new ClasspathFileHandleResolver());
 		String text = "updating whatever's ComponentX";
 		SaveFileFormat l = prefab.create(text);

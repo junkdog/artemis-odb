@@ -61,15 +61,11 @@ public class ArchetypeMapper {
 		private transient EntityTransmuter transmuter;
 
 		public TransmuterEntry(Bag<Class<? extends Component>> types) {
-			try {
-				for (Class<? extends Component> c : types) {
-					if (ClassReflection.getAnnotation(c, Transient.class) != null)
-						continue;
+			for (Class<? extends Component> c : types) {
+				if (ClassReflection.getAnnotation(c, Transient.class) != null)
+					continue;
 
-					componentTypes.add(c);
-				}
-			} catch (ReflectionException e) {
-				throw new RuntimeException(e);
+				componentTypes.add(c);
 			}
 		}
 

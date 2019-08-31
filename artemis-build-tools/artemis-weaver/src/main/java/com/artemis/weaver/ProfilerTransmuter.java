@@ -1,8 +1,5 @@
 package com.artemis.weaver;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -29,7 +26,7 @@ public class ProfilerTransmuter extends CallableTransmuter<Void> implements Opco
 	}
 	
 	@Override
-	protected Void process(String file) throws IOException {
+	protected Void process(String file) {
 		injectProfilerStubs(meta);
 		
 		ClassVisitor cv = new ProfileVisitor(cw, meta);

@@ -183,7 +183,7 @@ public final class ClassReflection {
 
 	/** Creates a new instance of the annotation represented by the supplied annotationClass.
 	 */
-	static public <T extends java.lang.annotation.Annotation> T getAnnotation(Class c, Class<T> annotationClass) throws ReflectionException {
+	static public <T extends java.lang.annotation.Annotation> T getAnnotation(Class c, Class<T> annotationClass) {
 		final Annotation declaredAnnotation = getDeclaredAnnotation(c,annotationClass);
 		return declaredAnnotation != null ? declaredAnnotation.getAnnotation(annotationClass) : null;
 	}

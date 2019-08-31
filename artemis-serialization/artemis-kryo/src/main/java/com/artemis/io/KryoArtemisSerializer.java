@@ -78,8 +78,7 @@ public class KryoArtemisSerializer extends WorldSerializationManager.ArtemisSeri
 	}
 
 	@Override
-	public void save(OutputStream os, SaveFileFormat save)
-			throws SerializationException {
+	public void save(OutputStream os, SaveFileFormat save) {
 
 		referenceTracker.inspectTypes(world);
 		referenceTracker.preWrite(save);
