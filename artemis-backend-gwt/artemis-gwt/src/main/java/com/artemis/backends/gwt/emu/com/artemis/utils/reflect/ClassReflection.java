@@ -190,7 +190,7 @@ public final class ClassReflection {
 	}
 
 	/** Returns this element's annotation for the specified type if such an annotation is present, else null. */
-	static public <T extends java.lang.annotation.Annotation> T getAnnotation(Class c, Class<T> annotationClass) throws ReflectionException {
+	static public <T extends java.lang.annotation.Annotation> T getAnnotation(Class c, Class<T> annotationClass) {
 		final Annotation declaredAnnotation = getDeclaredAnnotation(c,annotationClass);
 		return declaredAnnotation != null ? declaredAnnotation.getAnnotation(annotationClass) : null;
 	}
