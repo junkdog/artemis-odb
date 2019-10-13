@@ -3,6 +3,8 @@
 #### Version: 2.3.0-SNAPSHOT
 
 - **BREAKING CHANGES**
+  - Web backend upgraded to GWT `2.8.2`.
+  - Serialization modules that depend on libGDX now require `1.9.10`.
   - Make sure you clean your build when using Fluid entities.
 
 - **Fluid entities** quality of life changes.
@@ -10,7 +12,7 @@
   - Annotation driven aspects allow DI of `ESubscription` (requires registered `FluidEntityPlugin`)
   - Ability to exclude specific component methods from the fluid API. `@FluidMethod(exclude=true)`
   - `E` toString now reports entity id for easier debugging. ie: `E{id=10}`.    
-- Gradle plugin now supports `classesDirs`, deprecated `classesDir.
+- Gradle plugin now supports `classesDirs`, deprecated `classesDir`.
 - Improve flexibility of logic behind annotations dependency injection. (no user impact).
 - **FIX**: Avoiding an NPE in optimizer.EntitySystemType if meta.superClass is null.
 - **FIX**: ObjectWeb ASM updated to 7.0 to avoid choking on more modern bytecode.
