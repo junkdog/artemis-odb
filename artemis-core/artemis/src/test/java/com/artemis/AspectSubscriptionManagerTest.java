@@ -2,6 +2,7 @@ package com.artemis;
 
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
+import com.artemis.component.ComponentZ;
 import com.artemis.systems.IteratingSystem;
 import com.artemis.utils.IntBag;
 import org.junit.Before;
@@ -120,6 +121,25 @@ public class AspectSubscriptionManagerTest {
 		assertEquals("entites should have same components/compositionId",
 			w.getEntity(original).getCompositionId(),
 			w.getEntity(es.replacedEntityId).getCompositionId());
+	}
+
+	@Test
+	public void asm_adds_default_aspect() {
+		world = new World(new WorldConfiguration()
+				.setSystem(new BootstrappingManager())
+				.setDefaultAspect(Aspect.all(ComponentZ.class)));
+		AspectSubscriptionManager asm = world.getAspectSubscriptionManager();
+		EntitySubscription sub = asm.get(all(ComponentX.class));
+		SubListener listener = new SubListener();
+		sub.addSubscriptionListener(listener);
+
+		entity(ComponentX.class);
+		world.process();
+		assertEquals(0, listener.totalInserted);
+		
+		entity(ComponentX.class, ComponentZ.class);
+		world.process();
+		assertEquals(1, listener.totalInserted);
 	}
 
 	public static class CreateInremoveSystem extends IteratingSystem {

@@ -2,6 +2,7 @@ package com.artemis;
 
 import static org.junit.Assert.assertEquals;
 
+import com.artemis.annotations.All;
 import com.artemis.systems.EntityProcessingSystem;
 import org.junit.Test;
 
@@ -34,7 +35,40 @@ public class EntitySystemTest {
 		w.process();
 
 		assertEquals(1, es1.getSubscription().getEntities().size());
+		assertEquals(1, es1.subscription.getEntities().size());
 		assertEquals(1, es2.getSubscription().getEntities().size());
+		assertEquals(1, es2.subscription.getEntities().size());
+	}
+	
+	@Test
+	public void default_aspect() {
+		DefaultAspectSystem es = new DefaultAspectSystem();
+		AnnotatedDefaultAspectSystem esAnnotated = new AnnotatedDefaultAspectSystem();
+		World w = new World(new WorldConfigurationBuilder()
+				.with(es, esAnnotated)
+				.defaultAspect(Aspect.exclude(C2.class))
+				.build());
+		
+		EntityEdit e = w.createEntity().edit();
+		w.process();
+		assertEquals(0, es.getSubscription().getEntities().size());
+		assertEquals(0, es.subscription.getEntities().size());
+		assertEquals(0, esAnnotated.getSubscription().getEntities().size());
+		assertEquals(0, esAnnotated.subscription.getEntities().size());
+		
+		e.add(new C());
+		w.process();
+		assertEquals(1, es.getSubscription().getEntities().size());
+		assertEquals(1, es.subscription.getEntities().size());
+		assertEquals(1, esAnnotated.getSubscription().getEntities().size());
+		assertEquals(1, esAnnotated.subscription.getEntities().size());
+
+		e.add(new C2());
+		w.process();
+		assertEquals(0, es.getSubscription().getEntities().size());
+		assertEquals(0, es.subscription.getEntities().size());
+		assertEquals(0, esAnnotated.getSubscription().getEntities().size());
+		assertEquals(0, esAnnotated.subscription.getEntities().size());
 	}
 
 	public static class C extends Component {}
@@ -77,5 +111,20 @@ public class EntitySystemTest {
 
 		@Override
 		protected void process(Entity e) {}
+	}
+	
+	public static class DefaultAspectSystem extends BaseEntitySystem {
+		public DefaultAspectSystem() {
+			super(Aspect.all(C.class));
+		}
+		
+		@Override
+		protected void processSystem() {}
+	}
+	
+	@All(C.class)
+	public static class AnnotatedDefaultAspectSystem extends BaseEntitySystem {
+		@Override
+		protected void processSystem() {}
 	}
 }

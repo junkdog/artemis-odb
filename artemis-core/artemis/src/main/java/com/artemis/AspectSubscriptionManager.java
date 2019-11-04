@@ -28,6 +28,9 @@ public class AspectSubscriptionManager extends BaseSystem {
 
 	private final IntBag changed = new IntBag();
 	private final IntBag deleted = new IntBag();
+	
+	private Aspect.Builder defaultAspect;
+	private final Bag<Class<? extends Component>> tmpComponentBag = new Bag<>();
 
 	protected AspectSubscriptionManager() {
 		subscriptionMap = new HashMap<Aspect.Builder, EntitySubscription>();
@@ -41,7 +44,26 @@ public class AspectSubscriptionManager extends BaseSystem {
 		super.setWorld(world);
 
 		// making sure the first subscription matches all entities
-		get(all());
+		get(all().defaults(false));
+	}
+	
+	/**
+	 * <p>Gets the entity subscription for the {@link Aspect}.
+	 * Subscriptions are only created once per aspect.</p>
+	 *
+	 * Be careful when calling this within {@link BaseSystem#processSystem()}.
+	 * If the subscription does not exist yet, the newly created subscription
+	 * will reflect all the chances made by the currently processing system,
+	 * NOT the state before the system started processing. This might cause
+	 * the system to behave differently when run the first time (as
+	 * subsequent calls won't have this issue).
+	 * See https://github.com/junkdog/artemis-odb/issues/551
+	 *
+	 * @param builder Aspect to match.
+	 * @return {@link EntitySubscription} for aspect.
+	 */
+	public EntitySubscription get(Aspect.Builder builder) {
+		return get(builder, true);
 	}
 
 	/**
@@ -57,11 +79,41 @@ public class AspectSubscriptionManager extends BaseSystem {
      * See https://github.com/junkdog/artemis-odb/issues/551
 	 *
 	 * @param builder Aspect to match.
+	 * @param applyDefaults whether to apply default aspect
 	 * @return {@link EntitySubscription} for aspect.
 	 */
-	public EntitySubscription get(Aspect.Builder builder) {
+	EntitySubscription get(Aspect.Builder builder, boolean applyDefaults) {
+		if (applyDefaults && defaultAspect != null && builder.defaults) {
+			builder = applyDefaultAspect(builder.copy());
+		}
+		
 		EntitySubscription subscription = subscriptionMap.get(builder);
 		return (subscription != null) ? subscription : createSubscription(builder);
+	}
+	
+	private Aspect.Builder applyDefaultAspect(Aspect.Builder builder) {
+		tmpComponentBag.clear();
+		tmpComponentBag.addAll(defaultAspect.allTypes);
+		tmpComponentBag.removeAll(builder.allTypes);
+		tmpComponentBag.removeAll(builder.oneTypes);
+		tmpComponentBag.removeAll(builder.exclusionTypes);
+		builder.all(tmpComponentBag);
+		
+		tmpComponentBag.clear();
+		tmpComponentBag.addAll(defaultAspect.oneTypes);
+		tmpComponentBag.removeAll(builder.allTypes);
+		tmpComponentBag.removeAll(builder.oneTypes);
+		tmpComponentBag.removeAll(builder.exclusionTypes);
+		builder.one(tmpComponentBag);
+		
+		tmpComponentBag.clear();
+		tmpComponentBag.addAll(defaultAspect.exclusionTypes);
+		tmpComponentBag.removeAll(builder.allTypes);
+		tmpComponentBag.removeAll(builder.oneTypes);
+		tmpComponentBag.removeAll(builder.exclusionTypes);
+		builder.exclude(tmpComponentBag);
+		
+		return builder;
 	}
 
 	private EntitySubscription createSubscription(Aspect.Builder builder) {
@@ -119,5 +171,9 @@ public class AspectSubscriptionManager extends BaseSystem {
 	 */
 	public ImmutableBag<EntitySubscription> getSubscriptions() {
 		return subscriptions;
+	}
+
+	void setDefaultAspect(Aspect.Builder aspect) {
+		this.defaultAspect = aspect;
 	}
 }

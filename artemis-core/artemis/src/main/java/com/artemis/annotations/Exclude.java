@@ -44,4 +44,9 @@ public @interface Exclude {
 	 */
 	Class<? extends Component>[] value() default {};
 
+	/**
+	 * @return whether to exclude default aspect when used for a subscription
+	 */
+	boolean excludeDefaults() default false;
+
 }

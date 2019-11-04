@@ -27,7 +27,7 @@ public final class EntityTransmuter {
 	private final ShortBag entityToIdentity;
 
 	public EntityTransmuter(World world, Aspect.Builder aspect) {
-		this(world, world.getAspectSubscriptionManager().get(aspect).getAspect());
+		this(world, world.getAspectSubscriptionManager().get(aspect, false).getAspect());
 	}
 
 	EntityTransmuter(World world, Aspect aspect) {

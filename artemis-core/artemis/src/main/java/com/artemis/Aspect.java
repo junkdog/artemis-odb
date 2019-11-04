@@ -206,14 +206,29 @@ public class Aspect {
 	public static Aspect.Builder one(Collection<Class<? extends Component>> types) {
 		return new Builder().one(types);
 	}
+	
+	/**
+	 * Changes whether the default aspect will be applied to this aspect 
+	 * when used for a subscription.
+	 * 
+	 * @param defaults 
+	 * 			whether to apply default aspect
+	 * 
+	 * @return an aspect that will have the default aspect applied to it 
+	 *			depending on the value.
+	 */
+	public static Builder defaults(boolean defaults) {
+		return new Builder().defaults(defaults);
+	}
 
 	/**
 	 * Constructs instances of {@link Aspect}.
 	 */
 	public static class Builder {
-		private final Bag<Class<? extends Component>> allTypes;
-		private final Bag<Class<? extends Component>> exclusionTypes;
-		private final Bag<Class<? extends Component>> oneTypes;
+		final Bag<Class<? extends Component>> allTypes;
+		final Bag<Class<? extends Component>> exclusionTypes;
+		final Bag<Class<? extends Component>> oneTypes;
+		boolean defaults = true;
 
 		private Builder() {
 			allTypes = new Bag<Class<? extends Component>>();
@@ -246,6 +261,7 @@ public class Aspect {
 			b.allTypes.addAll(allTypes);
 			b.exclusionTypes.addAll(exclusionTypes);
 			b.oneTypes.addAll(oneTypes);
+			b.defaults = defaults;
 			return b;
 		}
 
@@ -258,7 +274,7 @@ public class Aspect {
 		 *
 		 * @return an aspect that can be matched against entities
 		 */
-		public Builder all(Collection<Class<? extends Component>> types) {
+		public Builder all(Iterable<Class<? extends Component>> types) {
 			for (Class<? extends Component> t : types) {
 				allTypes.add(t);
 			}
@@ -292,7 +308,7 @@ public class Aspect {
 		 *
 		 * @return an aspect that can be matched against entities
 		 */
-		public Builder one(Collection<Class<? extends Component>> types) {
+		public Builder one(Iterable<Class<? extends Component>> types) {
 			for (Class<? extends Component> t : types)
 				oneTypes.add(t);
 
@@ -332,10 +348,26 @@ public class Aspect {
 		 *
 		 * @return an aspect that can be matched against entities
 		 */
-		public Builder exclude(Collection<Class<? extends Component>> types) {
+		public Builder exclude(Iterable<Class<? extends Component>> types) {
 			for (Class<? extends Component> t : types)
 				exclusionTypes.add(t);
 
+			return this;
+		}
+		
+		/**
+		 * Changes whether the default aspect will be applied to this aspect 
+		 * when used for a subscription.
+		 * 
+		 * @param defaults 
+		 * 			whether to apply default aspect
+		 * 
+		 * @return an aspect that will have the default aspect applied to it 
+		 *			depending on the value.
+		 */
+		public Builder defaults(boolean defaults) {
+			this.defaults = defaults;
+			
 			return this;
 		}
 
@@ -391,6 +423,7 @@ public class Aspect {
 				"all=" + append(allTypes) +
 				", one=" + append(oneTypes) +
 				", exclude=" + append(exclusionTypes) +
+				", defaults=" + defaults +
 				']';
 		}
 
