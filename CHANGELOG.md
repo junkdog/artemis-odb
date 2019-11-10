@@ -1,6 +1,8 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
-#### Version: 2.3.0-SNAPSHOT
+#### Version: 2.4.0-SNAPSHOT
+
+#### Version: 2.3.0 - 2019-11-09
 
 - **BREAKING CHANGES**
   - Web backend upgraded to GWT `2.8.2`.
