@@ -12,7 +12,7 @@
     <repositories>
         <repository>
             <id>gradle repo</id>
-            <url>http://repo.gradle.org/gradle/libs-releases-local</url>
+            <url>https://repo.gradle.org/gradle/libs-releases-local</url>
         </repository>
     </repositories>
 
