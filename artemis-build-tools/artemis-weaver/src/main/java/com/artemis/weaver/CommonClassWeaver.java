@@ -15,7 +15,7 @@ class CommonClassWeaver extends ClassVisitor implements Opcodes {
 	private ClassMetadata meta;
 	
 	public CommonClassWeaver(ClassVisitor cv, ClassMetadata meta) {
-		super(ASM4, cv);
+		super(ASM8, cv);
 		this.meta = meta;
 	}
 	
