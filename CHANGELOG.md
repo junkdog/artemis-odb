@@ -1,6 +1,8 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 #### Version: 2.4.0-SNAPSHOT
+- **FIX**: Bytecode-weaving functionality for modern java runtimes (:cookie: for @schosin)
+
 
 #### Version: 2.3.0 - 2019-11-09
 
