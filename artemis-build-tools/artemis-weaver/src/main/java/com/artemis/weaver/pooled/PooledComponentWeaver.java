@@ -13,7 +13,7 @@ public class PooledComponentWeaver extends ClassVisitor implements Opcodes{
 	private ClassMetadata meta;
 	
 	public PooledComponentWeaver(ClassVisitor cv, ClassMetadata meta) {
-		super(ASM8, cv);
+		super(ASM9, cv);
 		this.meta = meta;
 	}
 	
