@@ -13,8 +13,8 @@
 
 	<repositories>
 		<repository>
-			<id>Spring Lib Release Repository</id>
-			<url>https://repo.spring.io/libs-release/</url>
+			<id>Gradle libs-releases-local</id>
+			<url>https://repo.gradle.org/gradle/libs-releases-local/</url>
 		</repository>
 	</repositories>
 
