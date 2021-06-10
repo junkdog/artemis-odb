@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  * during {@link EntitySystem#initialize()}, or explicitly via {@link World#inject(Object)}.</p>
  *
  * <p>On BaseEntitySystem subclasses, this annotation configures the aspects for the system,
- *  replacing the need to use constructor parameters.</>/p>
+ *  replacing the need to use constructor parameters.</p>
  *
  * The annotated field must be one the following types: {@link Archetype}, {@link Aspect}, {@link Aspect.Builder},
  * {@link EntitySubscription}, {@link EntityTransmuter}.</p>
