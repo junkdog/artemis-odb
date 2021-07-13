@@ -3,6 +3,7 @@
 [![Build status](https://github.com/junkdog/artemis-odb/actions/workflows/javaCI.yml/badge.svg?label=Build)](https://github.com/junkdog/artemis-odb/actions/workflows/javaCI.yml)
 [![Discord Chat](https://img.shields.io/discord/348229412858101762?logo=discord)](https://libgdx.com/community/discord/)
 [![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
+
 [Artemis-odb](https://github.com/junkdog/artemis-odb/wiki/About) is a [high performance](https://github.com/junkdog/entity-system-benchmarks) java based [Entity-Component-System](https://github.com/junkdog/artemis-odb/wiki/Introduction-to-Entity-Systems) framework.
 
 It is mature, actively maintained, and a continuation of the popular [Artemis](http://gamadu.com/artemis/).
