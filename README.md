@@ -96,3 +96,10 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
  - [Main library](https://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/) 
  - [Command-line tool](https://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/)
 
+#### License
+
+This work is licensed under BSD 2-Clause "Simplified" License except the cross platform reflection code, 
+which has been sourced from LibGDX and falls under the Apache License 2.0. These files can be identified
+by the Apache License header.
+
+`SPDX-License-Identifier: BSD-2-Clause AND Apache-2.0`
