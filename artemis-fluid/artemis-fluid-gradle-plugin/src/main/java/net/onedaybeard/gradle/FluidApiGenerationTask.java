@@ -8,8 +8,7 @@ import org.gradle.api.Task;
 import org.gradle.api.file.FileCollection;
 import org.gradle.api.logging.Logger;
 import org.gradle.api.logging.Logging;
-import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.TaskAction;
+import org.gradle.api.tasks.*;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -25,14 +24,14 @@ import java.util.Set;
  */
 public class FluidApiGenerationTask extends DefaultTask {
 
-    @Input
+    @OutputDirectory
     private File generatedSourcesDirectory;
 
-    @Input
+    @InputFiles
     private FileCollection classpath;
 
     @Input
-    public FluidGeneratorPreferences preferences = new FluidGeneratorPreferences();
+    private FluidGeneratorPreferences preferences = new FluidGeneratorPreferences();
 
     @TaskAction
     public void fluid() {
@@ -109,5 +108,13 @@ public class FluidApiGenerationTask extends DefaultTask {
 
     public void setClasspath(FileCollection classpath) {
         this.classpath = classpath;
+    }
+
+    public FluidGeneratorPreferences getPreferences() {
+        return preferences;
+    }
+
+    public void setPreferences(FluidGeneratorPreferences preferences) {
+        this.preferences = preferences;
     }
 }

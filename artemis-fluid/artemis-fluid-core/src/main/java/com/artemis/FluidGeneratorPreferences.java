@@ -3,6 +3,7 @@ package com.artemis;
 import com.artemis.annotations.Fluid;
 
 import java.io.File;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,7 +13,7 @@ import java.util.Set;
 /**
  * @author Daan van Yperen
  */
-public class FluidGeneratorPreferences {
+public class FluidGeneratorPreferences implements Serializable {
 
     /**
      * Generate fluid interface over returning parameterized values?
