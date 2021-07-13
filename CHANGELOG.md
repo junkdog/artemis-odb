@@ -1,8 +1,15 @@
 ## Change Log (we do our best to adhere to [semantic versioning](http://semver.org/))
 
 #### Version: 2.4.0-SNAPSHOT
-- **FIX**: Bytecode-weaving functionality for modern java runtimes (:cookie: for @schosin)
 
+- **BREAKING CHANGES**
+  - Serialization modules that depend on libGDX now require `1.9.14`.
+
+- **FIX**: Bytecode-weaving functionality for modern java runtimes (:cookie: for @schosin)
+- **FIX**: Upgrade of ASM to 9.0 and bump of opcodes to support java 15. 
+- **FIX**: Fix broken repositories.
+- **FIX**: Fix some HTTP links in documentation.
+- **FIX**: Various internal dependencies upgraded.
 
 #### Version: 2.3.0 - 2019-11-09
 
