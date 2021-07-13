@@ -100,6 +100,6 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 
 This work is licensed under BSD 2-Clause "Simplified" License except the cross platform reflection code, 
 which has been sourced from LibGDX and falls under the Apache License 2.0. These files can be identified
-by the Apache License header.
+by the Apache License header. Apache 2.0 license can be found under artemis-core\artemis\LICENSE.libgdx.
 
 `SPDX-License-Identifier: BSD-2-Clause AND Apache-2.0`
