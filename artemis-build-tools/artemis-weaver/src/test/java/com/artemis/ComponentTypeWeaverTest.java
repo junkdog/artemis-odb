@@ -1,11 +1,11 @@
 package com.artemis;
 
 import static com.artemis.Transformer.transform;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.InputStream;
 
+import com.artemis.component.UnweavableComponent;
 import org.junit.Before;
 import org.junit.Test;
 import org.objectweb.asm.ClassReader;
@@ -24,6 +24,11 @@ public class ComponentTypeWeaverTest {
 	public void init() {
 		GlobalConfiguration.enabledPooledWeaving = true;
 	}
+
+	@Test(expected = RuntimeException.class)
+	public void dont_weave_unweavable_classes() throws Exception {
+		transform(UnweavableComponent.class);
+	}
 	
 	@Test
 	public void pooled_weaver_test() throws Exception {
@@ -36,7 +41,6 @@ public class ComponentTypeWeaverTest {
 	@Test
 	public void pooled_forced_weaving_test() throws Exception {
 		GlobalConfiguration.enabledPooledWeaving = false;
-		
 		ClassMetadata meta = Weaver.scan(transform(PooledForced.class));
 		assertEquals(WeaverType.NONE, meta.annotation);
 		assertTrue(meta.foundReset); 
