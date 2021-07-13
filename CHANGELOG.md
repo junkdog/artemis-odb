@@ -4,11 +4,16 @@
 
 - **BREAKING CHANGES**
   - Serialization modules that depend on libGDX now require `1.9.14`.
-
+  
+- @PooledWeaver now aborts when used outside Component class hierarchy.
+- Aspect memory use decreased a bit. 
+- **FIX**: Fix @PooledWeaver breaking when used on components with arrays.
+- **FIX**: Fix various NPE (intbag and reflection).
+- **FIX**: Fix gradle deprecation warnings (artemis-fluid-gradle-plugin).  
 - **FIX**: Bytecode-weaving functionality for modern java runtimes (:cookie: for @schosin)
 - **FIX**: Upgrade of ASM to 9.0 and bump of opcodes to support java 15. 
 - **FIX**: Fix broken repositories.
-- **FIX**: Fix some HTTP links in documentation.
+- **FIX**: Fux some HTTP links in documentation.
 - **FIX**: Various internal dependencies upgraded.
 
 #### Version: 2.3.0 - 2019-11-09
