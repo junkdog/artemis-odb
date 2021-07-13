@@ -88,13 +88,14 @@ public class AspectFieldResolver implements FieldResolver {
     }
 
     private Aspect.Builder toAspect(AspectDescriptor ad) {
-        return all(ad.all()).one(ad.one()).exclude(ad.exclude());
+        return all(ad.all()).one(ad.one()).exclude(ad.exclude()).defaults(ad.defaults());
     }
 
     private Aspect.Builder toAspect(All all, One one, Exclude exclude) {
         return all(all != null ? all.value() : EMPTY_COMPONENT_CLASS_ARRAY)
                 .one(one != null ? one.value() : EMPTY_COMPONENT_CLASS_ARRAY)
-                .exclude(exclude != null ? exclude.value() : EMPTY_COMPONENT_CLASS_ARRAY);
+                .exclude(exclude != null ? exclude.value() : EMPTY_COMPONENT_CLASS_ARRAY)
+                .defaults(exclude == null || !exclude.excludeDefaults());
     }
 
     private Class<? extends Component>[] allComponents(Field field) {

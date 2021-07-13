@@ -2,6 +2,7 @@ package com.artemis;
 
 import com.artemis.component.ComponentX;
 import com.artemis.component.ComponentY;
+import com.artemis.component.ComponentZ;
 import com.artemis.component.Packed;
 import com.artemis.component.ReusedComponent;
 import com.artemis.systems.EntityProcessingSystem;
@@ -19,11 +20,13 @@ public class EntityTransmuterTest {
 	private ES1 es;
 	private EntityTransmuter transmuter1;
 	private EntityTransmuter transmuter3;
+	private EntityTransmuter transmuter4;
 
 	@Before
 	public void init() {
 		world = new World(new WorldConfiguration()
-				.setSystem(new ES1()));
+				.setSystem(new ES1())
+				.setDefaultAspect(Aspect.all(ComponentZ.class)));
 		world.inject(this);
 
 		transmuter3 = new EntityTransmuterFactory(world)
@@ -38,6 +41,19 @@ public class EntityTransmuterTest {
 			.remove(Packed.class)
 			.remove(ReusedComponent.class)
 			.build();
+
+		transmuter4 = new EntityTransmuter(world, Aspect.all(ComponentX.class, Packed.class).exclude(ComponentY.class));
+	}
+	
+	@Test
+	public void transmute_constructor_factory_equal_operations() {
+		Entity entityFactory = world.createEntity();
+		Entity entityConstructor = world.createEntity();
+		
+		transmuter3.transmute(entityFactory);
+		transmuter4.transmute(entityConstructor);
+		
+		assertEquals(entityFactory.getCompositionId(), entityConstructor.getCompositionId());
 	}
 
 	@Test
@@ -56,7 +72,7 @@ public class EntityTransmuterTest {
 	}
 
 	@Test
-	public void transmuting_entities() {
+	public void factory_transmuting_entities() {
 		Entity e1 = createEntity(ComponentY.class, ReusedComponent.class);
 		Entity e2 = createEntity(ComponentY.class, ReusedComponent.class);
 		world.process();
@@ -80,14 +96,49 @@ public class EntityTransmuterTest {
 		assertNotNull(e1.getComponent(Packed.class));
 		assertNotNull(e1.getComponent(ReusedComponent.class));
 		assertNull(e1.getComponent(ComponentY.class));
+		assertNull(e1.getComponent(ComponentZ.class));
 		assertNotNull(e2.getComponent(ComponentX.class));
 		assertNotNull(e2.getComponent(Packed.class));
 		assertNotNull(e2.getComponent(ReusedComponent.class));
 		assertNull(e2.getComponent(ComponentY.class));
+		assertNull(e2.getComponent(ComponentZ.class));
+	}
+	
+	@Test
+	public void constructor_transmuting_entities() {
+		Entity e1 = createEntity(ComponentY.class, ReusedComponent.class);
+		Entity e2 = createEntity(ComponentY.class, ReusedComponent.class);
+		world.process();
+		assertEquals(2, e1.getCompositionId());
+		
+		transmuter4.transmute(e1);
+		
+		// manually applying transmuter to e2
+		EntityEdit edit = e2.edit();
+		edit.create(ComponentX.class);
+		edit.create(Packed.class);
+		edit.remove(ComponentY.class);
+		
+		world.process();
+		world.process();
+		
+		assertTrue("compositionId=" + e2.getCompositionId(), 2 != e2.getCompositionId());
+		assertEquals(e1.getCompositionId(), e2.getCompositionId());
+		
+		assertNotNull(e1.getComponent(ComponentX.class));
+		assertNotNull(e1.getComponent(Packed.class));
+		assertNotNull(e1.getComponent(ReusedComponent.class));
+		assertNull(e1.getComponent(ComponentY.class));
+		assertNull(e1.getComponent(ComponentZ.class));
+		assertNotNull(e2.getComponent(ComponentX.class));
+		assertNotNull(e2.getComponent(Packed.class));
+		assertNotNull(e2.getComponent(ReusedComponent.class));
+		assertNull(e2.getComponent(ComponentY.class));
+		assertNull(e2.getComponent(ComponentZ.class));
 	}
 
 	@Test
-	public void transmute_twice() {
+	public void factory_transmute_twice() {
 		Entity e = createEntity(ComponentY.class, ReusedComponent.class);
 		world.process();
 
@@ -99,10 +150,24 @@ public class EntityTransmuterTest {
 		transmuter3.transmute(e);
 		assertEquals(3, e.getCompositionId());
 	}
+	
+	@Test
+	public void constructor_transmute_twice() {
+		Entity e = createEntity(ComponentY.class, ReusedComponent.class);
+		world.process();
+		
+		assertEquals(2, e.getCompositionId());
+		
+		transmuter1.transmute(e);
+		assertEquals(0, e.getCompositionId());
+		
+		transmuter4.transmute(e);
+		assertEquals(3, e.getCompositionId());
+	}
 
 
 	@Test
-	public void entity_insertion_removal() {
+	public void factory_entity_insertion_removal() {
 		Entity e = world.createEntity();
 		world.process();
 		transmuter3.transmute(e);
@@ -113,6 +178,21 @@ public class EntityTransmuterTest {
 		transmuter1.transmute(e);
 		world.process();
 
+		assertEquals(0, es.getSubscription().getEntities().size());
+	}
+	
+	@Test
+	public void constructor_entity_insertion_removal() {
+		Entity e = world.createEntity();
+		world.process();
+		transmuter4.transmute(e);
+		world.process();
+		
+		assertEquals(1, es.getSubscription().getEntities().size());
+		
+		transmuter1.transmute(e);
+		world.process();
+		
 		assertEquals(0, es.getSubscription().getEntities().size());
 	}
 
@@ -195,7 +275,7 @@ public class EntityTransmuterTest {
 		private EntityTransmuter transmuter;
 
 		public SysTransmuter() {
-			super(all(ComponentX.class));
+			super(all(ComponentX.class).exclude(ComponentZ.class));
 		}
 
 		@Override
@@ -215,7 +295,7 @@ public class EntityTransmuterTest {
 
 	public static class SysSubscriber extends BaseEntitySystem {
 		public SysSubscriber() {
-			super(all(ComponentY.class));
+			super(all(ComponentY.class).exclude(ComponentZ.class));
 		}
 
 		@Override
@@ -230,7 +310,7 @@ public class EntityTransmuterTest {
 
 	private static class ES1 extends EntityProcessingSystem {
 		public ES1() {
-			super(Aspect.all(ComponentX.class));
+			super(Aspect.all(ComponentX.class).exclude(ComponentZ.class));
 		}
 
 		@Override
@@ -243,7 +323,7 @@ public class EntityTransmuterTest {
 		private EntityTransmuter removeX;
 
 		public ES2() {
-			super(Aspect.all(ReusedComponent.class));
+			super(Aspect.all(ReusedComponent.class).exclude(ComponentZ.class));
 		}
 
 		@Override

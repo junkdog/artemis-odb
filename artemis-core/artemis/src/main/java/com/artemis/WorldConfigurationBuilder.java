@@ -28,6 +28,7 @@ public class WorldConfigurationBuilder {
     private ArtemisPlugin activePlugin;
     private final InjectionCache cache;
     private SystemInvocationStrategy invocationStrategy;
+	private Aspect.Builder defaultAspect;
 
     public WorldConfigurationBuilder() {
         reset();
@@ -46,6 +47,7 @@ public class WorldConfigurationBuilder {
         registerFieldResolvers(config);
         registerInvocationStrategies(config);
         config.setAlwaysDelayComponentRemoval(alwaysDelayComponentRemoval);
+        config.setDefaultAspect(defaultAspect);
         reset();
         return config;
     }
@@ -265,6 +267,17 @@ public class WorldConfigurationBuilder {
     public WorldConfigurationBuilder with(ArtemisPlugin... plugins) {
         addPlugins(plugins);
         return this;
+    }
+    
+    /**
+     * Sets the default aspect to be applied to all aspects when used for a subscription.
+     * 
+     * @param aspect default aspect
+     * @return this
+     */
+    public WorldConfigurationBuilder defaultAspect(Aspect.Builder aspect) {
+    	this.defaultAspect = aspect;
+    	return this;
     }
 
     /**

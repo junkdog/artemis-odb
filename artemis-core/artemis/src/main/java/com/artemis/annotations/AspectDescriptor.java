@@ -41,4 +41,9 @@ public @interface AspectDescriptor {
 	 * @return excluding types
 	 */
 	Class<? extends Component>[] exclude() default {};
+	
+	/**
+	 * @return whether to apply default aspect when used for a subscription
+	 */
+	boolean defaults() default true;
 }

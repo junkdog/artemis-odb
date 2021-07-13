@@ -38,7 +38,8 @@ public final class WorldConfiguration {
 
 	private boolean alwaysDelayComponentRemoval = false;
 	private Set<Class<? extends BaseSystem>> registered = new HashSet<Class<? extends BaseSystem>>();
-
+	private Aspect.Builder defaultAspect;
+	
 	public WorldConfiguration() {
 		// reserving space for core managers
 		systems.add(null); // ComponentManager
@@ -161,7 +162,9 @@ public final class WorldConfiguration {
 		invocationStrategy.setWorld(world);
 
 		world.invocationStrategy = invocationStrategy;
-
+		
+		asm.setDefaultAspect(defaultAspect);
+		
 		systems.set(COMPONENT_MANAGER_IDX, world.getComponentManager());
 		systems.set(ENTITY_MANAGER_IDX, world.getEntityManager());
 		systems.set(ASPECT_SUBSCRIPTION_MANAGER_IDX, asm);
@@ -221,5 +224,16 @@ public final class WorldConfiguration {
 	 */
 	public void setAlwaysDelayComponentRemoval(boolean value) {
 		this.alwaysDelayComponentRemoval = value;
+	}
+    
+    /**
+     * Sets the default aspect to be applied to all aspects when used for a subscription.
+     * 
+     * @param aspect default aspect
+     * @return this
+     */
+	public WorldConfiguration setDefaultAspect(Aspect.Builder aspect) {
+		this.defaultAspect = aspect;
+		return this;
 	}
 }
