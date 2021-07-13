@@ -63,4 +63,20 @@ public class ComponentFieldAccessorStrategyTest extends StrategyTest {
         TypeModel model = applyStrategy(ComponentFieldAccessorStrategy.class, Proof.class);
         assertHasMethod(model, "com.artemis.E proofGen(java.util.List<java.lang.Object> gen)");
     }
+
+    @Test
+    public void When_public_field_is_defined_in_generic_base_class() {
+        TypeModel model = applyStrategy(ComponentFieldAccessorStrategy.class, StringComponent.class);
+        assertHasMethod(model, "com.artemis.E stringComponentValue(java.lang.String value)");
+        assertHasMethod(model, "java.lang.String stringComponentValue()");
+    }
+
+    @Test
+    public void When_public_field_is_defined_in_generic_base_class_with_intermediate_class() {
+        TypeModel model = applyStrategy(ComponentFieldAccessorStrategy.class, SimpleComponent.class);
+        assertHasMethod(model, "com.artemis.E simpleComponentValue1(java.lang.Integer value1)");
+        assertHasMethod(model, "com.artemis.E simpleComponentValue2(java.lang.String value2)");
+        assertHasMethod(model, "java.lang.Integer simpleComponentValue1()");
+        assertHasMethod(model, "java.lang.String simpleComponentValue2()");
+    }
 }

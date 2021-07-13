@@ -51,4 +51,15 @@ public class ComponentMethodProxyStrategyTest extends StrategyTest {
         assertHasMethod(model,"com.artemis.generator.strategy.e.Proof proofFluid(com.artemis.generator.strategy.e.Proof p0)");
     }
 
+    @Test
+    public void When_public_void_parameterized_method_is_defined_in_generic_base_class() {
+        TypeModel model = applyStrategy(ComponentMethodProxyStrategy.class, SimpleComponent.class);
+        assertHasMethod(model,"com.artemis.E simpleComponent(java.lang.Integer p0,java.lang.String p1,int p2)");
+    }
+
+    @Test
+    public void When_public_return_value_parameterized_method_is_defined_in_generic_base_class() {
+        TypeModel model = applyStrategy(ComponentMethodProxyStrategy.class, SimpleComponent.class);
+        assertHasMethod(model,"java.lang.Integer simpleComponentDummy(java.lang.Integer p0,java.lang.String p1,int p2)");
+    }
 }

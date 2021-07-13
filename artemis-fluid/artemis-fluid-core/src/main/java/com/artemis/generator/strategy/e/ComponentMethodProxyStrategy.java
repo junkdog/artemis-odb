@@ -1,5 +1,7 @@
 package com.artemis.generator.strategy.e;
 
+import static com.artemis.generator.util.ExtendedTypeReflection.resolveGenericType;
+import static com.artemis.generator.util.ExtendedTypeReflection.resolveGenericReturnType;
 import com.artemis.annotations.Fluid;
 import com.artemis.annotations.FluidMethod;
 import com.artemis.generator.common.IterativeModelStrategy;
@@ -10,6 +12,7 @@ import com.artemis.generator.model.type.TypeModel;
 import com.artemis.generator.util.MethodBuilder;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Set;
 
 /**
@@ -64,7 +67,7 @@ public class ComponentMethodProxyStrategy extends IterativeModelStrategy {
     private MethodDescriptor methodProxyReturnFluidMethod(ComponentDescriptor component, Method method) {
         MethodBuilder builder = new MethodBuilder(FluidTypes.E_TYPE, component.getCompositeName(method.getName()));
 
-        String arguments = appendParameters(method, builder);
+        String arguments = appendParameters(component, method, builder);
 
         return builder
                 .mapper(component, ".create(entityId)." + method.getName() + "(" + arguments + ")")
@@ -73,22 +76,22 @@ public class ComponentMethodProxyStrategy extends IterativeModelStrategy {
                 .build();
     }
 
-    private String appendParameters(Method method, MethodBuilder builder) {
-        int count = 0;
+    private String appendParameters(ComponentDescriptor component, Method method, MethodBuilder builder) {
         String arguments = "";
-        for (Class<?> parameterType : method.getParameterTypes()) {
-            builder.parameter(parameterType, "p" + count);
-            arguments = arguments + (arguments.isEmpty() ? "" : ", ") + "p" + count;
-            count++;
+        final Type[] parameterTypes = method.getGenericParameterTypes();
+        final int paramCount = parameterTypes.length;
+        for(int i = 0; i < paramCount; i++) {
+            builder.parameter(resolveGenericType(component, method, parameterTypes[i]), "p" + i);
+            arguments = arguments + (arguments.isEmpty() ? "" : ", ") + "p" + i;
         }
         return arguments;
     }
 
     private MethodDescriptor methodProxyMethod(ComponentDescriptor component, Method method) {
 
-        MethodBuilder builder = new MethodBuilder(method.getGenericReturnType(), component.getCompositeName(method.getName()));
+        MethodBuilder builder = new MethodBuilder(resolveGenericReturnType(component, method), component.getCompositeName(method.getName()));
 
-        String arguments = appendParameters(method, builder);
+        String arguments = appendParameters(component, method, builder);
 
         return builder
                 .mapper("return ", component, ".create(entityId)." + method.getName() + "(" + arguments + ")")

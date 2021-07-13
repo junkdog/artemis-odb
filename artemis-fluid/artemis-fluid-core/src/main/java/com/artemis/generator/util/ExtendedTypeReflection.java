@@ -1,7 +1,9 @@
 package com.artemis.generator.util;
 
+import com.artemis.generator.model.artemis.ComponentDescriptor;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
+import com.google.common.reflect.TypeToken;
 import org.reflections.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -103,4 +105,53 @@ public abstract class ExtendedTypeReflection {
         };
     }
 
+    /**
+     * Resolve the actual type of the provided field.
+     * For non-generic fields, this will just return the field type.
+     * For generic fields, try to determine the provided generic type arguments and deduce the real type from it.
+     */
+    public static Type resolveGenericType(final ComponentDescriptor component, final Field field) {
+        return resolveGenericType(component.getComponentType(), field.getDeclaringClass(), field.getGenericType());
+    }
+
+    /**
+     * Resolve the actual type of the methods parameter.
+     * For non-generic methods, this will just return the parameters type.
+     * For generic methods, try to determine the provided generic type arguments and deduce the real type from it.
+     */
+    public static Type resolveGenericType(final ComponentDescriptor component, final Method method, final Type type) {
+        return resolveGenericType(component.getComponentType(), method.getDeclaringClass(), type);
+    }
+
+    /**
+     * Resolve the actual return type of the method.
+     * For non-generic methods, this will just return the parameters type.
+     * For generic methods, try to determine the provided generic type arguments and deduce the real return type from it.
+     */
+    public static Type resolveGenericReturnType(final ComponentDescriptor component, final Method method) {
+        return resolveGenericType(component.getComponentType(), method.getDeclaringClass(), method.getGenericReturnType());
+    }
+
+    /**
+     * Tries to deduce the actual runtime type for the generic type parameter.
+     * @param componentType the class of a component
+     * @param declaringType a base class of the given component class
+     * @param typeParam the generic type parameter that needs to be resolved
+     * @return the actual type
+     */
+    @SuppressWarnings({"UnstableApiUsage", "rawtypes", "unchecked"})
+    private static Type resolveGenericType(final Class<?> componentType, final Class<?> declaringType, final Type typeParam) {
+        if(declaringType.isAssignableFrom(componentType) && typeParam instanceof TypeVariable<?>) {
+            final TypeToken actual = TypeToken.of(componentType);
+            final TypeToken declared = actual.getSupertype(declaringType);
+            final ParameterizedType parameterizedType = (ParameterizedType) declared.getType();
+            final TypeVariable<?>[] declaredTypes = ((Class<?>) parameterizedType.getRawType()).getTypeParameters();
+            final Type[] actualTypes = parameterizedType.getActualTypeArguments();
+            final int typeIndex = Arrays.asList(declaredTypes).indexOf(typeParam);
+            if (typeIndex >= 0) {
+                return actualTypes[typeIndex];
+            }
+        }
+        return typeParam;
+    }
 }
