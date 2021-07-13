@@ -89,9 +89,10 @@ public final class ClassMetadataUtil {
 			case 'Z': // boolean
 				return 1;
 			case 'L': // object
+			case '[': // array
 				return 0;
 			default:
-				throw new RuntimeException("Unknown primtive type: " + fd.desc);
+				throw new RuntimeException("Unknown primitive type: " + fd.desc);
 		}
 	}
 	
