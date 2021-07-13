@@ -92,6 +92,6 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 
 #### Manual Download
 
- - [Main library](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/) 
- - [Command-line tool](http://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/)
+ - [Main library](https://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb/) 
+ - [Command-line tool](https://repo1.maven.org/maven2/net/onedaybeard/artemis/artemis-odb-cli/)
 
