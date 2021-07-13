@@ -45,8 +45,8 @@ public class AspectFieldHandlerTest {
 	@Test
 	public void inject_aspect_fields_system() {
 		WorldConfiguration worldConfiguration = new WorldConfiguration()
-			.setSystem(new SomeSystem())
-			.register(new Object());
+				.setSystem(new SomeSystem())
+				.register(new Object());
 		World world = new World(worldConfiguration);
 
 		SomeSystem withAspectFields = world.getSystem(SomeSystem.class);
@@ -58,12 +58,56 @@ public class AspectFieldHandlerTest {
 
 		checkArchetype(world, withAspectFields.archetype);
 	}
-	
+
+
+	@Test
+	public void no_exception_When_injecting_system_with_unannotated_fields() {
+		WorldConfiguration worldConfiguration = new WorldConfiguration()
+				.setSystem(new NullInjectionSystem())
+				.register(new Object());
+		World world = new World(worldConfiguration);
+
+		NullInjectionSystem withAspectFields = world.getSystem(NullInjectionSystem.class);
+		assertNull(withAspectFields.archetypeNotInjected);
+		assertNull(withAspectFields.subAllOneExcludeNotInjected);
+		assertNull(withAspectFields.transmuterAllOneExcludeNotInjected);
+		assertNull(withAspectFields.aspectAllOneExcludeNotInjected);
+		assertNull(withAspectFields.abAllOneExcludeNotInjected);
+		assertNull(withAspectFields.archetypeAllNotInjected);
+	}
+
+	@Test(expected = RuntimeException.class)
+	public void runtime_exception_When_all_annotation_value_is_empty_on_archetype() {
+		WorldConfiguration worldConfiguration = new WorldConfiguration()
+				.setSystem(new InvalidAllUseSystem())
+				.register(new Object());
+		World world = new World(worldConfiguration);
+		world.getSystem(InvalidAllUseSystem.class);
+	}
+
 	private static void checkArchetype(World world, Archetype archetype) {
 		Entity e = world.getEntity(world.create(archetype));
 		assertNotNull(e.getComponent(ComponentX.class));
 		assertNotNull(e.getComponent(ReusedComponent.class));
 		assertNull(e.getComponent(ComponentY.class));
+	}
+
+	public static class NullInjectionSystem extends BaseSystem {
+		public Archetype archetypeNotInjected;
+		public EntitySubscription subAllOneExcludeNotInjected;
+		public EntityTransmuter transmuterAllOneExcludeNotInjected;
+		public Aspect aspectAllOneExcludeNotInjected;
+		public Aspect.Builder abAllOneExcludeNotInjected;
+		public Archetype archetypeAllNotInjected;
+
+		@Override protected void processSystem() { }
+	}
+
+
+	public static class InvalidAllUseSystem extends BaseSystem {
+		@All()
+		public Archetype archetypeNotInjected;
+		@Override protected void processSystem() { }
 	}
 
 	private static class ObjectAspectFields {

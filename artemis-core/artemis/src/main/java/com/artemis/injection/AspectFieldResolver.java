@@ -37,29 +37,60 @@ public class AspectFieldResolver implements FieldResolver {
     @Override
     @SuppressWarnings("unchecked")
     public Object resolve(Object target, Class<?> fieldType, Field field) {
-        Aspect.Builder aspect = aspect(field);
-        if (aspect == null)
-            return null;
 
+        // Don't do a field lookup for other fields.
         if (Aspect.class == fieldType) {
-            return world.getAspectSubscriptionManager().get(aspect).getAspect();
+            return asAspect(field);
         } else if (Aspect.Builder.class == fieldType) {
-            return aspect;
+            return asAspectBuilder(field);
         } else if (EntityTransmuter.class == fieldType) {
-            return new EntityTransmuter(world, aspect);
+            return asEntityTransmuter(field);
         } else if (EntitySubscription.class == fieldType) {
-            return world.getAspectSubscriptionManager().get(aspect);
+            return asEntitySubscription(field);
         } else if (Archetype.class == fieldType) {
-            return new ArchetypeBuilder()
-                    .add(allComponents(field))
-                    .build(world);
+            return asArchetype(field);
         }
-
         return null;
     }
 
-    private Aspect.Builder aspect(Field field) {
+    private Aspect.Builder asAspectBuilder(Field field) {
+        return aspectOn(field);
+    }
+
+    private Aspect asAspect(Field field) {
+        final Aspect.Builder aspect = aspectOn(field);
+        return aspect != null ? world.getAspectSubscriptionManager().get(aspect).getAspect() : null;
+    }
+
+    private EntityTransmuter asEntityTransmuter(Field field) {
+        final Aspect.Builder aspect = aspectOn(field);
+        return (aspect != null) ? new EntityTransmuter(world, aspect) : null;
+    }
+
+    private EntitySubscription asEntitySubscription(Field field) {
+        final Aspect.Builder aspect = aspectOn(field);
+        return (aspect != null) ? world.getAspectSubscriptionManager().get(aspect) : null;
+    }
+
+    private Archetype asArchetype(Field field) {
+        final Aspect.Builder aspect = aspectOn(field);
+        if (aspect != null) {
+            final Class<? extends Component>[] types = allComponents(field);
+            if (types == null || types.length == 0)
+                throw new RuntimeException("@All annotation value on Archetype (" + field.toString() + ") cannot be empty.");
+            return new ArchetypeBuilder()
+                    .add(types)
+                    .build(world);
+        } else {
+            return null;
+        }
+    }
+
+    private Aspect.Builder aspectOn(Field field) {
+        if (field == null) return null;
+
         if (!fields.containsKey(field)) {
+            // Add field aspect annotations to cache.
             AspectDescriptor descriptor = descriptor(field);
 
             if (descriptor != null) {
@@ -97,6 +128,7 @@ public class AspectFieldResolver implements FieldResolver {
                 .exclude(exclude != null ? exclude.value() : EMPTY_COMPONENT_CLASS_ARRAY);
     }
 
+    @SuppressWarnings("unchecked")
     private Class<? extends Component>[] allComponents(Field field) {
         AspectDescriptor descriptor = descriptor(field);
 
