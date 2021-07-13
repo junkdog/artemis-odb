@@ -14,7 +14,7 @@
 	<url>https://github.com/junkdog/artemis-odb</url>
 
     <properties>
-        <gdx.version>1.9.10</gdx.version>
+        <gdx.version>1.9.14</gdx.version>
     </properties>
 
 	<dependencies>
