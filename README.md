@@ -1,9 +1,8 @@
 ## Artemis-odb
 
-[![Join the chat at https://gitter.im/junkdog/artemis-odb](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/junkdog/artemis-odb?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/junkdog/artemis-odb.svg)](https://travis-ci.org/junkdog/artemis-odb)
-
-
+[![Build status](https://github.com/junkdog/artemis-odb/actions/workflows/javaCI.yml/badge.svg?label=Build)](https://github.com/junkdog/artemis-odb/actions/workflows/javaCI.yml)
+[![Discord Chat](https://img.shields.io/discord/348229412858101762?logo=discord)](https://libgdx.com/community/discord/)
+[![License](https://img.shields.io/badge/License-BSD%202--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)
 [Artemis-odb](https://github.com/junkdog/artemis-odb/wiki/About) is a [high performance](https://github.com/junkdog/entity-system-benchmarks) java based [Entity-Component-System](https://github.com/junkdog/artemis-odb/wiki/Introduction-to-Entity-Systems) framework.
 
 It is mature, actively maintained, and a continuation of the popular [Artemis](http://gamadu.com/artemis/).
@@ -69,6 +68,7 @@ Dozens of games with source available in the [Game Gallery](https://github.com/j
 
 Share your thoughts and questions with us!
 
+- **[Discord Chat (ECS channel)](https://libgdx.com/community/discord/)**
 - **[Gitter web chat](https://gitter.im/junkdog/artemis-odb)**
 - **[issues](https://github.com/junkdog/artemis-odb/issues)**
 
@@ -78,7 +78,7 @@ Share your thoughts and questions with us!
 <dependency>
 	<groupId>net.onedaybeard.artemis</groupId>
 	<artifactId>artemis-odb</artifactId>
-	<version>2.3.0</version>
+	<version>2.4.0</version>
 </dependency>
 ```
 
@@ -87,7 +87,7 @@ See [weave automation](https://github.com/junkdog/artemis-odb/wiki/Weave-Automat
 #### Gradle
 
 ```groovy
-  dependencies { compile "net.onedaybeard.artemis:artemis-odb:2.3.0" }
+  dependencies { compile "net.onedaybeard.artemis:artemis-odb:2.4.0" }
 ```
 
 #### Manual Download
