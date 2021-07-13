@@ -70,7 +70,7 @@ public class IntBagIterator {
         assert indexBegin >= 0;
         this.index = indexBegin - 1;
         indexEnd = indexBegin + size;
-        final int allSize = intBag.size();
+        final int allSize = intBag != null ? intBag.size() : 0;
         indexEnd = intBag != null ? (indexEnd < allSize ? indexEnd : allSize) : 0;
         assert indexEnd >= 0;
         state = State.INIT;

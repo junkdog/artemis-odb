@@ -18,6 +18,13 @@ public class IntBagIteratorTest {
         Assert.assertFalse(intBagIterator.hasNext());
     }
 
+    @Test
+    public void hasNext_on_a_null_collection__returns_false() {
+        Assert.assertFalse(new IntBagIterator(null).hasNext());
+        Assert.assertFalse(new IntBagIterator(null,1).hasNext());
+        Assert.assertFalse(new IntBagIterator(null,1,1).hasNext());
+    }
+
     @Test(expected = NoSuchElementException.class)
     public void next___on_an_empty_collection__throws_exception() {
         IntBagIterator intBagIterator = new IntBagIterator(new IntBag(99));
