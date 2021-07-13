@@ -7,6 +7,7 @@
   
 - @PooledWeaver now aborts when used outside Component class hierarchy.
 - Aspect memory use decreased a bit. 
+- **FIX**: Fluid generation scans too many dependencies for components.
 - **FIX**: Fix @PooledWeaver breaking when used on components with arrays.
 - **FIX**: Fix various NPE (intbag and reflection).
 - **FIX**: Fix gradle deprecation warnings (artemis-fluid-gradle-plugin).  
