@@ -12,6 +12,7 @@ import com.artemis.utils.reflect.ReflectionException;
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.artemis.utils.reflect.ClassReflection.isAnnotationPresent;
 
@@ -61,7 +62,7 @@ public class InjectionCache {
 			if (cachedClass.wireType == WireType.IGNORED && clazz != Object.class) {
 				setWireAnnotation(cachedClass, DEFAULT_WIRE);
 			} else if (cachedClass.wireType == WireType.WIRE) {
-				setWireAnnotation(cachedClass, ClassReflection.getAnnotation(clazz, Wire.class));
+				setWireAnnotation(cachedClass, Objects.requireNonNull(ClassReflection.getAnnotation(clazz, Wire.class)));
 			}
 
 			classCache.put(clazz, cachedClass);
