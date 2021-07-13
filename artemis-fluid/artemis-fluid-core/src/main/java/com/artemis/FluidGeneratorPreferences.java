@@ -30,8 +30,16 @@ public class FluidGeneratorPreferences implements Serializable {
     private boolean excludeFromGeneration = false;
 
     {
+        // speed up compilation by skipping dependencies without components.
         excludeFromClasspath.add("-sources.jar"); // exclude sources
         excludeFromClasspath.add("gwt-user-"); // exclude gwt.
+        excludeFromClasspath.add("guava-");
+        excludeFromClasspath.add("reflections-");
+        excludeFromClasspath.add("commons-lang3-");
+        excludeFromClasspath.add("javapoet-");
+        excludeFromClasspath.add("fast-classpath-scanner-");
+        excludeFromClasspath.add("commons-io-");
+        excludeFromClasspath.add("javassist-");
     }
 
     public FluidGeneratorPreferences() {
@@ -42,17 +50,23 @@ public class FluidGeneratorPreferences implements Serializable {
         this.excludeFromGeneration = fluid.exclude();
     }
 
-    /** Get prefix for component getters. Default "get". */
+    /**
+     * Get prefix for component getters. Default "get".
+     */
     public String getPrefixComponentGetter() {
         return prefixComponentGetter;
     }
 
-    /** Set prefix for component setters. Default "get". */
+    /**
+     * Set prefix for component setters. Default "get".
+     */
     public void setPrefixComponentGetter(String prefixComponentGetter) {
         this.prefixComponentGetter = prefixComponentGetter;
     }
 
-    /** Copy settings from source to this. */
+    /**
+     * Copy settings from source to this.
+     */
     public void mirror(FluidGeneratorPreferences source) {
         this.swallowGettersWithParameters = source.swallowGettersWithParameters;
 
@@ -133,7 +147,7 @@ public class FluidGeneratorPreferences implements Serializable {
 
     public boolean matchesIgnoredClasspath(String element) {
         for (String segment : excludeFromClasspath) {
-            if ( element.contains(segment)) {
+            if (element.contains(segment)) {
                 return true;
             }
         }
