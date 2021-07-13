@@ -45,7 +45,7 @@ public class MetaScanner extends ClassVisitor implements Opcodes {
 	private ClassMetadata info;
 
 	public MetaScanner(ClassMetadata metadata) {
-		super(ASM8);
+		super(ASM9);
 		info = metadata;
 	}
 
