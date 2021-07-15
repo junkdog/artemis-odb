@@ -33,7 +33,9 @@
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system.SystemY"/>
 
 	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.component"/>
-	<extend-configuration-property name="artemis.reflect.include" value="com.artemis.system"/>
+	<extend-configuration-property name="artemis.reflect.include" value="com.google.gwt.junit.client.GWTTestCase"/>
+	<extend-configuration-property name="artemis.reflect.include" value="junit.framework.TestCase"/>
+	<extend-configuration-property name="artemis.reflect.include" value="junit.framework.Assert"/>
 
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.ComponentX"/>
 	<extend-configuration-property name="gdx.reflect.include" value="com.artemis.component.ComponentY"/>

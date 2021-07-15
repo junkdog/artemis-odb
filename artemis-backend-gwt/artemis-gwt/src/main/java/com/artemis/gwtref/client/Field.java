@@ -21,8 +21,8 @@ import java.util.Arrays;
 
 public class Field {
 	final String name;
-	final Class enclosingType;
-	final Class type;
+	final CachedTypeLookup enclosingType;
+	final CachedTypeLookup type;
 	final boolean isFinal;
 	final boolean isDefaultAccess;
 	final boolean isPrivate;
@@ -33,15 +33,15 @@ public class Field {
 	final boolean isVolatile;
 	final int getter;
 	final int setter;
-	final Class[] elementTypes;
+	final CachedTypeLookup[] elementTypes;
 	final Annotation[] annotations;
 
 	Field (String name, Class enclosingType, Class type, boolean isFinal, boolean isDefaultAccess, boolean isPrivate,
-		boolean isProtected, boolean isPublic, boolean isStatic, boolean isTransient, boolean isVolatile, int getter, int setter,
-		Class[] elementTypes, Annotation[] annotations) {
+		   boolean isProtected, boolean isPublic, boolean isStatic, boolean isTransient, boolean isVolatile, int getter, int setter,
+		   Class[] elementTypes, Annotation[] annotations) {
 		this.name = name;
-		this.enclosingType = enclosingType;
-		this.type = type;
+		this.enclosingType = new CachedTypeLookup(enclosingType);
+		this.type = new CachedTypeLookup(type);
 		this.isFinal = isFinal;
 		this.isDefaultAccess = isDefaultAccess;
 		this.isPrivate = isPrivate;
@@ -52,24 +52,29 @@ public class Field {
 		this.isVolatile = isVolatile;
 		this.getter = getter;
 		this.setter = setter;
-		this.elementTypes = elementTypes;
+
+		CachedTypeLookup[] tmp = null;
+		if (elementTypes != null) {
+			tmp = new CachedTypeLookup[elementTypes.length];
+			for (int i = 0; i < tmp.length; i++) {
+				tmp[i] = new CachedTypeLookup(elementTypes[i]);
+			}
+		}
+		this.elementTypes = tmp;
+
 		this.annotations = annotations != null ? annotations : new Annotation[] {};
 	}
 
-	public Annotation[] getDeclaredAnnotations() {
-		return annotations;
-	}
-
 	public Object get (Object obj) throws IllegalAccessException {
-		return ReflectionCache.instance.get(this, obj);
+		return ReflectionCache.getFieldValue(this, obj);
 	}
 
 	public void set (Object obj, Object value) throws IllegalAccessException {
-		ReflectionCache.instance.set(this, obj, value);
+		ReflectionCache.setFieldValue(this, obj, value);
 	}
 
 	public Type getElementType (int index) {
-		if (elementTypes != null && index < elementTypes.length) return ReflectionCache.getType(elementTypes[index]);
+		if (elementTypes != null && index >= 0 && index < elementTypes.length) return elementTypes[index].getType();
 		return null;
 	}
 
@@ -78,11 +83,11 @@ public class Field {
 	}
 
 	public Type getEnclosingType () {
-		return ReflectionCache.getType(enclosingType);
+		return enclosingType.getType();
 	}
 
 	public Type getType () {
-		return ReflectionCache.getType(type);
+		return type.getType();
 	}
 
 	public boolean isSynthetic () {
@@ -121,13 +126,16 @@ public class Field {
 		return isVolatile;
 	}
 
+	public Annotation[] getDeclaredAnnotations () {
+		return annotations;
+	}
+
 	@Override
 	public String toString () {
 		return "Field [name=" + name + ", enclosingType=" + enclosingType + ", type=" + type + ", isFinal=" + isFinal
-			+ ", isDefaultAccess=" + isDefaultAccess + ", isPrivate=" + isPrivate + ", isProtected=" + isProtected + ", isPublic="
-			+ isPublic + ", isStatic=" + isStatic + ", isTransient=" + isTransient + ", isVolatile=" + isVolatile + ", getter="
-			+ getter + ", setter=" + setter + ", elementTypes=" + Arrays.toString(elementTypes) + ", annotations="
-			+ Arrays.toString(annotations) + "]";
+				+ ", isDefaultAccess=" + isDefaultAccess + ", isPrivate=" + isPrivate + ", isProtected=" + isProtected + ", isPublic="
+				+ isPublic + ", isStatic=" + isStatic + ", isTransient=" + isTransient + ", isVolatile=" + isVolatile + ", getter="
+				+ getter + ", setter=" + setter + ", elementTypes=" + Arrays.toString(elementTypes) + ", annotations="
+				+ Arrays.toString(annotations) + "]";
 	}
-
 }

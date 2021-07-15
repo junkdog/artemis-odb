@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -36,7 +36,7 @@ public final class ClassReflection {
 	static public String getSimpleName (Class c) {
 		return c.getSimpleName();
 	}
-	
+
 	/** Determines if the supplied Object is assignment-compatible with the object represented by supplied Class. */
 	static public boolean isInstance (Class c, Object obj) {
 		return c.isInstance(obj);
@@ -58,8 +58,33 @@ public final class ClassReflection {
 		return Modifier.isStatic(c.getModifiers());
 	}
 
-	/** Returns true if the class or interface represented by the supplied Class is an abstract class. */
-	static public boolean isAbstractClass (Class c) {
+	/** Determines if the supplied Class object represents an array class. */
+	static public boolean isArray (Class c) {
+		return c.isArray();
+	}
+
+	/** Determines if the supplied Class object represents a primitive type. */
+	static public boolean isPrimitive (Class c) {
+		return c.isPrimitive();
+	}
+
+	/** Determines if the supplied Class object represents an enum type. */
+	static public boolean isEnum (Class c) {
+		return c.isEnum();
+	}
+
+	/** Determines if the supplied Class object represents an annotation type. */
+	static public boolean isAnnotation (Class c) {
+		return c.isAnnotation();
+	}
+
+	/** Determines if the supplied Class object represents an interface type. */
+	static public boolean isInterface (Class c) {
+		return c.isInterface();
+	}
+
+	/** Determines if the supplied Class object represents an abstract type. */
+	static public boolean isAbstract (Class c) {
 		return Modifier.isAbstract(c.getModifiers());
 	}
 
@@ -74,6 +99,11 @@ public final class ClassReflection {
 			String help = ". Make sure class has a public no-arg constructor.";
 			throw new ReflectionException("Could not instantiate instance of class: " + c.getName() + help, e);
 		}
+	}
+
+	/** Returns the Class representing the component type of an array. If this class does not represent an array class this method returns null.	 */
+	static public Class getComponentType(Class c){
+		return c.getComponentType();
 	}
 
 	/** Returns an array of {@link Constructor} containing the public constructors of the class represented by the supplied Class. */
@@ -91,7 +121,8 @@ public final class ClassReflection {
 		try {
 			return new Constructor(c.getConstructor(parameterTypes));
 		} catch (SecurityException e) {
-			throw new ReflectionException("Security violation occurred while getting constructor for class: '" + c.getName() + "'.", e);
+			throw new ReflectionException("Security violation occurred while getting constructor for class: '" + c.getName() + "'.",
+					e);
 		} catch (NoSuchMethodException e) {
 			throw new ReflectionException("Constructor not found for class: " + c.getName(), e);
 		}
@@ -106,6 +137,11 @@ public final class ClassReflection {
 		} catch (NoSuchMethodException e) {
 			throw new ReflectionException("Constructor not found for class: " + c.getName(), e);
 		}
+	}
+
+	/** Returns the elements of this enum class or null if this Class object does not represent an enum type. */
+	static public Object[] getEnumConstants (Class c) {
+		return c.getEnumConstants();
 	}
 
 	/** Returns an array of {@link Method} containing the public member methods of the class represented by the supplied Class. */
@@ -181,13 +217,6 @@ public final class ClassReflection {
 		return result;
 	}
 
-	/** Creates a new instance of the annotation represented by the supplied annotationClass.
-	 */
-	static public <T extends java.lang.annotation.Annotation> T getAnnotation(Class c, Class<T> annotationClass) {
-		final Annotation declaredAnnotation = getDeclaredAnnotation(c,annotationClass);
-		return declaredAnnotation != null ? declaredAnnotation.getAnnotation(annotationClass) : null;
-	}
-
 	/** Returns a {@link Field} that represents the specified declared field for the supplied class. */
 	static public Field getDeclaredField (Class c, String name) throws ReflectionException {
 		try {
@@ -205,6 +234,33 @@ public final class ClassReflection {
 	static public boolean isAnnotationPresent (Class c, Class<? extends java.lang.annotation.Annotation> annotationType) {
 		return c.isAnnotationPresent(annotationType);
 	}
+
+	/** Returns an array of {@link Annotation} objects reflecting all annotations declared by the supplied class, and inherited
+	 * from its superclass. Returns an empty array if there are none. */
+	static public Annotation[] getAnnotations (Class c) {
+		java.lang.annotation.Annotation[] annotations = c.getAnnotations();
+		Annotation[] result = new Annotation[annotations.length];
+		for (int i = 0; i < annotations.length; i++) {
+			result[i] = new Annotation(annotations[i]);
+		}
+		return result;
+	}
+	/** Creates a new instance of the annotation represented by the supplied annotationClass.
+	 */
+	// TODO: this conflcits with libGDX API. libGDX returns the container Annotation while odb returns the annotation directly. (preferable?)
+	static public <T extends java.lang.annotation.Annotation> T getAnnotation(Class c, Class<T> annotationClass) {
+		final Annotation declaredAnnotation = getDeclaredAnnotation(c,annotationClass);
+		return declaredAnnotation != null ? declaredAnnotation.getAnnotation(annotationClass) : null;
+	}
+
+// LibGDX impl
+//	/** Returns an {@link Annotation} object reflecting the annotation provided, or null if this class doesn't have such an
+//	 * annotation. This is a convenience function if the caller knows already which annotation type he's looking for. */
+//	static public Annotation getAnnotation (Class c, Class<? extends java.lang.annotation.Annotation> annotationType) {
+//		java.lang.annotation.Annotation annotation = c.getAnnotation(annotationType);
+//		if (annotation != null) return new Annotation(annotation);
+//		return null;
+//	}
 
 	/** Returns an array of {@link Annotation} objects reflecting all annotations declared by the supplied class,
 	 * or an empty array if there are none. Does not include inherited annotations. */
@@ -229,4 +285,9 @@ public final class ClassReflection {
 		}
 		return null;
 	}
+
+	static public Class[] getInterfaces(Class c) {
+		return c.getInterfaces();
+	}
+
 }
