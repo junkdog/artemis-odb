@@ -40,7 +40,8 @@ public class ReflectionCacheGenerator extends Generator {
 			throw new UnableToCompleteException();
 		}
 
-		ReflectionCacheSourceCreator source = new ReflectionCacheSourceCreator(logger, context, type);
-		return source.create();
-	}
+        final int partToInclude = typeName.contains("IReflectionCache2") ? 1 : 0;
+        ReflectionCacheSourceCreator source = new ReflectionCacheSourceCreator(logger, context, type, partToInclude);
+        return source.create();
+    }
 }

@@ -20,22 +20,45 @@ import com.google.gwt.core.client.GWT;
 
 import java.util.Collection;
 
-public class ReflectionCache {
-	public static IReflectionCache instance = GWT.create(IReflectionCache.class);
 
-	public static Type forName (String name) throws ClassNotFoundException {
-		Type type = instance.forName(convert(name));
-		if (type == null) {
-			throw new RuntimeException("(artemis-odb) Couldn't find Type for class '" + name + "'");
+public class ReflectionCache {
+	private static final IReflectionCache instance1 = GWT.create(IReflectionCache.class);
+	private static final IReflectionCache instance2 = GWT.create(IReflectionCache2.class);
+
+	public static Type forName (String name) {
+		Type type = instance1.forName(convert(name));
+		if (type != null) {
+			if (type.source == null) {
+				type.source = instance1;
+			}
+		} else {
+			type = instance2.forName(convert(name));
+			if (type == null) {
+				throw new RuntimeException("Couldn't find Type for class '" + name + "'");
+			}
+			if (type.source == null) {
+				type.source = instance2;
+			}
 		}
 		return type;
 	}
 
 	public static Type getType (Class clazz) {
-		if (clazz == null) return null;
-		Type type = instance.forName(convert(clazz.getName()));
-		if (type == null) {
-			throw new RuntimeException("(artemis-odb) Couldn't find Type for class '" + clazz.getName() + "'");
+		if (clazz == null)
+			return null;
+		Type type = instance1.forName(convert(clazz.getName()));
+		if (type != null) {
+			if (type.source == null) {
+				type.source = instance1;
+			}
+		} else {
+			type = instance2.forName(convert(clazz.getName()));
+			if (type == null) {
+				throw new RuntimeException("Couldn't find Type for class '" + clazz.getName() + "'");
+			}
+			if (type.source == null) {
+				type.source = instance2;
+			}
 		}
 		return type;
 	}
@@ -52,26 +75,26 @@ public class ReflectionCache {
 			}
 			char t = className.charAt(dimensions);
 			switch (t) {
-			case 'Z':
-				return "boolean" + suffix;
-			case 'B':
-				return "byte" + suffix;
-			case 'C':
-				return "char" + suffix;
-			case 'L':
-				return className.substring(dimensions + 1, className.length() - 1).replace('$', '.') + suffix;
-			case 'D':
-				return "double" + suffix;
-			case 'F':
-				return "float" + suffix;
-			case 'I':
-				return "int" + suffix;
-			case 'J':
-				return "long" + suffix;
-			case 'S':
-				return "short" + suffix;
-			default:
-				throw new IllegalArgumentException("(artemis-odb) Couldn't transform '" + className + "' to qualified source name");
+				case 'Z':
+					return "boolean" + suffix;
+				case 'B':
+					return "byte" + suffix;
+				case 'C':
+					return "char" + suffix;
+				case 'L':
+					return className.substring(dimensions + 1, className.length() - 1).replace('$', '.') + suffix;
+				case 'D':
+					return "double" + suffix;
+				case 'F':
+					return "float" + suffix;
+				case 'I':
+					return "int" + suffix;
+				case 'J':
+					return "long" + suffix;
+				case 'S':
+					return "short" + suffix;
+				default:
+					throw new IllegalArgumentException("Couldn't transform '" + className + "' to qualified source name");
 			}
 		} else {
 			return className.replace('$', '.');
@@ -79,10 +102,31 @@ public class ReflectionCache {
 	}
 
 	public static Object newArray (Class componentType, int size) {
-		return instance.newArray(componentType, size);
+		Type type = getType(componentType);
+		return type.source.newArray(type, size);
 	}
 
-	public static Collection<Type> getKnownTypes () {
-		return instance.getKnownTypes();
+	public static Object getFieldValue (Field field, Object obj) throws IllegalAccessException {
+		return field.getEnclosingType().source.get(field, obj);
+	}
+
+	public static void setFieldValue (Field field, Object obj, Object value) throws IllegalAccessException {
+		field.getEnclosingType().source.set(field, obj, value);
+	}
+
+	public static int getArrayLength (Type type, Object obj) {
+		return type.source.getArrayLength(type, obj);
+	}
+
+	public static Object getArrayElement (Type type, Object obj, int i) {
+		return type.source.getArrayElement(type, obj, i);
+	}
+
+	public static void setArrayElement (Type type, Object obj, int i, Object value) {
+		type.source.setArrayElement(type, obj, i, value);
+	}
+
+	public static Object invoke (Method method, Object obj, Object[] params) {
+		return method.enclosingType.getType().source.invoke(method, obj, params);
 	}
 }

@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -107,28 +107,6 @@ public final class Field {
 		return elementType != null ? elementType.getClassOfType() : null;
 	}
 
-	/** Returns the value of the field on the supplied object. */
-	public Object get (Object obj) throws ReflectionException {
-		try {
-			return field.get(obj);
-		} catch (IllegalArgumentException e) {
-			throw new ReflectionException("Could not get " + getDeclaringClass() + "#" + getName() + ": " + e.getMessage(), e);
-		} catch (IllegalAccessException e) {
-			throw new ReflectionException("Illegal access to field " + getName() + ": " + e.getMessage(), e);
-		}
-	}
-
-	/** Sets the value of the field on the supplied object. */
-	public void set (Object obj, Object value) throws ReflectionException {
-		try {
-			field.set(obj, value);
-		} catch (IllegalArgumentException e) {
-			throw new ReflectionException("Could not set " + getDeclaringClass() + "#" + getName() + ": " + e.getMessage(), e);
-		} catch (IllegalAccessException e) {
-			throw new ReflectionException("Illegal access to field " + getName() + ": " + e.getMessage(), e);
-		}
-	}
-
 	/** Returns this element's annotation for the specified type if such an annotation is present, else null. */
 	public <T extends java.lang.annotation.Annotation>T getAnnotation(Class<T> annotationClass) {
 		final Annotation declaredAnnotation = getDeclaredAnnotation(annotationClass);
@@ -168,5 +146,27 @@ public final class Field {
 			}
 		}
 		return null;
+	}
+
+	/** Returns the value of the field on the supplied object. */
+	public Object get (Object obj) throws ReflectionException {
+		try {
+			return field.get(obj);
+		} catch (IllegalArgumentException e) {
+			throw new ReflectionException("Could not get " + getDeclaringClass() + "#" + getName() + ": " + e.getMessage(), e);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException("Illegal access to field " + getName() + ": " + e.getMessage(), e);
+		}
+	}
+
+	/** Sets the value of the field on the supplied object. */
+	public void set (Object obj, Object value) throws ReflectionException {
+		try {
+			field.set(obj, value);
+		} catch (IllegalArgumentException e) {
+			throw new ReflectionException("Could not set " + getDeclaringClass() + "#" + getName() + ": " + e.getMessage(), e);
+		} catch (IllegalAccessException e) {
+			throw new ReflectionException("Illegal access to field " + getName() + ": " + e.getMessage(), e);
+		}
 	}
 }

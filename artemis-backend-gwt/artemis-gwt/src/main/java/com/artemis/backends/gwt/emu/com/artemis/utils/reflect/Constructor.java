@@ -16,8 +16,7 @@
 
 package com.artemis.utils.reflect;
 
-import com.artemis.utils.reflect.ReflectionException;
-
+import com.artemis.gwtref.client.Parameter;
 import java.lang.reflect.Modifier;
 
 /** Provides information about, and access to, a single constructor for a Class.
@@ -32,7 +31,12 @@ public final class Constructor {
 
 	/** Returns an array of Class objects that represent the formal parameter types, in declaration order, of the constructor. */
 	public Class[] getParameterTypes () {
-		return null;
+		Parameter[] parameters = constructor.getParameters();
+		Class[] parameterTypes = new Class[parameters.length];
+		for (int i = 0, j = parameters.length; i < j; i++) {
+			parameterTypes[i] = parameters[i].getClazz();
+		}
+		return parameterTypes;
 	}
 
 	/** Returns the Class object representing the class or interface that declares the constructor. */
@@ -59,7 +63,7 @@ public final class Constructor {
 			return constructor.newInstance(args);
 		} catch (IllegalArgumentException e) {
 			throw new ReflectionException("Illegal argument(s) supplied to constructor for class: " + getDeclaringClass().getName(),
-				e);
+					e);
 		}
 	}
 

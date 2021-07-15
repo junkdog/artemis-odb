@@ -1,12 +1,12 @@
 /*******************************************************************************
  * Copyright 2011 See AUTHORS file.
- * 
+ *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -121,13 +121,14 @@ public final class Method {
 		return declaredAnnotation != null ? declaredAnnotation.getAnnotation(annotationClass) : null;
 	}
 
-	/** Returns true if the field includes an annotation of the provided class type. */
+	/** Returns true if the method includes an annotation of the provided class type. */
 	public boolean isAnnotationPresent (Class<? extends java.lang.annotation.Annotation> annotationType) {
 		return method.isAnnotationPresent(annotationType);
 	}
 
-	/** Returns an array of {@link Annotation} objects reflecting all annotations declared by this field,
-	 * or an empty array if there are none. Does not include inherited annotations. */
+	/** Returns an array of {@link Annotation} objects reflecting all annotations declared by this method,
+	 * or an empty array if there are none. Does not include inherited annotations.
+	 * Does not include parameter annotations. */
 	public Annotation[] getDeclaredAnnotations () {
 		java.lang.annotation.Annotation[] annotations = method.getDeclaredAnnotations();
 		Annotation[] result = new Annotation[annotations.length];
@@ -137,7 +138,7 @@ public final class Method {
 		return result;
 	}
 
-	/** Returns an {@link Annotation} object reflecting the annotation provided, or null of this field doesn't
+	/** Returns an {@link Annotation} object reflecting the annotation provided, or null of this method doesn't
 	 * have such an annotation. This is a convenience function if the caller knows already which annotation
 	 * type he's looking for. */
 	public Annotation getDeclaredAnnotation (Class<? extends java.lang.annotation.Annotation> annotationType) {
@@ -152,4 +153,5 @@ public final class Method {
 		}
 		return null;
 	}
+
 }
