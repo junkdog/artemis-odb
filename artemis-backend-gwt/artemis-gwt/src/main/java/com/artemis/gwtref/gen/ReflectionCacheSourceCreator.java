@@ -45,9 +45,10 @@ public class ReflectionCacheSourceCreator {
 	final JClassType type;
 	final String simpleName;
 	final String packageName;
+	final int part;
 	SourceWriter sw;
 	final StringBuilder source = new StringBuilder();
-	final List<JType> types = new ArrayList<JType>();
+	List<JType> types = new ArrayList<JType>();
 	final List<SetterGetterStub> setterGetterStubs = new ArrayList<SetterGetterStub>();
 	final List<MethodStub> methodStubs = new ArrayList<MethodStub>();
 	final Map<String, String> parameterName2ParameterInstantiation = new HashMap<String, String>();
@@ -84,12 +85,13 @@ public class ReflectionCacheSourceCreator {
 		boolean unused;
 	}
 
-	public ReflectionCacheSourceCreator (TreeLogger logger, GeneratorContext context, JClassType type) {
+	public ReflectionCacheSourceCreator(TreeLogger logger, GeneratorContext context, JClassType type, int part) {
 		this.logger = logger;
 		this.context = context;
 		this.type = type;
 		this.packageName = type.getPackage().getName();
 		this.simpleName = type.getSimpleSourceName() + "Generated";
+		this.part = part;
 		logger.log(Type.INFO, type.getQualifiedSourceName());
 	}
 
@@ -176,6 +178,14 @@ public class ReflectionCacheSourceCreator {
 				return o1.getQualifiedSourceName().compareTo(o2.getQualifiedSourceName());
 			}
 		});
+
+		// Split types between two classes as a workaround for the java 65535 const limit.
+		if (part == 1) {
+			types = types.subList(types.size() / 2, types.size());
+		} else {
+			types = types.subList(0, types.size() / 2);
+		}
+
 
 		// generate Type lookup generator methods.
 		for (JType t : types) {
@@ -459,7 +469,7 @@ public class ReflectionCacheSourceCreator {
 		return sb.toString();
 	}
 
-	private boolean isVisible (JType type) {
+	private static boolean isVisible (JType type) {
 		if (type == null) return false;
 
 		if (type instanceof JClassType) {

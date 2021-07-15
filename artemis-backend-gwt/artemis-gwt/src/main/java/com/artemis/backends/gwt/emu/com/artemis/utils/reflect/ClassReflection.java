@@ -31,7 +31,7 @@ public final class ClassReflection {
 	static public Class forName (String name) throws ReflectionException {
 		try {
 			return ReflectionCache.forName(name).getClassOfType();
-		} catch (ClassNotFoundException e) {
+		} catch (RuntimeException e) {
 			throw new ReflectionException("Class not found: " + name);
 		}
 	}
