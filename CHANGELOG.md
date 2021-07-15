@@ -8,7 +8,8 @@
    - Building for HTML might throw a missing class error in the reflection cache. 
      Add missing classes to `artemis.reflect.include` to your gwt.xml.
 
-- Reflection implementation upgraded with latest libGDX reflection improvements. 
+- Reflection implementation upgraded with latest libGDX reflection improvements.
+- **FIX**: Maximum size of reflection cache increased (doubled, more or less).  
 
 #### Version: 2.4.0-SNAPSHOsT
 
