@@ -14,7 +14,7 @@
 - **FIX**: Bytecode-weaving functionality for modern java runtimes (:cookie: for @schosin)
 - **FIX**: Upgrade of ASM to 9.0 and bump of opcodes to support java 15. 
 - **FIX**: Fix broken repositories.
-- **FIX**: Fux some HTTP links in documentation.
+- **FIX**: Fix some HTTP links in documentation.
 - **FIX**: Various internal dependencies upgraded.
 
 #### Version: 2.3.0 - 2019-11-09
