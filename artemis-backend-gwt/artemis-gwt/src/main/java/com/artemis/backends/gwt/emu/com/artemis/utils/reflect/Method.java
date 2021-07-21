@@ -48,7 +48,7 @@ public final class Method {
 		Parameter[] parameters = method.getParameters();
 		Class[] parameterTypes = new Class[parameters.length];
 		for (int i = 0, j = parameters.length; i < j; i++) {
-			parameterTypes[i] = parameters[i].getType();
+			parameterTypes[i] = parameters[i].getClazz();
 		}
 		return parameterTypes;
 	}
@@ -126,21 +126,26 @@ public final class Method {
 		return declaredAnnotation != null ? declaredAnnotation.getAnnotation(annotationClass) : null;
 	}
 
-	/** Returns true if the field includes an annotation of the provided class type. */
+	/** Returns true if the method includes an annotation of the provided class type. */
 	public boolean isAnnotationPresent (Class<? extends java.lang.annotation.Annotation> annotationType) {
 		java.lang.annotation.Annotation[] annotations = method.getDeclaredAnnotations();
-		for (java.lang.annotation.Annotation annotation : annotations) {
-			if (annotation.annotationType().equals(annotationType)) {
-				return true;
+		if (annotations != null) {
+			for (java.lang.annotation.Annotation annotation : annotations) {
+				if (annotation.annotationType().equals(annotationType)) {
+					return true;
+				}
 			}
 		}
 		return false;
 	}
 
-	/** Returns an array of {@link Annotation} objects reflecting all annotations declared by this field,
-	 * or an empty array if there are none. Does not include inherited annotations. */
+	/** Returns an array of {@link Annotation} objects reflecting all annotations declared by this method,
+	 * or an empty array if there are none. Does not include inherited annotations.
+	 * Does not include parameter annotations. */
 	public Annotation[] getDeclaredAnnotations () {
 		java.lang.annotation.Annotation[] annotations = method.getDeclaredAnnotations();
+		if (annotations == null)
+			return new Annotation[0];
 		Annotation[] result = new Annotation[annotations.length];
 		for (int i = 0; i < annotations.length; i++) {
 			result[i] = new Annotation(annotations[i]);
@@ -148,11 +153,13 @@ public final class Method {
 		return result;
 	}
 
-	/** Returns an {@link Annotation} object reflecting the annotation provided, or null of this field doesn't
+	/** Returns an {@link Annotation} object reflecting the annotation provided, or null of this method doesn't
 	 * have such an annotation. This is a convenience function if the caller knows already which annotation
 	 * type he's looking for. */
 	public Annotation getDeclaredAnnotation (Class<? extends java.lang.annotation.Annotation> annotationType) {
 		java.lang.annotation.Annotation[] annotations = method.getDeclaredAnnotations();
+		if (annotations == null)
+			return null;
 		for (java.lang.annotation.Annotation annotation : annotations) {
 			if (annotation.annotationType().equals(annotationType)) {
 				return new Annotation(annotation);
@@ -160,4 +167,5 @@ public final class Method {
 		}
 		return null;
 	}
+
 }

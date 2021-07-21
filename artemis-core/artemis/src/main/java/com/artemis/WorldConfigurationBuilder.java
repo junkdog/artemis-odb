@@ -209,7 +209,7 @@ public class WorldConfigurationBuilder {
 
     private void dependsOnPlugin(Class<? extends ArtemisPlugin> type) throws ReflectionException {
 
-        if (ClassReflection.isAbstractClass(type)) {
+        if (ClassReflection.isAbstract(type)) {
             if (!anyAssignableTo(plugins, type)) {
                 throw new WorldConfigurationException("Implementation of " + type + " expected but not found. Did you forget to include a plugin? (for example: logging-libgdx for logging-api)");
             }
