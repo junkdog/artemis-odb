@@ -9,9 +9,10 @@
      Add missing classes to `artemis.reflect.include` to your gwt.xml.
 
 - Reflection implementation upgraded with latest libGDX reflection improvements.
+- Reflection generator logs a summary of included types per package.
 - **FIX**: Maximum size of reflection cache increased (doubled, more or less).  
 
-#### Version: 2.4.0-SNAPSHOsT
+#### Version: 2.4.0-SNAPSHOT
 
 - **BREAKING CHANGES**
   - Serialization modules that depend on libGDX now require `1.9.14`.
