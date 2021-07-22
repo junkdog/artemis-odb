@@ -1,5 +1,6 @@
 package com.artemis.generator.strategy.e;
 
+import static com.artemis.generator.util.ExtendedTypeReflection.resolveGenericType;
 import com.artemis.generator.model.FluidTypes;
 import com.artemis.generator.model.artemis.ComponentDescriptor;
 import com.artemis.generator.model.type.MethodDescriptor;
@@ -46,7 +47,7 @@ public class DefaultFieldProxyStrategy implements FieldProxyStrategy {
      * int E::posX() -> obtain field directly via interface.
      */
     private MethodDescriptor fieldGetterMethod(ComponentDescriptor component, Field field) {
-        return new MethodBuilder(field.getGenericType(), component.getCompositeName(field.getName()))
+        return new MethodBuilder(resolveGenericType(component, field), component.getCompositeName(field.getName()))
                 .mapper("return ", component, ".create(entityId)." + field.getName())
                 .debugNotes(field.toGenericString())
                 .build();
@@ -58,7 +59,7 @@ public class DefaultFieldProxyStrategy implements FieldProxyStrategy {
     private MethodDescriptor fieldSetterMethod(ComponentDescriptor component, Field field) {
         final String parameterName = field.getName();
         return new MethodBuilder(FluidTypes.E_TYPE, component.getCompositeName(parameterName))
-                .parameter(field.getGenericType(), parameterName)
+                .parameter(resolveGenericType(component, field), parameterName)
                 .mapper(component, ".create(this.entityId)." + parameterName + "=" + parameterName)
                 .debugNotes(field.toGenericString())
                 .returnFluid()
